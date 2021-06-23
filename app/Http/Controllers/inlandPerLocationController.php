@@ -14,7 +14,7 @@ class inlandPerLocationController extends Controller
 {
     public function index(Request $request)
     {
-        return view('inlandperlocation.index');
+        return view('inlands.location');
     }
 
     public function list(Request $request, Inland $inland) {

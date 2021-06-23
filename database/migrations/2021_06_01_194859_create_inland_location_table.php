@@ -23,10 +23,10 @@ class CreateInlandLocationTable extends Migration
             $table->integer('inland_id')->unsigned();
             $table->foreign('inland_id')->references('id')->on('inlands');
             $table->integer('location_id')->unsigned();
-            $table->foreign('location_id')->references('id')->on('location');
-            $table->string('type')->nullable();
+            $table->foreign('location_id')->references('id')->on('locations');
+            // $table->int('type')->nullable();
             $table->integer('service_id')->unsigned();
-            $table->foreign('service_id')->references('id')->on('inland_service');
+            $table->foreign('service_id')->references('id')->on('inland_services');
             $table->timestamps();
         });
     }

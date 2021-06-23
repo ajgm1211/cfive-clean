@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLocationTable extends Migration
+class CreateInlandServicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreateLocationTable extends Migration
      */
     public function up()
     {
-        Schema::create('location', function (Blueprint $table) {
+        Schema::create('inland_services', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->integer('province_id')->unsigned();
-            $table->foreign('province_id')->references('id')->on('inlands_provinces');
-            $table->Integer('identifier');
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ class CreateLocationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('location');
+        Schema::dropIfExists('table_inlan_service');
     }
 }
