@@ -94,17 +94,7 @@
 	                    type: 'text', 
 	                    rules: 'required', 
 	                    placeholder: 'Reference',
-	                    colClass: 'col-lg-2 col-pr-5'
-	                },
-					carrier: { 
-	                    label:'Carrier', 
-	                    searchable: true, 
-	                    type: 'select', 
-	                    rules: 'required', 
-	                    trackby: 'name', 
-	                    placeholder: 'Select', 
-	                    options: 'carriers',
-	                    colClass: 'col-xs-2 col-pr-5 col-pl-5 '
+	                    colClass: 'col-lg-2'
 	                },
 	                direction: { 
 	                    label:'Direction', 
@@ -114,7 +104,7 @@
 	                    trackby: 'name', 
 	                    placeholder: 'Select option', 
 	                    options: 'directions',
-	                    colClass: 'col-lg-2 col-pr-5 col-pl-5'
+	                    colClass: 'col-lg-2'
 	                },
 	                daterange: { 
 	                    label: 'Validity', 
@@ -122,7 +112,7 @@
 	                    type: "daterange", 
 	                    sdName: 'validity', 
 	                    edName: 'expire',
-	                    colClass: 'col-lg-2 col-pr-5 col-pl-5'
+	                    colClass: 'col-lg-2'
                     },
                     ports: { 
                         label: 'Ports', 
@@ -132,7 +122,7 @@
                         trackby: 'display_name', 
                         placeholder: 'Select options', 
                         options: 'harbors',
-                        colClass: 'col-lg-2 col-pr-5 col-pl-5'
+                        colClass: 'col-lg-2'
                     },
 	                gp_container: { 
 	                    label: 'Equipment', 
@@ -142,7 +132,7 @@
 	                    trackby: 'name', 
 	                    placeholder: 'Select option', 
 	                    options: 'equipments',
-	                    colClass: 'col-lg-2 col-pr-5 col-pl-5 input-h'
+	                    colClass: 'col-lg-2 input-h'
 	                },
 	                type: { 
 	                    label: 'Calculation', 
@@ -152,7 +142,17 @@
 	                    trackby: 'name', 
 	                    placeholder: 'Select', 
 	                    options: 'types',
-	                    colClass: 'col-lg-1'
+	                    colClass: 'col-lg-2'
+	                },
+					carrier: { 
+	                    label:'Carrier', 
+	                    searchable: true, 
+	                    type: 'select', 
+	                    rules: 'required', 
+	                    trackby: 'name', 
+	                    placeholder: 'Select', 
+	                    options: 'carriers',
+						colClass: 'col-lg-2'
 	                },
                     restrictions: { 
                         label:'Restrictions', 
@@ -160,7 +160,8 @@
                         type: 'multiselect', 
                         trackby: 'business_name', 
                         placeholder: 'Select options', 
-                        options: 'companies' 
+                        options: 'companies',
+						colClass: 'col-lg-2'
 					},
                     providers: { 
                         label: 'Provider', 
@@ -170,7 +171,7 @@
                         trackby: 'name', 
                         placeholder: 'Select', 
 						options: 'providers',
-						colClass: 'col-lg-1'
+						colClass: 'col-lg-2'
                         
                     },
 					

@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 class InlandPerLocation extends Model
 {
     protected $fillable = ['id, json_container, currency_id, harbor_id, inland_id, location_id, type, service_id'];
+
+    protected $casts = [
+        'json_container' => 'array',
+    ];
     
     public function inland()
     {
@@ -24,7 +28,7 @@ class InlandPerLocation extends Model
     
     public function location()
     {
-        return $this->belongsTo('App\location');
+        return $this->belongsTo('App\Location');
     }
 
     public function currency()
@@ -39,7 +43,7 @@ class InlandPerLocation extends Model
 
     public function service()
     {
-        return $this->belongsTo('App\inlandService');
+        return $this->belongsTo('App\InlandService');
     }
 
     public function scopeFilter(Builder $builder, Request $request)
