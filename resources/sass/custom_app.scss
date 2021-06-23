@@ -1251,6 +1251,13 @@ input.multiselect__input:focus {
     background: #ffffff;
     position: relative;
     transition: all 300ms ease-in-out;
+    height: 250px;
+}
+
+@media only screen and (max-width: 375px) {
+    .recent-search {   
+        height: 300px;
+    }
 }
 
 .recent-search:hover {
@@ -1269,6 +1276,8 @@ input.multiselect__input:focus {
     background: #006BFA;
     text-transform: uppercase;
     cursor: pointer !important;
+    position: absolute;
+    bottom: 0px;
 }
 
 .recent-search a:hover {
@@ -1279,6 +1288,7 @@ input.multiselect__input:focus {
 .recent-search p {
     font-size: 18px;
     color: #071C4B;
+    text-align: center;
 }
 
 .recent-search span {
