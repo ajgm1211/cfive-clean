@@ -26,8 +26,6 @@ class InlandPerLocationResource extends JsonResource
      */
     public function toArray($request)
     {
-        $containers=json_encode($this->json_container);
-
         $data = [
             'id' => $this->id,
             'currency' => $this->currency,
@@ -36,15 +34,16 @@ class InlandPerLocationResource extends JsonResource
             'location' => $this->location,
             'type' => $this->type,
             'service'=>$this->service,
-            'container' => $this->json_container,
         ];
 
         return $this->addContainers($data);
     }
     public function addContainers($data)
     {
-        $containers = $this->container;
+        $containers = $this->json_container;
+        
         foreach ($this->available_containers as $available_container) {
+            
             $data['rates_' . $available_container] = isset($containers['C' . $available_container]) ? $containers['C' . $available_container] : '-';
         }
         return $data;
