@@ -9,7 +9,7 @@
               </div>
               <div class="col-6">
                 <div class="float-right">
-                  <a href="/v2/quotes/search" class="btn btn-primary btn-bg"
+                  <a href="/api/search" class="btn btn-primary btn-bg"
                     ><i class="fa fa-search"></i> Search Rates</a
                   >
                 </div>
@@ -53,14 +53,14 @@ export default {
       activeOcean: false,
       actions: actions,
       fields: [
-        { key: "quote_id", label: "Quote ID", filterIsOpen: false },
+        { key: "quote_id", label: "Quote ID", filterIsOpen: true },
         {
           key: "status",
           label: "status",
           formatter: (value) => {
             return value.name;
           },
-          filterIsOpen: false,
+          filterIsOpen: true,
           filterTrackBy: "name",
           trackLabel: "name",
         },
@@ -97,7 +97,7 @@ export default {
           filterTrackBy: "fullname",
           trackLabel: "fullname",
         },
-        { key: "created_at", label: "Created at", filterIsOpen: false },
+        { key: "created_at", label: "Created at", filterIsOpen: true },
       ],
     };
   },

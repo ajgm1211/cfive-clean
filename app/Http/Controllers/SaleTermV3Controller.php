@@ -62,7 +62,7 @@ class SaleTermV3Controller extends Controller
             return $currency->only(['id', 'name']);
         });
 
-        $containers = Container::get();
+        $containers = Container::all();
 
         $data = [
             'types' => $types,
