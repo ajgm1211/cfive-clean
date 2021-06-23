@@ -776,7 +776,7 @@ trait SearchTrait
                 //Querying currency model
                 $local_charge_currency = Currency::find($local_charge_currency);
                 //Formatting to client decimal settings
-                $local_charge_amount = isDecimal($local_charge_amount[0], true);
+                $local_charge_amount = isDecimal($local_charge_amount, true);
             } elseif($direction == 1) {
                 //Percent markup
                 $local_charge_percentage = intval($this->cleanJsonData($local_charge_markup->pluck('percent_markup_import')));
