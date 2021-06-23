@@ -1029,7 +1029,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     /* Inlands V2 view routes **/
     Route::get('api/inlands', 'InlandController@index')->name('inlands.index');
-    Route::get('api/inlands/{id}/location', 'InlandController@location')->name('inlands.location');
+    Route::get('api/inlands/{id}/location', 'InlandPerLocationController@index')->name('inlands.location');
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /* End Inlands routes view **/

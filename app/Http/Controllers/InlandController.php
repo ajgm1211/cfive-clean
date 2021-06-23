@@ -20,10 +20,6 @@ use Illuminate\Support\Facades\DB;
 
 class InlandController extends Controller
 {
-    public function location(Request $request)
-    {
-        return view('inlands.location');
-    }
 
     public function index(Request $request)
     {
