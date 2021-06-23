@@ -16,7 +16,7 @@ class CreateHarborsLocationSearchTable extends Migration
         Schema::create('harbors_location_search', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('location_id')->unsigned();
-            $table->foreign('location_id')->references('id')->on('location');
+            $table->foreign('location_id')->references('id')->on('locations');
             $table->integer('harbors_id')->unsigned();
             $table->foreign('harbors_id')->references('id')->on('harbors');
             $table->timestamps();
