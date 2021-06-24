@@ -39,13 +39,12 @@ class SaleTermChargeController extends Controller
 
         $charge = SaleTermCharge::create([
             'calculation_type_id' => $request->calculation_type,
-            'amount' => $request->amount,
             'currency_id' => $request->currency,
             'sale_term_id' => $charge,
             'sale_term_code_id' => $request->sale_term_code
         ]);
 
-        $charge->jsonTotal();
+        $charge->jsonTotal($request);
 
         return new SaleTermChargeResource($charge);
     }
@@ -74,19 +73,17 @@ class SaleTermChargeController extends Controller
     {
         $data = $request->validate([
             'calculation_type' => 'required',
-            'amount' => 'required',
             'currency' => 'required',
             'sale_term_code' => 'required',
         ]);
         
         $charge->update([
             'calculation_type_id' => $data['calculation_type'],
-            'amount' => $data['amount'],
             'currency_id' => $data['currency'],
             'sale_term_code_id' => $data['sale_term_code'],
         ]);
 
-        $charge->jsonTotal();
+        $charge->jsonTotal($request);
 
         return new SaleTermChargeResource($charge);
     }

@@ -227,6 +227,12 @@ export default {
             } else {
                 let duplicateMatch = false;
 
+                component.ratesForQuote.results.forEach(function (result){
+                    if(result.activeTab != undefined){
+                        result.routingDetails[0] = result.routingDetails[result.activeTab];
+                    }
+                });
+
                 if(Object.keys(component.quoteData).length != 0){
                     component.ratesForQuote.rates.forEach(function (rate){
                         if((component.quoteData.local_ports.origin.length > 0 && component.quoteData.local_ports.origin.includes(rate.origin_port)) ||

@@ -68,16 +68,17 @@ class SaleTermCharge extends Model
         return $this->hasOne('App\Currency', 'id', 'currency_id');
     }
 
-    public function jsonTotal()
+    public function jsonTotal($data)
     {
         $containers = Container::where('gp_container_id', $this->sale_term->group_container_id)->get();
 
         $total = [];
-
+        
         foreach ($containers as $container) {
-            $total['c' . $container->code] = $this->amount;
+            ${'rates_' . $container->code} = 'rates_' . $container->code;
+            $total['c' . $container->code] = $data->${'rates_' . $container->code} ?? 0;
         }
-
+        
         $this->update(['total' => $total]);
     }
 }
