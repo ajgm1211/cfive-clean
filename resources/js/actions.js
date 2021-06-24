@@ -280,7 +280,7 @@ export default {
             return api.call('post', `/api/v2/sale_terms/charge/${id}/update`, data);
         },
         delete(id) {
-            return api.call('delete', `/api/v2/sale_terms/charge/${id}/destroy/`, {});
+            return api.call('delete', `/api/v2/sale_terms/charge/${id}/destroy`, {});
         },
         duplicate(id, data) {
             return api.call('post', `/api/v2/sale_terms/charge/${id}/duplicate`, data);

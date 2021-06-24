@@ -166,9 +166,9 @@ class SearchApiController extends Controller
         if($environment_name == "production"){
             $api_url = "https://carriers.cargofive.com/api/pricing";        
         }else if(in_array($environment_name,["local","prod"])){
-            $api_url = "http://carriersdev.cargofive.com/api/pricing";    
+            $api_url = "https://carriersdev.cargofive.com/api/pricing";    
         }else{
-            $api_url = "http://carriersdev.cargofive.com/api/pricing";
+            $api_url = "https://carriersdev.cargofive.com/api/pricing";
         }
 
         /**$inland_distances = InlandDistance::get()->map(function ($distance){
