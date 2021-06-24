@@ -40,19 +40,6 @@
                         ></span>
                         {{ value.label }}
 
-                        <!-- <md-field class="closeFilter" v-bind:class="[{ openFilter: filterIsOpen }, value.label]" :id="value.label">
-                            <label>Select an Option</label>
-                            <md-select multiple>
-                                <md-option value="fight-club">Fight Club</md-option>
-                                <md-option value="godfather">Godfather</md-option>
-                                <md-option value="godfather-ii">Godfather II</md-option>
-                                <md-option value="godfather-iii">Godfather III</md-option>
-                                <md-option value="godfellas">Godfellas</md-option>
-                                <md-option value="pulp-fiction">Pulp Fiction</md-option>
-                                <md-option value="scarface">Scarface</md-option>
-                            </md-select>
-                        </md-field> -->
-
                         <multiselect
                             v-if="filterSet"
                             :id="key"
@@ -177,6 +164,23 @@
                                 :disabled="item.disabled"
                                 :id="key"
                                 @change="cleanInput(key)"
+                            >
+                            </b-form-input>
+                            <span
+                                :id="'id_f_table_' + key"
+                                class="invalid-feedback"
+                            ></span>
+                        </div>
+                        <!-- End Text Input -->
+                        <!-- Text Input -->
+                        <div v-if="item.type == 'number'">
+                            <b-form-input
+                                v-model="fdata[key]"
+                                :placeholder="item.placeholder"
+                                :disabled="item.disabled"
+                                :id="key"
+                                @change="cleanInput(key)"
+                                @keypress="isNumber($event)"
                             >
                             </b-form-input>
                             <span
@@ -962,6 +966,9 @@ export default {
                     keys.push(key);
                     if (this.inputFields[key].type == "text")
                         data[key] = this.fdata[key];
+                    else if(this.inputFields[key].type == "number"){
+                        data[key] = this.fdata[key];
+                    }
                     else if (
                         ["select", "pre_select"].includes(
                             this.inputFields[key].type
@@ -1670,6 +1677,20 @@ export default {
                 } else {
                     component.getData();
                 }
+            }
+        },
+
+        isNumber: function (evt) {
+            evt = evt ? evt : window.event;
+            var charCode = evt.which ? evt.which : evt.keyCode;
+            if (
+                charCode > 31 &&
+                (charCode < 48 || charCode > 57) &&
+                charCode !== 46
+            ) {
+                evt.preventDefault();
+            } else {
+                return true;
             }
         },
     },

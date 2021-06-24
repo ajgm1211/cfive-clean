@@ -298,7 +298,12 @@
                             class="img-icon img-icon-left"
                             alt="port"
                         />
-                        <button v-if="searchRequest.company != '' && searchRequest.company != null" type="button" class="close custom_close" aria-label="Close" @click="searchRequest.company = '',searchRequest.contact = '',unlockContacts()">
+                        <button 
+                            v-if="searchRequest.company != '' && searchRequest.company != null" 
+                            type="button" 
+                            class="close custom_close" 
+                            aria-label="Close" 
+                            @click="searchRequest.company = '',searchRequest.contact = '', searchRequest.pricelevel = '',unlockContacts(), setPriceLevels()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -381,11 +386,17 @@
                                         :options="carriersApiOptions"
                                     ></b-form-checkbox-group>
                                 </b-form-group>
+                                <label>
+                                    <b-input
+                                        v-model="carrierSearchQuery"
+                                        placeholder="Search Carrier"
+                                    ></b-input>
+                                </label>
                                 <b-form-group label="Carriers">
                                     <b-form-checkbox-group
                                         id="carriers-list"
                                         v-model="carriers"
-                                        :options="carrierOptions"
+                                        :options="carrierOptionsSearch"
                                     ></b-form-checkbox-group>
                                 </b-form-group>
                             </b-dropdown-form>
@@ -1123,6 +1134,7 @@
                                                 placeholder="Amount"
                                                 class="input-modal surcharge-input"
                                                 style="padding: 21px 11px !important"
+                                                @keypress="isNumber($event)"
                                             ></b-form-input>
                                         </label>
                                     </div>
@@ -1518,40 +1530,7 @@ export default {
             calculationType: "",
             dataSurcharger: [],
             filterBy: "LOWEST PRICE",
-            optionsDirection: ["Import", "Export", "Both"],
-            optionsCurrency: ["USD", "EUR", "MXN"],
-            optionsCountries: [
-                "Argentina",
-                "Arabia",
-                "España",
-                "Mexico",
-                "Francia",
-            ],
-            optionsEquipment: ["DRY", "REEFER", "OPEN TOP", "FLAT RACK"],
-            optionsCarrier: [
-                "APL",
-                "CCNI",
-                "CMA CGM",
-                "COSCO",
-                "CSAV",
-                "Evergreen",
-                "Hamburg Sub",
-                "Hanjin",
-                "Hapag Lloyd",
-            ],
-            optionsTypeContract: ["Type 1", "Type 2", "Type 3", "Type 4"],
-            optionsCalculationType: [
-                "Calculation 1",
-                "Calculation 2",
-                "Calculation 3",
-                "Calculation 4",
-            ],
-            optionsFilter: [
-                "LOWEST PRICE",
-                "HIGH PRICE",
-                "LAST DATE",
-                "OLD DATE",
-            ],
+            carrierSearchQuery: '',
             items: [],
             isCompleteOne: true,
             isCompleteTwo: false,
@@ -1790,12 +1769,14 @@ export default {
                     value: component.datalists.container_groups[3],
                 },
             ];
-            component.datalists.carriers.forEach(function (carrier) {
-                component.carrierOptions.push({
-                    text: carrier.name,
-                    value: carrier,
+            if(component.carrierOptions.length == 0){
+                component.datalists.carriers.forEach(function (carrier) {
+                    component.carrierOptions.push({
+                        text: carrier.name,
+                        value: carrier,
+                    });
                 });
-            });
+            }
             if(component.carriersApiOptions.length == 0){
                 component.datalists.carriers_api.forEach(function (carrier_api) {
                     component.carriersApiOptions.push({
@@ -1865,7 +1846,6 @@ export default {
                     this.searchData.end_date + "T01:00:00";
                 this.searchRequest.company = this.searchData.company;
                 this.unlockContacts();
-                this.setPriceLevels();
                 this.searchRequest.contact = this.searchData.contact;
                 this.searchRequest.pricelevel = this.searchData.price_level;
                 this.searchRequest.carriersApi = this.searchData.carriers_api;
@@ -1891,7 +1871,6 @@ export default {
                 if (this.quoteData.search_options != null) {
                     this.searchRequest.company = this.quoteData.search_options.company;
                     this.unlockContacts();
-                    this.setPriceLevels();
                     this.searchRequest.contact = this.quoteData.search_options.contact;
                     this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
                     this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
@@ -1905,7 +1884,6 @@ export default {
                 } else {
                     this.searchRequest.company = this.quoteData.company_id;
                     this.unlockContacts();
-                    this.setPriceLevels();
                     this.searchRequest.contact = this.quoteData.contact;
                     this.searchRequest.pricelevel = this.quoteData.price_level;
                     this.searchRequest.originPorts = this.quoteData.origin_ports_duplicate;
@@ -1936,6 +1914,7 @@ export default {
                     this.additionalVisible = true;
                 }
                 
+            this.setPriceLevels();
             this.loaded = true;
         },
 
@@ -1951,6 +1930,8 @@ export default {
         //Send Search Request to Controller
         searchButtonPressed() {
             this.setSearchParameters();
+
+            this.carrierSearchQuery = '';
 
             if (
                 this.searchRequest.requestData.requested == undefined ||
@@ -2234,6 +2215,20 @@ export default {
             let url_tags = $(".img-link").last();
             url_tags.attr("href", response.url);
         },
+
+        isNumber: function (evt) {
+            evt = evt ? evt : window.event;
+            var charCode = evt.which ? evt.which : evt.keyCode;
+            if (
+                charCode > 31 &&
+                (charCode < 48 || charCode > 57) &&
+                charCode !== 46
+            ) {
+                evt.preventDefault();
+            } else {
+                return true;
+            }
+        },
     },
     watch: {
         /**deliveryType: function () {
@@ -2401,6 +2396,11 @@ export default {
                 return;
             }
         },
+    },
+    computed: {
+        carrierOptionsSearch() {
+           return this.carrierOptions.filter(c => c.text.toLowerCase().includes(this.carrierSearchQuery.toLowerCase()));
+        }
     },
 };
 </script>
