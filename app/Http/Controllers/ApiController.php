@@ -449,9 +449,9 @@ class ApiController extends Controller
     public function carriers(Request $request)
     {
         if ($request->paginate) {
-            $carriers = Carrier::paginate($request->paginate);
+            $carriers = Carrier::select('id','name','uncode','scac','image')->paginate($request->paginate);
         } else {
-            $carriers = Carrier::take($request->size)->get();
+            $carriers = Carrier::select('id','name','uncode','scac','image')->take($request->size)->get();
         }
 
         return $carriers;

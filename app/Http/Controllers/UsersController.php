@@ -9,6 +9,10 @@ use App\Http\Requests\StoreUsers;
 use App\Mail\VerifyMail;
 use App\Notifications\SlackNotification;
 use App\QuoteV2;
+use App\Contract;
+use App\ContractLcl;
+use App\NewContractRequest;
+use App\NewContractRequestLcl;
 use App\TermAndConditionV2;
 use App\User;
 use App\VerifyUser;
@@ -319,6 +323,10 @@ class UsersController extends Controller
     {
         if ($request->user_id) {
             QuoteV2::where('user_id', $id)->update(['user_id' => $request->user_id]);
+            NewContractRequest::where('user_id', $id)->update(['user_id' => $request->user_id]);
+            NewContractRequestLcl::where('user_id', $id)->update(['user_id' => $request->user_id]);
+            Contract::where('user_id', $id)->update(['user_id' => $request->user_id]);
+            ContractLcl::where('user_id', $id)->update(['user_id' => $request->user_id]);
             Company::where('owner', $id)->update(['owner' => $request->user_id]);
             TermAndConditionV2::where('user_id', $id)->update(['user_id' => $request->user_id]);
         }
@@ -335,9 +343,9 @@ class UsersController extends Controller
     public function destroymsg($id)
     {
         if (Auth::user()->type == 'admin') {
-            $users = User::pluck('name', 'id');
+            $users = User::get()->pluck('full_name', 'id');
         } else {
-            $users = User::where('company_user_id', Auth::user()->company_user_id)->where('id', '<>', $id)->pluck('name', 'id');
+            $users = User::where('company_user_id', Auth::user()->company_user_id)->where('id', '<>', $id)->get()->pluck('full_name', 'id');
         }
 
         $id_ud=UserDelegation::where('users_id','=',$id)->first();
