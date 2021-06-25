@@ -87,6 +87,9 @@ Route::group(['prefix' => 'v2'], function () {
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('quotes', 'QuotationApiController@list');
         Route::get('quotes/{id}', 'QuotationApiController@retrieve');
+
+        // Providers
+        Route::put('provider/{id}/update/refcode', 'ProvidersController@updateRefCode');
     });
 });
 
