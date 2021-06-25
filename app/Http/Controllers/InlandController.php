@@ -146,6 +146,7 @@ class InlandController extends Controller
      */
     public function update(Request $request, Inland $inland)
     {
+
         $data = $request->validate([
             'reference' => 'required',
             'type' => 'required',
@@ -156,7 +157,6 @@ class InlandController extends Controller
             'restrictions' => 'sometimes',
             'ports' => 'required',
             'providers' => 'required',
-
         ]);
 
         $status = $this->updateStatus($data['expire']);
@@ -170,6 +170,7 @@ class InlandController extends Controller
             'inland_type_id' => $data['type'],
             'gp_container_id' => $data['gp_container'],
             'provider_id' => $data['providers'],
+            'carrier_id' => $request->carrier,
         ]);
 
         $inland->InlandPortsSync($data['ports']);
