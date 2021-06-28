@@ -176,13 +176,13 @@ class ContractLcl extends Model implements HasMedia, Auditable
      */
     public function scopeFilterByCurrentCompany($query)
     {
-        if (Auth::user()->hasRole('subuser')) {
-            $company_id = Auth::user()->company_user_id;
-            return $query->where('company_user_id', '=', $company_id)->where('user_id', '=', Auth::user()->id);
-        } else {
+        // if (Auth::user()->hasRole('subuser')) {
+        //     $company_id = Auth::user()->company_user_id;
+        //     return $query->where('company_user_id', '=', $company_id)->where('user_id', '=', Auth::user()->id);
+        // } else {
             $company_id = Auth::user()->company_user_id;
             return $query->where('company_user_id', '=', $company_id);
-        }
+        // }
     }
 
     /**
