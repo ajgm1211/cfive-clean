@@ -45,7 +45,7 @@ class RequestFclV2Controller extends Controller
     {
         $now = Carbon::now();
         $now2 = Carbon::now();
-        $date_start = $now->subMonth(3)->format('Y-m-d');
+        $date_start = $now->subMonth(1)->format('Y-m-d');
         $date_end = $now2->format('Y-m-d');
         $date = $date_start . ' / ' . $date_end;
         return view('RequestV2.Fcl.show', compact('date'));
@@ -60,16 +60,16 @@ class RequestFclV2Controller extends Controller
         $date_end = $date_end->addDay(1);
         //$date_start = '2019-08-26 00:00:00';
         //$date_end    = '2020-03-03 12:39:54';
-        $Ncontract = DB::select('call  select_request_fcl("' . $date_start . '","' . $date_end . '")');
+        $Ncontract = DB::select('call  select_request_fcl_v2("' . $date_start . '","' . $date_end . '")');
 
-        $Ncontracts = array();
-        foreach ($Ncontract as $contract) {
+        $Ncontracts = $Ncontract;
+      /*  foreach ($Ncontract as $contract) {
             $request_id = NewContractRequest::find($contract->id);
 
             if ($request_id->status_erased == 0) {
                 $Ncontracts[] = $contract;
             }
-        }
+        }*/
 
         $permiso_eliminar = false;
         $user = \Auth::user();
