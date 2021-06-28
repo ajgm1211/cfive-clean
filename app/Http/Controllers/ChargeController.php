@@ -132,8 +132,8 @@ class ChargeController extends Controller
     public function retrieve(AutomaticRate $autorate)
     {   
         $charge = Charge::where([['automatic_rate_id',$autorate->id],['surcharge_id',null]])->first();
-        
-        return new ChargeResource($charge);
+        if($charge !=null)        
+         return new ChargeResource($charge);
     }
 
     public function destroy(Charge $charge)
