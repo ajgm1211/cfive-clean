@@ -777,7 +777,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                     $calculationvalvaration = 5;
                                 } elseif (strnatcasecmp($read[$requestobj[$CalculationType]], 'PER_TON') == 0) {
                                     $number_for_value = true;
-                                    $calculationvalvaration = 10;
+                                    $calculationvalvaration = 35;
                                 } elseif (strnatcasecmp($read[$requestobj[$CalculationType]], 'PER_BL') == 0) {
                                     $number_for_value = true;
                                     $calculationvalvaration = 9;
