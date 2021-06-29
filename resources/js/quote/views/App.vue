@@ -5,7 +5,7 @@
           <b-card>
             <div class="row">
               <div class="col-6">
-                <b-card-title>FCL Quotes</b-card-title>
+                <b-card-title>Quotes</b-card-title>
               </div>
               <div class="col-6">
                 <div class="float-right">
@@ -53,6 +53,7 @@ export default {
       activeOcean: false,
       actions: actions,
       fields: [
+        { key: "id", label: "ID", filterIsOpen: true },
         { key: "quote_id", label: "Quote ID", filterIsOpen: true },
         {
           key: "status",
