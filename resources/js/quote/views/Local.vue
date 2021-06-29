@@ -461,7 +461,14 @@
                         <!-- Header table -->
                         <b-thead class="q-thead">
                             <b-tr>
-                                <b-th></b-th>
+                                <b-th>
+                                    <b-form-checkbox
+                                        v-model="allSelected"
+                                        @change="selectAll"
+                                        class="checkbox-thead"
+                                    >
+                                    </b-form-checkbox>
+                                </b-th>
 
                                 <b-th>
                                     <span class="label-text">Charge</span>
@@ -809,7 +816,7 @@
                                 v-for="(input, counter) in inputs"
                                 :key="counter"
                             >
-                                <!-- Checkboxes -->
+                                <!-- Checkboxes AQUI -->
                                 <b-td>
                                     <b-form-checkbox
                                         v-model="selectedInputs"
@@ -817,7 +824,6 @@
                                         :value="input"
                                     ></b-form-checkbox>
                                 </b-td>
-
                                 <!-- Surcharges -->
                                 <b-td>
                                     <multiselect
@@ -1096,6 +1102,8 @@ export default {
                     colClass: "col-sm-12",
                 },
             },
+            allSelected: false,
+            
         };
     },
     watch: {
@@ -1105,6 +1113,13 @@ export default {
             this.$emit("chargesUpdated",id);}
     },
     methods: {
+        selectAll(checked) {
+            if(this.allSelected == true){
+                this.selectedInputs = this.inputs.slice() ; //Selected all the checkbox
+            }else{
+                 this.selectedInputs =[];
+            }    
+        },
         add() {
             if (this.value != "") {
                 this.inputId += 1;
