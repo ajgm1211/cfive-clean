@@ -1115,9 +1115,11 @@ export default {
     methods: {
         selectAll(checked) {
             if(this.allSelected == true){
-                this.selectedInputs = this.inputs.slice() ; //Selected all the checkbox
+                this.selectedInputs = this.inputs.slice();
+                this.selectedCharges = this.localcharges.slice();
             }else{
-                 this.selectedInputs =[];
+                 this.selectedInputs = [];
+                 this.selectedCharges = [];
             }    
         },
         add() {
