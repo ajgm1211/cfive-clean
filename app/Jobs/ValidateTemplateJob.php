@@ -43,7 +43,7 @@ class ValidateTemplateJob implements ShouldQueue
         ];
         $endpoint_obj = EndpointTable::where("name","barracuaep-template")->first();
         if($endpoint_obj->status == 1){
-            $json = '{"spreadsheetData":false}';
+            $json = '{"spreadsheetData":false,"type":"FCL"}';
             $url = $endpoint_obj->url."contracts/processing/".$this->request_id;
 
             $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
