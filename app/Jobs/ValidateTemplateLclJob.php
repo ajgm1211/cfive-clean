@@ -36,14 +36,14 @@ class ValidateTemplateLclJob implements ShouldQueue
             'Access-Control-Allow-Origin'    => '*',
             'Connection'    => 'keep-alive'
         ];
-        /* $endpoint_obj = EndpointTable::where("name","barracuaep-template")->first();
+        $endpoint_obj = EndpointTable::where("name","barracuaep-template-lcl")->first();
         if($endpoint_obj->status == 1){
-            $json = '{"spreadsheetData":false}';
+            $json = '{"spreadsheetData":false,"type":"LCL"}';
             $url = $endpoint_obj->url."contracts/processing/".$this->request_id;
 
             $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
             $response = json_decode($response->getBody()->getContents(),true);
-        } */
+        } 
 
         $endpoint_obj_cmpfile = EndpointTable::where("name","barracuaep-cmpfile-lcl")->first();
         if($endpoint_obj_cmpfile->status == 1){
