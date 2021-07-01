@@ -1519,7 +1519,7 @@ export default {
             valueEq: "",
             amount: "",
             currency: "",
-            currencySurcharge: "USD",
+            currencySurcharge: "",
             origin: "",
             destination: "",
             carrier: "",
