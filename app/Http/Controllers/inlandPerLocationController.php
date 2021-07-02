@@ -93,7 +93,7 @@ class inlandPerLocationController extends Controller
 
     public function destroyAll(Request $request)
     {
-        DB::table('inland_location')->whereIn('id', $request->input('ids'))->delete();
+        DB::table('inland_per_locations')->whereIn('id', $request->input('ids'))->delete();
         return response()->json(null, 204);
     }
 }
