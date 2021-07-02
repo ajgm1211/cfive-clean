@@ -3596,8 +3596,8 @@ $company_cliente = null;
                 'reference' => $data->contract->id,
                 'carrier' => $data->carrier->name,
                 'direction' => $data->contract->direction->name,
-                'origin' => ucwords(strtolower($data->port_origin->code)),
-                'destination' => ucwords(strtolower($data->port_destiny->code)),
+                'origin' => ucwords(strtoupper($data->port_origin->code)),
+                'destination' => ucwords(strtoupper($data->port_destiny->code)),
                 'valid_from' => $data->contract->validity,
                 'valid_until' => $data->contract->expire,
             );
