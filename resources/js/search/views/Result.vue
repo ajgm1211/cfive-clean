@@ -774,8 +774,24 @@ export default {
       this.actions.search
         .downloadContract(parameters)
         .then((response) => {
-          console.log('Downloading!', response);
-          window.open(response.data.url)
+          if(response.data.zip == true){
+          
+
+              console.log('Downloading!', response.data.url);
+              window.open("/api/search/downloadMContract/"+response.data.url);
+/*
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href=url;
+            link.setAttribute("download", "filename.zip");
+            document.body.appendChild(link);
+            link.click();
+*/
+          }else{
+              console.log('Downloading!', response);
+              window.open(response.data.url)
+          }
+     
         })
         .catch((error) => {
           console.log(error);
