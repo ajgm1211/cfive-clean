@@ -15,16 +15,10 @@ class inlandPerLocationTest extends TestCase
      *
      * @return void
      */
-    public function testExample()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
 
     public function test_Store(){
         $inlnadPL = factory(InlandPerLocation::class)->create();
 
-        $this->assertDatabaseHas('inland_location', $inlnadPL->toArray());
+        $this->assertDatabaseHas('inland_per_locations', $inlnadPL->toArray());
     }
 }
