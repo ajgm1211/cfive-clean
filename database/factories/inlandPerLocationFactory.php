@@ -15,12 +15,12 @@ use Faker\Generator as Faker;
 
 $factory->define(App\InlandPerLocation::class, function (Faker $faker) {
     $array=[
-        'C20DV'=>14,
-        'C40DV'=>07,
-        'C40HC'=>98,
+        'C20DV'=>30,
+        'C40DV'=>11,
+        'C40HC'=>90,
     ];
     return [
-        'json_container'=>$array, 
+        'json_container'=>json_encode($array), 
         'currency_id'=>$faker->numberBetween($min = 1, $max = 167),
         'harbor_id'=>$faker->numberBetween($min = 743, $max = 1000), 
         'inland_id'=>$faker->numberBetween($min = 22, $max = 31), 
