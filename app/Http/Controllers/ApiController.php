@@ -3511,10 +3511,10 @@ $company_cliente = null;
             return response()->json(['message' => 'There are missing parameters. You must send direction, carrier, since, until and container'], 400);
         }
 
-        $direction = $request->input('direction'); //'2020/10/01';
+        $direction = $request->input('direction');
 
         $collectionGeneral = new Collection();
-        $code = $request->input('container'); //'2020/10/01';
+        $code = $request->input('container');
         $containers = Container::where('gp_container_id', $code)->get();
         $contArray = $containers->pluck('code')->toArray();
         $dateSince = $request->input('since');
@@ -3596,8 +3596,8 @@ $company_cliente = null;
                 'reference' => $data->contract->id,
                 'carrier' => $data->carrier->name,
                 'direction' => $data->contract->direction->name,
-                'origin' => ucwords(strtolower($data->port_origin->name)),
-                'destination' => ucwords(strtolower($data->port_destiny->name)),
+                'origin' => ucwords(strtolower($data->port_origin->code)),
+                'destination' => ucwords(strtolower($data->port_destiny->code)),
                 'valid_from' => $data->contract->validity,
                 'valid_until' => $data->contract->expire,
             );
