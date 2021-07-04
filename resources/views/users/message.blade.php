@@ -15,7 +15,7 @@
 
         <div class="m-form__section m-form__section--first">
             <div class="form-group m-form__group" style="font-size: 14px;">
-                {{ Form::select('user_id',@$users,null,['class'=>'m-select2-general form-control']) }}
+                {{ Form::select('user_id',@$users,null,['class'=>'m-select2 form-control']) }}
             </div>
         </div>
 
@@ -55,6 +55,14 @@
             </div>
     </div>
 @endif
+<script>
+
+
+  $('.m-select2').select2({
+    placeholder: "Select an option"
+  });
+</script>
+
 
 
 

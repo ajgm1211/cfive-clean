@@ -16,18 +16,19 @@ class AddImageNamesToApiProviders extends Migration
         Schema::table('api_providers', function (Blueprint $table) {
             //
         });
+        if (Schema::hasTable('api_providers')) {
+            DB::table('api_providers')
+                ->where('id',1)
+                ->update([
+                    "image" => "cma.png"
+            ]);
 
-        DB::table('api_providers')
-            ->where('id',1)
-            ->update([
-                "image" => "cma.png"
-        ]);
-
-        DB::table('api_providers')
-            ->where('id',2)
-            ->update([
-                "image" => "maersk.png"
-        ]);
+            DB::table('api_providers')
+                ->where('id',2)
+                ->update([
+                    "image" => "maersk.png"
+            ]);
+        }
     }
 
     /**

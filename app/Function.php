@@ -182,3 +182,12 @@ function Quitar_Espacios($cadena)
 {
     return implode(' ', array_filter(explode(' ', $cadena)));
 }
+
+function quitar_acentos($cadena){
+    $originales = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿ';
+    $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyyby';
+    $cadena = utf8_decode($cadena);
+    $cadena = strtr($cadena, utf8_decode($originales), $modificadas);
+    return utf8_encode($cadena);
+}
+ 
