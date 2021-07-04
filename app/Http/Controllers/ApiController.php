@@ -20,6 +20,8 @@ use App\Harbor;
 use App\Http\Traits\MixPanelTrait;
 use App\Http\Traits\SearchTraitApi;
 use App\Http\Traits\UtilTrait;
+use Spatie\MediaLibrary\Models\Media;
+use Spatie\MediaLibrary\MediaStream;
 use App\IntegrationQuoteStatus;
 use App\LocalCharge;
 use App\LocalChargeApi;
@@ -3509,10 +3511,10 @@ $company_cliente = null;
             return response()->json(['message' => 'There are missing parameters. You must send direction, carrier, since, until and container'], 400);
         }
 
-        $direction = $request->input('direction'); //'2020/10/01';
+        $direction = $request->input('direction');
 
         $collectionGeneral = new Collection();
-        $code = $request->input('container'); //'2020/10/01';
+        $code = $request->input('container');
         $containers = Container::where('gp_container_id', $code)->get();
         $contArray = $containers->pluck('code')->toArray();
         $dateSince = $request->input('since');
@@ -3594,8 +3596,8 @@ $company_cliente = null;
                 'reference' => $data->contract->id,
                 'carrier' => $data->carrier->name,
                 'direction' => $data->contract->direction->name,
-                'origin' => ucwords(strtolower($data->port_origin->name)),
-                'destination' => ucwords(strtolower($data->port_destiny->name)),
+                'origin' => ucwords(strtoupper($data->port_origin->code)),
+                'destination' => ucwords(strtoupper($data->port_destiny->code)),
                 'valid_from' => $data->contract->validity,
                 'valid_until' => $data->contract->expire,
             );
@@ -3693,6 +3695,25 @@ $company_cliente = null;
             }
         } else {
             return $monto;
+        }
+    }
+
+    public function pdfApi($id)
+    {
+        $quote = QuoteV2::where('id', $id)->orwhere('quote_id', $id)->first();
+        if (!empty($quote)) {
+            $mediaItem = Media::where('model_id', $quote->id)->where('model_type', 'App\QuoteV2')->first();
+            if (!empty($mediaItem)) {
+                $data = array(
+                    "url_to_download" => $quote->getMedia('document')->first()->getUrl(),
+                    'quote_id' => $quote->quote_id
+                );
+                return $data;
+            } else {
+                return response()->json('Sorry, the media file does not exist');
+            }
+        } else {
+            return response()->json('Sorry, the quote does not exist');
         }
     }
 
