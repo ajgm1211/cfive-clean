@@ -232,15 +232,16 @@ class GlobalChargesController extends Controller
     
     public function validateData($request)
     {
-
+        
         //PORT TO PORT
         if ($request->input('allOriginPort') != null && $request->input('typeroute') == 'port') {
-
+          
             $vdata = [
                 'port_dest' => 'required',
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
         } else if ($request->input('allDestinationPort') != null && $request->input('typeroute') == 'port') {
 
@@ -249,14 +250,18 @@ class GlobalChargesController extends Controller
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
+            
         } elseif ($request->input('allOriginPort') != null && $request->input('allDestinationPort') != null && $request->input('typeroute') == 'port') {
 
             $vdata = [
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
+ 
         } elseif ($request->input('allOriginPort') == null && $request->input('allDestinationPort') == null && $request->input('typeroute') == 'port') {
 
             $vdata = [
@@ -265,7 +270,10 @@ class GlobalChargesController extends Controller
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
+
             ];
+            
         }
         //COUNTRY TO COUNTRY
         elseif ($request->input('allOriginCountry') != null && $request->input('typeroute') == 'country') {
@@ -275,6 +283,7 @@ class GlobalChargesController extends Controller
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
         } elseif ($request->input('allDestinationCountry') != null && $request->input('typeroute') == 'country') {
 
@@ -283,6 +292,7 @@ class GlobalChargesController extends Controller
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
         } elseif ($request->input('allOriginCountry') != null && $request->input('allDestinationCountry') != null && $request->input('typeroute') == 'country') {
 
@@ -290,6 +300,7 @@ class GlobalChargesController extends Controller
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
         } elseif ($request->input('allOriginCountry') == null && $request->input('allDestinationCountry') == null && $request->input('typeroute') == 'country') {
 
@@ -299,6 +310,7 @@ class GlobalChargesController extends Controller
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
         }
         //PORT TO COUNTRY    
@@ -309,6 +321,7 @@ class GlobalChargesController extends Controller
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
         } elseif ($request->input('allDestinationPortCountry') != null && $request->input('typeroute') == 'portcountry') {
 
@@ -317,6 +330,7 @@ class GlobalChargesController extends Controller
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
         } elseif ($request->input('allOriginPortCountry') != null && $request->input('allDestinationPortCountry') != null && $request->input('typeroute') == 'portcountry') {
 
@@ -324,6 +338,7 @@ class GlobalChargesController extends Controller
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
         } elseif ($request->input('allOriginPortCountry') == null && $request->input('allDestinationPortCountry') == null && $request->input('typeroute') == 'portcountry') {
 
@@ -333,6 +348,7 @@ class GlobalChargesController extends Controller
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
         }
         //COUNTRY TO PORT    
@@ -343,6 +359,7 @@ class GlobalChargesController extends Controller
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
         } elseif ($request->input('allDestinationCountryPort') != null && $request->input('typeroute') == 'countryport') {
 
@@ -351,6 +368,7 @@ class GlobalChargesController extends Controller
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
         } elseif ($request->input('allOriginCountryPort') != null && $request->input('allDestinationCountryPort') != null && $request->input('typeroute') == 'countryport') {
 
@@ -358,6 +376,7 @@ class GlobalChargesController extends Controller
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
         } else {
 
@@ -367,6 +386,7 @@ class GlobalChargesController extends Controller
                 'type' => 'required',
                 'calculationtype' => 'required',
                 'localcarrier' => 'required',
+                'ammount' => "required|regex:/^\d+(\.\d{1,2})?$/",
             ];
         }
 

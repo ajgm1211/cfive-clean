@@ -1467,7 +1467,7 @@ export default {
                                 }
                             }
                         }
-                    } else if (typeof listElement[field.key] == "string") {
+                    } else if (typeof listElement[field.key] == "string" || typeof listElement[field.key] == "number") {
                         if (
                             !component.filterOptions[field.key].includes(
                                 listElement[field.key]
@@ -1497,7 +1497,7 @@ export default {
                             listElement[filterKey].forEach(function (
                                 filteredArray
                             ) {
-                                if (typeof filteredArray == "string") {
+                                if (typeof filteredArray == "string" || typeof filteredArray == "number") {
                                     if (
                                         component.filtered[filterKey].includes(
                                             filteredArray
@@ -1547,7 +1547,7 @@ export default {
                                 }
                             });
                         }
-                    } else if (typeof listElement[filterKey] == "string") {
+                    } else if (typeof listElement[filterKey] == "string" || typeof listElement[filterKey] == "number") {
                         component.filtered[filterKey].forEach(function (
                             filteredString
                         ) {
@@ -1571,7 +1571,7 @@ export default {
                 if (component.filtered[filterKey].length != 0) {
                     filteredList.forEach(function (filteredElement) {
                         if (!Array.isArray(filteredElement[filterKey])) {
-                            if (typeof filteredElement[filterKey] == "string") {
+                            if (typeof filteredElement[filterKey] == "string" || typeof filteredElement[filterKey] == "number") {
                                 var stringMatch = false;
 
                                 component.filtered[filterKey].forEach(function (
@@ -1621,7 +1621,7 @@ export default {
                             filteredElement[filterKey].forEach(function (
                                 filteredArrayPurge
                             ) {
-                                if (typeof filteredArrayPurge == "string") {
+                                if (typeof filteredArrayPurge == "string" || typeof filteredArrayPurge == "number") {
                                     if (
                                         component.filtered[filterKey].includes(
                                             filteredArrayPurge
