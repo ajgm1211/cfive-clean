@@ -6,11 +6,11 @@
         <div class="col-6">
           <b-card-title>Per Location</b-card-title>
         </div>
-        <div class="col-6">
+        <!-- <div class="col-6">
           <div class="float-right">             
             <button class="btn btn-primary btn-bg" v-b-modal.addRange>Import File</button>
           </div> 
-        </div>
+        </div> -->
       </div>
       <DynamicalDataTable
         v-if="loaded"
