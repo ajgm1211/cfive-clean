@@ -124,4 +124,17 @@ class LocalChargeQuoteLcl extends Model implements Auditable
 
         return $new_record;
     }
+
+    public function groupingCharges($localcharge)
+    {
+        $current_total = $this->total;
+        $total_to_add = ((float)$localcharge['price_per_unit'] * (float)$localcharge['units']) + (float)$localcharge['markup'];
+        $localcharge['total'] = $total_to_add;
+        $added_total = $current_total + $total_to_add;
+        $this->price = $added_total;
+        $this->total = $added_total;
+        $this->units = 1;
+        $this->calculation_type_id = 2;
+        $this->update();
+    }
 }
