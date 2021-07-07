@@ -99,3 +99,5 @@ Route::group(['prefix' => 'requestLCL', 'middleware' => 'auth:api'], function ()
     //Route::group(['prefix' => 'request'], function () {
     Route::post('sendEmail', 'NewContractRequestLclController@sendEmailRequest');
 });
+
+$router->get('pdf/{id}',['as' => 'pdf.api', 'uses' => 'ApiController@pdfApi']);
