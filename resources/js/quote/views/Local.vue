@@ -1291,6 +1291,11 @@ export default {
                     .localcharges(data)
                     .then((response) => {
                         self.localcharges = response.data.charges;
+                        self.localcharges.forEach(function (local){
+                            if(local.markup.length == 0){
+                                local.markup = {};
+                            }
+                        })
                         self.port = response.data.port.display_name;
                         self.code_port = response.data.port.country.code.toLowerCase();
                         self.rate_id = response.data.automatic_rate.id;
