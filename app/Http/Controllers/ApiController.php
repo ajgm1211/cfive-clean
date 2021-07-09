@@ -3700,7 +3700,8 @@ $company_cliente = null;
 
     public function pdfApi($id)
     {
-        $quote = QuoteV2::where('id', $id)->orwhere('quote_id', $id)->first();
+        $quote = QuoteV2::where('company_user_id',Auth::user()->company_user_id)->where('id', $id)
+        ->orwhere('quote_id', $id)->first();
         if (!empty($quote)) {
             $mediaItem = Media::where('model_id', $quote->id)->where('model_type', 'App\QuoteV2')->first();
             if (!empty($mediaItem)) {
