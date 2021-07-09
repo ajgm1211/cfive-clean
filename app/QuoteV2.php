@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Http\Filters\QuotationFilter;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -1012,5 +1013,23 @@ class QuoteV2 extends Model implements HasMedia, Auditable
             return $equipment;
 
         }
+    }
+
+    public function setDateIssuedAttribute($value)
+    {
+        $date = Carbon::parse($value);
+        $this->attributes['date_issued'] = $date->format('Y-m-d');
+    }
+
+    public function setValidityStartAttribute($value)
+    {
+        $date = Carbon::parse($value);
+        $this->attributes['validity_start'] = $date->format('Y-m-d');
+    }
+
+    public function setValidityEndAttribute($value)
+    {
+        $date = Carbon::parse($value);
+        $this->attributes['validity_end'] = $date->format('Y-m-d');
     }
 }
