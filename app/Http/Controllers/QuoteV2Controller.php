@@ -4251,7 +4251,11 @@ class QuoteV2Controller extends Controller
             } else {
                 $media = $downloads->first();
                 $mediaItem = Media::find($media->id);
-                return $mediaItem;
+                $url = "https://cargofive-production-21.s3.amazonaws.com/contract_manual/".$mediaItem->getPath();
+                return response()->json(['success' => true, 'url' => $url]);
+                //return $mediaItem;
+
+
             }
         }
     }
