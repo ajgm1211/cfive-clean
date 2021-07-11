@@ -349,4 +349,14 @@ class LocalChargeQuotationLclController extends Controller
             $local_charge->totalize();
         }
     }
+    public function destroyAll(Request $request)
+    {
+        foreach($request['ids'] as $local_id){
+            $local_charge_quote = LocalChargeQuoteLcl::findOrFail($local_id);
+            $local_charge_quote->delete();
+            $local_charge_quote->totalize();
+        }
+        return response()->json(['success' => 'Ok']);
+    }
+
 }
