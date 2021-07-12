@@ -232,7 +232,7 @@ class SendExcelFile implements ShouldQueue
 
                     // MONTOS ALL IN
 
-                    $arrayFirstPartAmountAllIn = array(
+                 /*   $arrayFirstPartAmountAllIn = array(
                         'Contract' => $data->contract->name,
                         'Reference' => $data->contract->id,
                         'Carrier' => $data->carrier->name,
@@ -249,8 +249,8 @@ class SendExcelFile implements ShouldQueue
 
                     );
                     $arrayCompleteAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $arraySecondPartAmountAllIn);
-                    $sheet->row($a, $arrayCompleteAmountAllIn);
-                    $a++;
+                    $sheet->row($a, $arrayCompleteAmountAllIn);*/
+                   // $a++;
                     // Fin montos All In
 
                     $sheet->setBorder('A1:I' . $i, 'thin');
