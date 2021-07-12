@@ -40,18 +40,24 @@ class ValidateTemplateLclJob implements ShouldQueue
         if($endpoint_obj->status == 1){
             $json = '{"spreadsheetData":false,"type":"LCL"}';
             $url = $endpoint_obj->url."contracts/processing/".$this->request_id;
-
-            $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
-            $response = json_decode($response->getBody()->getContents(),true);
+            try{
+                $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
+                $response = json_decode($response->getBody()->getContents(),true);
+            }catch(\Exception $e){
+                $response = false;
+            }
         } 
 
         $endpoint_obj_cmpfile = EndpointTable::where("name","barracuaep-cmpfile-lcl")->first();
         if($endpoint_obj_cmpfile->status == 1){
             $url = $endpoint_obj_cmpfile->url."requestsLCL/cmpfiles/".$this->request_id;
             $json = '{"duplicate":true,"re_search":true}';
-
-            $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
-            $response = json_decode($response->getBody()->getContents(),true);
+            try{
+                $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
+                $response = json_decode($response->getBody()->getContents(),true);
+            }catch(\Exception $e){
+                $response = false;
+            }
         }
     }
 }
