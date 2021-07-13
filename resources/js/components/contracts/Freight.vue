@@ -32,7 +32,9 @@
                 @onOpenModalHarborDest="openModalHarborDest"
                 :view="'oceanfreight'"
                 :classTable="classTable"
-            ></DynamicalDataTable>
+            >
+            </DynamicalDataTable> 
+
             
         </b-card>
 
@@ -183,37 +185,11 @@ export default {
 
             /* Table headers */
             fields: [
-                {
-                    key: "origin",
-                    label: "Origin Port",
-                    formatter: (value) => {
-                        return value.display_name;
-                    },
-                },
-                {
-                    key: "destination",
-                    label: "Destination Port",
-                    formatter: (value) => {
-                        return value.display_name;
-                    },
-                },
-                {
-                    key: "carrier",
-                    label: "Carrier",
-                    formatter: (value) => {
-                        return value.name;
-                    },
-                },
-                {
-                    key: "currency",
-                    label: "Currency",
-                    formatter: (value) => {
-                        return value.alphacode;
-                    },
-                },
+                {key: "origin", label: "Origin Port", formatter: (value) => { return value.display_name }},
+                {key: "destination",label: "Destination Port",formatter: (value) => {    return value.display_name}},
+                {key: "carrier",label: "Carrier",formatter: (value) => { return value.name}},
+                {key: "currency",label: "Currency",formatter: (value) => { return value.alphacode}},
             ],
-
-
 
             origin_fields: {
                 origin: {
@@ -323,12 +299,7 @@ export default {
     methods: {
         /* Single Actions */
         onEdit(data) {
-            let component = this;
-
-
-
             component.currentData = data;
-
             this.$bvModal.show("editOFreight");
         },
 
