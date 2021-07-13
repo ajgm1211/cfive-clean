@@ -264,6 +264,7 @@ export default {
                     trackby: "display_name",
                     placeholder: "Origin Port",
                     options: "harbors",
+                    initial: []
                 },
                 destination: {
                     label: "Destination Port",
@@ -273,6 +274,7 @@ export default {
                     trackby: "display_name",
                     placeholder: "Destination Port",
                     options: "harbors",
+                    initial: []
                 },
                 carrier: {
                     label: "Carrier",
@@ -296,6 +298,19 @@ export default {
             },
         };
     },
+    created() {
+
+        let id = this.$route.params.id;
+        this.vdatalists = JSON.parse(JSON.stringify(this.datalists));
+
+            /* Return the lists data for dropdowns */
+        api.getData({}, `/api/v2/contracts/${id}/ocean_freight`, (err, data) => {
+            this.vdatalists = {...this.vdatalists, ...data.data};
+            this.loaded = true  
+            console.log('datalists', this.vdatalists);
+        });
+            
+        },
     methods: {
         /* Single Actions */
         onEdit(data) {
