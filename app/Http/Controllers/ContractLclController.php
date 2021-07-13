@@ -82,7 +82,7 @@ class ContractLclController extends Controller
             return $surcharge->only(['id', 'name']);
         });
 
-        $calculation_types = CalculationTypeLcl::get()->map(function ($calculation) {
+        $calculation_types = CalculationTypeLcl::where('options->type','!=','rate_only')->get()->map(function ($calculation) {
             return $calculation->only(['id', 'name']);
         });
 

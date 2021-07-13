@@ -7,6 +7,7 @@ use App\Http\Traits\QuoteV2Trait;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\SearchApiResource;
+use App\Http\Resources\SearchApiLclResource;
 use App\Http\Resources\RateResource;
 use App\Http\Requests\StoreContractSearch;
 use App\InlandDistance;
@@ -43,6 +44,7 @@ use App\CompanyPrice;
 use App\ContractFclFile;
 use App\NewContractRequest;
 use App\ApiProvider;
+use App\CargoType;
 use Illuminate\Http\Request;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use App\Http\Traits\MixPanelTrait;
@@ -161,6 +163,10 @@ class SearchApiController extends Controller
             return $comprice->only(['id','company_id','price_id']);
         });
 
+        $cargo_types = CargoType::get()->map(function ($cargo_type){
+            return $cargo_type->only(['id','name']);
+        });
+
         $environment_name = $_ENV['APP_ENV'];
 
         if($environment_name == "production"){
@@ -199,10 +205,134 @@ class SearchApiController extends Controller
             'surcharges',
             //'inland_distances',
             'calculation_type',
-            'company_prices'
+            'company_prices',
+            'cargo_types'
         );
 
         return response()->json(['data' => $data]);
+    }
+
+    //Stores current search
+    public function store(Request $request)
+    {
+        //Validating request data from form
+        $new_search_data = $request->validate([
+            'originPorts' => 'required|array|min:1',
+            'destinationPorts' => 'required|array|min:1',
+            'dateRange.startDate' => 'required',
+            'dateRange.endDate' => 'required',
+            'containers' => 'required_if:type,FCL|array|min:1',
+            'selectedContainerGroup' => 'required_if:type,FCL',
+            'deliveryType.id' => 'required',
+            'direction' => 'required',
+            'carriers' => 'sometimes',
+            'carriersApi' => 'sometimes',
+            'type' => 'required',
+            'company' => 'sometimes',
+            'contact' => 'sometimes',
+            'pricelevel' => 'sometimes',
+            'originCharges' => 'sometimes',
+            'destinationCharges' => 'sometimes',
+            'originAddress' => 'sometimes',
+            'destinationAddress' => 'sometimes',
+        ]);
+
+        //Stripping time stamp from date
+        $new_search_data['dateRange']['startDate'] = substr($new_search_data['dateRange']['startDate'], 0, 10);
+        $new_search_data['dateRange']['endDate'] = substr($new_search_data['dateRange']['endDate'], 0, 10);
+
+        //Getting address text if in array form
+        if (is_array($new_search_data['originAddress'])) {
+            $new_search_data['originAddress'] = $new_search_data['originAddress']['display_name'];
+        } else if (is_array($new_search_data['destinationAddress'])) {
+            $new_search_data['destinationAddress'] = $new_search_data['destinationAddress']['display_name'];
+        }
+
+        //Setting current company and user
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $company_user_id = $user->company_user_id;
+
+        //Including company and user in search data array
+        $new_search_data['user'] = $user_id;
+        $new_search_data['company_user'] = $company_user_id;
+
+        //SEARCH TRAIT - Getting new array that contains only ids, for queries
+        $new_search_data_ids = $this->getIdsFromArray($new_search_data);
+        //Formatting date
+        $pick_up_date = $new_search_data_ids['dateRange']['startDate'] . ' / ' . $new_search_data_ids['dateRange']['endDate'];
+
+        //formatting containers
+        $container_array = [];
+
+        //FORMATTING FOR OLD SEARCH, MUST BE REMOVED
+        foreach ($new_search_data_ids['containers'] as $container_id) {
+            $container = Container::where('id', $container_id)->first();
+
+            array_push($container_array, $container->code);
+        }
+
+        $new_search = SearchRate::create([
+            'company_user_id' => $new_search_data_ids['company_user'],
+            'pick_up_date' => $pick_up_date,
+            'equipment' => $container_array,
+            'delivery' => $new_search_data_ids['deliveryType'],
+            'direction' => $new_search_data_ids['direction'],
+            'type' => $new_search_data_ids['type'],
+            'user_id' => $new_search_data_ids['user'],
+            'contact_id' => $new_search_data_ids['contact'],
+            'company_id' => $new_search_data_ids['company'],
+            'price_level_id' => $new_search_data_ids['pricelevel'],
+            'origin_charges' => $new_search_data_ids['originCharges'],
+            'destination_charges' => $new_search_data_ids['destinationCharges'],
+            //'origin_address' => $new_search_data_ids['originAddress'],
+            //'destination_address' => $new_search_data_ids['destinationAddress']
+        ]);
+
+        foreach ($new_search_data_ids['originPorts'] as $origPort) {
+            foreach ($new_search_data_ids['destinationPorts'] as $destPort) {
+                $searchPort = new SearchPort();
+                $searchPort->port_orig = $origPort;
+                $searchPort->port_dest = $destPort;
+                $searchPort->search_rate()->associate($new_search);
+                $searchPort->save();
+            }
+        }
+
+        if(isset($new_search_data_ids['carriers'])){
+            foreach ($new_search_data_ids['carriers'] as $carrier_id) {
+                $carrier = Carrier::where('id',$carrier_id)->first();
+                
+                $search_carrier = new SearchCarrier();
+
+                $search_carrier->search_rate_id = $new_search->id;
+                
+                $search_carrier->provider()->associate($carrier)->save();
+            }
+        }
+
+        if(isset($new_search_data_ids['carriersApi'])){
+            foreach ($new_search_data_ids['carriersApi'] as $provider_id) {
+                $provider = ApiProvider::where('id',$provider_id)->first();
+                
+                $search_carrier = new SearchCarrier();
+    
+                $search_carrier->search_rate_id = $new_search->id;
+                
+                $search_carrier->provider()->associate($provider)->save();
+            }
+        }
+
+        return new SearchApiResource($new_search);
+    }
+
+    public function retrieve(SearchRate $search)
+    {
+        if( $search->type == "FCL" ){
+            return new SearchApiResource($search);
+        }else if( $search->type == "LCL" ){
+            return new SearchApiLclResource($search);
+        }
     }
 
     //Validates search request data
@@ -303,125 +433,6 @@ class SearchApiController extends Controller
         $this->trackEvents("search_fcl", $track_array);
 
         return RateResource::collection($rates);
-    }
-
-    //Stores current search
-    public function store(Request $request)
-    {
-        //Validating request data from form
-        $new_search_data = $request->validate([
-            'originPorts' => 'required|array|min:1',
-            'destinationPorts' => 'required|array|min:1',
-            'dateRange.startDate' => 'required',
-            'dateRange.endDate' => 'required',
-            'containers' => 'required|array|min:1',
-            'selectedContainerGroup' => 'required',
-            'deliveryType.id' => 'required',
-            'direction' => 'required',
-            'carriers' => 'sometimes',
-            'carriersApi' => 'sometimes',
-            'type' => 'required',
-            'company' => 'sometimes',
-            'contact' => 'sometimes',
-            'pricelevel' => 'sometimes',
-            'originCharges' => 'sometimes',
-            'destinationCharges' => 'sometimes',
-            'originAddress' => 'sometimes',
-            'destinationAddress' => 'sometimes'
-        ]);
-
-        //Stripping time stamp from date
-        $new_search_data['dateRange']['startDate'] = substr($new_search_data['dateRange']['startDate'], 0, 10);
-        $new_search_data['dateRange']['endDate'] = substr($new_search_data['dateRange']['endDate'], 0, 10);
-
-        //Getting address text if in array form
-        if (is_array($new_search_data['originAddress'])) {
-            $new_search_data['originAddress'] = $new_search_data['originAddress']['display_name'];
-        } else if (is_array($new_search_data['destinationAddress'])) {
-            $new_search_data['destinationAddress'] = $new_search_data['destinationAddress']['display_name'];
-        }
-
-        //Setting current company and user
-        $user = \Auth::user();
-        $user_id = $user->id;
-        $company_user_id = $user->company_user_id;
-
-        //Including company and user in search data array
-        $new_search_data['user'] = $user_id;
-        $new_search_data['company_user'] = $company_user_id;
-
-        //SEARCH TRAIT - Getting new array that contains only ids, for queries
-        $new_search_data_ids = $this->getIdsFromArray($new_search_data);
-        //Formatting date
-        $pick_up_date = $new_search_data_ids['dateRange']['startDate'] . ' / ' . $new_search_data_ids['dateRange']['endDate'];
-
-        //formatting containers
-        $container_array = [];
-
-        //FORMATTING FOR OLD SEARCH, MUST BE REMOVED
-        foreach ($new_search_data_ids['containers'] as $container_id) {
-            $container = Container::where('id', $container_id)->first();
-
-            array_push($container_array, $container->code);
-        }
-
-        $new_search = SearchRate::create([
-            'company_user_id' => $new_search_data_ids['company_user'],
-            'pick_up_date' => $pick_up_date,
-            'equipment' => $container_array,
-            'delivery' => $new_search_data_ids['deliveryType'],
-            'direction' => $new_search_data_ids['direction'],
-            'type' => $new_search_data_ids['type'],
-            'user_id' => $new_search_data_ids['user'],
-            'contact_id' => $new_search_data_ids['contact'],
-            'company_id' => $new_search_data_ids['company'],
-            'price_level_id' => $new_search_data_ids['pricelevel'],
-            'origin_charges' => $new_search_data_ids['originCharges'],
-            'destination_charges' => $new_search_data_ids['destinationCharges'],
-            //'origin_address' => $new_search_data_ids['originAddress'],
-            //'destination_address' => $new_search_data_ids['destinationAddress']
-        ]);
-
-        foreach ($new_search_data_ids['originPorts'] as $origPort) {
-            foreach ($new_search_data_ids['destinationPorts'] as $destPort) {
-                $searchPort = new SearchPort();
-                $searchPort->port_orig = $origPort;
-                $searchPort->port_dest = $destPort;
-                $searchPort->search_rate()->associate($new_search);
-                $searchPort->save();
-            }
-        }
-
-        if(isset($new_search_data_ids['carriers'])){
-            foreach ($new_search_data_ids['carriers'] as $carrier_id) {
-                $carrier = Carrier::where('id',$carrier_id)->first();
-                
-                $search_carrier = new SearchCarrier();
-
-                $search_carrier->search_rate_id = $new_search->id;
-                
-                $search_carrier->provider()->associate($carrier)->save();
-            }
-        }
-
-        if(isset($new_search_data_ids['carriersApi'])){
-            foreach ($new_search_data_ids['carriersApi'] as $provider_id) {
-                $provider = ApiProvider::where('id',$provider_id)->first();
-                
-                $search_carrier = new SearchCarrier();
-    
-                $search_carrier->search_rate_id = $new_search->id;
-                
-                $search_carrier->provider()->associate($provider)->save();
-            }
-        }
-
-        return new SearchApiResource($new_search);
-    }
-
-    public function retrieve(SearchRate $search)
-    {
-        return new SearchApiResource($search);
     }
 
     //Finds any Rates associated to a contract valid in search dates, matching search ports

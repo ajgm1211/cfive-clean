@@ -655,6 +655,7 @@ export default {
     return {
       loaded: false,
       actions: actions,
+      searchActions: {},
       requestData: {},
       finalRates: [],
       errorsExist: false,
@@ -666,12 +667,22 @@ export default {
       items: [],
       ratesForQuote: [],
       creatingQuote: false,
+      searchType: "FCL",
     };
   },
   created() {
     this.requestData = this.$route.query;
+    this.setActions();
   },
   methods: {
+    setActions() {
+      if(this.searchType == "FCL"){
+        this.searchActions = this.actions.search;
+      }else if(this.searchType == "LCL"){
+        this.searchActions = this.actions.searchlcl;
+      }
+    },
+
     countContainersClass() {
       if (
         this.request.containers.length == 5 ||
@@ -769,9 +780,10 @@ export default {
       }
     },
     downloadContractFile(rate){
+      let component = this;
       let parameters = [rate.contract_id, rate.contract_request_id, rate.contract_backup_id];
 
-      this.actions.search
+      component.searchActions
         .downloadContract(parameters)
         .then((response) => {
           console.log('Downloading!', response);
