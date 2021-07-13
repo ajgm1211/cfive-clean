@@ -67,7 +67,35 @@
                                         style="width: 90px"
                                     ></b-form-input>
                                 </li>
+
+                                
+                                
                             </ul>
+                            <ul class="exchange-rates" style="margin-bottom: 0px !important">
+                                <li class="mr-3">
+                                    <b class="mr-3">Select PDF:</b>
+                                    <multiselect
+                                        v-model="selectPDF"
+                                        :multiple="false"
+                                        :options="selectPDFOptions"
+                                        :searchable="false"
+                                        :close-on-select="true"
+                                        :clear-on-select="false"
+                                        :show-labels="false"
+                                        :hide-selected="true"
+                                        :allow-empty="false"
+                                        label="alphacode"
+                                        track-by="alphacode"
+                                        style="width: 180px"
+                                    >
+                                    </multiselect>
+                                </li>
+                            </ul>
+
+
+                            
+
+                            
                         </div>
                         
                         <!-- Show Totals Checkbox End-->
@@ -98,6 +126,8 @@ export default {
             loaded: false,
             pdfOptions: {},
             currentQuoteData: {},
+            selectPDF: 'PDF totals only',
+            selectPDFOptions: ["PDF totals only","PDF totals + discriminated costs","PDF discriminated costs only"]
         };
     },
     created() {
