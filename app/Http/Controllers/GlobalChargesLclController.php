@@ -95,7 +95,7 @@ class GlobalChargesLclController extends Controller
     public function addGlobalChar()
     {
         $countries = Country::pluck('name', 'id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name', 'id');
+        $calculationT = CalculationTypeLcl::where('options->type','!=','rate_only')->pluck('name', 'id');
         $typedestiny = TypeDestiny::all()->pluck('description', 'id');
         $surcharge = Surcharge::where('company_user_id', '=', Auth::user()->company_user_id)->pluck('name', 'id');
         $harbor = Harbor::all()->pluck('display_name', 'id');
@@ -110,7 +110,7 @@ class GlobalChargesLclController extends Controller
     public function editGlobalChar($id)
     {
         $countries = Country::pluck('name', 'id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name', 'id');
+        $calculationT = CalculationTypeLcl::where('options->type','!=','rate_only')->pluck('name', 'id');
         $typedestiny = TypeDestiny::all()->pluck('description', 'id');
         $surcharge = Surcharge::where('company_user_id', '=', Auth::user()->company_user_id)->pluck('name', 'id');
         $harbor = Harbor::all()->pluck('display_name', 'id');
@@ -192,7 +192,7 @@ class GlobalChargesLclController extends Controller
         $harbor = Harbor::all()->pluck('display_name', 'id');
         $carrier = Carrier::all()->pluck('name', 'id');
         $currency = Currency::all()->pluck('alphacode', 'id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name', 'id');
+        $calculationT = CalculationTypeLcl::where('options->type','!=','rate_only')->pluck('name', 'id');
         $typedestiny = TypeDestiny::all()->pluck('description', 'id');
         $global = GlobalChargeLcl::find($id);
         $validation = explode('/', $request->validation_expire);
@@ -252,7 +252,7 @@ class GlobalChargesLclController extends Controller
     public function duplicateGlobalCharges($id)
     {
         $countries = Country::pluck('name', 'id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name', 'id');
+        $calculationT = CalculationTypeLcl::where('options->type','!=','rate_only')->pluck('name', 'id');
         $typedestiny = TypeDestiny::all()->pluck('description', 'id');
         $surcharge = Surcharge::where('company_user_id', '=', Auth::user()->company_user_id)->pluck('name', 'id');
         $harbor = Harbor::all()->pluck('display_name', 'id');
@@ -357,7 +357,7 @@ class GlobalChargesLclController extends Controller
         $carrier_id_selec = $request->input('carrier_id_selec');
         $reload_DT = $request->input('reload_DT');
         $countries = Country::pluck('name', 'id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name', 'id');
+        $calculationT = CalculationTypeLcl::where('options->type','!=','rate_only')->pluck('name', 'id');
         $typedestiny = TypeDestiny::all()->pluck('description', 'id');
         $surcharge = Surcharge::where('company_user_id', '=', Auth::user()->company_user_id)->pluck('name', 'id');
         $harbor = Harbor::all()->pluck('display_name', 'id');
@@ -464,7 +464,7 @@ class GlobalChargesLclController extends Controller
         $reload_DT = $request->input('reload_DT');
         $globalcharges = GlobalChargeLcl::find($id);
         $countries = Country::pluck('name', 'id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name', 'id');
+        $calculationT = CalculationTypeLcl::where('options->type','!=','rate_only')->pluck('name', 'id');
         $typedestiny = TypeDestiny::all()->pluck('description', 'id');
         $surcharge = Surcharge::where('company_user_id', '=', $globalcharges->company_user_id)->pluck('name', 'id');
         $harbor = Harbor::all()->pluck('display_name', 'id');
@@ -486,7 +486,7 @@ class GlobalChargesLclController extends Controller
         $harbor = Harbor::pluck('display_name', 'id');
         $carrier = Carrier::pluck('name', 'id');
         $currency = Currency::pluck('alphacode', 'id');
-        $calculationT = CalculationTypeLcl::pluck('name', 'id');
+        $calculationT = CalculationTypeLcl::where('options->type','!=','rate_only')->pluck('name', 'id');
         $typedestiny = TypeDestiny::pluck('description', 'id');
         $global = GlobalChargeLcl::find($id);
 
@@ -553,7 +553,7 @@ class GlobalChargesLclController extends Controller
         $reload_DT = $request->input('reload_DT');
 
         $countries = Country::pluck('name', 'id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name', 'id');
+        $calculationT = CalculationTypeLcl::where('options->type','!=','rate_only')->pluck('name', 'id');
         $typedestiny = TypeDestiny::all()->pluck('description', 'id');
         $globalcharges = GlobalChargeLcl::find($id);
         $surcharge = Surcharge::where('company_user_id', '=', $globalcharges->company_user_id)->pluck('name', 'id');
