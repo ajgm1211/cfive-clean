@@ -60,7 +60,7 @@ class OceanFreightController extends Controller
             }
         }
 
-        return new OceanFreightResource($request->validate($rate));
+        return new OceanFreightResource($rate);
     }
 
     public function prepareData($data, $contract)
