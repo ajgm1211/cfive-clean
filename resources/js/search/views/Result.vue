@@ -378,7 +378,7 @@
                       title="Contract date beyond search range"
                     />
                   </p>
-                  <button
+                  <b-button
                     v-if="
                       rate.contract_id != 0 ||
                       rate.contract_request_id != 0 ||
@@ -386,14 +386,17 @@
                     "
                     style="
                       background: transparent;
-                      border: 0;
+                      border: 0 !important;
                       text-transform: uppercase;
                       color: #00c581;
                     "
                     @click="downloadContractFile(rate)"
+                    v-b-tooltip.hover 
+                    :title="rate.contract.user_id"
                   >
-                    download contract
-                  </button>
+                    <span class="badge" v-bind:class="{'badge-success':rate.contract.is_manual == 0, 'badge-primary':rate.contract.is_manual == 1 }">download contract</span>
+                    
+                  </b-button>
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center">
