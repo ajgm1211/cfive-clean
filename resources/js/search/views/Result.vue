@@ -392,9 +392,9 @@
                     "
                     @click="downloadContractFile(rate)"
                     v-b-tooltip.hover 
-                    :title="rate.contract.user_id"
+                    :title="rate.owner"
                   >
-                    <span class="badge" v-bind:class="{'badge-success':rate.contract.is_manual == 0, 'badge-primary':rate.contract.is_manual == 1 }">download contract</span>
+                    <span class="badge" v-bind:class="{'badge-primary':rate.contract.is_manual == 0, 'badge-secondary':rate.contract.is_manual == 1,'badge-success':rate.contract.is_manual == 2 }">download contract</span>
                     
                   </b-button>
                 </div>
