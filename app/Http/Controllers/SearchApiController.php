@@ -1008,7 +1008,13 @@ class SearchApiController extends Controller
 
     public function storeContractNewSearch(StoreContractSearch $request)
     {
-        // dd($request);
+           
+        $data = $request->validate([
+            "dataSurcharger.*.type.id" => 'required',
+            "dataSurcharger.*.calculation.id" => 'required',
+            "dataSurcharger.*.currency.id" => 'required',
+        ]);
+
         $req = $request->valueEq['id'];
         $contract = new Contract();
         $container = Container::get();
