@@ -8,7 +8,7 @@
                 <!-- TYPE - DELIVERY TYPE -->
                 <div class="col-12 col-sm-6 col-lg-3 d-flex">
 
-                    <!-- TYPE (FCL, LCL, AIR) -->
+                    <!-- TYPE (FCL, LCL) -->
                     <div class="type-input">
                         <multiselect
                             v-model="searchRequest.type"
@@ -18,14 +18,15 @@
                             :show-labels="false"
                             :options="typeOptions"
                             :searchable="false"
-                            @input="checkSearchType()"
+                            :allow-empty="false"
+                            @input="setSearchType()"
                             placeholder="Select Type"
                             class="s-input no-select-style"
                         >
                         </multiselect>
                         
                     </div>
-                    <!-- FIN TYPE (FCL, LCL, AIR) -->
+                    <!-- FIN TYPE (FCL, LCL) -->
 
                     <!-- DELIVERY TYPE (Door to Door, Door to Port, Port to Port, Port to Door)-->
                     <div class="delivery-input">
@@ -36,6 +37,7 @@
                             :clear-on-select="false"
                             :show-labels="false"
                             :searchable="false"
+                            :allow-empty="false"
                             :options="deliveryTypeOptions"
                             label="name"
                             track-by="name"
@@ -157,29 +159,34 @@
                 <!-- FIN DATEPICKER -->
 
                 <!-- CONTAINERS -->
-                <div class="col-lg-2 mb-2 input-search-form containers-search">
-                        
-                        <b-dropdown id="dropdown-containers" :text="containerText.join(', ')" ref="dropdown" class="m-2">
-                            <b-dropdown-form :disabled="searchRequest.requestData.requested == 1">
-                                <b-form-group label="Type">
-                                    <b-form-radio-group
-                                        id="containers"
-                                        v-model="selectedContainerGroup"
-                                        :options="containerGroupOptions"
-
-                                    ></b-form-radio-group>
-                                </b-form-group>
-                                <b-form-group label="Equipment List">
-                                    <b-form-checkbox-group
-                                        id="equipment"
-                                        v-model="containers"
-                                        :options="containerOptions"
-                                    ></b-form-checkbox-group>
-                                </b-form-group>
-                            </b-dropdown-form>
-                        </b-dropdown>
-                        <img src="/images/container.svg" class="img-icon" alt="port">
-                        <span v-if="errorsExist && 'containers' in responseErrors" style="color:red">Choose at least one container</span>
+                <div 
+                    class="col-lg-2 mb-2 input-search-form containers-search"
+                    v-show="searchRequest.type == 'FCL'" 
+                ><b-dropdown 
+                    id="dropdown-containers" 
+                    :disabled="searchRequest.requestData.requested == 1"
+                    :text="containerText.join(', ')" 
+                    ref="dropdown" 
+                    class="m-2">
+                    <b-dropdown-form>
+                        <b-form-group label="Type">
+                            <b-form-radio-group
+                                id="containers"
+                                v-model="selectedContainerGroup"
+                                :options="containerGroupOptions"
+                            ></b-form-radio-group>
+                        </b-form-group>
+                        <b-form-group label="Equipment List">
+                            <b-form-checkbox-group
+                                id="equipment"
+                                v-model="containers"
+                                :options="containerOptions"
+                            ></b-form-checkbox-group>
+                        </b-form-group>
+                    </b-dropdown-form>
+                    </b-dropdown>
+                    <img src="/images/container.svg" class="img-icon" alt="port">
+                    <span v-if="errorsExist && 'containers' in responseErrors" style="color:red">Choose at least one container</span>
 
                 </div>
                 <!-- FIN CONTAINERS -->
@@ -279,7 +286,7 @@
                             :clear-on-select="true"
                             :show-labels="false"
                             :hide-selected="true"
-                            :options="companyOptions"
+                            :options="datalists.companies"
                             label="business_name"
                             track-by="business_name"
                             placeholder="Company"
@@ -440,19 +447,38 @@
             <!-- LCL FORM INPUTS -->
             <div
                 class="row mr-0 ml-0 lcl-inputs"
-                v-if="searchRequest.type == 'LCL'"
+                v-show="searchRequest.type == 'LCL'"
             >
                 <!-- Tabs Section -->
                 <b-card no-body class="card-tabs col-12 font-tabs">
-                    <b-tabs card>
-                        <b-tab title="CALCULATE BY TOTAL SHIPMENT" active>
+                    <b-tabs 
+                        card
+                        v-model="searchRequest.lclTypeIndex"
+                    ><b-tab 
+                            title="CALCULATE BY TOTAL SHIPMENT" 
+                            id="shipment"
+                        >
                             <div class="row">
+                                <div
+                                    v-if="invalidShipmentCalculation"
+                                    class="col-12 mb-3"
+                                >
+                                    <h6 class="invalid-data" style="color:red;">
+                                        <b-icon
+                                            icon="exclamation-circle"
+                                            class="mr-2"
+                                        ></b-icon
+                                        >Please complete all the fields
+                                    </h6>
+                                </div>
                                 <div class="col-12 col-sm-3">
                                     <label class="d-flex align-items-center">
                                         <b-form-input
-                                            v-model="packages"
-                                            placeholder="Packages"
+                                            v-model="searchRequest.lclShipmentQuantity"
+                                            :placeholder="searchRequest.lclShipmentCargoType ? searchRequest.lclShipmentCargoType.name : 'Choose cargo type' "
                                             class="s-input-form mr-1"
+                                            type="number"
+                                            @input="setChargeableWeight()"
                                         >
                                         </b-form-input>
                                         <img
@@ -462,12 +488,15 @@
                                         />
                                         <div class="type-packages">
                                             <multiselect
-                                                v-model="typePallet"
+                                                v-model="searchRequest.lclShipmentCargoType"
                                                 :multiple="false"
                                                 :close-on-select="true"
                                                 :clear-on-select="false"
                                                 :show-labels="false"
-                                                :options="optionsTypePallet"
+                                                :options="datalists.cargo_types"
+                                                :allow-empty="false"
+                                                track-by="name"
+                                                label="name"
                                                 placeholder="Select"
                                                 class="s-input no-select-style"
                                             >
@@ -485,9 +514,11 @@
                                 <div class="col-12 col-sm-3">
                                     <label class="d-flex align-items-center">
                                         <b-form-input
-                                            v-model="weight"
+                                            v-model="searchRequest.lclShipmentWeight"
                                             placeholder="Total Weight"
                                             class="s-input-form mr-1"
+                                            type="number"
+                                            @input="setChargeableWeight()"
                                         >
                                         </b-form-input>
                                         <img
@@ -495,16 +526,18 @@
                                             class="img-icon"
                                             alt="peso"
                                         />
-                                        <span>KG</span>
+                                        <span>Kg</span>
                                     </label>
                                 </div>
 
                                 <div class="col-12 col-sm-3">
                                     <label class="d-flex align-items-center">
                                         <b-form-input
-                                            v-model="volumen"
-                                            placeholder="Total Volumen"
+                                            v-model="searchRequest.lclShipmentVolume"
+                                            placeholder="Total Volume"
                                             class="s-input-form mr-1"
+                                            type="number"
+                                            @input="setChargeableWeight()"
                                         >
                                         </b-form-input>
                                         <img
@@ -512,7 +545,7 @@
                                             class="img-icon"
                                             alt="volumen"
                                         />
-                                        <span>M<sup>3</sup></span>
+                                        <span>m<sup>3</sup></span>
                                     </label>
                                 </div>
 
@@ -521,7 +554,12 @@
                                     style="text-align: center"
                                 >
                                     <h6><b>CHARGEABLE WEIGHT</b></h6>
-                                    <p>12.00<sup>m3</sup></p>
+                                    <p 
+                                        v-if="searchRequest.lclShipmentVolume > (searchRequest.lclShipmentWeight / 1000)"
+                                    >{{ searchRequest.chargeableWeight }} m<sup>3</sup></p>
+                                    <p 
+                                        v-else
+                                    >{{ searchRequest.chargeableWeight }} Kg</p>
                                 </div>
                             </div>
                         </b-tab>
@@ -529,15 +567,15 @@
                         <b-tab title="CALCULATE BY PACKAGING">
                             <div class="row">
                                 <div
-                                    v-if="invalidCalculate"
+                                    v-if="invalidPackagingCalculation"
                                     class="col-12 mb-3"
                                 >
-                                    <h6 class="invalid-data">
+                                    <h6 class="invalid-data" style="color:red;">
                                         <b-icon
                                             icon="exclamation-circle"
                                             class="mr-2"
                                         ></b-icon
-                                        >Complete all the fileds
+                                        >Please complete all the fields
                                     </h6>
                                 </div>
 
@@ -546,12 +584,14 @@
                                         <div class="col-12 col-sm-1 pr-0">
                                             <div class="type-packages">
                                                 <multiselect
-                                                    v-model="typePallet"
+                                                    v-model="addPackagingBar.cargoType"
                                                     :multiple="false"
                                                     :close-on-select="true"
                                                     :clear-on-select="false"
                                                     :show-labels="false"
-                                                    :options="optionsTypePallet"
+                                                    label="name"
+                                                    track-by="name"
+                                                    :options="datalists.cargo_types"
                                                     placeholder="Select"
                                                     class="s-input no-select-style"
                                                 >
@@ -569,9 +609,11 @@
                                                 class="d-flex align-items-center"
                                             >
                                                 <b-form-input
-                                                    v-model="quantity"
+                                                    v-model="addPackagingBar.quantity"
+                                                    type="number"
                                                     placeholder="Quantity"
                                                     class="s-input-form input-quantity"
+                                                    @input="calculatePackagingTotal"
                                                 >
                                                 </b-form-input>
                                             </label>
@@ -582,9 +624,11 @@
                                                 class="d-flex align-items-center"
                                             >
                                                 <b-form-input
-                                                    v-model="height"
+                                                    v-model="addPackagingBar.height"
                                                     placeholder="Height"
+                                                    type="number"
                                                     class="s-input-form"
+                                                    @input="calculatePackagingTotal"
                                                 >
                                                 </b-form-input>
                                                 <img
@@ -600,9 +644,11 @@
                                                 class="d-flex align-items-center"
                                             >
                                                 <b-form-input
-                                                    v-model="width"
+                                                    v-model="addPackagingBar.width"
                                                     placeholder="Width"
                                                     class="s-input-form"
+                                                    type="number"
+                                                    @input="calculatePackagingTotal"
                                                 >
                                                 </b-form-input>
                                                 <img
@@ -616,9 +662,11 @@
                                         <div class="col-12 col-sm-2 pr-0">
                                             <label>
                                                 <b-form-input
-                                                    v-model="large"
-                                                    placeholder="Large"
+                                                    v-model="addPackagingBar.depth"
+                                                    placeholder="Length"
                                                     class="s-input-form"
+                                                    type="number"
+                                                    @input="calculatePackagingTotal"
                                                 ></b-form-input>
                                                 <img
                                                     src="/images/espacio-de-trabajo.svg"
@@ -631,9 +679,11 @@
                                         <div class="col-12 col-sm-2 pr-0">
                                             <label>
                                                 <b-form-input
-                                                    v-model="weight"
+                                                    v-model="addPackagingBar.weight"
                                                     placeholder="Weight"
+                                                    type="number"
                                                     class="s-input-form"
+                                                    @input="calculatePackagingTotal"
                                                 ></b-form-input>
                                                 <img
                                                     src="/images/espacio-de-trabajo.svg"
@@ -646,14 +696,19 @@
                                         <div
                                             class="col-12 col-sm-1 pr-0 d-flex align-items-center justify-content-center"
                                         >
-                                            <span>1un M<sup>3</sup> 12KG</span>
+                                            <p 
+                                                v-if="addPackagingBar.volume > (addPackagingBar.weight / 1000)"
+                                            ><span>{{ addPackagingBar.total }} m<sup>3</sup></span></p>
+                                            <p 
+                                                v-else
+                                            ><span>{{ addPackagingBar.total }} Kg</span></p>
                                         </div>
 
                                         <div
                                             class="col-12 col-sm-1 pr-0 d-flex justify-content-center align-items-center"
                                         >
                                             <span
-                                                v-on:click="addSurcharger"
+                                                @click="addLclPackaging"
                                                 class="btn-add-surch"
                                                 ><b-icon
                                                     icon="check-circle"
@@ -667,33 +722,33 @@
                             <div class="row">
                                 <div
                                     class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges"
-                                    v-for="(item, index) in dataPackaging"
+                                    v-for="(pack,index) in searchRequest.lclPackaging"
                                     :key="index"
                                 >
                                     <div class="col-12 col-sm-1 pr-0">
-                                        <p>{{ item.type }}</p>
+                                        <p>{{ pack.cargoType.name }}</p>
                                     </div>
                                     <div class="col-12 col-sm-1 pr-0">
-                                        <p>{{ item.quantity }}</p>
+                                        <p>{{ pack.quantity }}</p>
                                     </div>
                                     <div class="col-12 col-sm-2 pr-0">
-                                        <p>{{ item.height }}</p>
+                                        <p>{{ pack.height }}</p>
                                     </div>
                                     <div class="col-12 col-sm-2 pr-0">
-                                        <p>{{ item.width }}</p>
+                                        <p>{{ pack.width }}</p>
                                     </div>
                                     <div class="col-12 col-sm-2 pr-0">
-                                        <p>{{ item.large }}</p>
+                                        <p>{{ pack.depth }}</p>
                                     </div>
                                     <div class="col-12 col-sm-2 pr-0">
-                                        <p>{{ item.weight }}</p>
+                                        <p>{{ pack.weight }}</p>
                                     </div>
                                     <div class="col-12 col-sm-1 pr-0">
-                                        <p>{{ item.total }}</p>
+                                        <p>{{ pack.total }}</p>
                                     </div>
                                     <div class="col-12 col-sm-1 pr-0">
                                         <span
-                                            v-on:click="deleteSurcharger(index)"
+                                            v-on:click="deleteLclPackaging(index)"
                                             ><b-icon icon="x-circle"></b-icon
                                         ></span>
                                     </div>
@@ -1024,6 +1079,7 @@
 
                             <div
                                 v-for="(item, index) in items"
+                                :key="index"
                                 class="col-12 col-sm-6"
                             >
                                 <label>
@@ -1063,7 +1119,7 @@
                     <!-- SURCHARGES -->
                     <fieldset v-if="stepFour">
                         <div class="row">
-                            <div v-if="invalidSurcharger" class="col-12 mb-3">
+                            <div v-if="invalidSurcharge" class="col-12 mb-3">
                                 <h5 class="invalid-data">
                                     <b-icon
                                         icon="exclamation-circle"
@@ -1142,7 +1198,7 @@
                                         class="col-1 d-flex justify-content-center align-items-center"
                                     >
                                         <span
-                                            v-on:click="addSurcharger"
+                                            v-on:click="addSurchargeModal"
                                             class="btn-add-surch"
                                             ><b-icon
                                                 icon="check-circle"
@@ -1154,7 +1210,9 @@
                         </div>
 
                         <div class="row">
-                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger">
+                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" 
+                                v-for="(item, index) in dataSurcharge"
+                                :key="index">
                                 <div class="col-12 col-sm-3">
                                     <p>{{ item.type.name }}</p>
                                 </div>
@@ -1170,7 +1228,7 @@
                                 <div class="col-12 col-sm-1">
                                     <span
                                         v-on:click="
-                                            deleteSurchargerModal(index)
+                                            deleteSurchargeModal(index)
                                         "
                                         ><b-icon icon="x-circle"></b-icon
                                     ></span>
@@ -1417,6 +1475,7 @@ export default {
             additionalVisible: false,
             searching: false,
             actions: actions,
+            searchActions: {},
             datalists: {},
             IDRequest: {},
             searchRequest: {
@@ -1441,6 +1500,14 @@ export default {
                     endDate: new Date().toISOString(),
                 },
                 requestData: {},
+                //LCL
+                lclShipmentCargoType: "",
+                chargeableWeight: 0,
+                lclPackaging: [],
+                lclTypeIndex: null,
+                lclShipmentVolume: "",
+                lclShipmentWeight: "",
+                lclShipmentQuantity: "",
             },
             dropzoneOptions: {
                 url: "/",
@@ -1453,6 +1520,11 @@ export default {
                 },
                 addRemoveLinks: true,
                 autoProcessQueue: false,
+            },
+            addPackagingBar: {
+                total: 0,
+                cargoType: "",
+                volume: 0,
             },
             selectedContainerGroup: {},
             containers: [],
@@ -1477,6 +1549,7 @@ export default {
             errorsExist: false,
             responseErrors: {},
             foundRates: {},
+            foundRatesLcl: {},
             foundApiRates:true,
             companyChosen: false,
             quoteData: {},
@@ -1486,16 +1559,17 @@ export default {
             destinationAutocompleteValue: null,
             originAddressPlaceholder: "Select an address",
             destinationAddressPlaceholder: "Select an address",
+            invalidPackagingCalculation: false,
+            invalidShipmentCalculation: false,
+            //LCL
+            lclShipmentOptions: [],
             //Gene defined
             ptdActive: false,
             dtpActive: false,
             dtdActive: false,
-            dataPackaging: [],
             indeterminate: false,
-            typePallet: "PALLETS",
             selected: "radio1",
-            invalidCalculate: false,
-            optionsTypePallet: ["PALLETS", "PACKAGES"],
+            
 
             //DATEPICKER
             locale: "en-US",
@@ -1515,7 +1589,7 @@ export default {
             stepFour: false,
             stepFive: false,
             invalidInput: false,
-            invalidSurcharger: false,
+            invalidSurcharge: false,
             valueEq: "",
             amount: "",
             currency: "",
@@ -1528,7 +1602,7 @@ export default {
             direction: "",
             typeContract: "",
             calculationType: "",
-            dataSurcharger: [],
+            dataSurcharge: [],
             filterBy: "LOWEST PRICE",
             carrierSearchQuery: '',
             items: [],
@@ -1539,6 +1613,7 @@ export default {
             isCompleteFour: false,
             isCompleteFive: false,
             contractAdded: false,
+            firstLoad: true,
         };
     },
     mounted() {
@@ -1547,6 +1622,18 @@ export default {
             this.setDropdownLists(err, data.data);
             this.getQuery();
         });
+    },
+    updated(){
+        if(this.firstLoad){
+            if(this.searchRequest.type == "LCL" && this.searchData){
+                let equipLcl = JSON.parse(this.searchData.equipment);
+
+                if(equipLcl.type == "packaging"){
+                    this.searchData.lclTypeIndex = 1;
+                }
+            }
+            this.firstLoad = false;
+        }
     },
     methods: {
         //modal
@@ -1625,17 +1712,17 @@ export default {
             }
         },
 
-        addSurcharger() {
+        addSurchargeModal() {
             if (
                 this.typeContract == "" ||
                 this.calculationType == "" ||
                 this.currencySurcharge == ""
             ) {
-                this.invalidSurcharger = true;
+                this.invalidSurcharge = true;
                 return;
             }
 
-            this.invalidSurcharger = false;
+            this.invalidSurcharge = false;
 
             var surcharge = {
                 type: this.typeContract,
@@ -1644,7 +1731,7 @@ export default {
                 amount: this.amount,
             };
 
-            this.dataSurcharger.push(surcharge);
+            this.dataSurcharge.push(surcharge);
 
             this.typeContract = "";
             this.calculationType = "";
@@ -1698,17 +1785,20 @@ export default {
                     );
                 }
             } else {
+                this.$emit('searchTypeChanged');
                 this.setSearchDisplay(null);
             }
         },
 
         getSearchData(id) {
-            actions.search
+            let component = this;
+
+            component.actions.search
                 .retrieve(id)
                 .then((response) => {
-                    this.searchData = response.data.data;
-                    this.setSearchDisplay(
-                        this.searchRequest.requestData.requested
+                    component.searchData = response.data.data;
+                    component.setSearchDisplay(
+                        component.searchRequest.requestData.requested
                     );
                 })
                 .catch((error) => {
@@ -1785,15 +1875,9 @@ export default {
                     });
                 });
             }
-            component.containerOptions = component.datalists.containers;
-            component.companyOptions = component.datalists.companies;
             component.contactOptions = component.datalists.contacts;
             component.priceLevelOptions = component.datalists.price_levels;
-            component.datalists.delivery_types.forEach(function (dtype){
-                if(!dtype.name.includes("Door")){
-                    component.deliveryTypeOptions.push(dtype);
-                }
-            })
+            component.deliveryTypeOptions = component.datalists.delivery_types.filter(function byGroup(dtype) { return !dtype.name.includes("Door") });
             component.searchRequest.deliveryType = component.deliveryTypeOptions[0];
             component.allCarriers = true;
             component.searchRequest.originCharges =
@@ -1804,12 +1888,12 @@ export default {
                 component.datalists.company_user.destinationcharge == null
                     ? false
                     : true;
-
+            
             this.fillInitialFields(requestType);
         },
 
         fillInitialFields(requestType) {
-            let component = this; 
+            let component = this;
             let origPortNames = [];
             let destPortNames = [];
             
@@ -1817,8 +1901,10 @@ export default {
                 this.selectedContainerGroup = this.datalists.container_groups[0];
                 this.searchRequest.carriersApi = this.datalists.carriers_api;
                 this.deliveryType = this.deliveryTypeOptions[0];
+                this.searchRequest.lclShipmentCargoType = this.lclShipmentOptions[0];
             } else if (requestType == 0) {
                 this.searchRequest.type = this.searchData.type;
+                this.$emit('searchTypeChanged');
                 this.searchRequest.direction = this.searchData.direction_id;
                 //this.deliveryType = this.searchData.delivery_type;
                 this.searchRequest.deliveryType = this.searchData.delivery_type;
@@ -1836,10 +1922,26 @@ export default {
                         component.searchRequest.destinationPorts.push(destPort);
                     }
                 });
-                this.selectedContainerGroup = this.searchData.container_group;
-                this.searchRequest.selectedContainerGroup = this.searchData.container_group;
-                this.containers = this.searchData.containers;
-                this.searchRequest.containers = this.searchData.containers;
+                if(this.searchData.type == 'FCL'){
+                    this.selectedContainerGroup = this.searchData.container_group;
+                    this.searchRequest.selectedContainerGroup = this.searchData.container_group;
+                    this.containers = this.searchData.containers;
+                    this.searchRequest.containers = this.searchData.containers;
+                }else if(this.searchData.type == 'LCL'){
+                    this.selectedContainerGroup = this.datalists.container_groups[0];
+                    this.containers = this.datalists.containers.filter(function byGroup(container) { return container.gp_container_id == 1 });
+                    let equipLcl = JSON.parse(this.searchData.equipment);
+                    if(equipLcl.type == 'shipment'){
+                        this.searchRequest.lclTypeIndex = 0;
+                        this.searchRequest.lclShipmentCargoType = equipLcl.shipment.cargo_type;
+                        this.searchRequest.lclShipmentVolume = equipLcl.shipment.volume;
+                        this.searchRequest.lclShipmentWeight = equipLcl.shipment.weight;
+                        this.searchRequest.lclShipmentQuantity = equipLcl.shipment.quantity;
+                        this.searchRequest.chargeableWeight = equipLcl.shipment.chargeable_weight;
+                    }else if(equipLcl.type == 'packaging'){
+                        this.searchRequest.lclPackaging = equipLcl.packages;
+                    }
+                }
                 this.searchRequest.dateRange.startDate =
                     this.searchData.start_date + "T01:00:00";
                 this.searchRequest.dateRange.endDate =
@@ -1862,11 +1964,7 @@ export default {
                     this.searchData.origin_charges == 0 ? false : true;
                 this.searchRequest.destinationCharges =
                     this.searchData.destination_charges == 0 ? false : true;
-                this.searchRequest.harbors = this.datalists.harbors;
-                this.searchRequest.currency = this.datalists.currency;
-                this.searchRequest.calculation_type = this.datalists.calculation_type;
-                this.searchRequest.surcharges = this.datalists.surcharges;
-                this.requestSearch();
+                //this.requestSearch();
             } else if (requestType == 1) {
                 if (this.quoteData.search_options != null) {
                     this.searchRequest.company = this.quoteData.search_options.company;
@@ -1893,6 +1991,7 @@ export default {
                     this.searchRequest.direction = this.quoteData.direction_id;
                 }
                 this.searchRequest.type = this.quoteData.type;
+                this.$emit('searchTypeChanged');
                 //this.deliveryType = this.quoteData.delivery_type;
                 this.searchRequest.deliveryType = this.quoteData.delivery_type;
                 this.selectedContainerGroup = this.quoteData.gp_container;
@@ -1920,8 +2019,10 @@ export default {
 
         setSearchParameters() {
             this.searching = true;
-            this.searchRequest.selectedContainerGroup = this.selectedContainerGroup;
-            this.searchRequest.containers = this.containers;
+            if(this.searchRequest.type == 'FCL'){
+                this.searchRequest.selectedContainerGroup = this.selectedContainerGroup;
+                this.searchRequest.containers = this.containers;
+            }
             //this.searchRequest.deliveryType = this.deliveryType;
             this.searchRequest.carriers = this.carriers;
             this.errorsExist = false;
@@ -1929,15 +2030,36 @@ export default {
 
         //Send Search Request to Controller
         searchButtonPressed() {
+            let component = this;
+
             this.setSearchParameters();
 
             this.carrierSearchQuery = '';
+
+            if(this.searchRequest.lclTypeIndex == 0 &&
+                (this.searchRequest.lclShipmentVolume == "" ||
+                this.searchRequest.lclShipmentWeight == "" ||
+                this.searchRequest.lclShipmentQuantity == "")){
+                    this.invalidShipmentCalculation = true;
+
+                    setTimeout(function () {
+                        component.invalidShipmentCalculation = false;
+                        return
+                    }, 1500);
+            }else if(this.searchRequest.lclTypeIndex == 1 && this.searchRequest.lclPackaging.length == 0){
+                    this.invalidPackagingCalculation = true;
+
+                    setTimeout(function () {
+                        component.invalidPackagingCalculation = false;
+                        return
+                    }, 1500);
+                }
 
             if (
                 this.searchRequest.requestData.requested == undefined ||
                 this.searchRequest.requestData.requested == 0
             ) {
-                actions.search
+                component.searchActions
                     .create(this.searchRequest)
                     .then((response) => {
                         this.$router.push({
@@ -1971,6 +2093,7 @@ export default {
         },
         
         contracButtonPressed() {
+            let component = this;
             let data = {
                 //stepOne contract
                 reference: this.reference,
@@ -1987,12 +2110,12 @@ export default {
                 //stepthree remarks
                 remarks: this.remarks,
                 //stepFour Surcharges
-                dataSurcharger: this.dataSurcharger,
+                dataSurcharge: this.dataSurcharge,
                 //stepFive
                 
             };
             let vcomponent = this;
-            actions.search
+            component.searchActions
                 .createContract(data)
                 .then((response) => {
                     vcomponent.$refs.myVueDropzone.dropzone.options.url = `/api/v2/contracts/${response.data.id}/storeMedia`;
@@ -2013,22 +2136,27 @@ export default {
         },
 
         requestSearch() {
+            let component = this;
             this.searching = true;
             this.$emit("clearResults");
             this.$emit("searchRequested",this.searchRequest);
 
-            actions.search
+            component.searchActions
                 .process(this.searchRequest)
                 .then((response) => {
                     response.data.data.forEach(function (rate) {
-                        if (typeof rate.containers == "string") {
+                        if (this.searchRequest.type == "FCL" && typeof rate.containers == "string") {
                             rate.containers = JSON.parse(rate.containers);
                         }
                         if (rate.search == undefined) {
                             rate.search = response.data.data[0].search;
                         }
                     });
-                    this.foundRates = response.data.data;
+                    if(this.searchRequest.type == "FCL"){
+                        this.foundRates = response.data.data;
+                    }else if(this.searchRequest.type == "LCL"){
+                        this.foundRatesLcl = response.data.data;
+                    }
                     this.$emit(
                         "searchSuccess",
                         response.data.data
@@ -2102,8 +2230,10 @@ export default {
         },
 
         updateQuoteSearchOptions() {
+            let component = this;
+
             if (this.searchRequest.requestData.requested == 1) {
-                actions.quotes
+                component.searchActions
                     .updateSearch(
                         this.searchRequest.requestData.model_id,
                         this.searchRequest
@@ -2117,12 +2247,6 @@ export default {
                             this.responseErrors = error.data.errors;
                         }
                     });
-            }
-        },
-
-        checkSearchType() {
-            if (this.searchRequest.type == "LCL") {
-                window.location = `/v2/quotes/search?opt=1`;
             }
         },
 
@@ -2200,14 +2324,62 @@ export default {
             this.destinationAutocompleteValue = this.searchRequest.destinationAddresses;
         },
 
-        deleteSurcharger(index) {
-            this.dataPackaging.splice(index, 1);
-            //console.log(this.dataPackaging);
+        setSearchType(){
+            if(this.searchRequest.type == 'LCL' && this.searchData == undefined){
+                this.searchRequest.lclTypeIndex = 0;
+            }else if(this.searchRequest.type == 'FCL'){
+                this.searchRequest.lclTypeIndex = null
+            }
+
+            this.$emit("searchTypeChanged");
         },
 
-        deleteSurchargerModal(index) {
-            this.dataSurcharger.splice(index, 1);
-            //console.log(this.dataPackaging);
+        setActions() {
+            if(this.searchRequest.type == 'FCL'){
+                this.searchActions = this.actions.search;
+            }else if(this.searchRequest.type == 'LCL'){
+                this.searchActions = this.actions.searchlcl;
+            }
+        },
+
+        addLclPackaging() {
+            let component = this; 
+
+            if(this.addPackagingBar.weight &&
+                this.addPackagingBar.width &&
+                this.addPackagingBar.depth &&
+                this.addPackagingBar.height &&
+                this.addPackagingBar.quantity &&
+                this.addPackagingBar.cargoType){
+                    let newPackaging = _.cloneDeep(this.addPackagingBar);
+                    this.searchRequest.lclPackaging.push(newPackaging);
+                    this.clearAddPackagingBar();
+            }else{
+                this.invalidPackagingCalculation = true;
+
+                setTimeout(function () {
+                    component.invalidPackagingCalculation = false;
+                }, 1500);
+            }
+        },
+
+        clearAddPackagingBar(){
+            this.addPackagingBar.weight = null;
+            this.addPackagingBar.width = null;
+            this.addPackagingBar.depth = null;
+            this.addPackagingBar.height = null;
+            this.addPackagingBar.quantity = null;
+            this.addPackagingBar.cargoType = null;
+            this.addPackagingBar.total = null;
+            this.addPackagingBar.volume = null;
+        },
+
+        deleteLclPackaging(index) {
+            this.searchRequest.lclPackaging.splice(index, 1);
+        },
+
+        deleteSurchargeModal(index) {
+            this.dataSurcharge.splice(index, 1);
         },
 
         //upload files
@@ -2227,6 +2399,24 @@ export default {
                 evt.preventDefault();
             } else {
                 return true;
+            }
+        },
+
+        setChargeableWeight() {
+            if( this.searchRequest.lclShipmentVolume > (this.searchRequest.lclShipmentWeight / 1000) ){
+                this.searchRequest.chargeableWeight = this.searchRequest.lclShipmentVolume * this.searchRequest.lclShipmentQuantity;
+            }else{
+                this.searchRequest.chargeableWeight = this.searchRequest.lclShipmentWeight * this.searchRequest.lclShipmentQuantity;
+            }
+        },
+
+        calculatePackagingTotal() {
+            this.addPackagingBar.volume = this.addPackagingBar.height * this.addPackagingBar.width * this.addPackagingBar.depth;
+
+            if(this.addPackagingBar.volume > (this.addPackagingBar.weight / 1000)){
+                this.addPackagingBar.total = this.addPackagingBar.quantity * this.addPackagingBar.volume;
+            }else{
+                this.addPackagingBar.total = this.addPackagingBar.quantity * this.addPackagingBar.weight;
             }
         },
     },
@@ -2289,7 +2479,8 @@ export default {
                 });
             });
 
-            if(Object.keys(component.searchRequest.requestData).length != 0 &&
+            if(component.searchRequest.type == "FCL" &&
+                Object.keys(component.searchRequest.requestData).length != 0 &&
                 component.searchRequest.requestData.requested == 0 && 
                 component.searchData.container_group.id  == component.selectedContainerGroup.id){
                 selectedContainersByGroup = component.searchData.containers;
@@ -2400,7 +2591,7 @@ export default {
     computed: {
         carrierOptionsSearch() {
            return this.carrierOptions.filter(c => c.text.toLowerCase().includes(this.carrierSearchQuery.toLowerCase()));
-        }
+        },
     },
 };
 </script>
