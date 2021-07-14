@@ -560,8 +560,10 @@ class QuotationController extends Controller
 
         $quote = QuoteV2::where('id', $quote_id)->first();
 
+        //Duplicating quote
         $new_quote = $quote->duplicate();
 
+        //Setting additional data
         if ($quote->search_options == null) {
             $new_quote->update([
                 'contact_id' => $search_data_ids['contact'],
@@ -587,6 +589,7 @@ class QuotationController extends Controller
             $old_rate->delete();
         }
 
+        //Setting Automatic Rates
         $rate_ports = [ 'origin' => [], 'destination' => [] ];
 
         foreach ($rate_data as $rate) {
@@ -638,6 +641,7 @@ class QuotationController extends Controller
             $rateTotals->totalize($rate['currency_id']);
         }
 
+        //Deleting Inlands without ports in rates
         $inlands = $new_quote->inland_addresses()->get();
 
         foreach($inlands as $inland){
@@ -653,6 +657,21 @@ class QuotationController extends Controller
         }
 
         $inlands = $new_quote->inland_addresses()->get();
+
+        //Deleting Local Charges without ports in rates
+        $local_charge_quotes = $new_quote->local_charges()->get();
+
+        foreach($local_charge_quotes as $localcharge){
+            if($localcharge->localcharge == 1){
+                if(!in_array($localcharge->port_id, $rate_ports['origin'])){
+                    $localcharge->delete();
+                }
+            }elseif($localcharge->type_id == 2){
+                if(!in_array($localcharge->port_id, $rate_ports['destination'])){
+                    $localcharge->delete();
+                }
+            } 
+        }
 
         if($new_quote->type == "FCL"){
             $locals = $new_quote->local_charges_totals()->get();
