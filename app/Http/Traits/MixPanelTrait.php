@@ -326,6 +326,7 @@ trait MixPanelTrait
                 'Valid_from'    => $date[0],
                 'Valid_until'   => $date[1],
                 'Owner'         => $user->username_load,
+                'Created_at'    => $data->created_at,
             )
         );
     }
@@ -352,6 +353,7 @@ trait MixPanelTrait
                 'Valid_from'    => $date[0],
                 'Valid_until'   => $date[1],
                 'Owner'         => $data->username_load,
+                'Created_at'    => $data->created_at,
             )
         );
     }
@@ -493,6 +495,7 @@ trait MixPanelTrait
                 'Contract_id'=>$data->contract_id,
                 'Container_type'=>$container->group_containers->name,
                 'User' => $user->fullname,
+                'Created_at' => $data->created_at,
             )
         );
     }
@@ -517,6 +520,7 @@ trait MixPanelTrait
                 'Company' => $user->companyUser->name,
                 'Contract_id'=>$data->id,
                 'User' => $user->fullname,
+                'Created_at' => $data->created_at,
             )
         );
     }
