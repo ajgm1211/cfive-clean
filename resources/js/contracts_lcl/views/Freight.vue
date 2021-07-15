@@ -159,22 +159,22 @@ export default {
           key: "origin",
           label: "Origin Port",
           formatter: (value) => {
-            return value.display_name;
-          },
+            return value.display_name
+          }
         },
         {
           key: "destination",
           label: "Destination Port",
           formatter: (value) => {
-            return value.display_name;
-          },
+            return value.display_name
+          }
         },
         {
           key: "carrier",
           label: "Carrier",
           formatter: (value) => {
-            return value.name;
-          },
+            return value.name
+          }
         },
         { key: "uom", label: "W/M" },
         { key: "minimum", label: "Minimum" },
@@ -220,6 +220,7 @@ export default {
           trackby: "display_name",
           placeholder: "Origin Port",
           options: "harbors",
+          initial: [],
         },
         destination: {
           label: "Destination Port",
@@ -229,6 +230,7 @@ export default {
           trackby: "display_name",
           placeholder: "Destination Port",
           options: "harbors",
+          initial: [],
         },
         carrier: {
           label: "Carrier",
@@ -270,6 +272,7 @@ export default {
           trackby: "display_name",
           placeholder: "Origin Port",
           options: "harbors",
+          initial: [],
         },
         destination: {
           label: "Destination Port",
@@ -279,6 +282,7 @@ export default {
           trackby: "display_name",
           placeholder: "Destination Port",
           options: "harbors",
+          initial: [],
         },
         carrier: {
           label: "Carrier",
