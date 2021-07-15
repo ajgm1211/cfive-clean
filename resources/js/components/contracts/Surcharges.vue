@@ -47,7 +47,6 @@
         <!-- Create Form -->
         <b-modal id="addSurcharge" size="lg" hide-header-close title="Add Ocean Freight" hide-footer>
             <FormView 
-                :data="{ typeofroute: { id: 'port', name: 'Port', vselected: 'harbors' } }" 
                 :fields="input_fields"
                 :vdatalists="fdatalists"
                 btnTxt="Add Surcharge"
@@ -98,7 +97,7 @@
 
                 /* Table input inline fields */
                 input_fields: {
-                    typeofroute: { label: 'Type of route', searchable: true, type: 'pre_select', rules: 'required', trackby: 'name', placeholder: '', options: 'route_types', initial: { id: 'port', name: 'Port', vselected: 'harbors' }, target: 'dynamical_ports' },
+                    typeofroute: { label: 'Type of route', searchable: true, type: 'pre_select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'route_types', initial: { id: 'port', name: 'Port', vselected: 'harbors' }, target: 'dynamical_ports' },
                     surcharge: { label: 'Surcharge', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'surcharges' },
                     origin: { label: 'Origin', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'ori_dynamical_ports', initial: [] },
                     destination: { label: 'Destination', searchable: true, type: 'multiselect', rules: 'required', trackby: 'display_name', placeholder: 'Select options', options: 'des_dynamical_ports', initial: [] },

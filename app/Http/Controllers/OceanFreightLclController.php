@@ -32,9 +32,9 @@ class OceanFreightLclController extends Controller
     {
         $data = $this->validateData($request, $contract);
 
-        $origin = $data['origin'];
-        $destination = $data['destination'];
-        $carriers = $data['carrier'];
+         $origin = $data['origin'];
+         $destination = $data['destination'];
+         $carriers = $data['carrier'];
 
         foreach ($carriers as $carrier) {
             foreach ($origin as $origi) {
@@ -59,12 +59,12 @@ class OceanFreightLclController extends Controller
     public function validateData($request, $contract)
     {
         $vdata = [
-            'origin' => 'required',
-            'destination' => 'required',
-            'carrier' => 'required',
-            'currency' => 'required',
-            'uom' => 'required',
-            'minimum' => 'required',
+            'origin' => 'required:field ',
+            'destination' => 'required:field ',
+            'carrier' => 'required:field ',
+            'currency' => 'required:field ',
+            'uom' => 'required:field ',
+            'minimum' => 'required:field ',
             'schedule_type' => 'sometimes|nullable',
             'transit_time' => 'sometimes|nullable',
             'via' => 'sometimes|nullable',
@@ -76,7 +76,7 @@ class OceanFreightLclController extends Controller
     public function validateDataOrigin($request, $contract)
     {
         $vdata = [
-            'origin' => 'required',
+            'origin' => 'required:field',
         ];
         return $request->validate($vdata);
     }
