@@ -659,10 +659,10 @@ class QuotationController extends Controller
         $inlands = $new_quote->inland_addresses()->get();
 
         //Deleting Local Charges without ports in rates
-        $local_charge_quotes = $new_quote->local_charges()->get();
-
+        $local_charge_quotes = $quote->local_charges()->get();
+        
         foreach($local_charge_quotes as $localcharge){
-            if($localcharge->localcharge == 1){
+            if($localcharge->type_id == 1){
                 if(!in_array($localcharge->port_id, $rate_ports['origin'])){
                     $localcharge->delete();
                 }
