@@ -60,7 +60,13 @@
                                 <td>{!! isDecimal($total, false, true).' '.$charge->currency->alphacode !!}</td>
                             @endforeach
                         @else
-                            <td>{!! isDecimal($charge->total, false, true).' '.$charge->currency->alphacode !!}</td>
+                            @if(is_object($charge->total))
+                                @foreach($charge->total as $total)
+                                    <td>{!! isDecimal($total, false, true).' '.$charge->currency->alphacode !!}</td>
+                                @endforeach
+                            @else
+                                <td>{!! isDecimal($charge->total, false, true).' '.$charge->currency->alphacode !!}</td>
+                            @endif
                         @endif
                     </tr>
                 @endforeach
