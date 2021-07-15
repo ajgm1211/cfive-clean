@@ -517,7 +517,7 @@
                                     <span class="label-text">Detail</span>
                                 </b-th>
 
-                                <b-th v-if="currentQuoteData.type == 'FCL'">
+                                <b-th>
                                     <span class="label-text">Show As</span>
                                 </b-th>
 
@@ -651,7 +651,7 @@
                                 </b-td>
 
                                 <!-- Show As -->
-                                <b-td v-if="currentQuoteData.type == 'FCL'">
+                                <b-td>
                                     <multiselect
                                         v-model="localcharge.sale_codes"
                                         :options="datalists['sale_codes']"
@@ -912,7 +912,7 @@
                                 </b-td>
 
                                 <!-- Show As -->
-                                <b-td v-if="currentQuoteData.type == 'FCL'">
+                                <b-td>
                                     <multiselect
                                         v-model="input.sale_codes"
                                         :options="datalists['sale_codes']"
