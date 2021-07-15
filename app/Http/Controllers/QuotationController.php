@@ -541,9 +541,13 @@ class QuotationController extends Controller
 
     public function duplicate(QuoteV2 $quote)
     {
+        
         $new_quote = $quote->duplicate();
 
-        $new_quote->update(['custom_quote_id' => null]);
+        $new_quote->update([
+            'custom_quote_id' => null,
+            'user_id' => Auth::user()->id,
+        ]);
 
         return new QuotationResource($new_quote);
     }
