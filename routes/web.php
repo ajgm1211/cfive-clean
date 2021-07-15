@@ -1129,12 +1129,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/api/quote/localcharge/remarks/{quote}', 'LocalChargeQuotationController@getRemarks');
     Route::post('/api/quote/localcharge/updates/{id}', 'LocalChargeQuotationController@update');
     Route::post('/api/quote/localcharge/updates/{quote}/remarks', 'LocalChargeQuotationController@updateRemarks');
+    Route::post('/api/quote/localcharge/destroyAll', 'LocalChargeQuotationController@destroyAll');
     //LCL
     Route::get('/api/quote/localcharge/lcl', 'LocalChargeQuotationLclController@localcharges');
     Route::post('/api/quote/localcharge/lcl/store', 'LocalChargeQuotationLclController@store');
     Route::post('/api/quote/localcharge/lcl/delete/{id}', 'LocalChargeQuotationLclController@destroy');
     Route::get('/api/quote/localcharge/lcl/total', 'LocalChargeQuotationLclController@getTotal');
     Route::post('/api/quote/charge/lcl/store', 'LocalChargeQuotationLclController@storeCharge');
+    Route::post('/api/quote/localcharge/lcl/destroyAll', 'LocalChargeQuotationLclController@destroyAll');
 
     /** PDF */
     Route::get('/api/quote/pdf/{quote}', 'PdfController@quote')->middleware('check_company:quote');
