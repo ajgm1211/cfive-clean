@@ -920,7 +920,7 @@ class QuoteV2 extends Model implements HasMedia, Auditable
 
     public function updatePdfOptions($option = null)
     {
-        if (($this->pdf_options == null || count($this->pdf_options) != 5) && $option == null) {
+        if (($this->pdf_options == null || count($this->pdf_options) != 6) && $option == null) {
             $client = $this->company_user()->first();
             $client_currency = Currency::find($client->currency_id);
 
@@ -932,6 +932,10 @@ class QuoteV2 extends Model implements HasMedia, Auditable
                 "showTotals" => false,
                 "totalsCurrency" => $client_currency,
                 "exchangeRates" => $exchangeRates,
+                "selectPDF"=>[
+                    "id"=> 3,
+                    "name"=> "PDF detailed costs only"
+                ],
             ];
 
             $this->pdf_options = $pdfOptions;

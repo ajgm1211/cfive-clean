@@ -1,3 +1,4 @@
+@if($quote->pdf_options['selectPDF']['id'] ==2 || $quote->pdf_options['selectPDF']['id'] ==3 )
 <!-- Destinations detailed -->
 @if($destination_charges->count()>0)
     @foreach($destination_charges as $port => $value)
@@ -59,4 +60,5 @@
         <!-- End Table -->
     @endforeach
     <br>
+@endif
 @endif
