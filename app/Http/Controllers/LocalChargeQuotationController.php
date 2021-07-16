@@ -580,4 +580,14 @@ class LocalChargeQuotationController extends Controller
             'provider_name' => $data['provider_name'] ?? $data['automatic_rate']['carrier']['name'] ?? null,
         ]);
     }
+    public function destroyAll(Request $request)
+    {
+        foreach($request['ids'] as $local_id){
+            $local_charge_quote = LocalChargeQuote::findOrFail($local_id);
+            $local_charge_quote->delete();
+            $local_charge_quote->totalize();
+        }
+        return response()->json(['success' => 'Ok']);
+    }
+
 }

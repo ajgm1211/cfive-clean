@@ -32,7 +32,9 @@
                 @onOpenModalHarborDest="openModalHarborDest"
                 :view="'oceanfreight'"
                 :classTable="classTable"
-            ></DynamicalDataTable>
+            >
+            </DynamicalDataTable> 
+
             
         </b-card>
 
@@ -183,37 +185,11 @@ export default {
 
             /* Table headers */
             fields: [
-                {
-                    key: "origin",
-                    label: "Origin Port",
-                    formatter: (value) => {
-                        return value.display_name;
-                    },
-                },
-                {
-                    key: "destination",
-                    label: "Destination Port",
-                    formatter: (value) => {
-                        return value.display_name;
-                    },
-                },
-                {
-                    key: "carrier",
-                    label: "Carrier",
-                    formatter: (value) => {
-                        return value.name;
-                    },
-                },
-                {
-                    key: "currency",
-                    label: "Currency",
-                    formatter: (value) => {
-                        return value.alphacode;
-                    },
-                },
+                {key: "origin", label: "Origin Port", formatter: (value) => { return value.display_name }},
+                {key: "destination",label: "Destination Port",formatter: (value) => {    return value.display_name}},
+                {key: "carrier",label: "Carrier",formatter: (value) => { return value.name}},
+                {key: "currency",label: "Currency",formatter: (value) => { return value.alphacode}},
             ],
-
-
 
             origin_fields: {
                 origin: {
@@ -288,6 +264,7 @@ export default {
                     trackby: "display_name",
                     placeholder: "Origin Port",
                     options: "harbors",
+                    initial: []
                 },
                 destination: {
                     label: "Destination Port",
@@ -297,6 +274,7 @@ export default {
                     trackby: "display_name",
                     placeholder: "Destination Port",
                     options: "harbors",
+                    initial: []
                 },
                 carrier: {
                     label: "Carrier",
@@ -320,15 +298,23 @@ export default {
             },
         };
     },
+    created() {
+
+        let id = this.$route.params.id;
+        this.vdatalists = JSON.parse(JSON.stringify(this.datalists));
+
+            /* Return the lists data for dropdowns */
+        api.getData({}, `/api/v2/contracts/${id}/ocean_freight`, (err, data) => {
+            this.vdatalists = {...this.vdatalists, ...data.data};
+            this.loaded = true  
+            console.log('datalists', this.vdatalists);
+        });
+            
+        },
     methods: {
         /* Single Actions */
         onEdit(data) {
-            let component = this;
-
-
-
             component.currentData = data;
-
             this.$bvModal.show("editOFreight");
         },
 

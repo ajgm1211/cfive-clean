@@ -1,6 +1,7 @@
                     <!-- Section Title -->
+                @if($quote->pdf_options['selectPDF']['id'] ==2 || $quote->pdf_options['selectPDF']['id'] ==3 )
                     <div>
-                                    
+                                 
                         <p class="title" style="margin-bottom: 0px; color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}}</b></p>
                         
                        
@@ -75,3 +76,4 @@
                         </tbody>
                     </table>
                     <br>
+                @endif

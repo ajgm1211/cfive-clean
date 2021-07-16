@@ -76,6 +76,14 @@
                         <b-thead class="q-thead">
                             <b-tr>
                                 <b-th>
+                                    <b-form-checkbox
+                                        v-model="allSelectedLocal"
+                                        @change="selectAll"
+                                        class="checkbox-thead"
+                                    >
+                                    </b-form-checkbox>
+                                </b-th>
+                                <b-th>
                                     <span class="label-text">Charge</span>
                                 </b-th>
 
@@ -105,6 +113,29 @@
                                 <b-th>
                                     <span class="label-text">Currency</span>
                                 </b-th>
+                                <b-th>
+                                    <b-button
+                                        v-bind:id="'popover_all_local'"
+                                        class="action-app action-thead"
+                                        href="#"
+                                        tabindex="0"
+                                        ><i class="fa fa-ellipsis-h" aria-hidden="true"></i
+                                    ></b-button>
+                                    <b-popover
+                                        v-bind:target="'popover_all_local'"
+                                        class="btns-action"
+                                        variant=""
+                                        triggers="focus"
+                                        placement="bottomleft"
+                                    >
+                                        <button
+                                            class="btn-action"
+                                            v-on:click="onDeleteAll()"
+                                        >
+                                            Delete
+                                        </button>
+                                    </b-popover>    
+                                </b-th>
                             </b-tr>
                         </b-thead>
 
@@ -115,6 +146,13 @@
                                 v-for="(charge, key) in this.charges"
                                 :key="key"
                             >
+                                <b-td>
+                                    <b-form-checkbox
+                                        v-model="selectedLocalCharges"
+                                        :id="'id_' + charge.id"
+                                        :value="charge.id"
+                                    ></b-form-checkbox>
+                                </b-td> 
                                 <b-td>
                                     <b-form-input
                                         v-if="currentQuoteData.type == 'FCL'"
@@ -429,6 +467,7 @@
             centered
             hide-footer
             title="Add Charges"
+            @hidden="closeModal"
         >
             <div class="row">
                 <div class="col-12 col-lg-6 d-flex alig-items-center">
@@ -478,7 +517,7 @@
                                     <span class="label-text">Detail</span>
                                 </b-th>
 
-                                <b-th v-if="currentQuoteData.type == 'FCL'">
+                                <b-th>
                                     <span class="label-text">Show As</span>
                                 </b-th>
 
@@ -514,8 +553,6 @@
                                 <b-th>
                                     <span class="label-text">Currency</span>
                                 </b-th>
-
-                                <b-th></b-th>
                             </b-tr>
                         </b-thead>
 
@@ -614,7 +651,7 @@
                                 </b-td>
 
                                 <!-- Show As -->
-                                <b-td v-if="currentQuoteData.type == 'FCL'">
+                                <b-td>
                                     <multiselect
                                         v-model="localcharge.sale_codes"
                                         :options="datalists['sale_codes']"
@@ -875,7 +912,7 @@
                                 </b-td>
 
                                 <!-- Show As -->
-                                <b-td v-if="currentQuoteData.type == 'FCL'">
+                                <b-td>
                                     <multiselect
                                         v-model="input.sale_codes"
                                         :options="datalists['sale_codes']"
@@ -1084,6 +1121,7 @@ export default {
             inputId: 0,
             selectedCharges: [],
             selectedInputs: [],
+            selectedLocalCharges:[],
             carriers: [],
             value: "",
             template: "",
@@ -1103,7 +1141,7 @@ export default {
                 },
             },
             allSelected: false,
-            
+            allSelectedLocal: false,
         };
     },
     watch: {
@@ -1114,12 +1152,16 @@ export default {
     },
     methods: {
         selectAll(checked) {
-            if(this.allSelected == true){
+                this.selectedInputs = [];
+                this.selectedCharges = [];
+                this.selectedLocalCharges =[];
+                
+            if(this.allSelected == true && this.openModal==true){
                 this.selectedInputs = this.inputs.slice();
                 this.selectedCharges = this.localcharges.slice();
-            }else{
-                 this.selectedInputs = [];
-                 this.selectedCharges = [];
+
+            }if(this.allSelectedLocal == true && this.openModal==false){
+                this.selectedLocalCharges = this.charges.map((item) => item.id); 
             }    
         },
         add() {
@@ -1157,9 +1199,11 @@ export default {
         },
         showModal() {
             this.$refs["my-modal"].show();
+            this.openModal=true;
         },
         closeModal() {
             this.$refs["my-modal"].hide();
+            this.openModal=false;
         },
         addSaleCode(value) {
             this.sale_codes.push(value);
@@ -1407,6 +1451,32 @@ export default {
             } else {
                 this.alert("You must select a charge at least", "error");
             }
+            this.allSelected=false;
+        },
+        onDeleteAll() {
+            if(this.currentQuoteData.type=="FCL"){
+                let ids = this.selectedLocalCharges;       
+                actions.localcharges
+                    .deleteAll(ids)
+                    .then((response) => {
+                        this.alert("Record deleted successfully", "success");
+                        this.getTotal();
+                        this.getStoredCharges();
+                        this.allSelectedLocal= false;
+                    })
+                    .catch((data) => {});
+            }else{
+                let ids = this.selectedLocalCharges;       
+                actions.localchargeslcl
+                    .deleteAll(ids)
+                    .then((response) => {
+                        this.alert("Record deleted successfully", "success");
+                        this.getTotal();
+                        this.getStoredCharges();
+                        this.allSelectedLocal= false;
+                    })
+                    .catch((data) => {});
+            }           
         },
         onSubmitCharge(counter) {
             let data = {

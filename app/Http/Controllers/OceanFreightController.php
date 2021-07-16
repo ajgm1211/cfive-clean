@@ -32,7 +32,6 @@ class OceanFreightController extends Controller
     public function store(Request $request, Contract $contract)
     {
         $data = $this->validateData($request, $contract);
-
         $prepared_data = $this->prepareData($data, $contract);
         $origin = $data['origin'];
         $destination = $data['destination'];
@@ -110,14 +109,13 @@ class OceanFreightController extends Controller
 
         return $prepared_data;
     }
-
-    public function validateData($request, $contract)
+    public function validateData($request)
     {
         $vdata = [
-            'origin' => 'required',
-            'destination' => 'required',
-            'carrier' => 'required',
-            'currency' => 'required',
+            'origin' => 'required:field  ',
+            'destination' => 'required:field ',
+            'carrier' => 'required:field ',
+            'currency' => 'required:field ',
             'schedule_type' => 'sometimes|nullable',
             'transit_time' => 'sometimes|nullable',
             'via' => 'sometimes|nullable',
@@ -126,7 +124,7 @@ class OceanFreightController extends Controller
         $available_containers = Container::all()->pluck('code');
 
         foreach ($available_containers as $container) {
-            $vdata['rates_' . $container] = 'sometimes|nullable';
+            $vdata['rates_' . $container] = 'numeric ';
         }
 
         return $request->validate($vdata);
@@ -135,7 +133,7 @@ class OceanFreightController extends Controller
     public function validateDataOrigin($request, $contract)
     {
         $vdata = [
-            'origin' => 'required',
+            'origin' => 'required:field',
          ];
         return $request->validate($vdata);
     }
