@@ -12,15 +12,36 @@
                     <div class="col-lg-12">
                         <!-- Show Totals Checkbox-->
                         <div class="col-12 d-flex align-items-center justify-content-start flex-wrap mt-5 mb-5">
-                            <b-form-checkbox
+                            <ul class="exchange-rates" style="margin-bottom: 0px !important">
+                                <li class="mr-3">
+                                    <b class="mr-3">Select PDF:</b>
+                                    <multiselect
+                                        v-model="selectPDF"
+                                        :multiple="false"
+                                        :options="selectPDFOptions"
+                                        :searchable="false"
+                                        :close-on-select="true"
+                                        :clear-on-select="false"
+                                        :show-labels="false"
+                                        :hide-selected="true"
+                                        :allow-empty="false"
+                                        label="name"
+                                        track-by="name"
+                                        style="width: 180px"
+                                        @input="updatePdfOptions('typePDF')"
+                                    >
+                                    </multiselect>
+                                </li>
+                            </ul>
+                            
+                            <!-- <b-form-checkbox
                                 v-model="showTotals"
                                 style="width: 120px; top: -4px"
                                 @input="updatePdfOptions('totalsCheck')"
-                            >
-                                <span><b>Show totals in:</b></span>
-                            </b-form-checkbox>
-
+                            > -->
+                            <span v-show="showTotals" ><b>Show totals in:  </b></span>
                             <multiselect
+                                v-show="showTotals" 
                                 v-model="totalsCurrency"
                                 :multiple="false"
                                 :options="datalists['filtered_currencies']"
@@ -66,10 +87,9 @@
                                         @blur="updatePdfOptions('exchangeRates')"
                                         style="width: 90px"
                                     ></b-form-input>
-                                </li>
+                                </li>                               
                             </ul>
-                        </div>
-                        
+                        </div>                       
                         <!-- Show Totals Checkbox End-->
                     </div>
                 </div>
@@ -98,7 +118,12 @@ export default {
             loaded: false,
             pdfOptions: {},
             currentQuoteData: {},
-        };
+            selectPDF: {},
+            selectPDFOptions: [
+                {id:1, name:"PDF totals only"},
+                {id:2, name:"PDF totals + detailed costs"},
+                {id:3, name:"PDF detailed costs only"}]
+            };
     },
     created() {
         let id = this.$route.params.id;
@@ -121,6 +146,8 @@ export default {
 
             this.exchangeRates = this.pdfOptions["exchangeRates"];
         
+            this.selectPDF = this.pdfOptions["selectPDF"];
+            
             this.loaded = true;
         },
 
@@ -129,14 +156,21 @@ export default {
             let newExchangeRates = [];
 
             if(updateType == 'exchangeRates'){
-
                 component.pdfOptions['exchangeRates'].forEach(function (exRate){
                     exRate['custom'] = true;
                     newExchangeRates.push(exRate);
-                });
-                
+                });     
                 component.exchangeRates = newExchangeRates
             }
+
+            if(updateType == 'typePDF'){
+                component.showTotals=false;
+                if(component.selectPDF['id']==1 || component.selectPDF['id']==2){
+                    component.showTotals=true;
+                }
+            }
+
+            
 
             let pdfOptions = {
                 pdf_options: {
@@ -145,6 +179,7 @@ export default {
                     showTotals: component.showTotals,
                     totalsCurrency: component.totalsCurrency,
                     exchangeRates: component.exchangeRates,
+                    selectPDF: component.selectPDF
                 },
             };
 
