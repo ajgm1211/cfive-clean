@@ -161,15 +161,15 @@ class SearchApiController extends Controller
             return $comprice->only(['id','company_id','price_id']);
         });
 
-        // $environment_name = $_ENV['APP_ENV'];
+        $environment_name = $_ENV['APP_ENV'];
 
-        // if($environment_name == "production"){
-        //     $api_url = "https://carriers.cargofive.com/api/pricing";        
-        // }else if(in_array($environment_name,["local","prod"])){
-        //     $api_url = "https://carriersdev.cargofive.com/api/pricing";    
-        // }else{
-        //     $api_url = "https://carriersdev.cargofive.com/api/pricing";
-        // }
+        if($environment_name == "production"){
+            $api_url = "https://carriers.cargofive.com/api/pricing";        
+        }else if(in_array($environment_name,["local","prod"])){
+            $api_url = "https://carriersdev.cargofive.com/api/pricing";    
+        }else{
+            $api_url = "https://carriersdev.cargofive.com/api/pricing";
+        }
 
         /**$inland_distances = InlandDistance::get()->map(function ($distance){
             return $distance->only(['id','display_name','harbor_id']);
