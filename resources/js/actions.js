@@ -686,9 +686,9 @@ export default {
         list(data) {
             return api.call('get', `/api/search_lcl/list`, data);
         },
-        /**process(id) {
-            return api.call('post', `/api/search/process`, id);
-        },**/
+        process(id) {
+            return api.call('post', `/api/search_lcl/process`, id);
+        },
         create(data) {
             return api.call('post', `/api/search_lcl/store`, data);
         },

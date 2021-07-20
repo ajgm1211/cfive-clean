@@ -1048,6 +1048,7 @@ Route::group(['middleware' => ['auth']], function () {
     /**New Search LCL */
     Route::get('/api/search_lcl/list', 'SearchApiLclController@list')->name('searchlclV2.list');
     Route::post('/api/search_lcl/store', 'SearchApiLclController@store');
+    Route::post('/api/search_lcl/process', 'SearchApiLclController@processSearch');
 
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');

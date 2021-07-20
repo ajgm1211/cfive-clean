@@ -7,12 +7,15 @@ use App\Http\Traits\QuoteV2Trait;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\SearchApiLclResource;
-use App\Http\Resources\RateResource;
+use App\Http\Resources\RateLclResource;
 use App\SearchRate;
 use App\SearchPort;
 use App\SearchCarrier;
 use App\CompanyUser;
 use App\Carrier;
+use App\RateLcl;
+use App\LocalChargeLcl;
+use App\GlobalChargeLcl;
 use App\ApiProvider;
 use Illuminate\Http\Request;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
@@ -59,9 +62,13 @@ class SearchApiLclController extends Controller
             'lclShipmentVolume' => 'sometimes|required_if:lclTypeIndex,0',
             'lclShipmentWeight' => 'sometimes|required_if:lclTypeIndex,0',
             'lclShipmentCargoType' => 'sometimes|required_if:lclTypeIndex,0',
-            'chargeableWeight' => 'sometimes|required_if:lclTypeIndex,0',
+            'lclShipmentChargeableWeight' => 'sometimes|required_if:lclTypeIndex,0',
             //by Packaging
             'lclPackaging' => 'sometimes|required_if:lclTypeIndex,1|array',
+            'lclPackagingVolume' => 'sometimes|required_if:lclTypeIndex,1|numeric',
+            'lclPackagingWeight' => 'sometimes|required_if:lclTypeIndex,1|numeric',
+            'lclPackagingQuantity' => 'sometimes|required_if:lclTypeIndex,1|numeric',
+            'lclPackagingChargeableWeight' => 'sometimes|required_if:lclTypeIndex,1|numeric',
         ]);
 
         //Stripping time stamp from date
@@ -88,18 +95,20 @@ class SearchApiLclController extends Controller
         if($new_search_data['lclTypeIndex'] == 0){
             $equipment = [ 
                 'type' => 'shipment',
-                'shipment' => [
-                    'cargo_type' => $new_search_data['lclShipmentCargoType'],
-                    'volume' => $new_search_data['lclShipmentVolume'],
-                    'weight' => $new_search_data['lclShipmentWeight'],
-                    'quantity' => $new_search_data['lclShipmentQuantity'],
-                    'chargeable_weight' => $new_search_data['chargeableWeight'],
-                ],
+                'cargo_type' => $new_search_data['lclShipmentCargoType'],
+                'volume' => $new_search_data['lclShipmentVolume'],
+                'weight' => $new_search_data['lclShipmentWeight'],
+                'quantity' => $new_search_data['lclShipmentQuantity'],
+                'chargeable_weight' => $new_search_data['lclShipmentChargeableWeight'],
             ];
         }elseif($new_search_data['lclTypeIndex'] == 1){
             $equipment = [
                 'type' => 'packaging',
                 'packages' => $new_search_data['lclPackaging'],
+                'volume' => $new_search_data['lclPackagingVolume'],
+                'weight' => $new_search_data['lclPackagingWeight'],
+                'quantity' => $new_search_data['lclPackagingQuantity'],
+                'chargeable_weight' => $new_search_data['lclPackagingChargeableWeight']
             ];
         } 
 
@@ -171,9 +180,9 @@ class SearchApiLclController extends Controller
 
         $search_array = $request->input();
 
-        $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'], 0, 10);
-        $search_array['dateRange']['endDate'] = substr($search_array['dateRange']['endDate'], 0, 10);
-
+        $search_array['dateRange']['startDate'] = $this->formatSearchDate($search_array['dateRange']['startDate'],'date');
+        $search_array['dateRange']['endDate'] = $this->formatSearchDate($search_array['dateRange']['endDate'],'date');
+        
         $search_ids = $this->getIdsFromArray($search_array);
         $search_ids['company_user'] = $company_user_id;
         $search_ids['user'] = $user_id;
@@ -182,26 +191,32 @@ class SearchApiLclController extends Controller
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
 
+        foreach ($rates as $rate) {
+            //$rateNo += 1;
+            //dump($rate->contract);
+            //dump('for rate '. strval($rateNo));
+
+            //SEARCH TRAIT - Calculates rate (per shipment vs W/M)
+            $this->calculateLclRate($rate, $search_ids);
+
+            //Retrieving local charges with search data
+            $local_charges = $this->searchLocalCharges($search_ids, $rate);
+
+            //Retrieving global charges with search data
+            $global_charges = $this->searchGlobalCharges($search_ids, $rate);
+
+            //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
+            $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids);
+
+            //SEARCH TRAIT - Calculates charges appends the cost array to each charge instance
+            $this->calculateLclCharges($charges);
+        }
+
         $after_rates = true;
         
         if(!$after_rates){
             //$rateNo = 0;
             foreach ($rates as $rate) {
-                //$rateNo += 1;
-                //dump($rate->contract);
-                //dump('for rate '. strval($rateNo));
-                //Retrieving local charges with search data
-                $local_charges = $this->searchLocalCharges($search_ids, $rate);
-
-                //Retrieving global charges with search data
-                $global_charges = $this->searchGlobalCharges($search_ids, $rate);
-
-                //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
-                $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids);
-
-                //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
-                $this->setChargesPerContainer($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
-
                 //Getting price levels if requested
                 if (array_key_exists('pricelevel', $search_array) && $search_array['pricelevel'] != null) {
                     $price_level_markups = $this->searchPriceLevels($search_ids);
@@ -261,6 +276,108 @@ class SearchApiLclController extends Controller
             $this->trackEvents("search_fcl", $track_array);
         }
 
-        return RateResource::collection($rates);
+        return RateLclResource::collection($rates);
     }
+
+    public function searchRates($search_data)
+    {
+        //setting variables for query
+        $company_user_id = $search_data['company_user'];
+        $company_user = CompanyUser::where('id', $search_data['company_user'])->first();
+
+        $user_id = $search_data['user'];
+        $origin_ports = $search_data['originPorts'];
+        $destiny_ports = $search_data['destinationPorts'];
+        $carriers = $search_data['carriers'];
+        $dateSince = $search_data['dateRange']['startDate'];
+        $dateUntil = $search_data['dateRange']['endDate'];
+        $company_id = $search_data['company'];
+
+        //Querying rates database
+        $rates_array = RateLcl::whereIn('origin_port', $origin_ports)->whereIn('destiny_port', $destiny_ports)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($user_id, $company_user_id, $company_id, $dateSince, $dateUntil) {
+            $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
+                $a->where('user_id', '=', $user_id);
+            })->orDoesntHave('contract_user_restriction');
+        })->whereHas('contract', function ($q) use ($user_id, $company_user_id, $company_id, $dateSince, $dateUntil) {
+            $q->whereHas('contract_company_restriction', function ($b) use ($company_id) {
+                $b->where('company_id', '=', $company_id);
+            })->orDoesntHave('contract_company_restriction');
+        })->whereHas('contract', function ($q) use ($company_user_id, $dateSince, $dateUntil, $company_user) {
+            if ($company_user->future_dates == 1) {
+                $q->where(function ($query) use ($dateSince) {
+                    $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
+                })->where('company_user_id', '=', $company_user_id);
+            } else {
+                $q->where(function ($query) use ($dateSince, $dateUntil) {
+                    $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
+                })->where('company_user_id', '=', $company_user_id);
+            }
+        })->get();
+
+        //Setting attribute to totalize adding charges, inlands, markups, etc. Totals are shown in the client default currency
+        foreach ($rates_array as $rate) {
+            //Converting rates to client currency
+            $client_currency = $search_data['client_currency'];
+            //FOR CALCULATIONS
+            //$containers_client_currency = $this->convertToCurrency($rate->currency, $client_currency, json_decode($rate->containers, true));
+            //$rate->setAttribute('totals', $containers_client_currency);
+            //$rate->setAttribute('client_currency', $client_currency);
+        }
+
+        return $rates_array;
+    }
+
+    //Finds local charges matching contracts
+    public function searchLocalCharges($search_ids, $rate)
+    {
+        //Pulling necessary data from the search IDs array
+        $origin_ports = [$rate->origin_port,1485];
+        $destination_ports = [$rate->destiny_port,1485];
+        $origin_countries = [$rate->port_origin->country()->first()->id, 250];
+        $destination_countries = [$rate->port_destiny->country()->first()->id, 250];
+
+        //creating carriers array with only rates carrier
+        $carriers = [$rate->carrier->id, 26];
+
+        $local_charges = LocalChargeLcl::where('contractlcl_id', '=', $rate->contractlcl_id)->whereHas('localcharcarrierslcl', function ($q) use ($carriers) {
+            $q->whereIn('carrier_id', $carriers);
+        })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
+            $query->whereHas('localcharportslcl', function ($q) use ($origin_ports, $destination_ports) {
+                $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
+            })->orwhereHas('localcharcountrieslcl', function ($q) use ($origin_countries, $destination_countries) {
+                $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
+            });
+        })->with('localcharportslcl.portOrig', 'localcharcarrierslcl.carrier', 'currency', 'surcharge.saleterm')->get();
+
+        return $local_charges;
+    }
+
+    //Finds global charges matching search data
+    public function searchGlobalCharges($search_ids, $rate)
+    {
+        //building Carriers array from rates
+        $carriers = [$rate->carrier->id, 26];
+        //Pulling necessary data from the search IDs array
+        $validity_start = $search_ids['dateRange']['startDate'];
+        $validity_end = $search_ids['dateRange']['endDate'];
+        $origin_ports = [$rate->origin_port,1485];
+        $destination_ports = [$rate->destiny_port,1485];
+        $origin_countries = [$rate->port_origin->country()->first()->id, 250];
+        $destination_countries = [$rate->port_destiny->country()->first()->id, 250];
+        $company_user_id = $search_ids['company_user'];
+        
+        $global_charges = GlobalChargeLcl::where('validity', '<=', $validity_start)->where('expire', '>=', $validity_end)->whereHas('globalcharcarrierslcl', function ($q) use ($carriers) {
+            $q->whereIn('carrier_id', $carriers);
+        })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
+            $query->whereHas('globalcharportlcl', function ($q) use ($origin_ports, $destination_ports) {
+                $q->whereIn('port_orig', $origin_ports)->whereIn('port_dest', $destination_ports);
+            })->orwhereHas('globalcharcountrylcl', function ($q) use ($origin_countries, $destination_countries) {
+                $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
+            });
+        })->where('company_user_id', '=', $company_user_id)->with('globalcharportlcl.portOrig', 'globalcharportlcl.portDest', 'globalcharcarrierslcl.carrier', 'currency', 'surcharge.saleterm')->get();
+
+        return $global_charges;
+    }
+
+
 }
