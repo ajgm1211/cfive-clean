@@ -467,7 +467,7 @@ class SearchApiController extends Controller
                     })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased','!=',1)->where('gp_container_id', $container_group);
                 } else {
                     $q->where(function ($query) use ($dateSince, $dateUntil) {
-                        $query->where('validity', '>=', $dateSince)->where('expire', '>=', $dateUntil);
+                        $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
                     })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased','!=',1)->where('gp_container_id', $container_group);
                 }
             });
@@ -1019,7 +1019,13 @@ class SearchApiController extends Controller
 
     public function storeContractNewSearch(StoreContractSearch $request)
     {
-        // dd($request);
+           
+        $data = $request->validate([
+            "dataSurcharger.*.type.id" => 'required',
+            "dataSurcharger.*.calculation.id" => 'required',
+            "dataSurcharger.*.currency.id" => 'required',
+        ]);
+
         $req = $request->valueEq['id'];
         $contract = new Contract();
         $container = Container::get();
@@ -1159,24 +1165,37 @@ class SearchApiController extends Controller
                     $download = Storage::disk('UpLoadFile')->url($contractFile->namefile, $name);
                 }
             }
-            return response()->json(['success' => $success, 'url' => $download]);
+            return response()->json(['success' => $success, 'url' => $download,'zip'=>false ]);
         } else {
             $contract = Contract::find($contractId);
             $downloads = $contract->getMedia('document');
             $total = count($downloads);
-            if ($total > 1) {
-                return MediaStream::create('my-contract.zip')->addMedia($downloads);
+            if ($total > 1) {                                         
+                
+                return response()->json(['success' => true, 'url' => $contract,'zip'=>true ]);
             } else {
                 $media = $downloads->first();
                 $mediaItem = Media::find($media->id);
                 //return $mediaItem;
                 if($mediaItem->disk == 'FclRequest'){
-                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/Request/FCL/".$mediaItem->file_name]);
+                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/Request/FCL/".$mediaItem->file_name,'zip'=>false ]);
                 }
                 if($mediaItem->disk == 'contracts3'){
-                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/contract_manual/".$mediaItem->id."/".$mediaItem->file_name]);
+                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/contract_manual/".$mediaItem->id."/".$mediaItem->file_name,'zip'=>false ]);
                 }
             }
         }
     }
+    public function downloadMultipleContractFile(Contract $contract)
+    {
+        
+       
+        $downloads = $contract->getMedia('document');
+        $objeto = MediaStream::create('export.zip')->addMedia($downloads);
+
+        return $objeto;
+
+    }
+
+
 }

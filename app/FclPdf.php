@@ -75,18 +75,7 @@ class FclPdf
     {
         $localcharges = LocalChargeQuote::Quote($quote->id)->Type($type)->get();
 
-        /*$localcharges = $localcharges->groupBy([
-
-            function ($item) {
-                return $item['port']['name'] . ', ' . $item['port']['code'];
-            },
-
-        ]);
-
-        foreach ($localcharges as $value) {
-            $value['total'] = $this->localChargeTotals($quote->id, $type, $value[0]['port_id']);
-        }*/
-
+        //Checking if there are localcharges
         if (count($localcharges) > 0) {
             $localcharges = $localcharges->groupBy([
 
@@ -95,7 +84,8 @@ class FclPdf
                 },
 
             ]);
-            
+
+            //Relating inlands to localcharges
             foreach ($localcharges as $value) {
                 $inlands = $this->InlandTotals($quote->id, $type, $value[0]['port_id']);
 
@@ -117,8 +107,24 @@ class FclPdf
                     }
                 }
             }
+
+            //Setting up localcharges' ports ids
+            $ports = array();
+
+            foreach ($localcharges as $value) {
+                foreach ($value as $charge) {
+                    $ports[] = $charge->port_id;
+                }
+            }
+
+            //Checking if exists inlands not associated to localcharges and adding to collection
+            $inlands = $this->InlandExcludingPorts($quote->id, $type, $ports);
+            
+            $localcharges = $localcharges->union($inlands);
+
         } else {
 
+            //Setting up inlands
             $inlands = $this->InlandTotals($quote->id, $type, null);
 
             if (count($inlands) > 0) {
@@ -148,6 +154,28 @@ class FclPdf
 
         $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals as total', 'markups as profit', 'currency_id', 'inland_address_id','pdf_options')
             ->ConditionalPort($port)->Quotation($quote)->Type($type)->get();
+
+        return $inlands;
+    }
+
+    public function InlandExcludingPorts($quote, $type, $port)
+    {
+        if ($type == 1) {
+            $type = 'Origin';
+        } else {
+            $type = 'Destination';
+        }
+ 
+        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals as total', 'markups as profit', 'currency_id', 'inland_address_id','pdf_options')
+            ->whereNotIn('port_id', $port)->Quotation($quote)->Type($type)->get();
+
+        $inlands = $inlands->groupBy([
+
+            function ($item) {
+                return $item['port']['name'] . ', ' . $item['port']['code'];
+            },
+
+        ]);
 
         return $inlands;
     }

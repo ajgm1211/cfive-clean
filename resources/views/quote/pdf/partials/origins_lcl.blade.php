@@ -1,3 +1,4 @@
+@if($quote->pdf_options['selectPDF']['id'] ==2 || $quote->pdf_options['selectPDF']['id'] ==3 )
 <!-- Origins detailed -->
 @if($origin_charges->count()>0)
     @foreach($origin_charges as $port => $value)
@@ -40,8 +41,20 @@
                     <tr>
                         <td>{!! $charge->charge ?? 'Inland' !!}</td>
                         <td>{{  $charge->calculation_type['name'] ?? @$charge->inland_address->address ?? "--" }}</td>
-                        <td>{{ isDecimal($charge->units, false, true) ?? "--" }}</td>
-                        <td>{{ isDecimal($charge->price, false, true) ?? "--" }}</td>
+                        <td>{{ ($charge->units != 0 || $charge->units != "")? isDecimal($charge->units, false, true):1 }}</td>
+                        <!--<td>{{ isDecimal($charge->price, false, true) ?? "--" }}</td>-->
+                        @if($charge->price != 0 || $charge->price != "")
+                            <td>{{ isDecimal($charge->price, false, true) ?? "--" }}</td>
+                        @elseif(isset($charge->totals))
+                                @php
+                                    $array_total_inland = json_decode($charge->totals);
+                                @endphp
+                                @foreach($array_total_inland as $total)
+                                    <td>{!! isDecimal($total, false, true) !!}</td>
+                                @endforeach
+                        @else
+                                <td>{!! isDecimal($charge->total, false, true) !!}</td>
+                        @endif
                         @if(isset($charge->totals))
                             @php
                                 $array_total_inland = json_decode($charge->totals);
@@ -52,7 +65,6 @@
                         @else
                             <td>{!! isDecimal($charge->total, false, true).' '.$charge->currency->alphacode !!}</td>
                         @endif
-                        
                     </tr>
                 @endforeach
             </tbody>
@@ -61,4 +73,5 @@
         <!-- End Table -->
     @endforeach
     <br>
+@endif
 @endif

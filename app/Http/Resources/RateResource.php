@@ -16,6 +16,7 @@ class RateResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'owner'=>$this->contract->user ? $this->contract->user->fullname : 'Unassigned',
             'port_origin' => $this->port_origin,
             'port_destiny' => $this->port_destiny, 
             'origin_port' => $this->origin_port,
