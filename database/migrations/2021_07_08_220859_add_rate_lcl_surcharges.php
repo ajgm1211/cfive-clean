@@ -14,17 +14,10 @@ class AddRateLclSurcharges extends Migration
     public function up()
     {
         Schema::table('surcharges', function (Blueprint $table) {
-           
-            DB::table('surcharges')->insert([
-                0 => [
-                    'name' => 'Per Shipment',
-                    'description' => 'LCL Rate Surcharge',
-                ],
-                1 => [
-                    'name' => 'W/M',
-                    'description' => 'LCL Rate Surcharge',
-                ],
-            ]);
+            array(
+                'name' => 'Ocean Freight',
+                'description' => 'Rate surcharge',
+            )
         });
     }
 
