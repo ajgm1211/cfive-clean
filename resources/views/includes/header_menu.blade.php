@@ -169,7 +169,6 @@
                                     </span>
                                 </a>
                             </li>
-                            @role('administrator|company')
                                 <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
                                     <a href="{{route('new.contracts.lcl.index')}}" class="m-menu__link ">
                                         <i class="m-menu__link-icon flaticon-route"></i>
@@ -178,6 +177,7 @@
                                         </span>
                                     </a>
                                 </li> 
+                            @role('administrator|company')
                                 <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
                                     <a href="{{route('surcharges.index')}}" class="m-menu__link ">
                                         <i class="m-menu__link-icon flaticon-list-1"></i>

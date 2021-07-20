@@ -141,16 +141,21 @@ trait MixPanelTrait
         foreach($data['data']['destinationPorts'] as $dest){
             $destiny[]=$dest['display_name'];
         }
-        $mixPanel->track(
-            'Rate Finder FCL',
-            array(
-                'Company' => $data['company_user']['name'],
-                'Origin' =>$origin,
-                'Destination' =>$destiny,
-                'Container_type' => $data['data']['selectedContainerGroup']['name'],
-                'User' => $user->fullname,
-            )
-        );
+        if(!empty($origin) &&  !empty($destiny)){
+            $mixPanel->track(
+                'Rate Finder FCL',
+                array(
+                    'Company' => $data['company_user']['name'],
+                    'Origin' =>$origin,
+                    'Destination' =>$destiny,
+                    'Container_type' => $data['data']['selectedContainerGroup']['name'],
+                    'User' => $user->fullname,
+                )
+            );
+        }else{
+            \Log::error('The origin port or destination port is empty , the user is '.$user->email);
+        }
+    
     }
 
     /**
@@ -321,6 +326,7 @@ trait MixPanelTrait
                 'Valid_from'    => $date[0],
                 'Valid_until'   => $date[1],
                 'Owner'         => $user->username_load,
+                'Created_at'    => $data->created_at,
             )
         );
     }
@@ -347,6 +353,7 @@ trait MixPanelTrait
                 'Valid_from'    => $date[0],
                 'Valid_until'   => $date[1],
                 'Owner'         => $data->username_load,
+                'Created_at'    => $data->created_at,
             )
         );
     }
@@ -488,6 +495,7 @@ trait MixPanelTrait
                 'Contract_id'=>$data->contract_id,
                 'Container_type'=>$container->group_containers->name,
                 'User' => $user->fullname,
+                'Created_at' => $data->created_at,
             )
         );
     }
@@ -512,6 +520,7 @@ trait MixPanelTrait
                 'Company' => $user->companyUser->name,
                 'Contract_id'=>$data->id,
                 'User' => $user->fullname,
+                'Created_at' => $data->created_at,
             )
         );
     }

@@ -268,7 +268,7 @@ class GlobalChargesLclController extends Controller
     public function destroyGlobalCharges($id)
     {
         $global = GlobalChargeLcl::find($id);
-        if (!empty($global) == 0) {
+        if (!empty($global) ) {
             $global->delete();
         }
 

@@ -378,7 +378,7 @@
                       title="Contract date beyond search range"
                     />
                   </p>
-                  <button
+                  <b-button
                     v-if="
                       rate.contract_id != 0 ||
                       rate.contract_request_id != 0 ||
@@ -386,14 +386,17 @@
                     "
                     style="
                       background: transparent;
-                      border: 0;
+                      border: 0 !important;
                       text-transform: uppercase;
                       color: #00c581;
                     "
                     @click="downloadContractFile(rate)"
+                    v-b-tooltip.hover 
+                    :title="rate.owner"
                   >
-                    download contract
-                  </button>
+                    <span class="badge" v-bind:class="{'badge-primary':rate.contract.is_manual == 0, 'badge-secondary':rate.contract.is_manual == 1,'badge-success':rate.contract.is_manual == 2 }">download contract</span>
+                    
+                  </b-button>
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center">
@@ -786,8 +789,24 @@ export default {
       component.searchActions
         .downloadContract(parameters)
         .then((response) => {
-          console.log('Downloading!', response);
-          window.open(response.data.url)
+          if(response.data.zip == true){
+          
+
+              console.log('Downloading!', response.data.url);
+              window.open("/api/search/downloadMContract/"+response.data.url);
+/*
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href=url;
+            link.setAttribute("download", "filename.zip");
+            document.body.appendChild(link);
+            link.click();
+*/
+          }else{
+              console.log('Downloading!', response);
+              window.open(response.data.url)
+          }
+     
         })
         .catch((error) => {
           console.log(error);

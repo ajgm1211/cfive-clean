@@ -604,6 +604,9 @@ export default {
         harbors(id) {
             return api.call('get', `/api/quote/local/data/${id}`, {})
         },
+        deleteAll(ids) {
+            return api.call('post', `/api/quote/localcharge/destroyAll`, { ids: ids });
+        },
     },
     localchargeslcl: {
         create(data) {
@@ -620,6 +623,9 @@ export default {
         },
         total(params) {
             return api.call('get', '/api/quote/localcharge/lcl/total', { params })
+        },
+        deleteAll(ids) {
+            return api.call('post', `/api/quote/localcharge/lcl/destroyAll`, { ids: ids });
         },
     },
     providers: {
