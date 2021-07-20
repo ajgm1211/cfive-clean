@@ -43,20 +43,28 @@ class ValidateTemplateJob implements ShouldQueue
         ];
         $endpoint_obj = EndpointTable::where("name","barracuaep-template")->first();
         if($endpoint_obj->status == 1){
-            $json = '{"spreadsheetData":false}';
+            $json = '{"spreadsheetData":false,"type":"FCL"}';
             $url = $endpoint_obj->url."contracts/processing/".$this->request_id;
 
-            $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
-            $response = json_decode($response->getBody()->getContents(),true);
+            try{
+                $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
+                $response = json_decode($response->getBody()->getContents(),true);
+            }catch(\Exception $e){
+                $response = false;
+            }
+            
         }
 
         $endpoint_obj_cmpfile = EndpointTable::where("name","barracuaep-cmpfile")->first();
         if($endpoint_obj_cmpfile->status == 1){
             $url = $endpoint_obj_cmpfile->url."requests/cmpfiles/".$this->request_id;
             $json = '{"duplicate":true,"re_search":true}';
-
-            $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
-            $response = json_decode($response->getBody()->getContents(),true);
+            try{
+                $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
+                $response = json_decode($response->getBody()->getContents(),true);
+            }catch(\Exception $e){
+                $response = false;
+            }
         }
     }
 }

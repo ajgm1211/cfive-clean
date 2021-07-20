@@ -1415,6 +1415,14 @@
                         >
                             Contract saved successfully!
                         </div>
+                        <div
+                            v-if="contractAddedFailed"
+                            class="alert alert-danger"
+                            role="alert"
+                        >
+                            Failed creating contract, complete all the fields!
+                        </div>
+                       
                     </fieldset>
 
                     <div class="footer-add-contract-modal pl-4 pr-4">
@@ -1593,7 +1601,7 @@ export default {
             valueEq: "",
             amount: "",
             currency: "",
-            currencySurcharge: "USD",
+            currencySurcharge: "",
             origin: "",
             destination: "",
             carrier: "",
@@ -1614,6 +1622,7 @@ export default {
             isCompleteFive: false,
             contractAdded: false,
             firstLoad: true,
+            contractAddedFailed: false,
         };
     },
     mounted() {
@@ -1715,7 +1724,7 @@ export default {
         addSurchargeModal() {
             if (
                 this.typeContract == "" ||
-                this.calculationType == "" ||
+                this.calculationType == ""|| 
                 this.currencySurcharge == ""
             ) {
                 this.invalidSurcharge = true;
@@ -2130,7 +2139,11 @@ export default {
                 })
                 .catch((error) => {
                     if (error.status === 422) {
+                        vcomponent.contractAddedFailed = true;
                         this.responseErrors = error.data.errors;
+                        setTimeout(function () {
+                        vcomponent.contractAddedFailed = false;
+                    }, 5000);
                     }
                 });
         },

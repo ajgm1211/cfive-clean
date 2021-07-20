@@ -27,7 +27,7 @@ class Contract extends Model implements HasMedia, Auditable
     protected $guard = 'web';
     protected $table = "contracts";
 
-    protected $fillable = ['id', 'name', 'number', 'company_user_id','user_id', 'account_id', 'direction_id', 'validity', 'expire', 'status', 'remarks', 'gp_container_id', 'code', 'is_manual', 'result_validator', 'validator', 'is_api'];
+    protected $fillable = ['id', 'name', 'number', 'company_user_id', 'user_id', 'account_id', 'direction_id', 'validity', 'expire', 'status', 'remarks', 'gp_container_id', 'code', 'is_manual', 'result_validator', 'validator', 'is_api'];
 
     public function rates()
     {
@@ -70,7 +70,7 @@ class Contract extends Model implements HasMedia, Auditable
 
         return $this->hasOne('App\NewContractRequest', 'contract_id', 'id');
     }
-    
+
     public function user_from_request()
     {
         return $this->hasManyThrough('App\User', 'App\NewContractRequest', 'contract_id', 'id', 'id', 'user_id');
@@ -141,15 +141,20 @@ class Contract extends Model implements HasMedia, Auditable
      */
     public function scopeFilterByCurrentCompany($query)
     {
-        if (Auth::user()->hasRole('subuser')) {
-            $status_erased = 1;
-            $company_id = Auth::user()->company_user_id;
-            return $query->where('company_user_id', '=', $company_id)->where('status_erased', '!=', $status_erased)->where('user_id','=', Auth::user()->id);
-        }else{
-            $status_erased = 1;
-            $company_id = Auth::user()->company_user_id;
-            return $query->where('company_user_id', '=', $company_id)->where('status_erased', '!=', $status_erased);   
-        }
+  
+            if (Auth::check()) {
+
+                if (Auth::user()->hasRole('subuser')) {
+                    $status_erased = 1;
+                    $company_id = Auth::user()->company_user_id;
+                    return $query->where('company_user_id', '=', $company_id)->where('status_erased', '!=', $status_erased)->where('user_id', '=', Auth::user()->id);
+                } else {
+                    $status_erased = 1;
+                    $company_id = Auth::user()->company_user_id;
+                    return $query->where('company_user_id', '=', $company_id)->where('status_erased', '!=', $status_erased);
+                }
+            } 
+ 
     }
 
     /**

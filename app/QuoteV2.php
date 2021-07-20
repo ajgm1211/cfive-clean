@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Http\Filters\QuotationFilter;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -919,7 +920,7 @@ class QuoteV2 extends Model implements HasMedia, Auditable
 
     public function updatePdfOptions($option = null)
     {
-        if (($this->pdf_options == null || count($this->pdf_options) != 5) && $option == null) {
+        if (($this->pdf_options == null || count($this->pdf_options) != 6) && $option == null) {
             $client = $this->company_user()->first();
             $client_currency = Currency::find($client->currency_id);
 
@@ -931,6 +932,10 @@ class QuoteV2 extends Model implements HasMedia, Auditable
                 "showTotals" => false,
                 "totalsCurrency" => $client_currency,
                 "exchangeRates" => $exchangeRates,
+                "selectPDF"=>[
+                    "id"=> 3,
+                    "name"=> "PDF detailed costs only"
+                ],
             ];
 
             $this->pdf_options = $pdfOptions;
@@ -1012,5 +1017,23 @@ class QuoteV2 extends Model implements HasMedia, Auditable
             return $equipment;
 
         }
+    }
+
+    public function setDateIssuedAttribute($value)
+    {
+        $date = Carbon::parse($value);
+        $this->attributes['date_issued'] = $date->format('Y-m-d');
+    }
+
+    public function setValidityStartAttribute($value)
+    {
+        $date = Carbon::parse($value);
+        $this->attributes['validity_start'] = $date->format('Y-m-d');
+    }
+
+    public function setValidityEndAttribute($value)
+    {
+        $date = Carbon::parse($value);
+        $this->attributes['validity_end'] = $date->format('Y-m-d');
     }
 }
