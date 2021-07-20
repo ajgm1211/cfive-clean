@@ -23,14 +23,12 @@ class AddRatesToCalculationtypelcl extends Migration
 
             $json_options = json_encode($options);
             
-            DB::table('calculationtypelcl')->insert(
-                array(
-                    'name' => 'RATE',
-                    'code' => 'RATE',
-                    'display_name' => 'RATE',
-                    'options' => $json_options,
-                )
-            );
+            DB::table('calculationtypelcl')->insert([
+                'name' => 'W/M',
+                'code' => 'W/M',
+                'display_name' => 'W/M',
+                'options' => $json_options
+            ]);
         });
     }
 

@@ -346,8 +346,8 @@ class SearchApiController extends Controller
 
         $search_array = $request->input();
 
-        $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'], 0, 10);
-        $search_array['dateRange']['endDate'] = substr($search_array['dateRange']['endDate'], 0, 10);
+        $search_array['dateRange']['startDate'] = $this->formatSearchDate($search_array['dateRange']['startDate'],'date');
+        $search_array['dateRange']['endDate'] = $this->formatSearchDate($search_array['dateRange']['endDate'],'date');
 
         $search_ids = $this->getIdsFromArray($search_array);
         $search_ids['company_user'] = $company_user_id;
@@ -446,13 +446,13 @@ class SearchApiController extends Controller
         $container_group = $search_data['selectedContainerGroup'];
         $origin_ports = $search_data['originPorts'];
         $destiny_ports = $search_data['destinationPorts'];
-        $arregloCarrier = $search_data['carriers'];
+        $carriers = $search_data['carriers'];
         $dateSince = $search_data['dateRange']['startDate'];
         $dateUntil = $search_data['dateRange']['endDate'];
 
         //Querying rates database
         if ($company_user_id != null || $company_user_id != 0) {
-            $rates_query = Rate::whereIn('origin_port', $origin_ports)->whereIn('destiny_port', $destiny_ports)->whereIn('carrier_id', $arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier', 'currency')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id) {
+            $rates_query = Rate::whereIn('origin_port', $origin_ports)->whereIn('destiny_port', $destiny_ports)->whereIn('carrier_id', $carriers)->with('port_origin', 'port_destiny', 'contract', 'carrier', 'currency')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id) {
                 $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
                     $a->where('user_id', '=', $user_id);
                 })->orDoesntHave('contract_user_restriction');
@@ -472,7 +472,7 @@ class SearchApiController extends Controller
                 }
             });
         } else {
-            $rates_query = Rate::whereIn('origin_port', $origin_ports)->whereIn('destiny_port', $destiny_ports)->whereIn('carrier_id', $arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier', 'currency')->whereHas('contract', function ($q) {
+            $rates_query = Rate::whereIn('origin_port', $origin_ports)->whereIn('destiny_port', $destiny_ports)->whereIn('carrier_id', $carriers)->with('port_origin', 'port_destiny', 'contract', 'carrier', 'currency')->whereHas('contract', function ($q) {
                 $q->doesnthave('contract_user_restriction');
             })->whereHas('contract', function ($q) {
                 $q->doesnthave('contract_company_restriction');

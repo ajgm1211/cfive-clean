@@ -3,8 +3,14 @@
     <!-- RESULTS -->
     <div v-if="finalRates.length != 0" class="row" id="top-results">
       <!-- LCL CARD -->
-      <div class="col-12 mb-4" v-if="false">
-        <div class="result-search">
+      <div class="col-12 mb-4" 
+        v-if="searchType == 'LCL'"
+        >
+        <div 
+          class="result-search"
+          v-for="(rate, key) in finalRates" 
+          :key="key"
+        >
           <!-- CONTENT MAIN CARD -->
           <div class="row">
             <!-- CARRIER -->
@@ -165,8 +171,14 @@
       </div>
 
       <!-- FCL CARD -->
-      <div class="col-12 mb-4" v-for="(rate, key) in finalRates" :key="key">
-        <div class="result-search">
+      <div class="col-12 mb-4" 
+        v-else-if="searchType == 'FCL'" 
+      >
+        <div 
+          class="result-search"
+          v-for="(rate, key) in finalRates" 
+          :key="key"  
+        >
           <!-- INFORMACION DE TARIFA -->
           <div class="row">
             <!-- CARRIER -->
@@ -839,7 +851,6 @@ export default {
   },
   mounted(){
     let component = this;
-    //console.log(component.datalists);
     component.searchEndDate = component.request.dateRange.endDate;
     component.rates.forEach(function (rate) {
       rate.addToQuote = false;
@@ -855,6 +866,7 @@ export default {
       }
     }
     
+    this.$emit("resultsCreated")
     this.loaded = true;
   },
 }

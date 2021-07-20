@@ -156,6 +156,7 @@
             :datalists="datalists"
             @createQuote="createQuote"
             @addedToQuote="setRatesForQuote"
+            @resultsCreated="setActions"
             ref="resultsComponent"
         ></Result>
 
@@ -206,7 +207,7 @@ export default {
     },
     methods :
     {
-        setActions(){
+        setActions(origin){
             let component = this;
 
             this.searchType = this.$refs.searchComponent.searchRequest.type;
@@ -216,8 +217,14 @@ export default {
                     if(component.$refs[child].searchType){
                         component.$refs[child].searchType = component.searchType;
                     }
-                    component.$refs[child].setActions();
+                    if(child != 'resultsAPIComponent'){
+                        component.$refs[child].setActions();
+                    }
                 }
+            }
+
+            if(origin == 'dd'){
+                this.clearDisplay();
             }
         }, 
 
@@ -316,7 +323,6 @@ export default {
         },
 
         setSearchData(searchData){
-            //console.log(this.searchData);
             this.searching = false;
             if(this.searchType == "FCL"){
                 this.foundRates = searchData;
@@ -340,6 +346,9 @@ export default {
             };
             this.resultsTotal = 0;
             this.apiSearchDone = false;
+            if(this.$refs.searchComponent.searching = true){
+                this.$refs.searchComponent.searching = false;
+            }
         },
 
         quickSearch(){

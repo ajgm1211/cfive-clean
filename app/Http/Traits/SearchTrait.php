@@ -839,6 +839,43 @@ trait SearchTrait
         return str_replace($skips, '', $pluck);
     }
 
+    //groups local + global charges by type (Origin, Destination, Freight)
+    public function groupChargesByType($local_charges, $global_charges, $search_data)
+    {
+        //Creating arrays for every type
+        $origin = [];
+        $destination = [];
+        $freight = [];
+
+        //Creating collection for charges
+        $charges = collect([]);
+
+        //Joining local and global charges to loop through all
+        $all_charges = $local_charges->concat($global_charges);
+        
+        //Looping through charges and including them in the corresponding array
+        foreach($all_charges as $charge){
+            if($charge->typedestiny_id == 1){
+                array_push($origin,$charge);
+            }elseif($charge->typedestiny_id == 2){
+                array_push($destination,$charge);
+            }elseif($charge->typedestiny_id == 3){
+                array_push($freight,$charge);
+            }
+        }
+
+        //Forming final collection
+        if($search_data['originCharges']){
+            $charges->put('Origin',$origin);
+        }
+        $charges->put('Freight',$freight);
+        if($search_data['destinationCharges']){
+            $charges->put('Destination',$destination);
+        }
+        
+        return $charges;
+    }
+
     //If rate data comes separate from mode (twuenty, forty, etc) joins them under the "containers" field 
     //ONLY FOR DRY CONTAINERS
     public function joinRateContainers($rates, $search_containers)
@@ -883,43 +920,6 @@ trait SearchTrait
             $rate->containers = json_encode($container_array);
             $rate->save();
         }
-    }
-
-    //groups local + global charges by type (Origin, Destination, Freight)
-    public function groupChargesByType($local_charges, $global_charges, $search_data)
-    {
-        //Creating arrays for every type
-        $origin = [];
-        $destination = [];
-        $freight = [];
-
-        //Creating collection for charges
-        $charges = collect([]);
-
-        //Joining local and global charges to loop through all
-        $all_charges = $local_charges->concat($global_charges);
-        
-        //Looping through charges and including them in the corresponding array
-        foreach($all_charges as $charge){
-            if($charge->typedestiny_id == 1){
-                array_push($origin,$charge);
-            }elseif($charge->typedestiny_id == 2){
-                array_push($destination,$charge);
-            }elseif($charge->typedestiny_id == 3){
-                array_push($freight,$charge);
-            }
-        }
-
-        //Forming final collection
-        if($search_data['originCharges']){
-            $charges->put('Origin',$origin);
-        }
-        $charges->put('Freight',$freight);
-        if($search_data['destinationCharges']){
-            $charges->put('Destination',$destination);
-        }
-        
-        return $charges;
     }
 
     //Get charges per container from calculation type - inputs a charge collection, outputs ordered collection
@@ -973,6 +973,33 @@ trait SearchTrait
                 $charge->setAttribute('client_currency',$client_currency);
             }
         }
+    }
+
+    //Necessary calculations for LCL Rate (Per shipment vs W/M)
+    public function calculateLclRate($rate, $search_data)
+    {
+        dd($search_data);
+        $surcharge = $rate->surcharge()->first();
+        $calculation_type = $rate->calculation_type()->first();
+
+        if($rate->minimum > $rate->uom){
+            $amount = $rate->minimum;
+        }else{
+            $amount = $rate->uom;
+        }
+
+        if($calculation_type->id == "W/M"){
+            //$total = $amount
+        }else if($calculation_type->id == "Per Shipment"){
+            //$total =  
+        }
+        dd($rate);
+    }
+
+    //Necessary calculations for LCL
+    public function calculateLclCharges($charges)
+    {
+        dd($charges);
     }
 
     //Joining charges where surcharge, carrier and ports match; when join, amounts are added together
@@ -1221,5 +1248,19 @@ trait SearchTrait
                 }
             }
         }
+    }
+
+    //Clears date in 2021-07-13T01:00:00 format. Options can be:
+        // time -> returns only time, no date
+        // date -> returns only date, no time
+    public function formatSearchDate($date, $option)
+    {
+        if($option == 'time'){
+            $date = substr($date, 11, 8);
+        }else if($option == 'date'){
+            $date = substr($date, 0, 10);
+        }
+
+        return $date;
     }
 }
