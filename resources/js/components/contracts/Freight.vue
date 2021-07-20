@@ -315,7 +315,7 @@ export default {
         /* Single Actions */
         onEdit(data) {
             this.currentData = data;
-            this.$bvModal.show("editOFreight");
+            this.$bvModal.show("editOFreight"); 
         },
 
         /* Single Actions */
