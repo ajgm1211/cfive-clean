@@ -2,37 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Contract;
-use App\Carrier;
-use App\GroupContainer;
-use App\Direction;
-use App\Container;
-use App\Harbor;
-use App\Currency;
-use App\Surcharge;
 use App\CalculationType;
-use App\TypeDestiny;
-use App\Country;
+use App\Carrier;
 use App\Company;
+use App\Container;
+use App\Contract;
 use App\ContractLcl;
+use App\Country;
+use App\Currency;
+use App\Direction;
+use App\GroupContainer;
+use App\Harbor;
 use App\Http\Requests\UploadContractFile;
-use App\User;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ContractResource;
 use App\Jobs\NotificationsJob;
 use App\Jobs\ProcessContractFile;
+use App\LocalCharCarrier;
+use App\LocalCharge;
+use App\LocalCharPort;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
-use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
+use App\Rate;
+use App\Surcharge;
+use App\TypeDestiny;
+use App\User;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use HelperAll;
+
 
 class ContractController extends Controller
 {
     /**
-     * Render index view 
+     * Render index view
      *
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -48,13 +53,12 @@ class ContractController extends Controller
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function list(Request $request)
+    function list(Request $request)
     {
         $results = Contract::filterByCurrentCompany()->filter($request);
 
         return ContractResource::collection($results);
     }
-
 
     /**
      * Display the specified resource collection.
@@ -113,6 +117,10 @@ class ContractController extends Controller
             return $company->only(['id', 'name']);
         });
 
+        //Roles
+        $user = User::find(Auth::user()->id);
+        $rol = $user->getRoleNames()->first();
+
         $containers = Container::get();
 
         $data = compact(
@@ -127,6 +135,7 @@ class ContractController extends Controller
             'calculation_types',
             'destination_types',
             'companies',
+            'rol',
             'users'
         );
 
@@ -144,7 +153,6 @@ class ContractController extends Controller
         $rates = $contract->rates;
         $all_harbor_row = Harbor::find(1485);
         $all_country_row = Country::find(250);
-
 
         $origin_harbors = $rates->pluck('port_origin')->push($all_harbor_row);
         $destiny_harbors = $rates->pluck('port_destiny')->push($all_harbor_row);
@@ -172,7 +180,6 @@ class ContractController extends Controller
         return response()->json(['data' => $data]);
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
@@ -189,13 +196,14 @@ class ContractController extends Controller
             'validity' => 'required',
             'expire' => 'required',
             'gp_container' => 'required',
-            'carriers' => 'required'
+            'carriers' => 'required',
         ]);
 
         $contract = Contract::create([
             'name' => $data['name'],
             'number' => null,
             'company_user_id' => $company_user_id,
+            'user_id' => Auth::user()->id,
             'account_id' => null,
             'direction_id' => $data['direction'],
             'validity' => $data['validity'],
@@ -212,7 +220,7 @@ class ContractController extends Controller
     }
 
     /**
-     * Render edit view 
+     * Render edit view
      *
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -237,10 +245,10 @@ class ContractController extends Controller
             'validity' => 'required',
             'expire' => 'required',
             'gp_container' => 'required',
-            'carriers' => 'required'
+            'carriers' => 'required',
         ]);
 
-        $status = $this->updateStatus($data['expire']);
+        $status = $this->updateStatus($contract, $data);
 
         $contract->update([
             'name' => $data['name'],
@@ -256,16 +264,20 @@ class ContractController extends Controller
         return new ContractResource($contract);
     }
 
-    public function updateStatus($data)
+    public function updateStatus($contract, $data)
     {
 
         $date = date('Y-m-d');
-        $expire = date('Y-m-d', strtotime($data));
+        $expire = date('Y-m-d', strtotime($data['expire']));
 
-        if ($expire <= $date) {
-            $status = 'expired';
+        if ($contract->status != 'incomplete') {
+            if ($date <= $expire) {
+                $status = 'publish';
+            } else {
+                $status = 'expired';
+            }
         } else {
-            $status = 'publish';
+            $status = 'incomplete';
         }
 
         return $status;
@@ -282,7 +294,7 @@ class ContractController extends Controller
     {
         $data = $request->validate([
             'companies' => 'sometimes',
-            'users' => 'sometimes'
+            'users' => 'sometimes',
         ]);
 
         $contract->ContractCompaniesRestrictionsSync($data['companies'] ?? []);
@@ -290,7 +302,6 @@ class ContractController extends Controller
 
         return new ContractResource($contract);
     }
-
 
     /**
      * Update the specified resource of Contract Remarks.
@@ -302,7 +313,7 @@ class ContractController extends Controller
     public function updateRemarks(Request $request, Contract $contract)
     {
         $data = $request->validate([
-            'remarks' => 'sometimes'
+            'remarks' => 'sometimes',
         ]);
 
         $contract->update(['remarks' => @$data['remarks']]);
@@ -318,7 +329,18 @@ class ContractController extends Controller
      */
     public function destroy(Contract $contract)
     {
-        $contract->delete();
+        $status_erased = 1;
+        if ($contract->status == 'incomplete') {
+
+            $requestContract = NewContractRequest::where('contract_id', $contract->id);
+            if (empty($requestContract) == 0) {
+
+                $requestContract->update(['erased_contract' => $status_erased]);
+            }
+        }
+        // $contract->delete();
+        $contract->status_erased = $status_erased;
+        $contract->update();
 
         return response()->json(null, 204);
     }
@@ -354,7 +376,8 @@ class ContractController extends Controller
      */
     public function destroyAll(Request $request)
     {
-        DB::table('contracts')->whereIn('id', $request->input('ids'))->delete();
+        $status_erased = 1;
+        DB::table('contracts')->whereIn('id', $request->input('ids'))->update(['status_erased' =>  $status_erased]);
 
         return response()->json(null, 204);
     }
@@ -368,7 +391,10 @@ class ContractController extends Controller
     public function removefile(Request $request, Contract $contract)
     {
         $media = $contract->getMedia('document')->where('id', $request->input('id'))->first();
-        $media->delete();
+        if (!empty($media) == 0) {
+            $media->delete();
+        }
+
 
         return response()->json(null, 204);
     }
@@ -386,7 +412,7 @@ class ContractController extends Controller
                 'name' => substr($media->name, 14),
                 'size' => $media->size,
                 'type' => $media->mime_type,
-                'url' => $media->getFullUrl()
+                'url' => $media->getFullUrl(),
             ];
         });
 
@@ -410,18 +436,19 @@ class ContractController extends Controller
         $file = $request->file('file');
 
         $name = uniqid() . '_' . trim($file->getClientOriginalName());
+        $fileName = HelperAll::removeAccent($name);
 
-        $file->move($path, $name);
+        $file->move($path, $fileName);
 
-        $media = $contract->addMedia(storage_path('tmp/uploads/' . $name))->addCustomHeaders([
-            'ACL' => 'public-read'
+        $media = $contract->addMedia(storage_path('tmp/uploads/' . $fileName))->addCustomHeaders([
+            'ACL' => 'public-read',
         ])->toMediaCollection('document', 'contracts3');
 
         return response()->json([
             'contract' => new ContractResource($contract),
-            'name'          => $name,
+            'name' => $fileName,
             'original_name' => $file->getClientOriginalName(),
-            'url' => $media->getFullUrl()
+            'url' => $media->getFullUrl(),
         ]);
     }
 
@@ -441,8 +468,8 @@ class ContractController extends Controller
             $type = strtoupper($request->type);
 
             if ($request->code) {
-                $query =  Contract::where('code', $request->code);
-                $query_lcl =  ContractLcl::where('code', $request->code);
+                $query = Contract::where('code', $request->code);
+                $query_lcl = ContractLcl::where('code', $request->code);
             } else {
                 $query = Contract::where('code', $request->reference);
                 $query_lcl = ContractLcl::where('code', $request->reference);
@@ -490,7 +517,7 @@ class ContractController extends Controller
 
             NotificationsJob::dispatch('Request-' . $type, [
                 'user' => $user,
-                'ncontract' => $Ncontract->toArray()
+                'ncontract' => $Ncontract->toArray(),
             ]);
 
             $Ncontract->NotifyNewRequest($admins);
@@ -539,7 +566,7 @@ class ContractController extends Controller
     }
 
     /**
-     * store contract from API in DB 
+     * store contract from API in DB
      *
      * @param  mixed $request
      * @param  mixed $direction
@@ -560,13 +587,15 @@ class ContractController extends Controller
                 $contract = Contract::create([
                     'name' => $request->reference,
                     'company_user_id' => Auth::user()->company_user_id,
+                    'user_id' => Auth::user()->id,
                     'direction_id' => $direction,
-                    'validity' =>  $request->valid_from,
+                    'validity' => $request->valid_from,
                     'expire' => $request->valid_until,
                     'status' => 'incomplete',
                     'type' => $type,
                     'gp_container_id' => 1,
-                    'code' => $request->reference,
+                    'code' => $code,
+                    'is_api' => 1,
                 ]);
                 break;
             case 'LCL':
@@ -574,11 +603,12 @@ class ContractController extends Controller
                     'name' => $request->reference,
                     'company_user_id' => Auth::user()->company_user_id,
                     'direction_id' => $direction,
-                    'validity' =>  $request->valid_from,
+                    'validity' => $request->valid_from,
                     'expire' => $request->valid_until,
                     'status' => 'incomplete',
                     'type' => $type,
-                    'code' => $request->reference,
+                    'code' => $code,
+                    'is_api' => 1,
                 ]);
                 break;
         }
@@ -600,6 +630,8 @@ class ContractController extends Controller
             case 'FCL':
                 $request = NewContractRequest::create([
                     'namecontract' => $contract->name,
+                    'code' => $contract->code,
+                    'is_api' => $contract->is_api,
                     'validation' => $contract->validity . ' / ' . $contract->expire,
                     'direction_id' => $contract->direction_id,
                     'company_user_id' => $contract->company_user_id,
@@ -607,13 +639,15 @@ class ContractController extends Controller
                     'user_id' => Auth::user()->id,
                     'created' => date("Y-m-d H:i:s"),
                     'username_load' => 'Not assigned',
-                    'data' => '{"containers": [{"id": 1, "code": "20DV", "name": "20 DV"}, {"id": 2, "code": "40DV", "name": "40 DV"}, {"id": 3, "code": "40HC", "name": "40 HC"}, {"id": 4, "code": "45HC", "name": "45 HC"}, {"id": 5, "code": "40NOR", "name": "40 NOR"}], "group_containers": {"id": 1, "name": "DRY"}}',
+                    'data' => '{"containers": [{"id": 1, "code": "20DV", "name": "20 DV"}, {"id": 2, "code": "40DV", "name": "40 DV"}, {"id": 3, "code": "40HC", "name": "40 HC"}, {"id": 4, "code": "45HC", "name": "45 HC"}, {"id": 5, "code": "40NOR", "name": "40 NOR"}], "group_containers": {"id": 1, "name": "DRY"}, "contract":{"code":' . $contract->code . ',"is_api":' . $contract->is_api . '}}',
                     'contract_id' => $contract->id,
                 ]);
                 break;
             case 'LCL':
                 $request = NewContractRequestLcl::create([
                     'namecontract' => $contract->name,
+                    'code' => $contract->code,
+                    'is_api' => $contract->is_api,
                     'validation' => $contract->validity . ' / ' . $contract->expire,
                     'direction' => $contract->direction_id,
                     'company_user_id' => $contract->company_user_id,
@@ -653,5 +687,144 @@ class ContractController extends Controller
         }
 
         return $direction;
+    }
+
+    public function storeContractSearch(Request $request)
+    {
+
+        $req = $request->group_containerC;
+        $contract = new Contract();
+        $container = Container::get();
+
+        $data = $request->validate([
+            'referenceC' => 'required',
+            'group_containerC' => 'required',
+            'C20DV' => 'sometimes|required',
+            'C40DV' => 'sometimes|required',
+            'C40HC' => 'sometimes|required',
+            'C40NOR' => 'sometimes|required',
+            'C45HC' => 'sometimes|required',
+            'amountC' => 'sometimes|required',
+            'document' => 'required',
+        ]);
+            // dd(Auth::user()->id);
+        $contract->company_user_id = Auth::user()->company_user_id;
+        $contract->name = $request->referenceC;
+        $validation = explode('/', $request->validityC);
+        $contract->direction_id = $request->directionC;
+        $contract->validity = $validation[0];
+        $contract->expire = $validation[1];
+        $contract->status = 'publish';
+        $contract->gp_container_id = $request->group_containerC;
+        $contract->is_manual = 2;
+        $contract->user_id = Auth::user()->id;
+        $contract->save();
+
+        $contract->ContractCarrierSyncSingle($request->carrierR);
+
+        $rates = new Rate();
+        $rates->origin_port = $request->origin_port;
+        $rates->destiny_port = $request->destination_port;
+        $arreglo = array();
+        if ($req == 1) {
+
+            $rates->twuenty = $request->C20DV;
+            $rates->forty = $request->C40DV;
+            $rates->fortyhc = $request->C40HC;
+            $rates->fortynor = $request->C40NOR;
+            $rates->fortyfive = $request->C45HC;
+        } else {
+
+            $rates->twuenty = 0;
+            $rates->forty = 0;
+            $rates->fortyhc = 0;
+            $rates->fortynor = 0;
+            $rates->fortyfive = 0;
+
+            foreach ($container as $cod) {
+
+                $cont = 'C' . $cod->code;
+                if ($cod->gp_container_id == $req) {
+                    $arreglo[$cont] = $request->{$cont};
+                }
+            }
+            $rates->containers = json_encode($arreglo);
+        }
+        $rates->carrier_id = $request->carrierR;
+        $rates->currency_id = $request->currencyR;
+        $rates->contract()->associate($contract);
+        $rates->save();
+
+        // Surcharges
+
+        $calculation_type = $request->input('calculation');
+        $typeC = $request->input('type');
+        $currencyC = $request->input('currency');
+        $amountC = $request->input('amount');
+
+        if (count((array)$calculation_type) > 0) {
+            foreach ($calculation_type as $ct => $ctype) {
+
+                if (!empty($request->input('amount'))) {
+                    $localcharge = new LocalCharge();
+                    $localcharge->surcharge_id = $typeC[$ct];
+                    $localcharge->typedestiny_id = '3';
+                    $localcharge->calculationtype_id = $ctype;
+                    $localcharge->ammount = $amountC[$ct];
+                    $localcharge->currency_id = $currencyC[$ct];
+                    $localcharge->contract()->associate($contract);
+                    $localcharge->save();
+
+                    $detailcarrier = new LocalCharCarrier();
+                    $detailcarrier->carrier_id = $request->carrierR; //$request->input('localcarrier_id'.$contador.'.'.$c);
+                    $detailcarrier->localcharge()->associate($localcharge);
+                    $detailcarrier->save();
+
+                    $detailport = new LocalCharPort();
+                    $detailport->port_orig = $request->origin_port; // $request->input('port_origlocal'.$contador.'.'.$orig);
+                    $detailport->port_dest = $request->destination_port; //$request->input('port_destlocal'.$contador.'.'.$dest);
+                    $detailport->localcharge()->associate($localcharge);
+                    $detailport->save();
+                }
+            }
+        }
+
+        foreach ($request->input('document', []) as $file) {
+            $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document', 'contracts3');
+        }
+
+        return response()->json([
+            //'data' => $localcharge->toJson(),
+            'data' => 'Success',
+        ]);
+    }
+
+    public function getRequestStatus(Contract $contract)
+    {
+
+        if (!is_null($contract->contract_request)) {
+            $request_status = $contract->contract_request->status;
+            if ($request_status == "Pending") {
+                $progress = 25;
+            } else if ($request_status == "Processing") {
+                $progress = 50;
+            } else if ($request_status == "Imp Finished") {
+                $progress = 75;
+            } else if ($request_status == "Review") {
+                $progress = 90;
+            } else {
+                $progress = 100;
+            }
+        } else {
+            if ($contract->status == "incomplete") {
+                $progress = 50;
+            } else {
+                $progress = 100;
+            }
+        }
+
+        return response()->json([
+            'progress' => $progress,
+        ]);
     }
 }

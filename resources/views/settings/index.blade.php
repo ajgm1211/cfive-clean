@@ -86,6 +86,12 @@
                         <li class="nav-item">
                             <a class="nav-link {{\Auth::user()->type=='subuser' ? 'active':''}}" id="emails-tab" data-toggle="tab" href="#emails" role="tab" aria-controls="profile" aria-selected="false"><i class="fa fa-envelope"></i> &nbsp;Emails</a>
                         </li>
+                        @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company')
+                        <li class="nav-item">
+                            <a class="nav-link {{\Auth::user()->type=='subuser' ? 'active':''}}" id="delegations-tab" data-toggle="tab" href="#delegation" role="tab" aria-controls="profile" aria-selected="false"><i class="  fa fa-sitemap"></i> &nbsp;Delegations</a>
+                            <!-- <a class="nav-link {{\Auth::user()->type=='subuser' ? 'active':''}}" id="delegations-tab" data-toggle="tab" href="#delegation" role="tab" aria-controls="profile" aria-selected="false"><i class="  fa fa-users"></i> &nbsp;Delegations</a> -->
+                        </li>
+                        @endif
                     </ul>
                 </div>
                 <!-- /.col-md-4 -->
@@ -145,12 +151,12 @@
                                         <div class="form-group m-form__group">
                                             <label for="decimals">Decimals</label><br>
                                             <label class="m-radio m-radio--check-bold m-radio--state-success">
-												<input  checked='true' type="radio" name="decimals" value="1">														
+												<input   type="radio" name="decimals" value="1">														
 													<span></span>True
                                             </label>
                                             <br>
                                             <label class="m-radio m-radio--check-bold m-radio--state-brand">
-												<input  type="radio" name="decimals" value="0">
+												<input  checked='false' type="radio" name="decimals" value="0">
 	                                                <span></span>False
 							                </label>
                                         </div>
@@ -174,14 +180,14 @@
                                         <div class="form-group m-form__group">
                                             <label  class="m-radio m-radio--check-bold m-radio--state-brand">
                                                 <label for="origincharge">Origin Charges</label>
-											        <input  {{ @$IncludeOrigin}} type="checkbox" name="origincharge" value="1" >	
+											        <input  {{ @$IncludeOrigin}} type="checkbox"  checked='true' name="origincharge" value="1" >	
 											            <span></span>
                                                 </label>
                                             </label>    
                                             <br>
                                             <label  class="m-radio m-radio--check-bold m-radio--state-brand">
                                                 <label for="destinationcharge">Destination Charges</label>
-                                                    <input {{ @$IncludeDestiny}} type="checkbox" name="destinationcharge" value="1" >
+                                                    <input {{ @$IncludeDestiny}} type="checkbox"  checked='true' name="destinationcharge" value="1" >
                                                         <span></span>
                                                 </label>       
 											</label>
@@ -208,7 +214,13 @@
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
                                             <label for="footer_type">PDF Footer</label>
-                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
+                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image','Color'=>'Color'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group m-form__group">
+                                            <label for="footer_type">PDF Template</label>
+                                            {{ Form::select('pdf_template_id',$pdf_templates,@$company->companyUser->pdf_template_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_template','required'=>'true']) }}
                                         </div>
                                     </div>
                                     <div class="col-md-5">
@@ -410,9 +422,15 @@
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
                                             <label for="footer_type">PDF Footer</label>
-                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
+                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image','Color'=>'Color'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
                                         </div>
-                                    </div>                                    
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group m-form__group">
+                                            <label for="footer_type">PDF Template</label>
+                                            {{ Form::select('pdf_template_id',$pdf_templates,@$company->companyUser->pdf_template_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_template','required'=>'true']) }}
+                                        </div>
+                                    </div>                          
                                     <div class="col-md-5">
                                         <div class="form-group m-form__group">
                                             <label for="colors_PDF">Color</label><br>
@@ -491,6 +509,44 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tab-pane fade" id="delegation" role="tabpanel" aria-labelledby="delegations-tab">
+                                <div class="m--align-right">
+                                    <a  id="newRate" class="">  
+                                        <button type="button" class="btn btn-primary m--align-right" style="background-color: #006BFA !important;" data-toggle="modal"
+                                            data-target="#AddDelegationModal">
+                                            Add New
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </a>
+                                </div>    
+                                <br>
+                                <table class="m-datatable" id="delegationstable" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Phone</th>
+                                            <th>Address</th>
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($delegations as $items)
+                                            <tr>
+                                                <td>{{ $items->name }}</td>                                              
+                                                <td>{{ $items->phone }}</td>
+                                                <td>{{ $items->address }}</td>
+                                                <td>
+                                                <input name="del_id" type="hidden" value="{{$items->id}}" class="del_id"/>
+                                                <a href="#" class="open_edit_modal" data-toggle="modal"
+                                                data-target="#EditDelegationModal"><i class="fa fa-edit"></i></a> 
+                                                &nbsp; 
+                                                <a href="#" class="delete-delegation"><i class="fa fa-trash"></i></a>
+                                                </td>
+                                            </tr> 
+                                        @endforeach
+                                    </tbody>
+                                </table>                               
+                            </div>
                         </div>
                     </form>
                     @endif
@@ -503,12 +559,14 @@
 @endsection
 @section('js')
 @parent
+<script src="/assets/demo/default/custom/components/datatables/base/html-table.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
 <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
 <script src="{{asset('js/settings.js')}}" type="text/javascript"></script>
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 <script>
+
     var editor_config = {
         path_absolute : "/",
         selector: "textarea.editor",
@@ -546,4 +604,6 @@
 
     tinymce.init(editor_config);
 </script>
+@include('settings.add_D', ['company' => @$company])
+@include('settings.edit_D')
 @stop

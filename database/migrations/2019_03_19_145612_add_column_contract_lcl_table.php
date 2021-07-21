@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnContractLclTable extends Migration
 {
@@ -13,7 +13,7 @@ class AddColumnContractLclTable extends Migration
      */
     public function up()
     {
-        Schema::table('contracts_lcl', function (Blueprint $table){
+        Schema::table('contracts_lcl', function (Blueprint $table) {
             $table->integer('account_id')->nullable()->after('company_user_id')->unsigned();
             $table->foreign('account_id')->references('id')->on('accounts_import_clcl')->onDelete('cascade');
         });
@@ -26,9 +26,8 @@ class AddColumnContractLclTable extends Migration
      */
     public function down()
     {
-        Schema::table('contracts_lcl', function($table) {
+        Schema::table('contracts_lcl', function ($table) {
             $table->dropColumn('account_id');
-
         });
     }
 }

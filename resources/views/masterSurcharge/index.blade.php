@@ -102,7 +102,7 @@
                                                 <th >Carrier</th>
                                                 <th >Type Destiny</th>
                                                 <th >Calculation Type</th>
-                                                <th >Equiment</th>
+                                                <th >Equipment</th>
                                                 <th >Destination</th>
                                                 <th >Options</th>
                                             </tr>

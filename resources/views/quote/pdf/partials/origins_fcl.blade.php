@@ -1,3 +1,4 @@
+@if($quote->pdf_options['selectPDF']['id'] ==2 || $quote->pdf_options['selectPDF']['id'] ==3 )
 <!-- Origins detailed -->
 @if($origin_charges->count()>0)
     @foreach($origin_charges as $port => $value)
@@ -5,10 +6,8 @@
         <!-- Section Title -->
         <div>
 
-            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$port}}</b></p>
-
-            <br>
-
+            <p class="title" style="margin-bottom: 0px; color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.origin_charges')}} - {{$port}}</b></p>
+            
         </div>
         <!-- End Section Title -->
 
@@ -33,8 +32,6 @@
                         @endforeach
                     @endforeach
 
-                    <!--<th class="unit"><b>{{__('pdf.currency')}}</b></th>-->
-
                 </tr>
 
             </thead>
@@ -44,23 +41,18 @@
             <tbody>
                 @foreach($value as $key => $charge)
                     <tr>
-                        <td>{!! is_int($key) ? $charge->charge:'<b>'.__('pdf.total').'</b>' !!}</td>
-                        <td>{{ $charge->calculation_type['name'] }}</td>
+                        <td>{!! $charge->charge ?? 'Inland' !!}</td>
+                        <td>{{  @$charge->calculation_type['name'] ?? @$charge->inland_address->address ?? "--" }}</td>
                         @foreach ($charge->total as $total)
-                            <td>{!! is_int($key) ? isDecimal($total,true):'<b>'.isDecimal($total,true).'</b>' !!} {!! is_int($key) ? $charge->currency->alphacode:'<b>'.$charge->currency->alphacode.'</b>' !!}</td>
+                            <td>{!!  isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
                         @endforeach
-                        <!--<td>{!! is_int($key) ? $charge->currency->alphacode:'<b>'.$charge->currency->alphacode.'</b>' !!}</td>-->
                     </tr>
                 @endforeach
             </tbody>
             <!-- End Table Body -->
-
-            <tfoot>
-
-            </tfoot>
-
         </table>
         <!-- End Table -->
     @endforeach
     <br>
+@endif
 @endif

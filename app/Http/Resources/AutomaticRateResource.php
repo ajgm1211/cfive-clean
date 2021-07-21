@@ -37,46 +37,7 @@ class AutomaticRateResource extends JsonResource
             'schedule_type' => $this->setSchedule($this->schedule_type),
             'transit_time' => $this->transit_time,
             'via' => $this->via,
-            'totals_currency' => $this->currency()->first()->alphacode,
-            'profits_currency' => $this->currency()->first()
         ];
-
-        return $this->addContainers($data);
-    }
-
-    public function addContainers($data)
-    {   
-        $quote = $this->quotev2()->first();
-
-        if($quote->type == 'FCL'){
-            if($this->markups!=null){
-                $profits = json_decode($data['markups']);
-                foreach($profits as $code=>$profit){
-                    $prof_key = str_replace('m','',$code);
-                    $data['profits_'.$prof_key] = $profit;
-                }
-            }
-            if($this->total!=null){
-                $totals = json_decode($data['total']);
-                foreach($totals as $code=>$total){
-                    $total_key = str_replace('c','',$code);
-                    $data['totals_'.$total_key] = $total;
-                }
-            }
-        }else if($quote->type == "LCL"){
-            if($this->markups!=null){
-                $profits = json_decode($data['markups']);
-                foreach($profits as $code=>$profit){
-                    $data['profits_'.$code] = $profit;
-                }
-            }
-            if($this->total!=null){
-                $totals = json_decode($data['total']);
-                foreach($totals as $code=>$total){
-                    $data['totals_'.$code] = $total;
-                }
-            }
-        }
 
         return $data;
     }
@@ -85,7 +46,7 @@ class AutomaticRateResource extends JsonResource
     {
         if($sctype == 'Direct'){
             return ['id'=>1,'name'=>ScheduleType::where('id',1)->first()->name];
-        }else if($sctype == 'Transfer'){
+        }else if($sctype == 'Transhipment'){
             return ['id'=>2,'name'=>ScheduleType::where('id',2)->first()->name];
         }else if($sctype == 1 || $sctype == 2){
             return ['id'=>$sctype,'name'=>ScheduleType::where('id',$sctype)->first()->name];

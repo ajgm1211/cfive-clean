@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\AutomaticRate;
+use App\Charge;
+use App\Container;
+use App\Http\Requests\StoreAddSaletermQuotes;
 use App\SaleTermV2;
 use App\SaleTermV2Charge;
-use App\Charge;
-use App\AutomaticRate;
-use App\Container;
 use App\User;
-use App\Http\Requests\StoreAddSaletermQuotes;
+use Illuminate\Http\Request;
 
 class SaleTermV2Controller extends Controller
 {
@@ -50,10 +50,10 @@ class SaleTermV2Controller extends Controller
         $sale_charge->currency_id = $company_user->companyUser->currency_id;
         $sale_charge->save();
 
-        $notification = array(
+        $notification = [
             'toastr' => 'Record saved successfully!',
-            'alert-type' => 'success'
-        );
+            'alert-type' => 'success',
+        ];
 
         return back()->with($notification);
     }
@@ -93,14 +93,14 @@ class SaleTermV2Controller extends Controller
     }
 
     /**
-     * Update charges by saleterms
-     * @param Request $request 
+     * Update charges by saleterms.
+     * @param Request $request
      * @return array json
      */
     public function updateSaleCharges(Request $request)
     {
         $charge = SaleTermV2Charge::find($request->pk);
-        $name = explode("->", $request->name);
+        $name = explode('->', $request->name);
         if (strpos($request->name, '->') == true) {
             if ($name[0] == 'rate') {
                 $array = json_decode($charge->rate, true);
@@ -114,9 +114,9 @@ class SaleTermV2Controller extends Controller
             $charge->$name = $request->value;
         }
         $charge->update();
+
         return response()->json(['success' => 'Ok']);
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -127,31 +127,32 @@ class SaleTermV2Controller extends Controller
     public function destroy($id)
     {
         SaleTermV2::where('id', $id)->delete();
+
         return response()->json(['message' => 'Ok']);
     }
 
     public function destroyCharge($id)
     {
         SaleTermV2Charge::where('id', $id)->delete();
+
         return response()->json(['message' => 'Ok']);
     }
 
     public function storeSaleCharge(Request $request)
     {
-
         $containers = Container::all();
 
-        $merge_amounts = array();
+        $merge_amounts = [];
 
         foreach ($containers as $value) {
-            ${'array_amount_' . $value->code} = array();
-  
+            ${'array_amount_'.$value->code} = [];
+
             foreach ($request->equipments as $key => $equipment) {
                 if (($key == 'c'.$value->code) && $equipment != null) {
-                    ${'array_amount_' . $value->code} = array('c'.$value->code => $equipment);
+                    ${'array_amount_'.$value->code} = ['c'.$value->code => $equipment];
                 }
             }
-            $merge_amounts = array_merge($merge_amounts, ${'array_amount_' . $value->code});
+            $merge_amounts = array_merge($merge_amounts, ${'array_amount_'.$value->code});
         }
 
         $sale_charge = new SaleTermV2Charge();

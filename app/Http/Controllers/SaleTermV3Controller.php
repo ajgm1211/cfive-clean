@@ -58,11 +58,11 @@ class SaleTermV3Controller extends Controller
             return $currency->only(['id', 'name']);
         });
 
-        $sale_term_codes = SaleTermCode::get()->map(function ($currency) {
+        $sale_term_codes = SaleTermCode::filterByCurrentCompany()->orderBy('name','asc')->get()->map(function ($currency) {
             return $currency->only(['id', 'name']);
         });
 
-        $containers = Container::get();
+        $containers = Container::all();
 
         $data = [
             'types' => $types,

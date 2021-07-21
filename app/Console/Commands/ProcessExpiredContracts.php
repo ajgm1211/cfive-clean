@@ -39,16 +39,16 @@ class ProcessExpiredContracts extends Command
      */
     public function handle()
     {
-		try{
-			$contracts=Contract::where('status','publish')->where('expire','<=',date('Y-m-d'))->get();
-			foreach ($contracts as $contract){
-				Contract::where('id',$contract->id)->update(['status' => 'expired']);
-			}
-			$contracts_lcl=ContractLcl::where('status','publish')->where('expire','<=',date('Y-m-d'))->get();
-			foreach ($contracts_lcl as $contract){
-				ContractLcl::where('id',$contract->id)->update(['status' => 'expired']);
-			}
-		} catch(\Exception $e){
+        try {
+            $contracts = Contract::where('status', 'publish')->where('expire', '<=', date('Y-m-d'))->get();
+            foreach ($contracts as $contract) {
+                Contract::where('id', $contract->id)->update(['status' => 'expired']);
+            }
+            $contracts_lcl = ContractLcl::where('status', 'publish')->where('expire', '<=', date('Y-m-d'))->get();
+            foreach ($contracts_lcl as $contract) {
+                ContractLcl::where('id', $contract->id)->update(['status' => 'expired']);
+            }
+        } catch (\Exception $e) {
             return $this->info($e->getMessage());
         }
         $this->info('Command Process Expired Contracts executed successfully!');

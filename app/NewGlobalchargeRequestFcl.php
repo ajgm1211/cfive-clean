@@ -7,7 +7,6 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class NewGlobalchargeRequestFcl extends Model
 {
-    
     protected $table = 'n_request_globalcharge';
     protected $fillable = ['name',
                            'numbercontract',
@@ -22,13 +21,15 @@ class NewGlobalchargeRequestFcl extends Model
                            'created_at',
                            'sentemail',
                            'type',
-                           'data'];
+                           'data', ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo('App\User');
     }
 
-    public function companyuser(){
-        return $this->belongsTo('App\CompanyUser','company_user_id');
+    public function companyuser()
+    {
+        return $this->belongsTo('App\CompanyUser', 'company_user_id');
     }
 }

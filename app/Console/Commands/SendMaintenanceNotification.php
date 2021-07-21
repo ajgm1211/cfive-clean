@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\SendMaintenanceNotificationEmail;
+use App\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\User;
-use App\Mail\SendMaintenanceNotificationEmail;
 
 class SendMaintenanceNotification extends Command
 {
@@ -47,14 +47,15 @@ class SendMaintenanceNotification extends Command
         $month_spanish = $this->argument('month_spanish');
         $hour = $this->argument('hour');
         $duration = $this->argument('duration');
-        try{
-            $users=User::where('state',1)->get();
+        try {
+            $users = User::where('state', 1)->get();
             foreach ($users as $item) {
-                Mail::to($item->email)->send(new SendMaintenanceNotificationEmail($day, $month, $day_spanish, $month_spanish, $date, $hour, $duration));
+                @Mail::to($item->email)->send(new SendMaintenanceNotificationEmail($day, $month, $day_spanish, $month_spanish, $date, $hour, $duration));
             }
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             return $this->info($e->getMessage());
         }
+
         return $this->info('Command Send Maintenance Notification executed successfully!');
     }
 }

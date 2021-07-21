@@ -1,0 +1,264 @@
+.responsive-group-action {
+    display: flex;
+    .multiselect {
+        width: 20%;
+    }
+}
+
+.modal-add-freight {
+    .modal-input {
+        .row {
+            justify-content: center;
+        }
+    }
+}
+
+.b-form-datepicker {
+    label {
+        line-height: 2.5;
+    }
+}
+
+/*** * Modal Table Add Charges - Local Charges * ***/
+.data-surcharge,
+.data-provider,
+input.data-provider {
+    width: 145px !important;
+}
+.data-showas,
+input.data-showas {
+    width: 135px !important;
+}
+.data-currency {
+    width: 110px !important;
+}
+
+
+
+.data-profit.form-control {
+    float: left !important;
+    width: 50px !important;
+    padding: 0.15rem 0.3rem !important;
+    margin-right: 3px !important;
+}
+
+#modal-localcharges-table, #modal-inlandcharges-table {
+    .table-responsive-sm {    
+        background: #ffffff;
+        border-radius: 5px;
+        padding: 15px;
+        table {
+            height: 300px;
+        }
+        .btn-delete {
+            top: 10px;
+            position: relative;
+        }
+        .custom-checkbox {
+            top: 7px;
+        }
+    }
+}
+
+.data-detail {
+    width: 170px !important;
+}
+
+.change-currency-totals {
+    ul.multiselect__content {
+        height: 40px !important;
+    }
+}
+
+.exchange-rates {
+    display: flex;
+    flex-flow: wrap;
+    padding-left: 35px !important;
+    margin-bottom: 0px !important;
+    li {
+        display: flex;
+        align-items: center;
+        list-style: none;
+    }
+}
+
+/*** * Fin Modal Table Add Charges - Local Charges * ***/
+@media only screen and (min-width: 320px) and (max-width: 425px) {
+    .exchange-rates {
+        width: 100% !important;
+        padding-left: 0px !important;
+        li {
+            width: 100% !important;
+            display: block !important;
+            .multiselect, input {
+                width: 100% !important;
+            }
+        }
+    }
+    .responsive-checkbox-freight {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        .custom-checkbox {
+            margin-bottom: 20px;
+        }
+    }
+    .responsive-destination-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        img {
+            margin-bottom: 15px;
+        }
+    }
+
+    td #freights_20FR,
+    td #freights_40FR,
+    td #freights_20DV,
+    td #freights_40DV,
+    td #freights_40HC,
+    td #freights_45HC,
+    td #freights_40NOR,
+    td #freights_20RF,
+    td #freights_40RF,
+    td #freights_40HCRF,
+    td#rates_20FR input,
+    td#rates_40FR input,
+    td#rates_20DV input,
+    td#rates_40DV input,
+    td#rates_40HC input,
+    td#rates_45HC input,
+    td#rates_40NOR input,
+    td#rates_20RF input,
+    td#rates_40RF input,
+    td#rates_40HCRF input,
+    .data-profit.form-control  {
+        width: 80px;
+    }
+
+    td#charge input {
+        width: 150px !important;
+    }
+
+    td #fixed_surcharge,
+    td #fixed_calculation_type {
+        width: 150px;
+    }
+
+    .responsive-localcharges-card-select {
+        margin-top: 15px;
+    }
+
+    .responsive-localcharges-card, 
+    .responsive-localcharges-card-select {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        .multiselect.q-select {
+            width: 100% !important;
+        }
+        a {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    }
+
+    .origin-destination-inland-res {
+        width: 250px;
+    }
+
+    .resposive-origin-destination {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        .multiselect.q-select {
+            width: 100% !important;
+        }
+        h5 {
+            top: 3px;
+            position: relative;
+            white-space: nowrap;
+            margin-bottom: 0px;
+        }
+    }
+    .responsive-group-action {
+        display: flex;
+        flex-direction: column;
+        .custom-checkbox {
+            margin-bottom: 10px;
+        }
+        .multiselect {
+            width: 100% !important;
+        }
+    }
+
+}
+
+@media only screen and (min-width: 320px) and (max-width: 768px) {
+    .exchange-rates {
+        li {
+            margin-top: 10px;
+        }
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .responsive-checkbox-freight {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        .custom-checkbox {
+            margin-bottom: 0px;
+        }
+    }
+    td #freights_20FR,
+    td #freights_40FR,
+    td #freights_20DV,
+    td #freights_40DV,
+    td #freights_40HC,
+    td #freights_45HC,
+    td #freights_40NOR,
+    td #freights_20RF,
+    td #freights_40RF,
+    td #freights_40HCRF {
+        width: 80px;
+    }
+    .responsive-localcharges-card {
+        .multiselect.q-select {
+            width: 50% !important;
+        }
+        h5 b {
+            white-space: nowrap;
+        }
+    }
+    .resposive-origin-destination {
+        display: none;
+    }    
+    
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1025px) {
+    td #fixed_surcharge,
+    td #fixed_calculation_type {
+        width: 200px;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    td #fixed_surcharge, 
+    td #freights_20FR,
+    td #freights_40FR,
+    td #freights_20DV,
+    td #freights_40DV,
+    td #freights_40HC,
+    td #freights_45HC,
+    td #freights_40NOR,
+    td #freights_20RF,
+    td #freights_40RF,
+    td #freights_40HCRF  {
+        width: 100% !important;
+    }
+}

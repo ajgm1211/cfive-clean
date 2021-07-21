@@ -24,6 +24,9 @@ background-color: #969cc0;
 
 background-color: #36A3F7;
 }
+.bg-express{
+background-color: #5ce4a4;   
+}
 .m-portlet {
     box-shadow: none;
     border-radius: 5px;
@@ -649,6 +652,23 @@ background-color: #36A3F7;
 .hida {
     display: none;
 }
+.m-wizard.m-wizard--1.m-wizard--success .m-wizard__steps .m-wizard__step.m-wizard__step--done .m-wizard__step-info .m-wizard__step-number > span {
+    background-color: #0072fc;
+}
+.m-wizard.m-wizard--1.m-wizard--success .m-wizard__steps .m-wizard__step.m-wizard__step--current .m-wizard__step-info .m-wizard__step-number > span {
+    background-color: rgba(0, 114, 252, 0.70);
+}
+
+.m-wizard.m-wizard--1 .m-wizard__head .m-wizard__nav .m-wizard__steps .m-wizard__step .m-wizard__step-info .m-wizard__step-number > span {
+    width: 3rem;
+    height: 3rem;
+}
+.m-wizard.m-wizard--1 .m-wizard__head .m-wizard__nav .m-wizard__steps .m-wizard__step .m-wizard__step-info .m-wizard__step-number > span > span {
+    font-size: 16px;
+}
+.m-wizard.m-wizard--1.m-wizard--success .m-wizard__progress .progress .progress-bar:after {
+    background-color: #0172fc;
+}
 /* estilos */
 </style>
 @endsection
@@ -656,10 +676,8 @@ background-color: #36A3F7;
 @section('title', 'Quotes')
 @section('content')
 <br>
-
+{!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group dfw']) !!}
 <div class="padding">
-    {!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group dfw']) !!}
-
     <div class="col-lg-12">
         @if ($errors->any())
         <div class="alert alert-danger">
@@ -678,7 +696,7 @@ background-color: #36A3F7;
                         <div class="row">
                             <div class="col-lg-1">
                                 <label>Type</label>
-                                {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],null,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
+                                {{ Form::select('type',['1' => 'FCL','2' => 'LCL'],null,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
                             </div>
                             <div class="col-lg-1">
                                 <label>Direction</label>
@@ -1181,7 +1199,6 @@ background-color: #36A3F7;
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-lg-12">
                                 <center>
@@ -1193,8 +1210,7 @@ background-color: #36A3F7;
                                         id="quote_searching">Searching &nbsp;<i
                                             class="fa fa-spinner fa-spin"></i></button>
                                     <button type="button"
-                                        class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual" data-type="1">Create
-                                        Manual</span></button>
+                                        class="btn m-btn--pill  btn-info btn-search__quotes create-manual" data-toggle="modal" data-target="#createContractModal" data-type="1"><i class="fa fa-plus"></i> Add Contract</span></button>
                                 </center>
                             </div>
                         </div>
@@ -1203,11 +1219,21 @@ background-color: #36A3F7;
             </div>
         </div>
     </div>
-
-    {!! Form::close() !!}
-
-
 </div>
+
+<div class="padding">
+    <div class="col-lg-12">
+        <div class="tab-content">
+            <div class="row">
+                <div class="col-lg-12" align='right'>
+                    <button type="button" class="btn btn-link quote_man"><i class="fa fa-plus"></i> Create Quote Manually</button> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{!! Form::close() !!}
 
 
 
@@ -1249,9 +1275,9 @@ background-color: #36A3F7;
                                     </div>
                                 </div>
                                 <div class="col-lg-6" align='right'> 
-                                    <button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1)"><b>Create Quote</b></button>
-                                    <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2)" title="New Feature">
-                                        Create FCL Quote
+                                    <!--<button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1, 'FCL')"><b>Create Quote</b></button>-->
+                                    <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2, 'FCL')">
+                                        Create Quote
                                     </button>
                                 </div>
                             </div>
@@ -1304,7 +1330,7 @@ background-color: #36A3F7;
                                     <div class="m-widget5">
                                         <div class="m-widget5__item no-padding no-margin">
                                             <div class="m-widget5__pic">
-                                                <img src="http://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}" alt=""
+                                                <img src="http://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}" alt=""
                                                     title="" />
                                             </div>
                                         </div>
@@ -1377,7 +1403,7 @@ background-color: #36A3F7;
                                         <div class="col-lg-12 b-top no-padding padding-min">
                                             <div class="row justify-content-between">
 
-                                                @if(!empty($arr->remarks) || !empty($arr->remarksG))
+                                                @if(!empty($arr->remarks) || (!empty($arr->remarksG) && $arr->remarksG!='    ' && $arr->remarksG!='<br>    '))
                                                 <div class="col-lg-1">
                                                     <div class="btn-detail__quotes btn-remarks">
                                                         <a id='display_r{{$loop->iteration}}'
@@ -1441,14 +1467,6 @@ background-color: #36A3F7;
                                                     ($arr->totalItems !="0") )
                                                     <div class="downexcel" style="margin-right: 10px;">
 
-                                                        @if($arr->idContract !="0")
-                                                        <a id='excel_l{{$loop->iteration}}'
-                                                            href="{{route('quotes-v2.excel',[$arr->excelRequest,$arr->excelRequestFCL,$arr->idContract])}}"
-                                                            class="l detailed-cost" title="Download">
-                                                            <span class="workgreen"><i class="icon-excel"></i></span>
-                                                            <i class="la la-file-excel-o"></i>
-                                                        </a>
-                                                        @else
                                                         <a id='excel_l{{$loop->iteration}}' href="#"
                                                             onclick="downlodRequest({{ $arr->excelRequest }},{{ $arr->excelRequestFCL }},{{ $arr->idContract }})"
                                                             class="l detailed-cost" title="Download">
@@ -1456,7 +1474,7 @@ background-color: #36A3F7;
 
                                                             <i class="la la-file-excel-o"></i>
                                                         </a>
-                                                        @endif
+                                                
                                                     </div>
                                                     @endif
                                                     <div class="btn-detail__quotes btn-d">
@@ -1948,7 +1966,16 @@ background-color: #36A3F7;
         </div>
     </div>
 </div>
+
+
+
 @include('companies.partials.companiesModal')
+@include('quotesv2.partials.createContractModal')
+
+
+
+
+
 
 @endsection
 
@@ -1984,7 +2011,9 @@ precargar()
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript">
+
 </script>
+
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete"
     async defer></script>
@@ -2042,6 +2071,15 @@ $(document).ready(function() {
         $('.c5-switch').prop('checked', true);
         $('.c5-switch').trigger('change');
     }
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if(urlParams.has('opt')){
+        $('#quoteType').val('2');
+        $('#quoteType').trigger('change');
+    }
+        
+
+
 });
 /*** GOOGLE MAPS API ***/
 var autocomplete;
@@ -2091,6 +2129,14 @@ function AbrirModal(action, id) {
             });
         });
     }
+    if (action == "addContract") {
+        var url = '{{ route("quotesv2.addContract") }}';
+        $('.modal-body').load(url, function() {
+            $('#createContractModal').modal({
+                show: true
+            });
+        });
+    }
 }
 $('#delivery_type').on('change', function() {
     var value = $(this).val();
@@ -2130,6 +2176,7 @@ $('#quoteType').on('change', function() {
 //C5 Select
 (function($) {
     $.fn.selectC5 = function() {
+        
         var clickOnID = '' + $(this).attr('id') + '';
         var optionSelect = '#' + $(this).attr('id') + ' option';
         var selectType = '' + $(this).attr('select-type') + '';
@@ -2139,7 +2186,7 @@ $('#quoteType').on('change', function() {
             '</ul>' +
             '</span>' +
             '<span class="c5-select-multiple-container ' + clickOnID + '">' +
-            '<span class="c5-select-header">Types</span>' +
+           /*  '<span class="c5-select-header">Types</span>' +
             '<ul class="c5-select-list list-types-carriers">' +
             '<li class="c5-case"><label class="c5-label">CMA CGM Spot' +
             '<input id="mode4" type="checkbox" class="c5-check" value="CMA" title="CMA">' +
@@ -2150,7 +2197,7 @@ $('#quoteType').on('change', function() {
             '<li class="c5-case"><label class="c5-label">SAFMARINE Spot' +
             '<input id="mode6" type="checkbox" class="c5-check" value="SAFMARINE" title="SAFMARINE">' +
             '<span class="checkmark"></span></label></li>' +
-            '</ul>' +
+            '</ul>' + */
             '<span class="c5-select-header">Carriers</span>' +
             '<span class="c5-select-container-close">' +
             '<i class="fa fa-times" aria-hidden="true"></i>' +
@@ -2394,6 +2441,46 @@ $('#mySelect2').select2({
     return data.text;
   }
 });
+
+var uploadedDocumentMap = {}
+  Dropzone.options.documentDropzone = {
+    url: '{{ route('contracts.storeMedia') }}',
+    maxFilesize: 2, // MB
+    timeout: 18000,
+    addRemoveLinks: true,
+    headers: {
+    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+  },
+    success: function (file, response) {
+      $('#m_form').append('<input type="hidden" name="document[]" value="' + response.name + '">');
+      uploadedDocumentMap[file.name] = response.name
+      $('#m_form').find('input[name="existsFile"]').val(1);
+    },
+      removedfile: function (file) {
+        file.previewElement.remove()
+        var name = ''
+        if (typeof file.file_name !== 'undefined') {
+          name = file.file_name
+        } else {
+          name = uploadedDocumentMap[file.name]
+        }
+        $
+        $('#m_form').find('input[name="document[]"][value="' + name + '"]').remove();
+        $('#m_form').find('input[name="existsFile"]').val('');
+      },
+        init: function () {
+          @if(isset($project) && $project->document)
+          var files =
+              {!! json_encode($project->document) !!}
+          for (var i in files) {
+            var file = files[i]
+            this.options.addedfile.call(this, file)
+            file.previewElement.classList.add('dz-complete')
+            $('m_form').append('<input type="hidden" name="document[]" value="' + file.file_name + '">')
+          }
+          @endif
+        }
+        }
 </script>
 
 @stop

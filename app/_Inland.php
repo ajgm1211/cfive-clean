@@ -2,72 +2,67 @@
 
 namespace App;
 
-
+use App\Http\Filters\InlandFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Filters\InlandFilter;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
-
 
 class _Inland extends Model implements Auditable
 {
-  use \OwenIt\Auditing\Auditable;
+    use \OwenIt\Auditing\Auditable;
 
-  protected $table    = "inlands";
-  protected $fillable =   ['id','provider','type','validity','expire','company_user_id','gp_container_id'];
+    protected $table = 'inlands';
+    protected $fillable = ['id', 'provider', 'type', 'validity', 'expire', 'company_user_id', 'gp_container_id'];
 
-  public function inlandadditionalkms(){
+    public function inlandadditionalkms()
+    {
+        return $this->hasOne('App\InlandAdditionalKm');
+    }
 
-    return $this->hasOne('App\InlandAdditionalKm');
+    public function inlandports()
+    {
+        return $this->hasMany('App\InlandPort');
+    }
 
-  }
-  public function inlandports(){
+    public function inlandRange()
+    {
+        return $this->hasMany('App\InlandRange');
+    }
 
-    return $this->hasMany('App\InlandPort');
+    public function inlanddetails()
+    {
+        return $this->hasMany('App\InlandDetail');
+    }
 
-  }
-  public function inlandRange(){
+    public function companyUser()
+    {
+        return $this->belongsTo('App\CompanyUser');
+    }
 
-    return $this->hasMany('App\InlandRange');
+    public function inland_company_restriction()
+    {
+        return $this->HasMany('App\InlandCompanyRestriction');
+    }
 
-  }
-  public function inlanddetails(){
+    public function scopeFilterByCurrentCompany($query)
+    {
+        $company_id = Auth::user('web')->company_user_id;
 
-    return $this->hasMany('App\InlandDetail');
+        return $query->where('company_user_id', '=', $company_id);
+    }
 
-  }
-  public function companyUser()
-  {
-    return $this->belongsTo('App\CompanyUser');
-  }
-  public function inland_company_restriction(){
+    public function gpContainer()
+    {
+        return $this->belongsTo('App\GroupContainer');
+    }
 
-    return $this->HasMany('App\InlandCompanyRestriction');
-
-  }
-
-  public function scopeFilterByCurrentCompany( $query )
-  {
-
-    $company_id = Auth::user('web')->company_user_id;
-  
-    return $query->where('company_user_id', '=',$company_id);
-  }
-
-  public function gpContainer()
-	{
-		return $this->belongsTo('App\GroupContainer');
-  }
-  public function scopeFilter(Builder $builder, Request $request)
-	{
-		return (new InlandFilter($request, $builder))->filter();
-	}
-
-
+    public function scopeFilter(Builder $builder, Request $request)
+    {
+        return (new InlandFilter($request, $builder))->filter();
+    }
 }

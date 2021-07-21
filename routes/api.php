@@ -73,8 +73,13 @@ Route::group(['prefix' => 'v1'], function () {
         //Airports
         Route::get('airports', 'ApiController@airports');
         //Rates
-        Route::get('rates/{mode}/{code_origin}/{code_destination}/{inicio}/{fin}/{group}', ['as' => 'search.index.v2', 'uses' => 'ApiController@search']);
+        Route::get('rates/{mode}/{code_origin}/{code_destination}/{inicio}/{fin}/{group}/{carrierUrl?}', ['as' => 'search.index.v2', 'uses' => 'ApiController@search']);
+        Route::get('rates/lcl/{code_origin}/{code_destination}/{init_date}/{end_date}', ['as' => 'searchLCL.index.v2', 'uses' => 'ApiController@searchLCL']);
+        Route::get('getContract', ['as' => 'getContract.index.v2', 'uses' => 'ApiController@getContract']);
+
         Route::get('get_rates/{contract}', ['as' => 'search.contract.id', 'uses' => 'ApiController@processSearchByContract']);
+        //Calculation types
+        Route::get('calculationtypes/{type}', 'ApiCalculationTypeController@index');
     });
 });
 
@@ -89,3 +94,10 @@ Route::group(['prefix' => 'request', 'middleware' => 'auth:api'], function () {
     //Route::group(['prefix' => 'request'], function () {
     Route::post('sendEmail', 'RequestFclV2Controller@sendEmailRequest');
 });
+
+Route::group(['prefix' => 'requestLCL', 'middleware' => 'auth:api'], function () {
+    //Route::group(['prefix' => 'request'], function () {
+    Route::post('sendEmail', 'NewContractRequestLclController@sendEmailRequest');
+});
+
+$router->get('pdf/{id}',['as' => 'pdf.api', 'uses' => 'ApiController@pdfApi']);
