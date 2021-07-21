@@ -1161,7 +1161,7 @@ class SearchApiController extends Controller
             $total = count($downloads);
             if ($total > 1) {                                         
                 
-                return response()->json(['success' => true, 'url' => $contract,'zip'=>true ]);
+                return response()->json(['success' => true, 'url' => $contract->id,'zip'=>true ]);
             } else {
                 $media = $downloads->first();
                 $mediaItem = Media::find($media->id);
@@ -1179,6 +1179,7 @@ class SearchApiController extends Controller
     {
         
        
+        //$contract = Contract::find('41029');
         $downloads = $contract->getMedia('document');
         $objeto = MediaStream::create('export.zip')->addMedia($downloads);
 
