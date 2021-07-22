@@ -86,72 +86,36 @@
                 <div class="col-lg-3 mb-2 input-search-form origen-search"> 
 
                     <div class="od-input">
-                        <p class="all-places" v-if="false"><span>Barcelona</span></p>
-                        <b-form-input v-model="originPlaces" placeholder="Enter your name">asd</b-form-input>
-                        <span class="city-port city-port-si" v-if="textActiveFrom">{{textDirectionFrom}}</span>
+                        <img src="/images/port.svg" class="img-icon" alt="port">
+                        <div>
+                            <p class="input-places">
+                                <span v-for="data in findPlaces" >
+                                {{data}}
+                                <b @click="deletePlace(data)" class="delete-input-country">x</b></span>
+                            </p>
+                            <b-form-input v-model="originPlacesFrom" placeholder="From"></b-form-input>
+                        </div>
+                        <span class="city-port" v-if="showTagPlace"></span>
                     </div>
-                    <ul class="places-list" v-if="originPlaces">
-                        <li v-for="data, index in optionsPlaces">
+                    <ul class="places-list" v-if="originPlacesFrom">
+
+                        <li v-for="(data, key) in optionsPlaces">
                             <b-form-checkbox
-                            :id="'check'+data.index"
+                            :id="'place-'+key"
                             v-model="checkPlaces"
-                            :name="'check'+data.index"
-                            value="accepted"
-                            unchecked-value="not_accepted"
+                            :value="data.code"
+                            @change="placeChecked(data)"
                             >
                             <b-icon icon="geo-alt" class="mr-2"></b-icon>
                             <div class="text-places">
-                                <h6>{{data.country}}</h6>
-                                <p>{{data.location}}</p>
+                                <h6>{{data.location}}</h6>
+                                <p>{{data.country}}</p>
                             </div>
                             <span class="city-port">{{data.type}}</span>                                             
                             </b-form-checkbox>
 
                         </li>
                     </ul>
-
-                    <!-- <multiselect
-                        v-model="searchRequest.originPorts"
-                        :multiple="true"
-                        :close-on-select="true"
-                        :clear-on-select="true"
-                        :show-labels="false"
-                        :options="originPortOptions"
-                        @input="updateQuoteSearchOptions()"
-                        label="display_name"
-                        track-by="display_name"
-                        placeholder="From"
-                        class="s-input"
-                    >
-                    </multiselect>
-                    <img
-                        src="/images/port.svg"
-                        class="img-icon img-icon-left img-icon-origin"
-                        alt="port"
-                    />
-                    <span
-                        v-if="errorsExist && 'originPorts' in responseErrors"
-                        style="color: red"
-                        >The Origin Port field is required!</span
-                    >  -->
-
-                    <!-- <b-dropdown id="portCityFrom" class="s-input" :text="directionFrom">
-
-                        <div class="search-label">
-
-                            <b-icon icon="geo-alt" class="mr-2"></b-icon>
-                            <multiselect 
-                                v-model="valueFrom1"
-                                placeholder="From a Port" 
-                                :options="optionsCountry" 
-                                :optionsLimit="5"
-                                class="search-multiselect">
-                            </multiselect>
-                            <span class="city-port">port</span>
-
-                        </div>
-
-                    </b-dropdown> -->
 
                 </div>
                 <!-- FIN ORIGIN PORT -->
@@ -1464,14 +1428,18 @@ export default {
     },
     data() {
         return {
-            // datos estaticos search con inlands
-            originPlaces: '',
-            checkPlaces: '',
+            // datos estaticos search con inlands aqui
+            originPlacesFrom: '',
+            showPlaces: false,
+            showTagPlace: false,
+            checkPlaces: [],
+            findPlaces: [],
+            placeInShow: [],
             optionsPlaces: [
-                { country: 'España', location: 'Madrid', type: 'city' },
-                { country: 'España', location: 'Barcelona', type: 'port' },
-                { country: 'España', location: 'Canarias', type: 'port' },
-                { country: 'GraEspañape', location: 'Sevilla', type: 'city' }
+                { code:'123_456_2', country: 'España', location: 'Madrid', type: 'city' },
+                { code:'123_567_1', country: 'España', location: 'Barcelona', type: 'port' },
+                { code:'123_321_1', country: 'España', location: 'Canarias', type: 'port' },
+                { code:'123_876_2', country: 'España', location: 'Sevilla', type: 'city' }
             ],
             // fin datos estaticos search con inlands
             loaded: false,
@@ -1611,6 +1579,17 @@ export default {
         });
     },
     methods: {
+        placeChecked(data){
+            this.placeInShow.push({code: data.code, location: data.location});
+            this.findPlaces = [];
+            this.findPlaces.push(this.checkPlaces);
+            this.originPlacesFrom = false;
+            console.log(this.findPlaces);
+        },
+        deletePlace(e){
+            this.placeInShow.splice(e, 1);
+            this.findPlaces.splice(e, 1);
+        },
         //modal
         nextStep() {
             if (this.stepOne) {
@@ -2297,40 +2276,12 @@ export default {
         },
     },
     watch: {
-        /**deliveryType: function () {
-            if (this.deliveryType.id == 1) {
-                this.ptdActive = false;
-                this.dtpActive = false;
-                this.dtdActive = false;
-                return;
-            } else if (this.deliveryType.id == 2) {
-                this.dtpActive = false;
-                this.dtdActive = false;
+        checkPlaces: function() {
+            
+            /* this.findPlaces = [];
+            this.findPlaces.push(this.checkPlaces); */
 
-                this.ptdActive = !this.ptdActive;
-
-                this.setDestinationAddressMode();
-                return;
-            } else if (this.deliveryType.id == 3) {
-                this.ptdActive = false;
-                this.dtdActive = false;
-
-                this.dtpActive = !this.dtpActive;
-
-                this.setOriginAddressMode();
-                return;
-            } else if (this.deliveryType.id == 4) {
-                this.ptdActive = false;
-                this.dtpActive = false;
-
-                this.dtdActive = !this.dtdActive;
-
-                this.setDestinationAddressMode();
-                this.setOriginAddressMode();
-                return;
-            }
-        },**/
-
+        },
         selectedContainerGroup: function () {
             let component = this;
             let fullContainersByGroup = [];
