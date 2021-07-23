@@ -972,7 +972,7 @@
                                         v-model="input.units"
                                         style="width:80px;"
                                         @keypress="isNumber($event)"
-                                        class="q-input data-profit"
+                                        class="q-input"
                                     ></b-form-input>
                                 </b-td>
 
@@ -999,7 +999,13 @@
                                 <!-- Profits -->
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
-                                        v-model="input.total"
+                                        :value="
+                                            setTotal(
+                                                input.units,
+                                                input.price,
+                                                input.profit
+                                            )
+                                        "
                                         style="width:80px;"
                                         class="q-input"
                                         disabled
