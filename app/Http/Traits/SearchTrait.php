@@ -3,6 +3,7 @@
 namespace App\Http\Traits;
 
 use App\CalculationType;
+use App\CalculationTypeLcl;
 use App\ContainerCalculation;
 use App\CompanyUser;
 use App\Currency;
@@ -922,8 +923,87 @@ trait SearchTrait
         }
     }
 
+    //Necessary calculations for LCL Rate : calculating totals with requested LCL type, and converting to client currency for display
+    public function setLclRateTotals($rate, $search_data)
+    {
+        $amount = $rate->uom;
+
+        $chargeable_weigth = $search_data['chargeableWeight'];
+
+        $total = $amount * $chargeable_weigth;
+
+        if($total < $rate->minimum){
+            $total = $rate->minimum;
+        }
+
+        $total_client_currency = $this->convertToCurrency($rate->currency, $search_data['client_currency'], array($total));
+
+        $rate->setAttribute('total',$total);
+        $rate->setAttribute('total_client_currency',$total_client_currency[0]);
+    }
+
+    //Necessary calculations for LCL Charges, using calculation types (business rules)
+    public function calculateLclChargesPerType($charges_direction, $search_data)
+    {
+        foreach($charges_direction as $direction){
+            foreach($direction as $charge){
+                $calculation_options = json_decode($charge->calculationtypelcl->options, true);
+                $cargo_type = $this->setLclCargoType($search_data);
+
+                if($calculation_options['type'] == 'unique'){
+                    $amount = $charge->ammount;
+                }else if($calculation_options['type'] == 'chargeable' || $calculation_options['type'] == 'rate_only'){
+                    $amount = $charge->ammount * $search_data['chargeableWeight'];
+                }else if($calculation_options['type'] == 'ton'){
+                    $amount = $charge->ammount * ( $search_data['weight'] / 1000 );
+                }else if($calculation_options['type'] == 'm3'){
+                    $amount = $charge->ammount * $search_data['volume'];
+                }else if($calculation_options['type'] == 'kg'){
+                    $amount = $charge->ammount * $search_data['weight']; 
+                }else if($calculation_options['type'] == 'package'){
+                    $amount = $charge->ammount * $cargo_type['Package'];
+                }else if($calculation_options['type'] == 'pallet'){
+                    $amount = $charge->ammount * $cargo_type['Pallets'];
+                }
+
+                $total_client_currency = $this->convertToCurrency($charge->currency, $search_data['client_currency'], array($amount));
+
+                $charge->setAttribute('totals', $amount);
+                $charge->setAttribute('total_client_currency',$total_client_currency[0]);
+            }
+        }
+    }
+
+    //Counts Pallets and Packages for LCL search
+    public function setLclCargoType($search_data)
+    {
+        $cargo = [];
+
+        if($search_data['lclTypeIndex'] == 0){
+            if($search_data['cargoType'] == 1 ){ //Pallets
+                $cargo['Pallets'] = $search_data['quantity'];
+                $cargo['Packages'] = 0;
+            }else if($search_data['cargoType'] == 2 ){ //Packages
+                $cargo['Pallets'] = 0;
+                $cargo['Packages'] = $search_data['quantity'];
+            }
+        }else if($search_data['lclTypeIndex'] == 1){
+            $cargo['Pallets'] = 0;
+            $cargo['Packages'] = 0;
+            foreach($search_data['packaging'] as $pack){
+                if($pack['cargoType']['id'] == 1){
+                    $cargo['Pallets'] += $pack['quantity'];
+                }else if($pack['cargoType']['id'] == 2){
+                    $cargo['Packages'] += $pack['quantity'];
+                }
+            }
+        }
+
+        return $cargo;
+    }
+
     //Get charges per container from calculation type - inputs a charge collection, outputs ordered collection
-    public function setChargesPerContainer($charges, $containers, $rate_containers, $client_currency)
+    public function calculateFclCharges($charges, $containers, $rate_containers, $client_currency)
     {
         $container_ids = $this->getIdsFromArray($containers);
         $rate_container_array = json_decode($rate_containers,true);
@@ -975,45 +1055,19 @@ trait SearchTrait
         }
     }
 
-    //Necessary calculations for LCL Rate (Per shipment vs W/M)
-    public function calculateLclRate($rate, $search_data)
+    //Joining FCL charges where surcharge, carrier and ports match; when join, amounts are added together
+    public function joinCharges($charges, $search_data)
     {
-        dd($search_data);
-        $surcharge = $rate->surcharge()->first();
-        $calculation_type = $rate->calculation_type()->first();
-
-        if($rate->minimum > $rate->uom){
-            $amount = $rate->minimum;
-        }else{
-            $amount = $rate->uom;
-        }
-
-        if($calculation_type->id == "W/M"){
-            //$total = $amount
-        }else if($calculation_type->id == "Per Shipment"){
-            //$total =  
-        }
-        dd($rate);
-    }
-
-    //Necessary calculations for LCL
-    public function calculateLclCharges($charges)
-    {
-        dd($charges);
-    }
-
-    //Joining charges where surcharge, carrier and ports match; when join, amounts are added together
-    public function joinCharges($charges, $client_currency, $container_group_id)
-    {
+        $client_currency = $search_data['client_currency'];
         //Empty array for joint charges
         $joint_charges = [];
-        if($container_group_id == 1){
+        if($search_data['selectedContainerGroup'] == 1){
             $per_container_calculation_type = CalculationType::where('id',5)->first();
-        }elseif($container_group_id == 2){
+        }elseif($search_data['selectedContainerGroup'] == 2){
             $per_container_calculation_type = CalculationType::where('id',19)->first();
-        }elseif($container_group_id == 3){
+        }elseif($search_data['selectedContainerGroup'] == 3){
             $per_container_calculation_type = CalculationType::where('id',20)->first();
-        }elseif($container_group_id == 4){
+        }elseif($search_data['selectedContainerGroup'] == 4){
             $per_container_calculation_type = CalculationType::where('id',21)->first();
         }
 
@@ -1055,43 +1109,12 @@ trait SearchTrait
                                     //Index of compared charge must not be in the compared control array (compared_and_joint)
                                 if($charge->surcharge_id == $comparing_charge->surcharge_id &&
                                     count(array_intersect([$original_charge_index, $comparing_charge_index], $compared_and_joint)) == 0 ){
-                                    //Converting compared array container rates into corresponding currency:
-                                        //If currencies don't match, join must be done in client currency
-                                        if($charge->currency->id != $comparing_charge->currency->id){
-                                            $joint_containers = $charge->containers_client_currency;
-                                            //Marking charge as joint under client currency
-                                            $charge->setAttribute('joint_as','client_currency');
-                                            unset($charge->calculationtype);
-                                            unset($charge->calculationtype_id);
-                                            $charge->setAttribute('calculationtype', $per_container_calculation_type);
-                                            $charge->setAttribute('calculationtype_id', $per_container_calculation_type->id);
-                                            $comparing_charge_containers = $comparing_charge->containers_client_currency;
-                                        //If currencies match, sum is direct
-                                        }elseif($charge->currency->id == $comparing_charge->currency->id){
-                                            $joint_containers = $charge->containers;
-                                            //Marking as joint under charge currency
-                                            $charge->setAttribute('joint_as','charge_currency');
-                                            unset($charge->calculationtype);
-                                            unset($charge->calculationtype_id);
-                                            $charge->setAttribute('calculationtype', $per_container_calculation_type);
-                                            $charge->setAttribute('calculationtype_id', $per_container_calculation_type->id);
-                                            $comparing_charge_containers = $comparing_charge->containers;
+                                        if($search_data['type'] == 'FCL'){
+                                            $this->calculateJointFclCharge($charge,$comparing_charge, $per_container_calculation_type, $client_currency);
+                                        }elseif($search_data['type'] == 'LCL'){
+                                            $this->calculateJointLclCharge($charge,$comparing_charge, $per_container_calculation_type, $client_currency);
                                         }
-                                        //Adding container rates together
-                                        foreach($comparing_charge_containers as $code => $container){
-                                            if(!isset($joint_containers[$code])){
-                                                $joint_containers[$code] = 0;
-                                            }
-                                            $joint_containers[$code] += $container;
-                                            //Checking join type and using corresponding container array
-                                            if($charge->joint_as == 'client_currency'){
-                                                $charge->containers_client_currency = $joint_containers;
-                                            }elseif($charge->joint_as == 'charge_currency'){
-                                                $charge->containers = $joint_containers;
-                                                $charge->containers_client_currency = $this->convertToCurrency($charge->currency, $client_currency, $joint_containers);
-                                            }
-                                            
-                                        }
+
                                         //if original charge has been joint and included in final array, replace it. This avoids duplicate joint charges as follows:
                                             //EXAMPLE
                                             //Original charge 0 is joint with compared charge 1, original 0 is included in final array
@@ -1124,6 +1147,46 @@ trait SearchTrait
         }
 
         return($joint_charges);
+    }
+
+    public function calculateJointFclCharge($charge,$comparing_charge, $per_container_calculation_type, $client_currency)
+    {
+        //Converting compared array container rates into corresponding currency:
+            //If currencies don't match, join must be done in client currency
+            if($charge->currency->id != $comparing_charge->currency->id){
+                $joint_containers = $charge->containers_client_currency;
+                //Marking charge as joint under client currency
+                $charge->setAttribute('joint_as','client_currency');
+                unset($charge->calculationtype);
+                unset($charge->calculationtype_id);
+                $charge->setAttribute('calculationtype', $per_container_calculation_type);
+                $charge->setAttribute('calculationtype_id', $per_container_calculation_type->id);
+                $comparing_charge_containers = $comparing_charge->containers_client_currency;
+            //If currencies match, sum is direct
+            }elseif($charge->currency->id == $comparing_charge->currency->id){
+                $joint_containers = $charge->containers;
+                //Marking as joint under charge currency
+                $charge->setAttribute('joint_as','charge_currency');
+                unset($charge->calculationtype);
+                unset($charge->calculationtype_id);
+                $charge->setAttribute('calculationtype', $per_container_calculation_type);
+                $charge->setAttribute('calculationtype_id', $per_container_calculation_type->id);
+                $comparing_charge_containers = $comparing_charge->containers;
+            }
+            //Adding container rates together
+            foreach($comparing_charge_containers as $code => $container){
+                if(!isset($joint_containers[$code])){
+                    $joint_containers[$code] = 0;
+                }
+                $joint_containers[$code] += $container;
+                //Checking join type and using corresponding container array
+                if($charge->joint_as == 'client_currency'){
+                    $charge->containers_client_currency = $joint_containers;
+                }elseif($charge->joint_as == 'charge_currency'){
+                    $charge->containers = $joint_containers;
+                    $charge->containers_client_currency = $this->convertToCurrency($charge->currency, $client_currency, $joint_containers);
+                }
+            }
     }
 
     //Converting amounts to string so they display decimal places correctly
