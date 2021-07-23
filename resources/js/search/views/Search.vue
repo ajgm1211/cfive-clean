@@ -474,8 +474,8 @@
                                 <div class="col-12 col-sm-3">
                                     <label class="d-flex align-items-center">
                                         <b-form-input
-                                            v-model="searchRequest.lclShipmentQuantity"
-                                            :placeholder="searchRequest.lclShipmentCargoType ? searchRequest.lclShipmentCargoType.name : 'Choose cargo type' "
+                                            v-model="lclShipmentQuantity"
+                                            :placeholder="lclShipmentCargoType ? lclShipmentCargoType.name : 'Choose cargo type' "
                                             class="s-input-form mr-1"
                                             type="number"
                                             @input="setChargeableWeight()"
@@ -488,7 +488,7 @@
                                         />
                                         <div class="type-packages">
                                             <multiselect
-                                                v-model="searchRequest.lclShipmentCargoType"
+                                                v-model="lclShipmentCargoType"
                                                 :multiple="false"
                                                 :close-on-select="true"
                                                 :clear-on-select="false"
@@ -514,7 +514,7 @@
                                 <div class="col-12 col-sm-3">
                                     <label class="d-flex align-items-center">
                                         <b-form-input
-                                            v-model="searchRequest.lclShipmentWeight"
+                                            v-model="lclShipmentWeight"
                                             placeholder="Total Weight"
                                             class="s-input-form mr-1"
                                             type="number"
@@ -533,7 +533,7 @@
                                 <div class="col-12 col-sm-3">
                                     <label class="d-flex align-items-center">
                                         <b-form-input
-                                            v-model="searchRequest.lclShipmentVolume"
+                                            v-model="lclShipmentVolume"
                                             placeholder="Total Volume"
                                             class="s-input-form mr-1"
                                             type="number"
@@ -555,11 +555,11 @@
                                 >
                                     <h6><b>CHARGEABLE WEIGHT</b></h6>
                                     <p 
-                                        v-if="searchRequest.lclShipmentVolume > (searchRequest.lclShipmentWeight / 1000)"
-                                    >{{ searchRequest.lclShipmentChargeableWeight }} m<sup>3</sup></p>
+                                        v-if="lclShipmentVolume > (lclShipmentWeight / 1000)"
+                                    >{{ lclShipmentChargeableWeight }} m<sup>3</sup></p>
                                     <p 
                                         v-else
-                                    >{{ searchRequest.lclShipmentChargeableWeight }} Kg</p>
+                                    >{{ lclShipmentChargeableWeight }} Kg</p>
                                 </div>
                             </div>
                         </b-tab>
@@ -707,7 +707,7 @@
                             <div class="row">
                                 <div
                                     class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges"
-                                    v-for="(pack,index) in searchRequest.lclPackaging"
+                                    v-for="(pack,index) in lclPackaging"
                                     :key="index"
                                 >
                                     <div class="col-12 col-sm-1 pr-0">
@@ -739,16 +739,16 @@
 
                             <div class="row">
                                 <h6><b>TOTAL PACKAGES: </b></h6> 
-                                    {{ searchRequest.lclPackagingQuantity }} units 
-                                    {{ searchRequest.lclPackagingVolume }} m3 
-                                    {{ searchRequest.lclPackagingWeight }} Kg 
+                                    {{ lclPackagingQuantity }} units 
+                                    {{ lclPackagingVolume }} m3 
+                                    {{ lclPackagingWeight }} Kg 
                                 <h6><b>CHARGEABLE WEIGHT: </b></h6>
                                 <p 
-                                    v-if="searchRequest.lclPackagingVolume > (searchRequest.lclPackagingWeight / 1000)"
-                                >{{ searchRequest.lclPackagingChargeableWeight }} m<sup>3</sup></p>
+                                    v-if="lclPackagingVolume > (lclPackagingWeight / 1000)"
+                                >{{ lclPackagingChargeableWeight }} m<sup>3</sup></p>
                                 <p 
                                     v-else
-                                >{{ searchRequest.lclPackagingChargeableWeight }} Kg</p>
+                                >{{ lclPackagingChargeableWeight }} Kg</p>
                             </div>
                         </b-tab>
                     </b-tabs>
@@ -1504,18 +1504,25 @@ export default {
                 },
                 requestData: {},
                 //LCL
-                lclShipmentCargoType: "",
-                lclShipmentChargeableWeight: 0,
-                lclPackaging: [],
-                lclPackagingVolume: 0,
-                lclPackagingWeight: 0,
-                lclPackagingQuantity: 0,
-                lclPackagingChargeableWeight: 0,
-                lclShipmentVolume: "",
-                lclShipmentWeight: "",
-                lclShipmentQuantity: "",
-                lclTypeIndex: 0,
+                packaging: [],
+                volume: 0,
+                weight: 0,
+                quantity: 0,
+                chargeableWeight: 0,
+                cargoType: "",
             },
+            //LCL
+            lclShipmentCargoType: "",
+            lclShipmentChargeableWeight: 0,
+            lclPackaging: [],
+            lclPackagingVolume: 0,
+            lclPackagingWeight: 0,
+            lclPackagingQuantity: 0,
+            lclPackagingChargeableWeight: 0,
+            lclShipmentVolume: "",
+            lclShipmentWeight: "",
+            lclShipmentQuantity: "",
+            lclTypeIndex: 0,
             dropzoneOptions: {
                 url: "/",
                 thumbnailWidth: 150,
@@ -1892,7 +1899,7 @@ export default {
                 this.selectedContainerGroup = this.datalists.container_groups[0];
                 this.searchRequest.carriersApi = this.datalists.carriers_api;
                 this.deliveryType = this.deliveryTypeOptions[0];
-                this.searchRequest.lclShipmentCargoType = this.lclShipmentOptions[0];
+                this.lclShipmentCargoType = this.lclShipmentOptions[0];
             } else if (requestType == 0) {
                 this.searchRequest.type = this.searchData.type;
                 this.$emit('searchTypeChanged','code');
@@ -1922,18 +1929,18 @@ export default {
                     this.selectedContainerGroup = this.datalists.container_groups[0];
                     this.containers = this.datalists.containers.filter(function byGroup(container) { return container.gp_container_id == 1 });
                     let equipLcl = JSON.parse(this.searchData.equipment);
-                    if(equipLcl.type == 'shipment'){
-                        this.searchRequest.lclTypeIndex = 0;
-                        this.searchRequest.lclShipmentCargoType = equipLcl.cargo_type;
-                        this.searchRequest.lclShipmentVolume = equipLcl.volume;
-                        this.searchRequest.lclShipmentWeight = equipLcl.weight;
-                        this.searchRequest.lclShipmentQuantity = equipLcl.quantity;
-                        this.searchRequest.lclShipmentChargeableWeight = equipLcl.chargeable_weight;
-                    }else if(equipLcl.type == 'packaging'){
-                        this.searchRequest.lclTypeIndex = 1;
-                        this.searchRequest.lclPackaging = equipLcl.packages;
+                    this.searchRequest.lclTypeIndex = equipLcl.type;
+                    if(equipLcl.type == 0){
+                        this.lclShipmentCargoType = equipLcl.cargo_type;
+                        this.lclShipmentVolume = equipLcl.volume;
+                        this.lclShipmentWeight = equipLcl.weight;
+                        this.lclShipmentQuantity = equipLcl.quantity;
+                        this.lclShipmentChargeableWeight = equipLcl.chargeable_weight;
+                    }else if(equipLcl.type == 1){
+                        this.lclPackaging = equipLcl.packaging;
                         this.setChargeableWeight();
                     }
+                        this.setSearchParameters();
                 }
                 this.searchRequest.dateRange.startDate =
                     this.searchData.start_date + "T01:00:00";
@@ -2010,17 +2017,6 @@ export default {
             this.loaded = true;
         },
 
-        setSearchParameters() {
-            this.searching = true;
-            if(this.searchRequest.type == 'FCL'){
-                this.searchRequest.selectedContainerGroup = this.selectedContainerGroup;
-                this.searchRequest.containers = this.containers;
-            }
-            //this.searchRequest.deliveryType = this.deliveryType;
-            this.searchRequest.carriers = this.carriers;
-            this.errorsExist = false;
-        },
-
         //Send Search Request to Controller
         searchButtonPressed() {
             let component = this;
@@ -2029,17 +2025,17 @@ export default {
 
             this.carrierSearchQuery = '';
 
-            if(this.searchRequest.lclTypeIndex == 0 &&
-                (this.searchRequest.lclShipmentVolume == "" ||
-                this.searchRequest.lclShipmentWeight == "" ||
-                this.searchRequest.lclShipmentQuantity == "")){
-                    this.invalidShipmentCalculation = true;
+            if(this.lclTypeIndex == 0 &&
+                (this.lclShipmentVolume == "" ||
+                this.lclShipmentWeight == "" ||
+                this.lclShipmentQuantity == "")){
+                this.invalidShipmentCalculation = true;
 
                     setTimeout(function () {
                         component.invalidShipmentCalculation = false;
                         return
                     }, 1500);
-            }else if(this.searchRequest.lclTypeIndex == 1 && this.searchRequest.lclPackaging.length == 0){
+            }else if(this.lclTypeIndex == 1 && this.lclPackaging.length == 0){
                     this.invalidPackagingCalculation = true;
 
                     setTimeout(function () {
@@ -2074,6 +2070,31 @@ export default {
             } else if (this.searchRequest.requestData.requested == 1) {
                 this.getQuery();
             }
+        },
+
+        setSearchParameters() {
+            this.searching = true;
+            if(this.searchRequest.type == 'FCL'){
+                this.searchRequest.selectedContainerGroup = this.selectedContainerGroup;
+                this.searchRequest.containers = this.containers;
+            }else if(this.searchRequest.type == 'LCL'){
+                if(this.searchRequest.lclTypeIndex == 0){
+                    this.searchRequest.volume = this.lclShipmentVolume;
+                    this.searchRequest.weight = this.lclShipmentWeight;
+                    this.searchRequest.quantity = this.lclShipmentQuantity;
+                    this.searchRequest.chargeableWeight = this.lclShipmentChargeableWeight;
+                    this.searchRequest.cargoType = this.lclShipmentCargoType;
+                }else if(this.searchRequest.lclTypeIndex == 1){
+                    this.searchRequest.packaging = this.lclPackaging;
+                    this.searchRequest.volume = this.lclPackagingVolume;
+                    this.searchRequest.weight = this.lclPackagingWeight;
+                    this.searchRequest.quantity = this.lclPackagingQuantity;
+                    this.searchRequest.chargeableWeight = this.lclPackagingChargeableWeight;
+                }
+            }
+            //this.searchRequest.deliveryType = this.deliveryType;
+            this.searchRequest.carriers = this.carriers;
+            this.errorsExist = false;
         },
 
         alert(msg, type) {
@@ -2343,7 +2364,7 @@ export default {
                 this.addPackagingBar.quantity &&
                 this.addPackagingBar.cargoType){
                     let newPackaging = _.cloneDeep(this.addPackagingBar);
-                    this.searchRequest.lclPackaging.push(newPackaging);
+                    this.lclPackaging.push(newPackaging);
                     this.setChargeableWeight();
                     this.clearAddPackagingBar();
             }else{
@@ -2365,7 +2386,7 @@ export default {
         },
 
         deleteLclPackaging(index) {
-            this.searchRequest.lclPackaging.splice(index, 1);
+            this.lclPackaging.splice(index, 1);
             this.setChargeableWeight();
         },
 
@@ -2395,28 +2416,28 @@ export default {
 
         setChargeableWeight() {
             if(this.searchRequest.lclTypeIndex == 0){
-                if( this.searchRequest.lclShipmentVolume > (this.searchRequest.lclShipmentWeight / 1000) ){
-                    this.searchRequest.lclShipmentChargeableWeight = this.searchRequest.lclShipmentVolume * this.searchRequest.lclShipmentQuantity;
+                if( this.lclShipmentVolume > (this.lclShipmentWeight / 1000) ){
+                    this.lclShipmentChargeableWeight = this.lclShipmentVolume * this.lclShipmentQuantity;
                 }else{
-                    this.searchRequest.lclShipmentChargeableWeight = this.searchRequest.lclShipmentWeight * this.searchRequest.lclShipmentQuantity;
+                    this.lclShipmentChargeableWeight = this.lclShipmentWeight * this.lclShipmentQuantity;
                 }
             }else if(this.searchRequest.lclTypeIndex == 1){
                 let component = this;
 
-                component.searchRequest.lclPackagingQuantity = 0;
-                component.searchRequest.lclPackagingVolume = 0;
-                component.searchRequest.lclPackagingWeight = 0;
+                component.lclPackagingQuantity = 0;
+                component.lclPackagingVolume = 0;
+                component.lclPackagingWeight = 0;
 
-                component.searchRequest.lclPackaging.forEach(function (pack){
-                    component.searchRequest.lclPackagingQuantity += parseFloat(pack.quantity);
-                    component.searchRequest.lclPackagingVolume += parseFloat(pack.depth) * parseFloat(pack.height) * parseFloat(pack.width);
-                    component.searchRequest.lclPackagingWeight += parseFloat(pack.weight);
+                component.lclPackaging.forEach(function (pack){
+                    component.lclPackagingQuantity += parseFloat(pack.quantity);
+                    component.lclPackagingVolume += parseFloat(pack.depth) * parseFloat(pack.height) * parseFloat(pack.width);
+                    component.lclPackagingWeight += parseFloat(pack.weight);
                 });
 
-                if( this.searchRequest.lclPackagingVolume > (this.searchRequest.lclPackagingWeight / 1000) ){
-                    this.searchRequest.lclPackagingChargeableWeight = this.searchRequest.lclPackagingVolume * this.searchRequest.lclPackagingQuantity;
+                if( this.lclPackagingVolume > (this.lclPackagingWeight / 1000) ){
+                    this.lclPackagingChargeableWeight = this.lclPackagingVolume * this.lclPackagingQuantity;
                 }else{
-                    this.searchRequest.lclPackagingChargeableWeight = this.searchRequest.lclPackagingWeight * this.searchRequest.lclPackagingQuantity;
+                    this.lclPackagingChargeableWeight = this.lclPackagingWeight * this.lclPackagingQuantity;
                 }
 
             }
