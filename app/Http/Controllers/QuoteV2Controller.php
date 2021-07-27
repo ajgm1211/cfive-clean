@@ -7472,7 +7472,7 @@ class QuoteV2Controller extends Controller
         //return Excel::download(new QuotesExport, 'quotes.xlsx');
         $company_user_id = \Auth::user()->company_user_id;
         if (\Auth::user()->hasRole('subuser')) {
-            $quotes = QuoteV2::where('owner', \Auth::user()->id)->whereHas('user', function ($q) use ($company_user_id) {
+            $quotes = QuoteV2::where('user_id', \Auth::user()->id)->whereHas('user', function ($q) use ($company_user_id) {
                 $q->where('company_user_id', '=', $company_user_id);
             })->orderBy('created_at', 'desc')->get();
         } else {
