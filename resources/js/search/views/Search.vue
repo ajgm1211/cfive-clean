@@ -87,26 +87,27 @@
 
                     <div class="od-input">
                         <img src="/images/port.svg" class="img-icon" alt="port">
-                        <div>
+                        <div @click="openFinderFrom">
                             <p class="input-places">
-                                <span v-for="data in findPlaces" >
-                                {{data}}
-                                <b @click="deletePlace(data)" class="delete-input-country">x</b></span>
+                                <span v-for="(data, index) in placeInShowFrom" >
+                                {{data.location}}
+                                <b @click="deletePlaceFrom(index)" class="delete-input-country">x</b></span>
                             </p>
-                            <b-form-input v-model="originPlacesFrom" placeholder="From"></b-form-input>
+                            <b-form-input v-if="inputSearchFrom" v-model="originPlacesFrom" placeholder="From"></b-form-input>
                         </div>
-                        <span class="city-port" v-if="showTagPlace"></span>
+                        <span class="city-port" v-if="showTagPlaceFrom">{{nameTagPlacesFrom}}</span>
                     </div>
                     <ul class="places-list" v-if="originPlacesFrom">
 
                         <li v-for="(data, key) in optionsPlaces">
                             <b-form-checkbox
                             :id="'place-'+key"
-                            v-model="checkPlaces"
-                            :value="data.code"
-                            @change="placeChecked(data)"
+                            v-model="placeInShowFrom"
+                            :value="data"
+                            @change="placeCheckedFrom(data)"
                             >
-                            <b-icon icon="geo-alt" class="mr-2"></b-icon>
+                            <b-icon v-if="data.type == 'city' " icon="map" class="mr-2"></b-icon>
+                            <b-icon v-else icon="geo" class="mr-2"></b-icon>
                             <div class="text-places">
                                 <h6>{{data.location}}</h6>
                                 <p>{{data.country}}</p>
@@ -122,22 +123,38 @@
 
                 <!-- DESTINATION PORT -->
                 <div class="col-lg-3 mb-2 input-search-form destination-search">
-                        <multiselect
-                            v-model="searchRequest.destinationPorts"
-                            :multiple="true"
-                            :close-on-select="true"
-                            :clear-on-select="true"
-                            :show-labels="false"
-                            :options="destinationPortOptions"
-                            @input="updateQuoteSearchOptions()"
-                            label="display_name"
-                            track-by="display_name"
-                            placeholder="To" 
-                            class="s-input"
-                        >
-                        </multiselect>
+                        <div class="od-input od-input-to">
                         <img src="/images/port.svg" class="img-icon" alt="port">
-                        <span v-if="errorsExist && 'destinationPorts' in responseErrors" style="color:red">The Destination Port field is required!</span>
+                        <div @click="openFinderTo">
+                            <p class="input-places">
+                                <span v-for="(data, index) in placeInShowTo" >
+                                {{data.location}}
+                                <b @click="deletePlaceTo(index)" class="delete-input-country">x</b></span>
+                            </p>
+                            <b-form-input v-if="inputSearchTo" v-model="originPlacesTo" placeholder="To"></b-form-input>
+                        </div>
+                        <span class="city-port" v-if="showTagPlaceTo">{{nameTagPlacesTo}}</span>
+                    </div>
+                    <ul class="places-list" v-if="originPlacesTo">
+
+                        <li v-for="(data, key) in optionsPlaces">
+                            <b-form-checkbox
+                            :id="'place-'+key"
+                            v-model="placeInShowTo"
+                            :value="data"
+                            @change="placeCheckedTo(data)"
+                            >
+                            <b-icon v-if="data.type == 'city' " icon="map" class="mr-2"></b-icon>
+                            <b-icon v-else icon="geo" class="mr-2"></b-icon>
+                            <div class="text-places">
+                                <h6>{{data.location}}</h6>
+                                <p>{{data.country}}</p>
+                            </div>
+                            <span class="city-port">{{data.type}}</span>                                             
+                            </b-form-checkbox>
+
+                        </li>
+                    </ul>
                 </div>
                 <!-- FIN DESTINATION PORT -->
 
@@ -395,7 +412,7 @@
                                 </b-form-group>
                                 <label>
                                     <b-input
-                                        v-model="carrierSearchQuery"
+                                        v-model="carrierSearchQuery"aqui
                                         placeholder="Search Carrier"
                                     ></b-input>
                                 </label>
@@ -1430,16 +1447,24 @@ export default {
         return {
             // datos estaticos search con inlands aqui
             originPlacesFrom: '',
+            originPlacesTo: '',
             showPlaces: false,
-            showTagPlace: false,
-            checkPlaces: [],
-            findPlaces: [],
-            placeInShow: [],
+            showTagPlaceTo: false,
+            showTagPlaceFrom: false,
+            inputSearchFrom: true,
+            inputSearchTo: true,
+            nameTagPlaces: '',
+            placeInShowTo: [],
+            placeInShowFrom: [],
             optionsPlaces: [
                 { code:'123_456_2', country: 'España', location: 'Madrid', type: 'city' },
                 { code:'123_567_1', country: 'España', location: 'Barcelona', type: 'port' },
                 { code:'123_321_1', country: 'España', location: 'Canarias', type: 'port' },
-                { code:'123_876_2', country: 'España', location: 'Sevilla', type: 'city' }
+                { code:'123_232_2', country: 'España', location: 'Cuenca', type: 'city' },
+                { code:'123_438_2', country: 'España', location: 'Cordoba', type: 'city' },
+                { code:'123_986_1', country: 'España', location: 'Almeria', type: 'port' },
+                { code:'123_129_1', country: 'España', location: 'Malaga', type: 'port' },
+                { code:'123_457_2', country: 'España', location: 'Sevilla', type: 'city' }
             ],
             // fin datos estaticos search con inlands
             loaded: false,
@@ -1579,16 +1604,115 @@ export default {
         });
     },
     methods: {
-        placeChecked(data){
-            this.placeInShow.push({code: data.code, location: data.location});
-            this.findPlaces = [];
-            this.findPlaces.push(this.checkPlaces);
-            this.originPlacesFrom = false;
-            console.log(this.findPlaces);
+        openFinderFrom() {
+            if(this.inputSearchFrom == false && this.placeInShowFrom.length > 0) {
+                this.inputSearchFrom = true;
+            }
         },
-        deletePlace(e){
-            this.placeInShow.splice(e, 1);
-            this.findPlaces.splice(e, 1);
+        openFinderTo() {
+            if(this.inputSearchTo == false && this.placeInShowTo.length > 0) {
+                this.inputSearchTo = true;
+            }
+        },
+        placeCheckedFrom(data){
+
+            let countPort = 0;
+            let countCity = 0;
+
+            //console.log(this.placeInShow);
+
+            if (this.placeInShowFrom.length == 0) {
+                this.showTagPlace = false;
+                countPort = 0;
+                countCity = 0;
+                return;
+            }
+            //this.placeInShow.push({code: data.code, location: data.location, type: data.type});
+            this.originPlacesFrom = '';
+
+            if(this.placeInShowFrom.length > 0) {
+                this.inputSearchFrom = false;
+            }
+
+            this.placeInShowFrom.forEach(function (data) {
+                if(data.type == 'port') {
+                    countPort = 1;
+                    
+                } else {
+                    countCity = 1;
+                } 
+            });
+
+            this.showTagPlaceFrom = true;
+
+            if(countPort == 1 && countCity == 0) {
+                this.nameTagPlacesFrom = 'port';
+            } else if (countCity == 1 && countPort == 0) {
+                this.nameTagPlacesFrom = 'city';
+            } else if (countCity == 1 && countPort == 1) {
+                this.nameTagPlacesFrom = 'multi';
+            }
+
+     
+        },
+        placeCheckedTo(data){
+
+            let countPort = 0;
+            let countCity = 0;
+
+            //console.log(this.placeInShow);
+
+            if (this.placeInShowTo.length == 0) {
+                this.showTagPlaceTo = false;
+                countPort = 0;
+                countCity = 0;
+                return;
+            }
+            //this.placeInShow.push({code: data.code, location: data.location, type: data.type});
+            this.originPlacesTo = '';
+
+            if(this.placeInShowTo.length > 0) {
+                this.inputSearchTo = false;
+            }
+
+            this.placeInShowTo.forEach(function (data) {
+                if(data.type == 'port') {
+                    countPort = 1;
+                    
+                } else {
+                    countCity = 1;
+                } 
+            });
+
+            this.showTagPlaceTo = true;
+
+            if(countPort == 1 && countCity == 0) {
+                this.nameTagPlacesTo = 'port';
+            } else if (countCity == 1 && countPort == 0) {
+                this.nameTagPlacesTo = 'city';
+            } else if (countCity == 1 && countPort == 1) {
+                this.nameTagPlacesTo = 'multi';
+            }
+
+     
+        },
+        deletePlaceFrom(e){
+            this.placeInShowFrom.splice(e, 1);
+            if (this.placeInShowFrom.length == 0) {
+                this.showTagPlaceFrom = false;
+                countPort = 0;
+                countCity = 0;
+                return;
+            }
+        },
+        deletePlaceTo(e){
+            this.placeInShowTo.splice(e, 1);
+            if (this.placeInShowTo.length == 0) {
+                this.showTagPlaceTo = false;
+                countPort = 0;
+                countCity = 0;
+                return;
+            }
         },
         //modal
         nextStep() {
@@ -2276,12 +2400,11 @@ export default {
         },
     },
     watch: {
-        checkPlaces: function() {
+/*         placeInShow: function() {
             
-            /* this.findPlaces = [];
-            this.findPlaces.push(this.checkPlaces); */
+            
 
-        },
+        }, */
         selectedContainerGroup: function () {
             let component = this;
             let fullContainersByGroup = [];
@@ -2417,6 +2540,9 @@ export default {
     computed: {
         carrierOptionsSearch() {
            return this.carrierOptions.filter(c => c.text.toLowerCase().includes(this.carrierSearchQuery.toLowerCase()));
+        },
+        optionsPlacesSearch() {
+           return this.optionsPlaces.filter(c => c.text.toLowerCase().includes(this.originPlacesFrom.toLowerCase()));
         }
     },
 };

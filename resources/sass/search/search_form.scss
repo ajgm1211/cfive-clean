@@ -49,14 +49,19 @@ BUSCADOR
         height: 50px;
         width: 100% !important;
     } */
+    .od-input-to {
+        img {
+            left: 18px !important;
+        }
+    }
     .od-input {
         width: 100%;
         background: #F8F8F8;
         height: 50px;
         padding: 0px 65px 0px 50px;
-        display: flex;
-        align-items: center;
         div {
+            display: flex;
+            align-items: center;
             height: inherit;
         }
         img {
@@ -77,8 +82,12 @@ BUSCADOR
                 background: #1cc762;
                 color: #ffffff;
                 padding: 2px 7px;
+                margin-right: 5px;
             }
         }
+    }
+    .delete-input-country {
+        cursor: pointer;
     }
     .places-list {
         list-style: none !important;
@@ -147,6 +156,7 @@ BUSCADOR
         position: absolute;
         right: 15px;
         left: auto;
+        top: 14px;
     }
     .s-input-form {
         border: none !important;
