@@ -83,7 +83,7 @@
                     </div>
                     <div class="col-md-4" class="" > 
                         <label>Currency</label>
-                        {{ Form::select('currency_id',$currencies,null,['class'=>'form-control m-select2-edit schedule_type','placeholder'=>'Select an option']) }}
+                        {{ Form::select('currency_id',$currencies,null,['class'=>'form-control m-select2-edit schedule_type','placeholder'=>'Select an option', 'required']) }}
                     </div>
                 </div>              
                 <hr>

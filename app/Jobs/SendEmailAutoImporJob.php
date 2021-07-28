@@ -3,23 +3,24 @@
 namespace App\Jobs;
 
 use App\Mail\NotificationAutoImport;
-
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class SendEmailAutoImporJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $email,$message;
+    public $email;
+    public $message;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($email,$message)
+    public function __construct($email, $message)
     {
         $this->email = $email;
         $this->message = $message;

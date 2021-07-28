@@ -4,7 +4,7 @@
         <div class="m-stack m-stack--ver m-stack--general">
             <div class="m-stack__item m-stack__item--middle m-brand__logo">
                 @if(empty(\Auth::user()->company_user_id) != true)
-                <a href="{{route('quotes-v2.search')}}" class="m-brand__logo-wrapper">
+                <a href="{{url('/api/search')}}" class="m-brand__logo-wrapper">
                     <img alt="" src="/logo.png" />
                 </a>
                 @else
@@ -78,18 +78,10 @@
                         <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                         <ul class="m-menu__subnav">
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{route('quotes-v2.search')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-search-magnifier-interface-symbol"></i>
+                                <a href="{{url('/api/search')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-graphic-1"></i>
                                     <span class="m-menu__link-text">
-                                        Search Rates
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{route('quotes-v2.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-list-1"></i>
-                                    <span class="m-menu__link-text">
-                                        Quotes
+                                        Rate Finder
                                     </span>
                                 </a>
                             </li>
@@ -97,19 +89,22 @@
                                 <a href="{{url('/api/quotes')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-coins"></i>
                                     <span class="m-menu__link-text">
-                                        FCL Quote
-                                        <span class="m-menu__link-badge">
-                                            <span class="m-badge m-badge--brand m-badge--wide">
-                                                new
-                                            </span>
-                                        </span>
+                                        Quotes
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{route('quotes-v2.search')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-search-magnifier-interface-symbol"></i>
+                                    <span class="m-menu__link-text">
+                                        Search Rates
                                     </span>
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </li> 
-
+                @role('administrator|company|subuser')
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('companies.index', 'companies.show', 'contacts.index') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
@@ -149,9 +144,7 @@
                         </ul>
                     </div>
                 </li>
-
-                @role('administrator|company')
-
+                @endrole
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('new.contracts.index', 'contractslcl.index', 'surcharges.index', 'new.contracts.edit', 'Request.importaion.lcl', 'contractslcl.add') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
@@ -176,26 +169,28 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{route('contractslcl.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-route"></i>
-                                    <span class="m-menu__link-text">
-                                        Sea Freight LCL
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{route('surcharges.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-list-1"></i>
-                                    <span class="m-menu__link-text">
-                                        Surcharge List
-                                    </span>
-                                </a>
-                            </li>
+                                <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                    <a href="{{route('new.contracts.lcl.index')}}" class="m-menu__link ">
+                                        <i class="m-menu__link-icon flaticon-route"></i>
+                                        <span class="m-menu__link-text">
+                                            Sea Freight LCL
+                                        </span>
+                                    </a>
+                                </li> 
+                            @role('administrator|company')
+                                <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                    <a href="{{route('surcharges.index')}}" class="m-menu__link ">
+                                        <i class="m-menu__link-icon flaticon-list-1"></i>
+                                        <span class="m-menu__link-text">
+                                            Surcharge List
+                                        </span>
+                                    </a>
+                                </li>
+                            @endrole
                         </ul>
                     </div>
-                </li>
-
+                </li>   
+                @role('administrator|company')
 
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('globalcharges.index', 'globalchargeslcl.index', 'globalchargesapi.index', 'RequestsGlobalchargersFcl.create', 'RequestsGlobalchargersLcl.create', 'globalchargesapi') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
@@ -252,7 +247,7 @@
                     </div>
                 </li>
 
-                @endrole
+                
 
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('inlands.index', 'inland.edit', 'inlandD.find', 'UploadFile.index', 'provinces.index') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
@@ -278,6 +273,7 @@
                                     </span>
                                 </a>
                             </li>
+                            
                             @hasrole('administrator')
 
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
@@ -318,6 +314,7 @@
                         </ul>
                     </div>
                 </li>
+                @endrole
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel {{ ! Route::is('settings.index', 'termsv2.list', 'remarks.list', 'oauth.tokens', 'api.settings', 'users.home', 'prices.index', 'prices.add', 'UserConfiguration.index', 'templates.index', 'dashboard.index', 'ContainerCalculation.index', 'transit_time.index', 'settings.companies',  'search.list', 'impersonate.revert') ?: 'active-link' }}" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
                     <a href="#" class="m-menu__link m-menu__toggle">
@@ -377,6 +374,14 @@
                                 </a>
                             </li>
                             @endrole
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{ route('user.info') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon la la-user"></i>
+                                    <span class="m-menu__link-text">
+                                        My profile 
+                                    </span>
+                                </a>
+                            </li>
                             @role('administrator')
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
                                 data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
@@ -421,7 +426,7 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
+                            <!-- <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
                                 data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                                 <a href="#" class="m-menu__link m-menu__toggle">
                                     <i class="m-menu__link-icon la la-envelope"></i>
@@ -461,7 +466,7 @@
                                         Dashboard
                                     </span>
                                 </a>
-                            </li>
+                            </li> -->
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
                                 <a href="{{route('search.list')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-search"></i>
@@ -494,160 +499,6 @@
 
 
                             @role('administrator|data_entry')
-
-                            <!-- Sub- Menus --------------------------------------------------------------- -->
-                            <!--                        Inicio Links Importacion-->
-                            <!--
-<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-<a  href="#" class="m-menu__link m-menu__toggle">
-<i class="m-menu__link-icon la la-arrow-circle-o-up"></i>
-&nbsp;&nbsp;&nbsp;
-<span class="m-menu__link-text">
-Manage Requests
-</span>                                    
-<i class="m-menu__hor-arrow la la-angle-down"></i>
-<i class="m-menu__ver-arrow la la-angle-right"></i>
-</a>
-<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-<ul class="m-menu__subnav">
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
-<i class="m-menu__link-icon flaticon-folder-3"></i>
-<span class="m-menu__link-text">
-Request Importation FCL
-</span>
-</a>
-</li>
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{ route('RequestImportationLcl.index') }}" class="m-menu__link ">
-<i class="m-menu__link-icon flaticon-folder-3"></i>
-<span class="m-menu__link-text">
-Request Importation LCL
-</span>
-</a>
-</li>
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{ route('RequestsGlobalchargersFcl.index') }}" class="m-menu__link ">
-<i class="m-menu__link-icon flaticon-folder-3"></i>
-<span class="m-menu__link-text">
-Request Importation G.C-FCL
-</span>
-</a>
-</li>
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{ route('RequestsGlobalchargersLcl.index') }}" class="m-menu__link ">
-<i class="m-menu__link-icon flaticon-folder-3"></i>
-<span class="m-menu__link-text">
-Request Importation G.C-LCL
-</span>
-</a>
-</li>
-</ul>
-</div>
-</li>
-<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-<a  href="#" class="m-menu__link m-menu__toggle">
-<i class="m-menu__link-icon la la-ship"></i>
-&nbsp;&nbsp;&nbsp;
-<span class="m-menu__link-text">
-Manage G.C.
-</span>                                    
-<i class="m-menu__hor-arrow la la-angle-down"></i>
-<i class="m-menu__ver-arrow la la-angle-right"></i>
-</a>
-<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-<ul class="m-menu__subnav">
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{ route('gcadm.index') }}" class="m-menu__link ">
-<i class="m-menu__link-icon la la-globe"></i>
-<span class="m-menu__link-text">
-Administrator FCL
-</span>
-</a>
-</li>
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{ route('gclcladm.index') }}" class="m-menu__link ">
-<i class="m-menu__link-icon la la-globe"></i>
-<span class="m-menu__link-text">
-Administrator LCL
-</span>
-</a>
-</li>
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{ route('globalsduplicated.index') }}" class="m-menu__link ">
-<i class="m-menu__link-icon la la-copy"></i>
-<span class="m-menu__link-text">
-Duplicates FCL
-</span>
-</a>
-</li>
-</ul>
-</div>
-</li>
-<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-<a  href="#" class="m-menu__link m-menu__toggle">
-<i class="m-menu__link-icon la la-map-marker"></i>
-&nbsp;&nbsp;&nbsp;
-<span class="m-menu__link-text">
-Places And Carriers
-</span>                                    
-<i class="m-menu__hor-arrow la la-angle-down"></i>
-<i class="m-menu__ver-arrow la la-angle-right"></i>
-</a>
-<div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-<ul class="m-menu__subnav">
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{route('UploadFile.index')}}" class="m-menu__link ">
-<i class="m-menu__link-icon flaticon-business"></i>
-<span class="m-menu__link-text">
-Harbors
-</span>
-</a>
-</li>
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{route('Countries.index')}}" class="m-menu__link ">
-<i class="m-menu__link-icon la la-globe"></i>
-<span class="m-menu__link-text">
-Countries
-</span>
-</a>
-</li>
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{route('Region.index')}}" class="m-menu__link ">
-<i class="m-menu__link-icon la la-globe"></i>
-<span class="m-menu__link-text">
-Regions
-</span>
-</a>
-</li>
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{route('managercarriers.index')}}" class="m-menu__link ">
-<i class="m-menu__link-icon la la-ship"></i>
-<span class="m-menu__link-text">
-Manage Carriers
-</span>
-</a>
-</li>
-</ul>
-</div>
-</li>
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{route('CarrierImportation.index')}}" class="m-menu__link ">
-<i class="m-menu__link-icon la la-dropbox"></i>
-<span class="m-menu__link-text">
-Carrier Auto Importation
-</span>
-</a>
-</li>
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{route('gruopSurcharger.index')}}" class="m-menu__link ">
-<i class="m-menu__link-icon la la-dropbox"></i>
-<span class="m-menu__link-text">
-Group Surchargers
-</span>
-</a>
-</li>
--->
                             <!--                        Fin Links Importacion-->
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
                                 <a href="{{route('settings.companies')}}" class="m-menu__link ">
@@ -659,6 +510,31 @@ Group Surchargers
                             </li>
                 
                             @endrole
+                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
+                            data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                                <a href="#" class="m-menu__link m-menu__toggle">
+                                    <i class="m-menu__link-icon flaticon-warning-sign"></i>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <span class="m-menu__link-text">
+                                        Deprecated
+                                    </span>
+                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                </a>
+                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--right">
+
+                                    <ul class="m-menu__subnav">
+                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                            <a href="{{ route('quotes-v2.index') }}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-list-1"></i>
+                                                <span class="m-menu__link-text">
+                                                    Quotes V1
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
                             @if(Session::has('impersonate'))
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
                                 <a href="{{route('impersonate.revert')}}" class="m-menu__link ">
@@ -673,15 +549,6 @@ Group Surchargers
                     </div>
                 </li>
                 @endif  
-                <!-- 
-<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-<a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
-<span class="m-menu__link-text">
-<b>Support</b>
-</span>
-</a>
-</li> 
--->
 
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click"
                     data-redirect="true" aria-haspopup="true">
@@ -829,16 +696,7 @@ Group Surchargers
                             </div>
                         </li>
                     </div>
-                    <div class="col-md-6">
-                        <li class="m-nav__item " style="margin-top:20px;">
-                            <a href="{{ url('/tickets') }}" class=" ">
-                                <span class="m-nav__link-icon">
-                                    <i class="flaticon-computer m--font-warning" data-toggle="m-tooltip" title=""
-                                        data-html="true" data-original-title="<b>Support</b>"></i>
-                                </span>
-                            </a>
-                        </li>
-                    </div>
+                
                 </div>
             </ul>
         </div>

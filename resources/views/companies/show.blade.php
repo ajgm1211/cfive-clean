@@ -96,6 +96,12 @@
                                             {{$company->business_name}}</b></h4>
                                     <hr>
                                     <div class="collapse show" id="about_company">
+                                    <label><b>Company Id</b></label>
+                                        <p class="color-black">
+                                            <span id="company_id_span">{{$company->id}}</span>
+                                            <br>
+                                        </p>
+                                        <hr>
                                         <label><b>Name</b></label>
                                         <p class="color-black">
                                             <input type="hidden" value="{{$company->id}}" id="company_id" />
@@ -193,15 +199,17 @@
                                         <label><b>PDF language</b></label>
                                         <p class="color-black">
                                             <span id="pdf_language_span">
-                                                @if($company->pdf_language==1)
-                                                English
-                                                @elseif($company->pdf_language==2)
-                                                Spanish
+                                                @if($company->pdf_language==1 || $company->pdf_language=="english")
+                                                    English
+                                                @elseif($company->pdf_language==2 || $company->pdf_language=="spanish")
+                                                    Spanish
+                                                @elseif($company->pdf_language==3 || $company->pdf_language=="portuguese")
+                                                    Portuguese
                                                 @else
-                                                Portuguese
+                                                    English
                                                 @endif
                                             </span>
-                                            {{ Form::select('pdf_language',['0'=>'Choose a language',1=>'English',2=>'Spanish',3=>'Portuguese'],$company->pdf_language,['class'=>'custom-select form-control','id' => 'pdf_language_select','hidden'=>'true']) }}
+                                            {{ Form::select('pdf_language',['0'=>'Choose a language','english'=>'English','spanish'=>'Spanish','portuguese'=>'Portuguese'],$company->pdf_language,['class'=>'custom-select form-control','id' => 'pdf_language_select','hidden'=>'true']) }}
                                             <a id='edit_pdf_language' onclick="display_pdf_language()"
                                                 class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill pull-right"
                                                 title="Edit ">
@@ -242,6 +250,20 @@
                                                 title="Cancel" hidden>
                                                 <i class="la la-reply"></i>
                                             </a>
+                                            <br>
+                                        </p>
+                                        <hr>
+                                        <label><b>Extra fields</b></label>
+                                        <p class="color-black">
+                                            @if ($company->options)
+                                                @foreach($company->options as $key=>$extra)
+                                                    <ul>
+                                                        <li><b>{{$key}}</b> : {{$extra}}</li>
+                                                    </ul>
+                                                @endforeach
+                                            @else
+                                                <p>No data to display</p>
+                                            @endif
                                             <br>
                                         </p>
                                         <hr>
@@ -534,7 +556,7 @@
                         sort: 'timestamp'
                     }
                 },
-                {data: 'origin', name: 'origin', className: 'details-control'},
+                {data: 'origin', name: 'origin'},
                 {data: 'destination', name: 'destination'},
                 {data: 'type', name: 'type'},
                 {data: 'action', name: 'action', orderable: false, searchable: false },

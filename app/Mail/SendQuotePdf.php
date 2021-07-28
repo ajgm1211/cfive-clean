@@ -3,9 +3,9 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendQuotePdf extends Mailable
 {
@@ -16,7 +16,7 @@ class SendQuotePdf extends Mailable
      *
      * @return void
      */
-    public function __construct($subject,$body,$quote,$sender,$sign,$sign_type)
+    public function __construct($subject, $body, $quote, $sender, $sign, $sign_type)
     {
         $this->subject = $subject;
         $this->text = $body;
@@ -37,8 +37,8 @@ class SendQuotePdf extends Mailable
         return $this->from('info@cargofive.com', $this->sender)
             ->view('emails.quote_pdf')
             ->subject($this->subject)
-            ->with(['text' => $this->text,'sign'=> $this->sign,'sign_type'=>$this->sign_type])
-            ->attach(public_path().'/pdf/temp_' . $this->quote_id . '.pdf', [
+            ->with(['text' => $this->text, 'sign'=> $this->sign, 'sign_type'=>$this->sign_type])
+            ->attach(public_path().'/pdf/temp_'.$this->quote_id.'.pdf', [
                 'as' => 'Quote_'.$this->quote_id.'_'.$this->created.'.pdf',
                 'mime' => 'application/pdf',
             ]);

@@ -53,7 +53,9 @@ class ChargeLclController extends Controller
             'markup' => 1.00,
         ]);
 
-        $autorate->totalize($autorate->currency_id);
+        $totals = $autorate->totals()->first();
+
+        $totals->totalize($autorate->currency_id);
 
         return new ChargeLclResource($charge);
     }
@@ -109,13 +111,14 @@ class ChargeLclController extends Controller
                 }
             }
         }
+
+        $totals = $autorate->totals()->first();
         
-        if(isset($data['fixed_currency'])){
-            $charge->update(['currency_id'=>$data['fixed_currency']]);
-            $autorate->totalize($request->input('fixed_currency'));
-        } else {
-            $autorate->totalize($autorate->currency_id);
+        if(isset($data['fixed_currency_id'])){
+            $autorate->update(['currency_id'=>$data['fixed_currency_id']]);
         }  
+        
+        $totals->totalize($autorate->currency_id);
 
         return new ChargeLclResource($charge);
         
@@ -133,7 +136,10 @@ class ChargeLclController extends Controller
         $charge->delete();
         
         $autorate = $charge->automatic_rate()->first();
-        $autorate->totalize($autorate->currency_id);
+
+        $totals = $autorate->totals()->first();
+
+        $totals->totalize($autorate->currency_id);
 
         return response()->json(null, 204);
     }

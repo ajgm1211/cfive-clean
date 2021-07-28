@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Requests\StoreApiIntegration;
 use App\Jobs\SyncCompaniesJob;
 use GuzzleHttp\Client;
 
@@ -40,7 +41,7 @@ class Visualtrans
 
         $year = date('Y');
 
-        $response = $this->callApi('https://pr-altius.visualtrans.net/rest/api1-facturas-venta.pro?v=ejercicio%3A' . $year . '%2C%20cliente%3A' . $client_id . '&k=ENTICARGOFIVE75682100');
+        $response = $this->callApi('https://altius.visualtrans.net/rest/api1-facturas-venta.pro?v=ejercicio%3A' . $year . '%2C%20cliente%3A' . $client_id . '&k=ENTICARGOFIVE75682100');
 
         if ($response['count'] > 0) {
             return true;

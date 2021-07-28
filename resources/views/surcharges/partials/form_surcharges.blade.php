@@ -29,7 +29,7 @@
         <input type="hidden" name="is_admin" value="{{@$is_admin}}">
         @hasanyrole('administrator|data_entry')
             <div class="form-group row" id="variatiogroup">
-                @if(count($decodejosn) == 0)
+                @if(empty($decodejosn))
                     <div class="col-lg-4">
                         <label for="DispNamMD" class="form-control-label">
                             Variation:

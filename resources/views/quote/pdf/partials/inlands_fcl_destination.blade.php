@@ -6,9 +6,9 @@
                         <!-- Section Title -->
                         <div>
                             
-                            <p class="title" style="color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.inland')}} - {{$type}} | {{$port}}</b></p>
+                            <p class="title" style="margin-bottom: 0px; color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.inland')}} - {{$type}} | {{$port}}</b></p>
                             
-                            <br>
+                            
 
                         </div>
                         <!-- End Section Title -->

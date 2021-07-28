@@ -34,7 +34,7 @@ class ChargeController extends Controller
         array_splice($equip_array,-1,1);
 
         foreach($equip_array as $eq){
-            $vdata['rates_'.$eq] = 'sometimes|nullable|numeric';
+            $vdata['rates_'.$eq] = 'sometimes|nullable|numeric|not_regex:/[0-9]*,[0-9]*/';
         }
 
         $validate = $request->validate($vdata);
@@ -60,7 +60,9 @@ class ChargeController extends Controller
             'amount'=>$rates_json
         ]);
 
-        $autorate->totalize($autorate->currency_id);
+        $totals = $autorate->totals()->first();
+
+        $totals->totalize($autorate->currency_id);
 
         return new ChargeResource($charge);
     }
@@ -75,7 +77,7 @@ class ChargeController extends Controller
 
         foreach($form_keys as $fkey){
             if(strpos($fkey,'freights') !== false || strpos($fkey,'rates') !== false){
-                $data += $request->validate([$fkey=>'sometimes|numeric|nullable']);
+                $data += $request->validate([$fkey=>'sometimes|numeric|nullable|not_regex:/[0-9]*,[0-9]*/']);
             }
         }
 
@@ -104,7 +106,7 @@ class ChargeController extends Controller
 
         foreach($data as $key=>$value){
             if(isset($charge->$key) || $charge->$key==null){
-                if(strpos($key,'_id')!==false){
+                if(strpos($key,'_id')!==false && $value['id']!=null){
                     $charge->update([$key=>$value['id']]);
                 }else{
                     $charge->update([$key=>$value]);
@@ -112,12 +114,16 @@ class ChargeController extends Controller
             }
         }
 
+        $totals = $autorate->totals()->first();
+
         if(isset($data['fixed_currency'])){
+            $autorate->update(['currency_id'=>$data['fixed_currency']]);
             $charge->update(['currency_id'=>$data['fixed_currency']]);
-            $autorate->totalize($request->input('fixed_currency'));
-        } else {
-            $autorate->totalize($autorate->currency_id);
         }  
+        
+        $totals->totalize($autorate->currency_id);
+        
+        $quote = $totals->quote()->first();
 
         return new ChargeResource($charge);
         
@@ -126,8 +132,8 @@ class ChargeController extends Controller
     public function retrieve(AutomaticRate $autorate)
     {   
         $charge = Charge::where([['automatic_rate_id',$autorate->id],['surcharge_id',null]])->first();
-        
-        return new ChargeResource($charge);
+        if($charge !=null)        
+         return new ChargeResource($charge);
     }
 
     public function destroy(Charge $charge)
@@ -135,7 +141,10 @@ class ChargeController extends Controller
         $charge->delete();
         
         $autorate = $charge->automatic_rate()->first();
-        $autorate->totalize($autorate->currency_id);
+
+        $totals = $autorate->totals()->first();
+
+        $totals->totalize($autorate->currency_id);
 
         return response()->json(null, 204);
     }

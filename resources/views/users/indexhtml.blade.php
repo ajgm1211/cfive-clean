@@ -116,22 +116,25 @@
                         <th title="Field #5">
                             Company Name
                         </th>
-                        @hasrole('administrator')
                         <th title="Field #6">
+                            Delegation
+                        </th>
+                        @hasrole('administrator')
+                        <th title="Field #7">
                             Last Login
                         </th>
                         @endhasrole
-                        <th title="Field #7">
+                        <th title="Field #8">
                             Status
                         </th>
-                        <th title="Field #8">
+                        <th title="Field #9">
                             Options
                         </th>
 
                     </tr>
                     </thead>
                     <tbody>
-
+             
                     @foreach ($arreglo as $arr)
 
                         <tr>
@@ -149,6 +152,9 @@
                                 @endif
                             </td>
                             <td>@if($arr->companyUser){{ $arr->companyUser->name }}@endif</td>
+                            <td>
+                                {{ $arr->userD ?? "----" }}
+                            </td>
                             @hasrole('administrator')
                             <td>
                                 {{ $arr->last_login }}
@@ -187,7 +193,7 @@
                     @endforeach
                     </tbody>
                 </table>
-                <div class="modal fade" id="m_modal_5" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal fade" id="m_modal_5"  role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">

@@ -7,7 +7,6 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 class NewRequestGlobalChargerLcl extends Model
 {
-    
     protected $table = 'new_request_global_charger_lcls';
     protected $fillable = ['id',
                            'name',
@@ -23,14 +22,16 @@ class NewRequestGlobalChargerLcl extends Model
                            'username_load',
                            'time_star_one',
                            'created_at',
-                           'sentemail'
+                           'sentemail',
                           ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo('App\User');
     }
 
-    public function companyuser(){
-        return $this->belongsTo('App\CompanyUser','company_user_id');
+    public function companyuser()
+    {
+        return $this->belongsTo('App\CompanyUser', 'company_user_id');
     }
 }
