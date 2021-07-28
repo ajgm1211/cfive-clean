@@ -1,15 +1,13 @@
-                <!-- Freight charges detailed -->
-                
-
-                @foreach($freight_charges_detailed as $origin => $value)
+            <!-- Freight charges detailed -->
+            @foreach($freight_charges_detailed as $origin => $value)
                 @foreach($value as $destination => $item)
                     
                     <!-- Section Title -->
                     <div>
                         
-                        <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}} - {{$origin}} | {{$destination}}</b></p>
+                        <p class="title" style="margin-bottom: 0px; color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}} - {{$origin}} | {{$destination}}</b></p>
                         
-                        <br>
+                        
 
                     </div>
                     <!-- End Section Title -->
@@ -84,34 +82,20 @@
 
                                             <tr class="text-left color-table">
 
-                                                @if($v->surcharge_id!='')
+                                                <td>{{$v->surcharge_id!='' ? $v->surcharge->name:__('pdf.ocean_freight')}}</td>
 
-                                                    <td>{{$v->surcharge->name}}</td>
-
-                                                @else
-
-                                                    <td>{{__('pdf.ocean_freight')}}</td>
-
-                                                @endif
-
-                                                @if($v->surcharge_id!='')
-
-                                                    <td>{{@$v->calculation_type->name}}</td>
-
-                                                @else
-
-                                                    <td>{{__('pdf.per_container')}}</td>
-
-                                                @endif
+                                                <td>{{$v->surcharge_id!='' ? @$v->calculation_type->name:__('pdf.per_container')}}</td>
 
                                                 <td {{@$quote->pdf_options['showCarrier'] ? '':'hidden'}}>{{@$r->carrier->name}}</td>
 
                                                 @foreach ($equipmentHides as $key=>$hide)
                                                     @foreach ($containers as $c)
                                                         @if($c->code == $key)
-
+                                                            <?php
+                                                                $total_w_profit = $v->surcharge_id != '' ? $v->${'sum_amount_markup_'.$c->code}:$v->${'sum_amount_markup_'.$c->code}+@$r->total_rate->markups['m'.$c->code];
+                                                            ?>
                                                             <!--<td {{ $hide }}>{{isDecimal($v->${'total_sum_'.$c->code}, true)}}</td>-->
-                                                            <td {{ $hide }}>{{ @$v->${'sum_amount_markup_'.$c->code} == null ? 0 : isDecimal( @$v->${'sum_amount_markup_'.$c->code}, true) . ' ' .$v->currency->alphacode}}</td>
+                                                            <td {{ $hide }}>{{ @$total_w_profit == null ? 0 : isDecimal( @$total_w_profit, false, true) . ' ' .$v->currency->alphacode}}</td>
 
                                                         @endif
                                                     @endforeach
@@ -144,7 +128,7 @@
                                 @foreach ($equipmentHides as $key=>$hide)
                                     @foreach ($containers as $c)
                                         @if($c->code == $key)
-                                            <td {{$hide}}><b>{{ isDecimal(@$total_freight->${'c'.$c->code}, true) .' '. @$r->currency->alphacode }}</b></td>
+                                            <td {{$hide}}><b>{{ isDecimal(@$total_freight->${'c'.$c->code}, false, true) .' '. @$r->currency->alphacode }}</b></td>
                                         @endif
                                     @endforeach
                                 @endforeach

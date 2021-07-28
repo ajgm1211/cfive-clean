@@ -6,19 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 use App\Http\Filters\AutomaticInlandFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class AutomaticInland extends Model
+class AutomaticInland extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     protected $casts = [
         'markup' => 'array',
-        'rate' => 'array',
+        'rate' => 'array'
     ];
 
-    protected $fillable = ['quote_id', 'charge', 'automatic_rate_id', 'provider', 'provider_id', 'contract', 'validity_start', 'validity_end', 'port_id', 'type', 'distance', 'rate', 'markup', 'currency_id', 'inland_address_id'];
+    protected $fillable = ['quote_id', 'charge', 'automatic_rate_id', 'provider', 'provider_id', 'contract', 
+        'validity_start', 'validity_end', 'port_id', 'type', 'distance', 'rate', 'markup', 'currency_id', 'inland_totals_id'];
 
     public function quote()
     {
-        return $this->belongsTo('App\QuoteV2', 'id', 'quote_id');
+        return $this->belongsTo('App\QuoteV2', 'quote_id', 'id');
     }
 
     public function rate()
@@ -41,6 +44,11 @@ class AutomaticInland extends Model
         return $this->hasOne('App\Provider', 'id', 'provider_id');
     }
 
+    public function inland_totals()
+	{
+		return $this->belongsTo('App\AutomaticInlandTotal','inland_totals_id','id');
+	}
+
     public function country_code()
     {
         return $this->hasManyThrough('App\Country', 'App\Harbor', 'country_id', 'id');
@@ -50,7 +58,7 @@ class AutomaticInland extends Model
     {
         $array = json_decode(json_decode($array));
 
-        $value = array();
+        $value = [];
 
         foreach ($array as $k => $amount_value) {
             if ($k == 'c20') {
@@ -66,8 +74,8 @@ class AutomaticInland extends Model
             } else {
                 $containers = Container::all();
                 foreach ($containers as $container) {
-                    if ($k == 'c' . $container->code) {
-                        $value['c' . $container->code] = $amount_value;
+                    if ($k == 'c'.$container->code) {
+                        $value['c'.$container->code] = $amount_value;
                     }
                 }
             }
@@ -100,7 +108,7 @@ class AutomaticInland extends Model
 
     public function scopeSelectFields($query)
     {
-        return $query->select('id', 'provider_id', 'inland_address_id', 'contract', 'distance', 'port_id', 'type', 'distance', 'rate as price', 'markup as profit', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');
+        return $query->select('id', 'provider_id', 'provider', 'charge', 'contract', 'distance', 'port_id', 'type', 'distance', 'rate as price', 'markup as profit', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');
     }
 
     public function scopeGetPortRelation($query)
@@ -108,5 +116,16 @@ class AutomaticInland extends Model
         $query->with(['port' => function ($q) {
             $q->select('id', 'display_name');
         }]);
+    }
+
+    public function syncProviders($provider)
+    {
+        if($provider){
+            InlandProvider::create([
+                'provider_type' => $provider['model'],
+                'provider_id' => $provider['id'],
+                'automatic_inland_id' => $this->id,
+            ]);
+        }
     }
 }

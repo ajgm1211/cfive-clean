@@ -127,7 +127,7 @@
 
                     <div style="float: right">
 
-                        <p class="color-title" ><b class="uppercase">{{__('pdf.validity')}}: </b>{{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
+                        <p class="color-title" ><b class="uppercase">{{__('pdf.validity')}}: </b>{{\Carbon\Carbon::parse( $quote->validity_start)->format('d/m/Y') }} - {{\Carbon\Carbon::parse( $quote->validity_end)->format('d/m/Y') }}</p>
 
                     </div>
 

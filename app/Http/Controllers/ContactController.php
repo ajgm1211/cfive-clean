@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection as Collection;
-use App\Contact;
 use App\Company;
+use App\Contact;
 use App\Http\Requests\StoreContact;
-use App\Http\Resources\ContactResource;
 use App\Http\Traits\EntityTrait;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection as Collection;
+use App\Http\Traits\MixPanelTrait;
 
 class ContactController extends Controller
 {
-    use EntityTrait;
+    use EntityTrait, MixPanelTrait;
 
     /**
      * Display a listing of the resource.
@@ -43,6 +43,7 @@ class ContactController extends Controller
         }
 
         if ($request->ajax()) {
+            $this->trackEvents("api_contacts_list", [], "api");
             return $contacts;
             //return (new ContactResource($contacts));
         }
@@ -74,6 +75,7 @@ class ContactController extends Controller
         } else {
             $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
         }
+
         return view('contacts.addwithmodal', ['companies' => $companies]);
     }
 
@@ -87,6 +89,7 @@ class ContactController extends Controller
         } else {
             $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
         }
+
         return view('contacts.addWithModalManualQuote', ['companies' => $companies]);
     }
 
@@ -100,6 +103,7 @@ class ContactController extends Controller
         } else {
             $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
         }
+
         return view('contacts.add', ['companies' => $companies, 'company_id' => $company_id]);
     }
 
@@ -108,13 +112,13 @@ class ContactController extends Controller
         $request->validated();
 
         if ($request->ajax() && $request->options) {
-
             $data = json_decode($request->options, true);
 
             if (array_key_exists('external_contact_id', $data)) {
                 $contact = Contact::where('options->external_contact_id', $data['external_contact_id'])->first();
                 if ($contact) {
                     $contact->fill($request->all())->save();
+
                     return $contact;
                 }
             }
@@ -134,7 +138,7 @@ class ContactController extends Controller
         $options = null;
 
         if ($request->key_name && $request->key_value) {
-            $options_array = array();
+            $options_array = [];
 
             $options_key = $this->processArray($request->key_name);
             $options_value = $this->processArray($request->key_value);
@@ -176,7 +180,7 @@ class ContactController extends Controller
         $options = null;
 
         if ($request->key_name && $request->key_value) {
-            $options_array = array();
+            $options_array = [];
 
             $options_key = $this->processArray($request->key_name);
             $options_value = $this->processArray($request->key_value);
@@ -202,7 +206,7 @@ class ContactController extends Controller
 
     public function show(Request $request, $id)
     {
-        $contact = Contact::with(array('company' => function ($query) {
+        $contact = Contact::with(['company' => function ($query) {
             $query->select('id', 'business_name', 'phone', 'address', 'email', 'tax_number', 'company_user_id', 'owner');
             $query->with(['owner' => function ($q) {
                 $q->select('id', 'name', 'lastname', 'email', 'phone', 'position', 'state', 'company_user_id');
@@ -213,14 +217,15 @@ class ContactController extends Controller
                     $qy->select('id', 'name', 'alphacode', 'api_code_eur', 'api_code', 'rates', 'rates_eur');
                 }]);
             }]);
-        }))->where('id', $id)->firstOrFail();
+        }])->where('id', $id)->firstOrFail();
 
         if ($request->ajax()) {
             $collection = Collection::make($contact);
+
             return $collection;
         }
 
-        return view('contacts.show', compact('conact'));
+        return view('contacts.show', compact('contact'));
     }
 
     public function delete($id)
@@ -240,7 +245,7 @@ class ContactController extends Controller
                 return response()->json(['message' => 'Contact deleted successfully!']);
             }
 
-            return response()->json(['message' => 'Ok']);
+            return response()->json(['message' => 'OK']);
         } catch (\Exception $e) {
             if ($e instanceof ModelNotFoundException) {
                 return response()->json([
@@ -255,12 +260,14 @@ class ContactController extends Controller
     public function getContacts()
     {
         $contact = Contact::all()->pluck('first_name', 'id');
+
         return $contact;
     }
 
     public function getContactsByCompanyId($id)
     {
         $contact = Contact::where('company_id', $id)->pluck('first_name', 'id');
+
         return $contact;
     }
 }

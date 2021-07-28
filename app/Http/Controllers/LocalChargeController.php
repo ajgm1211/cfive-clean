@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\LocalCharge;
-use App\Http\Resources\LocalChargeResource;
 use App\Contract;
+use App\Http\Resources\LocalChargeResource;
+use App\LocalCharge;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class LocalChargeController extends Controller
@@ -20,7 +20,7 @@ class LocalChargeController extends Controller
     {
         $results = LocalCharge::filterByContract($contract->id)->filter($request);
 
-    	return LocalChargeResource::collection($results);
+        return LocalChargeResource::collection($results);
     }
 
     /**
@@ -39,10 +39,11 @@ class LocalChargeController extends Controller
 
         $localcharge->LocalChargeCarrierSync($data['carriers']);
 
-        if($data['typeofroute'] == 'country')
+        if ($data['typeofroute'] == 'country') {
             $localcharge->LocalChargeCountriesSync($data['origin'], $data['destination']);
-        else
+        } else {
             $localcharge->LocalChargePortsSync($data['origin'], $data['destination']);
+        }
 
         return new LocalChargeResource($localcharge);
     }
@@ -73,8 +74,7 @@ class LocalChargeController extends Controller
             'currency' => 'required',
         ];
 
-    	return $request->validate($vdata);
-
+        return $request->validate($vdata);
     }
 
     /**
@@ -93,10 +93,11 @@ class LocalChargeController extends Controller
 
         $localcharge->LocalChargeCarrierSync($data['carriers']);
 
-        if($data['typeofroute'] == 'country')
+        if ($data['typeofroute'] == 'country') {
             $localcharge->LocalChargeCountriesSync($data['origin'], $data['destination']);
-        else
+        } else {
             $localcharge->LocalChargePortsSync($data['origin'], $data['destination']);
+        }
 
         return new LocalChargeResource($localcharge);
     }
@@ -133,8 +134,7 @@ class LocalChargeController extends Controller
      */
     public function duplicate(LocalCharge $localcharge)
     {
-        
-        $new_localcharge = $localcharge->duplicate(); 
+        $new_localcharge = $localcharge->duplicate();
 
         return new LocalChargeResource($new_localcharge, true);
     }
@@ -147,7 +147,7 @@ class LocalChargeController extends Controller
      */
     public function destroyAll(Request $request)
     {
-        DB::table('localcharges')->whereIn('id', $request->input('ids'))->delete(); 
+        DB::table('localcharges')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
     }

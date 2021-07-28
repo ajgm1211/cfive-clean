@@ -189,10 +189,6 @@ return [
     Kordy\Ticketit\TicketitServiceProvider::class,
     App\Providers\CrispServiceProvider::class,
     App\Providers\AllServiceProvider::class,
-    
-
-
-
 
   ],
 
@@ -264,6 +260,7 @@ return [
     'Debugbar' => Barryvdh\Debugbar\Facade::class,
     'EventCrisp' => App\Helpers\EventCrisp::class,
     'HelperAll' => App\Helpers\HelperAll::class,
+    
 
   ],
 

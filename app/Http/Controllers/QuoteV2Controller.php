@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Airline;
 use App\Airport;
 use App\AutomaticInland;
-use App\AutomaticInlandTotal;
-use App\InlandAddress;
 use App\AutomaticInlandLclAir;
+use App\AutomaticInlandTotal;
 use App\AutomaticRate;
+use App\AutomaticRateTotal;
 use App\CalculationType;
 use App\CalculationTypeLcl;
 use App\Carrier;
@@ -24,7 +24,9 @@ use App\ContractFclFile;
 use App\ContractLclFile;
 use App\Country;
 use App\Currency;
+use App\Direction;
 use App\EmailTemplate;
+use App\FreightMarkup;
 use App\GlobalCharCarrier;
 use App\GlobalCharge;
 use App\GlobalChargeLcl;
@@ -36,6 +38,7 @@ use App\Http\Traits\QuoteV2Trait;
 use App\Http\Traits\SearchTrait;
 use App\Incoterm;
 use App\Inland;
+use App\InlandAddress;
 use App\InlandDistance;
 use App\Jobs\UpdatePdf;
 use App\LocalCharge;
@@ -49,13 +52,13 @@ use App\Price;
 use App\Quote;
 use App\QuoteV2;
 use App\Rate;
-use App\RateApi;
 use App\RateLcl;
 use App\RemarkCountry;
 use App\RemarkHarbor;
 use App\SaleTermV2;
-use App\Schedule;
+
 //LCL
+use App\Schedule;
 use App\SearchPort;
 use App\SearchRate;
 use App\Surcharge;
@@ -63,7 +66,7 @@ use App\TermAndConditionV2;
 use App\TermsPort;
 use App\User;
 use App\ViewQuoteV2;
-use GuzzleHttp\Client;
+use EventIntercom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
@@ -74,12 +77,12 @@ use Maatwebsite\Excel\Facades\Excel;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
 use Yajra\DataTables\DataTables;
-
+use App\Http\Traits\MixPanelTrait;
 
 class QuoteV2Controller extends Controller
 {
 
-    use QuoteV2Trait;
+    use QuoteV2Trait, MixPanelTrait;
     use SearchTrait;
 
     protected $pdf_language = 'English';
@@ -94,6 +97,11 @@ class QuoteV2Controller extends Controller
      * @param Request $request
      * @return Illuminate\View\View
      */
+    public function newSearch(Request $request)
+    {
+        return view('searchV2.index');
+    }
+
     public function index(Request $request)
     {
 
@@ -327,48 +335,48 @@ class QuoteV2Controller extends Controller
             })->editColumn('id', '{{$id}}')->make(true);
 
         /*return DataTables::of($colletions)
-            ->editColumn('created', function ($colletion) {
-                return [
-                    'display' => e($colletion['created']->format('M d, Y H:i')),
-                    'timestamp' => $colletion['created']->timestamp,
-                ];
-            })
-            ->addColumn('action', function ($colletion) {
-                return
-                    '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Options
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-          <a target="_blank" class="dropdown-item" href="/api/quote/' . obtenerRouteKey($colletion['idSet']) . '/edit">
-          <span>
-          <i class="la la-edit"></i>
-          &nbsp;
-          Edit
-          </span>
-          </a>
-          <a target="_blank" class="dropdown-item" href="/v2/quotes/pdf/' . $colletion['idSet'] . '">
-          <span>
-          <i class="la la-file"></i>
-          &nbsp;
-          PDF
-          </span>
-          </a>
-          <a href="#" class="dropdown-item" id="duplicate-quote-v2" data-quote-id="' . obtenerRouteKey($colletion['idSet']) . '" >
-          <span>
-          <i class="la la-plus"></i>
-          &nbsp;
-          Duplicate
-          </span>
-          </a>
-          <a href="#" class="dropdown-item" id="delete-quote-v2" data-quote-id="' . obtenerRouteKey($colletion['idSet']) . '" >
-          <span>
-          <i class="la la-eraser"></i>
-          &nbsp;
-          Delete
-          </span>
-          </a>
-          </div>';
-            })->editColumn('id', '{{$id}}')->make(true);*/
+    ->editColumn('created', function ($colletion) {
+    return [
+    'display' => e($colletion['created']->format('M d, Y H:i')),
+    'timestamp' => $colletion['created']->timestamp,
+    ];
+    })
+    ->addColumn('action', function ($colletion) {
+    return
+    '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Options
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+    <a target="_blank" class="dropdown-item" href="/api/quote/' . obtenerRouteKey($colletion['idSet']) . '/edit">
+    <span>
+    <i class="la la-edit"></i>
+    &nbsp;
+    Edit
+    </span>
+    </a>
+    <a target="_blank" class="dropdown-item" href="/v2/quotes/pdf/' . $colletion['idSet'] . '">
+    <span>
+    <i class="la la-file"></i>
+    &nbsp;
+    PDF
+    </span>
+    </a>
+    <a href="#" class="dropdown-item" id="duplicate-quote-v2" data-quote-id="' . obtenerRouteKey($colletion['idSet']) . '" >
+    <span>
+    <i class="la la-plus"></i>
+    &nbsp;
+    Duplicate
+    </span>
+    </a>
+    <a href="#" class="dropdown-item" id="delete-quote-v2" data-quote-id="' . obtenerRouteKey($colletion['idSet']) . '" >
+    <span>
+    <i class="la la-eraser"></i>
+    &nbsp;
+    Delete
+    </span>
+    </a>
+    </div>';
+    })->editColumn('id', '{{$id}}')->make(true);*/
     }
 
     /**
@@ -1595,8 +1603,6 @@ class QuoteV2Controller extends Controller
                 });
             })->get();
 
-            \Log::info($remarks_all);
-
             $remarks_origin = RemarkHarbor::wherein('port_id', $rem_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
                 $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
@@ -1968,9 +1974,10 @@ class QuoteV2Controller extends Controller
                 }
             }
 
-            $request->request->add(['company_user_id' => \Auth::user()->company_user_id, 'quote_id' => $this->idPersonalizado(), 'type' => 'FCL', 'delivery_type' => $form->delivery_type, 'company_id' => $fcompany_id, 'contact_id' => $fcontact_id, 'validity_start' => $since, 'validity_end' => $until, 'user_id' => \Auth::id(), 'equipment' => $equipment, 'status' => 'Draft', 'date_issued' => $since, 'price_id' => $priceId, 'payment_conditions' => $payments, 'origin_address' => $form->origin_address, 'destination_address' => $form->destination_address]);
+            $request->request->add(['company_user_id' => \Auth::user()->company_user_id, 'quote_id' => $this->idPersonalizado(), 'type' => 'FCL', 'delivery_type' => $form->delivery_type, 'company_id' => $fcompany_id, 'contact_id' => $fcontact_id, 'validity_start' => $since, 'validity_end' => $until, 'user_id' => \Auth::id(), 'equipment' => $equipment, 'status' => 'Draft', 'date_issued' => $since, 'price_id' => $priceId, 'payment_conditions' => $payments, 'origin_address' => null, 'destination_address' => null]);
 
             $quote = QuoteV2::create($request->all());
+            $quote->custom_quote_id = $quote->quote_id;
 
             $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
             $currency_id = $company->companyUser->currency_id;
@@ -1980,8 +1987,14 @@ class QuoteV2Controller extends Controller
             $quote->language_id = $language->id ?? 1;
             $cargo_type_id = $request->input('cargo_type');
             $quote->cargo_type_id = $cargo_type_id;
+            $pdfOptions = [
+                "allIn" => true,
+                "showCarrier" => true,
+                "showTotals" => false,
+                "totalsCurrency" => $currency
+            ];
+            $quote->pdf_options = $pdfOptions;
             $quote->save();
-
 
             $this->savePdfOption($quote, $currency);
         } else { // COTIZACION MANUAL
@@ -2001,11 +2014,18 @@ class QuoteV2Controller extends Controller
                 $typeText = "FCL";
                 $equipment = stripslashes(json_encode($request->input('equipment')));
                 $delivery_type = $request->input('delivery_type');
+
+                // EVENT INTERCOM
+                $event = new EventIntercom();
+                $event->event_quoteManualFcl();
             }
             if ($request->input('type') == '2') {
                 $typeText = "LCL";
                 $equipment = $arregloNull;
                 $delivery_type = $request->input('delivery_type');
+                // EVENT INTERCOM
+                $event = new EventIntercom();
+                $event->event_quoteManualLcl();
             }
             if ($request->input('type') == '3') {
                 $typeText = "AIR";
@@ -2034,69 +2054,78 @@ class QuoteV2Controller extends Controller
             $quote = QuoteV2::create($request->all());
 
             $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
+            $currency_id = $company->companyUser->currency_id;
+            $currency = Currency::find($currency_id);
 
             $language = $company->companyUser->language()->first();
             $quote->language_id = $language->id ?? 1;
             $cargo_type_id = $request->input('cargo_type');
             $quote->cargo_type_id = $cargo_type_id;
+            $pdfOptions = [
+                "allIn" => true,
+                "showCarrier" => true,
+                "showTotals" => false,
+                "totalsCurrency" => $currency
+            ];
+            $quote->pdf_options = $pdfOptions;
             $quote->save();
             $modo = $request->input('mode');
             // FCL
             if ($typeText == 'FCL') {
                 /**foreach ($request->input('originport') as $origP) {
-                    $infoOrig = explode("-", $origP);
-                    $origin_port[] = $infoOrig[0];
+                $infoOrig = explode("-", $origP);
+                $origin_port[] = $infoOrig[0];
                 }
                 foreach ($request->input('destinyport') as $destP) {
-                    $infoDest = explode("-", $destP);
-                    $destiny_port[] = $infoDest[0];
+                $infoDest = explode("-", $destP);
+                $destiny_port[] = $infoDest[0];
                 }
                 foreach ($origin_port as $orig) {
-                    foreach ($destiny_port as $dest) {
-                        $request->request->add(['contract' => '', 'origin_port_id' => $orig, 'destination_port_id' => $dest, 'currency_id' => $idCurrency, 'quote_id' => $quote->id]);
-                        $rate = AutomaticRate::create($request->all());
+                foreach ($destiny_port as $dest) {
+                $request->request->add(['contract' => '', 'origin_port_id' => $orig, 'destination_port_id' => $dest, 'currency_id' => $idCurrency, 'quote_id' => $quote->id]);
+                $rate = AutomaticRate::create($request->all());
 
-                        $oceanFreight = new Charge();
-                        $oceanFreight->automatic_rate_id = $rate->id;
-                        $oceanFreight->type_id = '3';
-                        $oceanFreight->surcharge_id = null;
-                        $oceanFreight->calculation_type_id = '5';
-                        $oceanFreight->amount = $arregloNull;
-                        $oceanFreight->markups = $arregloNull;
-                        $oceanFreight->currency_id = $idCurrency;
-                        $oceanFreight->total = $arregloNull;
-                        $oceanFreight->save();
-                    }
+                $oceanFreight = new Charge();
+                $oceanFreight->automatic_rate_id = $rate->id;
+                $oceanFreight->type_id = '3';
+                $oceanFreight->surcharge_id = null;
+                $oceanFreight->calculation_type_id = '5';
+                $oceanFreight->amount = $arregloNull;
+                $oceanFreight->markups = $arregloNull;
+                $oceanFreight->currency_id = $idCurrency;
+                $oceanFreight->total = $arregloNull;
+                $oceanFreight->save();
+                }
                 }**/
 
                 $this->saveTerms($quote->id, 'FCL', $modo);
             }
             if ($typeText == 'LCL') {
                 /**foreach ($request->input('originport') as $origP) {
-                    $infoOrig = explode("-", $origP);
-                    $origin_port[] = $infoOrig[0];
+                $infoOrig = explode("-", $origP);
+                $origin_port[] = $infoOrig[0];
                 }
                 foreach ($request->input('destinyport') as $destP) {
-                    $infoDest = explode("-", $destP);
-                    $destiny_port[] = $infoDest[0];
+                $infoDest = explode("-", $destP);
+                $destiny_port[] = $infoDest[0];
                 }
                 foreach ($origin_port as $orig) {
-                    foreach ($destiny_port as $dest) {
-                        $request->request->add(['contract' => '', 'origin_port_id' => $orig, 'destination_port_id' => $dest, 'currency_id' => $idCurrency, 'quote_id' => $quote->id]);
-                        $rate = AutomaticRate::create($request->all());
+                foreach ($destiny_port as $dest) {
+                $request->request->add(['contract' => '', 'origin_port_id' => $orig, 'destination_port_id' => $dest, 'currency_id' => $idCurrency, 'quote_id' => $quote->id]);
+                $rate = AutomaticRate::create($request->all());
 
-                        $oceanFreight = new ChargeLclAir();
-                        $oceanFreight->automatic_rate_id = $rate->id;
-                        $oceanFreight->type_id = '3';
-                        $oceanFreight->surcharge_id = null;
-                        $oceanFreight->calculation_type_id = '4';
-                        $oceanFreight->units = "0";
-                        $oceanFreight->price_per_unit = "0";
-                        $oceanFreight->total = "0";
-                        $oceanFreight->markup = "0";
-                        $oceanFreight->currency_id = $idCurrency;
-                        $oceanFreight->save();
-                    }
+                $oceanFreight = new ChargeLclAir();
+                $oceanFreight->automatic_rate_id = $rate->id;
+                $oceanFreight->type_id = '3';
+                $oceanFreight->surcharge_id = null;
+                $oceanFreight->calculation_type_id = '4';
+                $oceanFreight->units = "0";
+                $oceanFreight->price_per_unit = "0";
+                $oceanFreight->total = "0";
+                $oceanFreight->markup = "0";
+                $oceanFreight->currency_id = $idCurrency;
+                $oceanFreight->save();
+                }
                 }**/
 
                 $this->saveTerms($quote->id, 'LCL', $modo);
@@ -2123,7 +2152,6 @@ class QuoteV2Controller extends Controller
             if ($typeText == 'LCL' || $typeText == 'AIR') {
                 $input = Input::all();
                 $quantity = array_values(array_filter($input['quantity']));
-                //dd($input);
                 $type_cargo = array_values(array_filter($input['type_load_cargo']));
                 $height = array_values(array_filter($input['height']));
                 $width = array_values(array_filter($input['width']));
@@ -2174,10 +2202,18 @@ class QuoteV2Controller extends Controller
                     $markups = json_encode($rateO->markups);
                     $arregloNull = array();
 
-                    $remarks = $info_D->remarks . "<br>";
+                    if (isset($info_D->remarks)) {
+                        $remarks = $info_D->remarks . "<br>";
+                    } else {
+                        $remarks = '';
+                    }
+
+                    if (isset($info_D->remarksG)) {
+                        $remarks = $remarks . $info_D->remarksG;
+                    }
 
                     //NEW REMARKS FOR QUOTE
-                    $quote_language = $company->companyUser->pdf_language;
+                    $quote_language = $company->companyUser->pdf_language ?? 1;
 
                     if ($quote_language == 1) {
                         $quote->remarks_english = $remarks;
@@ -2196,12 +2232,50 @@ class QuoteV2Controller extends Controller
                     if (isset($info_D->transit_time) && $info_D->transit_time != '') {
                         $transitTime = $info_D->transit_time;
                         $viaT = $info_D->via;
+                        $service = $info_D->service;
                     } else {
                         $transitTime = null;
                         $viaT = null;
+                        $service = null;
                     }
 
-                    $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'transit_time' => $transitTime, 'via' => $viaT]);
+                    if ($quote->price_id) {
+                        $priceLevelMarkups = FreightMarkup::where([
+                            ['price_id', $quote->price_id],
+                            ['fixed_markup', '!=', '0'],
+                            ['price_type_id', 1]
+                        ])->orWhere([
+                            ['price_id', $quote->price_id],
+                            ['percent_markup', '!=', '0'],
+                            ['price_type_id', 1]
+                        ])->first();
+
+                        if ($priceLevelMarkups) {
+                            $input = Currency::where('id', $priceLevelMarkups->currency)->first();
+
+                            $output = Currency::where('id', $info_D->currency->id)->first();
+
+                            $priceLevelMarkupsArray = [];
+
+                            foreach ($rateO->markups as $key => $value) {
+                                $priceLevelMarkupsArray[$key] = $value;
+                            }
+                            if ($priceLevelMarkups->fixed_markup != 0) {
+                                $priceLevelMarkupsFinal = $this->convertToCurrency($input, $output, $priceLevelMarkupsArray);
+                            } else {
+                                $priceLevelMarkupsFinal = [];
+                                foreach ($priceLevelMarkupsArray as $key => $price) {
+                                    $priceLevelMarkupsFinal[$key] = isDecimal($price, true);
+                                }
+                            }
+                        } else {
+                            $priceLevelMarkupsFinal = null;
+                        }
+                    } else {
+                        $priceLevelMarkupsFinal = null;
+                    }
+
+                    $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'transit_time' => $transitTime, 'via' => $viaT, 'schedule_type' => $service]);
 
                     $rate = AutomaticRate::create($request->all());
 
@@ -2215,6 +2289,18 @@ class QuoteV2Controller extends Controller
                     $oceanFreight->currency_id = $info_D->currency->id;
                     $oceanFreight->total = $rates;
                     $oceanFreight->save();
+
+                    $rateTotals = new AutomaticRateTotal();
+                    $rateTotals->quote_id = $quote->id;
+                    $rateTotals->automatic_rate_id = $rate->id;
+                    $rateTotals->origin_port_id = $rate->origin_port_id;
+                    $rateTotals->destination_port_id = $rate->destination_port_id;
+                    $rateTotals->carrier_id = $rate->carrier_id;
+                    $rateTotals->currency_id = $info_D->currency->id;
+                    $rateTotals->totals = null;
+                    $rateTotals->markups = $priceLevelMarkupsFinal;
+                    $rateTotals->save();
+                    $rateTotals->totalize($info_D->currency->id);
 
                     $inlandD = $request->input('inlandD' . $rateO->rate_id);
                     $inlandO = $request->input('inlandO' . $rateO->rate_id);
@@ -2245,7 +2331,19 @@ class QuoteV2Controller extends Controller
                             $inlandDestAddress->quote_id = $quote->id;
                             $inlandDestAddress->address = $form->destination_address;
                             $inlandDestAddress->port_id = $inlandDestiny->port_id;
+                            $inlandDestAddress->type = $inlandDestiny->type;
                             $inlandDestAddress->save();
+
+                            //NEW TABLE INLAND TOTALS
+                            $inlandDestTotals = new AutomaticInlandTotal();
+                            $inlandDestTotals->quote_id = $quote->id;
+                            $inlandDestTotals->port_id = $inlandDestiny->port_id;
+                            $inlandDestTotals->currency_id = $info_D->idCurrency;
+                            $inlandDestTotals->totals = null;
+                            $inlandDestTotals->markups = null;
+                            $inlandDestTotals->type = $inlandDestiny->type;
+                            $inlandDestTotals->inland_address_id = $inlandDestAddress->id;
+                            $inlandDestTotals->save();
 
                             $arregloMontoInDest = json_encode($montoInDest);
                             $arregloMarkupsInDest = json_encode($markupInDest);
@@ -2265,19 +2363,8 @@ class QuoteV2Controller extends Controller
                             //FOR QUOTE MODULE, CREATED NEW FIELD CHARGE
                             $inlandDest->charge = $inlandDestiny->providerName;
                             //$inlandDest->provider_id = $inlandDestiny->prov_id;
-                            $inlandDest->inland_address_id = $inlandDestAddress->id;
+                            $inlandDest->inland_totals_id = $inlandDestTotals->id;
                             $inlandDest->save();
-
-                            //NEW TABLE INLAND TOTALS
-                            $inlandDestTotals = new AutomaticInlandTotal();
-                            $inlandDestTotals->quote_id = $quote->id;
-                            $inlandDestTotals->port_id = $inlandDestiny->port_id;
-                            $inlandDestTotals->currency_id = $info_D->idCurrency;
-                            $inlandDestTotals->totals = $arregloMontoInDest;
-                            $inlandDestTotals->markups = $arregloMarkupsInDest;
-                            $inlandDestTotals->type = $inlandDestiny->type;
-                            $inlandDestTotals->inland_address_id = $inlandDestAddress->id;
-                            $inlandDestTotals->save();
                         }
                     }
                     //INLAND ORIGEN
@@ -2309,7 +2396,19 @@ class QuoteV2Controller extends Controller
                             $inlandOrigAddress->quote_id = $quote->id;
                             $inlandOrigAddress->address = $form->origin_address;
                             $inlandOrigAddress->port_id = $inlandOrigin->port_id;
+                            $inlandOrigAddress->type = $inlandOrigin->type;
                             $inlandOrigAddress->save();
+
+                            //NEW TABLE INLAND TOTALS
+                            $inlandOrigTotals = new AutomaticInlandTotal();
+                            $inlandOrigTotals->quote_id = $quote->id;
+                            $inlandOrigTotals->port_id = $inlandOrigin->port_id;
+                            $inlandOrigTotals->currency_id = $info_D->idCurrency;
+                            $inlandOrigTotals->totals = null;
+                            $inlandOrigTotals->markups = null;
+                            $inlandOrigTotals->inland_address_id = $inlandOrigAddress->id;
+                            $inlandOrigTotals->type = $inlandOrigin->type;
+                            $inlandOrigTotals->save();
 
                             $arregloMontoInOrig = json_encode($montoInOrig);
                             $arregloMarkupsInOrig = json_encode($markupInOrig);
@@ -2329,19 +2428,8 @@ class QuoteV2Controller extends Controller
                             //FOR QUOTE MODULE, CREATED NEW FIELD
                             //$inlandOrig->provider_id = $inlandOrigin->prov_id;
                             $inlandOrig->charge = $inlandOrigin->providerName;
-                            $inlandOrig->inland_address_id = $inlandOrigAddress->id;
+                            $inlandOrig->inland_totals_id = $inlandOrigTotals->id;
                             $inlandOrig->save();
-
-                            //NEW TABLE INLAND TOTALS
-                            $inlandOrigTotals = new AutomaticInlandTotal();
-                            $inlandOrigTotals->quote_id = $quote->id;
-                            $inlandOrigTotals->port_id = $inlandOrigin->port_id;
-                            $inlandOrigTotals->currency_id = $info_D->idCurrency;
-                            $inlandOrigTotals->totals = $arregloMontoInOrig;
-                            $inlandOrigTotals->markups = $arregloMarkupsInOrig;
-                            $inlandOrigTotals->inland_address_id = $inlandOrigAddress->id;
-                            $inlandOrigTotals->type = $inlandOrigin->type;
-                            $inlandOrigTotals->save();
                         }
                     }
 
@@ -2455,6 +2543,10 @@ class QuoteV2Controller extends Controller
                 }
             }
 
+            // EVENTO INTERCOM
+            $event = new EventIntercom();
+            $event->event_quoteAutomaticFcl();
+
             // Terminos Automatica
             $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
             $language_id = $company->companyUser->pdf_language;
@@ -2462,10 +2554,13 @@ class QuoteV2Controller extends Controller
             //$this->saveRemarks($quote->id,$remarksGenerales);
         }
 
-        if ($type == 1) {
-            return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
-        } else {
+        /** Tracking create quote event */
+        $this->trackEvents("old_create_quote", $quote);
+
+        if ($type != 1) {
             return redirect()->action('QuotationController@edit', $quote);
+        } else {
+            return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
         }
     }
 
@@ -2713,10 +2808,33 @@ class QuoteV2Controller extends Controller
         return $rateC;
     }
 
+    public function getRatesCurrency($id, $typeCurrency)
+    {
+        $rates = Currency::where('id', '=', $id)->first();
+        $changeCurrency = Currency::where('id', '=', $typeCurrency)->first();
+        $inDolar = $rates->rates;
+
+        $inChange = $changeCurrency->rates;
+
+        $rateC = $inDolar / $inChange;
+
+        return $rateC;
+    }
+
     public function search()
     {
 
         $company_user_id = \Auth::user()->company_user_id;
+        //variables del modal contract
+        $group_containerC = GroupContainer::pluck('name', 'id');
+        $group_containerC->prepend('Select an option', '');
+        $carrierC = Carrier::pluck('name', 'id');
+        $directionC = Direction::pluck('name', 'id');
+        $harborsR = Harbor::get()->pluck('display_name', 'id');
+        $surchargesS = Surcharge::where('company_user_id', $company_user_id)->get()->pluck('name', 'id');
+        $calculationTypeS = CalculationType::get()->pluck('name', 'id');
+        //Fin variables
+
         $incoterm = Incoterm::pluck('name', 'id');
         $incoterm->prepend('Select an option', '');
         $group_contain = GroupContainer::pluck('name', 'id');
@@ -2729,13 +2847,14 @@ class QuoteV2Controller extends Controller
         $company_dropdown = null;
         $pricesG = Price::doesntHave('company_price')->where('company_user_id', $company_user_id)->pluck('name', 'id');
 
-        if (\Auth::user()->hasRole('subuser')) {
+       /* if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
                 $q->where('user_id', \Auth::user()->id);
             })->orwhere('owner', \Auth::user()->id)->pluck('business_name', 'id');
         } else {
             $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
-        }
+        }*/
+        $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
         $companies->prepend('Select an option', '0');
         $harbors = Harbor::get()->pluck('display_name', 'id_complete');
         $countries = Country::all()->pluck('name', 'id');
@@ -2753,8 +2872,21 @@ class QuoteV2Controller extends Controller
         $currencies = Currency::all()->pluck('alphacode', 'id');
         $hideO = 'hide';
         $hideD = 'hide';
-        $chargeOrigin = 'true';
-        $chargeDestination = 'true';
+
+        $charge = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
+
+        if ($charge->origincharge != null) {
+            $chargeOrigin = 'true';
+        } else {
+            $chargeOrigin = '';
+        }
+        if ($charge->destinationcharge != null) {
+            $chargeDestination = 'true';
+        } else {
+            $chargeDestination = '';
+        }
+
+
         $chargeFreight = 'true';
         $chargeAPI = 'true';
         $chargeAPI_M = 'false';
@@ -2776,9 +2908,7 @@ class QuoteV2Controller extends Controller
         $destA['ocultarDestA'] = 'hide';
         $destA['ocultarDestComb'] = '';
 
-        //dd($origen);
-
-        return view('quotesv2/search', compact('companies', 'harbor_origin', 'harbor_destination', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA', 'pricesG', 'company_dropdown'));
+        return view('quotesv2/search', compact('companies', 'harbor_origin', 'harbor_destination', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain', 'containerType', 'containers', 'carriersSelected', 'allCarrier', 'destinationClass', 'origenClass', 'origA', 'pricesG', 'company_dropdown', 'group_containerC', 'carrierC', 'directionC', 'harborsR', 'surchargesS', 'calculationTypeS'));
     }
 
     /**
@@ -2789,11 +2919,21 @@ class QuoteV2Controller extends Controller
 
     public function processSearch(SearchRateForm $request)
     {
+        $company_user_id = \Auth::user()->company_user_id;
+        //variables del modal contract
+        $group_containerC = GroupContainer::pluck('name', 'id');
+        $group_containerC->prepend('Select an option', '');
+        $carrierC = Carrier::pluck('name', 'id');
+        $directionC = Direction::pluck('name', 'id');
+        $harborsR = Harbor::get()->pluck('display_name', 'id');
+        $surchargesS = Surcharge::where('company_user_id', $company_user_id)->get()->pluck('name', 'id');
+        $calculationTypeS = CalculationType::get()->pluck('name', 'id');
+        //Fin variables
 
         $request->validated();
 
         $allCarrier = false;
-        $company_user_id = \Auth::user()->company_user_id;
+
         $user_id = \Auth::id();
         $container_calculation = ContainerCalculation::get();
         $containers = Container::get();
@@ -2831,19 +2971,18 @@ class QuoteV2Controller extends Controller
 
         $address = $request->input('origin_address') . " " . $request->input('destination_address');
 
-        //dd($request->all());
-
         //resquest completo del form
         $form = $request->all();
 
         $incoterm = Incoterm::pluck('name', 'id');
-        if (\Auth::user()->hasRole('subuser')) {
+        /*if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
                 $q->where('user_id', \Auth::user()->id);
             })->orwhere('owner', \Auth::user()->id)->pluck('business_name', 'id');
         } else {
             $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
-        }
+        }*/
+        $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
         $companies->prepend('Select an option', '0');
         $airlines = Airline::all()->pluck('name', 'id');
         $harbors = Harbor::get()->pluck('display_name', 'id_complete');
@@ -2880,7 +3019,7 @@ class QuoteV2Controller extends Controller
                 $origin_port[] = $infoOrig[0];
                 $origin_country[] = $infoOrig[1];
                 $origin_harbor_all[] = $infoOrig[0] . "-" . $infoOrig[1] . "-" . $infoOrig[2];
-                $orig = Harbor::where('harbor_parent',  $infoOrig[0])->get();
+                $orig = Harbor::where('harbor_parent', $infoOrig[0])->get();
                 foreach ($orig as $or) {
                     $origin_port[] = "$or->id";
                     $origin_country[] = "$or->country_id";
@@ -2888,7 +3027,7 @@ class QuoteV2Controller extends Controller
                 }
             } else {
 
-                $orig = Harbor::where('id', $infoOrig[2])->orwhere('harbor_parent',  $infoOrig[2])->get();
+                $orig = Harbor::where('id', $infoOrig[2])->orwhere('harbor_parent', $infoOrig[2])->get();
                 foreach ($orig as $or) {
                     $origin_port[] = "$or->id";
                     $origin_country[] = "$or->country_id";
@@ -2901,9 +3040,6 @@ class QuoteV2Controller extends Controller
         $origin_country = array_unique($origin_country);
         $origin_harbor_all = array_unique($origin_harbor_all);
 
-
-
-
         foreach ($request->input('destinyport') as $destP) {
 
             $infoDest = explode("-", $destP);
@@ -2915,7 +3051,7 @@ class QuoteV2Controller extends Controller
                 $destiny_country[] = $infoDest[1];
                 $destination_harbor_all[] = $infoDest[0] . "-" . $infoDest[1] . "-" . $infoDest[2];
 
-                $dest = Harbor::where('harbor_parent',  $infoDest[0])->get();
+                $dest = Harbor::where('harbor_parent', $infoDest[0])->get();
                 foreach ($dest as $dt) {
                     $destiny_port[] = "$dt->id";
                     $destiny_country[] = "$dt->country_id";
@@ -2923,7 +3059,7 @@ class QuoteV2Controller extends Controller
                 }
             } else {
 
-                $dest = Harbor::where('id', $infoDest[2])->orwhere('harbor_parent',  $infoDest[2])->get();
+                $dest = Harbor::where('id', $infoDest[2])->orwhere('harbor_parent', $infoDest[2])->get();
                 foreach ($dest as $dt) {
                     $destiny_port[] = "$dt->id";
                     $destiny_country[] = "$dt->country_id";
@@ -2938,9 +3074,6 @@ class QuoteV2Controller extends Controller
 
         $form['originport'] = $origin_harbor_all;
         $form['destinyport'] = $destination_harbor_all;
-
-
-
 
         $equipment = $request->input('equipment');
 
@@ -2985,8 +3118,6 @@ class QuoteV2Controller extends Controller
 
         $dateUntil = $dateRange[1];
 
-        
-
         //Colecciones
         $inlandDestiny = new collection();
         $inlandOrigin = new collection();
@@ -3017,11 +3148,11 @@ class QuoteV2Controller extends Controller
                     if ($company_setting->future_dates == 1) {
                         $q->where(function ($query) use ($dateSince) {
                             $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                        })->where('company_user_id', '=', $company_user_id)->where('status', '!=','incomplete')->where('gp_container_id', '=', $validateEquipment['gpId']);
+                        })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased', '!=', 1)->where('gp_container_id', '=', $validateEquipment['gpId']);
                     } else {
                         $q->where(function ($query) use ($dateSince, $dateUntil) {
                             $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                        })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', $validateEquipment['gpId']);
+                        })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased', '!=', 1)->where('gp_container_id', '=', $validateEquipment['gpId']);
                     }
 
                     // $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->
@@ -3035,11 +3166,11 @@ class QuoteV2Controller extends Controller
                     if ($company_setting->future_dates == 1) {
                         $q->where(function ($query) use ($dateSince) {
                             $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                        })->where('company_user_id', '=', $company_user_id)->where('status', '!=','incomplete')->where('gp_container_id', '=', $validateEquipment['gpId']);
+                        })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased', '!=', 1)->where('gp_container_id', '=', $validateEquipment['gpId']);
                     } else {
                         $q->where(function ($query) use ($dateSince, $dateUntil) {
                             $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                        })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('gp_container_id', '=', $validateEquipment['gpId']);
+                        })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased', '!=', 1)->where('gp_container_id', '=', $validateEquipment['gpId']);
                     }
                 });
             }
@@ -3048,25 +3179,25 @@ class QuoteV2Controller extends Controller
 
             /*if ($chargesAPI != null) {
 
-                $client = new Client();
+            $client = new Client();
 
-                foreach ($origin_port as $orig) {
-                    foreach ($destiny_port as $dest) {
-                        //$url =  'http://maersk_scrap/rates/api/{code}/{orig}/{dest}/{date}';
-                        $url = env('CMA_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
-                        $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['cmacgm', $orig, $dest, trim($dateUntil)], $url);
-                        try {
-                            $response = $client->request('GET', $url);
-                        } catch (\Exception $e) {
-                        }
+            foreach ($origin_port as $orig) {
+            foreach ($destiny_port as $dest) {
+            //$url =  'http://maersk_scrap/rates/api/{code}/{orig}/{dest}/{date}';
+            $url = env('CMA_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
+            $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['cmacgm', $orig, $dest, trim($dateUntil)], $url);
+            try {
+            $response = $client->request('GET', $url);
+            } catch (\Exception $e) {
+            }
 
-                        //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
-                        //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
-                    }
-                }
-                $arreglo2 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
-                    $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('number', 'CMA CGM');
-                });
+            //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+            //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+            }
+            }
+            $arreglo2 = RateApi::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id) {
+            $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('number', 'CMA CGM');
+            });
             }*/
 
             /* if ($chargesAPI_M != null) {
@@ -3117,10 +3248,10 @@ class QuoteV2Controller extends Controller
             $arreglo = $arreglo->get();
 
             /*if ($chargesAPI != null) {
-                $arreglo2 = $this->filtrarRate($arreglo2, $equipment, $validateEquipment['gpId'], $containers);
-                $arreglo2 = $arreglo2->get();
+            $arreglo2 = $this->filtrarRate($arreglo2, $equipment, $validateEquipment['gpId'], $containers);
+            $arreglo2 = $arreglo2->get();
 
-                $arreglo = $arreglo->merge($arreglo2);
+            $arreglo = $arreglo->merge($arreglo2);
             }*/
 
             /*    if ($chargesAPI_M != null) {
@@ -3213,6 +3344,9 @@ class QuoteV2Controller extends Controller
 
                     if (!empty($dataDest)) {
                         $inlandDestiny = Collection::make($dataDest);
+
+                        $event = new EventIntercom();
+                        $event->event_searchInland();
                     }
                 }
                 // Origin Addrees
@@ -3232,6 +3366,8 @@ class QuoteV2Controller extends Controller
 
                     if (!empty($dataOrig)) {
                         $inlandOrigin = Collection::make($dataOrig);
+                        $event = new EventIntercom();
+                        $event->event_searchInland();
                     }
                 }
 
@@ -3254,12 +3390,15 @@ class QuoteV2Controller extends Controller
                 $arregloDestinyG = array();
 
                 $rateC = $this->ratesCurrency($data->currency->id, $typeCurrency);
-                $rateFreight = $this->ratesCurrency($data->currency->id, $data->currency->alphacode);
+
+                //ACACAMBIOS
+
+                $rateFreight = $this->getRatesCurrency($data->currency->id, $idCurrency);
+
                 // Rates
                 $arregloR = $this->rates($equipment, $markup, $data, $rateC, $typeCurrency, $containers, $rateFreight);
 
                 $arregloRateSum = array_merge($arregloRateSum, $arregloR['arregloSum']);
-                //dd($arregloRateSum);
                 $arregloRateSave['rate'] = array_merge($arregloRateSave['rate'], $arregloR['arregloSaveR']);
                 $arregloRateSave['markups'] = array_merge($arregloRateSave['markups'], $arregloR['arregloSaveM']);
                 $arregloRate = array_merge($arregloRate, $arregloR['arregloRate']);
@@ -3267,14 +3406,19 @@ class QuoteV2Controller extends Controller
                 $equipmentFilter = $arregloR['arregloEquipment'];
 
                 // id de los port  ALL
-                array_push($orig_port, 1485);
-                array_push($dest_port, 1485);
+              //  array_push($orig_port, 1485);
+              //  array_push($dest_port, 1485);
                 // id de los carrier ALL
                 $carrier_all = 26;
                 array_push($carrier, $carrier_all);
                 // Id de los paises
-                array_push($origin_country, 250);
-                array_push($destiny_country, 250);
+                //array_push($origin_country, 250);
+                //array_push($destiny_country, 250);
+
+                $orig_port = [$data->origin_port,1485];
+                $dest_port = [$data->destiny_port,1485];
+                $origin_country = [$data->port_origin->country()->first()->id, 250];
+                $destiny_country = [$data->port_destiny->country()->first()->id, 250];
 
                 // ################### Calculos local  Charges #############################
                 if ($contractStatus != 'api') {
@@ -3315,68 +3459,72 @@ class QuoteV2Controller extends Controller
                         if ($localCarrier->carrier_id == $data->carrier_id || $localCarrier->carrier_id == $carrier_all) {
                             $localParams = array('terminos' => $terminos, 'local' => $local, 'data' => $data, 'typeCurrency' => $typeCurrency, 'idCurrency' => $idCurrency, 'localCarrier' => $localCarrier);
                             //Origin
-                            if ($chargesOrigin != null) {
-                                if ($local->typedestiny_id == '1') {
-                                    $band = false;
-                                    foreach ($containers as $cont) {
-                                        $name_arreglo = 'array' . $cont->code;
-                                        if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
+                            if ($company_setting->origincharge == '1') {
+                                if ($chargesOrigin != null) {
+                                    if ($local->typedestiny_id == '1') {
+                                        $band = false;
+                                        foreach ($containers as $cont) {
+                                            $name_arreglo = 'array' . $cont->code;
+                                            if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
 
-                                            $montoOrig = $local->ammount;
-                                            $montoOrig = $this->perTeu($montoOrig, $local->calculationtype_id, $cont->code);
-                                            $monto = $local->ammount / $rateMount;
-                                            $monto = $this->perTeu($monto, $local->calculationtype_id, $cont->code);
-                                            $monto = number_format($monto, 2, '.', '');
-                                            $markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id);
-                                            $arregloOrigin = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
-                                            $arregloOrigin = array_merge($arregloOrigin, $markupGe);
+                                                $montoOrig = $local->ammount;
+                                                $montoOrig = $this->perTeu($montoOrig, $local->calculationtype_id, $cont->code);
+                                                $monto = $local->ammount / $rateMount;
+                                                $monto = $this->perTeu($monto, $local->calculationtype_id, $cont->code);
+                                                $monto = number_format($monto, 2, '.', '');
+                                                $markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id);
+                                                $arregloOrigin = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
+                                                $arregloOrigin = array_merge($arregloOrigin, $markupGe);
+                                                $collectionOrigin->push($arregloOrigin);
+                                                $totalesCont[$cont->code]['tot_' . $cont->code . '_O'] += $markupGe['montoMarkup'];
+                                                $band = true;
+                                            }
+                                        }
+                                        if ($band) {
+                                            if (in_array($local->calculationtype_id, $arrayContainers)) {
+                                                $valores = $this->asociarPerCont($local->calculationtype_id);
+                                                $arregloOrigin = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
+                                            } else {
+                                                $arregloOrigin = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                            }
                                             $collectionOrigin->push($arregloOrigin);
-                                            $totalesCont[$cont->code]['tot_' . $cont->code . '_O'] += $markupGe['montoMarkup'];
-                                            $band = true;
                                         }
-                                    }
-                                    if ($band) {
-                                        if (in_array($local->calculationtype_id, $arrayContainers)) {
-                                            $valores = $this->asociarPerCont($local->calculationtype_id);
-                                            $arregloOrigin = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
-                                        } else {
-                                            $arregloOrigin = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
-                                        }
-                                        $collectionOrigin->push($arregloOrigin);
                                     }
                                 }
                             }
                             //Destiny
-                            if ($chargesDestination != null) {
-                                if ($local->typedestiny_id == '2') {
-                                    $band = false;
-                                    foreach ($containers as $cont) {
+                            if ($company_setting->destinationcharge == '1') {
+                                if ($chargesDestination != null) {
+                                    if ($local->typedestiny_id == '2') {
+                                        $band = false;
+                                        foreach ($containers as $cont) {
 
-                                        $name_arreglo = 'array' . $cont->code;
+                                            $name_arreglo = 'array' . $cont->code;
 
-                                        if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
-                                            $montoOrig = $local->ammount;
-                                            $montoOrig = $this->perTeu($montoOrig, $local->calculationtype_id, $cont->code);
-                                            $monto = $local->ammount / $rateMount;
-                                            $monto = $this->perTeu($monto, $local->calculationtype_id, $cont->code);
-                                            $monto = number_format($monto, 2, '.', '');
-                                            $markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id);
-                                            $arregloDestiny = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
-                                            $arregloDestiny = array_merge($arregloDestiny, $markupGe);
+                                            if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
+                                                $montoOrig = $local->ammount;
+                                                $montoOrig = $this->perTeu($montoOrig, $local->calculationtype_id, $cont->code);
+                                                $monto = $local->ammount / $rateMount;
+                                                $monto = $this->perTeu($monto, $local->calculationtype_id, $cont->code);
+                                                $monto = number_format($monto, 2, '.', '');
+                                                $markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id);
+                                                $arregloDestiny = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
+                                                $arregloDestiny = array_merge($arregloDestiny, $markupGe);
+                                                $collectionDestiny->push($arregloDestiny);
+                                                $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] += $markupGe['montoMarkup'];
+                                                $band = true;
+                                            }
+                                        }
+                                        if ($band) {
+
+                                            if (in_array($local->calculationtype_id, $arrayContainers)) {
+                                                $valores = $this->asociarPerCont($local->calculationtype_id);
+                                                $arregloDestiny = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
+                                            } else {
+                                                $arregloDestiny = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                            }
                                             $collectionDestiny->push($arregloDestiny);
-                                            $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] += $markupGe['montoMarkup'];
-                                            $band = true;
                                         }
-                                    }
-                                    if ($band) {
-
-                                        if (in_array($local->calculationtype_id, $arrayContainers)) {
-                                            $valores = $this->asociarPerCont($local->calculationtype_id);
-                                            $arregloDestiny = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
-                                        } else {
-                                            $arregloDestiny = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
-                                        }
-                                        $collectionDestiny->push($arregloDestiny);
                                     }
                                 }
                             }
@@ -3385,7 +3533,8 @@ class QuoteV2Controller extends Controller
                                 if ($local->typedestiny_id == '3') {
                                     $band = false;
                                     //Se ajusta el calculo para freight tomando en cuenta el rate currency
-                                    $rateMount_Freight = $this->ratesCurrency($local->currency->id, $data->currency->alphacode);
+                                    //$rateMount_Freight = $this->ratesCurrency($local->currency->id, $data->currency->alphacode);
+                                    $rateMount_Freight = $this->getRatesCurrency($local->currency->id, $data->currency->id);
                                     $localParams['typeCurrency'] = $data->currency->alphacode;
                                     $localParams['idCurrency'] = $data->currency->id;
                                     //Fin Variables
@@ -3398,13 +3547,15 @@ class QuoteV2Controller extends Controller
                                             $montoOrig = $local->ammount;
                                             $montoOrig = $this->perTeu($montoOrig, $local->calculationtype_id, $cont->code);
                                             $monto = $local->ammount / $rateMount_Freight;
+
                                             $monto = number_format($monto, 2, '.', '');
                                             $monto = $this->perTeu($monto, $local->calculationtype_id, $cont->code);
-                                            $markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id);
+                                            $markupGe = $this->localMarkupsTrait($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $local->currency->id, $rateMount_Freight);
                                             $arregloFreight = $this->ChargesArray($localParams, $monto, $montoOrig, $cont->code);
                                             $arregloFreight = array_merge($arregloFreight, $markupGe);
                                             $collectionFreight->push($arregloFreight);
                                             $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'];
+
                                             $band = true;
                                         }
                                     }
@@ -3428,6 +3579,8 @@ class QuoteV2Controller extends Controller
 
                 if ($contractStatus != 'api') {
 
+                    
+
                     $globalChar = GlobalCharge::where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->whereHas('globalcharcarrier', function ($q) use ($carrier) {
                         $q->whereIn('carrier_id', $carrier);
                     })->where(function ($query) use ($orig_port, $dest_port, $origin_country, $destiny_country) {
@@ -3446,6 +3599,7 @@ class QuoteV2Controller extends Controller
                         $q->whereIn('port_orig', $orig_port)->orwhereIn('port_dest', $dest_port);;
                     })->where('company_user_id', '=', $company_user_id)->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm')->get();
 
+                   //
                     foreach ($globalChar as $global) {
                         $rateMount = $this->ratesCurrency($global->currency->id, $typeCurrency);
                         // Condicion para enviar los terminos de venta o compra
@@ -3529,7 +3683,8 @@ class QuoteV2Controller extends Controller
                                 if ($chargesFreight != null) {
                                     if ($global->typedestiny_id == '3') {
 
-                                        $rateMount_Freight = $this->ratesCurrency($global->currency->id, $data->currency->alphacode);
+                                        //$rateMount_Freight = $this->ratesCurrency($global->currency->id, $data->currency->alphacode);
+                                        $rateMount_Freight = $this->getRatesCurrency($global->currency->id, $data->currency->id);
                                         $globalParams['typeCurrency'] = $data->currency->alphacode;
                                         $globalParams['idCurrency'] = $data->currency->id;
                                         //Fin Variables
@@ -3548,10 +3703,12 @@ class QuoteV2Controller extends Controller
                                                 $arregloFreightG = $this->ChargesArray($globalParams, $monto, $montoOrig, $cont->code);
                                                 $arregloFreightG = array_merge($arregloFreightG, $markupGe);
                                                 $collectionFreight->push($arregloFreightG);
-                                                $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'];
+                                                $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'] / $rateMount_Freight;
+
                                                 $band = true;
                                             }
                                         }
+
                                         if ($band) {
                                             if (in_array($global->calculationtype_id, $arrayContainers)) {
                                                 $valores = $this->asociarPerCont($global->calculationtype_id);
@@ -3579,7 +3736,6 @@ class QuoteV2Controller extends Controller
                 }
 
                 if (!empty($collectionOrigin)) {
-                    //dd($collectionOrigin);
                     $collectionOrigin = $this->OrdenarCollection($collectionOrigin);
                 }
 
@@ -3657,6 +3813,8 @@ class QuoteV2Controller extends Controller
                 $colores = '';
                 if ($data->contract->is_manual == 1) {
                     $colores = 'bg-manual';
+                } elseif ($data->contract->is_manual == 2) {
+                    $colores = 'bg-express';
                 } else {
                     $colores = 'bg-api';
                 }
@@ -3675,22 +3833,23 @@ class QuoteV2Controller extends Controller
                     $typeCurrency = $data->currency->alphacode;
                     $idCurrency = $data->currency->id;
 
-                    $rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
+                    //$rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
+                    $rateTot = $this->getRatesCurrency($data->currency->id, $idCurrency);
                 } else {
-                    $rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
+                    //$rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
+                    $rateTot = $this->getRatesCurrency($data->currency->id, $idCurrency);
                 }
 
                 foreach ($containers as $cont) {
 
                     $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $arregloRateSum['c' . $cont->code];
-
                     $data->setAttribute('tot' . $cont->code . 'F', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_F'], 2, '.', ''));
 
                     $data->setAttribute('tot' . $cont->code . 'O', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_O'], 2, '.', ''));
                     $data->setAttribute('tot' . $cont->code . 'D', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_D'], 2, '.', ''));
 
                     $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] / $rateTot;
-                    // dd($totalesCont[$cont->code]['tot_' . $cont->code . '_F']);
+
                     // TOTALES
                     $name_tot = 'totalT' . $cont->code;
                     $$name_tot = $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_O'];
@@ -3704,7 +3863,6 @@ class QuoteV2Controller extends Controller
                 // INLANDS
 
                 $data->setAttribute('inlandDestiny', $inlandDestiny->where('port_id', $data->destiny_port));
-                //   dd($inlandDestiny);
                 $data->setAttribute('inlandOrigin', $inlandOrigin->where('port_id', $data->origin_port));
                 $data->setAttribute('typeCurrency', $typeCurrency);
 
@@ -3747,6 +3905,7 @@ class QuoteV2Controller extends Controller
 
         $chargeOrigin = ($chargesOrigin != null) ? true : false;
         $chargeDestination = ($chargesDestination != null) ? true : false;
+
         $chargeFreight = ($chargesFreight != null) ? true : false;
         $chargeAPI = ($chargesAPI != null) ? true : false;
         $chargeAPI_M = ($chargesAPI_M != null) ? true : false;
@@ -3754,7 +3913,36 @@ class QuoteV2Controller extends Controller
         $containerType = $validateEquipment['gpId'];
         $isDecimal = optional(Auth::user()->companyUser)->decimals;
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destinationA', 'originA', 'isDecimal', 'harbor_origin', 'harbor_destination', 'pricesG', 'company_dropdown')); //aqui
+        // EVENTO INTERCOM
+        $event = new EventIntercom();
+        $event->event_searchRate();
+        $mixSearch = array();
+
+        if (isset($request->contact_id) && isset($request->company_id_quote)) {
+            $contact = contact::find($request->contact_id);
+
+            $contact_cliente = $contact->first_name . ' ' . $contact->last_name;
+            $company_cliente = $companies[$request->company_id_quote];
+        } else {
+            $contact_cliente = null;
+            $company_cliente = null;
+        }
+
+        $mixSearch = [
+            'company' => $company_setting->name,
+            'company_client' => $company_cliente,
+            'contact_client' => $contact_cliente,
+            'type_container' => $group_containerC[$request->container_type],
+            'equipment' => $request->equipment,
+            'contain' => $contain,
+            'origin' => $origin_port,
+            'destiny' =>$destiny_port,
+            'harbors' =>$harborsR,
+        ];
+        // dd($mixSearch);
+        $this->trackEvents("old_search_Fcl", $mixSearch);
+
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment', 'group_contain', 'chargeAPI_SF', 'containerType', 'carriersSelected', 'equipment', 'allCarrier', 'destinationClass', 'origenClass', 'destinationA', 'originA', 'isDecimal', 'harbor_origin', 'harbor_destination', 'pricesG', 'company_dropdown', 'group_containerC', 'group_containerC', 'carrierC', 'directionC', 'harborsR', 'surchargesS', 'calculationTypeS')); //aqui
     }
 
     public function perTeu($monto, $calculation_type, $code)
@@ -4063,7 +4251,11 @@ class QuoteV2Controller extends Controller
             } else {
                 $media = $downloads->first();
                 $mediaItem = Media::find($media->id);
-                return $mediaItem;
+                $url = "https://cargofive-production-21.s3.amazonaws.com/contract_manual/".$mediaItem->getPath();
+                return response()->json(['success' => true, 'url' => $url]);
+                //return $mediaItem;
+
+
             }
         }
     }
@@ -4180,19 +4372,24 @@ class QuoteV2Controller extends Controller
         // Traer cantidad total de paquetes y pallet segun sea el caso
         $package_pallet = $this->totalPalletPackage($request->input('total_quantity'), $request->input('cargo_type'), $request->input('type_load_cargo'), $request->input('quantity'));
 
-        //dd($package_pallet);
-
         $incoterm = Incoterm::pluck('name', 'id');
-        if (\Auth::user()->hasRole('subuser')) {
+        
+        /*if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
                 $q->where('user_id', \Auth::user()->id);
+                
             })->orwhere('owner', \Auth::user()->id)->pluck('business_name', 'id');
+            
         } else {
             $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
-        }
+            
+        }*/
+
+        $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
         $companies->prepend('Select an option', '0');
         $airlines = Airline::all()->pluck('name', 'id');
         $harbors = Harbor::get()->pluck('display_name', 'id_complete');
+        $harborsR = Harbor::get()->pluck('display_name', 'id');
         $countries = Country::all()->pluck('name', 'id');
         $prices = Price::all()->pluck('name', 'id');
         $company_user = User::where('id', \Auth::id())->first();
@@ -4418,8 +4615,6 @@ class QuoteV2Controller extends Controller
 
         foreach ($arreglo as $data) {
 
-            //dd($arreglo);
-
             $tt = $data->transit_time;
             $va = $data->via;
 
@@ -4445,7 +4640,7 @@ class QuoteV2Controller extends Controller
             $dataOrig = array();
             $dataDest = array();
             $dataFreight = array();
-            
+
             $rateC = $this->ratesCurrency($data->currency->id, $data->currency->alphacode);
 
             $typeCurrencyFreight = $data->currency->alphacode;
@@ -4470,7 +4665,13 @@ class QuoteV2Controller extends Controller
                 if ($subtotalT < $data->minimum) {
                     $subtotalT = $data->minimum;
                     $totalT = $subtotalT / $rateC;
-                    $priceRate = $data->minimum / $weight;
+                    if ($weight < 1) {
+                        $weightP = 1;
+                    } else {
+                        $weightP = $weight;
+                    }
+
+                    $priceRate = $data->minimum / $weightP;
                     $priceRate = number_format($priceRate, 2, '.', '');
                 }
 
@@ -4510,7 +4711,13 @@ class QuoteV2Controller extends Controller
                 if ($subtotalT < $data->minimum) {
                     $subtotalT = $data->minimum;
                     $totalT = $subtotalT / $rateC;
-                    $priceRate = $data->minimum / $weight;
+                    if ($weight < 1) {
+                        $weightP = 1;
+                    } else {
+                        $weightP = $weight;
+                    }
+
+                    $priceRate = $data->minimum / $weightP;
                     $priceRate = number_format($priceRate, 2, '.', '');
                 }
                 // MARKUPS
@@ -4554,7 +4761,7 @@ class QuoteV2Controller extends Controller
             array_push($destiny_country, 250);
 
             //Calculation type
-            $arrayBlHblShip = array('1', '2', '3', '16', '18'); // id  calculation type 1 = HBL , 2=  Shipment , 3 = BL , 16 per set
+            $arrayBlHblShip = array('1', '2', '3', '16', '18', '20', '21'); // id  calculation type 1 = HBL , 2=  Shipment , 3 = BL , 16 per set
             $arraytonM3 = array('4', '11', '17'); //  calculation type 4 = Per ton/m3
             $arraytonCompli = array('6', '7', '12', '13'); //  calculation type 4 = Per ton/m3
             $arrayPerTon = array('5', '10'); //  calculation type 5 = Per  TON
@@ -4562,6 +4769,7 @@ class QuoteV2Controller extends Controller
             $arrayPerPack = array('14'); //  per package
             $arrayPerPallet = array('15'); //  per pallet
             $arrayPerM3 = array('19'); //  per m3
+
 
             // Local charges
             $localChar = LocalChargeLcl::where('contractlcl_id', '=', $data->contractlcl_id)->whereHas('localcharcarrierslcl', function ($q) use ($carrier) {
@@ -4598,50 +4806,53 @@ class QuoteV2Controller extends Controller
                     $cantidadT = 1;
                     foreach ($local->localcharcarrierslcl as $carrierGlobal) {
                         if ($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id == $carrier_all) {
+                            if ($company_setting->origincharge == '1') {
+                                if ($chargesOrigin != null) {
+                                    if ($local->typedestiny_id == '1') {
+                                        $subtotal_local = $local->ammount;
+                                        $totalAmmount = $local->ammount / $rateMount;
 
-                            if ($chargesOrigin != null) {
-                                if ($local->typedestiny_id == '1') {
-                                    $subtotal_local = $local->ammount;
-                                    $totalAmmount = $local->ammount / $rateMount;
+                                        // MARKUP
+                                        $markupBL = $this->localMarkups($localPercentage, $localAmmount, $localMarkup, $totalAmmount, $typeCurrency, $markupLocalCurre);
 
-                                    // MARKUP
-                                    $markupBL = $this->localMarkups($localPercentage, $localAmmount, $localMarkup, $totalAmmount, $typeCurrency, $markupLocalCurre);
+                                        $totalOrigin += $totalAmmount;
+                                        $subtotal_local = number_format($subtotal_local, 2, '.', '');
+                                        $totalAmmount = number_format($totalAmmount, 2, '.', '');
+                                        $arregloOrig = array('surcharge_terms' => $terminos, 'surcharge_name' => $local->surcharge->name, 'cantidad' => "-", 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'idCurrency' => $local->currency->id, 'currency_orig_id' => $idCurrency, 'montoOrig' => $totalAmmount);
+                                        $arregloOrig = array_merge($arregloOrig, $markupBL);
 
-                                    $totalOrigin += $totalAmmount;
-                                    $subtotal_local = number_format($subtotal_local, 2, '.', '');
-                                    $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloOrig = array('surcharge_terms' => $terminos, 'surcharge_name' => $local->surcharge->name, 'cantidad' => "-", 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'origin', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'idCurrency' => $local->currency->id, 'currency_orig_id' => $idCurrency, 'montoOrig' => $totalAmmount);
-                                    $arregloOrig = array_merge($arregloOrig, $markupBL);
+                                        $collectionOrig->push($arregloOrig);
 
-                                    $collectionOrig->push($arregloOrig);
+                                        // ARREGLO GENERAL 99
 
-                                    // ARREGLO GENERAL 99
+                                        $arregloOrigin = array('surcharge_terms' => $terminos, 'surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00, 'montoMarkup' => 0.00, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contract_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => '99', 'rate_id' => $data->id, 'calculation_id' => $local->calculationtypelcl->id, 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency, 'currency_id' => $local->currency->id, 'currency_orig_id' => $idCurrency, 'cantidad' => $cantidadT);
 
-                                    $arregloOrigin = array('surcharge_terms' => $terminos, 'surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00, 'montoMarkup' => 0.00, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contract_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => '99', 'rate_id' => $data->id, 'calculation_id' => $local->calculationtypelcl->id, 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency, 'currency_id' => $local->currency->id, 'currency_orig_id' => $idCurrency, 'cantidad' => $cantidadT);
-
-                                    $collectionOrig->push($arregloOrigin);
+                                        $collectionOrig->push($arregloOrigin);
+                                    }
                                 }
                             }
-                            if ($chargesDestination != null) {
-                                if ($local->typedestiny_id == '2') {
-                                    $subtotal_local = $local->ammount;
-                                    $totalAmmount = $local->ammount / $rateMount;
-                                    // MARKUP
-                                    $markupBL = $this->localMarkups($localPercentage, $localAmmount, $localMarkup, $totalAmmount, $typeCurrency, $markupLocalCurre);
+                            if ($company_setting->destinationcharge == '1') {
+                                if ($chargesDestination != null) {
+                                    if ($local->typedestiny_id == '2') {
+                                        $subtotal_local = $local->ammount;
+                                        $totalAmmount = $local->ammount / $rateMount;
+                                        // MARKUP
+                                        $markupBL = $this->localMarkups($localPercentage, $localAmmount, $localMarkup, $totalAmmount, $typeCurrency, $markupLocalCurre);
 
-                                    $totalDestiny += $totalAmmount;
-                                    $subtotal_local = number_format($subtotal_local, 2, '.', '');
-                                    $totalAmmount = number_format($totalAmmount, 2, '.', '');
-                                    $arregloDest = array('surcharge_terms' => $terminos, 'surcharge_name' => $local->surcharge->name, 'cantidad' => "-", 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'idCurrency' => $local->currency->id, 'currency_orig_id' => $idCurrency, 'montoOrig' => $totalAmmount);
-                                    $arregloDest = array_merge($arregloDest, $markupBL);
+                                        $totalDestiny += $totalAmmount;
+                                        $subtotal_local = number_format($subtotal_local, 2, '.', '');
+                                        $totalAmmount = number_format($totalAmmount, 2, '.', '');
+                                        $arregloDest = array('surcharge_terms' => $terminos, 'surcharge_name' => $local->surcharge->name, 'cantidad' => "-", 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode, 'totalAmmount' => $totalAmmount . ' ' . $typeCurrency, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contractlcl_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => 'destination', 'subtotal_local' => $subtotal_local, 'cantidadT' => $cantidadT, 'typecurrency' => $typeCurrency, 'idCurrency' => $local->currency->id, 'currency_orig_id' => $idCurrency, 'montoOrig' => $totalAmmount);
+                                        $arregloDest = array_merge($arregloDest, $markupBL);
 
-                                    $collectionDest->push($arregloDest);
+                                        $collectionDest->push($arregloDest);
 
-                                    // ARREGLO GENERAL 99
+                                        // ARREGLO GENERAL 99
 
-                                    $arregloDest = array('surcharge_terms' => $terminos, 'surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00, 'montoMarkup' => 0.00, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contract_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => '99', 'rate_id' => $data->id, 'calculation_id' => $local->calculationtypelcl->id, 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency, 'currency_id' => $local->currency->id, 'currency_orig_id' => $idCurrency, 'cantidad' => $cantidadT);
+                                        $arregloDest = array('surcharge_terms' => $terminos, 'surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00, 'montoMarkup' => 0.00, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contract_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => '99', 'rate_id' => $data->id, 'calculation_id' => $local->calculationtypelcl->id, 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency, 'currency_id' => $local->currency->id, 'currency_orig_id' => $idCurrency, 'cantidad' => $cantidadT);
 
-                                    $collectionDest->push($arregloDest);
+                                        $collectionDest->push($arregloDest);
+                                    }
                                 }
                             }
                             if ($chargesFreight != null) {
@@ -5537,7 +5748,6 @@ class QuoteV2Controller extends Controller
                 });
             })->where('company_user_id', '=', $company_user_id)->with('globalcharportlcl.portOrig', 'globalcharportlcl.portDest', 'globalcharcarrierslcl.carrier', 'currency', 'surcharge.saleterm')->get();
 
-            
             foreach ($globalChar as $global) {
                 $rateMountG = $this->ratesCurrency($global->currency->id, $typeCurrency);
                 $rateC = $this->ratesCurrency($global->currency->id, $data->currency->alphacode);
@@ -5912,8 +6122,6 @@ class QuoteV2Controller extends Controller
                                     $arregloOrig = array_merge($arregloOrig, $markupTONM3);
                                     $dataGOrig[] = $arregloOrig;
 
-                                    
-
                                     // ARREGLO GENERAL 99
 
                                     $arregloOrigin = array('surcharge_terms' => $terminos, 'surcharge_id' => $global->surcharge->id, 'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00, 'montoMarkup' => 0.00, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtypelcl->name, 'contract_id' => $data->contract_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => '99', 'rate_id' => $data->id, 'calculation_id' => $global->calculationtypelcl->id, 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency, 'currency_id' => $global->currency->id, 'currency_orig_id' => $idCurrency, 'cantidad' => $unidades);
@@ -6043,13 +6251,15 @@ class QuoteV2Controller extends Controller
                                     $totalAmmount = ($totalWeight * $global->ammount) / $rateMountG;
                                     $mont = "";
                                     $unidades = $totalWeight;
+                                    // dd($subtotal_global,$global->minimum);
 
                                     if ($subtotal_global < $global->minimum) {
                                         $subtotal_global = $global->minimum;
-                                        $totalAmmount = ($totalWeight * $subtotal_global) / $rateMountG;
-                                        $unidades = $subtotal_global / $totalWeight;
+                                        $totalAmmount = $subtotal_global / $rateMountG;
+                                        $unidades = $subtotal_global / ($totalWeight ?? 1);
                                     }
                                     $totalAmmount = number_format($totalAmmount, 2, '.', '');
+
 
                                     // MARKUP
                                     $markupKG = $this->localMarkups($localPercentage, $localAmmount, $localMarkup, $totalAmmount, $typeCurrency, $markupLocalCurre);
@@ -6581,17 +6791,12 @@ class QuoteV2Controller extends Controller
 
             $totalFreightOrig = $totalFreight;
 
-
-
-
-
             $rateTotal = $this->ratesCurrency($data->currency->id, $typeCurrency);
             $totalFreight = $totalFreight / $rateTotal;
             $totalFreight = number_format($totalFreight, 2, '.', '');
 
             $totalQuote = $totalFreight + $totalOrigin + $totalDestiny;
             $totalQuoteSin = number_format($totalQuote, 2, ',', '');
-
 
             if ($chargesDestination == null && $chargesOrigin == null) {
 
@@ -6623,16 +6828,13 @@ class QuoteV2Controller extends Controller
             $data->setAttribute('service', $transit_time['service']);
             $data->setAttribute('sheduleType', null);*/
 
-            $data->setAttribute('sheduleType', null);
             $data->setAttribute('via', $va);
             $data->setAttribute('transit_time', $tt);
             if ($tt != '' && $tt != null) {
-                $data->setAttribute('service', 'Transfer');
+                $data->setAttribute('service', 'Transhipment');
             } else {
                 $data->setAttribute('service', 'Direct');
             }
-
-
 
             /*    if ($data->schedule_type_id != null) {
             $sheduleType = ScheduleType::find($data->schedule_type_id);
@@ -6740,6 +6942,31 @@ class QuoteV2Controller extends Controller
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name', 'id');
 
+        $mixSearch = array();
+        $company_setting = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
+
+        if (isset($request->contact_id) && isset($request->company_id_quote)) {
+            $contact = contact::find($request->contact_id);
+
+            $contact_cliente = $contact->first_name . ' ' . $contact->last_name;
+           
+            $company_cliente = $companies[$request->company_id_quote];
+        } else {
+            $contact_cliente = null;
+            $company_cliente = null;
+        }
+
+        $mixSearch = [
+            'company' => $company_setting->name,
+            'company_client' => $company_cliente,
+            'contact_client' => $contact_cliente,
+            'origin' => $origin_port,
+            'destiny' => $destiny_port,
+            'harbors' => $harborsR,
+        ];
+        // dd($mixSearch);
+        $this->trackEvents("old_search_lcl", $mixSearch);
+
         return view('quotesv2/searchLCL', compact('harbor', 'formulario', 'arreglo', 'form', 'companies', 'harbors', 'hideO', 'hideD', 'incoterm', 'simple', 'paquete', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'chargeAPI_SF', 'contain', 'group_contain', 'carrierMan', 'carriersSelected', 'allCarrier', 'containerType', 'quoteType'));
     }
 
@@ -6813,7 +7040,7 @@ class QuoteV2Controller extends Controller
 
     // Store  LCL AUTOMATIC
 
-    public function storeLCL(Request $request)
+    public function storeLCL(Request $request, $type)
     {
         if (!empty($request->input('form'))) {
             $form = json_decode($request->input('form'));
@@ -6838,7 +7065,7 @@ class QuoteV2Controller extends Controller
                 if ($form->company_id_quote != "0" && $form->company_id_quote != null) {
                     $payments = $this->getCompanyPayments($form->company_id_quote);
                     $fcompany_id = $form->company_id_quote;
-                    $fcontact_id = $form->contact_id;
+                    $fcontact_id = @$form->contact_id;
                 }
             }
 
@@ -6857,13 +7084,12 @@ class QuoteV2Controller extends Controller
             $quantity = array_values(array_filter($form->quantity));
 
             $language = $company->companyUser->language()->first();
-            if($language != null){
+            if ($language != null) {
                 $quote->language_id = $language->id;
             }
             $cargo_type_id = $form->cargo_type;
             $quote->cargo_type_id = $cargo_type_id;
             $quote->save();
-            //dd($input);
             $type_cargo = array_values(array_filter($form->type_load_cargo));
             $height = array_values(array_filter($form->height));
             $width = array_values(array_filter($form->width));
@@ -6907,10 +7133,58 @@ class QuoteV2Controller extends Controller
                 foreach ($info_D->rates as $rateO) {
 
                     $arregloNull = array();
-                    $remarks = $info_D->remarks . "<br>";
-                    $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'schedule_type' => $info_D->sheduleType, 'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
+                    if (isset($info_D->remarks)) {
+                        $remarks = $info_D->remarks . "<br>";
+                    } else {
+                        $remarks = '';
+                    }
+                    $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'schedule_type' => $info_D->service, 'transit_time' => $info_D->transit_time, 'via' => $info_D->via]);
+
+                    if (isset($info_D->remarksG)) {
+                        $remarks = $remarks . $info_D->remarksG;
+                    }
 
                     $rate = AutomaticRate::create($request->all());
+
+                    if ($quote->price_id) {
+                        $priceLevelMarkups = FreightMarkup::where([
+                            ['price_id', $quote->price_id],
+                            ['fixed_markup', '!=', '0'],
+                            ['price_type_id', 2]
+                        ])->orWhere([
+                            ['price_id', $quote->price_id],
+                            ['percent_markup', '!=', '0'],
+                            ['price_type_id', 2]
+                        ])->first();
+
+                        if ($priceLevelMarkups) {
+
+                            $input = Currency::where('id', $priceLevelMarkups->currency)->first();
+
+                            $output = Currency::where('id', $info_D->currency->id)->first();
+
+                            if ($priceLevelMarkups->fixed_markup != 0) {
+                                $priceLevelMarkupsAmount = array($priceLevelMarkups->fixed_markup);
+                                $priceLevelMarkupsFinal = $this->convertToCurrency($input, $output, $priceLevelMarkupsAmount);
+                                $priceLevelMarkupsFinal = isDecimal($priceLevelMarkupsFinal[0], true);
+                                $priceLevelMarkupsFinalArray = ['per_unit' => $priceLevelMarkupsFinal, 'total' => $priceLevelMarkupsFinal * $rateO->cantidad];
+                            } else if ($priceLevelMarkups->percent_markup != 0) {
+                                $priceLevelMarkupsAmount = $priceLevelMarkups->percent_markup;
+                                $priceLevelMarkupsFinal = $priceLevelMarkupsAmount * ($rateO->subtotal / 100);
+                                $priceLevelMarkupsFinal = isDecimal($priceLevelMarkupsFinal, true);
+                                $priceLevelMarkupsFinalArray = ['per_unit' => $priceLevelMarkupsFinal, 'total' => $priceLevelMarkupsFinal * $rateO->cantidad];
+                            } else {
+                                $priceLevelMarkupsFinal = 0;
+                                $priceLevelMarkupsFinalArray = ['per_unit' => 0, 'total' => 0];
+                            }
+                        } else {
+                            $priceLevelMarkupsFinal = 0;
+                            $priceLevelMarkupsFinalArray = ['per_unit' => 0, 'total' => 0];
+                        }
+                    } else {
+                        $priceLevelMarkupsFinal = 0;
+                        $priceLevelMarkupsFinalArray = ['per_unit' => 0, 'total' => 0];
+                    }
 
                     $oceanFreight = new ChargeLclAir();
                     $oceanFreight->automatic_rate_id = $rate->id;
@@ -6920,10 +7194,22 @@ class QuoteV2Controller extends Controller
                     $oceanFreight->units = $rateO->cantidad;
                     $oceanFreight->price_per_unit = $rateO->price;
                     $oceanFreight->total = $rateO->subtotal;
-                    $oceanFreight->markup = $rateO->markup;
+                    $oceanFreight->markup = $priceLevelMarkupsFinal ?? 0;
                     $oceanFreight->currency_id = $rateO->idCurrency;
                     $oceanFreight->minimum = $info_D->minimum;
                     $oceanFreight->save();
+
+                    $rateTotals = new AutomaticRateTotal();
+                    $rateTotals->quote_id = $quote->id;
+                    $rateTotals->automatic_rate_id = $rate->id;
+                    $rateTotals->origin_port_id = $rate->origin_port_id;
+                    $rateTotals->destination_port_id = $rate->destination_port_id;
+                    $rateTotals->carrier_id = $rate->carrier_id;
+                    $rateTotals->currency_id = $rateO->idCurrency;
+                    $rateTotals->totals = null;
+                    $rateTotals->markups = $priceLevelMarkupsFinalArray;
+                    $rateTotals->save();
+                    $rateTotals->totalize($rateO->idCurrency);
 
                     //    $inlandD =  $request->input('inlandD'.$rateO->rate_id);
                     //  $inlandO =  $request->input('inlandO'.$rateO->rate_id);
@@ -7039,7 +7325,6 @@ class QuoteV2Controller extends Controller
                 }
 
                 // CHARGES DESTINY
-                //dd($info_D->localDest);
                 foreach ($info_D->localDest as $localdestiny) {
 
                     foreach ($localdestiny as $localD) {
@@ -7121,6 +7406,9 @@ class QuoteV2Controller extends Controller
                 }
             }
 
+            $event = new EventIntercom();
+            $event->event_quoteAutomaticLcl();
+
             $quoteEdit = QuoteV2::find($quote->id);
             $quoteEdit->terms_english = $terminos_english;
             $quoteEdit->terms_and_conditions = $terminos_spanish;
@@ -7134,7 +7422,12 @@ class QuoteV2Controller extends Controller
         //return redirect()->route('quotes.index');
 
         //return redirect()->action('QuotationController@edit', $quote->id);
-        return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+        //return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+        if ($type != 1) {
+            return redirect()->action('QuotationController@edit', $quote);
+        } else {
+            return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+        }
     }
 
     public function unidadesTON($unidades)
@@ -7192,7 +7485,6 @@ class QuoteV2Controller extends Controller
         $nameFile = str_replace([' '], '_', $now . '_quotes');
         Excel::create($nameFile, function ($excel) use ($nameFile, $quotes) {
             $excel->sheet('Quotes', function ($sheet) use ($quotes) {
-                //dd($contract);
                 $sheet->cells('A1:AG1', function ($cells) {
                     $cells->setBackground('#2525ba');
                     $cells->setFontColor('#ffffff');
@@ -7362,5 +7654,11 @@ class QuoteV2Controller extends Controller
         $quote->update();
 
         return response()->json(['message' => 'Ok']);
+    }
+
+    public function getGroupContainer($id)
+    {
+        $group_container = Container::where('gp_container_id', $id)->get()->toJson();
+        return $group_container;
     }
 }
