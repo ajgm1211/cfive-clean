@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CompanyPrice extends Model
 {
-    protected $fillable = ['company_id','price_id'];
+    protected $fillable = ['company_id', 'price_id'];
 
     public function price()
     {

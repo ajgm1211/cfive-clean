@@ -2,7 +2,7 @@
     <div class="clearfix">
 
         <!-- Section Title -->
-        <span class="title text-left" style="color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.payment_conditions')}}</b><br><br/></span>
+        <span class="title text-left" style="color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.payment_conditions')}}</b></span>
         <!-- End Section Title -->
 
         <!-- Content -->

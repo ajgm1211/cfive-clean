@@ -22,14 +22,6 @@ class FailedGlobalchargerLcl extends Model
                            'carrier',
                            'company_user_id',
                            'account_imp_gclcl_id',
-                           'differentiator'
+                           'differentiator',
                           ];
-
-
-
-
-
-
-
-
 }

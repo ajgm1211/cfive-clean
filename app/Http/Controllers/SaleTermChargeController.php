@@ -7,6 +7,7 @@ use App\Http\Resources\SaleTermChargeResource;
 use App\SaleTermCharge;
 use App\SaleTermV3;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SaleTermChargeController extends Controller
 {
@@ -38,13 +39,12 @@ class SaleTermChargeController extends Controller
 
         $charge = SaleTermCharge::create([
             'calculation_type_id' => $request->calculation_type,
-            'amount' => $request->amount,
             'currency_id' => $request->currency,
             'sale_term_id' => $charge,
             'sale_term_code_id' => $request->sale_term_code
         ]);
 
-        $charge->jsonTotal();
+        $charge->jsonTotal($request);
 
         return new SaleTermChargeResource($charge);
     }
@@ -73,17 +73,17 @@ class SaleTermChargeController extends Controller
     {
         $data = $request->validate([
             'calculation_type' => 'required',
-            'amount' => 'required',
             'currency' => 'required',
             'sale_term_code' => 'required',
         ]);
         
         $charge->update([
             'calculation_type_id' => $data['calculation_type'],
-            'amount' => $data['amount'],
             'currency_id' => $data['currency'],
             'sale_term_code_id' => $data['sale_term_code'],
         ]);
+
+        $charge->jsonTotal($request);
 
         return new SaleTermChargeResource($charge);
     }
@@ -96,6 +96,13 @@ class SaleTermChargeController extends Controller
     public function destroy($id)
     {
         SaleTermCharge::find($id)->delete();
+
+        return response()->json(null, 204);
+    }
+
+    public function destroyAll(Request $request)
+    {
+        DB::table('sale_term_charges')->whereIn('id', $request->input('ids'))->delete();
 
         return response()->json(null, 204);
     }

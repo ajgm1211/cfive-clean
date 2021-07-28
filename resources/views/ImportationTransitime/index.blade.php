@@ -200,7 +200,7 @@
                 </div>
                 <div class="modal-footer">
                     <center>
-                        <h7>Do not leave this window, we will redirect you Thank you.</h7>
+                        <h7>Do not close this window. You will be redirected in a few moments.</h7>
                     </center>
                 </div>
             </div>
@@ -265,6 +265,7 @@
         url: '{{ route("ImpTransitTime.storeMedia") }}',
         maxFilesize: 15, // MB
         maxFiles: 1,
+        timeout: 18000,
         addRemoveLinks: true,
         headers: {
             'X-CSRF-TOKEN': "{{ csrf_token() }}"

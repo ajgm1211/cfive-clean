@@ -137,6 +137,7 @@
                                         <th>Carrier</th>
                                         <th>Amount</th>
                                         <th>Validity</th>
+                                        <th>more Information</th>
                                         <th>Options</th>
                                     </tr>
                                 </thead>
@@ -242,8 +243,58 @@
 
         //$('#frmSurcharges').text('<input type="hidden" name="company_user_id" value="">');
     }
+    function format (data) {
+        var orig='';
+        var dest='';
+
+        if(data.p_exception != null ){
+            $.each( data.p_exception  , function(key, value) {
+                if(value.port_orig!=null && value.port_dest == null ){
+                    orig+=value.portorigin.display_name;
+                    console.log(value.portorigin.display_name);
+                }else{
+                    dest+=value.portdestiny.display_name;
+                    console.log(value.portdestiny.display_name);
+                }
+            });
+        }
+        if(data.c_exception != null ){
+            $.each( data.c_exception  , function(key, value) {
+
+                if(value.country_orig!=null && value.country_dest == null )
+                {
+                    orig+=value.contryorigin.name;
+                    console.log(value.contryorigin.name);
+                }else{
+                    dest+=value.countrydestiny.name;
+                    console.log(value.countrydestiny.name);
+                }
+            });
+        }
+
+        if(dest==''){
+            dest+='No exceptions';
+        }
+        if(orig==''){
+            orig+='No exceptions';
+        }
+
+        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+            '<tr>'+
+                '<td>Exceptions at origin:</td>'+
+                '<td>'+orig+'</td>'+
+            '</tr>'+
+            '<tr>'+
+                '<td>Exceptions at destination:</td>'+
+                '<td>'+dest+'</td>'+
+            '</tr>'+
+        '</table>'; 
+    
+    }
+    
 
     function loadDatatable(company_id,carrier){
+        
         table = $('#requesttable').DataTable({
             dom: 'Bfrtip',
             processing: true,
@@ -277,8 +328,7 @@
                     }
                 }
             ],
-            //serverSide: true,
-            //ajax: '/globalcharges/createAdm/'+company_id+'/1',
+            
             ajax: {
                 url: "{{ route('gcadm.create') }}",
                 data: {
@@ -286,6 +336,7 @@
                     "carrier":carrier,
                 }
             },
+            
             columns: [
                 { data: null, render:function(){return "";}},
                 { data: 'company_user', name: 'company_user' },
@@ -298,7 +349,13 @@
                 { data: 'carrierlb', name: 'carrierlb' },
                 { data: 'amount', name: 'amount' },
                 { data: 'validitylb', name: 'validitylb' },
-                { data: 'action', name: 'action', orderable: false, searchable: false }
+                { 
+                    "className":      'details-control',
+                    "orderable":      false,
+                    "data":           null,
+                    "defaultContent": ''
+                },
+                { data: 'action', name: 'action', orderable: false, searchable: false }     
             ],
             "order": [[0, 'des']],
             "lengthChange": false,
@@ -312,12 +369,28 @@
             "processing": true,
             "paging": true
         });
-        table.clear();
+            
+      table.clear();  
     }
+     $('#requesttable tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row( tr );
+ 
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            row.child( format(row.data()) ).show();
+            tr.addClass('shown');
+        }} );
 
     $(document).on('click', '#search', function(){
         var company_id=$('#company_user').val();
         var carrier=$('#carrier').val();
+        url: "{{ route('gcadm.index') }}",
         loadDatatable(company_id,carrier);
     });
 

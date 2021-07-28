@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateEmailSettingsTable extends Migration
 {
@@ -18,7 +18,7 @@ class CreateEmailSettingsTable extends Migration
             $table->integer('company_user_id')->unsigned();
             $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
             $table->string('email_from')->nullable();
-            $table->enum('email_signature_type',['text','image'])->nullable();
+            $table->enum('email_signature_type', ['text', 'image'])->nullable();
             $table->string('email_signature_text')->nullable();
             $table->string('email_signature_image')->nullable();
             $table->timestamps();

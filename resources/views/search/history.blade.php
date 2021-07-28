@@ -2,6 +2,7 @@
 @section('css')
 @parent
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css">
 
 @endsection
 @section('title', 'History Search')
@@ -193,7 +194,12 @@ $(function() {
         "order": [
             [0, 'des']
         ],
-        "lengthChange": false,
+        dom: 'Blfrtip',
+        buttons: [
+             'csv', 'excel', 'pdf'
+        ],
+
+        
         "searching": true,
         "ordering": true,
         "width": true,
@@ -201,7 +207,9 @@ $(function() {
         "stateSave": true,
         "processing": true,
         "serverSide": true,
-        "paging": true
+        "paging": true,
+        'lengthMenu': [ [10, 25, 50, -1], [10, 25, 50, 'All'] ], 
+
     });
 
     $('#otro').DataTable({
@@ -248,7 +256,11 @@ $(function() {
         "order": [
             [0, 'des']
         ],
-        "lengthChange": false,
+        dom: 'Blfrtip',
+        buttons: [
+          'csv', 'excel', 'pdf', 
+        ],
+        
         "searching": true,
         "ordering": true,
         "width": true,
@@ -256,12 +268,27 @@ $(function() {
         "stateSave": true,
         "processing": true,
         "serverSide": true,
-        "paging": true
+        "paging": true,
+        
+        'lengthMenu': [ [10, 25, 50, -1], [10, 25, 50, 'All'] ], 
     });
 });
 </script>
 
-<script src="/assets/demo/default/custom/components/datatables/base/html-table-surcharge.js" type="text/javascript">
-</script>
+<script src="/assets/demo/default/custom/components/datatables/base/html-table-surcharge.js" type="text/javascript"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js" type="text/javascript"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js" type="text/javascript"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js" type="text/javascript"></script>
+
+
+
+
+
+
+
+
 
 @stop

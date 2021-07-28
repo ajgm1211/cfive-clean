@@ -15,21 +15,19 @@ class PriceSubtypesTableSeeder extends Seeder
 
         \DB::table('price_subtypes')->delete();
 
-        \DB::table('price_subtypes')->insert(array (
-            0 =>
-                array (
+        \DB::table('price_subtypes')->insert([
+            0 => [
                     'id' => 1,
                     'name' => 'Import',
                     'created_at' => $date,
                     'updated_at' => $date,
-                ),
-            1 =>
-                array (
+                ],
+            1 => [
                     'id' => 2,
                     'name' => 'Export',
                     'created_at' => $date,
                     'updated_at' => $date,
-                ),
-        ));
+                ],
+        ]);
     }
 }

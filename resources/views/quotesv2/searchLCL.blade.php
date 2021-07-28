@@ -1050,7 +1050,7 @@
                                 </div>
                             </div>
                             <!-- By packing -->
-                            <div class="tab-pane fade {{ $paquete }} " id="tab_1_2">
+                            <div class="tab-pane fade {{ @$paquete }} " id="tab_1_2">
                                 <input type="hidden" value="@$form['total_pallets']" id="total_pallets"
                                     name="total_pallets" />
                                 <input type="hidden" value="@$form['total_packages']" id="total_packages"
@@ -1315,7 +1315,7 @@
         <div class="row padding search">
             <!-- Tabla de muestreo de las cotizaciones -->
             <div class="container-fluid">
-                {!! Form::open(['route' => 'quotes-v2.storeLCL','class' => 'form-group m-form__group']) !!}
+                {!! Form::open(['class' => 'form-group m-form__group full-width', 'id' => 'rateForm']) !!}
                 <input type="hidden" name="forma" value="aaaaaa">
                 <input type="hidden" name="form" value="{{ json_encode($form) }}"
                     class="btn btn-sm btn-default btn-bold btn-upper formu">
@@ -1344,8 +1344,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6" align='right'> <button type="submit"
-                                                    class="btn m-btn--pill    btn-info">Create Quote</button></div>
+                                            <div class="col-lg-6" align='right'> 
+                                                <!--<button type="button" class="btn m-btn--pill btn-link" onclick="submitForm(1, 'LCL')"><b>Create Quote</b></button>-->
+                                                <button type="button" id="button_new_quote" class="btn m-btn--pill btn-info tool_tip" data-toggle="tooltip" data-placement="top" onclick="submitForm(2, 'LCL')">
+                                                    Create Quote
+                                                </button>
+                                            </div>
+                                            <!--<div class="col-lg-6" align='right'> <button type="submit" class="btn m-btn--pill  btn-info">Create Quote</button></div>-->
                                         </div>
 
                                         <div class="row">
@@ -1393,7 +1398,7 @@
                                                 <div class="m-widget5">
                                                     <div class="m-widget5__item no-padding no-margin">
                                                         <div class="m-widget5__pic">
-                                                            <img src="http://cargofive-production.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}"
+                                                            <img src="http://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/{{$arr->carrier->image}}"
                                                                 alt="" title="" />
                                                         </div>
                                                     </div>

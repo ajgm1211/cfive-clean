@@ -20,6 +20,7 @@ class HarborController extends Controller
         foreach ($harbors as $harbor) {
             $formatted_harbors[] = ['id' => $harbor->id_complete, 'text' => $harbor->display_name];
         }
+
         return \Response::json($formatted_harbors);
     }
 

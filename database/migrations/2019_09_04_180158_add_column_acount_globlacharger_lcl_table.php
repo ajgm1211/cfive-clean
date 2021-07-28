@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnAcountGloblachargerLclTable extends Migration
 {
@@ -13,10 +13,10 @@ class AddColumnAcountGloblachargerLclTable extends Migration
      */
     public function up()
     {
-        Schema::table('globalcharges_lcl', function (Blueprint $table){
-			$table->integer('account_imp_gclcl_id')->nullable()->after('company_user_id')->unsigned();
-			$table->foreign('account_imp_gclcl_id')->references('id')->on('account_importation_global_charger_lcls')->onDelete('cascade');
-		});
+        Schema::table('globalcharges_lcl', function (Blueprint $table) {
+            $table->integer('account_imp_gclcl_id')->nullable()->after('company_user_id')->unsigned();
+            $table->foreign('account_imp_gclcl_id')->references('id')->on('account_importation_global_charger_lcls')->onDelete('cascade');
+        });
     }
 
     /**

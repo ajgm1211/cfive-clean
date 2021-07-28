@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateNewRequestGlobalChargerLclsTable extends Migration
 {
@@ -19,7 +19,7 @@ class CreateNewRequestGlobalChargerLclsTable extends Migration
             $table->string('validation');
             $table->integer('company_user_id')->unsigned();
             $table->string('namefile');
-            $table->enum('status',['Pending', 'Processing', 'Done', 'Review'])->default('Pending');
+            $table->enum('status', ['Pending', 'Processing', 'Done', 'Review'])->default('Pending');
             $table->integer('user_id')->unsigned();
             $table->dateTime('created');
             $table->dateTime('updated')->nullable();

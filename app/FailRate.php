@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class FailRate extends Model
 {
     use SoftDeletes;
-    protected $dates    = ['deleted_at'];
+    protected $dates = ['deleted_at'];
 
-    protected $table    = "failes_rates";
+    protected $table = 'failes_rates';
     protected $fillable = [
         'origin_port',
         'destiny_port',
@@ -25,6 +25,6 @@ class FailRate extends Model
         'containers',
         'schedule_type',
         'transit_time',
-        'via'
+        'via',
     ];
 }

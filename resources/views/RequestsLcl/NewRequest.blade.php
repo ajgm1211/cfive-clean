@@ -71,8 +71,8 @@
                                     <label for="nameid" class="">References</label>
                                     {!!  Form::text('name',null,['id'=>'nameid',
                                     'placeholder'=>'Contract Name',
-                                    'required',
-                                    'class'=>'form-control m-input'])!!}
+                                    
+                                    'class'=>'form-control m-input','required'])!!}
                                 </div>
                                 <div class="col-lg-2">
                                     <label for="validation_expire" class=" ">Validation</label>
@@ -102,7 +102,7 @@
                                             <label for="file" class="btn btn-primary form-control" >
                                                 Choose File
                                             </label>
-                                            <input type="file" class="" name="file" onchange='cambiar()' id="file" required style='display: none;'>
+                                            <input type="file" class="" name="file" onchange='cambiar()' id="file" required accept=".xlsx,.xls,.csv,.pdf" style='display: none;'>
                                             <div id="info" style="color:red"></div>
                                         </div>
                                         <div class="col-lg-4">
@@ -351,7 +351,7 @@
                 </div>
                 <div class="modal-footer">
                     <center>
-                        <h7>Do not leave this window, we will redirect you Thank you.</h7>
+                        <h7>Do not close this window. You will be redirected in a few moments.</h7>
                     </center>
                 </div>
             </div>
@@ -408,7 +408,6 @@
         if(date_star == date_end){
             swal(
                 "Error",
-                "Error, Please select the date!", "error",
                 "Error, Please select the Date!", "error",
                 true,
             );
@@ -473,13 +472,31 @@
     }
     function cambiar(){
         var pdrs = document.getElementById('file').files[0].name;
-        document.getElementById('info').innerHTML = pdrs;
+
+        if(pdrs.endsWith(".xlsx",pdrs.length)==true || pdrs.endsWith(".xls",pdrs.length)==true ||pdrs.endsWith(".csv",pdrs.length)==true ||pdrs.endsWith(".pdf",pdrs.length)==true ){
+            var typeDoc=true;
+        }else{
+            swal("Error","Error, You can't upload files of this type, only(XLSX, XLS, CSV, PDF).", "error",true,);
+            var typeDoc=false;   
+        }
+        console.log(typeDoc);
+            document.getElementById('info').innerHTML = pdrs;  
     } 
 
     function validate(formData, jqForm, options) {
         var form = jqForm[0];
+        var pdrs = document.getElementById('file').files[0].name;
+        
+        if(pdrs.endsWith(".xlsx",pdrs.length)==true || pdrs.endsWith(".xls",pdrs.length)==true ||pdrs.endsWith(".csv",pdrs.length)==true ||pdrs.endsWith(".pdf",pdrs.length)==true ){
+            var typeDoc=true;
+        }else{
+            var typeDoc=false;
+        }
+        
         if (!form.file.value) {
-            //alert('File not found');
+            return false;
+        }else if(typeDoc!=true){
+            swal("Error","Error, You can't upload files of this type, please upload other file(XLSX, XLS, CSV, PDF).", "error",true,);
             return false;
         }
     }
@@ -531,16 +548,16 @@
                         if (willDelete) {
                             count = 0;
                             $('#modaledit').modal('hide');
-                            window.location.href = "{{route('contractslcl.index')}}";
+                            window.location.href = "{{route('new.contracts.lcl.index')}}";
                         } else {
                             count = 0;
                             $('#modaledit').modal('hide');
-                            window.location.href = "{{route('contractslcl.index')}}";
+                            window.location.href = "{{route('new.contracts.lcl.index')}}";
                         }
                     });
 
                 } else{
-                    window.location.href = "{{route('contractslcl.index')}}";
+                    window.location.href = "{{route('new.contracts.lcl.index')}}";
                 }
 
                 //window.location.href = "{{route('RequestImportationLcl.indexListClient')}}";

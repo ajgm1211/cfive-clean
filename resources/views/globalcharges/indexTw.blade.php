@@ -250,10 +250,18 @@ New \ Status Import  &nbsp;
         }
 
     }
+    // function format ( d ) {
+    //     // `d` is the original data object for the row
+    //     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+    //         '<tr>'+
+    //             '<td>Exceptions:</td>'+
+    //             '<td>'+d.name+'</td>'+
+    //         '</tr>'+
+    //     '</table>';
+    // }
 
     $(function() {
-        $('#requesttable').DataTable({
-
+        var tabla = $('#requesttable').DataTable({
             //serverSide: true,
             ajax: '{!! route("globalcharges.show",$company_userid) !!}',
             columns: [
@@ -267,7 +275,15 @@ New \ Status Import  &nbsp;
                 { data: 'carrierlb', name: 'carrierlb' },
                 { data: 'ammount', name: 'ammount' },
                 { data: 'validitylb', name: 'validitylb' },
-                { data: 'action', name: 'action', orderable: false, searchable: false }
+                // {
+                //     "className":      'details-control',
+                //     "orderable":      false,
+                //     "searchable":     false,
+                //     "data":           null,
+                //     "defaultContent": ''
+                // },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
+
             ],
             initComplete: function () {
                 this.api().columns([1,2,3,4,5,6,7,8,9]).every(function () {
@@ -290,18 +306,35 @@ New \ Status Import  &nbsp;
                     });
                 });
             },
-            "order": [[0, 'des']],
             "lengthChange": false,
             "searching": true,
             "ordering": false,
-            "width": true,
-            "autoWidth": false,
-            "stateSave": true,
+            "info": true,
+            "autoWidth": true, 
+            "deferLoading": 57,   
             "processing": true,
-            "serverSide": true,
-            "paging": true
-        });
+            "dom": 'Bfrtip',
+            "paging": true,
+            "scrollX": true,
+            "stateSave": false, 
+        }); 
 
+    //     $('#requesttable tbody').on('click', 'td.details-control', function () {
+    //         var tr = $(this).closest('tr');
+    //         var row = tabla.row( tr );
+ 
+    //     if ( row.child.isShown() ) {
+    //         // This row is already open - close it
+    //         row.child.hide();
+    //         tr.removeClass('shown');
+    //     }
+    //     else {
+    //         // Open this row
+    //         row.child( format(row.data()) ).show();
+    //         tr.addClass('shown');
+    //     }
+    // } );
+          
     });
 
     $(document).on('click', '#bulk_delete', function(){

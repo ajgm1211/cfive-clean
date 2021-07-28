@@ -1,17 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateQuotesTable extends Migration
 {
-  /**
+    /**
      * Run the migrations.
      *
      * @return void
      */
-
     public function up()
     {
         Schema::create('quotes', function (Blueprint $table) {
@@ -46,7 +45,7 @@ class CreateQuotesTable extends Migration
             $table->integer('carrier_id')->unsigned()->nullable();
             $table->foreign('carrier_id')->references('id')->on('carriers');
             $table->integer('airline_id')->unsigned()->nullable();
-            $table->foreign('airline_id')->references('id')->on('airlines');              
+            $table->foreign('airline_id')->references('id')->on('airlines');
             $table->integer('type')->unsigned();
             $table->string('qty_20')->nullable();
             $table->string('qty_40')->nullable();
@@ -60,21 +59,22 @@ class CreateQuotesTable extends Migration
             $table->float('sub_total_destination')->nullable();
             $table->float('total_markup_origin')->nullable();
             $table->float('total_markup_freight')->nullable();
-            $table->float('total_markup_destination')->nullable();            
+            $table->float('total_markup_destination')->nullable();
             $table->integer('status_quote_id')->unsigned()->default(1);
             $table->foreign('status_quote_id')->references('id')->on('status_quotes');
             $table->integer('sale_term_id')->unsigned()->nullable();
-            $table->foreign('sale_term_id')->references('id')->on('sale_terms');            
+            $table->foreign('sale_term_id')->references('id')->on('sale_terms');
             $table->timestamps();
         });
     }
-  /**
+
+    /**
      * Reverse the migrations.
      *
      * @return void
      */
-  public function down()
-  {
-    Schema::dropIfExists('quotes');
-  }
+    public function down()
+    {
+        Schema::dropIfExists('quotes');
+    }
 }
