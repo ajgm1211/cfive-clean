@@ -242,13 +242,13 @@ export default {
         },
         uom: {
           label: "W/M",
-          type: "text",
+          type: "number",
           rules: "required",
           placeholder: "W/M",
         },
         minimum: {
           label: "Reference",
-          type: "text",
+          type: "number",
           rules: "required",
           placeholder: "Minimum",
         },
