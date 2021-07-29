@@ -33,7 +33,6 @@
             <div class="col-12">
               
               <h6 class="mt-4 mb-5 contract-title">
-                {{cmaResult.additionalData.namedAccounts.length}}
                 {{ cmaResult.contractReference }}  <b-button :id="'popover-name-'+cmaResultKey" v-if="cmaResult.additionalData.namedAccounts.length > 0" class="pophover-name-account" style="border:none !important">
                   <b-icon v-if="cmaResult.additionalData.namedAccounts.length == 1" icon="person"></b-icon>
                   <b-icon v-else icon="people"></b-icon>
