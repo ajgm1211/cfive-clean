@@ -387,6 +387,9 @@ class LocalChargeQuotationController extends Controller
 
         switch ($request->type) {
             case 1:
+                $request->validate([
+                    'data'=> 'required',
+                ]);
                 $index = $request->index;
 
                 $local_charge = LocalChargeQuote::findOrFail($id);
@@ -442,6 +445,9 @@ class LocalChargeQuotationController extends Controller
                 $total->totalize();
                 break;
             case 6:
+                $request->validate([
+                    'data'=> 'required',
+                ]);
                 $index = $request->index;
                 $total = LocalChargeQuoteLcl::findOrFail($id);
                 $total->$index = $request->data;
@@ -459,12 +465,18 @@ class LocalChargeQuotationController extends Controller
                 $total->totalize();
                 break;
             case 8:
+                $request->validate([
+                    'data'=> 'required',
+                ]);
                 $index = $request->index;
                 $total = ChargeLclAir::findOrFail($id);
                 $total->$index = $request->data;
                 $total->update();
                 break;
             case 9:
+                $request->validate([
+                    'data'=> 'required',
+                ]);
                 $index = $request->index;
 
                 $local_charge = LocalChargeQuoteLcl::findOrFail($id);
