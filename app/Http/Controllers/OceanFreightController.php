@@ -124,7 +124,7 @@ class OceanFreightController extends Controller
         $available_containers = Container::all()->pluck('code');
 
         foreach ($available_containers as $container) {
-            $vdata['rates_' . $container] = 'numeric | required ';
+            $vdata['rates_' . $container] = 'numeric | sometimes';
         }
 
         return $request->validate($vdata);
@@ -218,7 +218,7 @@ class OceanFreightController extends Controller
         $available_containers = Container::where('gp_container_id', $contract->gpContainer->id)->get()->pluck('code');
 
         foreach ($available_containers as $container) {
-            $vdata['rates_' . $container] = 'numeric|required';
+            $vdata['rates_' . $container] = 'numeric | sometimes';
         }
 
         $data = $request->validate($vdata);
