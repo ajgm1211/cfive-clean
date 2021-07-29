@@ -1476,7 +1476,7 @@
     </div>
     <!-- FIN TARJETA MAERSK -->
 
-    <div v-if="result.companyCode ==='mostrartarjeta'"> <!-- eliminar div par que se muentren las tarjetas -->
+    <div v-if="false"> <!-- eliminar div par que se muentren las tarjetas -->
       <!-- TARJETA EVERGREEN -->
       <div
         class="mb-4"
