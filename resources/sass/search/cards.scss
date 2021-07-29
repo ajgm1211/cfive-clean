@@ -16,6 +16,11 @@ TARJETA
     }
 }
 
+.pophover-name-account {
+    top: -2px;
+    position: relative;
+    color: #031b4e!important;
+}
 
 /*** Direccion y Destino ***/
 
@@ -236,7 +241,9 @@ BANDA DE CARDS CMA Y MAERSK
 
 .banda-top.cma span, 
 .banda-top.maersk span,
-.banda-top.sealand span {
+.banda-top.sealand span,
+.banda-top.evergreen span,
+.banda-top.hapag span {
     text-transform: uppercase;
     position: relative;
     left: -7px;
@@ -289,6 +296,48 @@ BANDA DE CARDS CMA Y MAERSK
     &::before {
         top: 26px;
         border-top: 11px solid #368eac;
+    }
+}
+
+.banda-top.evergreen {
+    border-bottom: 26px solid #008835;
+    &::after {
+        border-top: 10px solid #04672b;
+    }
+    &::before {
+        border-top: 11px solid #04672b;
+    }
+    span {
+        top: 2px;
+        font-size: 9px;
+    }
+}
+
+.banda-top.hapag {
+    border-bottom: 26px solid #FF6701;
+    &::after {
+        border-top: 10px solid #bd4e04;
+    }
+    &::before {
+        border-top: 11px solid #bd4e04;
+    }
+    span {
+        top: 2px;
+        font-size: 9px;
+    }
+}
+
+.banda-top.yml {
+    border-bottom: 26px solid #172983;
+    &::after {
+        border-top: 10px solid #051046;
+    }
+    &::before {
+        border-top: 11px solid #051046;
+    }
+    span {
+        top: 2px;
+        font-size: 9px;
     }
 }
 
