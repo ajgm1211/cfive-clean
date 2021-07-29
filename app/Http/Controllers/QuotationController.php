@@ -41,6 +41,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Traits\MixPanelTrait;
 use App\ViewQuoteV2;
+use App\LocalChargeQuote;
 
 class QuotationController extends Controller
 {
@@ -566,6 +567,7 @@ class QuotationController extends Controller
 
         //Duplicating quote
         $new_quote = $quote->duplicate();
+        $new_quote->update(['user_id' => Auth::user()->id]);
 
         //Setting additional data
         if ($quote->search_options == null) {
@@ -697,6 +699,27 @@ class QuotationController extends Controller
 
         $quote->update(['search_options' => null]);
         $new_quote->update(['search_options' => null]);
+
+        $newLocalcharges=$new_quote->local_charges;
+
+        foreach($new_quote->automatic_inland_totals as $automaticInlnadT){
+            if($automaticInlnadT["pdf_options"]["groupId"]!=null){
+                foreach ($newLocalcharges as $local){
+                    $localcharges = LocalChargeQuote::findOrFail($automaticInlnadT["pdf_options"]["groupId"]);
+                    $igual=array_diff($localcharges['price'],$local['price']);
+                    if(count($igual)==0 && $local['surcharge_id']==$localcharges['surcharge_id'] && $local['calculation_type_id']==$localcharges['calculation_type_id'] 
+                    && $local['type_id']==$localcharges['type_id'] && isset($local['provider_name'])==isset($localcharges['provider_name']) && $local['charge']==$localcharges['charge']){
+                        $localcharges=AutomaticInlandTotal::findOrFail($automaticInlnadT->id);
+                        $pdfOptions = [
+                            "groupId"=> $local->id,
+                            "grouped"=> true
+                        ];
+                        $localcharges->pdf_options = $pdfOptions;
+                        $localcharges->update();
+                    }
+                }
+            }
+        }    
 
         return new QuotationResource($new_quote);
     }
