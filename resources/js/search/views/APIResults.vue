@@ -1865,7 +1865,7 @@
                 <span style="color: #006bfa; text-transform: capitalize"
                   ><b-icon icon="check-circle-fill"></b-icon> EVERGREEN</span
                 >
-                <p class="ml-4 mb-0">
+                <p class="ml-4 mb-0" v-if="evergreenResult.validityFrom && evergreenResult.validityTo">
                   <b>Validity:</b>
                   {{
                     evergreenResult.validityFrom.substring(0, 10) +
@@ -2512,7 +2512,7 @@
     <!-- TARJETA HAPAG -->
     <div
       class="mb-4"
-      v-for="(hapagResult, hapagResultKey) in orderedhapagRates"
+      v-for="(hapagResult, hapagResultKey) in orderedHapagRates"
       :key="hapagResultKey + 'hapag'"
     >
       <div class="result-search">
@@ -4345,7 +4345,7 @@ export default {
                     component.setDetention(respData);
                   } else if (respData.company == "CMA CGM") {
                     component.results["cmacgm"].push(respData);
-                  } else if (respData.company == "Evergreen") {
+                  } else if (respData.company == "EVERGREEN") {
                     component.results["evergreen"].push(respData);
                   } else if (respData.company == "Hapag-Lloyd") {
                     component.results["hapag"].push(respData);
