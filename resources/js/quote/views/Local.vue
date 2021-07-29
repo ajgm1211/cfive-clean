@@ -1542,6 +1542,9 @@ export default {
                     this.getTotal();
                 })
                 .catch((data) => {
+                if(data.status == 422){
+                    this.alert("Please complete the fields", "error");
+                }
                     this.$refs.observer.setErrors(data.data.errors);
                 });
         },
