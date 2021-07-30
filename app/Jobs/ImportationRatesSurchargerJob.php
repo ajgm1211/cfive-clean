@@ -147,7 +147,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
             // DIFERENCIADOR DE PUERTO CONTRY/REGION ---------------
             if ($statusPortCountry) {
-                $differentiator = $final_columns['DIFFERENTIATOR'];
+                $differentiator = @$final_columns['DIFFERENTIATOR'];
             }
 
             // CURRENCY --------------------------------------------

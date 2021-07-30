@@ -172,7 +172,7 @@ new registration
                                 <div class="col-lg-3">
                                     <label class="">Carriers</label>
                                     <div class="" id="carrierMul">
-                                        {!! Form::select('carrierM[]',$carrier,$contract->carriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','disabled','id'=>'carrierM','required','multiple'=>'multiple'])!!}
+                                        {!! Form::select('carrierM[]',$carrier,@$contract->carriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','disabled','id'=>'carrierM','required','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
@@ -368,7 +368,7 @@ new registration
                                             @if($selector == 1)
                                                 {!! Form::select('carrier',$carrier,$requestlcl->Requestcarriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
                                             @elseif($selector == 2)
-                                                {!! Form::select('carrier',$carrier,$contract->carriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                                                {!! Form::select('carrier',$carrier,@$contract->carriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
                                             @endif
                                         @else
                                             {!! Form::select('carrier',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
