@@ -68,6 +68,12 @@ return [
             'url' => 'storage',
             'visibility' => 'public',
         ],
+        'UpLoadFileComp' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            'url' => 'storage',
+            'visibility' => 'public',
+        ],
         // FCL -------------------------------------------------
         'FclAccount' => [
             'driver' => 's3',
