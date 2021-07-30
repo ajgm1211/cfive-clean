@@ -277,9 +277,13 @@ class TestController extends Controller
 
     }
 
-    public function contable()
+    public function contable(Request $request)
     {
 
+        
+            $model = $request;
+
+            dd($model);
       
 
     }
