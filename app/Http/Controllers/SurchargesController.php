@@ -98,7 +98,9 @@ class SurchargesController extends Controller
 
             $options_array = json_encode(array_combine($options_key, $options_value));
 
-            $surcharge->options = $options_array;
+            $surcharge->options = $options_array;     
+        }elseif($request->options){
+            $surcharge->options = $request->options;
         }
 
         $surcharge->save();
