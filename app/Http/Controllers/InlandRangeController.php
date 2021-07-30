@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use Illuminate\Support\Facades\DB;
 
 class InlandRangeController extends Controller
 {
@@ -193,5 +194,16 @@ class InlandRangeController extends Controller
         $new_inland_range = $range->duplicate();
 
         return new InlandRangeResource($new_inland_range);
+    }
+        /**
+     * Remove all the resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyAll(Request $request)
+    {
+        DB::table('inland_ranges')->whereIn('id', $request->input('ids'))->delete();
+
+        return response()->json(null, 204);
     }
 }
