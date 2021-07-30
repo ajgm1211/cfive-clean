@@ -1043,7 +1043,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/search/store', 'SearchApiController@store');
     Route::post('/api/search/storeContract', 'SearchApiController@storeContractNewSearch');
     Route::post('/api/search/downloadContract', 'SearchApiController@downloadContractFile');
-    Route::get('/api/search/downloadMContract/{id}', 'SearchApiController@downloadMultipleContractFile');
+    Route::get('/api/search/downloadMContract/{contract}', 'SearchApiController@downloadMultipleContractFile')->name('contract.multiple');
 
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
@@ -1402,5 +1402,5 @@ Route::resource('provinces', 'ProvinceController')->middleware('auth');
 
 Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
     Route::get('intercom', 'TestController@createIntercom')->name('test.intercom');
-    Route::get('contable', 'TestController@contable')->name('teste.intercom');
+    Route::get('{quote}/contable', 'TestController@contable')->name('teste.intercom')->middleware('check_company:quote');;
 });
