@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\CarrierResource;
 
 class QuotationChargeLclResource extends JsonResource
 {
@@ -28,7 +29,7 @@ class QuotationChargeLclResource extends JsonResource
             'profit' => $this->profit ?? 0,
             'total' => $this->total ?? $this->setTotal(),
             'currency' => $this->currency->alphacode ?? null,
-            'provider' => $this->automatic_rate->carrier->name ?? null,
+            'provider' => (new CarrierResource($this->automatic_rate->carrier ?? null))->companyUser($this->automatic_rate->quote->company_user ?? null),
         ];
     }
 
