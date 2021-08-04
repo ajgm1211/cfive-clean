@@ -54,6 +54,20 @@ class ValidateTemplateJob implements ShouldQueue
             }
             
         }
+        
+        $endpoint_obj = EndpointTable::where("name","barracuaep-generate-mask")->first();
+        if($endpoint_obj->status == 1){
+            $json = '{"type":"FCL"}';
+            $url = $endpoint_obj->url."requests/generateMask/".$this->request_id;
+
+            try{
+                $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
+                $response = json_decode($response->getBody()->getContents(),true);
+            }catch(\Exception $e){
+                $response = false;
+            }
+            
+        }
 
         $endpoint_obj_cmpfile = EndpointTable::where("name","barracuaep-cmpfile")->first();
         if($endpoint_obj_cmpfile->status == 1){

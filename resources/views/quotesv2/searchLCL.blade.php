@@ -1614,7 +1614,7 @@
                                                                 </span>
                                                             </div>
                                                             <div class="wth">
-                                                                <span class="bg-rates"> {{ $localorigin['currency']}}
+                                                                <span class="bg-rates"> {{ $arr->quoteCurrency }}
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -1817,7 +1817,7 @@
                                                                 </span>
                                                             </div>
                                                             <div class="wth">
-                                                                <span class="bg-rates"> {{ $localdestiny['currency']}}
+                                                                <span class="bg-rates"> {{ $arr->quoteCurrency }}
                                                                 </span>
                                                             </div>
                                                         </div>
