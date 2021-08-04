@@ -690,55 +690,6 @@ export default {
         return "col-4";
       }
     },
-    createQuote() {
-      let component = this;
-      let ratesForQuote = [];
-
-      component.creatingQuote = true;
-      component.finalRates.forEach(function (rate) {
-        if (rate.addToQuote) {
-          ratesForQuote.push(rate);
-        }
-      });
-
-      if (ratesForQuote.length == 0) {
-        component.noRatesAdded = true;
-        component.creatingQuote = false;
-        setTimeout(function () {
-          component.noRatesAdded = false;
-        }, 2000);
-      } else {
-        if (component.requestData.requested == 0) {
-          component.actions.quotes
-            .create(ratesForQuote, component.$route)
-            .then((response) => {
-              window.location.href =
-                "/api/quote/" + response.data.data.id + "/edit";
-              component.creatingQuote = false;
-            })
-            .catch((error) => {
-              if (error.status === 422) {
-                component.responseErrors = error.data.errors;
-                component.creatingQuote = false;
-              }
-            });
-        } else if (component.requestData.requested == 1) {
-          component.actions.quotes
-            .specialduplicate(ratesForQuote)
-            .then((response) => {
-              window.location.href =
-                "/api/quote/" + response.data.data.id + "/edit";
-              component.creatingQuote = false;
-            })
-            .catch((error) => {
-              if (error.status === 422) {
-                component.responseErrors = error.data.errors;
-                component.creatingQuote = false;
-              }
-            });
-        }
-      }
-    },
 
     setFilters() {
       let component = this;
@@ -820,9 +771,6 @@ export default {
     },
     createQuote() {
       this.$emit("createQuote");
-    },
-    createQuote(){
-      this.$emit('createQuote');
     },
   },
   mounted(){
