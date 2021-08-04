@@ -223,7 +223,7 @@
                         freight = 'freights_'+item.code;
                         rate = 'rates_'+item.code;
                         component.fields.push({ key: rate, label: item.name, type: 'text' });
-                        component.form_fields[rate] = { type: 'text', label: item.name, placeholder: item.name };
+                        component.form_fields[rate] = { type: 'number', label: item.name, placeholder: item.name };
                         containers[rate] = { type: 'text', label: item.name, placeholder: item.name };
                         if(table.extraRow){
                            component.extra_fields[freight] = { type: 'extraText', placeholder: item.name };

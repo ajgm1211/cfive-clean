@@ -41,6 +41,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Traits\MixPanelTrait;
 use App\ViewQuoteV2;
+use App\LocalChargeQuote;
 
 class QuotationController extends Controller
 {
@@ -556,7 +557,13 @@ class QuotationController extends Controller
     {
         $data = $request->input();
         $rate_data = $data['rates'];
-        $search_data = $rate_data[0]['search'];
+        $result_data = $data['results'];
+
+        if(count($rate_data) != 0){
+            $search_data = $rate_data[0]['search'];
+        }else{
+            $search_data = $result_data[0]['search'];
+        }
 
         $search_data_ids = $this->getIdsFromArray($search_data);
 
@@ -566,6 +573,7 @@ class QuotationController extends Controller
 
         //Duplicating quote
         $new_quote = $quote->duplicate();
+        $new_quote->update(['user_id' => Auth::user()->id]);
 
         //Setting additional data
         if ($quote->search_options == null) {
@@ -645,6 +653,63 @@ class QuotationController extends Controller
             $rateTotals->totalize($rate['currency_id']);
         }
 
+        foreach ($result_data as $result) {
+
+            $result = $this->formatApiResult($result, $search_data['selectedContainerGroup'], $search_data['containers']);
+
+            if(isset($result['validityFrom'])){
+                $start_date = substr($result['validityFrom'], 0, 10);
+            }else{
+                $start_date = substr($search_data['dateRange']['startDate'], 0, 10);
+            }
+
+            if(isset($result['validityTo'])){
+                $end_date = substr($result['validityTo'], 0, 10);
+            }else{
+                $end_date = substr($search_data['dateRange']['endDate'], 0, 10);
+            }
+
+            array_push($rate_ports['origin'], $result['origin_port']);
+            array_push($rate_ports['destination'], $result['destiny_port']);
+
+            $newRate = AutomaticRate::create([
+                'quote_id' => $new_quote->id,
+                'contract' => $result['contractReference'] ?? $result['quoteLine'],
+                'validity_start' => $start_date,
+                'validity_end' => $end_date,
+                'currency_id' => $result['currency_id'],
+                'origin_port_id' => $result['origin_port'],
+                'destination_port_id' => $result['destiny_port'],
+                'carrier_id' => $result['carrier_id'],
+            ]);
+
+            foreach ($result['pricingDetails']['surcharges'] as $charge_direction) {
+                foreach ($charge_direction as $charge) {
+
+                    $freight = Charge::create([
+                        'automatic_rate_id' => $newRate->id,
+                        'surcharge_id' => $charge['surcharge_id'],
+                        'type_id' => $charge['type_id'],
+                        'calculation_type_id' => $charge['calculationtype_id'],
+                        'currency_id' => $charge['currency_id'],
+                        'amount' => json_encode($charge['amount']),
+                        'total' => json_encode($charge['amount']),
+                    ]);
+                }
+            }
+
+            $rateTotals = AutomaticRateTotal::create([
+                "quote_id" => $quote->id,
+                'automatic_rate_id' => $newRate->id,
+                'origin_port_id' => $newRate->origin_port_id,
+                'destination_port_id' => $newRate->destination_port_id,
+                'carrier_id' => $newRate->carrier_id,
+                'currency_id' => $newRate->currency_id,
+            ]);
+
+            $rateTotals->totalize($result['currency_id']);
+        }
+
         //Deleting Inlands without ports in rates
         $inlands = $new_quote->inland_addresses()->get();
 
@@ -697,6 +762,27 @@ class QuotationController extends Controller
 
         $quote->update(['search_options' => null]);
         $new_quote->update(['search_options' => null]);
+
+        $newLocalcharges=$new_quote->local_charges;
+
+        foreach($new_quote->automatic_inland_totals as $automaticInlnadT){
+            if($automaticInlnadT["pdf_options"]["groupId"]!=null){
+                foreach ($newLocalcharges as $local){
+                    $localcharges = LocalChargeQuote::findOrFail($automaticInlnadT["pdf_options"]["groupId"]);
+                    $igual=array_diff($localcharges['price'],$local['price']);
+                    if(count($igual)==0 && $local['surcharge_id']==$localcharges['surcharge_id'] && $local['calculation_type_id']==$localcharges['calculation_type_id'] 
+                    && $local['type_id']==$localcharges['type_id'] && isset($local['provider_name'])==isset($localcharges['provider_name']) && $local['charge']==$localcharges['charge']){
+                        $localcharges=AutomaticInlandTotal::findOrFail($automaticInlnadT->id);
+                        $pdfOptions = [
+                            "groupId"=> $local->id,
+                            "grouped"=> true
+                        ];
+                        $localcharges->pdf_options = $pdfOptions;
+                        $localcharges->update();
+                    }
+                }
+            }
+        }    
 
         return new QuotationResource($new_quote);
     }
