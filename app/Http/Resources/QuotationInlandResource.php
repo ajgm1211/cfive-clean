@@ -4,6 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Traits\UtilTrait;
+use App\Http\Resources\ProvidersResource;
+use App\Provider;
+
 class QuotationInlandResource extends JsonResource
 {
 
@@ -17,6 +20,8 @@ class QuotationInlandResource extends JsonResource
      */
     public function toArray($request)
     {
+        $provider = $this->providers ?? Provider::where('name', $this->provider)->first();
+
         return [
             'id' => $this->id,
             'type' => $this->type,
@@ -25,7 +30,7 @@ class QuotationInlandResource extends JsonResource
             'distance' => $this->distance,
             'port' => $this->port->display_name ?? null,
             'address' => $this->inland_address->address ?? null,
-            'provider' => $this->providers->name ?? $this->provider ?? null,
+            'provider' => new ProvidersResource($provider),
             'valid_from' => $this->valid_from,
             'valid_until' => $this->valid_until,
             'price' => $this->arrayToFloat($this->price),
