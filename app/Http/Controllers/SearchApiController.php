@@ -214,7 +214,32 @@ class SearchApiController extends Controller
         $company_user = $user->companyUser()->first();
         $company_user_id = $company_user->id;
 
-        $search_array = $request->input();
+        
+
+        $search_array = $request->validate([
+            'originPorts' => 'required|array|min:1',
+            'destinationPorts' => 'required|array|min:1',
+            'dateRange.startDate' => 'required',
+            'dateRange.endDate' => 'required',
+            'containers' => 'required|array|min:1',
+            'selectedContainerGroup' => 'required',
+            'deliveryType.id' => 'required',
+            'direction' => 'required',
+            'carriers' => 'sometimes',
+            'carriersApi' => 'sometimes',
+            'type' => 'required',
+            'company' => 'sometimes',
+            'contact' => 'sometimes',
+            'pricelevel' => 'sometimes',
+            'originCharges' => 'sometimes',
+            'destinationCharges' => 'sometimes',
+            'originAddress' => 'sometimes',
+            'destinationAddress' => 'sometimes'
+  
+        ]);
+
+
+
 
         $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'], 0, 10);
         $search_array['dateRange']['endDate'] = substr($search_array['dateRange']['endDate'], 0, 10);
@@ -1161,7 +1186,7 @@ class SearchApiController extends Controller
             $total = count($downloads);
             if ($total > 1) {                                         
                 
-                return response()->json(['success' => true, 'url' => $contract,'zip'=>true ]);
+                return response()->json(['success' => true, 'url' => $contract->id,'zip'=>true ]);
             } else {
                 $media = $downloads->first();
                 $mediaItem = Media::find($media->id);
@@ -1179,6 +1204,7 @@ class SearchApiController extends Controller
     {
         
        
+        //$contract = Contract::find('41029');
         $downloads = $contract->getMedia('document');
         $objeto = MediaStream::create('export.zip')->addMedia($downloads);
 
