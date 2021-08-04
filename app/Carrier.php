@@ -43,4 +43,11 @@ class Carrier extends Model
     {
         return $this->morphToMany(SearchCarrier::class,'provider','provider_type','provider_id');
     }
+
+    public function referentialData($company_user_id)
+    {
+        return $this->morphOne('App\ReferentialData', 'referential')
+            ->where('company_user_id', $company_user_id)
+            ->first();
+    }
 }
