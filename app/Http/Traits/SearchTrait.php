@@ -868,6 +868,9 @@ trait SearchTrait
                 }if($rate->fortyfive != null && in_array('45HC',$requested_containers)){
                     $container_array['C45HC'] = $rate->fortyfive;
                 }
+
+                $rate->containers = json_encode($container_array);
+                $rate->save();
             }else{
                 $rate_containers = json_decode($rate->containers, true);
                 foreach($requested_containers as $requested){
@@ -876,12 +879,10 @@ trait SearchTrait
                     }else{
                         $container_array['C'.$requested] = $rate_containers['C'.$requested];
                     }
-                
                 }
-            }
 
-            $rate->containers = json_encode($container_array);
-            $rate->save();
+                $rate->containers = json_encode($container_array);
+            }
         }
     }
 
