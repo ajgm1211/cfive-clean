@@ -1,6 +1,6 @@
 <template>
   <div class="container-cards">
-    <!-- TARJETA CMA -->
+        <!-- TARJETA CMA -->
     <div
       class="mb-4"
       v-for="(cmaResult, cmaResultKey) in orderedCmaRates"
@@ -82,7 +82,7 @@
                   <p class="mb-0">
                     {{ cmaResult.departureName }}
                   </p>
-                  <p>{{ cmaResult.departureDateGmt.substring(0, 10) }}</p>
+                  <p v-if="cmaResult.departureDateGmt">{{ cmaResult.departureDateGmt.substring(0, 10) }}</p>
                 </div>
                 <!-- FIN ORGIEN -->
 
@@ -123,7 +123,7 @@
                   <p class="mb-0">
                     {{ cmaResult.arrivalName }}
                   </p>
-                  <p>{{ cmaResult.arrivalDateGmt.substring(0, 10) }}</p>
+                  <p v-if="cmaResult.arrivalDateGmt">{{ cmaResult.arrivalDateGmt.substring(0, 10) }}</p>
                 </div>
                 <!-- FIN DESTINO -->
               </div>
@@ -142,7 +142,7 @@
                     <p class="mb-1">
                       {{ cmaResult.departureName }}
                     </p>
-                    <p>{{ cmaResult.departureDateGmt.substring(0, 10) }}</p>
+                    <p v-if="cmaResult.departureDateGmt">{{ cmaResult.departureDateGmt.substring(0, 10) }}</p>
                   </div>
                   <!-- FIN ORGIEN -->
 
@@ -152,7 +152,7 @@
                     <p class="mb-1">
                       {{ cmaResult.arrivalName }}
                     </p>
-                    <p>{{ cmaResult.arrivalDateGmt.substring(0, 10) }}</p>
+                    <p v-if="cmaResult.arrivalDateGmt">{{ cmaResult.arrivalDateGmt.substring(0, 10) }}</p>
                   </div>
                   <!-- FIN DESTINO -->
                 </div>
@@ -467,7 +467,7 @@
                           <p class="mb-0">
                             {{ route.details[0].departureName }}
                           </p>
-                          <p>
+                          <p v-if="route.details[0].departureDateGmt">
                             {{
                               route.details[0].departureDateGmt.substring(0, 10)
                             }}
@@ -527,7 +527,7 @@
                         <div class="destination ml-4">
                           <span>destination</span>
                           <p class="mb-0">{{ route.details[0].arrivalName }}</p>
-                          <p>
+                          <p v-if="route.details[0].arrivalDateGmt">
                             {{
                               route.details[0].arrivalDateGmt.substring(0, 10)
                             }}
@@ -623,7 +623,7 @@
                             :key="detailKey"
                           >
                             <div>
-                              <p>
+                              <p v-if="routeDetail.arrivalDateGmt">
                                 {{
                                   routeDetail.arrivalDateGmt.substring(0, 10)
                                 }}
@@ -685,7 +685,7 @@
                       <div class="origin">
                         <span>origin</span>
                         <p class="mb-0">{{ route.details[0].departureName }}</p>
-                        <p>
+                        <p v-if="route.details[0].departureDateGmt">
                           {{
                             route.details[0].departureDateGmt.substring(0, 10)
                           }}
@@ -714,7 +714,7 @@
                       <div class="destination">
                         <span>destination</span>
                         <p class="mb-0">{{ route.details[0].arrivalName }}</p>
-                        <p>
+                        <p v-if="route.details[0].arrivalDateGmt">
                           {{ route.details[0].arrivalDateGmt.substring(0, 10) }}
                         </p>
                       </div>
@@ -817,7 +817,7 @@
                                 :key="detailKey"
                               >
                                 <div>
-                                  <p>
+                                  <p v-if="routeDetail.arrivalDateGmt">
                                     {{
                                       routeDetail.arrivalDateGmt.substring(
                                         0,
@@ -1665,7 +1665,7 @@
       :key="evergreenResultKey + 'evergreen'"
     >
       <div class="result-search">
-        <div class="banda-top evergreen"><span>EVERGREEN PRICES</span></div>
+        <div class="banda-top evergreen"><span>EVERGREEN SPOT</span></div>
 
         <!-- INFORMACION DE TARIFA -->
         <div class="row">
