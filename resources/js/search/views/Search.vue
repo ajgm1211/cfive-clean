@@ -110,7 +110,8 @@
                             <b-icon v-else icon="geo" class="mr-2"></b-icon>
                             <div class="text-places">
                                 <h6>{{data.location}}</h6>
-                                <p>{{data.country}}</p>
+                                <p v-if="data.type == 'city' ">Inlcudes transport to the Port</p>
+                                <p v-if="data.type == 'port' ">{{ data.country }}</p>
                             </div>
                             <span class="city-port">{{data.type}}</span>                                             
                             </b-form-checkbox>
