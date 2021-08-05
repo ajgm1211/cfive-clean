@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePricesLevelsTable extends Migration
+class CreateGroupCompaniesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,14 @@ class CreatePricesLevelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('prices_levels', function (Blueprint $table) {
+        Schema::create('group_companies', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('display_name');
-            $table->string('description');
+            $table->string('status');
             $table->integer('company_user_id')->unsigned();
-            $table->integer('price_level_type_id')->unsigned();
-            $table->foreign('price_level_type_id')->references('id')->on('prices_level_types');
             $table->foreign('company_user_id')->references('id')->on('company_users');
-            $table->timestamps();
+
+
         });
     }
 
@@ -33,6 +31,6 @@ class CreatePricesLevelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('prices_levels');
+        Schema::dropIfExists('group_companies');
     }
 }
