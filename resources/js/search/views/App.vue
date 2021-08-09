@@ -290,6 +290,7 @@ export default {
                     }
                     });
                 } else if (component.requestData.requested == 1 || duplicateMatch) {
+                    console.log(component.ratesForQuote)
                 component.actions.quotes
                     .specialduplicate(component.ratesForQuote)
                     .then((response) => {

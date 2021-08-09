@@ -200,23 +200,35 @@ class SearchApiLclController extends Controller
 
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
             $charges = $this->joinCharges($charges, $search_ids);
+
+            $this->checkLclAdaptable($charges);
+
+            $this->checkLclRoundable($charges);
+
+            //Appending Rate Id to Charges
+            $this->addChargesToRate($rate, $charges, $search_ids);
+
+            //Getting price levels if requested
+            if ($search_array['pricelevel']) {
+                $price_level_markups = $this->searchPriceLevels($search_ids);
+            } else {
+                $price_level_markups = [];
+            }
+
+            $remarks = $this->searchRemarks($rate, $search_ids);
+
+            //ATTRIBUTES AT THE END
+
+            $rate->setAttribute('remarks', $remarks);
         }
+        
+        dd($charges);
 
         $after_rates = true;
         
         if(!$after_rates){
             //$rateNo = 0;
-            foreach ($rates as $rate) {
-                //Getting price levels if requested
-                if (array_key_exists('pricelevel', $search_array) && $search_array['pricelevel'] != null) {
-                    $price_level_markups = $this->searchPriceLevels($search_ids);
-                } else {
-                    $price_level_markups = [];
-                }
-
-                //Appending Rate Id to Charges
-                $this->addChargesToRate($rate, $charges, $search_ids['client_currency']);
-                
+            foreach ($rates as $rate) {               
                 //Adding price levels
                 if ($price_level_markups != null && count($price_level_markups) != 0) {
                     $this->addMarkups($price_level_markups, $rate, $search_ids['client_currency']);
@@ -229,13 +241,9 @@ class SearchApiLclController extends Controller
                 
                 $this->calculateTotals($rate,$search_ids['client_currency']);
 
-                $remarks = $this->searchRemarks($rate, $search_ids);
-
                 $transit_time = $this->searchTransitTime($rate);
 
                 $rate->setAttribute('transit_time', $transit_time);
-
-                $rate->setAttribute('remarks', $remarks);
 
                 $rate->setAttribute('request_type', $request->input('requested'));
 
@@ -366,5 +374,15 @@ class SearchApiLclController extends Controller
         return $global_charges;
     }
 
+    //Retrieves and cleans markups from price levels
+    public function searchPriceLevels($search_data)
+    {
+        //SEARCH TRAIT - Markups are organized in a collection containing
+        //Freight markups (fixed & percent)
+        //Local Charge markups (fixed & percent)
+        //Inland markups (fixed & percent)
+        $markups = $this->getMarkupsFromPriceLevels($search_data['pricelevel'], $search_data['client_currency'], $search_data['direction'], $search_data['type']);
 
+        return $markups;
+    }
 }

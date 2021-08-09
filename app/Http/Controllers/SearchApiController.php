@@ -36,7 +36,6 @@ use App\LocalCharCarrier;
 use App\LocalCharPort;
 use App\GlobalCharge;
 use App\TransitTime;
-use App\RemarkCondition;
 use App\Surcharge;
 use App\CalculationType;
 use App\QuoteV2;
@@ -375,7 +374,7 @@ class SearchApiController extends Controller
             $this->calculateFclCharges($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
 
             //Getting price levels if requested
-            if (array_key_exists('pricelevel', $search_array) && $search_array['pricelevel'] != null) {
+            if ($search_array['pricelevel']) {
                 $price_level_markups = $this->searchPriceLevels($search_ids);
             } else {
                 $price_level_markups = [];
@@ -385,7 +384,7 @@ class SearchApiController extends Controller
             $charges = $this->joinCharges($charges, $search_ids);
 
             //Appending Rate Id to Charges
-            $this->addChargesToRate($rate, $charges, $search_ids['client_currency']);
+            $this->addChargesToRate($rate, $charges, $search_ids);
             
             //Adding price levels
             if ($price_level_markups != null && count($price_level_markups) != 0) {
@@ -644,52 +643,6 @@ class SearchApiController extends Controller
         return $markups;
     }
 
-    //Retrieves Global Remarks
-    public function searchRemarks($rate, $search_data)
-    {
-        //Retrieving current companyto filter remarks
-        $company_user = CompanyUser::where('id', $search_data['company_user'])->first();
-
-        $origin_country = $rate->port_origin->country()->first();
-        $destination_country = $rate->port_destiny->country()->first();
-        $rate_countries_id = [ $origin_country->id, $destination_country->id, 250];
-
-        $rate_ports_id = [$rate->origin_port, $rate->destiny_port , 1485];
-
-        $rate_carriers_id = [$rate->carrier_id, 26];
-        
-        $remarks = RemarkCondition::where('company_user_id', $company_user->id)->whereHas('remarksCarriers', function ($q) use ($rate_carriers_id) {
-            $q->whereIn('carrier_id', $rate_carriers_id);
-        })->where(function ($query) use ($rate_countries_id, $rate_ports_id) {
-            $query->orwhereHas('remarksHarbors', function ($q) use ($rate_ports_id) {
-                $q->whereIn('port_id', $rate_ports_id);
-            })->orwhereHas('remarksCountries', function ($q) use ($rate_countries_id) {
-                $q->whereIn('country_id', $rate_countries_id);
-            });
-        })->get();
-
-        $final_remarks = "";
-        $included_contracts = [];
-        $included_global_remarks = [];
-
-        foreach ($remarks as $remark) {
-            if ($search_data['direction'] == 1 && !in_array($remark->id, $included_global_remarks)) {
-                $final_remarks .= $remark->import . "<br>";
-                array_push($included_global_remarks, $remark->id);
-            } elseif ($search_data['direction'] == 2 && !in_array($remark->id, $included_global_remarks)) {
-                $final_remarks .= $remark->export . "<br>";
-                array_push($included_global_remarks, $remark->id);
-            }
-        }
-
-        if (!in_array($rate->contract_id, $included_contracts)) {
-            $final_remarks .= $rate->contract->remarks . '<br>';
-            array_push($included_contracts, $rate->contract->id);
-        }
-
-        return $final_remarks;
-    }
-
     //Retrieves Terms and Conditions
     public function searchTerms($search_data)
     {
@@ -736,49 +689,6 @@ class SearchApiController extends Controller
         $transit_time = TransitTime::where([['origin_id',$origin_port],['destination_id',$destination_port]])->whereIn('carrier_id',[$carrier,26])->first();
 
         return $transit_time;
-    }
-
-    //appending charges to corresponding Rate
-    public function addChargesToRate($rate, $target, $client_currency)
-    {
-        $rate_charges = [];
-        //Looping through charges type for array structure
-        foreach ($target as $direction => $charge_direction) {
-            $rate_charges[$direction] = [];
-
-            //Looping through charges by type
-            foreach ($charge_direction as $charge) {
-                if(!$charge->hide){   
-                    array_push($rate_charges[$direction], $charge);
-                }
-                
-                if($direction == 'Freight'){
-                    if ($charge->joint_as == 'client_currency') {
-                        $rate_currency_containers = $this->convertToCurrency($client_currency, $rate->currency, $charge->containers_client_currency);
-                        $charge->containers_client_currency = $rate_currency_containers;
-                    }
-                }
-            }
-
-            if ($direction == 'Freight') {
-                $ocean_freight_array = [
-                    'surcharge' => ['name' => 'Ocean Freight'],
-                    'containers' => json_decode($rate->containers, true),
-                    'calculationtype' => ['name' => 'Per Container', 'id' => '5'], 
-                    'typedestiny_id' => 3,
-                    'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
-                ];
-
-                $ocean_freight_collection = collect($ocean_freight_array);
-
-                array_push($rate_charges[$direction], $ocean_freight_collection);
-            }
-
-            if (count($rate_charges[$direction]) == 0) {
-                unset($rate_charges[$direction]);
-            };
-        }
-        $rate->setAttribute('charges', $rate_charges);
     }
 
     //Adds PriceLevels markups to target collection
@@ -1018,8 +928,7 @@ class SearchApiController extends Controller
     }
 
     public function storeContractNewSearch(StoreContractSearch $request)
-    {
-           
+    {  
         $data = $request->validate([
             "dataSurcharger.*.type.id" => 'required',
             "dataSurcharger.*.calculation.id" => 'required',
@@ -1108,7 +1017,6 @@ class SearchApiController extends Controller
 
     public function downloadContractFile(Request $request)
     {
-
         $parameters = $request->input();
 
         $contractId = $parameters[0];
@@ -1186,16 +1094,12 @@ class SearchApiController extends Controller
             }
         }
     }
+
     public function downloadMultipleContractFile(Contract $contract)
     {
-        
-       
         $downloads = $contract->getMedia('document');
         $objeto = MediaStream::create('export.zip')->addMedia($downloads);
 
         return $objeto;
-
     }
-
-
 }
