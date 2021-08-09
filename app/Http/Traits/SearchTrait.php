@@ -13,6 +13,7 @@ use App\Harbor;
 use App\Country;
 use App\TransitTime;
 use App\Container;
+use App\RemarkCondition;
 use App\GroupContainer;
 use GoogleMaps;
 use Illuminate\Support\Collection as Collection;
@@ -956,8 +957,22 @@ trait SearchTrait
                     $amount = $charge->ammount * $search_data['chargeableWeight'];
                 }else if($calculation_options['type'] == 'ton'){
                     $amount = $charge->ammount * ( $search_data['weight'] / 1000 );
+                    if($calculation_options['adaptable']){
+                        $m3_amount = $charge->ammount * $search_data['volume'];
+                        $m3_amount_client_currency = $this->convertToCurrency($charge->currency, $search_data['client_currency'], array($m3_amount));
+
+                        $charge->setAttribute('adaptable_total', $m3_amount);
+                        $charge->setAttribute('adaptable_total_client_currency',$m3_amount_client_currency[0]);
+                    }
                 }else if($calculation_options['type'] == 'm3'){
                     $amount = $charge->ammount * $search_data['volume'];
+                    if($calculation_options['adaptable']){
+                        $ton_amount = $charge->ammount * ( $search_data['weight'] / 1000 );
+                        $ton_amount_client_currency = $this->convertToCurrency($charge->currency, $search_data['client_currency'], array($ton_amount));
+
+                        $charge->setAttribute('adaptable_total', $ton_amount);
+                        $charge->setAttribute('adaptable_total_client_currency',$ton_amount_client_currency[0]);
+                    }
                 }else if($calculation_options['type'] == 'kg'){
                     $amount = $charge->ammount * $search_data['weight']; 
                 }else if($calculation_options['type'] == 'package'){
@@ -966,9 +981,15 @@ trait SearchTrait
                     $amount = $charge->ammount * $cargo_type['Pallets'];
                 }
 
+                $minimum = $charge->minimum;
+
+                if($amount < $minimum){
+                    $amount = $minimum;
+                }
+
                 $total_client_currency = $this->convertToCurrency($charge->currency, $search_data['client_currency'], array($amount));
 
-                $charge->setAttribute('totals', $amount);
+                $charge->setAttribute('total', $amount);
                 $charge->setAttribute('total_client_currency',$total_client_currency[0]);
             }
         }
@@ -1091,56 +1112,58 @@ trait SearchTrait
                 foreach($charges_direction as $charge){
                     if(!$charge->hide){
                         //Index of present charge in its array, for control purposes
-                    $original_charge_index = array_search($charge,$charges_direction);
-                    //Control variable that indicates whether a charge has been matched and joint
-                    $charge_matched = false;
-                    //Looping through duplicate array
-                    foreach($comparing_array as $comparing_charge){
-                        if(!$comparing_charge->hide){
-                            //Index of present compared change in its array, for control purposes
-                            $comparing_charge_index = array_search($comparing_charge,$comparing_array);
-                            //Checking that the index of the original charge is lower than the compared charge. This will avoid duplicate joints, as follows:
-                            //Original index 0 only compares with 1,2,3...
-                            //Original index 1 only compares with 2,3,4...
-                            //Original index 2 only compares with 3,4,5... And so on
-                            if($original_charge_index < $comparing_charge_index){
-                                //Checking if charge needs to be joint
-                                    //Surcharges must match
-                                    //Index of compared charge must not be in the compared control array (compared_and_joint)
-                                if($charge->surcharge_id == $comparing_charge->surcharge_id &&
-                                    count(array_intersect([$original_charge_index, $comparing_charge_index], $compared_and_joint)) == 0 ){
-                                        if($search_data['type'] == 'FCL'){
-                                            $this->calculateJointFclCharge($charge,$comparing_charge, $per_container_calculation_type, $client_currency);
-                                        }elseif($search_data['type'] == 'LCL'){
-                                            $this->calculateJointLclCharge($charge,$comparing_charge, $per_container_calculation_type, $client_currency);
-                                        }
-
-                                        //if original charge has been joint and included in final array, replace it. This avoids duplicate joint charges as follows:
-                                            //EXAMPLE
-                                            //Original charge 0 is joint with compared charge 1, original 0 is included in final array
-                                            //Original charge 0 is joint with compared charge 2, original 0 is included in final array -> DUPLICATE
-                                            //SOLUTION -> Original charge must be pulled from final array if present
-                                        foreach($joint_charges[$direction] as $key => $j_charge){
-                                            if($j_charge->id == $charge->id){
-                                                unset($joint_charges[$direction][$key]);
+                        $original_charge_index = array_search($charge,$charges_direction);
+                        //Control variable that indicates whether a charge has been matched and joint
+                        $charge_matched = false;
+                        //Looping through duplicate array
+                        foreach($comparing_array as $comparing_charge){
+                            if(!$comparing_charge->hide){
+                                //Index of present compared change in its array, for control purposes
+                                $comparing_charge_index = array_search($comparing_charge,$comparing_array);
+                                //Checking that the index of the original charge is lower than the compared charge. This will avoid duplicate joints, as follows:
+                                //Original index 0 only compares with 1,2,3...
+                                //Original index 1 only compares with 2,3,4...
+                                //Original index 2 only compares with 3,4,5... And so on
+                                if($original_charge_index < $comparing_charge_index){
+                                    //Checking if charge needs to be joint
+                                        //Surcharges must match
+                                        //Index of compared charge must not be in the compared control array (compared_and_joint)
+                                    if($charge->surcharge_id == $comparing_charge->surcharge_id &&
+                                        count(array_intersect([$original_charge_index, $comparing_charge_index], $compared_and_joint)) == 0 ){
+                                            if($search_data['type'] == 'FCL'){
+                                                $joint_success = $this->calculateJointFclCharge($charge,$comparing_charge, $per_container_calculation_type, $client_currency);
+                                            }elseif($search_data['type'] == 'LCL'){
+                                                $joint_success = $this->calculateJointLclCharge($charge,$comparing_charge, $client_currency);
                                             }
-                                        }
-                                        //Include joint charge in final array
-                                        array_push($joint_charges[$direction],$charge);
-                                        //Include comparing charge in control array, indicating it has been joint already
-                                        array_push($compared_and_joint,$comparing_charge_index);
-                                        //Indicating original charge has been matched with at least one comparin charge
-                                        $charge_matched = true;
+
+                                            if($joint_success){
+                                                //if original charge has been joint and included in final array, replace it. This avoids duplicate joint charges as follows:
+                                                    //EXAMPLE
+                                                    //Original charge 0 is joint with compared charge 1, original 0 is included in final array
+                                                    //Original charge 0 is joint with compared charge 2, original 0 is included in final array -> DUPLICATE
+                                                    //SOLUTION -> Original charge must be pulled from final array if present
+                                                foreach($joint_charges[$direction] as $key => $j_charge){
+                                                    if($j_charge->id == $charge->id){
+                                                        unset($joint_charges[$direction][$key]);
+                                                    }
+                                                }
+                                                //Include joint charge in final array
+                                                array_push($joint_charges[$direction],$charge);
+                                                //Include comparing charge in control array, indicating it has been joint already
+                                                array_push($compared_and_joint,$comparing_charge_index);
+                                                //Indicating original charge has been matched with at least one comparin charge
+                                                $charge_matched = true;
+                                            }
+                                    }
                                 }
                             }
                         }
-                    }
-                    //Checking if original charge hasnt been matched and joint
-                    if(!$charge_matched && !in_array($original_charge_index,$compared_and_joint)){
-                        //Including unjoint charge in final array
-                        $charge->setAttribute('joint_as', 'charge_currency');
-                        array_push($joint_charges[$direction],$charge);
-                    }
+                        //Checking if original charge hasnt been matched and joint
+                        if(!$charge_matched && !in_array($original_charge_index,$compared_and_joint)){
+                            //Including unjoint charge in final array
+                            $charge->setAttribute('joint_as', 'charge_currency');
+                            array_push($joint_charges[$direction],$charge);
+                        }
                     }
                 }
             }
@@ -1187,6 +1210,257 @@ trait SearchTrait
                     $charge->containers_client_currency = $this->convertToCurrency($charge->currency, $client_currency, $joint_containers);
                 }
             }
+
+            return true;
+    }
+
+    public function calculateJointLclCharge($charge,$comparing_charge, $client_currency)
+    {
+        $calculation_options = json_decode($charge->calculationtypelcl->options, true);
+        $comparing_calculation_options = json_decode($comparing_charge->calculationtypelcl->options, true);
+
+        //CASE 1: Type of calculation is the same, or same type but not unique nor chargeable - EXAMPLE: ton and ton, m3 and m3 ,etc
+        if( ( $charge->calculationtypelcl_id == $comparing_charge->calculationtypelcl_id ) || 
+            ( $calculation_options['type'] != 'unique' && $calculation_options['type'] != 'chargeable' && $calculation_options['type'] == $comparing_calculation_options['type'] ) ){
+            //If currencies don't match, join must be done in client currency
+            if($charge->currency->id != $comparing_charge->currency->id){
+                //Marking charge as joint under client currency
+                $charge->setAttribute('joint_as','client_currency');
+
+                //Adding regular amounts
+                $joint_amount = $charge->total_client_currency + $comparing_charge->total_client_currency;
+                $charge->total_client_currency = $joint_amount;
+
+                //adding adaptable amounts
+                if( $calculation_options['adaptable'] && $comparing_calculation_options['adaptable'] ){
+                    $joint_adaptable_amount_client_currency = $charge->adaptable_total_client_currency + $comparing_charge->adaptable_total_client_currency;
+    
+                    $charge->adaptable_total_client_currency = $joint_adaptable_amount_client_currency;
+                }
+            //If currencies match, add is direct
+            }elseif($charge->currency->id == $comparing_charge->currency->id){
+                //Marking as joint under charge currency
+                $charge->setAttribute('joint_as','charge_currency');
+
+                //Adding regular amounts
+                $joint_amount = $charge->total + $comparing_charge->total;
+                $charge->total = $joint_amount;
+                $charge->total_client_currency = $this->convertToCurrency($charge->currency, $client_currency, array($joint_amount))[0];
+
+                //Adding adaptable amounts
+                if( $calculation_options['adaptable'] && $comparing_calculation_options['adaptable'] ){
+                    $joint_adaptable_amount = $charge->adaptable_total + $comparing_charge->adaptable_total;
+                    $joint_adaptable_amount_client_currency = $charge->adaptable_total_client_currency + $comparing_charge->adaptable_total_client_currency;
+    
+                    $charge->adaptable_total = $joint_adaptable_amount;
+                    $charge->adaptable_total_client_currency = $joint_adaptable_amount_client_currency;
+                }
+            }
+
+            return true;
+        //CASE 2: Both charges adaptable, different types - ton and m3 (Adapt)
+        }elseif( $calculation_options['adaptable'] && $comparing_calculation_options['adaptable'] && $calculation_options['type'] != $comparing_calculation_options['type'] ){
+            //If currencies don't match, join must be done in client currency
+            if($charge->currency->id != $comparing_charge->currency->id){
+                //Marking charge as joint under client currency
+                $charge->setAttribute('joint_as','client_currency');
+
+                $joint_amount = $charge->total_client_currency + $comparing_charge->adaptable_total_client_currency;
+                $charge->total_client_currency = $joint_amount;
+
+                $joint_adaptable_amount = $charge->adaptable_total_client_currency + $comparing_charge->total_client_currency;
+                $charge->adaptable_total_client_currency = $joint_adaptable_amount;
+            //If currencies match, add is direct
+            }elseif($charge->currency->id == $comparing_charge->currency->id){
+                //Marking as joint under charge currency
+                $charge->setAttribute('joint_as','charge_currency');
+
+                $joint_amount = $charge->total + $comparing_charge->adaptable_total;
+                $charge->total = $joint_amount;
+                $charge->total_client_currency = $this->convertToCurrency($charge->currency, $client_currency, array($joint_amount))[0];
+
+                $joint_adaptable_amount = $charge->adaptable_total + $comparing_charge->total;
+                $charge->adaptable_total = $joint_adaptable_amount;
+                $charge->adaptable_total_client_currency = $this->convertToCurrency($charge->currency, $client_currency, array($joint_adaptable_amount))[0];
+            }
+
+            return true;
+        //CASE 3: Original charge adaptable, Comparing charge NOT adaptable, types differ 
+        }elseif( $calculation_options['adaptable'] && !$comparing_calculation_options['adaptable'] && $calculation_options['type'] != $comparing_calculation_options['type'] ){
+            //If currencies don't match, join must be done in client currency
+            if($charge->currency->id != $comparing_charge->currency->id){
+                //Marking charge as joint under client currency
+                $charge->setAttribute('joint_as','client_currency');
+
+                $joint_amount = $charge->adaptable_total_client_currency + $comparing_charge->total_client_currency;
+                $charge->adaptable_total_client_currency = $joint_amount;
+            //If currencies match, add is direct
+            }elseif($charge->currency->id == $comparing_charge->currency->id){
+                //Marking as joint under charge currency
+                $charge->setAttribute('joint_as','charge_currency');
+
+                $joint_amount = $charge->adaptable_total + $comparing_charge->total;
+                $charge->adaptable_total = $joint_amount;
+                $charge->adaptable_total_client_currency = $this->convertToCurrency($charge->currency, $client_currency, array($joint_amount))[0];
+            }
+
+            return true;
+        //CASE 4: Original charge NOT adaptable, Comparing charge adaptable, types differ - DONT JOIN, ONLY MODIFIES THE COMPARING ADAPTABLE AMOUNT
+        }elseif( !$calculation_options['adaptable'] && $comparing_calculation_options['adaptable'] && $calculation_options['type'] != $comparing_calculation_options['type'] ){
+            //If currencies don't match, join must be done in client currency
+            if($charge->currency->id != $comparing_charge->currency->id){
+                $joint_amount = $charge->total_client_currency + $comparing_charge->adaptable_total_client_currency;
+                $comparing_charge->adaptable_total_client_currency = $joint_amount;
+            //If currencies match, add is direct
+            }elseif($charge->currency->id == $comparing_charge->currency->id){
+                $joint_amount = $charge->total + $comparing_charge->adaptable_total;
+                $comparing_charge->adaptable_total = $joint_amount;
+                $comparing_charge->adaptable_total_client_currency = $this->convertToCurrency($comparing_charge->currency, $client_currency, array($joint_amount))[0];
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
+    public function checkLclAdaptable($charges)
+    {
+        foreach($charges as $direction=>$charges_direction){
+            foreach($charges_direction as $charge){
+                $calculation_options = json_decode($charge->calculationtypelcl->options, true);
+
+                if($calculation_options['adaptable']){
+                    if($charge->adaptable_total > $charge->total){
+                        $charge->total = $charge->adaptable_total;
+                    }
+
+                    if($charge->adaptable_total_client_currency > $charge->total_client_currency){
+                        $charge->total_client_currency = $charge->adaptable_total_client_currency;
+                    }
+                }
+            }
+        }
+    }
+
+    public function checkLclRoundable($charges)
+    {
+        foreach($charges as $direction=>$charges_direction){
+            foreach($charges_direction as $charge){
+                $calculation_options = json_decode($charge->calculationtypelcl->options, true);
+
+                if($calculation_options['rounded']){
+                    $charge->total = floor($charge->total);
+                    $charge->total_client_currency = floor($charge->total_client_currency);
+                }
+            }
+        }
+    }
+
+    //appending charges to corresponding Rate
+    public function addChargesToRate($rate, $target, $search_data)
+    {
+        $client_currency = $search_data['client_currency'];
+        $rate_charges = [];
+        //Looping through charges type for array structure
+        foreach ($target as $direction => $charge_direction) {
+            $rate_charges[$direction] = [];
+
+            //Looping through charges by type
+            foreach ($charge_direction as $charge) {
+                if(!$charge->hide){   
+                    array_push($rate_charges[$direction], $charge);
+                }
+                
+                if($direction == 'Freight'){
+                    if ($charge->joint_as == 'client_currency') {
+                        
+                        if($search_data['type'] == 'FCL'){
+                            $rate_currency_containers = $this->convertToCurrency($client_currency, $rate->currency, $charge->containers_client_currency);
+                            $charge->containers_client_currency = $rate_currency_containers;
+                        }elseif($search_data['type'] == 'LCL'){
+                            $rate_currency_total = $this->convertToCurrency($client_currency, $rate->currency, array($charge->total_client_currency));
+                            $charge->total_client_currency = $rate_currency_total[0];
+                        }
+                    }
+                }
+            }
+
+            if ($direction == 'Freight') {
+                if($search_data['type'] == 'FCL'){
+                    $ocean_freight_array = [
+                        'surcharge' => ['name' => 'Ocean Freight'],
+                        'containers' => json_decode($rate->containers, true),
+                        'calculationtype' => ['name' => 'Per Container', 'id' => '5'], 
+                        'typedestiny_id' => 3,
+                        'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
+                    ];
+                }elseif($search_data['type'] == 'LCL'){
+                    $ocean_freight_array = [
+                        'surcharge' => $rate->surcharge,
+                        'total' => $rate->total,
+                        'calculationtype' => $rate->calculation_type, 
+                        'typedestiny_id' => 3,
+                        'currency' => $rate->currency,
+                    ];
+                }
+
+                $ocean_freight_collection = collect($ocean_freight_array);
+
+                array_push($rate_charges[$direction], $ocean_freight_collection);
+            }
+
+            if (count($rate_charges[$direction]) == 0) {
+                unset($rate_charges[$direction]);
+            };
+        }
+        $rate->setAttribute('charges', $rate_charges);
+    }
+
+    //Retrieves Global Remarks
+    public function searchRemarks($rate, $search_data)
+    {
+        //Retrieving current companyto filter remarks
+        $company_user = CompanyUser::where('id', $search_data['company_user'])->first();
+
+        $origin_country = $rate->port_origin->country()->first();
+        $destination_country = $rate->port_destiny->country()->first();
+        $rate_countries_id = [ $origin_country->id, $destination_country->id, 250];
+
+        $rate_ports_id = [$rate->origin_port, $rate->destiny_port , 1485];
+
+        $rate_carriers_id = [$rate->carrier_id, 26];
+        
+        $remarks = RemarkCondition::where('company_user_id', $company_user->id)->whereHas('remarksCarriers', function ($q) use ($rate_carriers_id) {
+            $q->whereIn('carrier_id', $rate_carriers_id);
+        })->where(function ($query) use ($rate_countries_id, $rate_ports_id) {
+            $query->orwhereHas('remarksHarbors', function ($q) use ($rate_ports_id) {
+                $q->whereIn('port_id', $rate_ports_id);
+            })->orwhereHas('remarksCountries', function ($q) use ($rate_countries_id) {
+                $q->whereIn('country_id', $rate_countries_id);
+            });
+        })->get();
+
+        $final_remarks = "";
+        $included_contracts = [];
+        $included_global_remarks = [];
+
+        foreach ($remarks as $remark) {
+            if ($search_data['direction'] == 1 && !in_array($remark->id, $included_global_remarks)) {
+                $final_remarks .= $remark->import . "<br>";
+                array_push($included_global_remarks, $remark->id);
+            } elseif ($search_data['direction'] == 2 && !in_array($remark->id, $included_global_remarks)) {
+                $final_remarks .= $remark->export . "<br>";
+                array_push($included_global_remarks, $remark->id);
+            }
+        }
+
+        if (!in_array($rate->contract_id, $included_contracts)) {
+            $final_remarks .= $rate->contract->remarks . '<br>';
+            array_push($included_contracts, $rate->contract->id);
+        }
+
+        return $final_remarks;
     }
 
     //Converting amounts to string so they display decimal places correctly

@@ -746,6 +746,7 @@ export default {
               }
             });
         } else if (component.requestData.requested == 1) {
+          console.log(ratesForQuote);
           component.actions.quotes
             .specialduplicate(ratesForQuote)
             .then((response) => {
