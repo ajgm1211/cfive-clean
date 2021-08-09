@@ -1863,7 +1863,7 @@
             <div class="col-12 mt-3 mb-3 result-action">
               <div class="d-flex align-items-center">
                 <span style="color: #006bfa; text-transform: capitalize"
-                  ><b-icon icon="check-circle-fill"></b-icon> EVERGREEN</span
+                  ><b-icon icon="check-circle-fill"></b-icon> EVERGREEN SPOT</span
                 >
                 <p class="ml-4 mb-0" v-if="evergreenResult.validityFrom && evergreenResult.validityTo">
                   <b>Validity:</b>
