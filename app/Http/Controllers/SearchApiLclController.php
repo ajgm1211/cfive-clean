@@ -215,54 +215,48 @@ class SearchApiLclController extends Controller
                 $price_level_markups = [];
             }
 
+            //Adding price levels
+            if ($price_level_markups != null && count($price_level_markups) != 0) {
+                $this->addMarkups($price_level_markups, $rate, $search_ids['client_currency']);
+                foreach ($rate->charges as $charge_direction) {
+                    foreach ($charge_direction as $charge) {
+                        $this->addMarkups($price_level_markups, $charge, $search_ids['client_currency']);
+                    }
+                }
+            }
+
+            $this->calculateTotals($rate,$search_ids['client_currency']);
+
+            //ADDING ATTRIBUTES AT THE END            
             $remarks = $this->searchRemarks($rate, $search_ids);
 
-            //ATTRIBUTES AT THE END
-
             $rate->setAttribute('remarks', $remarks);
+
+            //$transit_time = $this->searchTransitTime($rate);
+
+            //$rate->setAttribute('transit_time', $transit_time);
+
+            $rate->setAttribute('request_type', $request->input('requested'));
+
+            $this->stringifyLclRateAmounts($rate);
+
+            $this->setDownloadParameters($rate);
+        }
+
+        if ($rates != null && count($rates) != 0) {
+            //Ordering rates by totals (cheaper to most expensive)
+            $rates = $this->sortRates($rates, $search_ids);
+
+            $terms = $this->searchTerms($search_ids);
+
+            $search_array['terms'] = $terms;
+
+            $rates[0]->SetAttribute('search', $search_array);
         }
         
-        dd($charges);
-
         $after_rates = true;
         
         if(!$after_rates){
-            //$rateNo = 0;
-            foreach ($rates as $rate) {               
-                //Adding price levels
-                if ($price_level_markups != null && count($price_level_markups) != 0) {
-                    $this->addMarkups($price_level_markups, $rate, $search_ids['client_currency']);
-                    foreach ($rate->charges as $charge_direction) {
-                        foreach ($charge_direction as $charge) {
-                            $this->addMarkups($price_level_markups, $charge, $search_ids['client_currency']);
-                        }
-                    }
-                }
-                
-                $this->calculateTotals($rate,$search_ids['client_currency']);
-
-                $transit_time = $this->searchTransitTime($rate);
-
-                $rate->setAttribute('transit_time', $transit_time);
-
-                $rate->setAttribute('request_type', $request->input('requested'));
-
-                $this->stringifyRateAmounts($rate);
-
-                $this->setDownloadParameters($rate);
-            }
-
-            if ($rates != null && count($rates) != 0) {
-                //Ordering rates by totals (cheaper to most expensive)
-                $rates = $this->sortRates($rates, $search_ids);
-
-                $terms = $this->searchTerms($search_ids);
-
-                $search_array['terms'] = $terms;
-
-                $rates[0]->SetAttribute('search', $search_array);
-            }
-
             $track_array = [];
             $track_array['company_user'] = $company_user;
             $track_array['data'] = $search_array;
@@ -313,10 +307,7 @@ class SearchApiLclController extends Controller
         foreach ($rates_array as $rate) {
             //Converting rates to client currency
             $client_currency = $search_data['client_currency'];
-            //FOR CALCULATIONS
-            //$containers_client_currency = $this->convertToCurrency($rate->currency, $client_currency, json_decode($rate->containers, true));
-            //$rate->setAttribute('totals', $containers_client_currency);
-            //$rate->setAttribute('client_currency', $client_currency);
+            $rate->setAttribute('client_currency', $client_currency);
         }
 
         return $rates_array;
@@ -384,5 +375,187 @@ class SearchApiLclController extends Controller
         $markups = $this->getMarkupsFromPriceLevels($search_data['pricelevel'], $search_data['client_currency'], $search_data['direction'], $search_data['type']);
 
         return $markups;
+    }
+
+    //Adds PriceLevels markups to target collection
+    public function addMarkups($markups, $target, $client_currency)
+    {
+        //If markups will be added to a Rate, extracts 'freight' variables from markups array
+        if (is_a($target, 'App\Rate')) {
+            //Info from markups array
+            $markups_to_add = $markups['freight'];
+            $fixed = $markups_to_add['freight_amount'];
+            $percent = $markups_to_add['freight_percentage'];
+            $markups_currency = $markups_to_add['freight_currency'];
+            $target_currency = $target->currency;
+            $is_eloquent_collection = true;
+            //Price arrays from rate
+            $target_total = $target->total;
+            //If markups will be added to a Local or Global Charge, extracts 'charge' variables from markups array
+        } elseif (is_a($target, 'App\LocalChargeLcl') || is_a($target, 'App\GlobalChargeLcl')) {
+            //Info from markups array
+            $markups_to_add = $markups['local_charges'];
+            $fixed = $markups_to_add['local_charge_amount'];
+            $percent = $markups_to_add['local_charge_percentage'];
+            $markups_currency = $markups_to_add['local_charge_currency'];
+            $target_currency = $target->currency;
+            $is_eloquent_collection = true;
+            //Price arrays from charge
+            $target_total_client_currency = $target->total_client_currency;
+            $target_total = $target->total;
+            //SPECIAL CASE - OCEAN FREIGHT
+        } elseif (isset($target['surcharge']) && $target['surcharge']->name == "Ocean Freight") {
+            //Info from markups array
+            $markups_to_add = $markups['freight'];
+            $fixed = $markups_to_add['freight_amount'];
+            $percent = $markups_to_add['freight_percentage'];
+            $markups_currency = $markups_to_add['freight_currency'];
+            $target_currency = $target['currency'];
+            $is_eloquent_collection = false;
+            //Price arrays from charge
+            $target_total = $target['total'];
+        }
+
+        //Checking if markups are fixed rate
+        if ($fixed != 0) {
+            //Converting amount to Charge and Client currency to add directly
+            $markups_array = $this->convertToCurrency($markups_currency, $target_currency, array($fixed));
+
+            $total_with_markups = isDecimal($target_total,true) + isDecimal($markups_array[0],true);
+
+            //Looping through totals (client currency) to populate empty arrays
+            if(isset($target_total_client_currency)){
+                $markups_client_currency = $this->convertToCurrency($markups_currency, $client_currency, array($fixed));
+
+                $total_with_markups_client_currency = isDecimal($target_total_client_currency,true) + isDecimal($markups_client_currency[0],true);
+            }
+        //Same loop but for percentile markups
+        } elseif ($percent != 0) {
+            //Calculating percentage of each container and each total price, storing them directly as final markups array
+            $markups_array = $this->calculatePercentage($percent, array($target_totals));
+
+            $total_with_markups =  isDecimal($target_total,true) + isDecimal($markups_array[0],true);
+
+            if(isset($target_total_client_currency)){
+                $markups_client_currency = $this->calculatePercentage($percent, array($target_total_client_currency));
+    
+                $total_with_markups =  isDecimal($target_total_client_currency,true) + isDecimal($markups_client_currency[0],true);
+            }
+        } else {
+            return;
+        }
+
+        //Appending markups and added totals and totals to rate or charge
+        if($is_eloquent_collection){
+            $target->setAttribute('total_markups', $markups_array[0]);
+            $target->setAttribute('total_markups_client_currency', $markups_client_currency[0]);
+            $target->setAttribute('total_with_markups', $total_with_markups);
+            $target->setAttribute('total_with_markups_client_currency', $total_with_markups_client_currency);
+        }else{
+            $target['total_markups'] = $markups_array[0];
+            $target['total_with_markups'] = $total_with_markups;
+        }
+    }
+
+    public function calculateTotals($rate,$client_currency)
+    {
+        $charge_type_total = [];
+
+        if (isset($rate->total_with_markups)){
+            $to_update = 'total_with_markups';
+            $total = $rate->total_with_markups;
+        }else{
+            $to_update = 'total';
+            $total = $rate->totals;
+        }
+
+        //Looping through charges type for array structure
+        foreach ($rate->charges as $direction => $charge_direction) {
+            $charge_type_total[$direction] = 0;
+            //Looping through charges by type
+            foreach ($charge_direction as $charge) {
+                
+                if (is_a($charge,"App\LocalCharge") || is_a($charge,"App\GlobalCharge")) {
+
+                    if(isset($charge->total_with_markups)){
+                        if($direction == "Freight"){
+                            if($charge->joint_as == "client_currency"){
+                                $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, array($charge->total_with_markups))[0];
+                                $charges_to_add_original = $charge->total_with_markups;
+                            }else{
+                                $charges_to_add = $this->convertToCurrency($charge->currency, $client_currency, array($charge->total))[0];
+                                $charges_to_add_original = $this->convertToCurrency($charge->currency, $rate->currency, array($charge->total))[0];
+                            }
+                        }else{
+                            $charges_to_add = $charge->total_with_markups;
+                        }
+                    }else{
+                        if($direction == "Freight"){
+                            if($charge->joint_as == "client_currency"){
+                                $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, array($charge->total_client_currency))[0];
+                                $charges_to_add_original = $charge->total_client_currency;
+                            }else{
+                                $charges_to_add = $this->convertToCurrency($charge->currency, $client_currency, array($charge->total))[0];
+                                $charges_to_add_original = $this->convertToCurrency($charge->currency,$rate->currency,array($charge->total))[0];
+                            }
+                        }else{
+                            $charges_to_add = $charge->total_client_currency;
+                        }
+                    }
+
+                    //Adding charge total to Rate totals
+                    $total += isDecimal($charges_to_add, true);
+
+                    if (!isset($charge_type_total[$direction])) {
+                        $charge_type_total[$direction] = 0;
+                    }
+                    
+                    //Add prices from charge to totals by type
+                    if($direction == "Freight"){
+                        $charge_type_total += isDecimal($charges_to_add_original,true);
+                    }else{
+                        $charge_type_total += isDecimal($charges_to_add,true);
+                    }
+
+                    //Updating rate totals to new added array
+                    $rate->$to_update = $total;
+
+                }else{
+
+                    if(isset($charge['total_with_markups'])){
+                        $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, array($charge['total_with_markups']))[0];
+                        $charges_to_add_original = $charge['total_with_markups'];
+                    }else{
+                        $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, array($charge['total']))[0];
+                        $charges_to_add_original = $charge['total'];
+                    }
+
+                    //Checking if charge contains each container present in Rate
+                    $total += isDecimal($charges_to_add, true);
+                    
+                    if (!isset($charge_type_total[$direction])) {
+                        $charge_type_total[$direction] = 0;
+                    }
+
+                    //Add prices from charge to totals by type
+                    $charge_type_total[$direction] += isDecimal($charges_to_add_original,true);
+                    
+
+                    //Updating rate totals to new added array
+                    $rate->$to_update = $total;
+                }
+            }
+
+            $rate->setAttribute('charge_totals_by_type', $charge_type_total);
+
+        }
+
+        $total_freight_currency = $rate->charge_totals_by_type['Freight'];
+        $rate->setAttribute('total_freight_currency', $total_freight_currency);
+
+        if(isset($rate->total_with_markups)){
+            $total_with_markups_freight_currency = $this->convertToCurrency($client_currency, $rate->currency, array($rate->total_with_markups));
+            $rate->setAttribute('total_with_markups_freight_currency', $total_with_markups_freight_currency[0]);
+        }
     }
 }
