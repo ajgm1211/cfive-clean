@@ -15,6 +15,9 @@ use App\TransitTime;
 use App\Container;
 use App\RemarkCondition;
 use App\GroupContainer;
+use App\NewContractRequest;
+use App\ContractFclFile;
+use App\TermAndConditionV2;
 use GoogleMaps;
 use Illuminate\Support\Collection as Collection;
 
@@ -991,6 +994,7 @@ trait SearchTrait
 
                 $charge->setAttribute('total', $amount);
                 $charge->setAttribute('total_client_currency',$total_client_currency[0]);
+                $charge->setAttribute('client_currency',$search_data['client_currency']);
             }
         }
     }
@@ -1399,7 +1403,9 @@ trait SearchTrait
                     $ocean_freight_array = [
                         'surcharge' => $rate->surcharge,
                         'total' => $rate->total,
-                        'calculationtype' => $rate->calculation_type, 
+                        'minimum' => $rate->minimum,
+                        'price_per_unit' => $rate->price_per_unit,
+                        'calculationtypelcl' => $rate->calculation_type, 
                         'typedestiny_id' => 3,
                         'currency' => $rate->currency,
                     ];
@@ -1463,8 +1469,23 @@ trait SearchTrait
         return $final_remarks;
     }
 
+
+    //Retrives global Transit Times
+    public function searchTransitTime($rate)
+    {
+        //Setting values fo query
+        $origin_port = $rate->origin_port;
+        $destination_port = $rate->destiny_port;
+        $carrier = $rate->carrier_id;
+
+        //Querying
+        $transit_time = TransitTime::where([['origin_id',$origin_port],['destination_id',$destination_port]])->whereIn('carrier_id',[$carrier,26])->first();
+
+        return $transit_time;
+    }
+
     //Converting amounts to string so they display decimal places correctly
-    public function stringifyRateAmounts($rate)
+    public function stringifyFclRateAmounts($rate)
     {
         //RATE TOTALS GLOBAL
         if(isset($rate->totals_with_markups)){
@@ -1585,6 +1606,165 @@ trait SearchTrait
                 }
             }
         }
+    }
+
+    public function stringifyLclRateAmounts($rate)
+    {
+        //RATE TOTALS GLOBAL
+        if(isset($rate->total_with_markups)){
+            $total_with_markups_string = strval(isDecimal($rate->total_with_markups, true));
+            $rate->total_with_markups = $total_with_markups_string;
+        }
+        
+        if(isset($rate->total_with_markups_freight_currency)){
+            $total_with_markups_freight_currency_string = strval(isDecimal($rate->total_with_markups_freight_currency, true));
+            $rate->total_with_markups_freight_currency = $total_with_markups_freight_currency_string;
+        }
+
+        if(isset($rate->total_freight_currency)){
+            $total_freight_currency_string = strval(isDecimal($rate->total_freight_currency, true));
+            $rate->total_freight_currency = $total_freight_currency_string;
+        }
+
+        $total_string = strval(isDecimal($rate->total, true));
+        $rate->total = $total_string;
+
+        //RATE TOTALS BY TYPE 
+        $by_type = $rate->charge_totals_by_type;
+        
+        foreach($by_type as $typeKey => $typeAmount){
+            $by_type[$typeKey] = strval(isDecimal($typeAmount, true));
+        }
+
+        $rate->charge_totals_by_type = $by_type;
+
+        //CHARGES
+        foreach($rate->charges as $direction => $charge_direction){
+            foreach($charge_direction as $chargeKey => $charge){
+                if(isset($charge->surcharge)){
+                    //Plain prices
+                    $charge_total_string = strval(isDecimal($charge->total,true));    
+                    $charge->total = $charge_total_string;
+    
+                    //Prices in client currency
+                    $charge_total_client_currency_string = strval(isDecimal($charge->total_client_currency,true));    
+                    $charge->total_client_currency = $charge_total_client_currency_string;
+    
+                    //Checking if markups
+                    if(isset($charge->total_with_markups)){
+                        //Plain prices
+                        $charge_total_with_markups_string = strval(isDecimal($charge->total_with_markups,true));    
+                        $charge->total_with_markups = $charge_total_with_markups_string;
+        
+                        //Prices in client currency
+                        $charge_total_with_markups_client_currency_string = strval(isDecimal($charge->total_with_markups_client_currency,true));    
+                        $charge->total_with_markups_client_currency = $charge_total_with_markups_client_currency_string;
+                        }
+                }else{
+                    //Plain prices
+                    $charge_total_string = strval(isDecimal($charge['total'],true));    
+                    $charge['total'] = $charge_total_string;
+
+                    if(isset($charge['total_with_markups'])){
+                        //Plain prices
+                        $charge_total_string = strval(isDecimal($charge['total_with_markups'],true));    
+                        $charge['total_with_markups'] = $charge_total_string;
+                    }
+                }
+            }
+        }
+    }
+
+    public function setDownloadParameters($rate)
+    {
+        if ($rate->contract->status != 'api') {
+
+            $contractRequestBackup = ContractFclFile::where('contract_id', $rate->contract->id)->first();
+            if (!empty($contractRequestBackup)) {
+                $contractBackupId = $contractRequestBackup->id;
+            } else {
+                $contractBackupId = "0";
+            }
+
+            $contractRequest = NewContractRequest::where('contract_id', $rate->contract->id)->first();
+            if (!empty($contractRequest)) {
+                $contractRequestId = $contractRequest->id;
+            } else {
+                $contractRequestId = "0";
+            }
+
+            $mediaItems = $rate->contract->getMedia('document');
+            $totalItems = count($mediaItems);
+            if ($totalItems > 0) {
+                $contractId = $rate->contract->id;
+            }else{
+                $contractId = "0";
+            }
+        }else{
+            $contractBackupId = "0";
+            $contractRequestId = "0";
+            $contractId = "0";
+        }
+
+        $rate->setAttribute('contractBackupId', $contractBackupId);
+        $rate->setAttribute('contractRequestId', $contractRequestId);
+        $rate->setAttribute('contractId', $contractId);
+    }
+
+    //Ordering rates by totals (cheaper to most expensive)
+    public function sortRates($rates, $search_data_ids)
+    {
+        if($search_data_ids['type'] == 'FCL'){
+            if (isset($search_data_ids['pricelevel'])) {
+                $sortBy = 'totals_with_markups';
+            } else {
+                $sortBy = 'totals';
+            }
+        }elseif($search_data_ids['type'] == 'LCL'){
+            if (isset($search_data_ids['pricelevel'])) {
+                $sortBy = 'total_with_markups';
+            } else {
+                $sortBy = 'total';
+            }
+        }
+
+        $sorted = $rates->sortBy($sortBy)->values();
+
+        return ($sorted);
+    }
+
+    //Retrieves Terms and Conditions
+    public function searchTerms($search_data)
+    {
+        //Retrieving current companyto filter terms
+        $company_user = CompanyUser::where('id', $search_data['company_user'])->first();
+
+        $terms = TermAndConditionV2::where([['company_user_id',$company_user->id],['type',$search_data['type']]])->get();
+
+        $terms_english = '';
+        $terms_spanish = '';
+        $terms_portuguese = '';
+
+        foreach($terms as $term){
+
+            if($search_data['direction'] == 1){
+                $terms_to_add = $term->import;
+            }else if($search_data['direction'] == 2){
+                $terms_to_add = $term->export;
+            }
+
+            if($term->language_id == 1){
+                $terms_english .= $terms_to_add . '<br>';
+            }else if($term->language_id == 2){
+                $terms_spanish .= $terms_to_add . '<br>';
+            }else if($term->language_id == 3){
+                $terms_portuguese .= $terms_to_add . '<br>';
+            }
+        }
+
+        $final_terms = ['english' => $terms_english, 'spanish' => $terms_spanish, 'portuguese' => $terms_portuguese ];
+
+        return $final_terms;
     }
 
     //Clears date in 2021-07-13T01:00:00 format. Options can be:
