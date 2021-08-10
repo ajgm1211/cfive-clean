@@ -408,7 +408,7 @@ class SearchApiController extends Controller
 
             $rate->setAttribute('request_type', $request->input('requested'));
 
-            $this->stringifyRateAmounts($rate);
+            $this->stringifyFclRateAmounts($rate);
 
             $this->setDownloadParameters($rate);
         }
@@ -641,54 +641,6 @@ class SearchApiController extends Controller
         $markups = $this->getMarkupsFromPriceLevels($search_data['pricelevel'], $search_data['client_currency'], $search_data['direction'], $search_data['type']);
 
         return $markups;
-    }
-
-    //Retrieves Terms and Conditions
-    public function searchTerms($search_data)
-    {
-        //Retrieving current companyto filter terms
-        $company_user = CompanyUser::where('id', $search_data['company_user'])->first();
-
-        $terms = TermAndConditionV2::where([['company_user_id',$company_user->id],['type',$search_data['type']]])->get();
-
-        $terms_english = '';
-        $terms_spanish = '';
-        $terms_portuguese = '';
-
-        foreach($terms as $term){
-
-            if($search_data['direction'] == 1){
-                $terms_to_add = $term->import;
-            }else if($search_data['direction'] == 2){
-                $terms_to_add = $term->export;
-            }
-
-            if($term->language_id == 1){
-                $terms_english .= $terms_to_add . '<br>';
-            }else if($term->language_id == 2){
-                $terms_spanish .= $terms_to_add . '<br>';
-            }else if($term->language_id == 3){
-                $terms_portuguese .= $terms_to_add . '<br>';
-            }
-        }
-
-        $final_terms = ['english' => $terms_english, 'spanish' => $terms_spanish, 'portuguese' => $terms_portuguese ];
-
-        return $final_terms;
-    }
-
-    //Retrives global Transit Times
-    public function searchTransitTime($rate)
-    {
-        //Setting values fo query
-        $origin_port = $rate->origin_port;
-        $destination_port = $rate->destiny_port;
-        $carrier = $rate->carrier_id;
-
-        //Querying
-        $transit_time = TransitTime::where([['origin_id',$origin_port],['destination_id',$destination_port]])->whereIn('carrier_id',[$carrier,26])->first();
-
-        return $transit_time;
     }
 
     //Adds PriceLevels markups to target collection
@@ -963,56 +915,6 @@ class SearchApiController extends Controller
             'id' => $contract->id,
             'data' => 'Success',
         ]);
-    }
-
-    //Ordering rates by totals (cheaper to most expensive)
-    public function sortRates($rates, $search_data_ids)
-    {
-        if (isset($search_data_ids['pricelevel'])) {
-            $sortBy = 'totals_with_markups';
-        } else {
-            $sortBy = 'totals';
-        }
-
-        $sorted = $rates->sortBy($sortBy)->values();
-
-        return ($sorted);
-    }
-
-    public function setDownloadParameters($rate)
-    {
-        if ($rate->contract->status != 'api') {
-
-            $contractRequestBackup = ContractFclFile::where('contract_id', $rate->contract->id)->first();
-            if (!empty($contractRequestBackup)) {
-                $contractBackupId = $contractRequestBackup->id;
-            } else {
-                $contractBackupId = "0";
-            }
-
-            $contractRequest = NewContractRequest::where('contract_id', $rate->contract->id)->first();
-            if (!empty($contractRequest)) {
-                $contractRequestId = $contractRequest->id;
-            } else {
-                $contractRequestId = "0";
-            }
-
-            $mediaItems = $rate->contract->getMedia('document');
-            $totalItems = count($mediaItems);
-            if ($totalItems > 0) {
-                $contractId = $rate->contract->id;
-            }else{
-                $contractId = "0";
-            }
-        }else{
-            $contractBackupId = "0";
-            $contractRequestId = "0";
-            $contractId = "0";
-        }
-
-        $rate->setAttribute('contractBackupId', $contractBackupId);
-        $rate->setAttribute('contractRequestId', $contractRequestId);
-        $rate->setAttribute('contractId', $contractId);
     }
 
     public function downloadContractFile(Request $request)
