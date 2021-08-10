@@ -32,7 +32,7 @@
               'edit',
               'duplicate',
               'delete',
-              'seeProgressDetails',
+              //'seeProgressDetails',
             ]"
             :filter="true"
             @onEdit="onEdit"
