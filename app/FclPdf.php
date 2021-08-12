@@ -88,22 +88,25 @@ class FclPdf
             //Relating inlands to localcharges
             foreach ($localcharges as $value) {
                 $inlands = $this->InlandTotals($quote->id, $type, $value[0]['port_id']);
-
-                foreach ($inlands as $inland) {
-                    if($inland->pdf_options['grouped']){
-                        foreach($value as $charge){
-                            if($inland->pdf_options['groupId'] == $charge->id){
-                                $grouping_array = [];
-                                $inland_total = json_decode(json_encode($inland->total), true);
-                                $inland_total = $this->convertToCurrency($inland->currency, $charge->currency, $inland_total);
-                                foreach($charge->total as $container=>$value){
-                                    $grouping_array[$container] = intval($value) + intval($inland_total[$container]);
+                foreach($value as $charge){
+                    foreach ($inlands as $inland) {
+                        if($inland->pdf_options['grouped']){
+                            
+                                if($inland->pdf_options['groupId'] == $charge->id){
+                                    $grouping_array = [];
+                                    $inland_total = json_decode(json_encode($inland->total), true);
+                                    $inland_total = $this->convertToCurrency($inland->currency, $charge->currency, $inland_total);
+                                    foreach($charge->total as $container=>$value){
+                                        $grouping_array[$container] = intval($value) + intval($inland_total[$container]);
+                                    }
+                                    $charge->total = $grouping_array;
                                 }
-                                $charge->total = $grouping_array;
+                            
+                        }else{
+                            if(!$value->contains($inland)){
+                                $value->push($inland);
                             }
                         }
-                    }else{
-                        $value->push($inland);
                     }
                 }
             }
