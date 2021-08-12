@@ -463,11 +463,11 @@ class SearchApiLclController extends Controller
 
         if (isset($rate->total_with_markups)){
             $to_update = 'total_with_markups';
-            $total = $rate->total_with_markups;
         }else{
             $to_update = 'total';
-            $total = $rate->totals;
         }
+
+        $total = 0;
 
         //Looping through charges type for array structure
         foreach ($rate->charges as $direction => $charge_direction) {
@@ -475,7 +475,7 @@ class SearchApiLclController extends Controller
             //Looping through charges by type
             foreach ($charge_direction as $charge) {
                 
-                if (is_a($charge,"App\LocalCharge") || is_a($charge,"App\GlobalCharge")) {
+                if (is_a($charge,"App\LocalChargeLcl") || is_a($charge,"App\GlobalChargeLcl")) {
 
                     if(isset($charge->total_with_markups)){
                         if($direction == "Freight"){
@@ -505,16 +505,12 @@ class SearchApiLclController extends Controller
 
                     //Adding charge total to Rate totals
                     $total += isDecimal($charges_to_add, true);
-
-                    if (!isset($charge_type_total[$direction])) {
-                        $charge_type_total[$direction] = 0;
-                    }
                     
                     //Add prices from charge to totals by type
                     if($direction == "Freight"){
-                        $charge_type_total += isDecimal($charges_to_add_original,true);
+                        $charge_type_total[$direction] += isDecimal($charges_to_add_original,true);
                     }else{
-                        $charge_type_total += isDecimal($charges_to_add,true);
+                        $charge_type_total[$direction] += isDecimal($charges_to_add,true);
                     }
 
                     //Updating rate totals to new added array
@@ -543,6 +539,7 @@ class SearchApiLclController extends Controller
 
                     //Updating rate totals to new added array
                     $rate->$to_update = $total;
+
                 }
             }
 
