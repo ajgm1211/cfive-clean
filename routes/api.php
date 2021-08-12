@@ -101,3 +101,18 @@ Route::group(['prefix' => 'requestLCL', 'middleware' => 'auth:api'], function ()
 });
 
 $router->get('pdf/{id}',['as' => 'pdf.api', 'uses' => 'ApiController@pdfApi']);
+
+Route::group(['prefix' => 'whitelabel'], function () {
+    Route::get('/users', [App\Http\Controllers\Whitelabel\Users::class, 'index']);
+    Route::get('/users/{id}', [App\Http\Controllers\Whitelabel\Users::class, 'show']);
+    Route::post('/users', [App\Http\Controllers\Whitelabel\Users::class, 'store']);
+    Route::put('/users/{id}', [App\Http\Controllers\Whitelabel\Users::class, 'update']);
+    Route::delete('/users/{id}', [App\Http\Controllers\Whitelabel\Users::class, 'destroy']);
+
+    Route::get('/contacts', [App\Http\Controllers\Whitelabel\Contacts::class, 'index']);
+    Route::get('/contacts/{id}', [App\Http\Controllers\Whitelabel\Contacts::class, 'show']);
+    Route::post('/contacts', [App\Http\Controllers\Whitelabel\Contacts::class, 'store']);
+    Route::put('/contacts/{id}', [App\Http\Controllers\Whitelabel\Contacts::class, 'update']);
+    Route::delete('/contacts/{id}', [App\Http\Controllers\Whitelabel\Contacts::class, 'destroy']);
+
+});
