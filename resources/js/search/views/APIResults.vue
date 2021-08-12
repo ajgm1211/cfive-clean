@@ -4274,7 +4274,7 @@ export default {
       let component = this;
       let apiOriginPorts = [];
       let apiDestinationPorts = [];
-      let apiDate = new Date().toISOString().substring(0, 10);
+      let apiDate = component.request.dateRange.startDate.substring(0, 10);
       let apiContainers = "";
       let apiCarrierCodes = "";
 
