@@ -171,8 +171,6 @@ export default {
                 }
             }
 
-            
-
             let pdfOptions = {
                 pdf_options: {
                     allIn: component.pdfOptions["allIn"],
