@@ -565,6 +565,8 @@ export default {
                     "showCarrier" : this.showCarrier,
                     "showTotals": this.pdfOptions['showTotals'],
                     "totalsCurrency": this.pdfOptions['totalsCurrency'],
+                    "exchangeRates": this.pdfOptions['exchangeRates'],
+                    "selectPDF": this.pdfOptions['selectPDF']
                 }
             };
             
