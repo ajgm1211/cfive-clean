@@ -1254,10 +1254,9 @@ trait SearchTrait
                 //Adding adaptable amounts
                 if( $calculation_options['adaptable'] && $comparing_calculation_options['adaptable'] ){
                     $joint_adaptable_amount = $charge->adaptable_total + $comparing_charge->adaptable_total;
-                    $joint_adaptable_amount_client_currency = $charge->adaptable_total_client_currency + $comparing_charge->adaptable_total_client_currency;
     
                     $charge->adaptable_total = $joint_adaptable_amount;
-                    $charge->adaptable_total_client_currency = $joint_adaptable_amount_client_currency;
+                    $charge->adaptable_total_client_currency = $this->convertToCurrency($charge->currency, $client_currency, array($joint_adaptable_amount))[0];
                 }
             }
 
