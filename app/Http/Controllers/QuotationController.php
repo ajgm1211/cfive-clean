@@ -327,7 +327,7 @@ class QuotationController extends Controller
             }else{
                 $end_date = substr($search_data['dateRange']['endDate'], 0, 10);
             }
-
+            
             $newRate = AutomaticRate::create([
                 'quote_id' => $quote->id,
                 'contract' => $result['contractReference'] ?? $result['quoteLine'],
