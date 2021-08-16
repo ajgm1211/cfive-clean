@@ -19,10 +19,10 @@
 				>
 			</FormInlineView>
 			<!-- End Form Contract Inline -->
-
+			
 			<!-- Tabs Section -->
 			<b-card no-body class="card-tabs">
-				<b-tabs card>
+				<b-tabs card v-if="this.currentData.type.id == 1">
 					<b-tab title="Per Ranges" @click="changeView('range')">
 						<inland-ranges
 							v-if="range"
@@ -41,6 +41,17 @@
 						</inland-km>
 					</b-tab>
 				</b-tabs>
+				<b-tabs card v-if="this.currentData.type.id == 2">
+					<b-tab title="Per Location">
+						<per-location
+							v-if="range"
+							:equipment="equipment" 
+							:datalists="datalists"
+							:classTable="classTable"
+							:actions="actions.inlandLocation">
+						</per-location>
+					</b-tab>
+				</b-tabs>
 			</b-card>
 
 			<!-- End Tabs Section -->
@@ -48,13 +59,13 @@
 		</div>
 
 	</div>
-
 </div>
 
 </template>
 <script>
 	import InlandRanges from './InlandRanges';
 	import InlandKm from './InlandKm';
+	import PerLocation from './PerLocation';
 	import actions from '../../actions';
 	import FormInlineView from '../../components/views/FormInlineView.vue';
 
@@ -62,6 +73,7 @@
 		components: { 
 			InlandRanges,
 			InlandKm,
+			PerLocation,
 			FormInlineView
 		},
 		data() {
@@ -82,7 +94,7 @@
 	                    type: 'text', 
 	                    rules: 'required', 
 	                    placeholder: 'Reference',
-	                    colClass: 'col-lg-2 col-pr-5'
+	                    colClass: 'col-lg-2'
 	                },
 	                direction: { 
 	                    label:'Direction', 
@@ -92,7 +104,7 @@
 	                    trackby: 'name', 
 	                    placeholder: 'Select option', 
 	                    options: 'directions',
-	                    colClass: 'col-lg-2 col-pr-5 col-pl-5'
+	                    colClass: 'col-lg-2'
 	                },
 	                daterange: { 
 	                    label: 'Validity', 
@@ -100,7 +112,7 @@
 	                    type: "daterange", 
 	                    sdName: 'validity', 
 	                    edName: 'expire',
-	                    colClass: 'col-lg-2 col-pr-5 col-pl-5'
+	                    colClass: 'col-lg-2'
                     },
                     ports: { 
                         label: 'Ports', 
@@ -110,7 +122,7 @@
                         trackby: 'display_name', 
                         placeholder: 'Select options', 
                         options: 'harbors',
-                        colClass: 'col-lg-2 col-pr-5 col-pl-5'
+                        colClass: 'col-lg-2'
                     },
 	                gp_container: { 
 	                    label: 'Equipment', 
@@ -120,7 +132,7 @@
 	                    trackby: 'name', 
 	                    placeholder: 'Select option', 
 	                    options: 'equipments',
-	                    colClass: 'col-lg-2 col-pr-5 col-pl-5 input-h'
+	                    colClass: 'col-lg-2 input-h'
 	                },
 	                type: { 
 	                    label: 'Calculation', 
@@ -130,7 +142,17 @@
 	                    trackby: 'name', 
 	                    placeholder: 'Select', 
 	                    options: 'types',
-	                    colClass: 'col-lg-1'
+	                    colClass: 'col-lg-2'
+	                },
+					carrier: { 
+	                    label:'Carrier', 
+	                    searchable: true, 
+	                    type: 'select', 
+	                    rules: 'required', 
+	                    trackby: 'name', 
+	                    placeholder: 'Select', 
+	                    options: 'carriers',
+						colClass: 'col-lg-2'
 	                },
                     restrictions: { 
                         label:'Restrictions', 
@@ -138,7 +160,8 @@
                         type: 'multiselect', 
                         trackby: 'business_name', 
                         placeholder: 'Select options', 
-                        options: 'companies' 
+                        options: 'companies',
+						colClass: 'col-lg-2'
 					},
                     providers: { 
                         label: 'Provider', 
@@ -148,7 +171,7 @@
                         trackby: 'name', 
                         placeholder: 'Select', 
 						options: 'providers',
-						colClass: 'col-lg-1'
+						colClass: 'col-lg-2'
                         
                     },
 					
