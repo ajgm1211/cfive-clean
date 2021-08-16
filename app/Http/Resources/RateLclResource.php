@@ -25,6 +25,7 @@ class RateLclResource extends JsonResource
             'contractlcl_id' => $this->contractlcl_id,
             'contract' => $this->contract,
             'uom' => $this->uom,
+            'units' => $this->units,
             'minimum' => $this->minimum,
             'currency_id' => $this->currency_id,
             'currency' => $this->currency,
