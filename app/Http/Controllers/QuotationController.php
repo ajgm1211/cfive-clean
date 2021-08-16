@@ -11,6 +11,7 @@ use App\CargoKind;
 use App\CargoType;
 use App\Carrier;
 use App\Charge;
+use App\ChargeLclAir;
 use App\Company;
 use App\CompanyUser;
 use App\Contact;
@@ -220,7 +221,11 @@ class QuotationController extends Controller
 
         $search_data_ids = $this->getIdsFromArray($search_data);
 
-        $equipment = $container_string = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
+        if($search_data_ids['type'] == 'FCL'){
+            $equipment = $container_string = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
+        }else{
+            $equipment = [];
+        }
 
         $remarks = "";
 
@@ -281,31 +286,61 @@ class QuotationController extends Controller
             foreach ($rate['charges'] as $charge_direction) {
                 foreach ($charge_direction as $charge) {
 
-                    $currency_id = isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency' ? $rate['client_currency']['id'] : $charge['currency']['id'];
-                    $charge = $this->formatChargeForQuote($charge);
+                    //dd($charge);
 
-                    $freight = Charge::create([
-                        'automatic_rate_id' => $newRate->id,
-                        'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : null,
-                        'type_id' => $charge['typedestiny_id'],
-                        'calculation_type_id' => $charge['calculationtype']['id'],
-                        'currency_id' => $currency_id,
-                        'amount' => json_encode($charge['amount']),
-                        'markups' => json_encode($charge['markups']),
-                        'total' => json_encode($charge['total']),
-                    ]);
+                    $currency_id = isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency' ? $rate['client_currency']['id'] : $charge['currency']['id'];
+
+                    if($search_data_ids['type'] == 'FCL'){
+                        $charge = $this->formatFclChargeForQuote($charge);
+
+                        $freight = Charge::create([
+                            'automatic_rate_id' => $newRate->id,
+                            'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : null,
+                            'type_id' => $charge['typedestiny_id'],
+                            'calculation_type_id' => $charge['calculationtype']['id'],
+                            'currency_id' => $currency_id,
+                            'amount' => json_encode($charge['amount']),
+                            'markups' => json_encode($charge['markups']),
+                            'total' => json_encode($charge['total']),
+                        ]);
+                    }elseif($search_data_ids['type'] == 'LCL'){
+                        $charge = $this->formatLclChargeForQuote($charge);
+
+                        $freight = ChargeLclAir::create([
+                            'automatic_rate_id' => $newRate->id,
+                            'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : null,
+                            'type_id' => $charge['typedestiny_id'],
+                            'calculation_type_id' => $charge['calculationtypelcl']['id'],
+                            'units' => $charge['units'],
+                            'price_per_unit' => $charge['total'] / $charge['units'],
+                            'minimum' => $charge['minimum'],
+                            'currency_id' => $currency_id,
+                            'markup' => $charge['markup'],
+                            'total' => $charge['total'],
+                        ]);
+                    }
                 }
             }
 
+            if($search_data_ids['type'] == 'FCL'){
+                $markups = isset($rate['container_markups']) ? $this->formatMarkupsForQuote($rate['container_markups']) : null;
+            }else{
+                $markups = [ 
+                    'total' => 0,
+                    'per_unit' => 0,
+                ];
+                
+            }
+
             $rateTotals = AutomaticRateTotal::create([
-                "quote_id" => $quote->id,
+                'quote_id' => $quote->id,
                 'automatic_rate_id' => $newRate->id,
                 'origin_port_id' => $newRate->origin_port_id,
                 'destination_port_id' => $newRate->destination_port_id,
                 'carrier_id' => $newRate->carrier_id,
                 'currency_id' => $rate['currency_id'],
                 'totals' => null,
-                'markups' => isset($rate['container_markups']) ? $this->formatMarkupsForQuote($rate['container_markups']) : null,
+                'markups' => $markups,
             ]);
 
             $rateTotals->totalize($rate['currency_id']);
@@ -357,7 +392,7 @@ class QuotationController extends Controller
             }
 
             $rateTotals = AutomaticRateTotal::create([
-                "quote_id" => $quote->id,
+                'quote_id' => $quote->id,
                 'automatic_rate_id' => $newRate->id,
                 'origin_port_id' => $newRate->origin_port_id,
                 'destination_port_id' => $newRate->destination_port_id,

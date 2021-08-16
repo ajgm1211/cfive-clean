@@ -202,11 +202,7 @@
                         charge.calculationtypelcl.name }}</b-td
                       >
                       <b-td> {{ charge.price_per_unit }} </b-td>
-                      <b-td v-if="JSON.parse(charge.calculationtypelcl.options).type == 'chargeable'"> {{ rate.search.chargeableWeight }} </b-td>
-                      <b-td v-if="JSON.parse(charge.calculationtypelcl.options).type == 'unique' || JSON.parse(charge.calculationtypelcl.options).type == 'rate_only' "> 1 </b-td>
-                      <b-td v-if="JSON.parse(charge.calculationtypelcl.options).type == 'ton'"> {{ rate.search.weight / 1000 }} </b-td>
-                      <b-td v-if="JSON.parse(charge.calculationtypelcl.options).type == 'm3'"> {{ rate.search.volume }} </b-td>
-                      <b-td v-if="JSON.parse(charge.calculationtypelcl.options).type == 'package' || JSON.parse(charge.calculationtypelcl.options).type == 'pallet'"> {{ rate.search.quantity }} </b-td>
+                      <b-td> {{ charge.units }} </b-td>
                       <b-td>
                         <p v-if="charge.total_markups != undefined">
                           {{
