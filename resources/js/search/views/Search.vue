@@ -431,6 +431,15 @@
                     >
                         &nbsp;&nbsp;<b>Include destination charges</b>
                     </b-form-checkbox>
+                    <b-form-checkbox
+                        id="showRateCurrency"
+                        v-model="searchRequest.showRateCurrency"
+                        name="showRateCurrency"
+                        class="as-checkbox"
+                        @input="updateQuoteSearchOptions"
+                    >
+                        &nbsp;&nbsp;<b>Show totals in rate currency</b>
+                    </b-form-checkbox>
                 </div>
                 <!-- FIN INCLUDE CHECKBOX -->
 
@@ -1432,6 +1441,7 @@ export default {
                 type: "FCL",
                 destinationCharges: false,
                 originCharges: false,
+                showRateCurrency: false,
                 deliveryType: {},
                 selectedContainerGroup: {},
                 containers: [],
@@ -1871,6 +1881,8 @@ export default {
                     this.searchData.origin_charges == 0 ? false : true;
                 this.searchRequest.destinationCharges =
                     this.searchData.destination_charges == 0 ? false : true;
+                this.searchRequest.showRateCurrency =
+                    this.searchData.show_rate_currency == 0 ? false : true;
                 this.searchRequest.harbors = this.datalists.harbors;
                 this.searchRequest.currency = this.datalists.currency;
                 this.searchRequest.calculation_type = this.datalists.calculation_type;
@@ -1883,6 +1895,7 @@ export default {
                     this.searchRequest.contact = this.quoteData.search_options.contact;
                     this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
                     this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
+                    this.searchRequest.showRateCurrency = this.quoteData.search_options.show_rate_currency;
                     this.searchRequest.destinationCharges = this.quoteData.search_options.destination_charges;
                     this.searchRequest.originPorts = this.quoteData.search_options.origin_ports;
                     this.searchRequest.destinationPorts = this.quoteData.search_options.destination_ports;
