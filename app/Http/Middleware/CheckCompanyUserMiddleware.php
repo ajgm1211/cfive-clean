@@ -15,14 +15,17 @@ class CheckCompanyUserMiddleware
     public function handle($request, Closure $next, $key)
     {
         $model = $request->{$key};
-
-        if ($model->company_user_id != $request->user()->company_user_id) {
-            if ($request->ajax() || $request->wantsJson()) {
-                abort(403, 'Unauthorized action.');
-            } else {
-                return redirect()->route('quotes-v2.search');
+        
+        if(isset($model->company_user_id)){
+            if ($model->company_user_id != $request->user()->company_user_id) {
+                if ($request->ajax() || $request->wantsJson()) {
+                    abort(403, 'Unauthorized action.');
+                } else {
+                    return redirect()->route('quotes-v2.search');
+                }
             }
         }
+ 
 
         return $next($request);
     }
