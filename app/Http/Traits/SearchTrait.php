@@ -942,6 +942,7 @@ trait SearchTrait
 
         $total_client_currency = $this->convertToCurrency($rate->currency, $search_data['client_currency'], array($total));
 
+        $rate->setAttribute('units', $chargeable_weigth);
         $rate->setAttribute('total',$total);
         $rate->setAttribute('total_client_currency',$total_client_currency[0]);
     }
@@ -956,10 +957,13 @@ trait SearchTrait
 
                 if($calculation_options['type'] == 'unique'){
                     $amount = $charge->ammount;
+                    $charge->units = 1;
                 }else if($calculation_options['type'] == 'chargeable' || $calculation_options['type'] == 'rate_only'){
                     $amount = $charge->ammount * $search_data['chargeableWeight'];
+                    $charge->units = $search_data['chargeableWeight'];
                 }else if($calculation_options['type'] == 'ton'){
                     $amount = $charge->ammount * ( $search_data['weight'] / 1000 );
+                    $charge->units = $search_data['weight'] / 1000;
                     if($calculation_options['adaptable']){
                         $m3_amount = $charge->ammount * $search_data['volume'];
                         $m3_amount_client_currency = $this->convertToCurrency($charge->currency, $search_data['client_currency'], array($m3_amount));
@@ -969,6 +973,7 @@ trait SearchTrait
                     }
                 }else if($calculation_options['type'] == 'm3'){
                     $amount = $charge->ammount * $search_data['volume'];
+                    $charge->units = $search_data['volume'];                    
                     if($calculation_options['adaptable']){
                         $ton_amount = $charge->ammount * ( $search_data['weight'] / 1000 );
                         $ton_amount_client_currency = $this->convertToCurrency($charge->currency, $search_data['client_currency'], array($ton_amount));
@@ -978,10 +983,13 @@ trait SearchTrait
                     }
                 }else if($calculation_options['type'] == 'kg'){
                     $amount = $charge->ammount * $search_data['weight']; 
+                    $charge->units = $search_data['weight'];
                 }else if($calculation_options['type'] == 'package'){
                     $amount = $charge->ammount * $cargo_type['Package'];
+                    $charge->units = $cargo_type['Package'];
                 }else if($calculation_options['type'] == 'pallet'){
                     $amount = $charge->ammount * $cargo_type['Pallets'];
+                    $charge->units = $cargo_type['Pallets'];
                 }
 
                 $minimum = $charge->minimum;
@@ -1403,6 +1411,7 @@ trait SearchTrait
                         'surcharge' => $rate->surcharge,
                         'total' => $rate->total,
                         'minimum' => $rate->minimum,
+                        'units' => $rate->calculation_type->name == "Per Shipment" ? 1 : $search_data['chargeableWeight'],
                         'price_per_unit' => $rate->price_per_unit,
                         'calculationtypelcl' => $rate->calculation_type, 
                         'typedestiny_id' => 3,
