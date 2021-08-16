@@ -233,6 +233,7 @@ class SearchApiController extends Controller
             'pricelevel' => 'sometimes',
             'originCharges' => 'sometimes',
             'destinationCharges' => 'sometimes',
+            'showRateCurrency' => 'sometimes',
             'originAddress' => 'sometimes',
             'destinationAddress' => 'sometimes'
   
@@ -351,6 +352,7 @@ class SearchApiController extends Controller
             'pricelevel' => 'sometimes',
             'originCharges' => 'sometimes',
             'destinationCharges' => 'sometimes',
+            'showRateCurrency' => 'sometimes',
             'originAddress' => 'sometimes',
             'destinationAddress' => 'sometimes'
         ]);
@@ -403,6 +405,7 @@ class SearchApiController extends Controller
             'price_level_id' => $new_search_data_ids['pricelevel'],
             'origin_charges' => $new_search_data_ids['originCharges'],
             'destination_charges' => $new_search_data_ids['destinationCharges'],
+            'show_rate_currency' => $new_search_data_ids['showRateCurrency'],
             //'origin_address' => $new_search_data_ids['originAddress'],
             //'destination_address' => $new_search_data_ids['destinationAddress']
         ]);
