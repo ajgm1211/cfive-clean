@@ -245,7 +245,6 @@ export default {
         },
         createQuote() {
             let component = this;
-            
             component.creatingQuote = true;
             
             if (component.ratesForQuote.rates.length == 0 && component.ratesForQuote.results.length == 0) {
@@ -255,8 +254,6 @@ export default {
                     component.noRatesAdded = false;
                 }, 2000);
             } else {
-                let duplicateMatch = false;
-
                 component.ratesForQuote.results.forEach(function (result){
                     if(result.activeTab != undefined){
                         result.routingDetails[0] = result.routingDetails[result.activeTab];
@@ -264,15 +261,9 @@ export default {
                 });
 
                 if(Object.keys(component.quoteData).length != 0){
-                    component.ratesForQuote.rates.forEach(function (rate){
-                        if((component.quoteData.local_ports.origin.length > 0 && component.quoteData.local_ports.origin.includes(rate.origin_port)) ||
-                            (component.quoteData.local_ports.destination.length > 0 && component.quoteData.local_ports.destination.includes(rate.destiny_port)) ||
-                            (component.quoteData.inland_ports.origin.length > 0 && component.quoteData.inland_ports.origin.includes(rate.origin_port)) ||
-                            (component.quoteData.inland_ports.destination.length > 0 && component.quoteData.inland_ports.destination.includes(rate.destiny_port)))
-                        {
-                            duplicateMatch = true;
-                        }
-                    });
+                    var duplicateMatch = this.checkLocalOrInlandDuplicates();
+                }else{
+                    var duplicateMatch = false;
                 }
 
                 if (component.requestData.requested == 0 || !duplicateMatch) {
@@ -290,7 +281,13 @@ export default {
                     }
                     });
                 } else if (component.requestData.requested == 1 || duplicateMatch) {
-                    console.log(component.ratesForQuote)
+                    if( component.ratesForQuote.rates.length > 0){
+                        component.ratesForQuote.rates[0].search.requestData = component.requestData;
+                    }
+
+                    if( component.ratesForQuote.results.length > 0){
+                        component.ratesForQuote.results[0].search.requestData = component.requestData;
+                    }
                 component.actions.quotes
                     .specialduplicate(component.ratesForQuote)
                     .then((response) => {
@@ -382,6 +379,66 @@ export default {
             this.quoteData = quoteData;
         },
 
+        checkLocalOrInlandDuplicates(){
+            let component = this;
+            let duplicateMatch = false;
+
+            //RATES FROM CONTRACTS
+            component.ratesForQuote.rates.forEach(function (rate){
+                component.quoteData.local_ports.origin.forEach(function (originPort){
+                    if(originPort.id == rate.origin_port){
+                        duplicateMatch = true;
+                    }
+                });
+
+                component.quoteData.local_ports.destination.forEach(function (destinationPort){
+                    if(destinationPort.id == rate.destiny_port){
+                        duplicateMatch = true;
+                    }
+                });
+
+                component.quoteData.inland_ports.origin.forEach(function (originPort){
+                    if(originPort.id == rate.origin_port){
+                        duplicateMatch = true;
+                    }
+                });
+
+                component.quoteData.inland_ports.destination.forEach(function (destinationPort){
+                    if(destinationPort.id == rate.destination_port){
+                        duplicateMatch = true;
+                    }
+                });
+            });
+
+            //API RESULTS
+            component.ratesForQuote.results.forEach(function (result){
+                component.quoteData.local_ports.origin.forEach(function (originPort){
+                    if(originPort.code == result.originPort){
+                        duplicateMatch = true;
+                    }
+                });
+
+                component.quoteData.local_ports.destination.forEach(function (destinationPort){
+                    if(destinationPort.code == result.destinationPort){
+                        duplicateMatch = true;
+                    }
+                });
+
+                component.quoteData.inland_ports.origin.forEach(function (originPort){
+                    if(originPort.code == result.originPort){
+                        duplicateMatch = true;
+                    }
+                });
+
+                component.quoteData.inland_ports.destination.forEach(function (destinationPort){
+                    if(destinationPort.code == result.destinationPort){
+                        duplicateMatch = true;
+                    }
+                });
+            });
+
+            return duplicateMatch;
+        },
     },
 }
 </script>

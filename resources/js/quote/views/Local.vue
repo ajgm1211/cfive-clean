@@ -349,7 +349,7 @@
                                 class="q-total"
                                 v-if="currentQuoteData.type == 'LCL'"
                             >
-                                <b-td colspan="3"></b-td>
+                                <b-td colspan="4"></b-td>
 
                                 <b-td
                                     ><span><b>Total</b></span></b-td
@@ -393,7 +393,7 @@
                                 class="q-total"
                                 v-if="currentQuoteData.type == 'FCL'"
                             >
-                                <b-td></b-td>
+                                <b-td colspan="2"></b-td>
 
                                 <b-td>
                                     <span>
@@ -972,7 +972,7 @@
                                         v-model="input.units"
                                         style="width:80px;"
                                         @keypress="isNumber($event)"
-                                        class="q-input data-profit"
+                                        class="q-input"
                                     ></b-form-input>
                                 </b-td>
 
@@ -999,7 +999,13 @@
                                 <!-- Profits -->
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
-                                        v-model="input.total"
+                                        :value="
+                                            setTotal(
+                                                input.units,
+                                                input.price,
+                                                input.profit
+                                            )
+                                        "
                                         style="width:80px;"
                                         class="q-input"
                                         disabled
@@ -1536,6 +1542,9 @@ export default {
                     this.getTotal();
                 })
                 .catch((data) => {
+                if(data.status == 422){
+                    this.alert("Please complete the fields", "error");
+                }
                     this.$refs.observer.setErrors(data.data.errors);
                 });
         },

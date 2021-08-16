@@ -277,9 +277,17 @@ class TestController extends Controller
 
     }
 
-    public function contable()
+    public function contable(Request $request)
     {
 
+        $frase = "611151464b6d5_19082_Moldtrans-S.L+._DRY+_BC-IMP_FCL";
+
+
+        $patrón = '+';
+        $sustitución = '_';
+        $newphrase = str_replace($patrón, $sustitución, $frase);
+
+        dd($newphrase,$frase);
       
 
     }

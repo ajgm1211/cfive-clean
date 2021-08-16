@@ -1888,6 +1888,10 @@ trait QuoteV2Trait
             $result['carrier_id'] = 12;
         }else if($result['companyCode'] == 'sealand'){
             $result['carrier_id'] = 24;
+        }else if($result['companyCode'] == 'evergreen'){
+            $result['carrier_id'] = 6;
+        }else if($result['companyCode'] == 'hapag'){
+            $result['carrier_id'] = 9;
         }
 
         foreach ($result['pricingDetails']['surcharges'] as $key => $charge_direction) {
@@ -1932,7 +1936,7 @@ trait QuoteV2Trait
                     }elseif($containerGroup['id'] == 4){
                         $charge['calculationtype_id'] = 21;
                     }
-                }elseif($charge['calculationType'] == 'Per Doc'){
+                }elseif($charge['calculationType'] == 'Per Doc' || $charge['calculationType'] == 'Per Document' ){
                     if($containerGroup['id'] == 1){
                         $charge['calculationtype_id'] = 9;
                     }elseif($containerGroup['id'] == 2){

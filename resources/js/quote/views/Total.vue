@@ -39,7 +39,8 @@
                                 style="width: 120px; top: -4px"
                                 @input="updatePdfOptions('totalsCheck')"
                             > -->
-                            <span v-show="showTotals" ><b>Show totals in:  </b></span>
+                            
+                            <span v-show="showTotals" ><b class="mr-3">Show totals in:</b></span>
                             <multiselect
                                 v-show="showTotals" 
                                 v-model="totalsCurrency"
@@ -169,8 +170,6 @@ export default {
                     component.showTotals=true;
                 }
             }
-
-            
 
             let pdfOptions = {
                 pdf_options: {
