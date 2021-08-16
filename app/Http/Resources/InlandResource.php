@@ -27,6 +27,7 @@ class InlandResource extends JsonResource
             'ports' => $this->inlandports->pluck('ports'),
             'restrictions' => $this->inland_company_restriction->pluck('company'),
             'providers' => $this->providers ?? [],
+            'carrier' => $this->carrier?? [],
         ];
     }
 }
