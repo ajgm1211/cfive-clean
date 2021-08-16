@@ -55,7 +55,8 @@ class Provider extends Model
     public function referentialData()
     {
         return $this->morphOne('App\ReferentialData', 'referential')
-            ->where('company_user_id', $this->company_user_id);
+            ->where('company_user_id', $this->company_user_id)
+            ->first();
     }
 
 }
