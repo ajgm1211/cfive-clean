@@ -1684,11 +1684,15 @@ trait SearchTrait
         }
     }
 
-    public function setDownloadParameters($rate)
+    public function setDownloadParameters($rate, $search_data)
     {
         if ($rate->contract->status != 'api') {
 
-            $contractRequestBackup = ContractFclFile::where('contract_id', $rate->contract->id)->first();
+            if( $search_data['type'] == 'FCL'){
+                $contractRequestBackup = ContractFclFile::where('contract_id', $rate->contract->id)->first();
+            }elseif( $search_data['type'] == 'LCL'){
+                $contractRequestBackup = ContractLclFile::where('contract_id', $rate->contract->id)->first();
+            }
             if (!empty($contractRequestBackup)) {
                 $contractBackupId = $contractRequestBackup->id;
             } else {
