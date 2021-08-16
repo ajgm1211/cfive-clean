@@ -215,22 +215,21 @@ class QuotationController extends Controller
 
         if (count($rate_data) != 0) {
             $search_data = $rate_data[0]['search'];
-        } else {
+        } elseif (count($result_data) != 0) {
             $search_data = $result_data[0]['search'];
+            //Setting terms & conditions when is from API
+            $search_data['terms'] = $this->searchTerms($search_data);
         }
 
         $search_data_ids = $this->getIdsFromArray($search_data);
 
-        $equipment = $container_string = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
+        $equipment = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
 
         $remarks = "";
 
         foreach ($rate_data as $rate) {
             $remarks .= $rate['remarks'];
         }
-        
-        //Setting terms & conditions when is from API
-        $terms = $this->searchTerms($search_data);
         
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
@@ -250,10 +249,9 @@ class QuotationController extends Controller
             'validity_start' => $search_data_ids['dateRange']['startDate'],
             'validity_end' => $search_data_ids['dateRange']['endDate'],
             'status' => 'Draft',
-            'direction_id' => $search_data_ids['direction'],
-            'terms_portuguese' => $search_data['terms'] ?? $search_data['terms']['portuguese'] ?? $terms['portuguese'] ?? null,
-            'terms_and_conditions' => $search_data['terms'] ?? $search_data['terms']['spanish'] ?? $terms['spanish'] ?? null,
-            'terms_english' => $search_data['terms'] ?? $search_data['terms']['english'] ?? $terms['english'] ?? null
+            'terms_portuguese' => $search_data['terms'] ? $search_data['terms']['portuguese'] : null,
+            'terms_and_conditions' => $search_data['terms'] ? $search_data['terms']['spanish'] : null,
+            'terms_english' => $search_data['terms'] ? $search_data['terms']['english'] : null
         ]);
 
         $quote = $quote->fresh();
