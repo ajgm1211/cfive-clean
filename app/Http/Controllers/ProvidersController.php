@@ -135,27 +135,29 @@ class ProvidersController extends Controller
             ['App\Provider', 'App\Carrier'], 
             $vdata['type']
         );
-
-        try {
-            $provider = $class_name::find($id);
-        } catch (Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            throw ValidationException::withMessages(['id' => 'This id isnt valid']);
+        
+        if($class_name == 'App\Provider'){
+            $provider = $class_name::where(['id' => $id, 'company_user_id' => \Auth::user()->company_user_id])->firstOrFail();
+        }else{
+            $provider = $class_name::findOrFail($id);
         }
+        
         $json_data = json_encode([ 'ref_code' => $vdata['ref_code'] ]);
+
         ReferentialData::updateOrCreate(
             [ 
                 'referential_id' => $id, 
                 'referential_type' => $class_name, 
-                'company_user_id' => $request->user()->company_user_id
+                'company_user_id' => \Auth::user()->company_user_id
             ],
             [ 
-                'user_id' => $request->user()->id, 
+                'user_id' => \Auth::user()->id, 
                 'json_data' => $json_data
             ] 
         );
-
+        
         if($vdata['type'] == 'carrier')
-            return (new CarrierResource($provider))->companyUser($request->user()->company_user_id);
+            return (new CarrierResource($provider))->companyUser(\Auth::user()->companyUser);
 
         return new ProvidersResource($provider);
     }
