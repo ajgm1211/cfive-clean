@@ -19,39 +19,25 @@
 				>
 			</FormInlineView>
 			<!-- End Form Contract Inline -->
-			
+			<div class="row mb-3">
+				<div class="col-12">
+					<div class="float-right">
+						<button class="btn btn-primary btn-bg" v-b-modal.addRange>Import File</button>
+					</div>
+				</div>
+			</div>
+
 			<!-- Tabs Section -->
 			<b-card no-body class="card-tabs">
-				<b-tabs card v-if="this.currentData.type.id == 1">
-					<b-tab title="Per Ranges" @click="changeView('range')">
-						<inland-ranges
-							v-if="range"
-							:equipment="equipment" 
-							:datalists="datalists"
-							:classTable="classTable"
-							:actions="actions.ranges">
-						</inland-ranges>
-					</b-tab>
-					<b-tab title="Per Km" @click="changeView('km')">
-						<inland-km
-							v-if="km"
-							:equipment="equipment" 
-							:datalists="datalists"
-							:actions="actions.kms">
-						</inland-km>
-					</b-tab>
-				</b-tabs>
-				<b-tabs card v-if="this.currentData.type.id == 2">
-					<b-tab title="Per Location">
-						<per-location
-							v-if="range"
-							:equipment="equipment" 
-							:datalists="datalists"
-							:classTable="classTable"
-							:actions="actions.inlandLocation">
-						</per-location>
-					</b-tab>
-				</b-tabs>
+				
+				<per-location
+					v-if="range"
+					:equipment="equipment" 
+					:datalists="datalists"
+					:classTable="classTable"
+					:actions="actions.ranges">
+				</per-location>
+				
 			</b-card>
 
 			<!-- End Tabs Section -->
@@ -59,20 +45,17 @@
 		</div>
 
 	</div>
+
 </div>
 
 </template>
 <script>
-	import InlandRanges from './InlandRanges';
-	import InlandKm from './InlandKm';
 	import PerLocation from './PerLocation';
 	import actions from '../../actions';
 	import FormInlineView from '../../components/views/FormInlineView.vue';
 
 	export default {
 		components: { 
-			InlandRanges,
-			InlandKm,
 			PerLocation,
 			FormInlineView
 		},
@@ -82,67 +65,17 @@
 				equipment: {},
 				inland: false,
 				loaded: false,
-				km: false,
-				range: false,
 				currentData: { daterange: { startDate: null, endDate: null } },
-				classTable: 'table-contract',
+				classTable: 'table-inland-per-location',
 
 				/* Form Inline Fields */
 	            form_fields: {
 	                reference: { 
-	                    label: 'Reference', 
+	                    label: 'Provider', 
 	                    type: 'text', 
 	                    rules: 'required', 
 	                    placeholder: 'Reference',
-	                    colClass: 'col-lg-2'
-	                },
-	                direction: { 
-	                    label:'Direction', 
-	                    searchable: true, 
-	                    type: 'select', 
-	                    rules: 'required', 
-	                    trackby: 'name', 
-	                    placeholder: 'Select option', 
-	                    options: 'directions',
-	                    colClass: 'col-lg-2'
-	                },
-	                daterange: { 
-	                    label: 'Validity', 
-	                    rules: 'required', 
-	                    type: "daterange", 
-	                    sdName: 'validity', 
-	                    edName: 'expire',
-	                    colClass: 'col-lg-2'
-                    },
-                    ports: { 
-                        label: 'Ports', 
-                        searchable: true, 
-                        type: 'multiselect', 
-                        rules: 'required', 
-                        trackby: 'display_name', 
-                        placeholder: 'Select options', 
-                        options: 'harbors',
-                        colClass: 'col-lg-2'
-                    },
-	                gp_container: { 
-	                    label: 'Equipment', 
-	                    searchable: true, 
-	                    type: 'select', 
-	                    rules: 'required', 
-	                    trackby: 'name', 
-	                    placeholder: 'Select option', 
-	                    options: 'equipments',
-	                    colClass: 'col-lg-2 input-h'
-	                },
-	                type: { 
-	                    label: 'Calculation', 
-	                    searchable: true, 
-	                    type: 'select', 
-	                    rules: 'required', 
-	                    trackby: 'name', 
-	                    placeholder: 'Select', 
-	                    options: 'types',
-	                    colClass: 'col-lg-2'
+	                    colClass: 'col-lg-2 col-pr-5'
 	                },
 					carrier: { 
 	                    label:'Carrier', 
@@ -152,28 +85,64 @@
 	                    trackby: 'name', 
 	                    placeholder: 'Select', 
 	                    options: 'carriers',
-						colClass: 'col-lg-2'
+	                    colClass: 'col-lg-2 col-pr-5 col-pl-5'
 	                },
-                    restrictions: { 
-                        label:'Restrictions', 
+	                direction: { 
+	                    label:'Direction', 
+	                    searchable: true, 
+	                    type: 'select', 
+	                    rules: 'required', 
+	                    trackby: 'name', 
+	                    placeholder: 'Select', 
+	                    options: 'directions',
+	                    colClass: 'col-lg-2 col-pr-5 col-pl-5'
+	                },
+	                daterange: { 
+	                    label: 'Validity', 
+	                    rules: 'required', 
+	                    type: "daterange", 
+	                    sdName: 'validity', 
+	                    edName: 'expire',
+	                    colClass: 'col-lg-2 col-pr-5 col-pl-5'
+                    }, 
+					restrictions: { 
+                        label:'Company Restriction', 
                         searchable: true, 
                         type: 'multiselect', 
                         trackby: 'business_name', 
                         placeholder: 'Select options', 
-                        options: 'companies',
-						colClass: 'col-lg-2'
+                        options: 'companies' 
 					},
-                    providers: { 
-                        label: 'Provider', 
-                        searchable: true, 
-                        type: 'select', 
-                        rules: 'required', 
-                        trackby: 'name', 
-                        placeholder: 'Select', 
-						options: 'providers',
-						colClass: 'col-lg-2'
-                        
-                    },
+	                type: { 
+	                    label: 'Calculation type', 
+	                    searchable: true, 
+	                    type: 'select', 
+	                    rules: 'required', 
+	                    trackby: 'name', 
+	                    placeholder: 'Select', 
+	                    options: 'types',
+	                    colClass: 'col-lg-2'
+	                },
+					gp_container: { 
+	                    label: 'Equipment', 
+	                    searchable: true, 
+	                    type: 'select', 
+	                    rules: 'required', 
+	                    trackby: 'name', 
+	                    placeholder: 'Select option', 
+	                    options: 'equipments',
+	                    colClass: 'col-lg-2 col-pr-5 col-pl-5 input-h'
+	                },
+                    // providers: { 
+                    //     label: 'Provider', 
+                    //     searchable: true, 
+                    //     type: 'select', 
+                    //     rules: 'required', 
+                    //     trackby: 'name', 
+                    //     placeholder: 'Select', 
+					// 	options: 'providers',
+					// 	colClass: 'col-lg-1'      
+                    // },
 					
 				}
 			}
@@ -205,19 +174,6 @@
 			/* Execute when inline form updated */
 			onSuccess(data){
 				this.equipment = data.gp_container;
-			},
-
-			changeView(val){
-
-				if(val == 'range'){
-					this.range = true;
-					this.km = false;
-				}
-
-				if(val == 'km'){
-					this.range = false;
-					this.km = true;
-				}
 			},
 
 			/* Set the Dropdown lists to use in form */

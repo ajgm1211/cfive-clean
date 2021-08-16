@@ -28,7 +28,8 @@ class Inland extends Model implements Auditable
         'company_user_id',
         'gp_container_id',
         'direction_id',
-        'provider_id'
+        'provider_id',
+        'carrier_id'
     ];
 
     public function inlandRange()
@@ -147,5 +148,13 @@ class Inland extends Model implements Auditable
     public function inlanddetails()
     {
         return $this->hasMany('App\InlandDetail');
+    }
+    public function inlandLocation()
+    {
+        return $this->hasMany('App\InlandPerLocation');
+    }
+    public function carrier()
+    {
+        return $this->belongsTo('App\Carrier');
     }
 }

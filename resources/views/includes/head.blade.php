@@ -8,7 +8,7 @@
         content="Search, compare, and manage ocean freight rates across multiple carriers. With our platform, you can create a new quote in no time and give your sales a big boost!">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    @if (env('APP_ENV') === 'prod' || env('APP_ENV') === 'production')
+    @if (env('APP_ENV') === 'prod' || env('APP_ENV') === 'production' || env('APP_ENV') === 'develop')
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     @endif
 
