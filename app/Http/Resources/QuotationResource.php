@@ -154,9 +154,13 @@ class QuotationResource extends JsonResource
 
         foreach($locals as $local){
             if($local->type_id == 1){
-                array_push($ports['origin'], $local->port()->first()->id);
+                if(!in_array($local->port->first,$ports['origin'])){
+                    array_push($ports['origin'], $local->port()->first());
+                }
             }else if($local->type_id == 2){
-                array_push($ports['destination'], $local->port()->first()->id);
+                if(!in_array($local->port->first,$ports['destination'])){
+                    array_push($ports['destination'], $local->port()->first());
+                }
             }
         }
 

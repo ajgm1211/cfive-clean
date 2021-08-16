@@ -1,4 +1,4 @@
-@if($quote->pdf_options['selectPDF']['id'] ==2 || $quote->pdf_options['selectPDF']['id'] ==3 )
+@if(@$quote->pdf_options['selectPDF']['id'] ==2 || @$quote->pdf_options['selectPDF']['id'] ==3 )
 <!-- Freight charges all in -->
 
 <div>

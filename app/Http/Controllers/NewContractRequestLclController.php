@@ -227,6 +227,7 @@ class NewContractRequestLclController extends Controller
 
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
+        $nombre = quitar_caracteres($nombre);
         $nombre = $now . '_' . $nombre;
         // $fileName = HelperAll::removeAcent($nombre);
         $fileBoll = \Storage::disk('LclRequest')->put($nombre, \File::get($file));
