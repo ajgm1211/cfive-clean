@@ -14,6 +14,7 @@ use App\TransitTime;
 use App\Container;
 use App\GroupContainer;
 use GoogleMaps;
+use App\Surcharge;
 use Illuminate\Support\Collection as Collection;
 
 trait SearchTrait
@@ -1098,6 +1099,14 @@ trait SearchTrait
         }
 
         return($joint_charges);
+    }
+
+        //get surcharge to apply a rate
+    public function getSurchargeOcean()
+    {
+
+        $surchargeOcean = Surcharge::where('options->onlyrate','yes')->first();
+        return $surchargeOcean;
     }
 
     //Converting amounts to string so they display decimal places correctly
