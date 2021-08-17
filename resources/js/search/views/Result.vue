@@ -338,7 +338,7 @@
                       :key="contKey"
                     >
                       <p>
-                        <b style="font-size: 16px" v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined)"
+                        <b style="font-size: 16px" v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined) || request.showRateCurrency"
                           >{{
                             rate.totals_with_markups_freight_currency
                               ? rate.totals_with_markups_freight_currency["C" + container.code]
@@ -462,7 +462,7 @@
                       <b-th style="width: 300px">Charge</b-th>
                       <b-th style="width: 325px">Detail</b-th>
                       <!-- <b-th></b-th>
-                                            <b-th></b-th> -->
+                      <b-th></b-th> -->
                       <b-th
                         v-for="(container, contKey) in request.containers"
                         :key="contKey"
