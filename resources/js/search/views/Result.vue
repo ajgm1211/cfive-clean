@@ -78,7 +78,7 @@
                 <!-- VALIDITY -->
                 <div class="d-flex align-items-center">
                   <p class="mr-4 mb-0">
-                    <b>Vality:</b> 2020-20-20 / 2020-20-20
+                    <b>VALIDITY:</b> 2020-20-20 / 2020-20-20
                   </p>
                   <a href="#">download contract</a>
                 </div>
@@ -368,7 +368,7 @@
               <div class="col-12 mt-3 mb-3 result-action">
                 <div class="d-flex align-items-center">
                   <p class="mr-4 mb-0">
-                    <b>Validity:</b>
+                    <b style="font-size:11px;">VALIDITY:</b>
                     {{ rate.contract.validity + " / " + rate.contract.expire }}
                     <img
                       v-if="rate.contract.validity > searchEndDate"
