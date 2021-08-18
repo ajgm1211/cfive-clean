@@ -780,6 +780,7 @@ class SearchApiController extends Controller
             if ($direction == 'Freight') {
                 $ocean_freight_array = [
                     'surcharge' => ['name' => $surchargeOcean->name,'id' => $surchargeOcean->id],
+                    'surcharge_id' =>  $surchargeOcean->id,
                     'containers' => json_decode($rate->containers, true),
                     'calculationtype' => ['name' => 'Per Container', 'id' => '5'], 
                     'typedestiny_id' => 3,

@@ -659,7 +659,7 @@ class QuoteV2Controller extends Controller
             $charge->$name = $value;
         }
         $charge->update();
-        if ($charge->surcharge_id == '') {
+        if ($charge->surcharge_id == '13885') {
             AutomaticRate::find($charge->automatic_rate_id)->update(['currency_id' => $charge->currency_id]);
         }
         $quote_id = $charge->automatic_rate->quote_id;
