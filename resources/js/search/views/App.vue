@@ -7,6 +7,7 @@
             @searchSuccess="setSearchData"
             @clearResults="clearDisplay"
             @quoteLoaded="setQuoteData"
+            @searchTypeChanged="setActions"
             ref="searchComponent"
         ></Search>
 
@@ -83,7 +84,7 @@
         </div>
 
         <!-- HEADER FCL -->
-        <div class="row mt-4 mb-4 result-header">
+        <div class="row mt-4 mb-4 result-header" v-if="searchType == 'FCL'">
         <div
             class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
         >
@@ -108,7 +109,7 @@
         <!-- FIN HEADER FCL -->
 
         <!-- HEADER LCL -->
-        <div class="row mt-4 mb-4 result-header" v-if="false">
+        <div class="row mt-4 mb-4 result-header" v-else-if="searchType == 'LCL'">
         <div
             class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
         >
@@ -132,7 +133,9 @@
 
         <Recent 
             v-if="resultsTotal == 0 && !searching"
+            :searchType="searchType"
             @recentSearch="quickSearch"
+            ref="recentComponent"
         ></Recent>
 
         <APIResults
@@ -142,16 +145,19 @@
             @apiSearchStarted="clearDisplay"
             @apiSearchDone="addApiResults"
             @addedToQuote="setResultsForQuote"
-            ref="resultsAPI"
+            ref="resultsAPIComponent"
         ></APIResults>
 
         <Result 
-            v-if="foundRates.length != 0"
-            :rates="foundRates"
+            v-if="foundRates.length != 0 || foundRatesLcl.length != 0"
+            :searchType="searchType"
+            :rates="searchType=='FCL' ? foundRates : foundRatesLcl"
             :request="searchRequest"
             :datalists="datalists"
             @createQuote="createQuote"
             @addedToQuote="setRatesForQuote"
+            @resultsCreated="setActions"
+            ref="resultsComponent"
         ></Result>
 
     </div>
@@ -176,6 +182,7 @@ export default {
             searching: false,
             searchRequested: false,
             foundRates: [],
+            foundRatesLcl: [],
             foundCharges: {},            
             searchRequest: [],
             datalists: {},
@@ -191,6 +198,8 @@ export default {
             apiSearchDone: true,
             searchDone: true,
             quoteData: {},
+            searchType: "FCL",
+            searchLoaded: false,
         }
     },
     created() {
@@ -198,6 +207,27 @@ export default {
     },
     methods :
     {
+        setActions(origin){
+            let component = this;
+
+            this.searchType = this.$refs.searchComponent.searchRequest.type;
+
+            for (var child in component.$refs) {
+                if(component.$refs[child] && component.$refs[child].searchActions){
+                    if(component.$refs[child].searchType){
+                        component.$refs[child].searchType = component.searchType;
+                    }
+                    if(child != 'resultsAPIComponent'){
+                        component.$refs[child].setActions();
+                    }
+                }
+            }
+
+            if(origin == 'dd'){
+                this.clearDisplay();
+            }
+        }, 
+
         countContainersClass() {
             if (
                 this.searchRequest.containers.length == 5 ||
@@ -283,16 +313,22 @@ export default {
             this.searching = true;
             this.searchRequest = searchRequest;
             this.requestData = this.$route.query;
-            this.$nextTick (()=>{
-                this.$refs.resultsAPI.callAPIs();
-            })
+            if(this.searchType == "FCL"){
+                this.$nextTick (()=>{
+                    this.$refs.resultsAPIComponent.callAPIs();
+                })
+            }
         },
 
         setSearchData(searchData){
-            //console.log(this.searchData);
             this.searching = false;
-            this.foundRates = searchData;
-            this.resultsTotal += this.foundRates.length;
+            if(this.searchType == "FCL"){
+                this.foundRates = searchData;
+                this.resultsTotal += this.foundRates.length;
+            }else if(this.searchType == "LCL"){
+                this.foundRatesLcl = searchData;
+                this.resultsTotal += this.foundRatesLcl.length;
+            }
             this.searchDone = true;
             if(this.apiSearchDone){
                 this.$refs.searchComponent.searching = false;
@@ -301,12 +337,16 @@ export default {
 
         clearDisplay(){
             this.foundRates = [];
+            this.foundRatesLcl = [];
             this.ratesForQuote = {
                 rates: [],
                 results: [],
             };
             this.resultsTotal = 0;
             this.apiSearchDone = false;
+            if(this.$refs.searchComponent.searching = true){
+                this.$refs.searchComponent.searching = false;
+            }
         },
 
         quickSearch(){
