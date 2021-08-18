@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use App\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreProviders;
 use App\Http\Resources\ProvidersResource;
+use App\Http\Resources\CarrierResource;
+use App\ReferentialData;
+use Illuminate\Validation\ValidationException;
 
 class ProvidersController extends Controller
 {
@@ -113,6 +115,53 @@ class ProvidersController extends Controller
 
         return new ProvidersResource($providers);
     }
+
+    /**
+     * Update the specified ref code in referential data.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Contract $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function updateRefCode(Request $request, $id)
+    {
+        $vdata = $request->validate([
+            'type' => 'required|in:provider,carrier',
+            'ref_code' => 'required',
+        ]);
+
+        $class_name = str_replace(
+            ['provider', 'carrier'], 
+            ['App\Provider', 'App\Carrier'], 
+            $vdata['type']
+        );
+        
+        if($class_name == 'App\Provider'){
+            $provider = $class_name::where(['id' => $id, 'company_user_id' => \Auth::user()->company_user_id])->firstOrFail();
+        }else{
+            $provider = $class_name::findOrFail($id);
+        }
+        
+        $json_data = json_encode([ 'ref_code' => $vdata['ref_code'] ]);
+
+        ReferentialData::updateOrCreate(
+            [ 
+                'referential_id' => $id, 
+                'referential_type' => $class_name, 
+                'company_user_id' => \Auth::user()->company_user_id
+            ],
+            [ 
+                'user_id' => \Auth::user()->id, 
+                'json_data' => $json_data
+            ] 
+        );
+        
+        if($vdata['type'] == 'carrier')
+            return (new CarrierResource($provider))->companyUser(\Auth::user()->companyUser);
+
+        return new ProvidersResource($provider);
+    }
+
 
     
         /**

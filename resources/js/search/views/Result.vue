@@ -501,7 +501,7 @@
               <div class="col-12 mt-3 mb-3 result-action">
                 <div class="d-flex align-items-center">
                   <p class="mr-4 mb-0">
-                    <b>Validity:</b>
+                    <b style="font-size:11px;">VALIDITY:</b>
                     {{ rate.contract.validity + " / " + rate.contract.expire }}
                     <img
                       v-if="rate.contract.validity > searchEndDate"
@@ -890,7 +890,6 @@ export default {
               console.log('Downloading!', response);
               window.open(response.data.url)
           }
-     
         })
         .catch((error) => {
           console.log(error);

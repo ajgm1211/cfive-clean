@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\ProvidersResource;
 
 class QuotationInlandLclResource extends JsonResource
 {
@@ -22,7 +23,7 @@ class QuotationInlandLclResource extends JsonResource
             'distance' => $this->distance,
             'port' => $this->port->display_name ?? null,
             'address' => $this->inland_address->address ?? null,
-            'provider' => $this->providers->name ?? null,
+            'provider' => new ProvidersResource($this->providers),
             'valid_from' => $this->valid_from,
             'valid_until' => $this->valid_until,
             'units' => $this->units,
