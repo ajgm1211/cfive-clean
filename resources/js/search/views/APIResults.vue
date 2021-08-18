@@ -2590,7 +2590,7 @@
                   <p class="mb-0">
                     {{ hapagResult.departureName }}
                   </p>
-                  <p>{{ hapagResult.departureDateGmt.substring(0, 10) }}</p>
+                  <p v-if="hapagResult.departureDateGmt">{{ hapagResult.departureDateGmt.substring(0, 10) }}</p>
                 </div>
                 <!-- FIN ORGIEN -->
 
@@ -2631,7 +2631,7 @@
                   <p class="mb-0">
                     {{ hapagResult.arrivalName }}
                   </p>
-                  <p>{{ hapagResult.arrivalDateGmt.substring(0, 10) }}</p>
+                  <p v-if="hapagResult.arrivalDateGmt">{{ hapagResult.arrivalDateGmt.substring(0, 10) }}</p>
                 </div>
                 <!-- FIN DESTINO -->
               </div>
@@ -2650,7 +2650,7 @@
                     <p class="mb-1">
                       {{ hapagResult.departureName }}
                     </p>
-                    <p>{{ hapagResult.departureDateGmt.substring(0, 10) }}</p>
+                    <p v-if="hapagResult.departureDateGmt">{{ hapagResult.departureDateGmt.substring(0, 10) }}</p>
                   </div>
                   <!-- FIN ORGIEN -->
 
@@ -2660,7 +2660,7 @@
                     <p class="mb-1">
                       {{ hapagResult.arrivalName }}
                     </p>
-                    <p>{{ hapagResult.arrivalDateGmt.substring(0, 10) }}</p>
+                    <p v-if="hapagResult.arrivalDateGmt">{{ hapagResult.arrivalDateGmt.substring(0, 10) }}</p>
                   </div>
                   <!-- FIN DESTINO -->
                 </div>
@@ -2736,7 +2736,7 @@
                   ><b-icon icon="check-circle-fill"></b-icon> HAPAG-LlOYD My
                   PRICES</span
                 >
-                <p class="ml-4 mb-0">
+                <p class="ml-4 mb-0" v-if="hapagResult.validityFrom && hapagResult.validityTo">
                   <b style="font-size:11px;">VALIDITY:</b>
                   {{
                     hapagResult.validityFrom.substring(0, 10) +
@@ -2977,7 +2977,7 @@
                           <p class="mb-0">
                             {{ route.details[0].departureName }}
                           </p>
-                          <p>
+                          <p v-if="route.details[0].departureDateGmt">
                             {{
                               route.details[0].departureDateGmt.substring(0, 10)
                             }}
@@ -3037,7 +3037,7 @@
                         <div class="destination ml-4">
                           <span>destination</span>
                           <p class="mb-0">{{ route.details[0].arrivalName }}</p>
-                          <p>
+                          <p v-if="route.details[0].arrivalDateGmt">
                             {{
                               route.details[0].arrivalDateGmt.substring(0, 10)
                             }}
@@ -3133,7 +3133,7 @@
                             :key="detailKey"
                           >
                             <div>
-                              <p>
+                              <p v-if="routeDetail.arrivalDateGmt">
                                 {{
                                   routeDetail.arrivalDateGmt.substring(0, 10)
                                 }}
@@ -3195,7 +3195,7 @@
                       <div class="origin">
                         <span>origin</span>
                         <p class="mb-0">{{ route.details[0].departureName }}</p>
-                        <p>
+                        <p v-if="route.details[0].departureDateGmt">
                           {{
                             route.details[0].departureDateGmt.substring(0, 10)
                           }}
@@ -3224,7 +3224,7 @@
                       <div class="destination">
                         <span>destination</span>
                         <p class="mb-0">{{ route.details[0].arrivalName }}</p>
-                        <p>
+                        <p v-if="route.details[0].arrivalDateGmt">
                           {{ route.details[0].arrivalDateGmt.substring(0, 10) }}
                         </p>
                       </div>
@@ -3328,7 +3328,7 @@
                                 :key="detailKey"
                               >
                                 <div>
-                                  <p>
+                                  <p v-if="routeDetail.arrivalDateGmt">
                                     {{
                                       routeDetail.arrivalDateGmt.substring(
                                         0,
