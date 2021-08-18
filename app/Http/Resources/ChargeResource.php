@@ -37,7 +37,7 @@ class ChargeResource extends JsonResource
         if($this->amount!= null){
             $charges = json_decode($data['amount']);
             foreach($charges as $key=>$value){
-                if($this->surcharge_id == null){
+                if($this->surcharge_id == "13885"){
                     $fr_key = 'freights_'.str_replace('c','',$key);
                     $data[$fr_key] = isDecimal($value,true);
                 } else {
