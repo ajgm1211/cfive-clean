@@ -658,11 +658,9 @@ export default {
         },
     },
     excel: {
-
         create(data, route) {
             return api.call('post', `/contracts/export`, data);
         }
-
     },
     search: {
         list(data) {
@@ -682,6 +680,17 @@ export default {
         },
         downloadContract(data){
             return api.call('post',`/api/search/downloadContract`, data);
+        },
+    },
+    searchlcl: {
+        list(data) {
+            return api.call('get', `/api/search_lcl/list`, data);
+        },
+        process(id) {
+            return api.call('post', `/api/search_lcl/process`, id);
+        },
+        create(data) {
+            return api.call('post', `/api/search_lcl/store`, data);
         },
     },
     contracts_lcl: {

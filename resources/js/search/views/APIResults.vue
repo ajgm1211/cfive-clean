@@ -4247,6 +4247,8 @@ export default {
       containerCodesMaerskDetentions: [],
       resultsForQuote: [],
       accordion_id: 0,
+      searchType: "FCL",
+      searchActions: {},
     };
   },
   methods: {
@@ -4299,10 +4301,7 @@ export default {
         component.results[carrier.code] = [];
       });
 
-      if (
-        this.request.carriersApi.length > 0 &&
-        this.request.selectedContainerGroup.id == 1
-      ) {
+      if (this.request.carriersApi.length > 0 && this.request.selectedContainerGroup.id == 1 && this.searchType == "FCL") {
         component.request.carriersApi.forEach(function (carrier) {
           apiCarrierCodes += carrier.code;
 

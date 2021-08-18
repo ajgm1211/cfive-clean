@@ -1045,6 +1045,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/search/downloadContract', 'SearchApiController@downloadContractFile');
     Route::get('/api/search/downloadMContract/{contract}', 'SearchApiController@downloadMultipleContractFile')->name('contract.multiple');
 
+    /**New Search LCL */
+    Route::get('/api/search_lcl/list', 'SearchApiLclController@list')->name('searchlclV2.list');
+    Route::post('/api/search_lcl/store', 'SearchApiLclController@store');
+    Route::post('/api/search_lcl/process', 'SearchApiLclController@processSearch');
+
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
     Route::get('/api/quotes/{quote}', 'QuotationController@retrieve')->middleware('check_company:quote');
