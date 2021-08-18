@@ -1861,7 +1861,7 @@ trait QuoteV2Trait
             $result['carrier_id'] = 24;
         }else if($result['companyCode'] == 'evergreen'){
             $result['carrier_id'] = 6;
-        }else if($result['companyCode'] == 'hapag'){
+        }else if($result['companyCode'] == 'hapag-lloyd'){
             $result['carrier_id'] = 9;
         }
 
