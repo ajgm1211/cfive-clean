@@ -36,7 +36,7 @@
           <!-- INFORMACION PRINCIPAL -->
           <div class="row col-12 col-lg-8 margin-res">
             <!-- CONTRACT NAME -->
-            <div class="col-12">
+            <div class="col-lg-10 col-12">
               <h6 class="mt-4 mb-5 contract-title">
                 {{ cmaResult.contractReference }}
                 <b-button
@@ -65,7 +65,9 @@
               </h6>
             </div>
             <!-- FIN CONTRACT NAME -->
+            <div class="col-lg-2 col-12 text-center">
 
+            </div>
             <!-- RUTA Y PRECIOS -->
             <div
               class="row col-12 mr-0 ml-0"
@@ -229,13 +231,33 @@
                   PRICES</span
                 >
                 <p class="ml-4 mb-0">
-                  <b>Validity:</b>
+                  <b style="font-size:11px;">VALIDITY:</b>
                   {{
                     cmaResult.validityFrom.substring(0, 10) +
                     " / " +
                     cmaResult.validityTo.substring(0, 10)
                   }}
                 </p>
+
+                <b-button
+                  :id="'popover-name-commodity-' + cmaResultKey"
+                  v-if="cmaResult.additionalData.commodities.length > 0"
+                  class="pophover-name-account ml-3 mb-0 mt-1"
+                  style="border:none !important"
+                >
+                  <b style="font-size:11px; color:#212529;">COMMODITIES</b> &nbsp;<b-icon icon="box"></b-icon>
+              </b-button>
+              <b-popover
+                  :target="'popover-name-commodity-' + cmaResultKey"
+                  triggers="hover"
+                  placement="top"
+                >
+                  <ul class="pl-2 ml-2">
+                    <li v-for="data in cmaResult.additionalData.commodities">
+                      {{ data.name }}
+                    </li>
+                  </ul>
+              </b-popover>
               </div>
 
               <div class="d-flex justify-content-end align-items-center">
@@ -526,7 +548,7 @@
                         <!-- DESTINO -->
                         <div class="destination ml-4">
                           <span>destination</span>
-                          <p class="mb-0">{{ route.details[0].arrivalName }}</p>
+                          <p class="mb-0">{{ route.details.slice(-1)[0].arrivalName }}</p>
                           <p v-if="route.details[0].arrivalDateGmt">
                             {{
                               route.details[0].arrivalDateGmt.substring(0, 10)
@@ -1866,7 +1888,7 @@
                   ><b-icon icon="check-circle-fill"></b-icon> EVERGREEN SPOT</span
                 >
                 <p class="ml-4 mb-0" v-if="evergreenResult.validityFrom && evergreenResult.validityTo">
-                  <b>Validity:</b>
+                  <b style="font-size:11px;">VALIDITY:</b>
                   {{
                     evergreenResult.validityFrom.substring(0, 10) +
                     " / " +
@@ -2711,11 +2733,11 @@
             <div class="col-12 mt-3 mb-3 result-action">
               <div class="d-flex align-items-center">
                 <span style="color: #006bfa; text-transform: capitalize"
-                  ><b-icon icon="check-circle-fill"></b-icon> hapag CGM My
+                  ><b-icon icon="check-circle-fill"></b-icon> HAPAG-LlOYD My
                   PRICES</span
                 >
                 <p class="ml-4 mb-0">
-                  <b>Validity:</b>
+                  <b style="font-size:11px;">VALIDITY:</b>
                   {{
                     hapagResult.validityFrom.substring(0, 10) +
                     " / " +
@@ -3559,7 +3581,7 @@
                     PRICES</span
                   >
                   <p class="ml-4 mb-0">
-                    <b>Validity:</b>
+                    <b style="font-size:11px;">VALIDITY:</b>
                     {{
                       cmaResult.validityFrom.substring(0, 10) +
                       " / " +
