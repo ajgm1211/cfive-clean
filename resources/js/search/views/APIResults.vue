@@ -2519,7 +2519,7 @@
         <div class="banda-top hapag"><span>HAPAG-LLOYD</span></div>
 
         <!-- INFORMACION DE TARIFA -->
-        <div class="row">
+        <div class="row" style="min-height: 199px !important">
           <!-- CARRIER -->
           <div
             class="
@@ -2584,11 +2584,9 @@
                   <div class="direction-form">
                     <img src="/images/logo-ship-blue.svg" alt="bote" />
 
-                    <div class="route-indirect d-flex align-items-center">
+                    <div class="route-direct d-flex align-items-center">
                       <div class="circle mr-2"></div>
                       <div class="line"></div>
-                      <div class="circle fill-circle-gray mr-2 ml-2"></div>
-                      <div class="line line-blue"></div>
                       <div class="circle fill-circle ml-2"></div>
                     </div>
                   </div>
