@@ -214,8 +214,6 @@ class SearchApiController extends Controller
         $company_user = $user->companyUser()->first();
         $company_user_id = $company_user->id;
 
-        
-
         $search_array = $request->validate([
             'originPorts' => 'required|array|min:1',
             'destinationPorts' => 'required|array|min:1',
@@ -236,11 +234,7 @@ class SearchApiController extends Controller
             'showRateCurrency' => 'sometimes',
             'originAddress' => 'sometimes',
             'destinationAddress' => 'sometimes'
-  
         ]);
-
-
-
 
         $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'], 0, 10);
         $search_array['dateRange']['endDate'] = substr($search_array['dateRange']['endDate'], 0, 10);
@@ -352,7 +346,6 @@ class SearchApiController extends Controller
             'pricelevel' => 'sometimes',
             'originCharges' => 'sometimes',
             'destinationCharges' => 'sometimes',
-            'showRateCurrency' => 'sometimes',
             'originAddress' => 'sometimes',
             'destinationAddress' => 'sometimes'
         ]);
@@ -405,7 +398,6 @@ class SearchApiController extends Controller
             'price_level_id' => $new_search_data_ids['pricelevel'],
             'origin_charges' => $new_search_data_ids['originCharges'],
             'destination_charges' => $new_search_data_ids['destinationCharges'],
-            'show_rate_currency' => $new_search_data_ids['showRateCurrency'],
             //'origin_address' => $new_search_data_ids['originAddress'],
             //'destination_address' => $new_search_data_ids['destinationAddress']
         ]);
