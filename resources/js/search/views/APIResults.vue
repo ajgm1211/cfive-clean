@@ -2516,10 +2516,10 @@
       :key="hapagResultKey + 'hapag'"
     >
       <div class="result-search">
-        <div class="banda-top hapag"><span>HAPAG LLOYD PRICES</span></div>
+        <div class="banda-top hapag"><span>HAPAG-LLOYD</span></div>
 
         <!-- INFORMACION DE TARIFA -->
-        <div class="row">
+        <div class="row" style="min-height: 199px !important">
           <!-- CARRIER -->
           <div
             class="
@@ -2584,11 +2584,9 @@
                   <div class="direction-form">
                     <img src="/images/logo-ship-blue.svg" alt="bote" />
 
-                    <div class="route-indirect d-flex align-items-center">
+                    <div class="route-direct d-flex align-items-center">
                       <div class="circle mr-2"></div>
                       <div class="line"></div>
-                      <div class="circle fill-circle-gray mr-2 ml-2"></div>
-                      <div class="line line-blue"></div>
                       <div class="circle fill-circle ml-2"></div>
                     </div>
                   </div>
@@ -2598,7 +2596,7 @@
                       <b>Transit Time: </b>
                       {{ hapagResult.transitTime + " days" }}
                     </p>
-                    <p><b>Vessel: </b> {{ hapagResult.vehiculeName }}</p>
+                    <p v-if="hapagResult.vehiculeName"><b>Vessel: </b> {{ hapagResult.vehiculeName }}</p>
                   </div>
                 </div>
                 <!-- FIN LINEA DE RUTA -->
@@ -2711,8 +2709,7 @@
             <div class="col-12 mt-3 mb-3 result-action">
               <div class="d-flex align-items-center">
                 <span style="color: #006bfa; text-transform: capitalize"
-                  ><b-icon icon="check-circle-fill"></b-icon> hapag CGM My
-                  PRICES</span
+                  ><b-icon icon="check-circle-fill"></b-icon> HAPAG-LLOYD QUICK QUOTES</span
                 >
                 <p class="ml-4 mb-0" v-if="hapagResult.validityFrom && hapagResult.validityTo">
                   <b>Validity:</b>
@@ -2732,8 +2729,7 @@
                     String(hapagResult.contractReference) +
                     '_' +
                     String(hapagResult.accordion_id)
-                  "
-                  ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
+                  " v-if="!hapagResult.routingDetails.length"><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
                 ></b-button>
                 <b-button
                   class="rs-btn"
