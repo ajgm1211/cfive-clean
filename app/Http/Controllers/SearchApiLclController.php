@@ -255,14 +255,14 @@ class SearchApiLclController extends Controller
         }
         
         $after_rates = true;
-        
+
         if(!$after_rates){
             $track_array = [];
             $track_array['company_user'] = $company_user;
             $track_array['data'] = $search_array;
 
             /** Tracking search event with Mix Panel*/
-            $this->trackEvents("search_fcl", $track_array);
+            $this->trackEvents("search_lcl", $track_array);
         }
 
         return RateLclResource::collection($rates);
