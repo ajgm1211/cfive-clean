@@ -431,15 +431,6 @@
                     >
                         &nbsp;&nbsp;<b>Include destination charges</b>
                     </b-form-checkbox>
-                    <b-form-checkbox
-                        id="showRateCurrency"
-                        v-model="searchRequest.showRateCurrency"
-                        name="showRateCurrency"
-                        class="as-checkbox"
-                        @input="updateQuoteSearchOptions"
-                    >
-                        &nbsp;&nbsp;<b>Show totals in rate currency</b>
-                    </b-form-checkbox>
                 </div>
                 <!-- FIN INCLUDE CHECKBOX -->
 
@@ -1504,6 +1495,7 @@ export default {
             destinationAutocompleteValue: null,
             originAddressPlaceholder: "Select an address",
             destinationAddressPlaceholder: "Select an address",
+
             //Gene defined
             ptdActive: false,
             dtpActive: false,
@@ -1882,7 +1874,7 @@ export default {
                 this.searchRequest.destinationCharges =
                     this.searchData.destination_charges == 0 ? false : true;
                 this.searchRequest.showRateCurrency =
-                    this.searchData.show_rate_currency == 0 ? false : true;
+                    this.datalists.company_user.options.totals_in_freight_currency == 1 ? true : false;
                 this.searchRequest.harbors = this.datalists.harbors;
                 this.searchRequest.currency = this.datalists.currency;
                 this.searchRequest.calculation_type = this.datalists.calculation_type;
