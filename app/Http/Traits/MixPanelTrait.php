@@ -78,6 +78,9 @@ trait MixPanelTrait
             case "new_request_carrier_lcl":
                 $this->trackNewRequestLclEvent($data, $user);
                 break;
+            case "search_lcl":
+                $this->trackSearchLclEvent($data, $user);
+                break;
         }
     }
 
@@ -611,5 +614,43 @@ trait MixPanelTrait
                 'App' => 'Cargofive'
             )
         );
+    }
+
+    /**
+     * trackSearchLclEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
+    public function trackSearchLclEvent($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        foreach ($data['data']['originPorts'] as $orig) {
+            $origin[] = $orig['display_name'];
+        }
+        foreach ($data['data']['destinationPorts'] as $dest) {
+            $destiny[] = $dest['display_name'];
+        }
+        if (!empty($origin) &&  !empty($destiny)) {
+            $mixPanel->track(
+                'Rate Finder LCL',
+                array(
+                    'Type'           =>$data['data']['type'],
+                    'Company'        => $data['company_user']['name'],
+                    'Origin'         => $origin,
+                    'Destination'    => $destiny,
+                    'Client_company' => $data['data']['company']['business_name'] ?? null,
+                    'Client_contact' => ['data']['contact']['name'] ?? null,
+                    'Container_type' => $data['data']['cargoType']['name'],
+                    'User'           => $user->fullname,
+                )
+            );
+        } else {
+            \Log::error('The origin port or destination port is empty , the user is ' . $user->email);
+        }
     }
 }
