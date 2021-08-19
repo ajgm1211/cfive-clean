@@ -16,7 +16,7 @@ class ChargeController extends Controller
 {
     public function list(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
     {   
-        $results = Charge::where([['surcharge_id','!=',null],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
+        $results = Charge::where([['surcharge_id','!=','15021'],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
         
         return ChargeResource::collection($results);
     }
