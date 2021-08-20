@@ -1,6 +1,6 @@
 <template>
   <div class="container-cards">
-        <!-- TARJETA CMA -->
+    <!-- TARJETA CMA -->
     <div
       class="mb-4"
       v-for="(cmaResult, cmaResultKey) in orderedCmaRates"
@@ -2891,7 +2891,7 @@
                       :key="hapagTypeTotalKey"
                     >
                       <b
-                        >{{ hapagTypeTotal.currencyCode }}
+                        >{{ hapagTypeTotal.currency }}
                         {{ hapagTypeTotal.total }}
                       </b></b-td
                     >
@@ -4237,7 +4237,7 @@ export default {
         maersk: [],
         cmacgm: [],
         evergreen: [],
-        hapag: [],
+        "hapag-lloyd": [],
       },
       containerCodesMaerskPenalties: [],
       containerCodesMaerskDetentions: [],
@@ -4344,7 +4344,7 @@ export default {
                   } else if (respData.company == "EVERGREEN") {
                     component.results["evergreen"].push(respData);
                   } else if (respData.company == "Hapag-Lloyd") {
-                    component.results["hapag"].push(respData);
+                    component.results["hapag-lloyd"].push(respData);
                   }
 
                   component.request.carriersApi.forEach(function (provider) {
@@ -4666,26 +4666,6 @@ export default {
         (item) => item.pricingDetails.totalRatePerContainer[0].total,
         ["asc"]
       );
-
-      /**var sortedArray = _(this.results.cmacgm).chain().sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[0]){
-                return result.pricingDetails.totalRatePerContainer[0].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[1]){
-                return result.pricingDetails.totalRatePerContainer[1].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[2]){
-                return result.pricingDetails.totalRatePerContainer[2].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[3]){
-                return result.pricingDetails.totalRatePerContainer[3].total;
-            }
-        }).value();
-
-        return sortedArray;**/
     },
 
     orderedEvergreenRates: function () {
@@ -4694,54 +4674,14 @@ export default {
         (item) => item.pricingDetails.totalRatePerContainer[0].total,
         ["asc"]
       );
-
-      /**var sortedArray = _(this.results.cmacgm).chain().sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[0]){
-                return result.pricingDetails.totalRatePerContainer[0].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[1]){
-                return result.pricingDetails.totalRatePerContainer[1].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[2]){
-                return result.pricingDetails.totalRatePerContainer[2].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[3]){
-                return result.pricingDetails.totalRatePerContainer[3].total;
-            }
-        }).value();
-
-        return sortedArray;**/
     },
 
     orderedHapagRates: function () {
       return _.orderBy(
-        this.results.hapag,
+        this.results['hapag-lloyd'],
         (item) => item.pricingDetails.totalRatePerContainer[0].total,
         ["asc"]
       );
-
-      /**var sortedArray = _(this.results.cmacgm).chain().sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[0]){
-                return result.pricingDetails.totalRatePerContainer[0].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[1]){
-                return result.pricingDetails.totalRatePerContainer[1].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[2]){
-                return result.pricingDetails.totalRatePerContainer[2].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[3]){
-                return result.pricingDetails.totalRatePerContainer[3].total;
-            }
-        }).value();
-
-        return sortedArray;**/
     },
   },
 };
