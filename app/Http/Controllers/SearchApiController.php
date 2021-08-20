@@ -264,18 +264,18 @@ class SearchApiController extends Controller
             //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
             $this->setChargesPerContainer($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
 
+            //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
+            $charges = $this->joinCharges($charges, $search_ids['client_currency'], $search_ids['selectedContainerGroup']);
+
+            //Appending Rate Id to Charges
+            $this->addChargesToRate($rate, $charges, $search_ids['client_currency']);
+
             //Getting price levels if requested
             if (array_key_exists('pricelevel', $search_array) && $search_array['pricelevel'] != null) {
                 $price_level_markups = $this->searchPriceLevels($search_ids);
             } else {
                 $price_level_markups = [];
             }
-
-            //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
-            $charges = $this->joinCharges($charges, $search_ids['client_currency'], $search_ids['selectedContainerGroup']);
-
-            //Appending Rate Id to Charges
-            $this->addChargesToRate($rate, $charges, $search_ids['client_currency']);
             
             //Adding price levels
             if ($price_level_markups != null && count($price_level_markups) != 0) {
