@@ -413,6 +413,12 @@
                             </div>
                             <div class="tab-pane fade" id="pdf" role="tabpanel" aria-labelledby="pdf-tab">
                                 <div class="row">
+                                <div class="col-md-4">
+                                        <div class="form-group m-form__group">
+                                            <label for="footer_type">PDF Template</label>
+                                            {{ Form::select('pdf_template_id',$pdf_templates,@$company->companyUser->pdf_template_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_template','required'=>'true']) }}
+                                        </div>
+                                    </div>
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
                                             <label for="pdf_language">PDF language</label>
@@ -421,14 +427,14 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
-                                            <label for="footer_type">PDF Footer</label>
-                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image','Color'=>'Color'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
+                                            <label for="footer_type">PDF Header</label>
+                                            {{ Form::select('footer_type',[''=>'Choose a type','Image'=>'Image'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
-                                            <label for="footer_type">PDF Template</label>
-                                            {{ Form::select('pdf_template_id',$pdf_templates,@$company->companyUser->pdf_template_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_template','required'=>'true']) }}
+                                            <label for="footer_type">PDF Footer</label>
+                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image','Color'=>'Color'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
                                         </div>
                                     </div>                          
                                     <div class="col-md-5">
