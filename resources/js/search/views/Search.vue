@@ -1432,6 +1432,7 @@ export default {
                 type: "FCL",
                 destinationCharges: false,
                 originCharges: false,
+                showRateCurrency: false,
                 deliveryType: {},
                 selectedContainerGroup: {},
                 containers: [],
@@ -1494,6 +1495,7 @@ export default {
             destinationAutocompleteValue: null,
             originAddressPlaceholder: "Select an address",
             destinationAddressPlaceholder: "Select an address",
+
             //Gene defined
             ptdActive: false,
             dtpActive: false,
@@ -1871,6 +1873,8 @@ export default {
                     this.searchData.origin_charges == 0 ? false : true;
                 this.searchRequest.destinationCharges =
                     this.searchData.destination_charges == 0 ? false : true;
+                this.searchRequest.showRateCurrency =
+                    this.datalists.company_user.options.totals_in_freight_currency == 1 ? true : false;
                 this.searchRequest.harbors = this.datalists.harbors;
                 this.searchRequest.currency = this.datalists.currency;
                 this.searchRequest.calculation_type = this.datalists.calculation_type;
@@ -1883,6 +1887,7 @@ export default {
                     this.searchRequest.contact = this.quoteData.search_options.contact;
                     this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
                     this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
+                    this.searchRequest.showRateCurrency = this.quoteData.search_options.show_rate_currency;
                     this.searchRequest.destinationCharges = this.quoteData.search_options.destination_charges;
                     this.searchRequest.originPorts = this.quoteData.search_options.origin_ports;
                     this.searchRequest.destinationPorts = this.quoteData.search_options.destination_ports;
