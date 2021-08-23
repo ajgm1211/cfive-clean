@@ -182,10 +182,9 @@
                     <b-tr>
                       <b-th>Charge</b-th>
                       <b-th>Detail</b-th>
-                      <b-th>Price Per Unit</b-th>
-                      <b-th>Units</b-th>                      
                       <b-th>Amount</b-th>
-                      <b-th>Minimum</b-th>
+                      <b-th>Units</b-th>
+                      <b-th></b-th>                      
                       <b-th>Total</b-th>
                     </b-tr>
                   </b-thead>
@@ -201,7 +200,7 @@
                       <b-td>{{
                         charge.calculationtypelcl.name }}</b-td
                       >
-                      <b-td> {{ charge.price_per_unit }} </b-td>
+                      <b-td> {{ charge.ammount }} </b-td>
                       <b-td> {{ charge.units }} </b-td>
                       <b-td>
                         <p v-if="charge.total_markups != undefined">
@@ -223,7 +222,6 @@
                           }}</span
                         >
                       </b-td>
-                      <b-td> {{ charge.minimum }} </b-td>
                       <b-td>
                         <b v-if="chargeType == 'Freight'">{{
                           charge.joint_as == "client_currency"
