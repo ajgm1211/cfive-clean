@@ -240,7 +240,7 @@ class SearchApiLclController extends Controller
 
             $this->stringifyLclRateAmounts($rate);
 
-            $this->setDownloadParameters($rate);
+            $this->setDownloadParameters($rate, $search_ids);
         }
 
         if ($rates != null && count($rates) != 0) {
