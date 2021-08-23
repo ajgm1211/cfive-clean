@@ -67,7 +67,10 @@ class QuotationApiController extends Controller
         $company_user_id = Auth::user()->company_user_id;
 
         $quote = QuoteV2::ConditionalWhen($type, $status, $integration)
-            ->AuthUserCompany($company_user_id)->findOrFail($id);
+            ->AuthUserCompany($company_user_id)
+            ->where(function ($query) use($id) {
+                $query->where('id',$id)->orWhere('quote_id',$id);
+            })->firstOrFail();
 
         $data = new QuotationApiResource($quote);
 
