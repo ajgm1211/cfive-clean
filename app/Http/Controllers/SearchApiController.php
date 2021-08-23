@@ -214,8 +214,6 @@ class SearchApiController extends Controller
         $company_user = $user->companyUser()->first();
         $company_user_id = $company_user->id;
 
-        
-
         $search_array = $request->validate([
             'originPorts' => 'required|array|min:1',
             'destinationPorts' => 'required|array|min:1',
@@ -233,13 +231,10 @@ class SearchApiController extends Controller
             'pricelevel' => 'sometimes',
             'originCharges' => 'sometimes',
             'destinationCharges' => 'sometimes',
+            'showRateCurrency' => 'sometimes',
             'originAddress' => 'sometimes',
             'destinationAddress' => 'sometimes'
-  
         ]);
-
-
-
 
         $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'], 0, 10);
         $search_array['dateRange']['endDate'] = substr($search_array['dateRange']['endDate'], 0, 10);
@@ -269,18 +264,18 @@ class SearchApiController extends Controller
             //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
             $this->setChargesPerContainer($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
 
+            //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
+            $charges = $this->joinCharges($charges, $search_ids['client_currency'], $search_ids['selectedContainerGroup']);
+
+            //Appending Rate Id to Charges
+            $this->addChargesToRate($rate, $charges, $search_ids['client_currency']);
+
             //Getting price levels if requested
             if (array_key_exists('pricelevel', $search_array) && $search_array['pricelevel'] != null) {
                 $price_level_markups = $this->searchPriceLevels($search_ids);
             } else {
                 $price_level_markups = [];
             }
-
-            //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
-            $charges = $this->joinCharges($charges, $search_ids['client_currency'], $search_ids['selectedContainerGroup']);
-
-            //Appending Rate Id to Charges
-            $this->addChargesToRate($rate, $charges, $search_ids['client_currency']);
             
             //Adding price levels
             if ($price_level_markups != null && count($price_level_markups) != 0) {
@@ -292,7 +287,7 @@ class SearchApiController extends Controller
                 }
             }
             
-            $this->calculateTotals($rate,$search_ids['client_currency']);
+            $this->calculateTotals($rate,$search_ids);
 
             $remarks = $this->searchRemarks($rate, $search_ids);
 
@@ -917,9 +912,11 @@ class SearchApiController extends Controller
         }
     }
 
-    public function calculateTotals($rate,$client_currency)
+    public function calculateTotals($rate,$search_data)
     {
+        $client_currency = $search_data['client_currency'];
         $charge_type_totals = [];
+        $totals_array_freight_currency = [];
 
         if (isset($rate->totals_with_markups)){
             $to_update = 'totals_with_markups';
@@ -950,8 +947,10 @@ class SearchApiController extends Controller
                                 $charges_to_add = $this->convertToCurrency($charge->currency, $client_currency, $charge->containers_with_markups);
                                 $charges_to_add_original = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers_with_markups);
                             }
+                            $charges_to_add_rate_currency = $charges_to_add_original;
                         }else{
                             $charges_to_add = $charge->totals_with_markups;
+                            $charges_to_add_rate_currency = $this->convertToCurrency($charge->currency, $rate->currency, $charge->totals_with_markups);
                         }
                     }else{
                         if($direction == "Freight"){
@@ -962,8 +961,10 @@ class SearchApiController extends Controller
                                 $charges_to_add = $this->convertToCurrency($charge->currency, $client_currency, $charge->containers);
                                 $charges_to_add_original = $this->convertToCurrency($charge->currency,$rate->currency,$charge->containers);
                             }
+                            $charges_to_add_rate_currency = $charges_to_add_original;
                         }else{
                             $charges_to_add = $charge->containers_client_currency;
+                            $charges_to_add_rate_currency = $this->convertToCurrency($charge->currency,$rate->currency,$charge->containers_client_currency);
                         }
                     }
 
@@ -977,6 +978,10 @@ class SearchApiController extends Controller
                         if (!isset($charge_type_totals[$direction][$code])) {
                             $charge_type_totals[$direction][$code] = 0;
                         }
+                        if(!isset($totals_array_freight_currency[$code])){
+                            $totals_array_freight_currency[$code] = 0;
+                        }
+                        $totals_array_freight_currency[$code] += isDecimal($charges_to_add_rate_currency[$code],true);
                         //Add prices from charge to totals by type
                         if($direction == "Freight"){
                             $charge_type_totals[$direction][$code] += isDecimal($charges_to_add_original[$code],true);
@@ -1008,6 +1013,10 @@ class SearchApiController extends Controller
                         if (!isset($charge_type_totals[$direction][$code])) {
                             $charge_type_totals[$direction][$code] = 0;
                         }
+                        if(!isset($totals_array_freight_currency[$code])){
+                            $totals_array_freight_currency[$code] = 0;
+                        }
+                        $totals_array_freight_currency[$code] += isDecimal($charges_to_add_original[$code],true);
                         //Add prices from charge to totals by type
                         $charge_type_totals[$direction][$code] += isDecimal($charges_to_add_original[$code],true);
                     }
@@ -1021,8 +1030,12 @@ class SearchApiController extends Controller
 
         }
 
-        $totals_freight_currency = $rate->charge_totals_by_type['Freight'];
-        $rate->setAttribute('totals_freight_currency', $totals_freight_currency);
+        if($search_data['showRateCurrency']){
+            $rate->setAttribute('totals_freight_currency', $totals_array_freight_currency);
+        }else{
+            $totals_freight_currency = $rate->charge_totals_by_type['Freight'];
+            $rate->setAttribute('totals_freight_currency', $totals_freight_currency);
+        }
 
         if(isset($rate->totals_with_markups)){
             $totals_with_markups_freight_currency = $this->convertToCurrency($client_currency, $rate->currency, $rate->totals_with_markups);
