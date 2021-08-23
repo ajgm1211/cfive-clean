@@ -25,8 +25,8 @@ class Users extends Controller
             ->select('users.*', 'companies.*')
             ->get();
         
-            return $users;
-    }
+            return response()->json($users,200);    
+        }
 
     /**
      * Show the form for creating a new resource.
@@ -60,7 +60,8 @@ class Users extends Controller
 
         User::create($data);
 
-        
+        return response()->json($data);
+
         
     }
 
@@ -74,7 +75,7 @@ class Users extends Controller
     {
         $user = User::find($id);
 
-        return $user;
+        return response()->json($user,200);    
     }
 
     /**
@@ -121,7 +122,7 @@ class Users extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
-        return $user;
+        return response()->json($user,200);    
     }
 
 }
