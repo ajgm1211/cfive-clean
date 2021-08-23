@@ -19,7 +19,7 @@ class Contacts extends Controller
     {
         $contact = Contact::all();
 
-        return $contact;
+        return response()->json($contact,200);    
     }
 
     /**
@@ -50,7 +50,7 @@ class Contacts extends Controller
 
         $contact = Contact::create($request->all());
 
-        return $contact;
+        return response()->json($contact,200);    
     }
 
     /**
@@ -63,7 +63,7 @@ class Contacts extends Controller
     {
         $contact = Contact::find($id);
 
-        return $contact;
+        return response()->json($contact,200);    
     }
 
     /**
@@ -110,6 +110,6 @@ class Contacts extends Controller
     {
         $contact = Contact::find($id);
         $contact->delete();
-        return $contact;
+        return response()->json($contact,200);    
     }
 }
