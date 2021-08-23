@@ -370,6 +370,7 @@ trait MixPanelTrait
             $event,
             array(
                 'Company'       => $data->companyuser->name,
+                'Status'        => $data->status,
                 'User'          => $user->fullname,
                 'Contract'      => $data->namecontract,
                 'Valid_from'    => $date[0],
@@ -542,7 +543,7 @@ trait MixPanelTrait
         $container = json_decode($data->data);
 
         $mixPanel->track(
-            'New Request Carrier FCL',
+            'New Request By Carrier FCL',
             array(
                 'Type' => 'FCL',
                 'Company' => $user->companyUser->name,
@@ -600,7 +601,7 @@ trait MixPanelTrait
         $container = json_decode($data->data);
 
         $mixPanel->track(
-            'New Request Carrier FCL',
+            'New Request By Carrier LCL',
             array(
                 'Type' => 'LCL',
                 'Company' => $user->companyUser->name,
