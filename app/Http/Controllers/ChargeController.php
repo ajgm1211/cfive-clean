@@ -6,17 +6,21 @@ use Illuminate\Http\Request;
 use App\AutomaticRate;
 use App\QuoteV2;
 use App\Charge;
+use App\Surcharge;
 use App\Http\Resources\AutomaticRateResource;
 use App\Http\Resources\ChargeResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Http\Traits\SearchTrait;
 
 class ChargeController extends Controller
 {
+    use  SearchTrait;
     public function list(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
     {   
-        $results = Charge::where([['surcharge_id','!=','15021'],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
+        $surcharge_ocean = $this->getSurchargeOcean();
+        $results = Charge::where([['surcharge_id','!=',$surcharge_ocean->id ],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
         
         return ChargeResource::collection($results);
     }
@@ -131,7 +135,8 @@ class ChargeController extends Controller
 
     public function retrieve(AutomaticRate $autorate)
     {   
-        $charge = Charge::where([['automatic_rate_id',$autorate->id],['surcharge_id','15021']])->first();
+        $surcharge_ocean = $this->getSurchargeOcean();
+        $charge = Charge::where([['automatic_rate_id',$autorate->id],['surcharge_id',$surcharge_ocean->id]])->first();
         if($charge !=null)        
          return new ChargeResource($charge);
     }
