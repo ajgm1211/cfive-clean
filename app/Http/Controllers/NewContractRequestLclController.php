@@ -285,8 +285,9 @@ class NewContractRequestLclController extends Controller
                 ]);
 
                 $contract->carrier = $carrierVal;
+                $contract->type = 'LCL';
 
-                $this->trackEvents("new_request_carrier_lcl", $contract);
+                $this->trackEvents("new_request_by_carrier", $contract);
             }
 
             if (env('APP_VIEW') == 'operaciones') {

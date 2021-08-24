@@ -307,9 +307,10 @@ class RequestFclV2Controller extends Controller
                 ]);
 
                 $Ncontract->carrier = $carrierVal;
+                $Ncontract->type = 'FCL';
 
                 //Calling Mix Panel's event
-                $this->trackEvents("new_request_carrier_fcl", $Ncontract);
+                $this->trackEvents("new_request_by_carrier", $Ncontract);
             }
 
             $contract->addMedia(storage_path('tmp/request/' . $file))->preservingOriginal()->toMediaCollection('document', 'contracts3');
