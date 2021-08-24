@@ -58,10 +58,10 @@ class SearchApiLclController extends Controller
             'destinationAddress' => 'sometimes',
             'lclTypeIndex' => 'sometimes',
             //LCL
-            'volume' => 'sometimes|required_if:type,LCL',
-            'weight' => 'sometimes|required_if:type,LCL',
-            'quantity' => 'sometimes|required_if:type,LCL',
-            'chargeableWeight' => 'sometimes|required_if:type,LCL',
+            'volume' => 'sometimes|required_if:type,LCL|gt:0',
+            'weight' => 'sometimes|required_if:type,LCL|gt:0',
+            'quantity' => 'sometimes|required_if:type,LCL|gt:0',
+            'chargeableWeight' => 'sometimes|required_if:type,LCL|gt:0',
             //by Total Shipment
             'cargoType' => 'sometimes|required_if:lclTypeIndex,0',
             //by Packaging
