@@ -69,13 +69,10 @@ trait MixPanelTrait
             case "new_request_Fcl":
                 $this->trackNewRequestFclEvent($data, $user);
                 break;
-            case "new_request_carrier_fcl":
-                $this->trackNewRequestCarrierFclEvent($data, $user);
+            case "new_request_by_carrier":
+                $this->trackNewRequestByCarrierEvent($data, $user);
                 break;
             case "new_request_Lcl":
-                $this->trackNewRequestLclEvent($data, $user);
-                break;
-            case "new_request_carrier_lcl":
                 $this->trackNewRequestLclEvent($data, $user);
                 break;
         }
@@ -526,38 +523,6 @@ trait MixPanelTrait
     }
 
     /**
-     * trackRequestCarrierFclEvent
-     *
-     * @param  mixed $data
-     * @param  mixed $user
-     * @return void
-     */
-    public function trackNewRequestCarrierFclEvent($data, $user)
-    {
-        $mixPanel = app('mixpanel');
-
-        $mixPanel->identify($user->id);
-
-        $carrier = Carrier::find($data->carrier);
-
-        $container = json_decode($data->data);
-
-        $mixPanel->track(
-            'New Request By Carrier FCL',
-            array(
-                'Type' => 'FCL',
-                'Company' => $user->companyUser->name,
-                'Contract_id' => $data->contract_id,
-                'Container_type' => $container->group_containers->name,
-                'Carrier' => $carrier->name,
-                'User' => $user->fullname,
-                'Created_at' => $data->created_at,
-                'App' => 'Cargofive'
-            )
-        );
-    }
-
-    /**
      * trackRequestLclEvent
      *
      * @param  mixed $data
@@ -584,13 +549,13 @@ trait MixPanelTrait
     }
 
     /**
-     * trackRequestCarrierLclEvent
+     * trackRequestCarrierFclEvent
      *
      * @param  mixed $data
      * @param  mixed $user
      * @return void
      */
-    public function trackRequestCarrierLclEvent($data, $user)
+    public function trackNewRequestByCarrierEvent($data, $user)
     {
         $mixPanel = app('mixpanel');
 
@@ -601,14 +566,15 @@ trait MixPanelTrait
         $container = json_decode($data->data);
 
         $mixPanel->track(
-            'New Request By Carrier LCL',
+            'New Request By Carrier',
             array(
-                'Type' => 'LCL',
+                'Type' => $data->type,
                 'Company' => $user->companyUser->name,
-                'Contract_id' => $data->id,
+                'Contract_id' => $data->contract_id,
+                'Container_type' => $container->group_containers->name,
+                'Carrier' => $carrier->name,
                 'User' => $user->fullname,
                 'Created_at' => $data->created_at,
-                'Carrier' => $carrier->name,
                 'App' => 'Cargofive'
             )
         );

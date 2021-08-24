@@ -57,7 +57,7 @@ return [
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
-            'username' => env('NAME_LOG','CARGOFIVE LOG 5.7'),
+            'username' => env('NAME_LOG','CARGOFIVE'),
             'emoji' => ':boom:',
             'level' => 'debug',
         ],
