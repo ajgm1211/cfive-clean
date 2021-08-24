@@ -468,7 +468,7 @@
                                             icon="exclamation-circle"
                                             class="mr-2"
                                         ></b-icon
-                                        >Please complete all the fields
+                                        >Values cannot be empty or zero
                                     </h6>
                                 </div>
                                 <div class="col-12 col-sm-3">
@@ -576,7 +576,7 @@
                                             icon="exclamation-circle"
                                             class="mr-2"
                                         ></b-icon
-                                        >Please complete all the fields
+                                        >Values cannot be empty or zero
                                     </h6>
                                 </div>
 
@@ -786,6 +786,7 @@
                     </button>
                     <b-button
                         v-b-modal.add-contract
+                        v-if="searchRequest.type == 'FCL'"
                         class="btn-add-contract ml-4"
                         >Add Contract</b-button
                     >
@@ -2029,7 +2030,7 @@ export default {
                 (this.lclShipmentVolume == "" ||
                 this.lclShipmentWeight == "" ||
                 this.lclShipmentQuantity == "")){
-                this.invalidShipmentCalculation = true;
+                    this.invalidShipmentCalculation = true;
 
                     setTimeout(function () {
                         component.invalidShipmentCalculation = false;
@@ -2065,6 +2066,18 @@ export default {
                         this.searching = false;
                         if (error.status === 422) {
                             this.responseErrors = error.data.errors;
+                            if(this.responseErrors.quantity ||
+                                this.responseErrors.volume ||
+                                this.responseErrors.weight){
+                                    this.invalidShipmentCalculation = true;
+                                    this.invalidPackagingCalculation = true;
+
+                                    setTimeout(function () {
+                                        component.invalidShipmentCalculation = false;
+                                        component.invalidPackagingCalculation = false;
+                                        return
+                                    }, 1500);                               
+                            }
                         }
                     });
             } else if (this.searchRequest.requestData.requested == 1) {
@@ -2357,16 +2370,28 @@ export default {
         addLclPackaging() {
             let component = this; 
 
-            if(this.addPackagingBar.weight &&
+            if(this.addPackagingBar.weight && 
                 this.addPackagingBar.width &&
                 this.addPackagingBar.depth &&
                 this.addPackagingBar.height &&
                 this.addPackagingBar.quantity &&
                 this.addPackagingBar.cargoType){
-                    let newPackaging = _.cloneDeep(this.addPackagingBar);
-                    this.lclPackaging.push(newPackaging);
-                    this.setChargeableWeight();
-                    this.clearAddPackagingBar();
+                    if(this.addPackagingBar.weight > 0 && 
+                        this.addPackagingBar.width > 0 &&
+                        this.addPackagingBar.depth > 0 &&
+                        this.addPackagingBar.height > 0 &&
+                        this.addPackagingBar.quantity > 0){
+                            let newPackaging = _.cloneDeep(this.addPackagingBar);
+                            this.lclPackaging.push(newPackaging);
+                            this.setChargeableWeight();
+                            this.clearAddPackagingBar();
+                    }else{
+                        this.invalidPackagingCalculation = true;
+
+                        setTimeout(function () {
+                            component.invalidPackagingCalculation = false;
+                        }, 1500);
+                    }
             }else{
                 this.invalidPackagingCalculation = true;
 
