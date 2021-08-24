@@ -410,7 +410,7 @@ class SearchApiController extends Controller
 
             $this->stringifyFclRateAmounts($rate);
 
-            $this->setDownloadParameters($rate);
+            $this->setDownloadParameters($rate,$search_ids);
         }
 
         if ($rates != null && count($rates) != 0) {
