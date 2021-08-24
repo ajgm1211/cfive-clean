@@ -762,7 +762,7 @@ class QuotationController extends Controller
         $inlands = $new_quote->inland_addresses()->get();
 
         //Deleting Local Charges without ports in rates
-        $local_charge_quotes = $quote->local_charges()->get();
+        $local_charge_quotes = $new_quote->local_charges()->get();
 
         foreach ($local_charge_quotes as $localcharge) {
             if ($localcharge->type_id == 1) {
@@ -778,7 +778,7 @@ class QuotationController extends Controller
 
         if ($new_quote->type == "FCL") {
             $locals = $new_quote->local_charges_totals()->get();
-        } elseif ($new_quote->type == "FCL") {
+        } elseif ($new_quote->type == "LCL") {
             $locals = $new_quote->local_charges_lcl_totals()->get();
         }
 
