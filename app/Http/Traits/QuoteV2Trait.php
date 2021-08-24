@@ -1861,7 +1861,7 @@ trait QuoteV2Trait
             $result['carrier_id'] = 24;
         }else if($result['companyCode'] == 'evergreen'){
             $result['carrier_id'] = 6;
-        }else if($result['companyCode'] == 'hapag'){
+        }else if($result['companyCode'] == 'hapag-lloyd'){
             $result['carrier_id'] = 9;
         }
 
@@ -1897,7 +1897,7 @@ trait QuoteV2Trait
                     $charge['type_id'] = 3;
                 }
 
-                if($charge['calculationType'] == 'Per Container'){
+                if($charge['calculationType'] == 'Per Container' || $charge['calculationType'] == null ){
                     if($containerGroup['id'] == 1){
                         $charge['calculationtype_id'] = 5;
                     }elseif($containerGroup['id'] == 2){
