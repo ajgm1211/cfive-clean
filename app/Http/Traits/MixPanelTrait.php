@@ -2,6 +2,7 @@
 
 namespace App\Http\Traits;
 
+use App\Carrier;
 use Illuminate\Support\Collection as Collection;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use Illuminate\Support\Facades\Auth;
@@ -68,8 +69,17 @@ trait MixPanelTrait
             case "new_request_Fcl":
                 $this->trackNewRequestFclEvent($data, $user);
                 break;
+            case "new_request_carrier_fcl":
+                $this->trackNewRequestCarrierFclEvent($data, $user);
+                break;
             case "new_request_Lcl":
                 $this->trackNewRequestLclEvent($data, $user);
+                break;
+            case "new_request_carrier_lcl":
+                $this->trackNewRequestLclEvent($data, $user);
+                break;
+            case "search_lcl":
+                $this->trackSearchLclEvent($data, $user);
                 break;
         }
     }
@@ -134,28 +144,27 @@ trait MixPanelTrait
         $mixPanel = app('mixpanel');
 
         $mixPanel->identify($user->id);
-        
-        foreach($data['data']['originPorts'] as $orig){
-            $origin[]=$orig['display_name'];
+
+        foreach ($data['data']['originPorts'] as $orig) {
+            $origin[] = $orig['display_name'];
         }
-        foreach($data['data']['destinationPorts'] as $dest){
-            $destiny[]=$dest['display_name'];
+        foreach ($data['data']['destinationPorts'] as $dest) {
+            $destiny[] = $dest['display_name'];
         }
-        if(!empty($origin) &&  !empty($destiny)){
+        if (!empty($origin) &&  !empty($destiny)) {
             $mixPanel->track(
                 'Rate Finder FCL',
                 array(
                     'Company' => $data['company_user']['name'],
-                    'Origin' =>$origin,
-                    'Destination' =>$destiny,
+                    'Origin' => $origin,
+                    'Destination' => $destiny,
                     'Container_type' => $data['data']['selectedContainerGroup']['name'],
                     'User' => $user->fullname,
                 )
             );
-        }else{
-            \Log::error('The origin port or destination port is empty , the user is '.$user->email);
+        } else {
+            \Log::error('The origin port or destination port is empty , the user is ' . $user->email);
         }
-    
     }
 
     /**
@@ -317,16 +326,25 @@ trait MixPanelTrait
 
         $mixPanel->identify($user->id);
         $date = explode("/", $data->validation);
+
+        if($data->status == 'Done'){
+            $event = 'Request Done FCL';
+        }else{
+            $event = 'Request FCL Status Updates';
+        }
+
         $mixPanel->track(
-            'Request Done FCL',
+            $event,
             array(
                 'Company'       => $data->companyuser->name,
                 'User'          => $user->fullname,
                 'Contract'      => $data->namecontract,
                 'Valid_from'    => $date[0],
                 'Valid_until'   => $date[1],
+                'Status'        => $data->status,
                 'Owner'         => $user->username_load,
                 'Created_at'    => $data->created_at,
+                'App'           => 'Cargofive'
             )
         );
     }
@@ -344,8 +362,15 @@ trait MixPanelTrait
 
         $mixPanel->identify($user->id);
         $date = explode("/", $data->validation);
+
+        if($data->status == 'Done'){
+            $event = 'Request Done LCL';
+        }else{
+            $event = 'Request LCL Status Updates';
+        }
+
         $mixPanel->track(
-            'Request Done LCL',
+            $event,
             array(
                 'Company'       => $data->companyuser->name,
                 'User'          => $user->fullname,
@@ -354,6 +379,7 @@ trait MixPanelTrait
                 'Valid_until'   => $date[1],
                 'Owner'         => $data->username_load,
                 'Created_at'    => $data->created_at,
+                'App'           => 'Cargofive'
             )
         );
     }
@@ -377,11 +403,11 @@ trait MixPanelTrait
                 $equipment[] = $data['contain'][$equipment_id];
             }
         }
-        foreach  ($data['origin'] as $q){ 
-            $origin[]=$data['harbors'][$q];           
-        } 
-        foreach  ($data['destiny'] as $q){ 
-            $destiny[]=$data['harbors'][$q];           
+        foreach ($data['origin'] as $q) {
+            $origin[] = $data['harbors'][$q];
+        }
+        foreach ($data['destiny'] as $q) {
+            $destiny[] = $data['harbors'][$q];
         }
 
         $mixPanel->track(
@@ -392,8 +418,8 @@ trait MixPanelTrait
                 'Client_company' => $data['company_client'] ?? null,
                 'Client_contact' => $data['contact_client'] ?? null,
                 'Container_group' => $data['type_container'],
-                'origin'=>$origin,
-                'destiny'=>$destiny,
+                'origin' => $origin,
+                'destiny' => $destiny,
                 'Container_type' => $equipment,
                 'User' => $user->fullname,
             )
@@ -413,11 +439,11 @@ trait MixPanelTrait
 
         $mixPanel->identify($user->id);
 
-        foreach  ($data['origin'] as $q){ 
-            $origin[]=$data['harbors'][$q];           
-        } 
-        foreach  ($data['destiny'] as $q){ 
-           $destiny[]=$data['harbors'][$q];           
+        foreach ($data['origin'] as $q) {
+            $origin[] = $data['harbors'][$q];
+        }
+        foreach ($data['destiny'] as $q) {
+            $destiny[] = $data['harbors'][$q];
         }
 
         $mixPanel->track(
@@ -427,8 +453,8 @@ trait MixPanelTrait
                 'Company' => $data['company'],
                 'Client_company' => $data['company_client'] ?? null,
                 'Client_contact' => $data['contact_client'] ?? null,
-                'origin'=> $origin,
-                'destiny'=> $destiny,
+                'origin' => $origin,
+                'destiny' => $destiny,
                 'User' => $user->fullname,
             )
         );
@@ -472,7 +498,7 @@ trait MixPanelTrait
         );
     }
 
-        /**
+    /**
      * trackRequestFclEvent
      *
      * @param  mixed $data
@@ -481,26 +507,59 @@ trait MixPanelTrait
      */
     public function trackNewRequestFclEvent($data, $user)
     {
-        
+
         $mixPanel = app('mixpanel');
 
         $mixPanel->identify($user->id);
 
-        $container=json_decode($data->data);
+        $container = json_decode($data->data);
         $mixPanel->track(
             'New Request FCL',
             array(
                 'Type' => 'FCL',
                 'Company' => $user->companyUser->name,
-                'Contract_id'=>$data->contract_id,
-                'Container_type'=>$container->group_containers->name,
+                'Contract_id' => $data->contract_id,
+                'Container_type' => $container->group_containers->name,
                 'User' => $user->fullname,
                 'Created_at' => $data->created_at,
+                'App' => 'Cargofive'
             )
         );
     }
 
-        /**
+    /**
+     * trackRequestCarrierFclEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
+    public function trackNewRequestCarrierFclEvent($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        $carrier = Carrier::find($data->carrier);
+
+        $container = json_decode($data->data);
+
+        $mixPanel->track(
+            'New Request Carrier FCL',
+            array(
+                'Type' => 'FCL',
+                'Company' => $user->companyUser->name,
+                'Contract_id' => $data->contract_id,
+                'Container_type' => $container->group_containers->name,
+                'Carrier' => $carrier->name,
+                'User' => $user->fullname,
+                'Created_at' => $data->created_at,
+                'App' => 'Cargofive'
+            )
+        );
+    }
+
+    /**
      * trackRequestLclEvent
      *
      * @param  mixed $data
@@ -518,10 +577,80 @@ trait MixPanelTrait
             array(
                 'Type' => 'LCL',
                 'Company' => $user->companyUser->name,
-                'Contract_id'=>$data->id,
+                'Contract_id' => $data->id,
                 'User' => $user->fullname,
                 'Created_at' => $data->created_at,
+                'App' => 'Cargofive'
             )
         );
+    }
+
+    /**
+     * trackRequestCarrierLclEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
+    public function trackRequestCarrierLclEvent($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        $carrier = Carrier::find($data->carrier);
+
+        $container = json_decode($data->data);
+
+        $mixPanel->track(
+            'New Request Carrier FCL',
+            array(
+                'Type' => 'LCL',
+                'Company' => $user->companyUser->name,
+                'Contract_id' => $data->id,
+                'User' => $user->fullname,
+                'Created_at' => $data->created_at,
+                'Carrier' => $carrier->name,
+                'App' => 'Cargofive'
+            )
+        );
+    }
+
+    /**
+     * trackSearchLclEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
+    public function trackSearchLclEvent($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        foreach ($data['data']['originPorts'] as $orig) {
+            $origin[] = $orig['display_name'];
+        }
+        foreach ($data['data']['destinationPorts'] as $dest) {
+            $destiny[] = $dest['display_name'];
+        }
+        if (!empty($origin) &&  !empty($destiny)) {
+            $mixPanel->track(
+                'Rate Finder LCL',
+                array(
+                    'Type'           =>$data['data']['type'],
+                    'Company'        => $data['company_user']['name'],
+                    'Origin'         => $origin,
+                    'Destination'    => $destiny,
+                    'Client_company' => $data['data']['company']['business_name'] ?? null,
+                    'Client_contact' => ['data']['contact']['name'] ?? null,
+                    'Container_type' => $data['data']['cargoType']['name'],
+                    'User'           => $user->fullname,
+                )
+            );
+        } else {
+            \Log::error('The origin port or destination port is empty , the user is ' . $user->email);
+        }
     }
 }
