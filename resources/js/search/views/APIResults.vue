@@ -526,7 +526,7 @@
                         <!-- DESTINO -->
                         <div class="destination ml-4">
                           <span>destination</span>
-                          <p class="mb-0">{{ route.details[0].arrivalName }}</p>
+                          <p class="mb-0">{{ route.details.slice(-1)[0].arrivalName }}</p>
                           <p v-if="route.details[0].arrivalDateGmt">
                             {{
                               route.details[0].arrivalDateGmt.substring(0, 10)
