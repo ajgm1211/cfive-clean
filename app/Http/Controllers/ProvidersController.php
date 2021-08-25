@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreProviders;
 use App\Http\Resources\ProvidersResource;
 use App\Http\Resources\CarrierResource;
+use App\Provider;
 use App\ReferentialData;
 use Illuminate\Validation\ValidationException;
 
@@ -84,7 +85,7 @@ class ProvidersController extends Controller
             'description' => 'required',    
         ]);
 
-        $providers = provider::create([
+        $providers = Provider::create([
             'name' => $data['name'],
             'description' => $data['description'],
             'company_user_id' => $company_user_id,       
