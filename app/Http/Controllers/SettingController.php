@@ -82,10 +82,13 @@ class SettingController extends Controller
     {
         $file = Input::file('image');
         $footer_image = Input::file('footer_image');
+        $header_image = Input::file('header_image');
         $signature_image = Input::file('email_signature_image');
         $filepath = '';
         $filepath_footer_image = '';
+        $filepath_header_image = '';
         $filepath_signature_image = '';
+
         if ($file != '') {
             $filepath = 'Logos/Companies/' . $file->getClientOriginalName();
             $name = $file->getClientOriginalName();
@@ -110,6 +113,11 @@ class SettingController extends Controller
             $s3->put($filepath_signature_image, file_get_contents($signature_image), 'public');
             //ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
         }
+        if ($header_image != '') {
+            $filepath_header_image = 'Header/' . $header_image->getClientOriginalName();
+            $s3 = \Storage::disk('s3_upload');
+            $s3->put($filepath_header_image, \File::get($header_image), 'public');
+        } 
         if ($request->decimals) {
             $decimals = 1;
         } else {
@@ -131,11 +139,15 @@ class SettingController extends Controller
             $company->pdf_language = $request->pdf_language;
             $company->footer_type = $request->footer_type;
             $company->footer_text = $request->footer_text_content;
+            $company->header_type = $request->header_type;
             $company->pdf_template_id = $request->pdf_template_id;
             $company->colors_pdf = $request->colors_pdf;
 
             if ($footer_image != "") {
                 $company->footer_image = $filepath_footer_image;
+            }
+            if ($header_image != "") {
+                $company->header_image = $filepath_header_image;
             }
             $company->type_pdf = 2;
             $company->pdf_ammounts = 2;
@@ -174,10 +186,14 @@ class SettingController extends Controller
             $company->pdf_language = $request->pdf_language;
             $company->footer_type = $request->footer_type;
             $company->footer_text = $request->footer_text_content;
+            $company->header_type = $request->header_type;
             $company->pdf_template_id = $request->pdf_template_id;
             $company->colors_pdf = $request->colors_pdf;
             if ($footer_image != "") {
                 $company->footer_image = $filepath_footer_image;
+            }
+            if ($header_image != "") {
+                $company->header_image = $filepath_header_image;
             }
             if ($file != '') {
                 $company->logo = $filepath;
