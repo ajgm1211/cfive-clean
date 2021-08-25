@@ -205,22 +205,28 @@
                             </div>
                             <div class="tab-pane fade" id="pdf" role="tabpanel" aria-labelledby="pdf-tab">
                                 <div class="row">
+                                    <div class="col-md-4" >
+                                        <div class="form-group m-form__group">
+                                            <label for="footer_type">PDF Template</label>
+                                            {{ Form::select('pdf_template_id',$pdf_templates,@$company->companyUser->pdf_template_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_template','required'=>'true']) }}
+                                        </div>
+                                    </div>
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
                                             <label for="pdf_language">PDF language</label>
                                             {{ Form::select('pdf_language',['0'=>'Choose a language','1'=>'English','2'=>'Spanish','3'=>'Portuguese'],null,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4" id="haeder_pdf">
                                         <div class="form-group m-form__group">
-                                            <label for="footer_type">PDF Footer</label>
-                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image','Color'=>'Color'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
+                                            <label for="header_type">PDF Header</label>
+                                            {{ Form::select('header_type',[''=>'Choose a type','image'=>'Image'],@$company->companyUser->header_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_header','required'=>'true']) }}
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
-                                            <label for="footer_type">PDF Template</label>
-                                            {{ Form::select('pdf_template_id',$pdf_templates,@$company->companyUser->pdf_template_id,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_template','required'=>'true']) }}
+                                            <label for="footer_type">PDF Footer</label>
+                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image','Color'=>'Color'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
                                         </div>
                                     </div>
                                     <div class="col-md-5">
@@ -231,6 +237,16 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col-md-12 hide" id="header_image">
+                                        <hr>
+                                        <div class="form-group files">
+                                            <label for="header_image">PDF Header image (1280 x 120 recommended)</label>
+                                            <input type="file" class="form-control-file" name="header_image">
+                                            @if(@$company->companyUser->header_image!='')
+                                            <img src="{{Storage::disk('s3_upload')->url(@$company->companyUser->footer_image )}}" class="img img-thumbnail img-fluid" style="width:100%; height: 80px;">
+                                            @endif
+                                        </div>
+                                    </div>
                                     <div class="col-md-12 hide" id="footer_image">
                                         <hr>
                                         <div class="form-group files">
@@ -425,10 +441,10 @@
                                             {{ Form::select('pdf_language',['0'=>'Choose a language','1'=>'English','2'=>'Spanish','3'=>'Portuguese'],@$company->companyUser->pdf_language,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 {{@$company->companyUser->pdf_template_id=='2' ? '':'hide'}} " id="haeder_pdf">
                                         <div class="form-group m-form__group">
                                             <label for="footer_type">PDF Header</label>
-                                            {{ Form::select('footer_type',[''=>'Choose a type','Image'=>'Image'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
+                                            {{ Form::select('header_type',[''=>'Choose a type','image'=>'Image'],@$company->companyUser->header_type,['class'=>'custom-select form-control','id' => 'pdf_header','required'=>'true']) }}
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -445,6 +461,16 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col-md-12 {{@$company->companyUser->header_type=='image' ? '':'hide'}}" id="header_image">
+                                        <hr>
+                                        <div class="form-group files">
+                                            <label for="header_image">PDF header image (1280 x 120 recommended)</label>
+                                            <input type="file" class="form-control-file" name="header_image">
+                                            @if(@$company->companyUser->header_image!='')
+                                            <img src="{{Storage::disk('s3_upload')->url(@$company->companyUser->header_image )}}" class="img img-thumbnail img-fluid" style="">
+                                            @endif
+                                        </div>
+                                    </div>
                                     <div class="col-md-12 {{@$company->companyUser->footer_type=='Image' ? '':'hide'}}" id="footer_image">
                                         <hr>
                                         <div class="form-group files">
