@@ -145,11 +145,11 @@ class SearchApiController extends Controller
             return $price->only(['id', 'name']);
         });
 
-        $surcharges = Surcharge::where('company_user_id', '=', $company_user_id)->get()->map(function ($surcharge) {
+        $surcharges = Surcharge::where('company_user_id', '=', $company_user_id)->orderBy('name','asc')->get()->map(function ($surcharge) {
             return $surcharge->only(['id', 'name',]);
         });
 
-        $calculation_type = CalculationType::get()->map(function ($calculationt) {
+        $calculation_type = CalculationType::orderBy('name','asc')->get()->map(function ($calculationt) {
             return $calculationt->only(['id', 'name']);
         });
 
