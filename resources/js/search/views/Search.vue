@@ -1487,6 +1487,7 @@ export default {
                 type: "FCL",
                 destinationCharges: false,
                 originCharges: false,
+                showRateCurrency: false,
                 deliveryType: {},
                 selectedContainerGroup: {},
                 containers: [],
@@ -1965,6 +1966,8 @@ export default {
                     this.searchData.origin_charges == 0 ? false : true;
                 this.searchRequest.destinationCharges =
                     this.searchData.destination_charges == 0 ? false : true;
+                this.searchRequest.showRateCurrency =
+                    this.datalists.company_user.options.totals_in_freight_currency == 1 ? true : false;
                 this.requestSearch();
             } else if (requestType == 1) {
                 if (this.quoteData.search_options != null) {
@@ -1973,6 +1976,7 @@ export default {
                     this.searchRequest.contact = this.quoteData.search_options.contact;
                     this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
                     this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
+                    this.searchRequest.showRateCurrency = this.quoteData.search_options.show_rate_currency;
                     this.searchRequest.destinationCharges = this.quoteData.search_options.destination_charges;
                     this.searchRequest.originPorts = this.quoteData.search_options.origin_ports;
                     this.searchRequest.destinationPorts = this.quoteData.search_options.destination_ports;
@@ -2594,44 +2598,18 @@ export default {
             }
         },
         
-        valueEq: function () {
-            if (this.valueEq.name == "DRY") {
-                this.items.splice({});
-                this.items.push(
-                    { name: "C20DV", placeholder: "20DV", value: 0 },
-                    { name: "C40DV", placeholder: "40DV" },
-                    { name: "C40HC", placeholder: "40HC" },
-                    { name: "C45HC", placeholder: "45HC" },
-                    { name: "C40NOR", placeholder: "40NOR" }
-                );
-                return;
-            }
+        valueEq: function (newValue,oldValue) {
+            let component = this;
 
-            if (this.valueEq.name == "REEFER") {
-                this.items.splice({});
-                this.items.push(
-                    { name: "C20RF", placeholder: "20RF" },
-                    { name: "C40RF", placeholder: "40RF" },
-                    { name: "C40HCRF", placeholder: "40HCRF" }
-                );
-                return;
-            }
-
-            if (this.valueEq.name == "OPEN TOP") {
-                this.items.splice({});
-                this.items.push(
-                    { name: "C20OT", placeholder: "20OT" },
-                    { name: "C40OT", placeholder: "40OT" }
-                );
-                return;
-            }
-
-            if (this.valueEq.name == "FLAT RACK") {
-                this.items.splice({});
-                this.items.push(
-                    { name: "C20FR", placeholder: "20FR" },
-                    { name: "C40FR", placeholder: "40FR" }
-                );
+            this.items.splice({});
+            if(newValue && newValue != ""){
+                this.datalists.containers.forEach(function (container){
+                    if(container.gp_container_id == newValue.id){
+                        component.items.push(
+                            { name: "C" + container.code, placeholder: container.code, value: 0 },
+                        );
+                    }
+                });
                 return;
             }
         },
