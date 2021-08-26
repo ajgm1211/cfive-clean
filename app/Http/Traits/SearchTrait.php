@@ -16,7 +16,9 @@ use App\Container;
 use App\RemarkCondition;
 use App\GroupContainer;
 use App\NewContractRequest;
+use App\NewContractRequestLcl;
 use App\ContractFclFile;
+use App\ContractLclFile;
 use App\TermAndConditionV2;
 use GoogleMaps;
 use Illuminate\Support\Collection as Collection;
@@ -1351,6 +1353,10 @@ trait SearchTrait
                         $charge->total_client_currency = $charge->adaptable_total_client_currency;
                     }
                 }
+
+                if($direction != "Freight"){
+                    $charge->ammount = $charge->total / $charge->units; 
+                }
             }
         }
     }
@@ -1413,7 +1419,7 @@ trait SearchTrait
                         'total' => $rate->total,
                         'minimum' => $rate->minimum,
                         'units' => $rate->calculation_type->name == "Per Shipment" ? 1 : $search_data['chargeableWeight'],
-                        'price_per_unit' => $rate->price_per_unit,
+                        'ammount' => $rate->uom,
                         'calculationtypelcl' => $rate->calculation_type, 
                         'typedestiny_id' => 3,
                         'currency' => $rate->currency,
@@ -1684,18 +1690,24 @@ trait SearchTrait
         }
     }
 
-    public function setDownloadParameters($rate)
+    public function setDownloadParameters($rate, $search_data)
     {
         if ($rate->contract->status != 'api') {
 
-            $contractRequestBackup = ContractFclFile::where('contract_id', $rate->contract->id)->first();
+            if( $search_data['type'] == 'FCL'){
+                $contractRequestBackup = ContractFclFile::where('contract_id', $rate->contract->id)->first();
+                $contractRequest = NewContractRequest::where('contract_id', $rate->contract->id)->first();
+            }elseif( $search_data['type'] == 'LCL'){
+                $contractRequestBackup = ContractLclFile::where('contractlcl_id', $rate->contract->id)->first();
+                $contractRequest = NewContractRequestLcl::where('contract_id', $rate->contract->id)->first();
+            }
+
             if (!empty($contractRequestBackup)) {
                 $contractBackupId = $contractRequestBackup->id;
             } else {
                 $contractBackupId = "0";
             }
 
-            $contractRequest = NewContractRequest::where('contract_id', $rate->contract->id)->first();
             if (!empty($contractRequest)) {
                 $contractRequestId = $contractRequest->id;
             } else {

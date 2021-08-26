@@ -1,6 +1,6 @@
 <template>
   <div class="container-cards">
-        <!-- TARJETA CMA -->
+    <!-- TARJETA CMA -->
     <div
       class="mb-4"
       v-for="(cmaResult, cmaResultKey) in orderedCmaRates"
@@ -2538,10 +2538,10 @@
       :key="hapagResultKey + 'hapag'"
     >
       <div class="result-search">
-        <div class="banda-top hapag"><span>HAPAG LLOYD PRICES</span></div>
+        <div class="banda-top hapag"><span>HAPAG-LLOYD</span></div>
 
         <!-- INFORMACION DE TARIFA -->
-        <div class="row">
+        <div class="row" style="min-height: 199px !important">
           <!-- CARRIER -->
           <div
             class="
@@ -2606,11 +2606,9 @@
                   <div class="direction-form">
                     <img src="/images/logo-ship-blue.svg" alt="bote" />
 
-                    <div class="route-indirect d-flex align-items-center">
+                    <div class="route-direct d-flex align-items-center">
                       <div class="circle mr-2"></div>
                       <div class="line"></div>
-                      <div class="circle fill-circle-gray mr-2 ml-2"></div>
-                      <div class="line line-blue"></div>
                       <div class="circle fill-circle ml-2"></div>
                     </div>
                   </div>
@@ -2620,7 +2618,7 @@
                       <b>Transit Time: </b>
                       {{ hapagResult.transitTime + " days" }}
                     </p>
-                    <p><b>Vessel: </b> {{ hapagResult.vehiculeName }}</p>
+                    <p v-if="hapagResult.vehiculeName"><b>Vessel: </b> {{ hapagResult.vehiculeName }}</p>
                   </div>
                 </div>
                 <!-- FIN LINEA DE RUTA -->
@@ -2733,8 +2731,7 @@
             <div class="col-12 mt-3 mb-3 result-action">
               <div class="d-flex align-items-center">
                 <span style="color: #006bfa; text-transform: capitalize"
-                  ><b-icon icon="check-circle-fill"></b-icon> HAPAG-LlOYD My
-                  PRICES</span
+                  ><b-icon icon="check-circle-fill"></b-icon> HAPAG-LLOYD QUICK QUOTE</span
                 >
                 <p class="ml-4 mb-0" v-if="hapagResult.validityFrom && hapagResult.validityTo">
                   <b style="font-size:11px;">VALIDITY:</b>
@@ -2754,8 +2751,7 @@
                     String(hapagResult.contractReference) +
                     '_' +
                     String(hapagResult.accordion_id)
-                  "
-                  ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
+                  " v-if="!hapagResult.routingDetails.length"><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
                 ></b-button>
                 <b-button
                   class="rs-btn"
@@ -2917,7 +2913,7 @@
                       :key="hapagTypeTotalKey"
                     >
                       <b
-                        >{{ hapagTypeTotal.currencyCode }}
+                        >{{ hapagTypeTotal.currency }}
                         {{ hapagTypeTotal.total }}
                       </b></b-td
                     >
@@ -4263,7 +4259,7 @@ export default {
         maersk: [],
         cmacgm: [],
         evergreen: [],
-        hapag: [],
+        "hapag-lloyd": [],
       },
       containerCodesMaerskPenalties: [],
       containerCodesMaerskDetentions: [],
@@ -4369,7 +4365,7 @@ export default {
                   } else if (respData.company == "EVERGREEN") {
                     component.results["evergreen"].push(respData);
                   } else if (respData.company == "Hapag-Lloyd") {
-                    component.results["hapag"].push(respData);
+                    component.results["hapag-lloyd"].push(respData);
                   }
 
                   component.request.carriersApi.forEach(function (provider) {
@@ -4691,26 +4687,6 @@ export default {
         (item) => item.pricingDetails.totalRatePerContainer[0].total,
         ["asc"]
       );
-
-      /**var sortedArray = _(this.results.cmacgm).chain().sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[0]){
-                return result.pricingDetails.totalRatePerContainer[0].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[1]){
-                return result.pricingDetails.totalRatePerContainer[1].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[2]){
-                return result.pricingDetails.totalRatePerContainer[2].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[3]){
-                return result.pricingDetails.totalRatePerContainer[3].total;
-            }
-        }).value();
-
-        return sortedArray;**/
     },
 
     orderedEvergreenRates: function () {
@@ -4719,54 +4695,14 @@ export default {
         (item) => item.pricingDetails.totalRatePerContainer[0].total,
         ["asc"]
       );
-
-      /**var sortedArray = _(this.results.cmacgm).chain().sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[0]){
-                return result.pricingDetails.totalRatePerContainer[0].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[1]){
-                return result.pricingDetails.totalRatePerContainer[1].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[2]){
-                return result.pricingDetails.totalRatePerContainer[2].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[3]){
-                return result.pricingDetails.totalRatePerContainer[3].total;
-            }
-        }).value();
-
-        return sortedArray;**/
     },
 
     orderedHapagRates: function () {
       return _.orderBy(
-        this.results.hapag,
+        this.results['hapag-lloyd'],
         (item) => item.pricingDetails.totalRatePerContainer[0].total,
         ["asc"]
       );
-
-      /**var sortedArray = _(this.results.cmacgm).chain().sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[0]){
-                return result.pricingDetails.totalRatePerContainer[0].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[1]){
-                return result.pricingDetails.totalRatePerContainer[1].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[2]){
-                return result.pricingDetails.totalRatePerContainer[2].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[3]){
-                return result.pricingDetails.totalRatePerContainer[3].total;
-            }
-        }).value();
-
-        return sortedArray;**/
     },
   },
 };

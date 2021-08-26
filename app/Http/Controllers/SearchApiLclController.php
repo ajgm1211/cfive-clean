@@ -58,10 +58,10 @@ class SearchApiLclController extends Controller
             'destinationAddress' => 'sometimes',
             'lclTypeIndex' => 'sometimes',
             //LCL
-            'volume' => 'sometimes|required_if:type,LCL',
-            'weight' => 'sometimes|required_if:type,LCL',
-            'quantity' => 'sometimes|required_if:type,LCL',
-            'chargeableWeight' => 'sometimes|required_if:type,LCL',
+            'volume' => 'sometimes|required_if:type,LCL|gt:0',
+            'weight' => 'sometimes|required_if:type,LCL|gt:0',
+            'quantity' => 'sometimes|required_if:type,LCL|gt:0',
+            'chargeableWeight' => 'sometimes|required_if:type,LCL|gt:0',
             //by Total Shipment
             'cargoType' => 'sometimes|required_if:lclTypeIndex,0',
             //by Packaging
@@ -228,7 +228,7 @@ class SearchApiLclController extends Controller
             $this->calculateTotals($rate,$search_ids['client_currency']);
 
             //ADDING ATTRIBUTES AT THE END            
-            $remarks = $this->searchRemarks($rate, $search_ids);
+            $remarks = $this->searchRemarks($rate,$search_ids);
 
             $rate->setAttribute('remarks', $remarks);
 
@@ -240,7 +240,7 @@ class SearchApiLclController extends Controller
 
             $this->stringifyLclRateAmounts($rate);
 
-            $this->setDownloadParameters($rate);
+            $this->setDownloadParameters($rate,$search_ids);
         }
 
         if ($rates != null && count($rates) != 0) {
@@ -254,17 +254,13 @@ class SearchApiLclController extends Controller
             $rates[0]->SetAttribute('search', $search_array);
         }
         
-        $after_rates = true;
-        
-        if(!$after_rates){
             $track_array = [];
             $track_array['company_user'] = $company_user;
             $track_array['data'] = $search_array;
 
             /** Tracking search event with Mix Panel*/
-            $this->trackEvents("search_fcl", $track_array);
-        }
-
+            $this->trackEvents("search_lcl", $track_array);
+        
         return RateLclResource::collection($rates);
     }
 
