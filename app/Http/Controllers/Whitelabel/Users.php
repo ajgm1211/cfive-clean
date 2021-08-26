@@ -8,8 +8,9 @@ use App\Company;
 use App\User;
 use App\Http\Requests\StoreUsers;
 use Illuminate\Support\Facades\DB;
-
-
+use GuzzleHttp\Client; 
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
 
 class Users extends Controller
 {
@@ -46,24 +47,50 @@ class Users extends Controller
     public function store(Request $request)
     {
 
-        $data = request()->validate([
-            'name' => 'required',
-            'lastname' => 'required',
-            'password' => 'required',
-            'email' => 'required|email|unique:users',
-            'phone' => 'nullable',
-            'type' => 'nullable',
-            'company_user_id' => 'nullable',
-            'position' => 'nullable',
-            'whitelabel' => 'nullable',
-        ]);
+         $data = $request->validate([
+             'name' => 'required',
+             'lastname' => 'required',
+             'password' => 'required',
+             'email' => 'required|email|unique:users',
+             'phone' => 'nullable',
+             'type' => 'nullable',
+             'company_user_id' => 'nullable',
+             'position' => 'nullable',
+             'whitelabel' => 'nullable',
+         ]);
 
-        User::create($data);
+         User::create($data);
+        if ($request->whitelabel == 1){
 
-        return response()->json($data);
+         $name = $request->get('name');
+         $lastname = $request->get('lastname');
+         $email = $request->get('email');
+         $password = $request->get('password');
+         $type = 'admin';
+
+         $client = new \GuzzleHttp\Client([              
+             'Accept' => 'application/json',
+             'Content-Type' => 'application/x-www-form-urlencoded']);
+                 // Create a POST request
+             $response = $client->request(
+                 'POST',
+                 'http://chirix.localhost:8000/admin',
+                 [
+                     'json' => [
+                         'name' => $name,
+                         'lastname' => $lastname,
+                         'email' => $email,
+                         'password' => $password,
+                         'type' => $type,
+                     ]
+                 ]
+             );
+        }
+        return response()->json($data,200);
 
         
     }
+
 
     /**
      * Display the specified resource.
