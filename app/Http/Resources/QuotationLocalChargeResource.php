@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\ProvidersResource;
+use App\Provider;
 use App\Http\Traits\UtilTrait;
 
 class QuotationLocalChargeResource extends JsonResource
@@ -18,6 +20,8 @@ class QuotationLocalChargeResource extends JsonResource
      */
     public function toArray($request)
     {
+        $provider = Provider::where('name', $this->provider_name)->first(); 
+
         return [
             'id' => $this->id,
             'charge' => $this->charge,
@@ -34,7 +38,7 @@ class QuotationLocalChargeResource extends JsonResource
             'total' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($this->total) : $this->total,
             'units' => $this->units ?? null,
             'currency' => $this->currency->alphacode ?? null,
-            'provider' => $this->provider_name ?? null,
+            'provider' => new ProvidersResource($provider)
         ];
 
     }
