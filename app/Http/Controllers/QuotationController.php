@@ -225,7 +225,7 @@ class QuotationController extends Controller
         $search_data_ids = $this->getIdsFromArray($search_data);
 
         if($search_data_ids['type'] == 'FCL'){
-            $equipment = $container_string = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
+            $equipment = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
         }else{
             $equipment = [];
         }
@@ -256,7 +256,11 @@ class QuotationController extends Controller
             'status' => 'Draft',
             'terms_portuguese' => $search_data['terms'] ? $search_data['terms']['portuguese'] : null,
             'terms_and_conditions' => $search_data['terms'] ? $search_data['terms']['spanish'] : null,
-            'terms_english' => $search_data['terms'] ? $search_data['terms']['english'] : null
+            'terms_english' => $search_data['terms'] ? $search_data['terms']['english'] : null,
+            'total_quantity' => $search_data['quantity'],
+            'total_weight' => $search_data['weight'],
+            'total_volume' => $search_data['volume'],
+            'chargeable_weight' => $search_data['chargeableWeight'],
         ]);
 
         $quote = $quote->fresh();
