@@ -469,7 +469,7 @@
                       :key="contKey"
                     >
                       <p>
-                        <b style="font-size: 16px" v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined)"
+                        <b style="font-size: 16px" v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined) || request.showRateCurrency"
                           >{{
                             rate.totals_with_markups_freight_currency
                               ? rate.totals_with_markups_freight_currency["C" + container.code]
@@ -499,7 +499,7 @@
               <div class="col-12 mt-3 mb-3 result-action">
                 <div class="d-flex align-items-center">
                   <p class="mr-4 mb-0">
-                    <b>Validity:</b>
+                    <b style="font-size:11px;">VALIDITY:</b>
                     {{ rate.contract.validity + " / " + rate.contract.expire }}
                     <img
                       v-if="rate.contract.validity > searchEndDate"
