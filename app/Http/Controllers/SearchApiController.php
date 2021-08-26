@@ -396,7 +396,7 @@ class SearchApiController extends Controller
                 }
             }
             
-            $this->calculateTotals($rate,$search_ids['client_currency']);
+            $this->calculateTotals($rate,$search_ids);
 
             $remarks = $this->searchRemarks($rate, $search_ids);
 
