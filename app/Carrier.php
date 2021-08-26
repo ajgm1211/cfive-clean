@@ -34,9 +34,9 @@ class Carrier extends Model
         return $this->hasMany('App\GlobalCharPortCarrier');
     }
 
-    public function getUrlAttribute()
+    public function getUrlAttribute($value)
     {
-        return config('medialibrary.s3.domain')."/imgcarrier/".$this->image;
+        return config('medialibrary.s3.domain')."/imgcarrier/".$value;
     }
 
     public function search_carriers()

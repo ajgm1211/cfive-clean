@@ -28,7 +28,7 @@ class CarrierResource extends JsonResource
             'name' => $this->name,
             'type' => 'carrier',
             'scac' => $this->scac,
-            'url' => $this->url,
+            'url' => $this->image ? config('medialibrary.s3.domain')."/imgcarrier/".$this->image:$this->url,
             'referential_data' => ($this->company_user != null && $this->referentialData($this->company_user->id) != null) ?
              json_decode($this->referentialData($this->company_user->id)->json_data):[]
         ];

@@ -283,6 +283,11 @@ class NewContractRequestLclController extends Controller
                     'carrier_id' => $carrierVal,
                     'request_id' => $Ncontract->id,
                 ]);
+
+                $contract->carrier = $carrierVal;
+                $contract->type = 'LCL';
+
+                $this->trackEvents("new_request_by_carrier", $contract);
             }
 
             if (env('APP_VIEW') == 'operaciones') {
@@ -441,7 +446,8 @@ class NewContractRequestLclController extends Controller
                     $Ncontract->time_star = $now2;
                     $Ncontract->time_star_one = true;
                 }
-
+                //Calling Mix Panel's event
+                $this->trackEvents("Request_Status_lcl", $Ncontract);
             } elseif ($Ncontract->status == 'Review') {
                 if ($Ncontract->time_total == null) {
                     $fechaEnd = Carbon::parse($now2);
@@ -459,6 +465,8 @@ class NewContractRequestLclController extends Controller
                         $Ncontract->time_total = $time_exacto;
                     }
                 }
+                //Calling Mix Panel's event
+                $this->trackEvents("Request_Status_lcl", $Ncontract);
 
             } elseif ($Ncontract->status == 'Done') {
 
@@ -488,6 +496,7 @@ class NewContractRequestLclController extends Controller
                     }
 
                 }
+                //Calling Mix Panel's event
                 $this->trackEvents("Request_Status_lcl", $Ncontract);
                 if( $Ncontract->contract_id != null){
                     $contract = ContractLcl::find($Ncontract->contract_id);
