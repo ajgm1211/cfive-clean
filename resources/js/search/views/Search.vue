@@ -759,7 +759,9 @@
 
             <div class="col-lg-8">
                 <div
-                    v-if="Array.isArray(foundRates) && (foundRates.length == 0) && !foundApiRates"
+                    v-if="(((searchRequest.type == 'FCL') && Array.isArray(foundRates) && (foundRates.length == 0)) || 
+                    ((searchRequest.type == 'LCL') && Array.isArray(foundRatesLcl) && (foundRatesLcl.length == 0))) && 
+                    !foundApiRates"
                     class="alert alert-danger"
                     role="alert"
                 >
@@ -1563,7 +1565,7 @@ export default {
             responseErrors: {},
             foundRates: {},
             foundRatesLcl: {},
-            foundApiRates:true,
+            foundApiRates:false,
             companyChosen: false,
             quoteData: {},
             originDistance: true,

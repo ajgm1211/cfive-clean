@@ -342,9 +342,18 @@ export default {
                 rates: [],
                 results: [],
             };
+            if(this.$refs.resultsAPIComponent){
+                this.$refs.searchComponent.foundApiRates = false;
+                this.$refs.resultsAPIComponent.results = {
+                    maersk: [],
+                    cmacgm: [],
+                    evergreen: [],
+                    "hapag-lloyd": [],
+                }
+            }
             this.resultsTotal = 0;
             this.apiSearchDone = false;
-            if(this.$refs.searchComponent.searching = true){
+            if(this.$refs.searchComponent.searching == true){
                 this.$refs.searchComponent.searching = false;
             }
         },

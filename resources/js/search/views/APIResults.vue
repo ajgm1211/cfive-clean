@@ -57,7 +57,10 @@
                   placement="top"
                 >
                   <ul class="pl-2 ml-2">
-                    <li v-for="data in cmaResult.additionalData.namedAccounts">
+                    <li 
+                      v-for="data,key in cmaResult.additionalData.namedAccounts"
+                      :key="key"
+                    >
                       {{ data.name }}
                     </li>
                   </ul>
@@ -253,7 +256,9 @@
                   placement="top"
                 >
                   <ul class="pl-2 ml-2">
-                    <li v-for="data in cmaResult.additionalData.commodities">
+                    <li 
+                      v-for="data,key in cmaResult.additionalData.commodities"
+                      :key="key">
                       {{ data.name }}
                     </li>
                   </ul>
