@@ -50,6 +50,33 @@ class Contacts extends Controller
 
         $contact = Contact::create($request->all());
 
+        if ($request->whitelabel == 1){
+
+            $name = $request->get('name');
+            $lastname = $request->get('lastname');
+            $email = $request->get('email');
+            $password = $request->get('password');
+            $type = 'user';
+   
+            $client = new \GuzzleHttp\Client([              
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/x-www-form-urlencoded']);
+                    // Create a POST request
+                $response = $client->request(
+                    'POST',
+                    'http://chirix.localhost:8000/admin',
+                    [
+                        'form_params' => [
+                            'name' => $name,
+                            'lastname' => $lastname,
+                            'email' => $email,
+                            'password' => $password,
+                            'type' => $type,
+                        ]
+                    ]
+                );
+           }
+
         return response()->json($contact,200);    
     }
 
