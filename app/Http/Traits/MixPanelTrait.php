@@ -54,6 +54,9 @@ trait MixPanelTrait
             case "Request_Status_fcl":
                 $this->trackStatusFclEvent($data, $user);
                 break;
+            case "Request_Review":
+                $this->trackReviewEvent($data, $user);
+                break;
             case "Request_Status_lcl":
                 $this->trackStatusLclEvent($data, $user);
                 break;
@@ -326,7 +329,6 @@ trait MixPanelTrait
         }else{
             $event = 'Request FCL Status Updates';
         }
-
         $mixPanel->track(
             $event,
             array(
@@ -337,7 +339,34 @@ trait MixPanelTrait
                 'Valid_until'   => $date[1],
                 'Status'        => $data->status,
                 'Owner'         => $user->username_load,
-                'Created_at'    => $data->created_at,
+                'Created_at'    => $data->created_at->format('Y-m-d'),
+                'Module_type'   => $data->module,
+                'App'           => 'Cargofive'
+            )
+        );
+    }
+    
+    public function trackReviewEvent($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+        $date = explode("/", $data->validation);
+        $event = 'Request Review';
+        $mixPanel->track(
+            $event,
+            array(
+                'Company'       => $data->companyuser->name,
+                'User'          => $user->fullname,
+                'Contract'      => $data->namecontract,
+                'Valid_from'    => $date[0],
+                'Valid_until'   => $date[1],
+                'Status'        => $data->status,
+                'Owner'         => $data->username_load,
+                'Created_at'    => $data->created_at->format('Y-m-d'),
+                'Average'       => $data->time_total,
+                'Module_type'   => $data->module,
+                'Created_at'    => $data->created_at->format('Y-m-d'),
                 'App'           => 'Cargofive'
             )
         );
@@ -373,7 +402,8 @@ trait MixPanelTrait
                 'Valid_from'    => $date[0],
                 'Valid_until'   => $date[1],
                 'Owner'         => $data->username_load,
-                'Created_at'    => $data->created_at,
+                'Created_at'    => $data->created_at->format('Y-m-d'),
+                'Module_type'   => 'LCL',
                 'App'           => 'Cargofive'
             )
         );
@@ -516,7 +546,7 @@ trait MixPanelTrait
                 'Contract_id' => $data->contract_id,
                 'Container_type' => $container->group_containers->name,
                 'User' => $user->fullname,
-                'Created_at' => $data->created_at,
+                'Created_at' => $data->created_at->format('Y-m-d'),
                 'App' => 'Cargofive'
             )
         );
@@ -542,7 +572,7 @@ trait MixPanelTrait
                 'Company' => $user->companyUser->name,
                 'Contract_id' => $data->id,
                 'User' => $user->fullname,
-                'Created_at' => $data->created_at,
+                'Created_at' => $data->created_at->format('Y-m-d'),
                 'App' => 'Cargofive'
             )
         );
@@ -574,9 +604,10 @@ trait MixPanelTrait
                 'Container_type' => $container->group_containers->name,
                 'Carrier' => $carrier->name,
                 'User' => $user->fullname,
-                'Created_at' => $data->created_at,
+                'Created_at' => $data->created_at->format('Y-m-d'),
                 'App' => 'Cargofive'
             )
         );
     }
+    
 }
