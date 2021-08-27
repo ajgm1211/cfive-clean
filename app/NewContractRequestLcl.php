@@ -35,7 +35,7 @@ class NewContractRequestLcl extends Model implements Auditable
         'code',
         'is_api'
     ];
-
+    
     public function user()
     {
         return $this->belongsTo('App\User');
