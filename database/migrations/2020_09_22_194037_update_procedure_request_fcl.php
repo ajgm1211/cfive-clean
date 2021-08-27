@@ -1,4 +1,14 @@
 <?php
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+/*
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+=======
+
+>>>>>>> 635a6bb04b09cf0ae26bc51143db2ae5d465fff3
+>>>>>>> cf376bd2d763f631506156e2aab3912b4c0c8c39
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
