@@ -428,6 +428,7 @@ class RequestFclV2Controller extends Controller
             $Ncontract = NewContractRequest::find($id);
             $Ncontract->status = $status;
             $Ncontract->updated = $now2;
+            $Ncontract->setAttribute('module','FCL');
             if ($Ncontract->username_load == 'Not assigned' || empty($Ncontract->username_load) == true) {
                 $Ncontract->username_load = \Auth::user()->name . ' ' . \Auth::user()->lastname;
             }
@@ -438,7 +439,6 @@ class RequestFclV2Controller extends Controller
                     $Ncontract->time_star_one = true;
                 }
                 //Calling Mix Panel's event
-                $this->trackEvents("Request_Status_fcl", $Ncontract);
             } elseif ($Ncontract->status == 'Review') {
                 if ($Ncontract->time_total == null) {
                     $fechaEnd = Carbon::parse($now2);
@@ -455,9 +455,9 @@ class RequestFclV2Controller extends Controller
                         }
                         $Ncontract->time_total = $time_exacto;
                     }
+                    $this->trackEvents("Request_Review", $Ncontract);
                 }
                 //Calling Mix Panel's event
-                $this->trackEvents("Request_Status_fcl", $Ncontract);
             } elseif ($Ncontract->status == 'Done') {
                 $contractObj = Contract::find($Ncontract->contract_id);
                 $contractObj->status = 'publish';
@@ -488,13 +488,15 @@ class RequestFclV2Controller extends Controller
                     }
                 }
                 //Calling Mix Panel's event
-                $this->trackEvents("Request_Status_fcl", $Ncontract);
             }
+            $this->trackEvents("Request_Status_fcl", $Ncontract);
+            unset($Ncontract->module);
             $Ncontract->save();
             $color = HelperAll::statusColorRq($Ncontract->status);
 
             return response()->json($data = ['data' => 1, 'status' => $Ncontract->status, 'color' => $color, 'request' => $Ncontract]);
         } catch (\Exception $e) {
+            print($e);
             return response()->json($data = ['data' => 2]);
         }
     }

@@ -437,6 +437,7 @@ class NewContractRequestLclController extends Controller
             $Ncontract = NewContractRequestLcl::find($id);
             $Ncontract->status = $status;
             $Ncontract->updated = $now2;
+            $Ncontract->setAttribute('module','LCL');
             if ($Ncontract->username_load == 'Not assigned') {
                 $Ncontract->username_load = \Auth::user()->name . ' ' . \Auth::user()->lastname;
             }
@@ -464,9 +465,10 @@ class NewContractRequestLclController extends Controller
                         }
                         $Ncontract->time_total = $time_exacto;
                     }
+                    $this->trackEvents("Request_Review", $Ncontract);
                 }
                 //Calling Mix Panel's event
-                $this->trackEvents("Request_Status_lcl", $Ncontract);
+                
 
             } elseif ($Ncontract->status == 'Done') {
 
@@ -496,8 +498,6 @@ class NewContractRequestLclController extends Controller
                     }
 
                 }
-                //Calling Mix Panel's event
-                $this->trackEvents("Request_Status_lcl", $Ncontract);
                 if( $Ncontract->contract_id != null){
                     $contract = ContractLcl::find($Ncontract->contract_id);
                     $contract->status = 'publish';
@@ -505,8 +505,11 @@ class NewContractRequestLclController extends Controller
                 }
             }
 
+            //Calling Mix Panel's event
+            $this->trackEvents("Request_Status_lcl", $Ncontract);
+            unset($Ncontract->module);
             $Ncontract->save();
-
+            
             if (strnatcasecmp($Ncontract->status, 'Pending') == 0) {
                 $color = '#f81538';
             } else if (strnatcasecmp($Ncontract->status, 'Processing') == 0) {
