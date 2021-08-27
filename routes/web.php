@@ -1029,6 +1029,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     /* Inlands V2 view routes **/
     Route::get('api/inlands', 'InlandController@index')->name('inlands.index');
+    Route::get('api/inlands/{id}/location', 'InlandPerLocationController@index')->name('inlands.location');
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /* End Inlands routes view **/
@@ -1159,6 +1160,7 @@ Route::group(['middleware' => ['auth']], function () {
     /** Providers view routes **/
     Route::get('api/providers', 'ProvidersController@index')->name('providers.index');
     /** End providers routes view **/
+    Route::get('inlandperlocation', 'inlandPerLocationController@index')->name('inlandperlocation.index');
 });
 
 /*****************************************************************************************
@@ -1300,7 +1302,15 @@ Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function (
     Route::post('{inland}/km/{km}/update', 'InlandKmController@update')->middleware('check_company:inland');
     Route::get('{inland}/km/retrieve', 'InlandKmController@retrieve')->middleware('check_company:inland');
     /* End API Inland Km EndPoints **/
-
+    
+    /* API Inland location EndPoints **/
+    Route::get('{inland}/location', 'inlandPerLocationController@list');
+    Route::post('{inland}/location/store', 'inlandPerLocationController@store');
+    Route::post('{inland}/location/{location}/update', 'inlandPerLocationController@update');
+    Route::post('location/{location}/duplicate', 'inlandPerLocationController@duplicate');
+    Route::delete('location/{location}/destroy', 'inlandPerLocationController@destroy');
+    Route::post('location/destroyAll', 'inlandPerLocationController@destroyAll');
+    /* End API Inland location EndPoints **/
     /*
     Route::get('groupc/{inland}', 'InlandController@groupInlandContainer')->middleware('check_company:inland');
     // INLAND RANGE
@@ -1370,6 +1380,9 @@ Route::group(['prefix' => 'api/v2/providers', 'middleware' => ['auth']], functio
 
     /** providers **/
 });
+
+
+
 
 /*****************************************************************************************
  **                                   END API ENDPOINTS                                   **

@@ -206,6 +206,37 @@ export default {
             return api.call('get', `/api/v2/inland/${inland_id}/km/retrieve`, {});
         }
     },
+    
+    inlandLocation: {
+        list(params, callback, route) {
+
+            let inland_id = route.params.id;
+
+            api.call('get', `/api/v2/inland/${inland_id}/location`, { params })
+                .then(response => {
+                    callback(null, response.data);
+                }).catch(error => {
+                    callback(error, error.response.data);
+                });
+        },
+        create(data, route) {
+            let inland_id = route.params.id;
+            return api.call('post', `/api/v2/inland/${inland_id}/location/store`, data);
+        },
+        update(id, data, route) {
+            let inland_id = route.params.id;
+            return api.call('post', `/api/v2/inland/${inland_id}/location/${id}/update`, data);
+        },
+        delete(id) {
+            return api.call('delete', `/api/v2/inland/location/${id}/destroy/`, {});
+        },
+        duplicate(id, data) {
+            return api.call('post', `/api/v2/inland/location/${id}/duplicate`, data);
+        },
+        deleteAll(ids) {
+            return api.call('post', `/api/v2/inland/location/destroyAll`, { ids: ids });
+        }
+    },
     transit_time: {
         list(params, callback, route) {
 
@@ -809,4 +840,5 @@ export default {
             return api.call('post', `/api/v2/contractslcl/${contract_id}/restrictions`, data);
         },
     },
+
 };
