@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddRateLclSurcharges extends Migration
+class ReupdateLclRateRelations extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class AddRateLclSurcharges extends Migration
      */
     public function up()
     {
-        Schema::table('surcharges', function (Blueprint $table) {
-            array(
-                'name' => 'Ocean Freight',
-                'description' => 'Rate surcharge'
-            );
+        Schema::table('rates_lcl', function (Blueprint $table) {
+            DB::table('rates_lcl')
+                ->update([
+                    "calculationtype_id" => 22,
+                    "surcharge_id" => 15044,
+            ]);
         });
     }
 
