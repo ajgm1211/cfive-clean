@@ -230,6 +230,8 @@ class NewContractRequestLclController extends Controller
         $nombre = quitar_caracteres($nombre);
         $nombre = $now . '_' . $nombre;
         // $fileName = HelperAll::removeAcent($nombre);
+        $info_file = pathinfo($nombre);
+        $ext = (strtoupper($info_file['extension']) == 'PDF') ? 'PDF':'EXCEL';
         $fileBoll = \Storage::disk('LclRequest')->put($nombre, \File::get($file));
 
         $typeVal = 1;
@@ -287,7 +289,7 @@ class NewContractRequestLclController extends Controller
                 $contract->carrier = $carrierVal;
                 $contract->type = 'LCL';
 
-                $this->trackEvents("new_request_by_carrier", $contract);
+                $this->trackEvents("new_request_by_carrier", $Ncontract);
             }
 
             if (env('APP_VIEW') == 'operaciones') {
@@ -319,8 +321,8 @@ class NewContractRequestLclController extends Controller
             } else {
                 ValidateTemplateLclJob::dispatch($Ncontract->id);
             }
-
-            $this->trackEvents("new_request_Lcl", $contract);
+            $Ncontract->setAttribute('file_ext',$ext);
+            $this->trackEvents("new_request_Lcl", $Ncontract);
             
             // EVENTO INTERCOM
             $event = new EventIntercom();
