@@ -290,7 +290,7 @@ class RequestFclV2Controller extends Controller
             $Ncontract->data = $data;
             $Ncontract->contract_id = $contract->id;
             $Ncontract->save();
-
+            $Ncontract->setAttribute('carrier',null);
             foreach ($carriers as $carrierVal) {
                 ContractCarrier::create([
                     'carrier_id' => $carrierVal,
@@ -325,11 +325,11 @@ class RequestFclV2Controller extends Controller
                 }
             }
 
-            /*if (env('APP_VIEW') == 'operaciones') {
+            if (env('APP_VIEW') == 'operaciones') {
                 ValidateTemplateJob::dispatch($Ncontract->id)->onQueue('operaciones');
             } else {
                 ValidateTemplateJob::dispatch($Ncontract->id);
-            }*/
+            }
 
             $user = User::find($request->user);
             $message = "There is a new request from " . $user->name . " - " . $user->companyUser->name;

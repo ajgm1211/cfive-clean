@@ -594,7 +594,6 @@ trait MixPanelTrait
         $mixPanel->identify($user->id);
 
         $carrier = Carrier::find($data->carrier);
-
         $container = json_decode($data->data);
         $data_container = null;
         if(!empty($container->group_containers)){

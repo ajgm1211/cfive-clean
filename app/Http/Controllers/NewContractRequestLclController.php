@@ -279,16 +279,15 @@ class NewContractRequestLclController extends Controller
             $Ncontract->data = $data;
             $Ncontract->contract_id = $Contract_id;
             $Ncontract->save();
-
+            
+            $Ncontract->setAttribute('carrier',null);
+            $Ncontract->type = 'LCL';
             foreach ($request->carrierM as $carrierVal) {
                 RequetsCarrierLcl::create([
                     'carrier_id' => $carrierVal,
                     'request_id' => $Ncontract->id,
                 ]);
-
-                $contract->carrier = $carrierVal;
-                $contract->type = 'LCL';
-
+                $Ncontract->carrier = $carrierVal;
                 $this->trackEvents("new_request_by_carrier", $Ncontract);
             }
 
