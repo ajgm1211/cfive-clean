@@ -340,7 +340,7 @@ trait MixPanelTrait
                 'Status'        => $data->status,
                 'Owner'         => $user->username_load,
                 'Created_at'    => $data->created_at->format('Y-m-d'),
-                'Module_type'   => $data->module,
+                'Type'          => $data->module,
                 'App'           => 'Cargofive'
             )
         );
@@ -365,7 +365,7 @@ trait MixPanelTrait
                 'Owner'         => $data->username_load,
                 'Created_at'    => $data->created_at->format('Y-m-d'),
                 'Average'       => $data->time_total,
-                'Module_type'   => $data->module,
+                'Type'          => $data->module,
                 'Created_at'    => $data->created_at->format('Y-m-d'),
                 'App'           => 'Cargofive'
             )
@@ -403,7 +403,7 @@ trait MixPanelTrait
                 'Valid_until'   => $date[1],
                 'Owner'         => $data->username_load,
                 'Created_at'    => $data->created_at->format('Y-m-d'),
-                'Module_type'   => 'LCL',
+                'Type'          => 'LCL',
                 'App'           => 'Cargofive'
             )
         );
@@ -547,6 +547,7 @@ trait MixPanelTrait
                 'Container_type' => $container->group_containers->name,
                 'User' => $user->fullname,
                 'Created_at' => $data->created_at->format('Y-m-d'),
+                'Extension' => $data->file_ext,
                 'App' => 'Cargofive'
             )
         );
@@ -570,9 +571,10 @@ trait MixPanelTrait
             array(
                 'Type' => 'LCL',
                 'Company' => $user->companyUser->name,
-                'Contract_id' => $data->id,
+                'Contract_id' => $data->contract_id,
                 'User' => $user->fullname,
                 'Created_at' => $data->created_at->format('Y-m-d'),
+                'Extension' => $data->file_ext,
                 'App' => 'Cargofive'
             )
         );
@@ -594,14 +596,17 @@ trait MixPanelTrait
         $carrier = Carrier::find($data->carrier);
 
         $container = json_decode($data->data);
-
+        $data_container = null;
+        if(!empty($container->group_containers)){
+            $data_container = $container->group_containers->name;
+        }
         $mixPanel->track(
             'New Request By Carrier',
             array(
                 'Type' => $data->type,
                 'Company' => $user->companyUser->name,
                 'Contract_id' => $data->contract_id,
-                'Container_type' => $container->group_containers->name,
+                'Container_type' => $data_container,
                 'Carrier' => $carrier->name,
                 'User' => $user->fullname,
                 'Created_at' => $data->created_at->format('Y-m-d'),
