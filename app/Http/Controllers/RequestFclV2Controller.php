@@ -255,20 +255,16 @@ class RequestFclV2Controller extends Controller
         $now = $time->format('dmY_His');
         $now2 = $time->format('Y-m-d H:i:s');
         $file = $request->input('document');
+        $ext = null;
         if (!empty($file)) {
+            $info_file = pathinfo($file);
+            $ext = (strtoupper($info_file['extension']) == 'PDF') ? 'PDF':'EXCEL';
             $gpContainer = GroupContainer::find($groupContainer);
-            $ArrayData['group_containers'] = [
-                'id' => $gpContainer->id,
-                'name' => $gpContainer->name,
-            ];
+            $ArrayData['group_containers'] = ['id' => $gpContainer->id,'name' => $gpContainer->name];
             $ArrayData['containers'] = [];
             foreach ($containers as $containerId) {
                 $container = Container::find($containerId);
-                $ArrayData['containers'][] = [
-                    'id' => $container->id,
-                    'name' => $container->name,
-                    'code' => $container->code,
-                ];
+                $ArrayData['containers'][] = ['id' => $container->id,'name' => $container->name,'code' => $container->code];
             }
             $data = json_encode($ArrayData);
 
@@ -312,7 +308,7 @@ class RequestFclV2Controller extends Controller
                 //Calling Mix Panel's event
                 $this->trackEvents("new_request_by_carrier", $Ncontract);
             }
-
+            
             $contract->addMedia(storage_path('tmp/request/' . $file))->preservingOriginal()->toMediaCollection('document', 'contracts3');
             $Ncontract->addMedia(storage_path('tmp/request/' . $file))->toMediaCollection('document', 'FclRequest-New');
             $ext_at_sl = strtolower(pathinfo($file, PATHINFO_EXTENSION));
@@ -342,6 +338,7 @@ class RequestFclV2Controller extends Controller
             $message = 'has created a new request: ' . $Ncontract->id;
 
             //Calling Mix Panel's event
+            $Ncontract->setAttribute('file_ext',$ext);
             $this->trackEvents("new_request_Fcl", $Ncontract);
 
             // EVENTO INTERCOM
