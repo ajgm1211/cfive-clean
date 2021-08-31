@@ -1517,15 +1517,15 @@ export default {
             },
             //LCL
             lclShipmentCargoType: "",
-            lclShipmentChargeableWeight: 0,
+            lclShipmentChargeableWeight: 1,
             lclPackaging: [],
-            lclPackagingVolume: 0,
-            lclPackagingWeight: 0,
-            lclPackagingQuantity: 0,
-            lclPackagingChargeableWeight: 0,
-            lclShipmentVolume: "",
-            lclShipmentWeight: "",
-            lclShipmentQuantity: "",
+            lclPackagingVolume: 1,
+            lclPackagingWeight: 1,
+            lclPackagingQuantity: 1,
+            lclPackagingChargeableWeight: 1,
+            lclShipmentVolume: 1,
+            lclShipmentWeight: 1,
+            lclShipmentQuantity: 1,
             lclTypeIndex: 0,
             dropzoneOptions: {
                 url: "/",
@@ -1541,6 +1541,11 @@ export default {
             },
             addPackagingBar: {
                 cargoType: "",
+                weight: 1,
+                width: 1,
+                depth: 1,
+                height: 1,
+                quantity: 1,
             },
             selectedContainerGroup: {},
             containers: [],
@@ -1576,8 +1581,6 @@ export default {
             destinationAddressPlaceholder: "Select an address",
             invalidPackagingCalculation: false,
             invalidShipmentCalculation: false,
-            //LCL
-            lclShipmentOptions: [],
             //Gene defined
             ptdActive: false,
             dtpActive: false,
@@ -1903,7 +1906,6 @@ export default {
                 this.selectedContainerGroup = this.datalists.container_groups[0];
                 this.searchRequest.carriersApi = this.datalists.carriers_api;
                 this.deliveryType = this.deliveryTypeOptions[0];
-                this.lclShipmentCargoType = this.lclShipmentOptions[0];
             } else if (requestType == 0) {
                 this.searchRequest.type = this.searchData.type;
                 this.$emit('searchTypeChanged','code');
@@ -2362,6 +2364,14 @@ export default {
         },
 
         setSearchType(){
+            if(this.searchRequest.type = 'LCL'){
+                if(this.lclShipmentCargoType == ""){
+                    this.lclShipmentCargoType = this.datalists.cargo_types[0];
+                }
+                if(this.addPackagingBar.cargoType == ""){
+                    this.addPackagingBar.cargoType = this.datalists.cargo_types[0];
+                }
+            }
             this.$emit("searchTypeChanged",'dd');
         },
 
@@ -2450,7 +2460,7 @@ export default {
                 if( this.lclShipmentVolume > (this.lclShipmentWeight / 1000) ){
                     this.lclShipmentChargeableWeight = this.lclShipmentVolume * this.lclShipmentQuantity;
                 }else{
-                    this.lclShipmentChargeableWeight = this.lclShipmentWeight * this.lclShipmentQuantity;
+                    this.lclShipmentChargeableWeight = (this.lclShipmentWeight / 1000) * this.lclShipmentQuantity;
                 }
             }else if(this.searchRequest.lclTypeIndex == 1){
                 let component = this;
@@ -2468,7 +2478,7 @@ export default {
                 if( this.lclPackagingVolume > (this.lclPackagingWeight / 1000) ){
                     this.lclPackagingChargeableWeight = this.lclPackagingVolume * this.lclPackagingQuantity;
                 }else{
-                    this.lclPackagingChargeableWeight = this.lclPackagingWeight * this.lclPackagingQuantity;
+                    this.lclPackagingChargeableWeight = (this.lclPackagingWeight / 1000) * this.lclPackagingQuantity;
                 }
 
             }
