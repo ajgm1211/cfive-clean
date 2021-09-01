@@ -19,43 +19,6 @@
             <h2 class="mr-5 t-recent">
             results found: <b>{{ resultsTotal }}</b>
             </h2>
-            <!--<div class="d-flex filter-search">
-            <b style="color: #80888b !important; letter-spacing: 2px !important"
-                >filter by:</b
-            >&nbsp;
-            <div
-                style="
-                width: 200px !important;
-                height: 33.5px;
-                position: relative;
-                top: -8px;
-                "
-            >
-                <multiselect
-                v-model="filterBy"
-                :multiple="false"
-                :close-on-select="true"
-                :clear-on-select="false"
-                :hide-selected="true"
-                :show-labels="false"
-                :options="filterOptions"
-                placeholder="Carrier"
-                class="s-input no-select-style"
-                
-                >
-                </multiselect>
-                <button
-                v-if="filterBy != '' && filterBy != null"
-                type="button"
-                class="close custom_close_filter"
-                aria-label="Close"
-                @click="(filterBy = ''), filterCarriers()"
-                >
-                <span aria-hidden="true">&times;</span>
-                </button>
-                <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
-            </div>
-            </div>-->
         </div>
 
         <div class="col-12 col-sm-6 addcontract-createquote">
@@ -132,7 +95,7 @@
         <!-- FIN RESULTS HEADER -->
 
         <Recent 
-            v-if="resultsTotal == 0 && !searching"
+            v-show="resultsTotal == 0 && !searching"
             :searchType="searchType"
             @recentSearch="quickSearch"
             ref="recentComponent"
