@@ -201,9 +201,7 @@ class SearchApiLclController extends Controller
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
             $charges = $this->joinCharges($charges, $search_ids);
 
-            $this->checkLclAdaptable($charges);
-
-            $this->checkLclRoundable($charges);
+            $charges = $this->checkLclAdaptable($charges);
 
             //Appending Rate Id to Charges
             $this->addChargesToRate($rate, $charges, $search_ids);
