@@ -23,7 +23,8 @@ class FclPdf
 
     public function generate($quote)
     {
-        
+        $user = User::find($quote->user_id);
+
         $containers = Container::all();
 
         $equipmentHides = $this->hideContainerV2($quote->equipment, 'BD', $containers);
@@ -46,7 +47,7 @@ class FclPdf
 
         $delegation= $this->delegation($quote);
 
-        $view = \View::make('quote.pdf.index', ['quote' => $quote,'delegation'=>$delegation, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
+        $view = \View::make('quote.pdf.index', ['quote' => $quote,'delegation'=>$delegation, 'inlands' => $inlands, 'user' => $user, 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
 
         $pdf = \App::make('dompdf.wrapper');
 
