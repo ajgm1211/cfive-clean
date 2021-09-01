@@ -554,12 +554,7 @@
                                     style="text-align: center"
                                 >
                                     <h6><b>CHARGEABLE WEIGHT</b></h6>
-                                    <p 
-                                        v-if="lclShipmentVolume > (lclShipmentWeight / 1000)"
-                                    >{{ lclShipmentChargeableWeight }} m<sup>3</sup></p>
-                                    <p 
-                                        v-else
-                                    >{{ lclShipmentChargeableWeight }} Kg</p>
+                                    <p>{{ lclShipmentChargeableWeight }} W/M</p>
                                 </div>
                             </div>
                         </b-tab>
@@ -743,12 +738,7 @@
                                     {{ lclPackagingVolume }} m3 
                                     {{ lclPackagingWeight }} Kg 
                                 <h6><b>CHARGEABLE WEIGHT: </b></h6>
-                                <p 
-                                    v-if="lclPackagingVolume > (lclPackagingWeight / 1000)"
-                                >{{ lclPackagingChargeableWeight }} m<sup>3</sup></p>
-                                <p 
-                                    v-else
-                                >{{ lclPackagingChargeableWeight }} Kg</p>
+                                <p>{{ lclPackagingChargeableWeight }} W/M</p>
                             </div>
                         </b-tab>
                     </b-tabs>
@@ -2364,7 +2354,7 @@ export default {
         },
 
         setSearchType(){
-            if(this.searchRequest.type = 'LCL'){
+            if(this.searchRequest.type == 'LCL'){
                 if(this.lclShipmentCargoType == ""){
                     this.lclShipmentCargoType = this.datalists.cargo_types[0];
                 }
