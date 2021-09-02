@@ -16,7 +16,9 @@ class ChargeLclController extends Controller
 {
     public function list(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
     {   
-        $results = ChargeLclAir::where([['surcharge_id','!=',null],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
+        $results = ChargeLclAir::where('type_id',3)->whereHas('surcharge', function ($query) {
+            return $query->where('name', '!=', 'Ocean Freight');
+        })->filterByAutorate($autorate->id)->filter($request);
         
         return ChargeLclResource::collection($results);
     }
@@ -126,7 +128,9 @@ class ChargeLclController extends Controller
 
     public function retrieve(AutomaticRate $autorate)
     {   
-        $charge = ChargeLclAir::where([['automatic_rate_id',$autorate->id],['surcharge_id',null]])->first();
+        $charge = ChargeLclAir::where('automatic_rate_id',$autorate->id)->whereHas('surcharge', function ($query) {
+            return $query->where([['name', 'Ocean Freight'],['company_user_id',null]]);
+        })->first();
 
         return new ChargeLclResource($charge);
     }
