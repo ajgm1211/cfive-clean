@@ -218,6 +218,13 @@
                               : charge.total_markups
                           }}</span
                         >
+                        <span
+                          v-else-if="
+                            charge.total_markups == null
+                          "
+                          class="profit"
+                          >+{{ 0 }}</span
+                        >
                       </b-td>
                       <b-td>
                         <b v-if="chargeType == 'Freight'">{{
