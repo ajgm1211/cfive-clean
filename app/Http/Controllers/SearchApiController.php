@@ -1024,7 +1024,7 @@ class SearchApiController extends Controller
 
         }
 
-        if ($search_data['showRateCurrency']) {
+        if (isset($search_data['showRateCurrency'])) {
             $rate->setAttribute('totals_freight_currency', $totals_array_freight_currency);
         } else {
             $totals_freight_currency = $rate->charge_totals_by_type['Freight'];
