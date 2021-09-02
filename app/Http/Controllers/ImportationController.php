@@ -274,7 +274,7 @@ class ImportationController extends Controller
         $request->session()->flash('message.content', 'The rates are being reprocessed');
 
         return redirect()->route('Failed.Developer.For.Contracts', [$id, 0]);
-    trim()}
+    }
 
     public function ReprocesarSurchargers(Request $request, $id)
     {
