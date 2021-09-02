@@ -31,6 +31,7 @@ class NewContractRequestLcl extends Model implements Auditable
         'contract_id',
         'type',
         'data',
+        'manage_app',
         'username_load',
         'code',
         'is_api'
