@@ -235,6 +235,8 @@ class ContractsLclController extends Controller
                     $rates->schedule_type_id = $sch;
                     $rates->transit_time = $request->input('transitTi.' . $key);
                     $rates->via = $request->input('via.' . $key);
+                    $rates->calculationtype_id = CalculationTypeLcl::where('name', 'W/M')->pluck('id')[0];
+                    $rates->surcharge_id = Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->pluck('id')[0];
                     $rates->contract()->associate($contract);
                     $rates->save();
                 }
