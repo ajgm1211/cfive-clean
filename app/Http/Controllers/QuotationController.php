@@ -289,11 +289,9 @@ class QuotationController extends Controller
                 'carrier_id' => $rate['carrier_id'],
             ]);
 
-            foreach ($rate['charges'] as $charge_direction) {
+            foreach ($rate['charges'] as $direction=>$charge_direction) {
+                $rate_markups[$direction] = 0;
                 foreach ($charge_direction as $charge) {
-
-                    //dd($charge);
-
                     $currency_id = isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency' ? $rate['client_currency']['id'] : $charge['currency']['id'];
 
                     if($search_data_ids['type'] == 'FCL'){
@@ -310,18 +308,19 @@ class QuotationController extends Controller
                             'total' => json_encode($charge['total']),
                         ]);
                     }elseif($search_data_ids['type'] == 'LCL'){
-                        $charge = $this->formatLclChargeForQuote($charge);
+                        $charge = $this->formatLclChargeForQuote($charge, $rate['client_currency']);
+                        $rate_markups[$direction] += $charge['markup'];
 
                         $freight = ChargeLclAir::create([
                             'automatic_rate_id' => $newRate->id,
-                            'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : null,
+                            'surcharge_id' => $charge['surcharge']['id'],
                             'type_id' => $charge['typedestiny_id'],
                             'calculation_type_id' => $charge['calculationtypelcl']['id'],
                             'units' => $charge['units'],
-                            'price_per_unit' => $charge['total'] / $charge['units'],
+                            'price_per_unit' => $charge['ammount'],
                             'minimum' => $charge['minimum'],
                             'currency_id' => $currency_id,
-                            'markup' => $charge['markup'],
+                            'markup' => null,
                             'total' => $charge['total'],
                         ]);
                     }
@@ -333,9 +332,8 @@ class QuotationController extends Controller
             }else{
                 $markups = [ 
                     'total' => 0,
-                    'per_unit' => 0,
+                    'per_unit' => $rate_markups['Freight'] / $rate['units'],
                 ];
-                
             }
 
             $rateTotals = AutomaticRateTotal::create([
