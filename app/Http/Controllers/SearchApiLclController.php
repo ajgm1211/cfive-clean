@@ -426,7 +426,7 @@ class SearchApiLclController extends Controller
         //Same loop but for percentile markups
         } elseif ($percent != 0) {
             //Calculating percentage of each container and each total price, storing them directly as final markups array
-            $markups_array = $this->calculatePercentage($percent, array($target_totals));
+            $markups_array = $this->calculatePercentage($percent, array($target_total));
 
             $total_with_markups =  isDecimal($target_total,true) + isDecimal($markups_array[0],true);
 
