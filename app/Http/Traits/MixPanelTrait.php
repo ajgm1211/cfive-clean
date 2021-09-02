@@ -346,16 +346,21 @@ trait MixPanelTrait
         );
     }
     
+    /**
+     * trackReviewEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
+    
     public function trackReviewEvent($data, $user)
     {
         $mixPanel = app('mixpanel');
-
         $mixPanel->identify($user->id);
         $date = explode("/", $data->validation);
         $event = 'Request Review';
-        $mixPanel->track(
-            $event,
-            array(
+        $parameters = array(
                 'Company'       => $data->companyuser->name,
                 'User'          => $user->fullname,
                 'Contract'      => $data->namecontract,
@@ -368,8 +373,28 @@ trait MixPanelTrait
                 'Type'          => $data->module,
                 'Created_at'    => $data->created_at->format('Y-m-d'),
                 'App'           => 'Cargofive'
-            )
-        );
+            );
+        $mixPanel->track($event,$parameters);
+        $parameters['Request_id'] = $data->id;
+        $parameters['App'] = ($data->manage_app == 'others') ? 'Cargofive':'Barracuda';
+        $this->trackRequestByAppEvent($parameters,$user);
+    }
+    
+    /**
+     * trackRequestByAppEvent
+     *
+     * @param  mixed $parameters
+     * @param  mixed $user
+     * @return void
+     */
+    
+    public function trackRequestByAppEvent($parameters,$user)
+    {
+        $mixPanel = app('mixpanel');
+        $mixPanel->identify($user->id);
+        $data = $parameters;
+        unset($data['Average']);
+        $mixPanel->track('Request By App',$data);
     }
 
     /**
