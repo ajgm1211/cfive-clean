@@ -184,7 +184,11 @@
                       <b-th>Detail</b-th>
                       <b-th>Amount</b-th>
                       <b-th>Units</b-th>
-                      <b-th></b-th>                      
+                      <b-th 
+                        v-if="rate.search.pricelevel != null"
+                      >
+                      Markups</b-th>
+                      <b-th v-else></b-th>                    
                       <b-th>Total</b-th>
                     </b-tr>
                   </b-thead>
@@ -203,13 +207,6 @@
                       <b-td> {{ charge.ammount }} </b-td>
                       <b-td> {{ charge.units }} </b-td>
                       <b-td>
-                        <p v-if="charge.total_markups != undefined">
-                          {{
-                            charge.joint_as == "client_currency"
-                              ? charge.total_client_currency
-                              : charge.total
-                          }}
-                        </p>
                         <span
                           v-if="
                             charge.total_markups != undefined
