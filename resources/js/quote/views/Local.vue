@@ -236,6 +236,7 @@
                                         v-model="charge.total['c' + item]"
                                         class="q-input local_charge_total_input"
                                         @keypress="isNumber($event)"
+                                        disabled
                                         v-on:blur="
                                             onUpdate(
                                                 charge.id,
