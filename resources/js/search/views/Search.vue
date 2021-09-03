@@ -1,5 +1,9 @@
 <template>
-    <div id="search" class="search pt-5">
+    <div id="search" class="search pt-5">    
+        dd{{originPlacesFrom}}
+        dd{{originPlacesTo}}
+        dd{{optionsPlaces}}
+        <!-- dd{{portAndLocation}} -->
         <div v-if="loaded">
 
             <!-- OPCIONES DE DELIVERY Y ADDITIONAL SERVICES BOTON -->
@@ -1448,6 +1452,7 @@ export default {
     data() {
         return {
             // datos estaticos search con inlands aqui
+            portAndLocation:[],
             originPlacesFrom: '',
             originPlacesTo: '',
             showPlaces: false,
@@ -1459,14 +1464,14 @@ export default {
             placeInShowTo: [],
             placeInShowFrom: [],
             optionsPlaces: [
-                { code:'123_456_2', country: 'España', location: 'Madrid', type: 'city' },
-                { code:'123_567_1', country: 'España', location: 'Barcelona', type: 'port' },
-                { code:'123_321_1', country: 'España', location: 'Canarias', type: 'port' },
-                { code:'123_232_2', country: 'España', location: 'Cuenca', type: 'city' },
-                { code:'123_438_2', country: 'España', location: 'Cordoba', type: 'city' },
-                { code:'123_986_1', country: 'España', location: 'Almeria', type: 'port' },
-                { code:'123_129_1', country: 'España', location: 'Malaga', type: 'port' },
-                { code:'123_457_2', country: 'España', location: 'Sevilla', type: 'city' }
+                // {  country: 'España', location: 'Madrid', type: 'city' },
+                // {  country: 'España', location: 'Barcelona', type: 'port' },
+                // {  country: 'España', location: 'Canarias', type: 'port' },
+                // {  country: 'España', location: 'Cuenca', type: 'city' },
+                // {  country: 'España', location: 'Cordoba', type: 'city' },
+                // {  country: 'España', location: 'Almeria', type: 'port' },
+                // {  country: 'España', location: 'Malaga', type: 'port' },
+                // {  country: 'España', location: 'Sevilla', type: 'city' }
             ],
             // fin datos estaticos search con inlands
             loaded: false,
@@ -1598,6 +1603,7 @@ export default {
             isCompleteFive: false,
             contractAdded: false,
             contractAddedFailed: false,
+            filter:[]
         };
     },
     mounted() {
@@ -1609,12 +1615,21 @@ export default {
     },
     methods: {
         openFinderFrom() {
-            if(this.inputSearchFrom == false && this.placeInShowFrom.length > 0) {
+            
+            if(this.originPlacesFrom.length>=3){
+                this.filter = this.portAndLocation.filter(location => location.location.toLowerCase().startsWith(this.originPlacesFrom.toLowerCase())); 
+                return this.optionsPlaces= this.filter;
+            }          
+            if(this.inputSearchFrom == false && this.searchRequest.originPorts.length >= 0) {           
                 this.inputSearchFrom = true;
             }
         },
         openFinderTo() {
-            if(this.inputSearchTo == false && this.placeInShowTo.length > 0) {
+            if(this.originPlacesTo.length>=3){
+                this.filter = this.portAndLocation.filter(location => location.location.toLowerCase().startsWith(this.originPlacesTo.toLowerCase()));
+                return this.optionsPlaces= this.filter;
+            }
+            if(this.inputSearchTo == false && this.searchRequest.destinationPorts.length >= 0) { 
                 this.inputSearchTo = true;
             }
         },
@@ -1622,7 +1637,9 @@ export default {
 
             let countPort = 0;
             let countCity = 0;
-
+            
+            this.searchRequest.originPorts=this.placeInShowFrom;
+            // this.placeInShowFrom=this.searchRequest.originPorts;
             //console.log(this.placeInShow);
 
             if (this.placeInShowFrom.length == 0) {
@@ -1664,6 +1681,8 @@ export default {
             let countPort = 0;
             let countCity = 0;
 
+            this.searchRequest.destinationPorts=this.placeInShowTo;
+            // this.placeInShowTo=this.searchRequest.destinationPorts;
             //console.log(this.placeInShow);
 
             if (this.placeInShowTo.length == 0) {
@@ -1701,6 +1720,9 @@ export default {
      
         },
         deletePlaceFrom(e){
+            let countPort = 0;
+            let countCity = 0;
+            
             this.placeInShowFrom.splice(e, 1);
             if (this.placeInShowFrom.length == 0) {
                 this.showTagPlaceFrom = false;
@@ -1710,6 +1732,9 @@ export default {
             }
         },
         deletePlaceTo(e){
+            let countPort = 0;
+            let countCity = 0;
+
             this.placeInShowTo.splice(e, 1);
             if (this.placeInShowTo.length == 0) {
                 this.showTagPlaceTo = false;
@@ -1907,7 +1932,7 @@ export default {
         //set UI elements
         setSearchDisplay(requestType) {
             let component = this;
-
+            component.portAndLocation=component.datalists.harbors;
             component.originPortOptions = component.datalists.harbors;
             component.destinationPortOptions = component.datalists.harbors;
             component.directionOptions = [
@@ -1983,10 +2008,12 @@ export default {
             let destPortNames = [];
             
             if (requestType == null) {
+                console.log('requestType null');
                 this.selectedContainerGroup = this.datalists.container_groups[0];
                 this.searchRequest.carriersApi = this.datalists.carriers_api;
                 this.deliveryType = this.deliveryTypeOptions[0];
             } else if (requestType == 0) {
+                console.log('requestType 0');
                 this.searchRequest.type = this.searchData.type;
                 this.searchRequest.direction = this.searchData.direction_id;
                 //this.deliveryType = this.searchData.delivery_type;
@@ -2039,6 +2066,7 @@ export default {
                 this.searchRequest.surcharges = this.datalists.surcharges;
                 this.requestSearch();
             } else if (requestType == 1) {
+                console.log('requestType 1');
                 if (this.quoteData.search_options != null) {
                     this.searchRequest.company = this.quoteData.search_options.company;
                     this.unlockContacts();

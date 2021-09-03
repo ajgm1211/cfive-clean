@@ -43,9 +43,12 @@ use App\CompanyPrice;
 use App\ContractFclFile;
 use App\NewContractRequest;
 use App\ApiProvider;
+use App\DistanceKmLocation;
 use Illuminate\Http\Request;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use App\Http\Traits\MixPanelTrait;
+use App\InlandPerLocation;
+use App\Location;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
@@ -113,7 +116,7 @@ class SearchApiController extends Controller
         /*$harbors = Harbor::get()->map(function ($harbor) {
             return $harbor->only(['id', 'display_name', 'code', 'harbor_parent']);
         });*/
-        $harbors =  \DB::select('call  select_harbors_search');
+        // $harbors =  \DB::select('call  select_harbors_search');
 
         $delivery_types = DeliveryType::get()->map(function ($delivery_type) {
             return $delivery_type->only(['id', 'name']);
@@ -160,6 +163,34 @@ class SearchApiController extends Controller
         $company_prices = CompanyPrice::get()->map(function ($comprice){
             return $comprice->only(['id','company_id','price_id']);
         });
+        
+        $ports = Harbor::get()->map(function ($harbor){
+            return $harbor->only(['id','display_name','country']);
+        });
+        $locations= Location::get()->map(function ($location){
+            return $location->only(['id','name','province']);
+        });
+
+        $harbors=[];
+
+        foreach ($locations as $locationSearch){
+        $country=Country::find($locationSearch['province']['country_id']);
+            $harbors[]=[
+                'id'=>$locationSearch['id'],
+                'country'=>$country->name,
+                'location'=>$locationSearch['name'],
+                'type'=>'city'
+            ];
+        };
+
+        foreach ($ports as $harborsSearch){
+            $harbors[]=[
+                'id'=>$harborsSearch['id'],
+                'country'=>$harborsSearch['country']['name'],
+                'location'=>$harborsSearch['display_name'],
+                'type'=>'port'
+            ];
+        };
 
         $environment_name = $_ENV['APP_ENV'];
 
@@ -321,15 +352,15 @@ class SearchApiController extends Controller
 
         /** Tracking search event with Mix Panel*/
         $this->trackEvents("search_fcl", $track_array);
-
+        
         return RateResource::collection($rates);
     }
 
     //Stores current search
     public function store(Request $request)
-    {
+    {       
         //Validating request data from form
-        $new_search_data = $request->validate([
+        $new_search = $request->validate([
             'originPorts' => 'required|array|min:1',
             'destinationPorts' => 'required|array|min:1',
             'dateRange.startDate' => 'required',
@@ -350,6 +381,7 @@ class SearchApiController extends Controller
             'destinationAddress' => 'sometimes'
         ]);
 
+        $new_search_data = $this->changeLocationsByPort($new_search);
         //Stripping time stamp from date
         $new_search_data['dateRange']['startDate'] = substr($new_search_data['dateRange']['startDate'], 0, 10);
         $new_search_data['dateRange']['endDate'] = substr($new_search_data['dateRange']['endDate'], 0, 10);
@@ -1223,6 +1255,53 @@ class SearchApiController extends Controller
 
         return $objeto;
 
+    }
+    // public function getInland($new_search_data){
+        
+    //     // foreach ($new_search_data['originPorts']as $key=> $dataLocations){
+    //     //     dd($new_search_data);
+    //     //     if($dataLocations['type']=='city'){
+    //     //         $inlandPerLocation=InlandPerLocation::where('harbor_id',$dataLocations['id'])
+    //     //         ->where('location_id',$dataLocations['location_id'])->with('inland')->first();
+    //     //         dd($inlandPerLocation['inland']);
+    //     //         if($inlandPerLocation==!null && $inlandPerLocation['inland']['status']!='expired'){
+                    
+    //     //         }
+    //     //     }
+
+    //     // }
+    // }
+    public function changeLocationsByPort($new_search){
+
+        foreach ($new_search['originPorts'] as $key=> $dataLocations){
+            if($dataLocations['type']=='city'){
+                $distances=DistanceKmLocation::where('location_id',$dataLocations['id'])->with('harbors')->first();
+                $new_search['originPorts'][$key]=[
+                    'id'=>$distances['harbors']['id'],
+                    'port_name'=>$distances['harbors']['display_name'],
+                    'location_id'=>$dataLocations['id'],
+                    'location_name'=>$dataLocations['location'],
+                    'distance'=>$distances['distance'],
+                    'type'=>'city'
+                ];
+            }
+        }
+        foreach ($new_search['destinationPorts'] as $key=> $dataLocations){
+            if($dataLocations['type']=='city'){
+                $distances=DistanceKmLocation::where('location_id',$dataLocations['id'])->with('harbors')->first();
+                $new_search['destinationPorts'][$key]=[
+                    'id'=>$distances['harbors']['id'],
+                    'port_name'=>$distances['harbors']['display_name'],
+                    'location_id'=>$dataLocations['id'],
+                    'location_name'=>$dataLocations['location'],
+                    'distance'=>$distances['distance'],
+                    'type'=>'city'
+                ];
+                
+            }
+        }
+        // dd($new_search);
+        return $new_search;
     }
 
 

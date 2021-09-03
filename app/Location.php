@@ -8,8 +8,8 @@ class Location extends Model
 {
     protected $fillable = ['id', 'name', 'province_id','identifier'];
 
-    public function provinces()
+    public function province()
     {
-        return $this->hasOne('App\InlandsProvinces', 'province_id');
+        return $this->belongsTo('App\InlandsProvinces');
     }
 }
