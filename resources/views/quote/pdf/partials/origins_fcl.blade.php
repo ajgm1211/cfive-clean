@@ -40,11 +40,12 @@
             <!-- Table Body -->
             <tbody>
                 @foreach($value as $key => $charge)
+                    @php $amounts = is_array($charge->total) ? $charge->total:json_decode(json_decode($charge->total)) @endphp
                     <tr>
-                        <td>{!! $charge->charge ?? 'Inland' !!}</td>
-                        <td>{{  @$charge->calculation_type['name'] ?? @$charge->inland_address->address ?? "--" }}</td>
-                        @foreach ($charge->total as $total)
-                            <td>{!!  isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
+                        <td>{!! $charge->charge !!}</td>
+                        <td>{{  @$charge->calculation_type['name'] ?? @$charge ?? "--" }}</td>
+                        @foreach ($amounts as $total)
+                            <td>{!! isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
                         @endforeach
                     </tr>
                 @endforeach
