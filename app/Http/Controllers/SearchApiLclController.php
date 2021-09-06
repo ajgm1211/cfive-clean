@@ -481,7 +481,7 @@ class SearchApiLclController extends Controller
                                 $charges_to_add_original = $this->convertToCurrency($charge->currency, $rate->currency, array($charge->total_with_markups))[0];
                             }
                         }else{
-                            $charges_to_add = $charge->total_with_markups;
+                            $charges_to_add = $charge->total_with_markups_client_currency;
                         }
                     }else{
                         if($direction == "Freight"){
