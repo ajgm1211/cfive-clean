@@ -34,10 +34,12 @@
     @endif 
 
     @if(@$user->companyUser->pdf_template_id==2)
-        <div class="clearfix">
-            <img src="{{Storage::disk('s3_upload')->url($user->companyUser->header_image)}}" class="img img-fluid" style="max-width:100%;">
-        </div>
-        <br>
+        @if(@$user->companyUser->header_type=='image')
+            <div class="clearfix">
+                <img src="{{Storage::disk('s3_upload')->url($user->companyUser->header_image)}}" class="img img-fluid" style="max-width:100%;">
+            </div>
+            <br>
+        @endif
         <div id="company" style="float: left;">
             <div>
                 <span class="color-title uppercase"><b>{{__('pdf.quote_id')}}:</b></span>
