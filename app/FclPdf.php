@@ -155,7 +155,7 @@ class FclPdf
             $type = 'Destination';
         }
 
-        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals as total', 'markups as profit', 'currency_id', 'inland_address_id','pdf_options')
+        $inlands = AutomaticInland::select('id', 'quote_id', 'port_id', 'rate as total', 'markup as profit', 'charge', 'currency_id', 'inland_totals_id')
             ->ConditionalPort($port)->Quotation($quote)->Type($type)->get();
 
         return $inlands;
@@ -169,7 +169,7 @@ class FclPdf
             $type = 'Destination';
         }
  
-        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals as total', 'markups as profit', 'currency_id', 'inland_address_id','pdf_options')
+        $inlands = AutomaticInland::select('id', 'quote_id', 'port_id', 'rate as total', 'markup as profit', 'charge', 'currency_id', 'inland_totals_id')
             ->whereNotIn('port_id', $port)->Quotation($quote)->Type($type)->get();
 
         $inlands = $inlands->groupBy([
