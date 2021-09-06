@@ -220,6 +220,7 @@
                         >
                         <span
                           v-else-if="
+                            rate.search.pricelevel != null &&
                             charge.total_markups == null
                           "
                           class="profit"
