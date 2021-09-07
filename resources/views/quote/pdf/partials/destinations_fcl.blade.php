@@ -42,10 +42,16 @@
                     @php $amounts = is_array($charge->total) ? $charge->total:json_decode(json_decode($charge->total)) @endphp
                     <tr>
                         <td>{!! $charge->charge !!}</td>
-                        <td>{{  $charge->calculation_type['name'] ?? @$charge->address ?? "--" }}</td>
-                        @foreach ($amounts as $total)
-                            <td>{!!  isDecimal($total, false, true) !!} {!! $charge->currency->alphacode !!}</td>
-                        @endforeach
+                        <td>{{  @$charge->calculation_type['name'] ?? @$charge->address ?? "--" }}</td>
+                        @if(isset($charge->sum_total))
+                            @foreach ($charge->sum_total as $total)
+                                <td>{!! isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
+                            @endforeach
+                        @else
+                            @foreach ($amounts as $total)
+                                <td>{!! isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
+                            @endforeach
+                        @endif
                     </tr>
                 @endforeach
             </tbody>

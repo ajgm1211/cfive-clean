@@ -44,9 +44,15 @@
                     <tr>
                         <td>{!! $charge->charge !!}</td>
                         <td>{{  @$charge->calculation_type['name'] ?? @$charge->address ?? "--" }}</td>
-                        @foreach ($amounts as $total)
-                            <td>{!! isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
-                        @endforeach
+                        @if(isset($charge->sum_total))
+                            @foreach ($charge->sum_total as $total)
+                                <td>{!! isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
+                            @endforeach
+                        @else
+                            @foreach ($amounts as $total)
+                                <td>{!! isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
+                            @endforeach
+                        @endif
                     </tr>
                 @endforeach
             </tbody>
