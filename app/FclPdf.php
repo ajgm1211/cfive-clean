@@ -158,6 +158,11 @@ class FclPdf
         $inlands = AutomaticInland::select('id', 'quote_id', 'port_id', 'rate as total', 'markup as profit', 'charge', 'currency_id', 'inland_totals_id')
             ->ConditionalPort($port)->Quotation($quote)->Type($type)->get();
 
+        foreach($inlands as $inland){
+            $address = $inland->getInlandAddress();
+            $inland->address = $address;
+        }
+
         return $inlands;
     }
 
