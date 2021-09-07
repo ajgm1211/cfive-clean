@@ -151,4 +151,11 @@ class AutomaticInland extends Model implements Auditable
         });
     }
 
+    public function getInlandAddress()
+    {
+        $result = AutomaticInlandTotal::find($this->inland_totals_id);
+
+        return $result->inland_address->address ?? null;
+    }
+
 }
