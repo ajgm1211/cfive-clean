@@ -1760,10 +1760,11 @@ trait QuoteV2Trait
                 $charge_currency = Currency::where('id',$charge['currency']['id'])->first();
                 $client_currency = Currency::where('id',$charge_client_currency)->first();
 
-                $markup = $this->convertToCurrency($charge_currency, $client_currency, array($charge['total_markups']))[0];
                 if($charge['typedestiny_id'] == 3){
+                    $markup = $this->convertToCurrency($charge_currency, $client_currency, array($charge['total_markups']))[0];
                     $total = $charge['total'];
                 }else{
+                    $markup = $charge['total_markups'];
                     $total = $charge['total_with_markups'];
                 }
             }else{

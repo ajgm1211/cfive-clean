@@ -320,7 +320,7 @@ class QuotationController extends Controller
                             'price_per_unit' => $charge['ammount'],
                             'minimum' => $charge['minimum'],
                             'currency_id' => $currency_id,
-                            'markup' => null,
+                            'markup' => $charge['markup'],
                             'total' => $charge['total'],
                         ]);
                     }
