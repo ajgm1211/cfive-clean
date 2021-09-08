@@ -17,11 +17,16 @@ use App\RemarkCondition;
 use App\GroupContainer;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
+use App\Contract;
+use App\ContractLcl;
 use App\ContractFclFile;
 use App\ContractLclFile;
 use App\TermAndConditionV2;
 use GoogleMaps;
 use Illuminate\Support\Collection as Collection;
+use Illuminate\Support\Facades\Storage;
+use Spatie\MediaLibrary\MediaStream;
+use Spatie\MediaLibrary\Models\Media;
 
 trait SearchTrait
 {
@@ -1733,10 +1738,10 @@ trait SearchTrait
             } else {
                 if($type == 'FCL'){
                     $contractFile = ContractFclFile::find($contractBackupId);
-                    $request_location = 'FclRequest'
+                    $request_location = 'FclRequest';
                 }elseif($type == 'LCL'){
                     $contractFile = ContractLclFile::find($contractBackupId);
-                    $request_location = 'LclRequest'
+                    $request_location = 'LclRequest';
                 }
                 $time = new \DateTime();
                 $now = $time->format('d-m-y');
@@ -1762,7 +1767,13 @@ trait SearchTrait
             }
             return response()->json(['success' => $success, 'url' => $download,'zip'=>false ]);
         } else {
-            $contract = Contract::find($contractId);
+            if($type == 'FCL'){
+                $contract = Contract::find($contractId);
+                $request_location = 'FclRequest';
+            }elseif($type == 'LCL'){
+                $contract = ContractLcl::find($contractId);
+                $request_location = 'LclRequest';
+            }
             $downloads = $contract->getMedia('document');
             $total = count($downloads);
             if ($total > 1) {                                         
