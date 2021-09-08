@@ -1690,13 +1690,22 @@ trait SearchTrait
 
     public function downloadContractFromSearch($rate)
     {
-        dd($rate);
-        $contractId = $rate['contract_id'];
+        if(isset($rate['contract_id'])){
+            $contractId = $rate['contract_id'];
+            $type = 'FCL';
+        }elseif(isset($rate['contractlcl_id'])){
+            $contractId = $rate['contractlcl_id'];
+            $type = 'LCL';
+        }
         $contractRequestId = $rate['contract_request_id'];
         $contractBackupId = $rate['contract_backup_id'];
 
         if ($contractId == 0) {
-            $contractFile = NewContractRequest::find($contractRequestId);
+            if($type == 'FCL'){
+                $contractFile = NewContractRequest::find($contractRequestId);
+            }elseif($type == 'LCL'){
+                $contractFile = NewContractRequestLcl::find($contractRequestId);
+            }
             $mode_search = false;
             if (!empty($contractFile)) {
                 $success = false;
@@ -1707,7 +1716,7 @@ trait SearchTrait
                     $company = CompanyUser::find($contractFile->company_user_id);
                     $extObj = new \SplFileInfo($contractFile->namefile);
                     $ext = $extObj->getExtension();
-                    $name = $contractFile->id . '-' . $company->name . '_' . $now . '-FLC.' . $ext;
+                    $name = $contractFile->id . '-' . $company->name . '_' . $now . '-' . $type . '.' . $ext;
                 } else {
                     $mode_search = true;
                     $contractFile->load('companyuser');
@@ -1717,29 +1726,35 @@ trait SearchTrait
                     $mediaItem = $contractFile->getFirstMedia('document');
                     $extObj = new \SplFileInfo($mediaItem->file_name);
                     $ext = $extObj->getExtension();
-                    $name = $contractFile->id . '-' . $contractFile->companyuser->name . '_' . $data['group_containers']['name'] . '_' . $now . '-FLC.' . $ext;
-                    $download = Storage::disk('s3_upload')->url('Request/FCL/' . $mediaItem->id . '/' . $mediaItem->file_name, $name);
+                    $name = $contractFile->id . '-' . $contractFile->companyuser->name . '_' . $data['group_containers']['name'] . '_' . $now . '-' . $type . '.' . $ext;
+                    $download = Storage::disk('s3_upload')->url('Request/' . $type . '/' . $mediaItem->id . '/' . $mediaItem->file_name, $name);
                     $success = true;
                 }
             } else {
-                $contractFile = ContractFclFile::find($contractBackupId);
+                if($type == 'FCL'){
+                    $contractFile = ContractFclFile::find($contractBackupId);
+                    $request_location = 'FclRequest'
+                }elseif($type == 'LCL'){
+                    $contractFile = ContractLclFile::find($contractBackupId);
+                    $request_location = 'LclRequest'
+                }
                 $time = new \DateTime();
                 $now = $time->format('d-m-y');
                 $extObj = new \SplFileInfo($contractFile->namefile);
                 $ext = $extObj->getExtension();
-                $name = $contractFile->id . '-' . $now . '-FLC.' . $ext;
+                $name = $contractFile->id . '-' . $now . '-' . $type . '.' . $ext;
             }
 
             if ($mode_search == false) {
-                if (Storage::disk('s3_upload')->exists('Request/FCL/' . $contractFile->namefile, $name)) {
+                if (Storage::disk('s3_upload')->exists('Request/' . $type . '/' . $contractFile->namefile, $name)) {
                     $success = true;
-                    $download = Storage::disk('s3_upload')->url('Request/FCL/' . $contractFile->namefile, $name);
+                    $download = Storage::disk('s3_upload')->url('Request/' . $type . '/' . $contractFile->namefile, $name);
                 } elseif (Storage::disk('s3_upload')->exists('contracts/' . $contractFile->namefile, $name)) {
                     $success = true;
                     $download = Storage::disk('s3_upload')->url('contracts/' . $contractFile->namefile, $name);
-                } elseif (Storage::disk('FclRequest')->exists($contractFile->namefile, $name)) {
+                } elseif (Storage::disk($request_location)->exists($contractFile->namefile, $name)) {
                     $success = true;
-                    $download = Storage::disk('FclRequest')->url($contractFile->namefile, $name);
+                    $download = Storage::disk($request_location)->url($contractFile->namefile, $name);
                 } elseif (Storage::disk('UpLoadFile')->exists($contractFile->namefile, $name)) {
                     $success = true;
                     $download = Storage::disk('UpLoadFile')->url($contractFile->namefile, $name);
@@ -1757,8 +1772,8 @@ trait SearchTrait
                 $media = $downloads->first();
                 $mediaItem = Media::find($media->id);
                 //return $mediaItem;
-                if($mediaItem->disk == 'FclRequest'){
-                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/Request/FCL/".$mediaItem->file_name,'zip'=>false ]);
+                if($mediaItem->disk == $request_location){
+                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/Request/" . $type . '/' .$mediaItem->file_name,'zip'=>false ]);
                 }
                 if($mediaItem->disk == 'contracts3'){
                     return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/contract_manual/".$mediaItem->id."/".$mediaItem->file_name,'zip'=>false ]);
