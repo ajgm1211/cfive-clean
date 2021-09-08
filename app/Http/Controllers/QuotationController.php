@@ -251,7 +251,9 @@ class QuotationController extends Controller
             'status' => 'Draft',
             'terms_portuguese' => $search_data['terms'] ? $search_data['terms']['portuguese'] : null,
             'terms_and_conditions' => $search_data['terms'] ? $search_data['terms']['spanish'] : null,
-            'terms_english' => $search_data['terms'] ? $search_data['terms']['english'] : null
+            'terms_english' => $search_data['terms'] ? $search_data['terms']['english'] : null,
+            'direction_id' => $search_data_ids['direction'],
+
         ]);
 
         $quote = $quote->fresh();
