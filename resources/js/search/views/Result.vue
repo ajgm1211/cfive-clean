@@ -119,7 +119,25 @@
                       title="Contract date beyond search range"
                     />
                   </p>
-                  <a href="#">download contract</a>
+                  <b-button
+                    v-if="
+                      rate.contract_id != 0 ||
+                      rate.contract_request_id != 0 ||
+                      rate.contract_backup_id != 0
+                    "
+                    style="
+                      background: transparent;
+                      border: 0 !important;
+                      text-transform: uppercase;
+                      color: #00c581;
+                    "
+                    @click="downloadContractFile(rate)"
+                    v-b-tooltip.hover 
+                    :title="rate.owner"
+                  >
+                    <span class="badge" v-bind:class="{'badge-primary':rate.contract.is_manual == 0, 'badge-secondary':rate.contract.is_manual == 1,'badge-success':rate.contract.is_manual == 2 }">download contract</span>
+                    
+                  </b-button>
                 </div>
 
                 <!-- OPTIONS -->
@@ -871,10 +889,9 @@ export default {
     },
     downloadContractFile(rate){
       let component = this;
-      let parameters = [rate.contract_id, rate.contract_request_id, rate.contract_backup_id];
 
       component.searchActions
-        .downloadContract(parameters)
+        .downloadContract(rate)
         .then((response) => {
           if(response.data.zip == true){
           

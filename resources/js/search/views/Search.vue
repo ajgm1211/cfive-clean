@@ -585,6 +585,7 @@
                                                     :close-on-select="true"
                                                     :clear-on-select="false"
                                                     :show-labels="false"
+                                                    :allow-empty="false"
                                                     label="name"
                                                     track-by="name"
                                                     :options="datalists.cargo_types"
