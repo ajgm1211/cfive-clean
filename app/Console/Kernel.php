@@ -50,7 +50,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:sendQuotes')
             ->cron('*/3 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->command('command:processExpiredContracts')
-            ->dailyAt('00:00')->appendOutputTo(storage_path('logs/commands.log'));
+            ->dailyAt('23:50')->appendOutputTo(storage_path('logs/commands.log'));
         //$schedule->exec('php /var/www/html/artisan queue:work --timeout=3600 --tries=7 &')
         //    ->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
         //$schedule->exec('php /var/www/html/artisan queue:work --queue=importation --timeout=3600 --tries=7 &')
