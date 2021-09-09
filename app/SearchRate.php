@@ -10,7 +10,7 @@ class SearchRate extends Model
 
     protected $fillable = [
         'id', 'pick_up_date', 'user_id', 'equipment', 'delivery', 'direction', 'type', 'company_user_id', 'user_id', 
-        'company_id', 'contact_id', 'price_level_id', 'origin_charges', 'destination_charges', 'origin_address', 'destination_address'
+        'company_id', 'contact_id', 'price_level_id', 'origin_charges', 'destination_charges', 'origin_address', 'destination_address', 'options'
     ];
 
     public function search_ports()

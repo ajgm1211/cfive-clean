@@ -1404,3 +1404,17 @@ Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
     Route::get('intercom', 'TestController@createIntercom')->name('test.intercom');
     Route::get('contable', 'TestController@contable')->name('teste.intercom');
 });
+
+//  Route::group(['prefix' => 'whitelabel'], function () {
+
+//      Route::get('/api/search', 'SearchApiController@index')->name('searchV2.index');
+//      Route::get('/api/search/list', 'SearchApiController@list')->name('searchV2.list');
+//      Route::get('/api/search/data', 'SearchApiController@data')->name('searchV2.data');
+//      Route::get('/api/search/{search}', 'SearchApiController@retrieve')->name('searchV2.retrieve');
+//      Route::post('/api/search/process', 'SearchApiController@processSearch');
+//      Route::post('/api/search/store', 'SearchApiController@store');
+//      Route::post('/api/search/storeContract', 'SearchApiController@storeContractNewSearch');
+//      Route::post('/api/search/downloadContract', 'SearchApiController@downloadContractFile');
+//      Route::get('/api/search/downloadMContract/{id}', 'SearchApiController@downloadMultipleContractFile');
+
+//  });
