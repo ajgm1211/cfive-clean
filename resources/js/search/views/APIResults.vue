@@ -2538,7 +2538,7 @@
       :key="hapagResultKey + 'hapag'"
     >
       <div class="result-search">
-        <div class="banda-top hapag"><span>HAPAG-LLOYD</span></div>
+        <div class="banda-top hapag"><span>QUICK-QUOTES</span></div>
 
         <!-- INFORMACION DE TARIFA -->
         <div class="row" style="min-height: 199px !important">
