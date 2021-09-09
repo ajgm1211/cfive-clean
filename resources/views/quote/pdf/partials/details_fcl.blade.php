@@ -190,24 +190,4 @@
                 </div>
                 
             @endif
-
-            @if(($quote->delivery_type==2 || $quote->delivery_type==3 || $quote->delivery_type==4) && ($quote->origin_address!='' || $quote->destination_address!=''))
-
-                <div  class="incoterm">
-
-                    @if($quote->origin_address!='')
-                    
-                        <p><span><b>{{__('pdf.origin_address')}}: </b></span>{{@$quote->origin_address}}</p>
-                    
-                    @endif
-                    
-                    @if($quote->destination_address!='')
-                    
-                        <p><span><b>{{__('pdf.destination_address')}}: </b></span>{{@$quote->destination_address}}</p>
-                        
-                    @endif
-                
-                </div>
-                <br>
-            @endif
             <br>
