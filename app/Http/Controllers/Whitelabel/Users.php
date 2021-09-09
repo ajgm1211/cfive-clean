@@ -24,6 +24,7 @@ class Users extends Controller
         $users = DB::table('companies')
             ->join('users', 'companies.owner', '=', 'users.id')
             ->select('users.*', 'companies.*')
+            // ->where('users.')
             ->get();
         
             return response()->json($users,200);    
@@ -59,7 +60,7 @@ class Users extends Controller
              'whitelabel' => 'nullable',
          ]);
 
-         User::create($data);
+        User::create($data);
         if ($request->whitelabel == 1){
 
          $name = $request->get('name');

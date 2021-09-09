@@ -7,6 +7,7 @@ use App\Http\Traits\QuoteV2Trait;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\SearchApiResource;
+use App\Http\Resources\WhitelabelSearchApiResource;
 use App\Http\Resources\RateResource;
 use App\Http\Requests\StoreContractSearch;
 use App\InlandDistance;
@@ -78,12 +79,25 @@ class SearchApiController extends Controller
         return SearchApiResource::collection($results);
     }
 
+    public function listwhitelabel(Request $request)
+    {
+        // $company_user_id = \Auth::user()->company_user_id;
+
+        $company_user_id = 1;
+        //Filtering and pagination
+        $results = SearchRate::where([['company_user_id', $company_user_id],['type','FCL']])->orderBy('id', 'desc')->take(4)->get();
+
+        //Grouping as collection to be managed by Vue
+        return WhitelabelSearchApiResource::collection($results);
+    }
+
     //Retrieves all data needed for search processing and displaying
     public function data(Request $request)
     {
         $user = \Auth::user();
         //Querying each model used and mapping only necessary data
-        $company_user_id = $user->company_user_id;
+        // $company_user_id = $user->company_user_id;
+        $company_user_id = 1;
 
         $company_user = CompanyUser::where('id', $company_user_id)->first();
 
@@ -210,9 +224,9 @@ class SearchApiController extends Controller
     {
         //Setting current company and user
         $user = \Auth::user();
-        $user_id = $user->id;
-        $company_user = $user->companyUser()->first();
-        $company_user_id = $company_user->id;
+        $user_id = 1;
+        // $company_user = $user->companyUser()->first();
+        $company_user_id = 1;
 
         $search_array = $request->input();
 
@@ -303,6 +317,12 @@ class SearchApiController extends Controller
         $this->trackEvents("search_fcl", $track_array);
 
         return RateResource::collection($rates);
+
+        if ($request->requested == 2  ){
+
+            echo('Hola');
+
+        }
     }
 
     //Stores current search
@@ -419,9 +439,15 @@ class SearchApiController extends Controller
         return new SearchApiResource($new_search);
     }
 
+
     public function retrieve(SearchRate $search)
     {
         return new SearchApiResource($search);
+    }
+
+    public function retrievewhitelabel(SearchRate $search)
+    {
+        return new WhitelabelSearchApiResource($search);
     }
 
     //Finds any Rates associated to a contract valid in search dates, matching search ports

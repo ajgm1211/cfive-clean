@@ -7,6 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Company;
 use App\Contact;
 use App\Http\Requests\StoreContact;
+use GuzzleHttp\Client; 
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
+use Exception;
 
 class Contacts extends Controller
 {
@@ -40,44 +44,57 @@ class Contacts extends Controller
      */
     public function store(Request $request)
     {
-        $contact =  [
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email',
-            'options' => 'json',
-        ];
+           $data = $request->validate(  [
+               'first_name' => 'required',
+               'last_name' => 'required',
+               'email' => 'required|email',
+               'phone'=> 'nullable',
+               'position'=> 'nullable',
+               'whitelabel'=> 'nullable',
+               'options' => 'json',
+           ]);
+        // try {
+        //     $client = new Client;
+        //         $response = $client->post('http://chirix.localhost:8000/user', ['json' => [
+        //         'name' => 'a',
+        //         'lastname' => 'a',
+        //         'email' => 'a2@mail.com',
+        //         'type' => 'user'
+        //         ]]);
+        //     return json_decode($response->getBody()->getContents(), true);
+        // } catch (Exception $e) {
+        //     throw new Exception($e->getResponse()->getBody()->getContents());        
+        // }
+        Contact::create($data);
+        
+         if ($request->whitelabel == 1){
 
+             $name = $request->get('first_name');
+             $lastname = $request->get('last_name');
+             $email = $request->get('email');
+             $type = 'user';
+             $phone = $request->get('phone');
+             $position = $request->get('position');
+            
+             $client = new \GuzzleHttp\Client([              
+                 'Accept' => 'application/json',
+                 'Content-Type' => 'application/x-www-form-urlencoded']);
+                     // Create a POST request
+                 $response = $client->request(
+                     'POST',
+                     'http://chirix.localhost:8000/user',
+                      [
+                          'json' => [
+                             'name' => $name,
+                             'lastname' => $lastname,
+                             'email' => $email,
+                             'type' => $type,
+                          ]
+                      ]
+                     );
+        }
 
-        $contact = Contact::create($request->all());
-
-        if ($request->whitelabel == 1){
-
-            $name = $request->get('name');
-            $lastname = $request->get('lastname');
-            $email = $request->get('email');
-            $password = $request->get('password');
-            $type = 'user';
-   
-            $client = new \GuzzleHttp\Client([              
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/x-www-form-urlencoded']);
-                    // Create a POST request
-                $response = $client->request(
-                    'POST',
-                    'http://chirix.localhost:8000/admin',
-                    [
-                        'form_params' => [
-                            'name' => $name,
-                            'lastname' => $lastname,
-                            'email' => $email,
-                            'password' => $password,
-                            'type' => $type,
-                        ]
-                    ]
-                );
-           }
-
-        return response()->json($contact,200);    
+         return response()->json($data,200);    
     }
 
     /**
