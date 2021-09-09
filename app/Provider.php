@@ -52,5 +52,11 @@ class Provider extends Model
         return $new_provider;
     }
 
+    public function referentialData()
+    {
+        return $this->morphOne('App\ReferentialData', 'referential')
+            ->where('company_user_id', $this->company_user_id)
+            ->first();
+    }
 
 }

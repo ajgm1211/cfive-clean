@@ -3707,14 +3707,19 @@ $company_cliente = null;
             if (!empty($mediaItem)) {
                 $data = array(
                     "url_to_download" => $quote->getMedia('document')->first()->getUrl(),
-                    'quote_id' => $quote->quote_id
+                    'quote_id' => $quote->quote_id,
+                    'id' => $quote->id
                 );
                 return $data;
             } else {
-                return response()->json('Sorry, the media file does not exist');
+                return response()->json([
+                    'message' => 'Sorry, the media file does not exist'
+                ], 404);
             }
         } else {
-            return response()->json('Sorry, the quote does not exist');
+            return response()->json([
+                'message' => 'Sorry, the quote does not exist'
+            ], 404);
         }
     }
 
