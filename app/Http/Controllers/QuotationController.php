@@ -215,22 +215,21 @@ class QuotationController extends Controller
 
         if (count($rate_data) != 0) {
             $search_data = $rate_data[0]['search'];
-        } else {
+        } elseif (count($result_data) != 0) {
             $search_data = $result_data[0]['search'];
+            //Setting terms & conditions when is from API
+            $search_data['terms'] = $this->searchTerms($search_data);
         }
 
         $search_data_ids = $this->getIdsFromArray($search_data);
 
-        $equipment = $container_string = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
+        $equipment = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
 
         $remarks = "";
 
         foreach ($rate_data as $rate) {
             $remarks .= $rate['remarks'];
         }
-        
-        //Setting terms & conditions when is from API
-        $terms = $this->searchTerms($search_data);
         
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
@@ -250,10 +249,9 @@ class QuotationController extends Controller
             'validity_start' => $search_data_ids['dateRange']['startDate'],
             'validity_end' => $search_data_ids['dateRange']['endDate'],
             'status' => 'Draft',
-            'direction_id' => $search_data_ids['direction'],
-            'terms_portuguese' => $search_data['terms'] ?? $search_data['terms']['portuguese'] ?? $terms['portuguese'] ?? null,
-            'terms_and_conditions' => $search_data['terms'] ?? $search_data['terms']['spanish'] ?? $terms['spanish'] ?? null,
-            'terms_english' => $search_data['terms'] ?? $search_data['terms']['english'] ?? $terms['english'] ?? null
+            'terms_portuguese' => $search_data['terms'] ? $search_data['terms']['portuguese'] : null,
+            'terms_and_conditions' => $search_data['terms'] ? $search_data['terms']['spanish'] : null,
+            'terms_english' => $search_data['terms'] ? $search_data['terms']['english'] : null
         ]);
 
         $quote = $quote->fresh();
@@ -552,11 +550,14 @@ class QuotationController extends Controller
 
         $origin_charges = $search_data['originCharges'];
         $destination_charges = $search_data['destinationCharges'];
+        $show_rate_currency = $search_data['showRateCurrency'];
 
         $origin_ports = $search_data['originPorts'];
         $destination_ports = $search_data['destinationPorts'];
 
-        $search_options = compact('start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges', 'origin_ports', 'destination_ports');
+        $search_options = compact(
+            'start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges', 
+            'origin_ports', 'destination_ports', 'show_rate_currency');
 
         $quote->update(['search_options' => $search_options, 'direction_id' => $search_data['direction']]);
     }

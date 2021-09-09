@@ -64,6 +64,11 @@ class SettingController extends Controller
             } else {
                 $IncludeDestiny = '';
             }
+            if ($company->companyUser->options['totals_in_freight_currency'] == '1') {
+                $ShowFreightCurrency = "checked='true'";
+            } else {
+                $ShowFreightCurrency = '';
+            }
             if ($company->companyUser->colors_pdf != null) {
                 $color_pdf = $company->companyUser->colors_pdf;
             } else {
@@ -75,7 +80,7 @@ class SettingController extends Controller
         $currencies = Currency::where('alphacode', '=', 'USD')->orwhere('alphacode', '=', 'EUR')->pluck('alphacode', 'id');
         $pdf_templates = PdfTemplate::pluck('name', 'id');
 
-        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'color_pdf','delegations'));
+        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'ShowFreightCurrency', 'color_pdf','delegations'));
     }
 
     public function store(StoreSettings $request)
@@ -156,7 +161,8 @@ class SettingController extends Controller
             }
             $options=[
                 'api_providers'=> [],
-                'company_address_pdf'=> 1
+                'company_address_pdf'=> 1,
+                'show_search_totals_in_freight_currency' => true,
             ];
             $company->options=$options;
             $company->save();
@@ -175,6 +181,9 @@ class SettingController extends Controller
             $email_settings->save();
         } else {
             $company = CompanyUser::findOrFail($request->company_id);
+            $company_options = $company->options;
+            $company_options['totals_in_freight_currency'] = $request->showfreightcurrency;
+            $company->options = $company_options;
             $company->name = $request->name;
             $company->phone = $request->phone;
             $company->address = $request->address;

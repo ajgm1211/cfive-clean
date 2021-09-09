@@ -78,7 +78,7 @@
                 <!-- VALIDITY -->
                 <div class="d-flex align-items-center">
                   <p class="mr-4 mb-0">
-                    <b>Vality:</b> 2020-20-20 / 2020-20-20
+                    <b>VALIDITY:</b> 2020-20-20 / 2020-20-20
                   </p>
                   <a href="#">download contract</a>
                 </div>
@@ -338,7 +338,7 @@
                       :key="contKey"
                     >
                       <p>
-                        <b style="font-size: 16px" v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined)"
+                        <b style="font-size: 16px" v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined) || request.showRateCurrency"
                           >{{
                             rate.totals_with_markups_freight_currency
                               ? rate.totals_with_markups_freight_currency["C" + container.code]
@@ -368,7 +368,7 @@
               <div class="col-12 mt-3 mb-3 result-action">
                 <div class="d-flex align-items-center">
                   <p class="mr-4 mb-0">
-                    <b>Validity:</b>
+                    <b style="font-size:11px;">VALIDITY:</b>
                     {{ rate.contract.validity + " / " + rate.contract.expire }}
                     <img
                       v-if="rate.contract.validity > searchEndDate"
@@ -462,7 +462,7 @@
                       <b-th style="width: 300px">Charge</b-th>
                       <b-th style="width: 325px">Detail</b-th>
                       <!-- <b-th></b-th>
-                                            <b-th></b-th> -->
+                      <b-th></b-th> -->
                       <b-th
                         v-for="(container, contKey) in request.containers"
                         :key="contKey"

@@ -76,7 +76,7 @@
                     <!-- Header TT,via,date,contract-->
                     <div class="d-flex justify-content-between align-items-center">
                         <FormInlineView
-                            v-if="rateLoaded"
+                            v-if="freight.headerLoaded"
                             :data ="freight.rateData"
                             :fields="header_fields"
                             :multi="true"
@@ -465,20 +465,21 @@ export default {
                     .retrieve(freight.id,component.$route)
                     .then((response) => {
                         freight.rateData = response.data.data;
+                        freight.headerLoaded = true;
                         component.rateLoaded = true;
+                        freight.loaded = true;
+
+                        setTimeout(function() {
+                            component.$nextTick(() => {
+                                component.$forceUpdate()
+                            });
+                        },100);
                         })
                     .catch((data) => {
                         this.$refs.observer.setErrors(data.data.errors);
                         });
-                        
-                freight.loaded = true;
+                
             }
-
-            setTimeout(function() {
-                component.$nextTick(() => {
-                    component.$forceUpdate()
-                });
-            },100);
         },
 
         setFreightData(){
@@ -486,6 +487,7 @@ export default {
             let firstOpen = false;
 
             component.freights.forEach(function (freight) {
+                freight.headerLoaded = false;
                 freight.loaded = false;
                 component.datalists.carriers.forEach(function (carrier){
                     if(freight.carrier_id==carrier.id){
@@ -504,8 +506,8 @@ export default {
                 });
                 
                 if(!firstOpen){
-                    component.setCollapseState(freight);
                     freight.initialCollapse = true;
+                    component.setCollapseState(freight);
                     firstOpen = true;
                 }else{
                     freight.initialCollapse = false;
