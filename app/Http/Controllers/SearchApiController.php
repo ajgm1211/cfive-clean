@@ -660,8 +660,8 @@ class SearchApiController extends Controller
         $rate_ports_id = [$rate->origin_port, $rate->destiny_port, 1485];
 
         $rate_carriers_id = [$rate->carrier_id, 26];
-
-        $remarks = RemarkCondition::where('company_user_id', $company_user->id)->whereHas('remarksCarriers', function ($q) use ($rate_carriers_id) {
+        
+        $remarks = RemarkCondition::where('company_user_id', $company_user->id)->where('level', '!=' , 'api' )->whereHas('remarksCarriers', function ($q) use ($rate_carriers_id) {
             $q->whereIn('carrier_id', $rate_carriers_id);
         })->where(function ($query) use ($rate_countries_id, $rate_ports_id) {
             $query->orwhereHas('remarksHarbors', function ($q) use ($rate_ports_id) {
@@ -1024,7 +1024,7 @@ class SearchApiController extends Controller
 
         }
 
-        if ($search_data['showRateCurrency']) {
+        if (isset($search_data['showRateCurrency'])) {
             $rate->setAttribute('totals_freight_currency', $totals_array_freight_currency);
         } else {
             $totals_freight_currency = $rate->charge_totals_by_type['Freight'];
