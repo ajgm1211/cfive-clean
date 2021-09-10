@@ -85,6 +85,7 @@ class LclPdf
                         foreach($value as $charge){
                             if($inland->pdf_options['groupId'] == $charge->id){
                                 $inland_total = json_decode($inland->totals, true);
+                                $inland_total = isset($inland->sum_total) ? $inland->sum_total:$inland_total;
                                 $inland_total = $this->convertToCurrency($inland->currency, $charge->currency, $inland_total);
                                 $grouped_total = intval($charge->total) + intval($inland_total['lcl_totals']);
                                 $charge->total = $grouped_total;
@@ -140,8 +141,11 @@ class LclPdf
             $type = 'Destination';
         }
 
-        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals', 'markups as profit', 'currency_id', 'inland_address_id','pdf_options')
+        $inlands = AutomaticInlandLclAir::select('id', 'charge', 'inland_totals_id', 'quote_id', 'total', 'price_per_unit', 'units', 'port_id', 'markup as profit', 'currency_id')
             ->ConditionalPort($port)->Quotation($quote)->Type($type)->get();
+
+        //Adding address and modifying totals in Inlands
+        $this->addAddressTotalToInland($inlands);
 
         return $inlands;
     }
@@ -154,8 +158,11 @@ class LclPdf
             $type = 'Destination';
         }
  
-        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals as total', 'markups as profit', 'currency_id', 'inland_address_id','pdf_options')
+        $inlands = AutomaticInlandLclAir::select('id', 'charge', 'inland_totals_id', 'quote_id', 'port_id', 'total', 'price_per_unit', 'units', 'markup as profit', 'currency_id')
             ->whereNotIn('port_id', $port)->Quotation($quote)->Type($type)->get();
+
+        //Adding address and modifying totals in Inlands
+        $this->addAddressTotalToInland($inlands);
 
         $inlands = $inlands->groupBy([
 
@@ -166,6 +173,24 @@ class LclPdf
         ]);
 
         return $inlands;
+    }
+
+    public function addAddressTotalToInland($inlands){
+        foreach ($inlands as $inland) {
+            $total = $this->processInlandTotal($inland);
+            $address = $inland->getInlandAddress();
+            $inland->address = $address;
+            $inland->sum_total = $total;
+        }
+    }
+
+    public function processInlandTotal($data){
+        if($data->total != null){
+            $total = $data->total + $data->profit;
+            return $total;
+        }
+        $total = ($data->price_per_unit*$data->unit)+$data->profit;
+        return $total;
     }
 
     public function localChargeTotals($quote, $type, $port)
