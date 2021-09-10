@@ -223,9 +223,14 @@ class SearchApiController extends Controller
     public function processSearch(Request $request)
     {
         //Setting current company and user
+        // $user = \Auth::user();
+        // $user_id = $user->id;
+        // $company_user = $user->companyUser()->first();
+        // $company_user_id = $company_user->id;
+        
         $user = \Auth::user();
         $user_id = 1;
-        // $company_user = $user->companyUser()->first();
+        $company_user = $user->companyUser()->first();
         $company_user_id = 1;
 
         $search_array = $request->input();
@@ -318,11 +323,11 @@ class SearchApiController extends Controller
 
         return RateResource::collection($rates);
 
-        if ($request->requested == 2  ){
+        // if ($request->requested == 2  ){
 
-            echo('Hola');
+        //     echo('Hola');
 
-        }
+        // }
     }
 
     //Stores current search
