@@ -63,16 +63,18 @@
     <!-- End Info Date -->
 
     <!-- Logo -->
-    <div id="logo">
+    @if(@$user->companyUser->pdf_template_id!=2)
+        <div id="logo">
 
-        @if($user->companyUser->logo!='')
+            @if($user->companyUser->logo!='')
 
-        <img src="{{Storage::disk('s3')->url(@$user->companyUser->logo)}}" class="img img-fluid"
-            style="width: 150px; height: auto; margin-bottom:0">
+            <img src="{{Storage::disk('s3')->url(@$user->companyUser->logo)}}" class="img img-fluid"
+                style="width: 150px; height: auto; margin-bottom:0">
 
-        @endif
+            @endif
 
-    </div>
+        </div>
+    @endif
     <!-- End Logo -->
 
 
