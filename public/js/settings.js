@@ -84,6 +84,7 @@ $(document).on('click', '#default-currency-submit', function() {
 //Mostrar/Ocultar opciones pdf
 $(document).on('change', '#pdf_footer', function() {
     var value = $(this).val();
+    console.log(value);
     if (value == 'Text') {
         $('#footer_text').removeClass('hide');
         $('#footer_image').addClass('hide');
@@ -91,6 +92,27 @@ $(document).on('change', '#pdf_footer', function() {
         $('#footer_image').removeClass('hide');
         $('#footer_text').addClass('hide');
     }
+});
+
+$(document).on('change', '#pdf_header', function() {
+    var value = $(this).val();
+    console.log(value);
+    if (value == 'image') {
+        $('#header_image').removeClass('hide');
+    }else{
+        $('#header_image').addClass('hide');
+    } 
+});
+
+$(document).on('change', '#pdf_template', function() {
+    var value = $(this).val();
+    console.log(value);
+    if (value == 2) {
+        $('#haeder_pdf').removeClass('hide');
+    }else{
+        $('#haeder_pdf').addClass('hide');
+        $('#header_image').addClass('hide');
+    } 
 });
 
 //Mostrar/Ocultar opciones firma email
@@ -104,6 +126,7 @@ $(document).on('change', '#signature_type', function() {
         $('#signature_text').addClass('hide');
     }
 });
+
 
 //Select2
 $('#currency_id').select2({

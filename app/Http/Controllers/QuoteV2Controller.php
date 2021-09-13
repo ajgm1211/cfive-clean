@@ -1708,19 +1708,19 @@ class QuoteV2Controller extends Controller
         if ($type == 'port') {
 
             $remarks_all = RemarkHarbor::where('port_id', $port_all->id)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('remark_conditions.level','!=','api')->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
 
             $remarks_origin = RemarkHarbor::wherein('port_id', $rem_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('remark_conditions.level','!=','api')->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
 
             $remarks_destination = RemarkHarbor::wherein('port_id', $rem_dest)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('remark_conditions.level','!=','api')->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
@@ -1729,19 +1729,19 @@ class QuoteV2Controller extends Controller
         if ($type == 'country') {
 
             $remarks_all = RemarkCountry::where('country_id', $country_all->id)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('remark_conditions.level','!=','api')->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
 
             $remarks_origin = RemarkCountry::wherein('country_id', $rem_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('remark_conditions.level','!=','api')->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
 
             $remarks_destination = RemarkCountry::wherein('country_id', $rem_dest)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('remark_conditions.level','!=','api')->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();

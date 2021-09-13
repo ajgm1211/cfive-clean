@@ -577,7 +577,7 @@ trait MixPanelTrait
                 'Type' => $data->type,
                 'Company' => $user->companyUser->name,
                 'Contract_id' => $data->contract_id,
-                'Container_type' => $container->group_containers->name,
+                'Container_type' => $container->group_containers->name ?? null,
                 'Carrier' => $carrier->name,
                 'User' => $user->fullname,
                 'Created_at' => $data->created_at,
