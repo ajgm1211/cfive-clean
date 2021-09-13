@@ -18,3 +18,4 @@ access.log
 /reports
 sonar-scanner.properties
 sonar-project.properties
+.DS_store
