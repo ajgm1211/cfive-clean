@@ -610,6 +610,7 @@
                                                     type="number"
                                                     placeholder="Quantity"
                                                     class="s-input-form input-quantity"
+                                                    @input="setChargeableWeight"
                                                 >
                                                 </b-form-input>
                                             </label>
@@ -624,6 +625,7 @@
                                                     placeholder="Height (cm)"
                                                     type="number"
                                                     class="s-input-form"
+                                                    @input="setChargeableWeight"
                                                 >
                                                 </b-form-input>
                                                 <img
@@ -643,6 +645,7 @@
                                                     placeholder="Width (cm)"
                                                     class="s-input-form"
                                                     type="number"
+                                                    @input="setChargeableWeight"
                                                 >
                                                 </b-form-input>
                                                 <img
@@ -660,6 +663,7 @@
                                                     placeholder="Length (cm)"
                                                     class="s-input-form"
                                                     type="number"
+                                                    @input="setChargeableWeight"
                                                 ></b-form-input>
                                                 <img
                                                     src="/images/espacio-de-trabajo.svg"
@@ -676,6 +680,7 @@
                                                     placeholder="Weight"
                                                     type="number"
                                                     class="s-input-form"
+                                                    @input="setChargeableWeight"
                                                 ></b-form-input>
                                                 <img
                                                     src="/images/espacio-de-trabajo.svg"
@@ -2390,8 +2395,8 @@ export default {
                         this.addPackagingBar.quantity > 0){
                             let newPackaging = _.cloneDeep(this.addPackagingBar);
                             this.lclPackaging.push(newPackaging);
-                            this.setChargeableWeight();
                             this.clearAddPackagingBar();
+                            this.setChargeableWeight();
                     }else{
                         this.invalidPackagingCalculation = true;
 
@@ -2455,6 +2460,14 @@ export default {
                 }
             }else if(this.searchRequest.lclTypeIndex == 1){
                 let component = this;
+            
+                let barHeight = parseFloat(this.addPackagingBar.height) > 0 ? parseFloat(this.addPackagingBar.height) : 0;
+                let barWidth = parseFloat(this.addPackagingBar.width) > 0 ? parseFloat(this.addPackagingBar.width) : 0;
+                let barDepth = parseFloat(this.addPackagingBar.depth) > 0 ? parseFloat(this.addPackagingBar.depth) : 0;
+                
+                let barVolume = (barHeight * barWidth * barDepth) / 1000000;
+                let barQuantity = this.addPackagingBar.quantity > 0 ? parseFloat(this.addPackagingBar.quantity) : 0;
+                let barWeight = this.addPackagingBar.weight > 0 ? parseFloat(this.addPackagingBar.weight) : 0;
 
                 component.lclPackagingQuantity = 0;
                 component.lclPackagingVolume = 0;
@@ -2462,14 +2475,18 @@ export default {
 
                 component.lclPackaging.forEach(function (pack){
                     component.lclPackagingQuantity += parseFloat(pack.quantity);
-                    component.lclPackagingVolume += (parseFloat(pack.depth) / 100) * (parseFloat(pack.height) / 100) * (parseFloat(pack.width) / 100);
+                    component.lclPackagingVolume += (parseFloat(pack.depth) * parseFloat(pack.height) * parseFloat(pack.width)) / 1000000;
                     component.lclPackagingWeight += parseFloat(pack.weight);
                 });
 
+                this.lclPackagingQuantity += barQuantity;
+                this.lclPackagingVolume += barVolume;
+                this.lclPackagingWeight += barWeight;
+
                 if( this.lclPackagingVolume > (this.lclPackagingWeight / 1000) ){
-                    this.lclPackagingChargeableWeight = this.lclPackagingVolume * this.lclPackagingQuantity;
+                    this.lclPackagingChargeableWeight = (this.lclPackagingVolume * this.lclPackagingQuantity);
                 }else{
-                    this.lclPackagingChargeableWeight = (this.lclPackagingWeight / 1000) * this.lclPackagingQuantity;
+                    this.lclPackagingChargeableWeight = ((this.lclPackagingWeight / 1000) * this.lclPackagingQuantity);
                 }
 
             }
