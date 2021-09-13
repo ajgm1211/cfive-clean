@@ -1392,9 +1392,17 @@ export default {
 
         onSpecialDuplicate(quote_id){
             let searchRequestType = 1;
+            var searchRequest = { renew: true };
 
-            this.$router.push({ name: 'searchV2.index', query: { requested: searchRequestType, model_id: quote_id } });
-            this.$router.go();
+            this.actions
+                .updateSearch(
+                    quote_id,
+                    searchRequest
+                )
+                .then((response) => {
+                    this.$router.push({ name: 'searchV2.index', query: { requested: searchRequestType, model_id: quote_id } });
+                    this.$router.go();
+                })
         },
         /* End single actions */
 
