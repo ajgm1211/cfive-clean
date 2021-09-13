@@ -200,6 +200,7 @@
                     <b-tr>
                       <b-th>Charge</b-th>
                       <b-th>Detail</b-th>
+                      <b-th></b-th>
                       <b-th>Amount</b-th>
                       <b-th>Units</b-th>
                       <b-th 
@@ -222,6 +223,7 @@
                       <b-td>{{
                         charge.calculationtypelcl.name }}</b-td
                       >
+                      <b-td></b-td>
                       <b-td> {{ charge.ammount }} </b-td>
                       <b-td> {{ charge.units }} </b-td>
                       <b-td>
