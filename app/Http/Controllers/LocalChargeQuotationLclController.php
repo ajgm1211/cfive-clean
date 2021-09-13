@@ -285,6 +285,7 @@ class LocalChargeQuotationLclController extends Controller
             if ($previous_charge) {
                 $previous_charge->groupingCharges($localcharge);
                 $previous_charge->totalize();
+                $local_charge = $previous_charge;
             } else {
                 $local_charge = LocalChargeQuoteLcl::create([
                     'price' => (((float)$localcharge['price_per_unit'] * (float)$units) + (float)$localcharge['markup']) / (float)$units,

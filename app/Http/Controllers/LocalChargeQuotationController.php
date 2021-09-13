@@ -540,6 +540,7 @@ class LocalChargeQuotationController extends Controller
                 $previous_charge->groupingCharges($localcharge);
                 $previous_charge->sumarize();
                 $previous_charge->totalize();
+                $local_charge = $previous_charge;
             } else {
                 $local_charge = LocalChargeQuote::create([
                     'price' => $localcharge['price'],
