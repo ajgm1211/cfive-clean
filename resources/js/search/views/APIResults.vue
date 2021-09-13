@@ -2543,7 +2543,7 @@
       :key="hapagResultKey + 'hapag'"
     >
       <div class="result-search">
-        <div class="banda-top hapag"><span>HAPAG-LLOYD</span></div>
+        <div class="banda-top hapag"><span>QUICK-QUOTES</span></div>
 
         <!-- INFORMACION DE TARIFA -->
         <div class="row" style="min-height: 199px !important">
@@ -4508,49 +4508,44 @@ export default {
     },
 
     hideCharges(responseData) {
-      if (!this.request.originCharges) {
-        delete responseData.pricingDetails.surcharges.originSurcharges;
-        responseData.pricingDetails.totalRatePerContainer.forEach(function (
-          totalPerCont
-        ) {
-          let newTotal = 0;
-          newTotal =
-            totalPerCont.total -
-            responseData.pricingDetails.totalRatePerType.totalRateOrigin[
-              responseData.pricingDetails.totalRatePerContainer.indexOf(
-                totalPerCont
-              )
-            ].total;
-          responseData.pricingDetails.totalRatePerContainer[
-            responseData.pricingDetails.totalRatePerContainer.indexOf(
-              totalPerCont
-            )
-          ].total = newTotal;
-        });
-        responseData.pricingDetails.totalRatePerType.totalRateOrigin = null;
-      }
 
-      if (!this.request.destinationCharges) {
+      if (!this.request.originCharges && !this.request.destinationCharges){
+        delete responseData.pricingDetails.surcharges.originSurcharges;
         delete responseData.pricingDetails.surcharges.destinationSurcharges;
-        responseData.pricingDetails.totalRatePerContainer.forEach(function (
-          totalPerCont
-        ) {
+
+        responseData.pricingDetails.totalRatePerContainer.forEach(function (totalPerCont) {
+
+          totalPerCont.total =
+            responseData.pricingDetails.totalRatePerType.totalRateFreight[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total;
+        });
+      }else if (!this.request.originCharges && this.request.destinationCharges) {
+        delete responseData.pricingDetails.surcharges.originSurcharges;
+
+        responseData.pricingDetails.totalRatePerContainer.forEach(function (totalPerCont) {
           let newTotal = 0;
           newTotal =
             totalPerCont.total -
-            responseData.pricingDetails.totalRatePerType.totalRateDestination[
-              responseData.pricingDetails.totalRatePerContainer.indexOf(
-                totalPerCont
-              )
-            ].total;
-          responseData.pricingDetails.totalRatePerContainer[
-            responseData.pricingDetails.totalRatePerContainer.indexOf(
-              totalPerCont
-            )
-          ].total = newTotal;
+            responseData.pricingDetails.totalRatePerType.totalRateOrigin[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total;
+
+          responseData.pricingDetails.totalRatePerContainer[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total = newTotal;
         });
-        responseData.pricingDetails.totalRatePerType.totalRateDestination =
-          null;
+
+        responseData.pricingDetails.totalRatePerType.totalRateOrigin = null;
+
+      }else if (this.request.originCharges && !this.request.destinationCharges) {
+        delete responseData.pricingDetails.surcharges.destinationSurcharges;
+
+        responseData.pricingDetails.totalRatePerContainer.forEach(function (totalPerCont) {
+          let newTotal = 0;
+
+          newTotal =
+            totalPerCont.total -
+            responseData.pricingDetails.totalRatePerType.totalRateDestination[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total;
+
+          responseData.pricingDetails.totalRatePerContainer[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total = newTotal;
+        });
+
+        responseData.pricingDetails.totalRatePerType.totalRateDestination = null;
       }
     },
 

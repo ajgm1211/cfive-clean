@@ -576,27 +576,32 @@ class QuotationController extends Controller
     {
         $search_data = $request->input();
 
-        $date_range = $search_data['dateRange'];
-        $start_date = substr($date_range['startDate'], 0, 10);
-        $end_date = substr($date_range['endDate'], 0, 10);
+        if(isset($search_data['renew'])){
+            $quote->update(['search_options' => null]);
+        }else{
+            $date_range = $search_data['dateRange'];
+            $start_date = substr($date_range['startDate'], 0, 10);
+            $end_date = substr($date_range['endDate'], 0, 10);
+    
+            $contact = $search_data['contact'];
+            $company = $search_data['company'];
+    
+            $price_level = $search_data['pricelevel'];
+    
+            $origin_charges = $search_data['originCharges'];
+            $destination_charges = $search_data['destinationCharges'];
+            $show_rate_currency = $search_data['showRateCurrency'];
+    
+            $origin_ports = $search_data['originPorts'];
+            $destination_ports = $search_data['destinationPorts'];
+    
+            $search_options = compact(
+                'start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges', 
+                'origin_ports', 'destination_ports', 'show_rate_currency');
+    
+            $quote->update(['search_options' => $search_options, 'direction_id' => $search_data['direction']]);
+        }
 
-        $contact = $search_data['contact'];
-        $company = $search_data['company'];
-
-        $price_level = $search_data['pricelevel'];
-
-        $origin_charges = $search_data['originCharges'];
-        $destination_charges = $search_data['destinationCharges'];
-        $show_rate_currency = $search_data['showRateCurrency'];
-
-        $origin_ports = $search_data['originPorts'];
-        $destination_ports = $search_data['destinationPorts'];
-
-        $search_options = compact(
-            'start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges', 
-            'origin_ports', 'destination_ports', 'show_rate_currency');
-
-        $quote->update(['search_options' => $search_options, 'direction_id' => $search_data['direction']]);
     }
 
     public function destroy(QuoteV2 $quote)
