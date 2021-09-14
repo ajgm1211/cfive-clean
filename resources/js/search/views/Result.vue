@@ -121,9 +121,9 @@
                   </p>
                   <b-button
                     v-if="
-                      rate.contract_id != 0 ||
+                      (rate.contract_id != 0 ||
                       rate.contract_request_id != 0 ||
-                      rate.contract_backup_id != 0
+                      rate.contract_backup_id != 0) && false
                     "
                     style="
                       background: transparent;
