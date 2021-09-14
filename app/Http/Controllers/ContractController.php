@@ -213,7 +213,8 @@ class ContractController extends Controller
             'remarks' => '',
             'is_manual' => 1
         ]);
-
+        
+        $contract->createCustomCode();
         $contract->ContractCarrierSync($data['carriers']);
 
         return new ContractResource($contract);
