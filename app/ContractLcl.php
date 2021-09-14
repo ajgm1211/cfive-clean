@@ -263,4 +263,25 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
         return $new_contract;
     }
+
+    public function createCustomCode()
+    {
+        $lastContract = ContractLcl::where('company_user_id',$this->company_user_id)->
+        orderBy('contract_code', 'desc')->first();
+
+        $company = strtoupper(substr($this->companyUser->name, 0, 3));
+
+        $code = 'LCL-'.$company.'-0001';
+        
+        if($lastContract->contract_code){
+            $lastContractId = (int)substr($lastContract->contract_code, -3);
+            $lastContractId = str_pad($lastContractId+1, 4, '0', STR_PAD_LEFT);
+            $code = 'LCL-'.$company.'-'.$lastContractId;
+        }
+
+        $this->contract_code = $code;
+        $this->save();
+
+        return;
+    }
 }
