@@ -1380,7 +1380,7 @@ trait SearchTrait
                         'total' => $rate->total,
                         'minimum' => $rate->minimum,
                         'units' => $rate->calculation_type->name == "Per Shipment" ? 1 : $search_data['chargeableWeight'],
-                        'ammount' => $rate->uom,
+                        'ammount' => $rate->uom > $rate->minimum ? $rate->uom : $rate->minimum,
                         'calculationtypelcl' => $rate->calculation_type, 
                         'typedestiny_id' => 3,
                         'currency' => $rate->currency,
