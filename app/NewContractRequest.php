@@ -37,6 +37,7 @@ class NewContractRequest extends Model implements HasMedia, Auditable
         'code',
         'is_api'
     ];
+    
 
     public function user()
     {

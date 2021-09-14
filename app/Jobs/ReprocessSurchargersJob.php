@@ -78,14 +78,14 @@ class ReprocessSurchargersJob implements ShouldQueue
             $surcharB = false;
             $currencyB = false;
 
-            $surchargerEX = explode('_', $FailSurchager['surcharge_id']);
-            $originEX = explode('_', $FailSurchager['port_orig']);
-            $destinyEX = explode('_', $FailSurchager['port_dest']);
-            $typedestinyEX = explode('_', $FailSurchager['typedestiny_id']);
-            $calculationtypeEX = explode('_', $FailSurchager['calculationtype_id']);
-            $ammountEX = explode('_', $FailSurchager['ammount']);
-            $currencyEX = explode('_', $FailSurchager['currency_id']);
-            $carrierEX = explode('_', $FailSurchager['carrier_id']);
+            $surchargerEX = explode('_', trim($FailSurchager['surcharge_id']));
+            $originEX = explode('_', trim($FailSurchager['port_orig']));
+            $destinyEX = explode('_', trim($FailSurchager['port_dest']));
+            $typedestinyEX = explode('_', trim($FailSurchager['typedestiny_id']));
+            $calculationtypeEX = explode('_', trim($FailSurchager['calculationtype_id']));
+            $ammountEX = explode('_', trim($FailSurchager['ammount']));
+            $currencyEX = explode('_', trim($FailSurchager['currency_id']));
+            $carrierEX = explode('_', trim($FailSurchager['carrier_id']));
 
             if (count($surchargerEX) <= 1 && count($typedestinyEX) <= 1
                    && count($typedestinyEX) <= 1 && count($calculationtypeEX) <= 1
