@@ -1155,7 +1155,11 @@
                         </div>
 
                         <div class="row">
-                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger">
+                            <div 
+                                class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" 
+                                v-for="(item, index) in dataSurcharger"
+                                :key="index"    
+                            >
                                 <div class="col-12 col-sm-3">
                                     <p>{{ item.type.name }}</p>
                                 </div>
