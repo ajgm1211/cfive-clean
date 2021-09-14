@@ -141,20 +141,19 @@ class Contract extends Model implements HasMedia, Auditable
      */
     public function scopeFilterByCurrentCompany($query)
     {
-  
-            if (Auth::check()) {
 
-                if (Auth::user()->hasRole('subuser')) {
-                    $status_erased = 1;
-                    $company_id = Auth::user()->company_user_id;
-                    return $query->where('company_user_id', '=', $company_id)->where('status_erased', '!=', $status_erased)->where('user_id', '=', Auth::user()->id);
-                } else {
-                    $status_erased = 1;
-                    $company_id = Auth::user()->company_user_id;
-                    return $query->where('company_user_id', '=', $company_id)->where('status_erased', '!=', $status_erased);
-                }
-            } 
- 
+        if (Auth::check()) {
+
+            if (Auth::user()->hasRole('subuser')) {
+                $status_erased = 1;
+                $company_id = Auth::user()->company_user_id;
+                return $query->where('company_user_id', '=', $company_id)->where('status_erased', '!=', $status_erased)->where('user_id', '=', Auth::user()->id);
+            } else {
+                $status_erased = 1;
+                $company_id = Auth::user()->company_user_id;
+                return $query->where('company_user_id', '=', $company_id)->where('status_erased', '!=', $status_erased);
+            }
+        }
     }
 
     /**
@@ -449,5 +448,24 @@ class Contract extends Model implements HasMedia, Auditable
         }
 
         return $arr;
+    }
+
+    public function createCustomCode()
+    {
+        $lastContract = Contract::where('company_user_id',$this->company_user_id)
+        ->orderBy('contract_code', 'desc')->first();
+        
+        $company = strtoupper(substr($this->companyUser->name, 0, 3));
+
+        $code = 'FCL-'.$company.'-0001';
+
+        if($lastContract->contract_code){
+            $lastContractId = (int)substr($lastContract->contract_code, -3);
+            $lastContractId = str_pad($lastContractId+1, 4, '0', STR_PAD_LEFT);
+            $code = 'FCL-'.$company.'-'.$lastContractId;
+        }
+
+        $this->contract_code = $code;
+        $this->save();
     }
 }
