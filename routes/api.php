@@ -103,17 +103,17 @@ Route::group(['prefix' => 'requestLCL', 'middleware' => 'auth:api'], function ()
 $router->get('pdf/{id}',['as' => 'pdf.api', 'uses' => 'ApiController@pdfApi']);
 
 Route::group(['prefix' => 'whitelabel'], function () {
-    Route::get('/users', [App\Http\Controllers\Whitelabel\Users::class, 'index']);
-    Route::get('/users/{id}', [App\Http\Controllers\Whitelabel\Users::class, 'show']);
-    Route::post('/users/save', [App\Http\Controllers\Whitelabel\Users::class, 'store']);
-    Route::put('/users/{id}', [App\Http\Controllers\Whitelabel\Users::class, 'update']);
-    Route::delete('/users/{id}', [App\Http\Controllers\Whitelabel\Users::class, 'destroy']);
+    Route::get('/users', [App\Http\Controllers\Whitelabel\UsersController::class, 'index']);
+    Route::get('/users/{id}', [App\Http\Controllers\Whitelabel\UsersController::class, 'show']);
+    Route::post('/users/save', [App\Http\Controllers\Whitelabel\UsersController::class, 'store']);
+    Route::put('/users/{id}', [App\Http\Controllers\Whitelabel\UsersController::class, 'update']);
+    Route::delete('/users/{id}', [App\Http\Controllers\Whitelabel\UsersController::class, 'destroy']);
 
-    Route::get('/contacts', [App\Http\Controllers\Whitelabel\Contacts::class, 'index']);
-    Route::get('/contacts/{id}', [App\Http\Controllers\Whitelabel\Contacts::class, 'show']);
-    Route::post('/contacts/save', [App\Http\Controllers\Whitelabel\Contacts::class, 'store']);
-    Route::put('/contacts/{id}', [App\Http\Controllers\Whitelabel\Contacts::class, 'update']);
-    Route::delete('/contacts/{id}', [App\Http\Controllers\Whitelabel\Contacts::class, 'destroy']);
+    Route::get('/contacts', [App\Http\Controllers\Whitelabel\ContactsController::class, 'index']);
+    Route::get('/contacts/{id}', [App\Http\Controllers\Whitelabel\ContactsController::class, 'show']);
+    Route::post('/contacts/save', [App\Http\Controllers\Whitelabel\ContactsController::class, 'store']);
+    Route::put('/contacts/{id}', [App\Http\Controllers\Whitelabel\ContactsController::class, 'update']);
+    Route::delete('/contacts/{id}', [App\Http\Controllers\Whitelabel\ContactsController::class, 'destroy']);
 
     Route::get('search/list', 'SearchApiController@listwhitelabel');
     Route::get('search/data', 'SearchApiController@data');
