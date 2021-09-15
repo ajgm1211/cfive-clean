@@ -1155,7 +1155,11 @@
                         </div>
 
                         <div class="row">
-                            <div class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" v-for="(item, index) in dataSurcharger">
+                            <div 
+                                class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges" 
+                                v-for="(item, index) in surchargeData"
+                                :key="index"    
+                            >
                                 <div class="col-12 col-sm-3">
                                     <p>{{ item.type.name }}</p>
                                 </div>
@@ -1539,7 +1543,7 @@ export default {
             direction: "",
             typeContract: "",
             calculationType: "",
-            dataSurcharger: [],
+            surchargeData: [],
             filterBy: "LOWEST PRICE",
             carrierSearchQuery: '',
             items: [],
@@ -1656,7 +1660,7 @@ export default {
                 amount: this.amount,
             };
 
-            this.dataSurcharger.push(surcharge);
+            this.surchargeData.push(surcharge);
 
             this.typeContract = "";
             this.calculationType = "";
@@ -2002,7 +2006,7 @@ export default {
                 //stepthree remarks
                 remarks: this.remarks,
                 //stepFour Surcharges
-                dataSurcharger: this.dataSurcharger,
+                surchargeData: this.surchargeData,
                 //stepFive
                 
             };
@@ -2225,7 +2229,7 @@ export default {
         },
 
         deleteSurchargerModal(index) {
-            this.dataSurcharger.splice(index, 1);
+            this.surchargeData.splice(index, 1);
             //console.log(this.dataPackaging);
         },
 
