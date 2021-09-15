@@ -310,6 +310,19 @@
                 .draw();
         }
     } );
+    function activeCheck(){
+        $("#company_user").prop("checked",true);
+
+        company_user = $("#company_user").val();
+
+        i = 3;
+        if ( surchargestableV.column(i).search() !== company_user ) {
+            surchargestableV
+                .column(i)
+                .search( company_user )
+                .draw();
+        }
+    }
     var surchargestableV = '';
     $(function() {    
         surchargestableV = $('#surchargestable').DataTable({
@@ -346,7 +359,7 @@
             }
             surchargestableV.draw();
         }
-        
+        activeCheck();
         $('#salesTermTable').DataTable({
             processing: true,
             serverSide: true,
@@ -375,11 +388,11 @@
     function addExtraField() {
         var $template = $('#hide_extra_field'),
             $clone = $template
-            .clone()
-            .removeClass('hide')
-            .removeAttr('id')
-            .addClass('clone')
-            .insertAfter($template);
+        .clone()
+        .removeClass('hide')
+        .removeAttr('id')
+        .addClass('clone')
+        .insertAfter($template);
     }
 
     $(document).on('click', '#add_extra_field', function(e) {
