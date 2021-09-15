@@ -57,7 +57,9 @@
                   placement="top"
                 >
                   <ul class="pl-2 ml-2">
-                    <li v-for="data in cmaResult.additionalData.namedAccounts">
+                    <li v-for="data,namedKey in cmaResult.additionalData.namedAccounts"
+                      :key="namedKey"
+                    >
                       {{ data.name }}
                     </li>
                   </ul>
@@ -253,7 +255,9 @@
                   placement="top"
                 >
                   <ul class="pl-2 ml-2">
-                    <li v-for="data in cmaResult.additionalData.commodities">
+                    <li v-for="data,commKey in cmaResult.additionalData.commodities"
+                      :key="commKey"
+                    >
                       {{ data.name }}
                     </li>
                   </ul>
@@ -4294,7 +4298,6 @@ export default {
       let apiDestinationPorts = [];
       let apiDate = component.request.dateRange.startDate.substring(0, 10);
       let apiContainers = "";
-      let apiCarrierCodes = "";
 
       component.$emit("apiSearchStarted");
 
@@ -4321,85 +4324,69 @@ export default {
         this.request.carriersApi.length > 0 &&
         this.request.selectedContainerGroup.id == 1
       ) {
-        component.request.carriersApi.forEach(function (carrier) {
-          apiCarrierCodes += carrier.code;
+        
+        this.request.carriersApi.forEach(function(apiCarrier){
+          apiOriginPorts.forEach(function (origin) {
+            apiDestinationPorts.forEach(function (destination) {
+              axios
+                .get(component.datalists.api_url, {
+                  params: {
+                    originPort: origin,
+                    destinationPort: destination,
+                    equipmentSizeType: apiContainers,
+                    departureDate: apiDate,
+                    uemail: component.datalists.user.email,
+                    brands: apiCarrier.code,
+                  },
+                  headers: {
+                    Authorization:
+                      "Bpu7Ijd4iau5zphybdbDUbfiKhPNlSXkmRBkrky0QJPQ1Aj2Ha",
+                    Accept: "application/json",
+                    "Content-type": "application/json",
+                  },
+                })
+                .then((response) => {
+                  response.data.forEach(function (respData) {
+                    if (
+                      respData.company == "Maersk Spot" ||
+                      respData.company == "Sealand Spot"
+                    ) {
+                      component.results["maersk"].push(respData);
+                      component.setPenalties(respData);
+                      component.setDetention(respData);
+                    } else {
+                      component.results[apiCarrier.code].push(respData);
+                    } 
 
-          if (
-            component.request.carriersApi[
-              component.request.carriersApi.indexOf(carrier) + 1
-            ] != undefined
-          ) {
-            apiCarrierCodes += ",";
-          }
-        });
+                    respData.image = apiCarrier.image;
 
-        apiOriginPorts.forEach(function (origin) {
-          apiDestinationPorts.forEach(function (destination) {
-            axios
-              .get(component.datalists.api_url, {
-                params: {
-                  originPort: origin,
-                  destinationPort: destination,
-                  equipmentSizeType: apiContainers,
-                  departureDate: apiDate,
-                  uemail: component.datalists.user.email,
-                  brands: apiCarrierCodes,
-                },
-                headers: {
-                  Authorization:
-                    "Bpu7Ijd4iau5zphybdbDUbfiKhPNlSXkmRBkrky0QJPQ1Aj2Ha",
-                  Accept: "application/json",
-                  "Content-type": "application/json",
-                },
-              })
-              .then((response) => {
-                response.data.forEach(function (respData) {
-                  if (
-                    respData.company == "Maersk Spot" ||
-                    respData.company == "Sealand Spot"
-                  ) {
-                    component.results["maersk"].push(respData);
-                    component.setPenalties(respData);
-                    component.setDetention(respData);
-                  } else if (respData.company == "CMA CGM") {
-                    component.results["cmacgm"].push(respData);
-                  } else if (respData.company == "EVERGREEN") {
-                    component.results["evergreen"].push(respData);
-                  } else if (respData.company == "Hapag-Lloyd") {
-                    component.results["hapag-lloyd"].push(respData);
-                  }
+                    component.accordion_id += 1;
+                    respData.accordion_id = component.accordion_id;
 
-                  component.request.carriersApi.forEach(function (provider) {
-                    if (respData.companyCode == provider.code) {
-                      respData.image = provider.image;
-                    }
+                    respData.addToQuote = false;
+                    respData.search = component.request;
+                    respData.originPort = origin;
+                    respData.destinationPort = destination;
+                    component.hideCharges(respData);
                   });
-                  component.accordion_id += 1;
 
-                  respData.addToQuote = false;
-                  respData.accordion_id = component.accordion_id;
-                  respData.search = component.request;
-                  respData.originPort = origin;
-                  respData.destinationPort = destination;
-                  component.hideCharges(respData);
+                  component.$emit("apiSearchDone", response.data.length);
+
+                  //Sending data to MixPanel
+                  component.$mixpanel.track("Rates Spot", {
+                    distinct_id: component.datalists.user.id,
+                    Brands: apiCarrier.code,
+                    Company: component.datalists.company_user.name,
+                    Origin: origin,
+                    Destination: destination,
+                    Container_type: apiContainers,
+                  });
+                })
+                .catch((error) => {
+                  console.log(error);
+                  component.$emit("apiSearchDone", 0);
                 });
-
-                component.$emit("apiSearchDone", response.data.length);
-
-                //Sending data to MixPanel
-                component.$mixpanel.track("Rates Spot", {
-                  distinct_id: component.datalists.user.id,
-                  Brands: apiCarrierCodes,
-                  Company: component.datalists.company_user.name,
-                  Origin: origin,
-                  Destination: destination,
-                  Container_type: apiContainers,
-                });
-              })
-              .catch((error) => {
-                console.log(error);
-                component.$emit("apiSearchDone", 0);
-              });
+            });
           });
         });
       } else {
