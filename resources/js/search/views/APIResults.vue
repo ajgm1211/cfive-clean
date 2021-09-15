@@ -4370,7 +4370,11 @@ export default {
                     component.hideCharges(respData);
                   });
 
-                  component.$emit("apiSearchDone", response.data.length);
+                  if(component.request.carriersApi[
+                      component.request.carriersApi.indexOf(apiCarrier) + 1
+                    ] == undefined){
+                      component.$emit("apiSearchDone", response.data.length);
+                    }
 
                   //Sending data to MixPanel
                   component.$mixpanel.track("Rates Spot", {
