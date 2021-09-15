@@ -91,6 +91,7 @@
                                 <th title="">Description </th>
                                 <th title="">Company User</th>
                                 <th title="">Sale term </th>
+                                <th title="">Variations </th>
                                 <th title="">Options </th>
                             </tr>
                         </thead>
