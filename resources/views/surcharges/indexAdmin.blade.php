@@ -335,6 +335,7 @@
                 { data: 'description', name: 'description' },
                 { data: 'company_user', name: 'company_user' },
                 { data: 'sale_term', name: 'sale_term' },
+                { data: 'variations', name: 'variations' },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
             orderCellsTop: true,
