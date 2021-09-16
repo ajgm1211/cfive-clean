@@ -86,8 +86,11 @@ class UsersController extends Controller
                      ]
                  ]
              );
+             return response()->json([
+                'message' => 'User successfully registered',
+                'data' => $data
+            ], 201);
         }
-        return response()->json($data,201);
 
         
     }

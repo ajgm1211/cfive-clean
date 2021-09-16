@@ -94,8 +94,10 @@ class ContactsController extends Controller
                      );
         }
 
-         return response()->json($data,200);    
-    }
+        return response()->json([
+            'message' => 'Contact successfully registered',
+            'data' => $data
+        ], 201);    }
 
     /**
      * Display the specified resource.
