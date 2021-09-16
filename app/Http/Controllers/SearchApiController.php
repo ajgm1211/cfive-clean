@@ -14,6 +14,7 @@ use App\Harbor;
 use App\Direction;
 use App\SearchRate;
 use App\SearchPort;
+use App\SearchLocation;
 use App\SearchCarrier;
 use App\Carrier;
 use App\Company;
@@ -52,6 +53,7 @@ use App\Location;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
+use App\HarborsLocationSearch;
 
 class SearchApiController extends Controller
 {
@@ -192,15 +194,15 @@ class SearchApiController extends Controller
             ];
         };
 
-        $environment_name = $_ENV['APP_ENV'];
+        // $environment_name = $_ENV['APP_ENV'];
 
-        if($environment_name == "production"){
-            $api_url = "https://carriers.cargofive.com/api/pricing";        
-        }else if(in_array($environment_name,["local","prod"])){
-            $api_url = "https://carriersdev.cargofive.com/api/pricing";    
-        }else{
-            $api_url = "https://carriersdev.cargofive.com/api/pricing";
-        }
+        // if($environment_name == "production"){
+        //     $api_url = "https://carriers.cargofive.com/api/pricing";        
+        // }else if(in_array($environment_name,["local","prod"])){
+        //     $api_url = "https://carriersdev.cargofive.com/api/pricing";    
+        // }else{
+        //     $api_url = "https://carriersdev.cargofive.com/api/pricing";
+        // }
 
         /**$inland_distances = InlandDistance::get()->map(function ($distance){
             return $distance->only(['id','display_name','harbor_id']);
@@ -245,7 +247,7 @@ class SearchApiController extends Controller
         $company_user = $user->companyUser()->first();
         $company_user_id = $company_user->id;
 
-        $search_array = $request->validate([
+        $search_data = $request->validate([
             'originPorts' => 'required|array|min:1',
             'destinationPorts' => 'required|array|min:1',
             'dateRange.startDate' => 'required',
@@ -267,8 +269,10 @@ class SearchApiController extends Controller
             'destinationAddress' => 'sometimes'
         ]);
 
-        $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'], 0, 10);
-        $search_array['dateRange']['endDate'] = substr($search_array['dateRange']['endDate'], 0, 10);
+        $search_data['dateRange']['startDate'] = substr($search_data['dateRange']['startDate'], 0, 10);
+        $search_data['dateRange']['endDate'] = substr($search_data['dateRange']['endDate'], 0, 10);
+        
+        $search_array= $this->changeLocationsByPort($search_data);
 
         $search_ids = $this->getIdsFromArray($search_array);
         $search_ids['company_user'] = $company_user_id;
@@ -276,7 +280,7 @@ class SearchApiController extends Controller
         $search_ids['client_currency'] = $company_user->currency;
 
         //Retrieving rates with search data
-        $rates = $this->searchRates($search_ids);
+        $rates = $this->searchRates($search_ids,$search_array);
 
         //$rateNo = 0;
         foreach ($rates as $rate) {
@@ -441,6 +445,19 @@ class SearchApiController extends Controller
                 $searchPort->port_dest = $destPort;
                 $searchPort->search_rate()->associate($new_search);
                 $searchPort->save();
+            }
+        }
+
+        if(isset($new_search_data_ids['locationOrig']) || isset($new_search_data_ids['locationDest']) ){
+            foreach ($new_search_data_ids['locationOrig'] as $origLocation) {
+                foreach ($new_search_data_ids['locationDest'] as $destLocation) {
+
+                    $searchPort = new Searchlocation();
+                    $searchPort->location_orig = $origLocation;
+                    $searchPort->location_dest = $destLocation;
+                    $searchPort->search_rate()->associate($new_search);
+                    $searchPort->save();
+                }
             }
         }
 
@@ -1256,53 +1273,82 @@ class SearchApiController extends Controller
         return $objeto;
 
     }
-    // public function getInland($new_search_data){
-        
-    //     // foreach ($new_search_data['originPorts']as $key=> $dataLocations){
-    //     //     dd($new_search_data);
-    //     //     if($dataLocations['type']=='city'){
-    //     //         $inlandPerLocation=InlandPerLocation::where('harbor_id',$dataLocations['id'])
-    //     //         ->where('location_id',$dataLocations['location_id'])->with('inland')->first();
-    //     //         dd($inlandPerLocation['inland']);
-    //     //         if($inlandPerLocation==!null && $inlandPerLocation['inland']['status']!='expired'){
-                    
-    //     //         }
-    //     //     }
-
-    //     // }
-    // }
-    public function changeLocationsByPort($new_search){
+   
+    public function changeLocationsByPort($new_search){      
 
         foreach ($new_search['originPorts'] as $key=> $dataLocations){
             if($dataLocations['type']=='city'){
-                $distances=DistanceKmLocation::where('location_id',$dataLocations['id'])->with('harbors')->first();
+                $portOrig=HarborsLocationSearch::where('location_id',$dataLocations['id'])->with('harbors')->get();
+                if(count($portOrig)==1){
+                    $new_search['originPorts'][$key]=[
+                        'id' =>$portOrig[0]['harbors']['id'],
+                        'display_name' => $portOrig[0]['harbors']['display_name']
+                    ];
+                    $new_search['locationOrig'][$key]=[
+                        'id'=>$portOrig[0]['location_id'],
+                        'harbor'=>$portOrig[0]['harbors']['id']
+                    ];
+                }else{
+                    unset($new_search['originPorts'][$key]);
+                    foreach($portOrig as $orig){             
+                        $new_search['originPorts'][]=[
+                            'id'=>$orig['harbors']['id'],
+                            'display_name' => $orig['harbors']['display_name']
+                        ];
+                        $new_search['locationOrig'][]=[
+                            'id'=>$orig['location_id'],
+                            'harbor'=>$orig['harbors']['id']
+                        ];
+                    }
+                    $new_search['originPorts']=array_values($new_search['originPorts']);
+                }
+            }else{
                 $new_search['originPorts'][$key]=[
-                    'id'=>$distances['harbors']['id'],
-                    'port_name'=>$distances['harbors']['display_name'],
-                    'location_id'=>$dataLocations['id'],
-                    'location_name'=>$dataLocations['location'],
-                    'distance'=>$distances['distance'],
-                    'type'=>'city'
+                    'id'=>$dataLocations['id'],
+                    'display_name'=>$dataLocations['location'],
+                ];
+                $new_search['locationOrig'][$key]=[
+                    'id'=>null
                 ];
             }
         }
         foreach ($new_search['destinationPorts'] as $key=> $dataLocations){
             if($dataLocations['type']=='city'){
-                $distances=DistanceKmLocation::where('location_id',$dataLocations['id'])->with('harbors')->first();
+                $portDest=HarborsLocationSearch::where('location_id',$dataLocations['id'])->with('harbors')->get();
+                if(count($portDest)==1){
+                    $new_search['destinationPorts'][$key]=[
+                        'id'=>$portDest[0]['harbors']['id'],
+                        'display_name' => $portDest[0]['harbors']['display_name']
+                    ];
+                    $new_search['locationDest'][$key]=[
+                        'id'=>$portDest[0]['location_id'],
+                        'harbor'=>$portDest[0]['harbors']['id']
+                    ];
+                }else{
+                    unset($new_search['destinationPorts'][$key]);
+                    foreach($portDest as $dest){             
+                        $new_search['destinationPorts'][]=[
+                            'id'=>$dest['harbors']['id'],
+                            'display_name' => $dest['harbors']['display_name']
+                        ];
+                        $new_search['locationDest']=[
+                            'id'=>$dest['location_id'],
+                            'harbor'=>$dest['harbors']['id']
+                        ];
+                    }
+                    $new_search['destinationPorts']=array_values($new_search['destinationPorts']);
+                }
+            }else{
                 $new_search['destinationPorts'][$key]=[
-                    'id'=>$distances['harbors']['id'],
-                    'port_name'=>$distances['harbors']['display_name'],
-                    'location_id'=>$dataLocations['id'],
-                    'location_name'=>$dataLocations['location'],
-                    'distance'=>$distances['distance'],
-                    'type'=>'city'
+                    'id'=>$dataLocations['id'],
+                    'display_name' => $dataLocations['location']
                 ];
-                
+                $new_search['locationDest'][$key]=[
+                    'id'=>null
+                ];
             }
         }
-        // dd($new_search);
         return $new_search;
     }
-
 
 }

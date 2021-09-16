@@ -2220,7 +2220,9 @@ export default {
             this.searching = true;
             this.$emit("clearResults");
             this.$emit("searchRequested",this.searchRequest);
-
+            // borrar 2 lineas de abajo
+            this.searchRequest.originPorts=this.placeInShowFrom;
+            this.searchRequest.destinationPorts=this.placeInShowTo;
             actions.search
                 .process(this.searchRequest)
                 .then((response) => {
