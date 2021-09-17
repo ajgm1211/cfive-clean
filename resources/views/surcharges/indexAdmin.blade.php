@@ -91,6 +91,7 @@
                                 <th title="">Description </th>
                                 <th title="">Company User</th>
                                 <th title="">Sale term </th>
+                                <th title="">Variations </th>
                                 <th title="">Options </th>
                             </tr>
                         </thead>
@@ -310,6 +311,19 @@
                 .draw();
         }
     } );
+    function activeCheck(){
+        $("#company_user").prop("checked",true);
+
+        company_user = $("#company_user").val();
+
+        i = 3;
+        if ( surchargestableV.column(i).search() !== company_user ) {
+            surchargestableV
+                .column(i)
+                .search( company_user )
+                .draw();
+        }
+    }
     var surchargestableV = '';
     $(function() {    
         surchargestableV = $('#surchargestable').DataTable({
@@ -322,6 +336,7 @@
                 { data: 'description', name: 'description' },
                 { data: 'company_user', name: 'company_user' },
                 { data: 'sale_term', name: 'sale_term' },
+                { data: 'variations', name: 'variations' },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
             orderCellsTop: true,
@@ -346,7 +361,7 @@
             }
             surchargestableV.draw();
         }
-        
+        activeCheck();
         $('#salesTermTable').DataTable({
             processing: true,
             serverSide: true,
@@ -375,11 +390,11 @@
     function addExtraField() {
         var $template = $('#hide_extra_field'),
             $clone = $template
-            .clone()
-            .removeClass('hide')
-            .removeAttr('id')
-            .addClass('clone')
-            .insertAfter($template);
+        .clone()
+        .removeClass('hide')
+        .removeAttr('id')
+        .addClass('clone')
+        .insertAfter($template);
     }
 
     $(document).on('click', '#add_extra_field', function(e) {
