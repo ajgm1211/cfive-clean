@@ -933,12 +933,129 @@ class SearchApiController extends Controller
         ]);
     }
 
+    public function setDownloadParameters($rate)
+    {
+        if ($rate->contract->status != 'api') {
+
+            $contractRequestBackup = ContractFclFile::where('contract_id', $rate->contract->id)->first();
+            if (!empty($contractRequestBackup)) {
+                $contractBackupId = $contractRequestBackup->id;
+            } else {
+                $contractBackupId = "0";
+            }
+
+            $contractRequest = NewContractRequest::where('contract_id', $rate->contract->id)->first();
+            if (!empty($contractRequest)) {
+                $contractRequestId = $contractRequest->id;
+            } else {
+                $contractRequestId = "0";
+            }
+
+            $mediaItems = $rate->contract->getMedia('document');
+            $totalItems = count($mediaItems);
+            if ($totalItems > 0) {
+                $contractId = $rate->contract->id;
+            } else {
+                $contractId = "0";
+            }
+        } else {
+            $contractBackupId = "0";
+            $contractRequestId = "0";
+            $contractId = "0";
+        }
+
+        $rate->setAttribute('contractBackupId', $contractBackupId);
+        $rate->setAttribute('contractRequestId', $contractRequestId);
+        $rate->setAttribute('contractId', $contractId);
+    }
+
     public function downloadContractFile(Request $request)
+    {
+
+        $parameters = $request->input();
+
+        $contractId = $parameters[0];
+        $contractRequestId = $parameters[1];
+        $contractBackupId = $parameters[2];
+
+        if ($contractId == 0) {
+            $contractFile = NewContractRequest::find($contractRequestId);
+            $mode_search = false;
+            if (!empty($contractFile)) {
+                $success = false;
+                $download = null;
+                if (!empty($contractFile->namefile)) {
+                    $time = new \DateTime();
+                    $now = $time->format('d-m-y');
+                    $company = CompanyUser::find($contractFile->company_user_id);
+                    $extObj = new \SplFileInfo($contractFile->namefile);
+                    $ext = $extObj->getExtension();
+                    $name = $contractFile->id . '-' . $company->name . '_' . $now . '-FLC.' . $ext;
+                } else {
+                    $mode_search = true;
+                    $contractFile->load('companyuser');
+                    $data = json_decode($contractFile->data, true);
+                    $time = new \DateTime();
+                    $now = $time->format('d-m-y');
+                    $mediaItem = $contractFile->getFirstMedia('document');
+                    $extObj = new \SplFileInfo($mediaItem->file_name);
+                    $ext = $extObj->getExtension();
+                    $name = $contractFile->id . '-' . $contractFile->companyuser->name . '_' . $data['group_containers']['name'] . '_' . $now . '-FLC.' . $ext;
+                    $download = Storage::disk('s3_upload')->url('Request/FCL/' . $mediaItem->id . '/' . $mediaItem->file_name, $name);
+                    $success = true;
+                }
+            } else {
+                $contractFile = ContractFclFile::find($contractBackupId);
+                $time = new \DateTime();
+                $now = $time->format('d-m-y');
+                $extObj = new \SplFileInfo($contractFile->namefile);
+                $ext = $extObj->getExtension();
+                $name = $contractFile->id . '-' . $now . '-FLC.' . $ext;
+            }
+
+            if ($mode_search == false) {
+                if (Storage::disk('s3_upload')->exists('Request/FCL/' . $contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk('s3_upload')->url('Request/FCL/' . $contractFile->namefile, $name);
+                } elseif (Storage::disk('s3_upload')->exists('contracts/' . $contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk('s3_upload')->url('contracts/' . $contractFile->namefile, $name);
+                } elseif (Storage::disk('FclRequest')->exists($contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk('FclRequest')->url($contractFile->namefile, $name);
+                } elseif (Storage::disk('UpLoadFile')->exists($contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk('UpLoadFile')->url($contractFile->namefile, $name);
+                }
+            }
+            return response()->json(['success' => $success, 'url' => $download, 'zip' => false]);
+        } else {
+            $contract = Contract::find($contractId);
+            $downloads = $contract->getMedia('document');
+            $total = count($downloads);
+            if ($total > 1) {
+
+                return response()->json(['success' => true, 'url' => $contract->id, 'zip' => true]);
+            } else {
+                $media = $downloads->first();
+                $mediaItem = Media::find($media->id);
+                //return $mediaItem;
+                if ($mediaItem->disk == 'FclRequest') {
+                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/Request/FCL/" . $mediaItem->file_name, 'zip' => false]);
+                }
+                if ($mediaItem->disk == 'contracts3') {
+                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/contract_manual/" . $mediaItem->id . "/" . $mediaItem->file_name, 'zip' => false]);
+                }
+            }
+        }
+    }
+
+    /**public function downloadContractFile(Request $request)
     {
         $rate = $request->input();
 
         $this->downloadContractFromSearch($rate);
-    }   
+    }**/
 
     public function downloadMultipleContractFile(Contract $contract)
     {
