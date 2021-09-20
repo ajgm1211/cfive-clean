@@ -891,14 +891,14 @@ export default {
     },
     downloadContractFile(rate){
       let component = this;
+      let parameters = [rate.contract_id, rate.contract_request_id, rate.contract_backup_id];
 
       component.searchActions
-        .downloadContract(rate)
+        .downloadContract(parameters)
         .then((response) => {
           if(response.data.zip == true){
           
 
-              console.log('Downloading!', response.data.url);
               window.open("/api/search/downloadMContract/"+response.data.url);
 /*
             const url = window.URL.createObjectURL(blob);

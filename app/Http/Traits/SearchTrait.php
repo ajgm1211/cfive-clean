@@ -1651,7 +1651,7 @@ trait SearchTrait
         }
     }
 
-    public function setDownloadParameters($rate, $search_data)
+    /**public function setDownloadParameters($rate, $search_data)
     {
         if ($rate->contract->status != 'api') {
 
@@ -1791,7 +1791,7 @@ trait SearchTrait
                 }
             }
         }
-    }
+    }**/
 
     //Ordering rates by totals (cheaper to most expensive)
     public function sortRates($rates, $search_data_ids)
