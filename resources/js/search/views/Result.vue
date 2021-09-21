@@ -2,327 +2,17 @@
   <div class="container-cards" v-if="loaded">
     <!-- RESULTS -->
     <div v-if="finalRates.length != 0" class="row" id="top-results">
-      <!-- LCL CARD -->
-      <div class="col-12 mb-4" 
-        v-if="searchType == 'LCL'"
-        >
-        <div 
-          class="result-search"
-          v-for="(rate, key) in finalRates" 
-          :key="key"
-        >
-          <!-- CONTENT MAIN CARD -->
-          <div class="row">
-            <!-- CARRIER -->
-            <div
-              class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
-              style="border-right: 1px solid #f3f3f3"
-            >
-              <img
-                :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' + rate.carrier.image"
-                alt="logo"
-                width="115px"
-              />
-            </div>
-
-            <!-- NAME, ORIGEN AND DESTINATION INFO -->
-            <div class="row col-12 col-sm-8">
-              <!-- NAME -->
-              <div class="col-12">
-                <h6 class="mt-4 mb-5">{{ rate.contract.name }}</h6>
-              </div>
-
-              <!-- INFO CONTRACT -->
-              <div
-                class="row col-12 mr-0 ml-0"
-                style="border-bottom: 1px solid #f3f3f3"
-              >
-                <!-- INFO CONTRACT -->
-                <div class="col-12 col-sm-6 d-flex">
-                  <!-- ORIGEN -->
-                  <div class="origin mr-4">
-                    <span>origin</span>
-                    <p>{{ rate.port_origin.display_name }}</p>
-                  </div>
-
-                  <!-- TT -->
-                  <div
-                    class="via d-flex flex-column justify-content-center align-items-center"
-                  >
-                    <div class="direction-form">
-                      <img src="/images/logo-ship-blue.svg" alt="bote" />
-
-                      <div class="line-route-direct">
-                        <div class="circle mr-2"></div>
-                        <div class="line"></div>
-                        <div class="circle fill-circle ml-2"></div>
-                      </div>
-                    </div>
-                    <!--<div class="direction-desc">
-                      <b>direct</b>
-                      <p><b>TT:</b> 45 Days</p>
-                    </div> -->
-                  </div>
-
-                  <!-- DESTINATION -->
-                  <div class="destination ml-4">
-                    <span>destination</span>
-                    <p>{{ rate.port_destiny.display_name }}</p>
-                  </div>
-                </div>
-
-                <!-- PRICE -->
-                <div class="col-12 col-sm-6">
-                  <div class="row justify-content-center card-amount">
-                    <div class="col-12 col-sm-2">
-                      <p>
-                        <b style="font-size: 16px" v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined)"
-                          >{{
-                            rate.total_with_markups_freight_currency
-                              ? rate.total_with_markups_freight_currency
-                              : rate.total_freight_currency
-                          }}
-                          <span style="font-size: 10px">{{
-                            rate.currency.alphacode
-                          }}</span></b
-                        >
-                        <b style="font-size: 16px" v-else
-                          >{{
-                            rate.total_with_markups
-                              ? rate.total_with_markups
-                              : rate.total
-                          }}
-                          <span style="font-size: 10px">{{
-                            rate.client_currency.alphacode
-                          }}</span></b
-                        >
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- OPTIONS AND VALIDITY -->
-              <div
-                class="col-12 mt-3 mb-3 result-action d-flex justify-content-between align-items-center"
-              >
-                <!-- VALIDITY -->
-                <div class="d-flex align-items-center">
-                  <p class="mr-4 mb-0">
-                    <b>Validity:</b>
-                    {{ rate.contract.validity + " / " + rate.contract.expire }}
-                    <img
-                      v-if="rate.contract.validity > searchEndDate"
-                      src="/images/error.svg"
-                      width="15px"
-                      data-toggle="tooltip"
-                      title="Contract date beyond search range"
-                    />
-                  </p>
-                  <b-button
-                    v-if="
-                      (rate.contract_id != 0 ||
-                      rate.contract_request_id != 0 ||
-                      rate.contract_backup_id != 0) && false
-                    "
-                    style="
-                      background: transparent;
-                      border: 0 !important;
-                      text-transform: uppercase;
-                      color: #00c581;
-                    "
-                    @click="downloadContractFile(rate)"
-                    v-b-tooltip.hover 
-                    :title="rate.owner"
-                  >
-                    <span class="badge" v-bind:class="{'badge-primary':rate.contract.is_manual == 0, 'badge-secondary':rate.contract.is_manual == 1,'badge-success':rate.contract.is_manual == 2 }">download contract</span>
-                    
-                  </b-button>
-                </div>
-
-                <!-- OPTIONS -->
-                <div class="d-flex justify-content-end align-items-center">
-                  <b-button
-                    v-if="rate.remarks != '<br><br>' && rate.remarks != '<br>'"
-                    class="rs-btn"
-                    :class="rate.remarksCollapse ? null : 'collapsed'"
-                    :aria-expanded="rate.remarksCollapse ? 'true' : 'false'"
-                    :aria-controls="'remarks_' + +String(rate.id)"
-                    @click="rate.remarksCollapse = !rate.remarksCollapse"
-                    ><b>remarks</b><b-icon icon="caret-down-fill"></b-icon
-                  ></b-button>
-                  <b-button
-                    class="rs-btn"
-                    :class="rate.detailCollapse ? null : 'collapsed'"
-                    :aria-expanded="rate.detailCollapse ? 'true' : 'false'"
-                    :aria-controls="'remarks_' + +String(rate.id)"
-                    @click="rate.detailCollapse = !rate.detailCollapse"
-                    ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
-                  ></b-button>
-                </div>
-              </div>
-            </div>
-
-            <!-- ADD QUOTE BTN -->
-            <div
-              class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
-              style="border-left: 1px solid #f3f3f3"
-            >
-              <b-form-checkbox
-                v-model="rate.addToQuote"
-                class="btn-add-quote"
-                name="check-button"
-                button
-                @change="addRateToQuote(rate)"
-              >
-                <b>add to quote</b>
-              </b-form-checkbox>
-            </div>
-          </div>
-
-          <div class="row">
-            <!-- TARIFAS -->
-            <b-collapse
-              :id="'details_' + String(rate.id)"
-              class="pt-5 pb-5 pl-5 pr-5 col-12"
-              v-model="rate.detailCollapse"
-            >
-              <div
-                v-for="(chargeArray, chargeType) in rate.charges"
-                :key="chargeType"
-              >
-                <h5>
-                  <b>{{ chargeType }}</b>
-                </h5>
-
-                <b-table-simple hover small responsive class="sc-table">
-                  <b-thead>
-                    <b-tr>
-                      <b-th>Charge</b-th>
-                      <b-th>Detail</b-th>
-                      <b-th></b-th>
-                      <b-th>Amount</b-th>
-                      <b-th>Units</b-th>
-                      <b-th 
-                        v-if="rate.search.pricelevel != null"
-                      >
-                      Markups</b-th>
-                      <b-th v-else></b-th>                    
-                      <b-th>Total</b-th>
-                    </b-tr>
-                  </b-thead>
-
-                  <b-tbody>
-                    <b-tr
-                      v-for="(charge, chargeKey) in chargeArray"
-                      :key="chargeKey"
-                    >
-                      <b-td
-                        ><b>{{ charge.surcharge.name }}</b></b-td
-                      >
-                      <b-td>{{
-                        charge.calculationtypelcl.name }}</b-td
-                      >
-                      <b-td></b-td>
-                      <b-td> {{ charge.ammount }} </b-td>
-                      <b-td> {{ charge.units }} </b-td>
-                      <b-td>
-                        <span
-                          v-if="
-                            charge.total_markups != undefined
-                          "
-                          class="profit"
-                          >+{{
-                            charge.joint_as == "client_currency"
-                              ? charge.total_markups_client_currency
-                              : charge.total_markups
-                          }}</span
-                        >
-                        <span
-                          v-else-if="
-                            rate.search.pricelevel != null &&
-                            charge.total_markups == null
-                          "
-                          class="profit"
-                          >+{{ 0 }}</span
-                        >
-                      </b-td>
-                      <b-td>
-                        <b v-if="chargeType == 'Freight'">{{
-                          charge.joint_as == "client_currency"
-                            ? rate.currency.alphacode
-                            : charge.currency.alphacode
-                        }}</b>
-                        <b v-else-if="charge.joint_as == 'client_currency'">{{
-                          charge.client_currency.alphacode
-                        }}</b>
-                        <b v-else-if="charge.joint_as != 'client_currency'">{{
-                          charge.currency.alphacode
-                        }}</b>
-                        <b v-if="charge.total_markups != undefined">{{
-                          charge.joint_as == "client_currency"
-                            ? charge.total_with_markups_client_currency
-                            : charge.total_with_markups
-                        }}</b>
-                        <b v-else>{{
-                          charge.joint_as == "client_currency"
-                            ? charge.total_client_currency
-                            : charge.total
-                        }}</b>
-                      </b-td>
-                    </b-tr>
-
-                    <b-tr>
-                      <b-td></b-td>
-                      <b-td></b-td>
-                      <b-td></b-td>
-                      <b-td></b-td>
-                      <b-td colspan="2" style="text-align: right"
-                        ><b>Total {{ chargeType }}</b></b-td
-                      >
-                      <b-td><b>{{
-                            chargeType == "Freight"
-                              ? rate.currency.alphacode
-                              : rate.client_currency.alphacode
-                          }}
-                          {{
-                            rate.charge_totals_by_type[chargeType]
-                          }}</b
-                        ></b-td
-                      >
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
-              </div>
-            </b-collapse>
-            <!-- FIN TARIFAS -->
-
-            <!-- REMARKS -->
-            <b-collapse
-              :id="'remarks_' + String(rate.id)"
-              class="pt-5 pb-5 pl-5 pr-5 col-12"
-              v-model="rate.remarksCollapse"
-            >
-              <h5><b>Remarks</b></h5>
-
-              <b-card>
-                <p v-html="rate.remarks"></p>
-              </b-card>
-            </b-collapse>
-            <!-- FIN REMARKS -->
-          </div>
-        </div>
+      <div v-if="searchType == 'LCL'" class="col-12 mb-4">
+        <ResultSearch
+          v-for="(item, index) in finalRates"
+          :key="index"
+          :rate="item"
+        />
       </div>
-
+      
       <!-- FCL CARD -->
-      <div class="col-12 mb-4" 
-        v-else-if="searchType == 'FCL'" 
-      >
-        <div 
-          class="result-search"
-          v-for="(rate, key) in finalRates" 
-          :key="key"  
-        >
+      <div class="col-12 mb-4" v-else-if="searchType == 'FCL'">
+        <div class="result-search" v-for="(rate, key) in finalRates" :key="key">
           <!-- INFORMACION DE TARIFA -->
           <div class="row">
             <!-- CARRIER -->
@@ -331,7 +21,10 @@
               style="border-right: 1px solid #f3f3f3"
             >
               <img
-                :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' + rate.carrier.image"
+                :src="
+                  'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
+                    rate.carrier.image
+                "
                 alt="logo"
                 width="115px"
               />
@@ -384,7 +77,7 @@
                       <b
                         v-if="
                           rate.transit_time != undefined &&
-                          rate.transit_time != undefined
+                            rate.transit_time != undefined
                         "
                         >{{
                           rate.transit_time.service == 1
@@ -395,7 +88,7 @@
                       <b
                         v-if="
                           rate.transit_time != undefined &&
-                          rate.transit_time != undefined
+                            rate.transit_time != undefined
                         "
                         >{{
                           rate.transit_time.via ? rate.transit_time.via : ""
@@ -404,7 +97,7 @@
                       <p
                         v-if="
                           rate.transit_time != null &&
-                          rate.transit_time.transit_time != null
+                            rate.transit_time.transit_time != null
                         "
                       >
                         <b>TT:</b> {{ rate.transit_time.transit_time }}
@@ -494,11 +187,21 @@
                       :key="contKey"
                     >
                       <p>
-                        <b style="font-size: 16px" v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined) || request.showRateCurrency"
+                        <b
+                          style="font-size: 16px"
+                          v-if="
+                            (rate.charges.Origin == undefined &&
+                              rate.charges.Destination == undefined) ||
+                              request.showRateCurrency
+                          "
                           >{{
                             rate.totals_with_markups_freight_currency
-                              ? rate.totals_with_markups_freight_currency["C" + container.code]
-                              : rate.totals_freight_currency["C" + container.code]
+                              ? rate.totals_with_markups_freight_currency[
+                                  "C" + container.code
+                                ]
+                              : rate.totals_freight_currency[
+                                  "C" + container.code
+                                ]
                           }}
                           <span style="font-size: 10px">{{
                             rate.currency.alphacode
@@ -537,8 +240,8 @@
                   <b-button
                     v-if="
                       rate.contract_id != 0 ||
-                      rate.contract_request_id != 0 ||
-                      rate.contract_backup_id != 0
+                        rate.contract_request_id != 0 ||
+                        rate.contract_backup_id != 0
                     "
                     style="
                       background: transparent;
@@ -547,11 +250,18 @@
                       color: #00c581;
                     "
                     @click="downloadContractFile(rate)"
-                    v-b-tooltip.hover 
+                    v-b-tooltip.hover
                     :title="rate.owner"
                   >
-                    <span class="badge" v-bind:class="{'badge-primary':rate.contract.is_manual == 0, 'badge-secondary':rate.contract.is_manual == 1,'badge-success':rate.contract.is_manual == 2 }">download contract</span>
-                    
+                    <span
+                      class="badge"
+                      v-bind:class="{
+                        'badge-primary': rate.contract.is_manual == 0,
+                        'badge-secondary': rate.contract.is_manual == 1,
+                        'badge-success': rate.contract.is_manual == 2,
+                      }"
+                      >download contract</span
+                    >
                   </b-button>
                 </div>
 
@@ -639,9 +349,7 @@
                       <b-td
                         ><b>{{ charge.surcharge.name }}</b></b-td
                       >
-                      <b-td>{{
-                        charge.calculationtype.name
-                      }}</b-td>
+                      <b-td>{{ charge.calculationtype.name }}</b-td>
                       <!-- <b-td></b-td>
                                             <b-td></b-td> -->
                       <b-td
@@ -660,8 +368,8 @@
                         <span
                           v-if="
                             charge.container_markups != undefined &&
-                            charge.container_markups['C' + container.code] !=
-                              undefined
+                              charge.container_markups['C' + container.code] !=
+                                undefined
                           "
                           class="profit"
                           >+{{
@@ -800,6 +508,7 @@
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import actions from "../../actions";
+import ResultSearch from "../../components/ResultSearch.vue";
 export default {
   props: {
     rates: Array,
@@ -809,6 +518,7 @@ export default {
   },
   components: {
     Multiselect,
+    ResultSearch,
   },
   data() {
     return {
@@ -835,9 +545,9 @@ export default {
   },
   methods: {
     setActions() {
-      if(this.searchType == "FCL"){
+      if (this.searchType == "FCL") {
         this.searchActions = this.actions.search;
-      }else if(this.searchType == "LCL"){
+      } else if (this.searchType == "LCL") {
         this.searchActions = this.actions.searchlcl;
       }
     },
@@ -862,7 +572,7 @@ export default {
       let component = this;
 
       if (component.filterBy != "") {
-        component.rates.forEach(function (rate) {
+        component.rates.forEach(function(rate) {
           if (component.filterBy == rate.carrier.name) {
             component.finalRates.push(rate);
           }
@@ -870,7 +580,7 @@ export default {
       } else {
         component.finalRates = component.rates;
       }
-      component.rates.forEach(function (rate) {
+      component.rates.forEach(function(rate) {
         if (!component.filterOptions.includes(rate.carrier.name)) {
           component.filterOptions.push(rate.carrier.name);
         }
@@ -880,7 +590,7 @@ export default {
       let component = this;
       //console.log(this.request);
       if (component.filterBy != "") {
-        component.rates.forEach(function (rate) {
+        component.rates.forEach(function(rate) {
           if (component.filterBy == rate.carrier.name) {
             component.finalRates.push(rate);
           }
@@ -889,18 +599,17 @@ export default {
         component.finalRates = component.rates;
       }
     },
-    downloadContractFile(rate){
+    downloadContractFile(rate) {
       let component = this;
       let parameters = [rate.contract_id, rate.contract_request_id, rate.contract_backup_id];
 
       component.searchActions
         .downloadContract(parameters)
         .then((response) => {
-          if(response.data.zip == true){
-          
-
-              window.open("/api/search/downloadMContract/"+response.data.url);
-/*
+          if (response.data.zip == true) {
+            console.log("Downloading!", response.data.url);
+            window.open("/api/search/downloadMContract/" + response.data.url);
+            /*
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href=url;
@@ -908,22 +617,22 @@ export default {
             document.body.appendChild(link);
             link.click();
 */
-          }else{
-              console.log('Downloading!', response);
-              window.open(response.data.url)
+          } else {
+            console.log("Downloading!", response);
+            window.open(response.data.url);
           }
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    addRateToQuote(rate){
+    addRateToQuote(rate) {
       let component = this;
 
       if (rate.addToQuote) {
         component.ratesForQuote.push(rate);
       } else {
-        component.ratesForQuote.forEach(function (rateQ) {
+        component.ratesForQuote.forEach(function(rateQ) {
           if (rate.id == rateQ.id) {
             component.ratesForQuote.splice(
               component.ratesForQuote.indexOf(rateQ),
@@ -939,25 +648,25 @@ export default {
       this.$emit("createQuote");
     },
   },
-  mounted(){
+  mounted() {
     let component = this;
     component.searchEndDate = component.request.dateRange.endDate;
-    component.rates.forEach(function (rate) {
+    component.rates.forEach(function(rate) {
       rate.addToQuote = false;
     });
     component.finalRates = component.rates;
     //component.setFilters();
     window.document.onscroll = () => {
-      let navBar = document.getElementById('top-results');
-      if(window.scrollY > navBar.offsetTop){
-          component.isActive = true;
+      let navBar = document.getElementById("top-results");
+      if (window.scrollY > navBar.offsetTop) {
+        component.isActive = true;
       } else {
-          component.isActive = false;
+        component.isActive = false;
       }
-    }
-    
-    this.$emit("resultsCreated")
+    };
+
+    this.$emit("resultsCreated");
     this.loaded = true;
   },
-}
+};
 </script>
