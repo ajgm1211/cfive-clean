@@ -143,6 +143,7 @@
                                 @input="onSubmit()"
                                 @select="cleanInput(key)"
                                 class="input-h"
+                                style="cursor:pointer"
                             ></multiselect>
                             <span
                                 :id="'id_f_inline_'+key"
