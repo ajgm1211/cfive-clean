@@ -489,8 +489,8 @@
                     >Values cannot be empty or zero
                   </h6>
                 </div>
-                <div class="col-12 col-sm-3">
-                  <label class="d-flex align-items-center">
+                <div class="col-12 col-sm-3 d-flex align-items-center">
+                  <label>
                     <b-form-input
                       v-model="lclShipmentQuantity"
                       :placeholder="
@@ -508,29 +508,23 @@
                       class="img-icon"
                       alt="paquete"
                     />
-                    <div class="type-packages">
-                      <multiselect
-                        v-model="lclShipmentCargoType"
-                        :multiple="false"
-                        :close-on-select="true"
-                        :clear-on-select="false"
-                        :show-labels="false"
-                        :options="datalists.cargo_types"
-                        :allow-empty="false"
-                        track-by="name"
-                        label="name"
-                        placeholder="Select"
-                        class="s-input no-select-style"
-                      >
-                      </multiselect>
-                      <!-- <b-icon
-                                                icon="caret-down-fill"
-                                                aria-hidden="true"
-                                                class="delivery-type"
-                                                style="right: -10px !important; display: none;"
-                                            ></b-icon> -->
-                    </div>
                   </label>
+                  <div class="type-packages">
+                    <multiselect
+                      v-model="lclShipmentCargoType"
+                      :multiple="false"
+                      :close-on-select="true"
+                      :clear-on-select="false"
+                      :show-labels="false"
+                      :options="datalists.cargo_types"
+                      :allow-empty="false"
+                      track-by="name"
+                      label="name"
+                      placeholder="Select"
+                      class="s-input no-select-style"
+                    >
+                    </multiselect>
+                  </div>
                 </div>
 
                 <div class="col-12 col-sm-3">
@@ -604,11 +598,6 @@
                           class="s-input no-select-style"
                         >
                         </multiselect>
-                        <!-- <b-icon
-                                                    icon="caret-down-fill"
-                                                    aria-hidden="true"
-                                                    class="delivery-type"
-                                                ></b-icon> -->
                       </div>
                     </div>
 

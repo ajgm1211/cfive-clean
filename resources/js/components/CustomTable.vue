@@ -4,13 +4,19 @@
       <b>{{ charge }}</b>
     </h5>
 
-    <b-table
-      striped
-      hover
-      responsive
-      :items="tbody"
-      :fields="thead"
-    >
+    <b-table striped hover responsive :items="tbody" :fields="thead">
+      <template slot="custom-foot">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td v-if="thead.includes('Markups')"></td>
+        <td style="text-align:right">
+          <b>Total {{ charge }}</b>
+        </td>
+        <td>
+          <b>{{ alphacode }}</b> <b>{{ total_by_type[charge] }}</b>
+        </td>
+      </template>
     </b-table>
   </section>
 </template>
@@ -23,6 +29,7 @@ export default {
     },
     thead: {
       required: true,
+      type: Array,
     },
     data: {
       required: true,
@@ -30,19 +37,24 @@ export default {
     total_by_type: {
       required: true,
     },
+    search_pricelevel: {
+      required: true,
+    },
+    total_markups: {
+      required: true,
+    },
+    currency: {
+      required: true,
+    },
   },
   data() {
     return {
       tbody: [],
-      currency: "",
+      alphacode: "",
+      total: "",
     };
   },
   mounted() {
-    // console.log("DATA", this.data);
-    // console.log("total byt type", this.total_by_type[this.charge]);
-
-    // console.log("markups?????????", this.thead.includes("Markups"));
-
     this.data.forEach((charge) => {
       let object = {
         Charge: null,
@@ -52,12 +64,12 @@ export default {
         Total: null,
       };
 
-      this.currency =
+      this.alphacode =
         this.charge == "Freight"
           ? charge.currency.alphacode
           : charge.client_currency.alphacode;
 
-      if (this.thead.includes("Markups") == true) {
+      if (this.thead.includes("Markups")) {
         // this.tbody = [];
         let object = {
           Charge: null,
@@ -73,15 +85,46 @@ export default {
         object.Amount = charge.ammount;
         object.Units = charge.units;
 
+        // MARKUP VALUE
         if (charge.total_markups != undefined) {
           object.Markups =
             charge.joint_as == "client_currency"
               ? charge.total_markups_client_currency
               : charge.total_markups;
         }
+        if (this.search_pricelevel != null && this.total_markups == null) {
+          object.Markups = "+ 0";
+        }
 
-        object.Markups = charge.units;
-        object.Total = charge.total;
+        let alphacode2;
+
+        // TOTAL VALUE
+        if (this.charge == "Freight") {
+          alphacode2 =
+            charge.joint_as == "client_currency"
+              ? this.currency.alphacode
+              : charge.currency.alphacode;
+        } else if (charge.joint_as == "client_currency") {
+          alphacode2 = charge.client_currency.alphacode;
+        } else if (charge.joint_as != "client_currency") {
+          alphacode2 = charge.currency.alphacode;
+        }
+
+        var total;
+
+        if (charge.total_markups != undefined) {
+          total =
+            charge.joint_as == "client_currency"
+              ? charge.total_with_markups_client_currency
+              : charge.total_with_markups;
+        } else {
+          total =
+            charge.joint_as == "client_currency"
+              ? charge.total_client_currency
+              : charge.total;
+        }
+
+        object.Total = `${alphacode2} ${total}`;
 
         this.tbody.push(object);
       } else {
@@ -93,23 +136,7 @@ export default {
 
         this.tbody.push(object);
       }
-
-      //   console.log("object", object);
     });
-    // console.log("tbody", this.tbody);
-
-    let total = `Total ${this.charge}  ${this.currency} ${
-      this.total_by_type[this.charge]
-    }`;
-
-    let fixedTotal = {
-      Total: total,
-    };
-
-    this.tbody.push(fixedTotal);
-
-    // console.log("TOTAL", total);
-    // console.log("CURRENCY", this.currency);
   },
 };
 </script>

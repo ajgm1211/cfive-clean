@@ -75,7 +75,7 @@ div,
         font-size: 13px !important;
         min-height: 40px !important;
         border: 2px solid #eee !important;
-        padding: 4px 40px 5px 10px !important;
+        // padding: 4px 40px 5px 10px !important;
         border-radius: 0.25rem !important;
         height: auto !important;
     }
@@ -1066,7 +1066,7 @@ input.multiselect__input:focus {
 .multiselect__placeholder {
     font-size: 12px;
     position: relative;
-    top: 5px;
+    top: 2px;
 }
 
 
