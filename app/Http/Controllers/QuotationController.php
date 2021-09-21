@@ -314,9 +314,9 @@ class QuotationController extends Controller
 
             $rateTotals->totalize($rate['currency_id']);
         }
-
+        
         foreach ($result_data as $result) {
-
+            
             $result = $this->formatApiResult($result, $search_data['selectedContainerGroup'], $search_data['containers']);
 
             if (isset($result['validityFrom'])) {

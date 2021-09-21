@@ -1887,7 +1887,8 @@ trait QuoteV2Trait
                         $charge['surcharge_id'] = $surcharge->id;
                     }
                 }else{
-                    $charge['surcharge_id'] = null;
+                    $ocean_id = Surcharge::where('options->onlyrate','yes')->select('id')->first();
+                    $charge['surcharge_id'] = $ocean_id->id;
                 }
 
                 if($key == "originSurcharges"){
