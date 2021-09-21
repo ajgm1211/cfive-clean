@@ -20,6 +20,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Traits\MixPanelTrait;
+use Illuminate\Support\Str;
+use GuzzleHttp\Client; 
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
+
 
 class CompanyController extends Controller
 {
@@ -431,6 +436,7 @@ class CompanyController extends Controller
         $file = Input::file('logo');
         $filepath_tmp = null;
         $options = null;
+        $randomString = Str::random(8);
 
         if ($request->key_name && $request->key_value) {
             $options_array = [];
@@ -456,8 +462,56 @@ class CompanyController extends Controller
         $request->request->add(['company_user_id' => Auth::user()->company_user_id, 'owner' => Auth::user()->id, 'options' => $options, 'logo' => $filepath_tmp]);
 
         //Save Company
-        $company = Company::create($request->all());
+        $company = new Company;
+        $company->business_name = $request->business_name;
+        $company->phone = $request->phone;
+        $company->email = $request->email;
+        $company->logo = $request->logo;
+        $company->associated_quotes = $request->associated_quotes;
+        $company->tax_number = $request->tax_number;
+        $company->address = $request->address;
+        $company->options = $request->options;
+        $company->company_user_id = $request->company_user_id;
+        $company->unique_code = $randomString;
+        $company->whitelabel = 1;
+        $company->save();
 
+
+        //  Save Whitelabel
+
+         if ($company->whitelabel == 1){
+
+            $business_name = $request->get('business_name');
+            $phone = $request->get('phone');
+            $email = $request->get('email');
+            $address = $request->get('address');
+            $logo = $request->get('logo');
+            $unique_code =$randomString;
+    
+            $client = new \GuzzleHttp\Client([              
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/x-www-form-urlencoded',
+                'Authorization' => Auth::user()->api_token,
+            ]);
+                    // Create a POST request
+                $response = $client->request(
+                    'POST',
+                    'http://chirix.localhost:8000/shipper',
+                    [
+                        'json' => [
+                            'business_name' => $business_name,
+                            'phone' => $phone,
+                            'email' => $email,
+                            'address' => $address,
+                            'logo' => $logo,
+                            'unique_code' => $unique_code,
+                        ]
+                    ]
+                );
+    
+            }
+
+        // $company = Company::create($request->all());
         if ($file != '') {
             $this->saveLogo($company, $file);
         }
