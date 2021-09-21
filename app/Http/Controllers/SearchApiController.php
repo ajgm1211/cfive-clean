@@ -240,6 +240,7 @@ class SearchApiController extends Controller
 
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
+        $surchargeOcean = $this->getSurchargeOcean();
 
         //$rateNo = 0;
         foreach ($rates as $rate) {
@@ -262,7 +263,7 @@ class SearchApiController extends Controller
             $charges = $this->joinCharges($charges, $search_ids['client_currency'], $search_ids['selectedContainerGroup']);
 
             //Appending Rate Id to Charges
-            $this->addChargesToRate($rate, $charges, $search_ids['client_currency']);
+            $this->addChargesToRate($rate, $charges, $search_ids['client_currency'],$surchargeOcean);
 
             //Getting price levels if requested
             if (array_key_exists('pricelevel', $search_array) && $search_array['pricelevel'] != null) {
@@ -270,7 +271,7 @@ class SearchApiController extends Controller
             } else {
                 $price_level_markups = [];
             }
-
+            
             //Adding price levels
             if ($price_level_markups != null && count($price_level_markups) != 0) {
                 $this->addMarkups($price_level_markups, $rate, $search_ids['client_currency']);
@@ -742,8 +743,10 @@ class SearchApiController extends Controller
     }
 
     //appending charges to corresponding Rate
-    public function addChargesToRate($rate, $target, $client_currency)
+    public function addChargesToRate($rate, $target, $client_currency,$surchargeOcean = "")
     {
+
+       // dd($surchargeOcean);
         $rate_charges = [];
         //Looping through charges type for array structure
         foreach ($target as $direction => $charge_direction) {
@@ -765,7 +768,8 @@ class SearchApiController extends Controller
 
             if ($direction == 'Freight') {
                 $ocean_freight_array = [
-                    'surcharge' => ['name' => 'Ocean Freight'],
+                    'surcharge' => ['name' => $surchargeOcean->name,'id' => $surchargeOcean->id],
+                    'surcharge_id' =>  $surchargeOcean->id,
                     'containers' => json_decode($rate->containers, true),
                     'calculationtype' => ['name' => 'Per Container', 'id' => '5'],
                     'typedestiny_id' => 3,
