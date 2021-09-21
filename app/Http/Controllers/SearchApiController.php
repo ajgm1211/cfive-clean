@@ -240,6 +240,7 @@ class SearchApiController extends Controller
 
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
+        $surchargeOcean = $this->getSurchargeOcean();
 
         //$rateNo = 0;
         foreach ($rates as $rate) {
@@ -742,8 +743,10 @@ class SearchApiController extends Controller
     }
 
     //appending charges to corresponding Rate
-    public function addChargesToRate($rate, $target, $client_currency)
+    public function addChargesToRate($rate, $target, $client_currency,$surchargeOcean = "")
     {
+
+       // dd($surchargeOcean);
         $rate_charges = [];
         //Looping through charges type for array structure
         foreach ($target as $direction => $charge_direction) {
@@ -765,7 +768,8 @@ class SearchApiController extends Controller
 
             if ($direction == 'Freight') {
                 $ocean_freight_array = [
-                    'surcharge' => ['name' => 'Ocean Freight'],
+                    'surcharge' => ['name' => $surchargeOcean->name,'id' => $surchargeOcean->id],
+                    'surcharge_id' =>  $surchargeOcean->id,
                     'containers' => json_decode($rate->containers, true),
                     'calculationtype' => ['name' => 'Per Container', 'id' => '5'],
                     'typedestiny_id' => 3,
