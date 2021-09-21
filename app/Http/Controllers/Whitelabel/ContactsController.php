@@ -53,18 +53,7 @@ class ContactsController extends Controller
                'whitelabel'=> 'nullable',
                'options' => 'json',
            ]);
-        // try {
-        //     $client = new Client;
-        //         $response = $client->post('http://chirix.localhost:8000/user', ['json' => [
-        //         'name' => 'a',
-        //         'lastname' => 'a',
-        //         'email' => 'a2@mail.com',
-        //         'type' => 'user'
-        //         ]]);
-        //     return json_decode($response->getBody()->getContents(), true);
-        // } catch (Exception $e) {
-        //     throw new Exception($e->getResponse()->getBody()->getContents());        
-        // }
+
         Contact::create($data);
         
          if ($request->whitelabel == 1){
@@ -89,6 +78,9 @@ class ContactsController extends Controller
                              'lastname' => $lastname,
                              'email' => $email,
                              'type' => $type,
+                             'phone' => $phone,
+                             'position' => $position,
+
                           ]
                       ]
                      );
