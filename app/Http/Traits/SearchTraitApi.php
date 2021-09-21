@@ -11,6 +11,7 @@ use App\Price;
 use App\RemarkHarbor;
 use App\TransitTime;
 use App\User;
+use App\Surcharge;
 use GoogleMaps;
 use Illuminate\Support\Collection as Collection;
 
@@ -744,6 +745,9 @@ trait SearchTraitApi
 
         return $collection;
     }
+
+
+ 
 
     /*  **************************  LCL  ******************************************** */
 
