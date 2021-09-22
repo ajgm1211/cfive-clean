@@ -87,7 +87,7 @@ export default {
 
         // MARKUP VALUE
         if (charge.total_markups != undefined) {
-          object.Markups =
+          object.Markups = '+' +
             charge.joint_as == "client_currency"
               ? charge.total_markups_client_currency
               : charge.total_markups;
@@ -141,8 +141,20 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .custom-table {
   padding: 20px;
+  padding-bottom: 0px;
+
+  &:last-of-type{
+    padding-bottom:20px ;
+  }
+
+}
+
+.table thead {
+    background-color: transparent !important;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
 }
 </style>
