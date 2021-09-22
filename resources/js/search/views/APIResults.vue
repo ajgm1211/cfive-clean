@@ -4337,20 +4337,22 @@ export default {
 
       if (
         this.request.carriersApi.length > 0 &&
-        this.request.selectedContainerGroup.id == 1
+        (this.request.selectedContainerGroup.id == 1 || this.request.selectedContainerGroup.id == 2)
       ) {
         
         this.request.carriersApi.forEach(function(apiCarrier){
           apiOriginPorts.forEach(function (origin) {
             apiDestinationPorts.forEach(function (destination) {
-              params.push({
-                  originPort: origin,
-                  destinationPort: destination,
-                  equipmentSizeType: apiContainers,
-                  departureDate: apiDate,
-                  uemail: component.datalists.user.email,
-                  brands: apiCarrier.code,
-                });
+              if(component.request.selectedContainerGroup.id == 1 || (component.request.selectedContainerGroup.id == 2 && apiCarrier.code == 'cmacgm')){
+                params.push({
+                    originPort: origin,
+                    destinationPort: destination,
+                    equipmentSizeType: apiContainers,
+                    departureDate: apiDate,
+                    uemail: component.datalists.user.email,
+                    brands: apiCarrier.code,
+                  });
+              }
             });
           });
         });
@@ -4593,14 +4595,20 @@ export default {
 
     setApiContainers() {
       let component = this;
+      let finalContainers = [];
       let finalContainerString = "";
 
-      component.request.containers.forEach(function(container) {
-        let containerString = "1x" + container.code.substring(0, 2);
+      component.request.containers.forEach(function (container) {
+        let containerOptions = JSON.parse(container.options);
 
-        if (["NOR", "HCRF", "OT", "FR"].includes(container.code)) {
-          return;
+        if (containerOptions.has_api) {
+          finalContainers.push(container);
         }
+      });
+
+      finalContainers.forEach(function (container) {
+        let containerString = "1x" + container.code.substring(0, 2);
+        
         if (container.code.includes("HC")) {
           containerString += "HC";
         }
@@ -4616,8 +4624,8 @@ export default {
         finalContainerString += containerString;
 
         if (
-          component.request.containers[
-            component.request.containers.indexOf(container) + 1
+          finalContainers[
+            finalContainers.indexOf(container) + 1
           ] != undefined
         ) {
           finalContainerString += ",";
