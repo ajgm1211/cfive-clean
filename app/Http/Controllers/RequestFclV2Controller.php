@@ -63,7 +63,7 @@ class RequestFclV2Controller extends Controller
         $Ncontract = DB::select('call  select_request_fcl_v2("' . $date_start . '","' . $date_end . '")');
 
         $Ncontracts = $Ncontract;
-      /*  foreach ($Ncontract as $contract) {
+        /*  foreach ($Ncontract as $contract) {
             $request_id = NewContractRequest::find($contract->id);
 
             if ($request_id->status_erased == 0) {
@@ -255,20 +255,16 @@ class RequestFclV2Controller extends Controller
         $now = $time->format('dmY_His');
         $now2 = $time->format('Y-m-d H:i:s');
         $file = $request->input('document');
+        $ext = null;
         if (!empty($file)) {
+            $info_file = pathinfo($file);
+            $ext = (strtoupper($info_file['extension']) == 'PDF') ? 'PDF':'EXCEL';
             $gpContainer = GroupContainer::find($groupContainer);
-            $ArrayData['group_containers'] = [
-                'id' => $gpContainer->id,
-                'name' => $gpContainer->name,
-            ];
+            $ArrayData['group_containers'] = ['id' => $gpContainer->id,'name' => $gpContainer->name];
             $ArrayData['containers'] = [];
             foreach ($containers as $containerId) {
                 $container = Container::find($containerId);
-                $ArrayData['containers'][] = [
-                    'id' => $container->id,
-                    'name' => $container->name,
-                    'code' => $container->code,
-                ];
+                $ArrayData['containers'][] = ['id' => $container->id,'name' => $container->name,'code' => $container->code];
             }
             $data = json_encode($ArrayData);
 
@@ -294,7 +290,7 @@ class RequestFclV2Controller extends Controller
             $Ncontract->data = $data;
             $Ncontract->contract_id = $contract->id;
             $Ncontract->save();
-
+            $Ncontract->setAttribute('carrier',null);
             foreach ($carriers as $carrierVal) {
                 ContractCarrier::create([
                     'carrier_id' => $carrierVal,
@@ -305,15 +301,23 @@ class RequestFclV2Controller extends Controller
                     'carrier_id' => $carrierVal,
                     'request_id' => $Ncontract->id,
                 ]);
-            }
 
+                $Ncontract->carrier = $carrierVal;
+                $Ncontract->type = 'FCL';
+
+                //Calling Mix Panel's event
+                $this->trackEvents("new_request_by_carrier", $Ncontract);
+            }
+            
             $contract->addMedia(storage_path('tmp/request/' . $file))->preservingOriginal()->toMediaCollection('document', 'contracts3');
             $Ncontract->addMedia(storage_path('tmp/request/' . $file))->toMediaCollection('document', 'FclRequest-New');
             $ext_at_sl = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
-            if (strnatcasecmp($ext_at_sl, 'xls') == 0 ||
+            if (
+                strnatcasecmp($ext_at_sl, 'xls') == 0 ||
                 strnatcasecmp($ext_at_sl, 'xlsx') == 0 ||
-                strnatcasecmp($ext_at_sl, 'csv') == 0) {
+                strnatcasecmp($ext_at_sl, 'csv') == 0
+            ) {
                 if (env('APP_VIEW') == 'operaciones') {
                     SelectionAutoImportJob::dispatch($Ncontract->id, 'fcl')->onQueue('operaciones');
                 } else {
@@ -331,8 +335,10 @@ class RequestFclV2Controller extends Controller
             $message = "There is a new request from " . $user->name . " - " . $user->companyUser->name;
             $user->notify(new SlackNotification($message));
             $admins = User::where('type', 'admin')->get();
-            $message = 'has created an new request: ' . $Ncontract->id;
+            $message = 'has created a new request: ' . $Ncontract->id;
 
+            //Calling Mix Panel's event
+            $Ncontract->setAttribute('file_ext',$ext);
             $this->trackEvents("new_request_Fcl", $Ncontract);
 
             // EVENTO INTERCOM
@@ -419,6 +425,7 @@ class RequestFclV2Controller extends Controller
             $Ncontract = NewContractRequest::find($id);
             $Ncontract->status = $status;
             $Ncontract->updated = $now2;
+            $Ncontract->setAttribute('module','FCL');
             if ($Ncontract->username_load == 'Not assigned' || empty($Ncontract->username_load) == true) {
                 $Ncontract->username_load = \Auth::user()->name . ' ' . \Auth::user()->lastname;
             }
@@ -428,11 +435,12 @@ class RequestFclV2Controller extends Controller
                     $Ncontract->time_star = $now2;
                     $Ncontract->time_star_one = true;
                 }
+                //Calling Mix Panel's event
             } elseif ($Ncontract->status == 'Review') {
                 if ($Ncontract->time_total == null) {
                     $fechaEnd = Carbon::parse($now2);
                     if (empty($Ncontract->time_star) == true) {
-                        $Ncontract->time_total = 'It did not go through the processing state';
+                        $Ncontract->time_total = 'No time';
                     } else {
                         $time_exacto = '';
                         $fechaStar = Carbon::parse($Ncontract->time_star);
@@ -444,7 +452,9 @@ class RequestFclV2Controller extends Controller
                         }
                         $Ncontract->time_total = $time_exacto;
                     }
+                    $this->trackEvents("Request_Review", $Ncontract);
                 }
+                //Calling Mix Panel's event
             } elseif ($Ncontract->status == 'Done') {
                 $contractObj = Contract::find($Ncontract->contract_id);
                 $contractObj->status = 'publish';
@@ -459,7 +469,7 @@ class RequestFclV2Controller extends Controller
 
                 if ($Ncontract->sentemail == false) {
                     $users = User::all()->where('company_user_id', '=', $Ncontract->company_user_id);
-                    $message = 'The request was processed N°: ' . $Ncontract->id;
+                    $message = 'The request '.$Ncontract->id.' was processed';
                     foreach ($users as $user) {
 
                         $user->notify(new N_general(\Auth::user(), $message));
@@ -474,16 +484,18 @@ class RequestFclV2Controller extends Controller
                         SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id);
                     }
                 }
-                $this->trackEvents("Request_Status_fcl", $Ncontract);
+                //Calling Mix Panel's event
             }
+            $this->trackEvents("Request_Status_fcl", $Ncontract);
+            unset($Ncontract->module);
             $Ncontract->save();
             $color = HelperAll::statusColorRq($Ncontract->status);
 
             return response()->json($data = ['data' => 1, 'status' => $Ncontract->status, 'color' => $color, 'request' => $Ncontract]);
         } catch (\Exception $e) {
+            print($e);
             return response()->json($data = ['data' => 2]);
         }
-
     }
 
     public function sendEmailRequest(Request $request)
@@ -531,7 +543,6 @@ class RequestFclV2Controller extends Controller
             $ext = $extObj->getExtension();
             $name = $Ncontract->id . '-' . preg_replace('([^A-Za-z0-9])', '_', $Ncontract->companyuser->name) . '_' . $data['group_containers']['name'] . '_' . $now . '-FLC.' . $ext;
             return Storage::disk('FclRequest-New')->download($mediaItem->id . '/' . $mediaItem->file_name, $name);
-
         } elseif (strnatcasecmp($selector, 'storage') == 0) {
 
             $Ncontract = NewContractRequest::find($id);
@@ -562,7 +573,6 @@ class RequestFclV2Controller extends Controller
                 return back();
             }
         }
-
     }
 
     public function edit($id)
@@ -673,7 +683,7 @@ class RequestFclV2Controller extends Controller
         $fileName = HelperAll::removeAccent($name);
 
         try {
-            
+
             $file->move($path, $fileName);
         } catch (\Exception $e) {
             return response()->json([
@@ -788,7 +798,6 @@ class RequestFclV2Controller extends Controller
                         }
                     }
                 });
-
             });
 
             $myFile = $myFile->string('xlsx'); //change xlsx for the format you want, default is xls

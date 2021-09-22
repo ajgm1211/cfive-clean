@@ -164,7 +164,9 @@ class NewContractRequestsController extends Controller
         $time = new \DateTime();
         $now = $time->format('dmY_His');
         $now2 = $time->format('Y-m-d H:i:s');
+
         $file = $request->file('file');
+
         $ext = strtolower($file->getClientOriginalExtension());
         /*$validator = \Validator::make(
         array('ext' => $ext),
@@ -177,7 +179,10 @@ class NewContractRequestsController extends Controller
         }*/
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
+        $nombre = quitar_caracteres($nombre);
+      
         $nombre = $now . '_' . $nombre;
+
         $fileBoll = \Storage::disk('FclRequest')->put($nombre, \File::get($file));
         $typeVal = 1;
         $arreglotype = '';

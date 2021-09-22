@@ -15,6 +15,8 @@ return [
     "risk_level" => "Risk level",
     "pod" => "POD",
     "pol" => "POL",
+    "origin" => "Origin",
+    "destination" => "Destination",
     "type" => "Type",
     "service" => "Service",
     "remarks" => "Ocean Freight Remarks",

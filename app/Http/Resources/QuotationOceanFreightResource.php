@@ -31,7 +31,7 @@ class QuotationOceanFreightResource extends JsonResource
             'destiny' => $this->destination_port->display_name ?? null,
             'transit_time' => (int) $this->transit_time ?? null,
             'via' => $this->via ?? null,
-            'carrier' => (new CarrierResource($this->carrier))->companyUser($this->quote->company_user),
+            'carrier' => (new CarrierResource($this->carrier))->companyUser($this->quoteV2->company_user),
             //'carrier' => $this->carrier,
             'charges' => count($this->charge)>0 ? QuotationOceanFreightChargeResource::collection($this->charge):QuotationOceanFreightChargeLclResource::collection($this->charge_lcl_air),
         ];
