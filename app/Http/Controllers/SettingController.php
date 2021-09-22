@@ -162,7 +162,7 @@ class SettingController extends Controller
             $options=[
                 'api_providers'=> [],
                 'company_address_pdf'=> 1,
-                'show_search_totals_in_freight_currency' => true,
+                'totals_in_freight_currency' => false,
             ];
             $company->options=$options;
             $company->save();

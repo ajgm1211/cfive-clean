@@ -230,6 +230,8 @@ class NewContractRequestLclController extends Controller
         $nombre = quitar_caracteres($nombre);
         $nombre = $now . '_' . $nombre;
         // $fileName = HelperAll::removeAcent($nombre);
+        $info_file = pathinfo($nombre);
+        $ext = (strtoupper($info_file['extension']) == 'PDF') ? 'PDF':'EXCEL';
         $fileBoll = \Storage::disk('LclRequest')->put($nombre, \File::get($file));
 
         $typeVal = 1;
@@ -277,17 +279,16 @@ class NewContractRequestLclController extends Controller
             $Ncontract->data = $data;
             $Ncontract->contract_id = $Contract_id;
             $Ncontract->save();
-
+            
+            $Ncontract->setAttribute('carrier',null);
+            $Ncontract->type = 'LCL';
             foreach ($request->carrierM as $carrierVal) {
                 RequetsCarrierLcl::create([
                     'carrier_id' => $carrierVal,
                     'request_id' => $Ncontract->id,
                 ]);
-
-                $contract->carrier = $carrierVal;
-                $contract->type = 'LCL';
-
-                $this->trackEvents("new_request_by_carrier", $contract);
+                $Ncontract->carrier = $carrierVal;
+                $this->trackEvents("new_request_by_carrier", $Ncontract);
             }
 
             if (env('APP_VIEW') == 'operaciones') {
@@ -319,8 +320,8 @@ class NewContractRequestLclController extends Controller
             } else {
                 ValidateTemplateLclJob::dispatch($Ncontract->id);
             }
-
-            $this->trackEvents("new_request_Lcl", $contract);
+            $Ncontract->setAttribute('file_ext',$ext);
+            $this->trackEvents("new_request_Lcl", $Ncontract);
             
             // EVENTO INTERCOM
             $event = new EventIntercom();
@@ -437,6 +438,7 @@ class NewContractRequestLclController extends Controller
             $Ncontract = NewContractRequestLcl::find($id);
             $Ncontract->status = $status;
             $Ncontract->updated = $now2;
+            $Ncontract->setAttribute('module','LCL');
             if ($Ncontract->username_load == 'Not assigned') {
                 $Ncontract->username_load = \Auth::user()->name . ' ' . \Auth::user()->lastname;
             }
@@ -464,9 +466,10 @@ class NewContractRequestLclController extends Controller
                         }
                         $Ncontract->time_total = $time_exacto;
                     }
+                    $this->trackEvents("Request_Review", $Ncontract);
                 }
                 //Calling Mix Panel's event
-                $this->trackEvents("Request_Status_lcl", $Ncontract);
+                
 
             } elseif ($Ncontract->status == 'Done') {
 
@@ -496,8 +499,6 @@ class NewContractRequestLclController extends Controller
                     }
 
                 }
-                //Calling Mix Panel's event
-                $this->trackEvents("Request_Status_lcl", $Ncontract);
                 if( $Ncontract->contract_id != null){
                     $contract = ContractLcl::find($Ncontract->contract_id);
                     $contract->status = 'publish';
@@ -505,8 +506,11 @@ class NewContractRequestLclController extends Controller
                 }
             }
 
+            //Calling Mix Panel's event
+            $this->trackEvents("Request_Status_lcl", $Ncontract);
+            unset($Ncontract->module);
             $Ncontract->save();
-
+            
             if (strnatcasecmp($Ncontract->status, 'Pending') == 0) {
                 $color = '#f81538';
             } else if (strnatcasecmp($Ncontract->status, 'Processing') == 0) {

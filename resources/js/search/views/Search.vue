@@ -2132,8 +2132,8 @@ export default {
 
     requestSearch() {
       let component = this;
+      this.$emit("clearResults",'searchStarted');
       this.searching = true;
-      this.$emit("clearResults");
       this.$emit("searchRequested", this.searchRequest);
 
       component.searchActions
@@ -2453,6 +2453,7 @@ export default {
     },
   },
   watch: {
+
     /**deliveryType: function () {
             if (this.deliveryType.id == 1) {
                 this.ptdActive = false;
