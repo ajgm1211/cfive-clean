@@ -36,7 +36,7 @@ class Carrier extends Model
 
     public function getUrlAttribute($value)
     {
-        return 'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/'.$value;
+        return config('medialibrary.s3.domain')."/imgcarrier/".$value;
     }
 
     public function search_carriers()

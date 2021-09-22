@@ -6,6 +6,7 @@ use App\AutomaticRate;
 use App\Charge;
 use App\ChargeLclAir;
 use App\Container;
+use App\Carrier;
 use App\Currency;
 use App\Harbor;
 use App\Inland;
@@ -1843,6 +1844,9 @@ trait QuoteV2Trait
         $user = \Auth::user('web');
         $company_user = $user->worksAt();
         $company_user_id = $company_user->id;
+        $carriers = Carrier::get()->map(function ($carrier) {
+            return $carrier->only(['id', 'options']);
+        });
 
         $currency = Currency::where('alphacode',$result['pricingDetails']['surcharges']['freightSurcharges'][0]['containers'][0]['currencyCode'])->first();
         $result['currency_id'] = $currency->id;
@@ -1853,12 +1857,12 @@ trait QuoteV2Trait
         $result['origin_port'] = $origin_port->id;
         $result['destiny_port'] = $destination_port->id;
 
-        if($result['companyCode'] == 'cmacgm'){
-            $result['carrier_id'] = 3;
-        }else if($result['companyCode'] == 'maersk'){
-            $result['carrier_id'] = 12;
-        }else if($result['companyCode'] == 'sealand'){
-            $result['carrier_id'] = 24;
+        foreach($carriers as $carrier){
+            $carrier_options = json_decode($carrier['options'], true);
+            
+            if($carrier_options['api_code'] == $result['companyCode']){
+                $result['carrier_id'] = $carrier['id'];
+            }
         }
 
         foreach ($result['pricingDetails']['surcharges'] as $key => $charge_direction) {
@@ -1893,7 +1897,7 @@ trait QuoteV2Trait
                     $charge['type_id'] = 3;
                 }
 
-                if($charge['calculationType'] == 'Per Container'){
+                if($charge['calculationType'] == 'Per Container' || $charge['calculationType'] == null ){
                     if($containerGroup['id'] == 1){
                         $charge['calculationtype_id'] = 5;
                     }elseif($containerGroup['id'] == 2){
@@ -1903,7 +1907,7 @@ trait QuoteV2Trait
                     }elseif($containerGroup['id'] == 4){
                         $charge['calculationtype_id'] = 21;
                     }
-                }elseif($charge['calculationType'] == 'Per Doc'){
+                }elseif($charge['calculationType'] == 'Per Doc' || $charge['calculationType'] == 'Per Document' ){
                     if($containerGroup['id'] == 1){
                         $charge['calculationtype_id'] = 9;
                     }elseif($containerGroup['id'] == 2){

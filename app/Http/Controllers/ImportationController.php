@@ -104,16 +104,16 @@ class ImportationController extends Controller
                 $scheduleTBol = false;
                 $containersBol = false;
 
-                $originEX = explode('_', $failrate->origin_port);
-                $destinyEX = explode('_', $failrate->destiny_port);
-                $carrierArr = explode('_', $failrate->carrier_id);
-                $twentyArr = explode('_', $failrate->twuenty);
-                $fortyArr = explode('_', $failrate->forty);
-                $fortyhcArr = explode('_', $failrate->fortyhc);
-                $fortynorArr = explode('_', $failrate->fortynor);
-                $fortyfiveArr = explode('_', $failrate->fortyfive);
-                $currencyArr = explode('_', $failrate->currency_id);
-                $scheduleTArr = explode('_', $failrate->schedule_type);
+                $originEX = explode('_', trim($failrate->origin_port));
+                $destinyEX = explode('_', trim($failrate->destiny_port));
+                $carrierArr = explode('_', trim($failrate->carrier_id));
+                $twentyArr = explode('_', trim($failrate->twuenty));
+                $fortyArr = explode('_', trim($failrate->forty));
+                $fortyhcArr = explode('_', trim($failrate->fortyhc));
+                $fortynorArr = explode('_', trim($failrate->fortynor));
+                $fortyfiveArr = explode('_', trim($failrate->fortyfive));
+                $currencyArr = explode('_', trim($failrate->currency_id));
+                $scheduleTArr = explode('_', trim($failrate->schedule_type));
                 $containers = json_decode($failrate->containers, true);
                 if (!empty($containers)) {
                     foreach ($containers as $containerEq) {
@@ -311,14 +311,14 @@ class ImportationController extends Controller
                 $surcharB = false;
                 $currencyB = false;
 
-                $surchargerEX = explode('_', $FailSurchager['surcharge_id']);
-                $originEX = explode('_', $FailSurchager['port_orig']);
-                $destinyEX = explode('_', $FailSurchager['port_dest']);
-                $typedestinyEX = explode('_', $FailSurchager['typedestiny_id']);
-                $calculationtypeEX = explode('_', $FailSurchager['calculationtype_id']);
-                $ammountEX = explode('_', $FailSurchager['ammount']);
-                $currencyEX = explode('_', $FailSurchager['currency_id']);
-                $carrierEX = explode('_', $FailSurchager['carrier_id']);
+                $surchargerEX = explode('_', trim($FailSurchager['surcharge_id']));
+                $originEX = explode('_', trim($FailSurchager['port_orig']));
+                $destinyEX = explode('_', trim($FailSurchager['port_dest']));
+                $typedestinyEX = explode('_', trim($FailSurchager['typedestiny_id']));
+                $calculationtypeEX = explode('_', trim($FailSurchager['calculationtype_id']));
+                $ammountEX = explode('_', trim($FailSurchager['ammount']));
+                $currencyEX = explode('_', trim($FailSurchager['currency_id']));
+                $carrierEX = explode('_', trim($FailSurchager['carrier_id']));
 
                 if (count($surchargerEX) <= 1 && count($typedestinyEX) <= 1
                     && count($typedestinyEX) <= 1 && count($calculationtypeEX) <= 1
@@ -2748,133 +2748,72 @@ class ImportationController extends Controller
     // Companies ------------------------------------------------------------------------
     public function UploadCompanies(Request $request)
     {
-        //dd($request->all());
-        //dd($request->file('file'));
-        $file = $request->file('file');
-        $now = new \DateTime();
-        $now = $now->format('dmY_His');
-        $ext = strtolower($file->getClientOriginalExtension());
-        $validator = \Validator::make(
-            ['ext' => $ext],
-            ['ext' => 'in:xls,xlsx,csv']
-        );
 
-        if ($validator->fails()) {
-            $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
+        try {
+            $file = $request->file('file');
+            $now = new \DateTime();
+            $now = $now->format('dmY_His');
+            $ext = strtolower($file->getClientOriginalExtension());
+            $validator = \Validator::make(
+                ['ext' => $ext],
+                ['ext' => 'in:xls,xlsx,csv']
+            );
+    
+            if ($validator->fails()) {
+                $request->session()->flash('message.nivel', 'danger');
+                $request->session()->flash('message.content', 'Only files with csv, xls and xlsx extensions are allowed');
+                return redirect()->route('companies.index');
+            }
+    
+            $nombre = $file->getClientOriginalName();
+            $nombre = $now . '_' . $nombre;
+            Storage::disk('UpLoadFile')->put($nombre, \File::get($file));
 
-            return redirect()->route('companies.index');
-        }
-
-        $nombre = $file->getClientOriginalName();
-        $nombre = $now . '_' . $nombre;
-        Storage::disk('UpLoadFile')->put($nombre, \File::get($file));
-        $errors = 0;
-        Excel::selectSheetsByIndex(0)
-            ->Load(\Storage::disk('UpLoadFile')
-                   ->url($nombre), function ($reader) use ($errors, $request) {
-                       $businessnameread = 'business_name';
-                       $phoneRead = 'phone';
-                       $emailRead = 'email';
-                       $taxnumberead = 'tax_number';
-                       $addressRead = 'address';
-                       $pricelevelRead = 'price_level';
-
-                       foreach ($reader->get() as $read) {
-                           $businessnameVal = '';
-                           $phoneVal = '';
-                           $emailVal = '';
-                           $taxnumbeVal = '';
-                           $addressVal = '';
-                           $pricelevelVal = '';
+            Excel::selectSheetsByIndex(0)
+                ->Load(\Storage::disk('UpLoadFile')
+                       ->url($nombre), function ($reader) use ($request) {
+                           $businessnameread = 'business_name';
+                           $phoneRead = 'phone';
+                           $emailRead = 'email';
+                           $taxnumberead = 'tax_number';
+                           $addressRead = 'address';
                            $ownerVal = \Auth::user()->id;
                            $company_user_id = \Auth::user()->company_user_id;
-
-                           $businessnameBol = false;
-                           $phoneBol = false;
-                           $emailBol = false;
-
-                           $businessnameVal = $read[$businessnameread];
-                           $phoneVal = $read[$phoneRead];
-                           $emailVal = $read[$emailRead];
-                           $taxnumbeVal = $read[$taxnumberead];
-                           $addressVal = $read[$addressRead];
-                           $pricelevelVal = $read[$pricelevelRead];
-
-                           if (empty($businessnameVal) != true) {
-                               $businessnameBol = true;
-                           } else {
-                               $businessnameVal = $businessnameVal . '_E_E';
+    
+                           foreach ($reader->get() as $read) {
+                               $businessnameVal = '';
+                               $phoneVal = '';
+                               $emailVal = '';
+                               $taxnumbeVal = '';
+                               $addressVal = '';
+                               
+                               $businessnameVal = $read[$businessnameread];
+                               $phoneVal = $read[$phoneRead];
+                               $emailVal = $read[$emailRead];
+                               $taxnumbeVal = $read[$taxnumberead];
+                               $addressVal = $read[$addressRead];
+                               
+                               Company::updateOrCreate(
+                                ['business_name' => $businessnameVal, 'company_user_id' => $company_user_id],
+                                [
+                                    'phone' => $phoneVal,
+                                    'address' => $addressVal,
+                                    'email' => $emailVal,
+                                    'tax_number' => $taxnumbeVal,
+                                    'owner' => $ownerVal
+                                ]
+                                );
                            }
-
-                           if (empty($phoneVal) != true) {
-                               $phoneBol = true;
-                           } else {
-                               $phoneVal = $phoneVal . '_E_E';
-                           }
-
-                           if (empty($emailVal) != true) {
-                               $emailBol = true;
-                           } else {
-                               $emailVal = $emailVal . '_E_E';
-                           }
-
-                           if ($businessnameBol == true &&
-                               $phoneBol == true &&
-                               $emailBol == true) {
-                               $existe = Company::where('business_name', '=', $businessnameVal)
-                                   ->where('phone', '=', $phoneVal)
-                                   ->where('address', '=', $addressVal)
-                                   ->where('email', '=', $emailVal)
-                                   ->where('tax_number', '=', $taxnumbeVal)
-                                   ->where('company_user_id', '=', $company_user_id)
-                                   ->where('owner', '=', $ownerVal)
-                                   ->get();
-                               if (empty($existe) ) {
-                                   Company::create([
-                                       'business_name' => $businessnameVal,
-                                       'phone' => $phoneVal,
-                                       'address' => $addressVal,
-                                       'email' => $emailVal,
-                                       'tax_number' => $taxnumbeVal,
-                                       'logo' => null,
-                                       'associated_quotes' => null,
-                                       'company_user_id' => $company_user_id,
-                                       'owner' => $ownerVal,
-                                   ]);
-                               }
-                           } else {
-                               Failcompany::create([
-                                   'business_name' => $businessnameVal,
-                                   'phone' => $phoneVal,
-                                   'address' => $addressVal,
-                                   'email' => $emailVal,
-                                   'tax_number' => $taxnumbeVal,
-                                   'associated_quotes' => null,
-                                   'company_user_id' => $company_user_id,
-                                   'owner' => $ownerVal,
-                               ]);
-                               $errors = $errors + 1;
-                           }
-                       }
-
-                       if ($errors > 0) {
-                           $request->session()->flash('message.content', 'You successfully added the companies ');
-                           $request->session()->flash('message.nivel', 'danger');
-                           $request->session()->flash('message.title', 'Well done!');
-                           if ($errors == 1) {
-                               $request->session()->flash('message.content', $errors . ' fee is not charged correctly');
-                           } else {
-                               $request->session()->flash('message.content', $errors . ' Companies did not load correctly');
-                           }
-                       } else {
-                           $request->session()->flash('message.nivel', 'success');
-                           $request->session()->flash('message.title', 'Well done!');
-                       }
-                   });
-        Storage::Delete($nombre);
-
-        return redirect()->route('companies.index');
+                       });
+            Storage::Delete($nombre);
+    
+            return redirect()->route('companies.index');
+        } catch(\Exception $e) {
+            $request->session()->flash('message.content', 'An error has occurred: '.$e->getMessage());
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.title', 'Error!');
+            return redirect()->route('companies.index');
+        }
     }
 
     public function FailedCompnaiesView()
