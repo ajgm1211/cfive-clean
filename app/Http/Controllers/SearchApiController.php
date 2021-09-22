@@ -898,9 +898,9 @@ class SearchApiController extends Controller
     public function storeContractNewSearch(StoreContractSearch $request)
     {  
         $data = $request->validate([
-            "dataSurcharger.*.type.id" => 'required',
-            "dataSurcharger.*.calculation.id" => 'required',
-            "dataSurcharger.*.currency.id" => 'required',
+            "dataSurcharge.*.type.id" => 'required',
+            "dataSurcharge.*.calculation.id" => 'required',
+            "dataSurcharge.*.currency.id" => 'required',
         ]);
 
         $req = $request->valueEq['id'];
