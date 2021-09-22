@@ -278,7 +278,7 @@ p {
   color: #071c4b;
   margin: 0;
   font-size: 14px;
-  padding: 10px;
+  padding: 15px 10px 0 10px;
 }
 
 .info-details {
@@ -350,5 +350,6 @@ p {
 
 .route > p {
   color: #071c4b;
+  font-weight: bold;
 }
 </style>
