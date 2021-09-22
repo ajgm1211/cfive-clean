@@ -69657,6 +69657,7 @@ td > .m-checkbox.m-checkbox--single {
 }
 
 .table.table-striped thead th {
+  width: 200px;
   border: 0;
 }
 
@@ -80116,10 +80117,6 @@ body.m-content--skin-light2 {
     z-index: 2;
   }
 
-  .m-brand .m-brand__tools .m-brand__icon {
-    margin-left: 15px;
-  }
-
   .m-brand .m-brand__tools .m-brand__icon .flaticon-more {
     position: relative;
     top: 1px;
@@ -86095,10 +86092,6 @@ a.m-brand__logo-wrapper img {
 .m-brand__logo img {
   height: 30px;
   width: auto;
-}
-
-.m-stack__item.m-stack__item--middle.m-brand__logo {
-  width: 100% !important;
 }
 
 #m_header_nav {
