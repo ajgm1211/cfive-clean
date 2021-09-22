@@ -98,13 +98,18 @@
             <div
               class="detailsbtn"
               style="margin-right: 20px"
+              :aria-controls="'remarks_' + +String(rate.id)"
               v-if="rate.remarks != '<br><br>' && rate.remarks != '<br>'"
               @click="rate.remarksCollapse = !rate.remarksCollapse"
             >
               <b style="margin-right:10px">Remarks</b>
               <b-icon icon="caret-down-fill"></b-icon>
             </div>
-            <div class="detailsbtn" v-b-toggle.collapse-table>
+            <div
+              :aria-controls="'remarks_' + +String(rate.id)"
+              @click="rate.detailCollapse = !rate.detailCollapse"
+              class="detailsbtn"
+            >
               <b style="margin-right:10px">detailed cost</b>
               <b-icon icon="caret-down-fill"></b-icon>
             </div>
@@ -114,11 +119,23 @@
 
       <!--  ADD TO QUOTE BTN  -->
       <div class="d-flex align-items-center justify-content-center">
-        <div class="add-quote-button">add to quote</div>
+        <b-form-checkbox
+          v-model="rate.addToQuote"
+          class="btn-add-quote"
+          name="check-button"
+          button
+          @change="sendQuote(rate)"
+        >
+          <b>add to quote</b>
+        </b-form-checkbox>
       </div>
     </div>
 
-    <b-collapse style="background:white;" id="collapse-table">
+    <b-collapse
+      v-model="rate.detailCollapse"
+      :id="'details_' + String(rate.id)"
+      style="background:white;"
+    >
       <CustomTable
         v-for="(charge, index) in rate.charges"
         :key="index"
@@ -165,6 +182,7 @@ export default {
     };
   },
   mounted() {
+    console.log("rate 1", this.rate);
     this.rate.search.pricelevel != null
       ? (this.fields = [
           "Charge",
@@ -175,6 +193,11 @@ export default {
           "Total",
         ])
       : (this.fields = ["Charge", "Detail", "Amount", "Units", "Total"]);
+  },
+  methods: {
+    sendQuote(rate) {
+      this.$emit("QuoteToAdd", rate);
+    },
   },
 };
 </script>

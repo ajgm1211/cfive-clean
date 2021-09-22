@@ -7,9 +7,10 @@
           v-for="(item, index) in finalRates"
           :key="index"
           :rate="item"
+          @QuoteToAdd="addRateToQuote"
         />
       </div>
-      
+
       <!-- FCL CARD -->
       <div class="col-12 mb-4" v-else-if="searchType == 'FCL'">
         <div class="result-search" v-for="(rate, key) in finalRates" :key="key">
