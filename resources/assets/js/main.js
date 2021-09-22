@@ -1,14 +1,14 @@
 // IMPORTS
 import Vue from "vue";
 import VueRouter from "vue-router";
-import TablePlugin from "bootstrap-vue";
+import {TablePlugin, BootstrapVue} from "bootstrap-vue";
 import Vuelidate from "vuelidate";
 import Main from "../views/Main.vue";
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import VueCkeditor from 'vue-ckeditor5';
 import Api from '../../../resources/js/api'; // Api calls controller
 import '../../../resources/sass/custom_app.scss'
-
+import '../../../resources/js/bootstrap';
 
 
 
@@ -53,6 +53,7 @@ Vue.use(VueRouter);
 Vue.use(TablePlugin);
 Vue.use(Vuelidate);
 Vue.use(VueCkeditor.plugin, options);
+Vue.use(BootstrapVue);
 
 window.api = new Api();
 
