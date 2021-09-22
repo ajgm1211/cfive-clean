@@ -617,7 +617,7 @@
                       <label class="d-flex align-items-center">
                         <b-form-input
                           v-model="addPackagingBar.height"
-                          placeholder="Height"
+                          placeholder="Height (cm)"
                           type="number"
                           class="s-input-form"
                         >
@@ -634,7 +634,7 @@
                       <label class="d-flex align-items-center">
                         <b-form-input
                           v-model="addPackagingBar.width"
-                          placeholder="Width"
+                          placeholder="Width (cm)"
                           class="s-input-form"
                           type="number"
                         >
@@ -651,7 +651,7 @@
                       <label>
                         <b-form-input
                           v-model="addPackagingBar.depth"
-                          placeholder="Length"
+                          placeholder="Length (cm)"
                           class="s-input-form"
                           type="number"
                         ></b-form-input>
@@ -1489,11 +1489,11 @@ export default {
       },
       addPackagingBar: {
         cargoType: "",
-        weight: 1,
-        width: 1,
-        depth: 1,
-        height: 1,
-        quantity: 1,
+        weight: "",
+        width: "",
+        depth: "",
+        height: "",
+        quantity: "",
       },
       selectedContainerGroup: {},
       containers: [],
