@@ -191,6 +191,7 @@ class ContractLclController extends Controller
             'is_manual' => 1
         ]);
 
+        $contract->createCustomCode();
         $contract->ContractCarrierSync($data['carriers']);
 
         return new ContractLclResource($contract);

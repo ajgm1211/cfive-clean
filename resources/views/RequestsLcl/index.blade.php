@@ -105,6 +105,7 @@
                                                 <th >ID</th>
                                                 <th >Company</th>
                                                 <th >Reference</th>
+                                                <th >Code</th>
                                                 <th >Direction</th>
                                                 <th >Carrier</th>
                                                 <th >Contract Validation</th>
@@ -299,6 +300,7 @@
                     { data: 'id', name: 'id' },
                     { data: 'Company', name: 'Company' },
                     { data: 'name', name: 'name' },
+                    { data: 'code', name: 'code' },
                     { data: 'direction', name: 'direction' },
                     { data: 'carrier', name: 'carrier' },
                     { data: 'validation', name: 'validation' },

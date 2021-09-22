@@ -122,6 +122,7 @@
                 /* Table headers */
                 fields: [
                     { key: 'name', label: 'Reference', formatter: value => { return `<p class="truncate-contract" title="${value}">${value}</p>` }, filterIsOpen:false }, 
+                    { key: 'contract_code', label: 'Code', filterIsOpen:false }, 
                     { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badgecarriers(value) }, filterIsOpen:false, filterTrackBy: "name", trackLabel: "name"},
                     { key: 'status', label: 'Status', formatter: value => { return `<span class="status-st ${value}"></span>` }, filterIsOpen:false },
                     { key: 'validity', label: 'Valid From', filterIsOpen:false }, 

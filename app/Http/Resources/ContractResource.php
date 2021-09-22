@@ -21,6 +21,7 @@ class ContractResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'contract_code' => $this->contract_code ?? "---",
             'number' => $this->number,
             'company_user' => $this->companyUser,
             'user_name' => $this->user->fullname ?? $this->user_from_request[0]->fullname ?? "---",
