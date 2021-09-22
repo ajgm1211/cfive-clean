@@ -553,6 +553,12 @@ class QuotationController extends Controller
         }
 
         if ($request->input('pdf_options') != null) {
+
+            $request->validate([
+                'pdf_options.exchangeRates.*.exchangeEUR' => 'gt:0',
+                'pdf_options.exchangeRates.*.exchangeUSD' => 'gt:0',
+            ]);
+
             $quote->update(['pdf_options' => $request->input('pdf_options')]);
         }
 

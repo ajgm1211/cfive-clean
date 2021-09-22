@@ -187,7 +187,7 @@ export default {
             }
 
             if(origin == 'dd'){
-                this.clearDisplay();
+                this.clearDisplay('switch');
             }
         }, 
 
@@ -293,12 +293,12 @@ export default {
                 this.resultsTotal += this.foundRatesLcl.length;
             }
             this.searchDone = true;
-            if(this.apiSearchDone){
+            if(this.apiSearchDone || this.$refs.searchComponent.searchRequest.type == "LCL"){
                 this.$refs.searchComponent.searching = false;
             }
         },
 
-        clearDisplay(){
+        clearDisplay(trigEvent){
             this.foundRates = [];
             this.foundRatesLcl = [];
             this.ratesForQuote = {
@@ -316,7 +316,8 @@ export default {
             }
             this.resultsTotal = 0;
             this.apiSearchDone = false;
-            if(this.$refs.searchComponent.searching == true){
+            this.searching = false;
+            if(trigEvent == "switch"){
                 this.$refs.searchComponent.searching = false;
             }
         },

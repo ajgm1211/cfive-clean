@@ -1919,7 +1919,8 @@ trait QuoteV2Trait
                     if($surcharge == null){
                         $newSurcharge = Surcharge::create([
                             'name' => $charge['chargeCode'],
-                            'description' => 'from API'
+                            'description' => 'from API',
+                            'options' => json_encode(['is_api' => true]),
                         ]);
 
                         $charge['surcharge_id'] = $newSurcharge->id;
