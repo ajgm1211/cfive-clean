@@ -22,6 +22,7 @@ use App\SaleTermV3;
 use App\Surcharge;
 use App\Container;
 use App\Http\Requests\StoreLocalChargeLclQuote;
+use App\PivotLocalChargeQuote;
 use App\Provider;
 
 class LocalChargeQuotationController extends Controller
@@ -247,12 +248,14 @@ class LocalChargeQuotationController extends Controller
             'selectedCharges.*.provider_name' => 'sometimes',
             'selectedCharges.*.currency_id' => 'required'
         ]);
+        
+        $charge_fcl = null;
 
         foreach ($request->selectedCharges as $localcharge) {
             if(!array_key_exists("automatic_rate_id", $localcharge)){
-                $this->storeInCharges($request->quote_id, $request->type_id, $request->port_id, $localcharge);
+                $charge_fcl = $this->storeInCharges($request->quote_id, $request->type_id, $request->port_id, $localcharge);
             }
-            $this->storeInLocalCharges($localcharge, $request->port_id, $request->quote_id, $request->type_id);
+            $this->storeInLocalCharges($localcharge, $request->port_id, $request->quote_id, $request->type_id, $charge_fcl);
         }
 
         return response()->json(['success' => 'Ok']);
@@ -517,7 +520,7 @@ class LocalChargeQuotationController extends Controller
      * @param  mixed $request
      * @return void
      */
-    public function storeInLocalCharges($localcharge, $port, $quote, $type)
+    public function storeInLocalCharges($localcharge, $port, $quote, $type, $charge_fcl)
     {
         $charge = $localcharge['surcharge']['name'];
 
@@ -537,6 +540,7 @@ class LocalChargeQuotationController extends Controller
                 $previous_charge->groupingCharges($localcharge);
                 $previous_charge->sumarize();
                 $previous_charge->totalize();
+                $local_charge = $previous_charge;
             } else {
                 $local_charge = LocalChargeQuote::create([
                     'price' => $localcharge['price'],
@@ -571,6 +575,22 @@ class LocalChargeQuotationController extends Controller
             $local_charge->sumarize();
             $local_charge->totalize();
         }
+
+        if($charge_fcl != null){
+            $charge_data = $charge_fcl;
+        }else{
+            $charge_data = $localcharge;
+        }
+
+        $this->storeInPivotLocalChargeQuote($charge_data, $local_charge);
+    }
+
+    public function storeInPivotLocalChargeQuote($charge, $localcharge){
+        PivotLocalChargeQuote::create([
+            'charge_id' => $charge['id'],
+            'local_charge_quote_id' => $localcharge['id'],
+            'quote_id' => $localcharge['quote_id']
+        ]);
     }
 
     public function storeInCharges($quote, $type, $port, $data)
@@ -581,7 +601,7 @@ class LocalChargeQuotationController extends Controller
 
         $rate = $quote->getRate($type, $port, $carrier_id);
 
-        Charge::create([
+        $charge_fcl = Charge::create([
             'automatic_rate_id' => $rate->id,
             'calculation_type_id' => $data['calculation_type_id'],
             'currency_id' => $data['currency_id'],
@@ -591,6 +611,8 @@ class LocalChargeQuotationController extends Controller
             'markups' => $this->removeCommas($data['markup']),
             'provider_name' => $data['provider_name'] ?? $data['automatic_rate']['carrier']['name'] ?? null,
         ]);
+
+        return $charge_fcl;
     }
     public function destroyAll(Request $request)
     {

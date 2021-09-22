@@ -2,50 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Traits\SearchTrait;
-use App\Http\Traits\QuoteV2Trait;
-use App\User;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\SearchApiResource;
-use App\Http\Resources\RateResource;
-use App\Http\Requests\StoreContractSearch;
-use App\InlandDistance;
-use App\Harbor;
-use App\Direction;
-use App\SearchRate;
-use App\SearchPort;
-use App\SearchCarrier;
+use App\ApiProvider;
+use App\CalculationType;
 use App\Carrier;
 use App\Company;
-use App\TermAndConditionV2;
-use App\DeliveryType;
-use App\Currency;
-use App\TypeDestiny;
-use App\Container;
-use App\GroupContainer;
-use App\ScheduleType;
-use App\Country;
-use App\Rate;
-use App\Contract;
-use App\Price;
-use App\Contact;
-use App\CompanyUser;
-use App\LocalCharge;
-use App\LocalCharCarrier;
-use App\LocalCharPort;
-use App\GlobalCharge;
-use App\TransitTime;
-use App\RemarkCondition;
-use App\Surcharge;
-use App\CalculationType;
-use App\QuoteV2;
 use App\CompanyPrice;
+use App\CompanyUser;
+use App\Contact;
+use App\Container;
+use App\Contract;
 use App\ContractFclFile;
-use App\NewContractRequest;
-use App\ApiProvider;
-use Illuminate\Http\Request;
-use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
+use App\Country;
+use App\Currency;
+use App\DeliveryType;
+use App\Direction;
+use App\GlobalCharge;
+use App\GroupContainer;
+use App\Http\Requests\StoreContractSearch;
+use App\Http\Resources\RateResource;
+use App\Http\Resources\SearchApiResource;
 use App\Http\Traits\MixPanelTrait;
+use App\Http\Traits\QuoteV2Trait;
+use App\Http\Traits\SearchTrait;
+use App\LocalCharge;
+use App\NewContractRequest;
+use App\Price;
+use App\Rate;
+use App\RemarkCondition;
+use App\ScheduleType;
+use App\SearchCarrier;
+use App\SearchPort;
+use App\SearchRate;
+use App\Surcharge;
+use App\TermAndConditionV2;
+use App\TransitTime;
+use App\TypeDestiny;
+use App\User;
+use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
@@ -68,11 +63,10 @@ class SearchApiController extends Controller
     }
 
     //Retrieves last 4 searches made
-    public function list(Request $request)
-    {
+    function list(Request $request) {
         $company_user_id = \Auth::user()->company_user_id;
         //Filtering and pagination
-        $results = SearchRate::where([['company_user_id', $company_user_id],['type','FCL']])->orderBy('id', 'desc')->take(4)->get();
+        $results = SearchRate::where([['company_user_id', $company_user_id], ['type', 'FCL']])->orderBy('id', 'desc')->take(4)->get();
 
         //Grouping as collection to be managed by Vue
         return SearchApiResource::collection($results);
@@ -91,7 +85,7 @@ class SearchApiController extends Controller
             return $carrier->only(['id', 'name', 'image']);
         });
 
-        $carriers_api = ApiProvider::whereIn('id',$company_user->options['api_providers'])->orderBy('name')->get()->map(function ($provider) {
+        $carriers_api = ApiProvider::whereIn('id', $company_user->options['api_providers'])->orderBy('name')->get()->map(function ($provider) {
             return $provider->only(['id', 'name', 'code', 'image']);
         });
 
@@ -111,9 +105,9 @@ class SearchApiController extends Controller
         }
 
         /*$harbors = Harbor::get()->map(function ($harbor) {
-            return $harbor->only(['id', 'display_name', 'code', 'harbor_parent']);
+        return $harbor->only(['id', 'display_name', 'code', 'harbor_parent']);
         });*/
-        $harbors =  \DB::select('call  select_harbors_search');
+        $harbors = \DB::select('call  select_harbors_search');
 
         $delivery_types = DeliveryType::get()->map(function ($delivery_type) {
             return $delivery_type->only(['id', 'name']);
@@ -138,18 +132,18 @@ class SearchApiController extends Controller
         });
 
         /**$countries = Country::get()->map(function ($country){
-            return $country->only(['id','code','name']);
+        return $country->only(['id','code','name']);
         });**/
 
         $price_levels = Price::where('company_user_id', $company_user_id)->get()->map(function ($price) {
             return $price->only(['id', 'name']);
         });
 
-        $surcharges = Surcharge::where('company_user_id', '=', $company_user_id)->get()->map(function ($surcharge) {
-            return $surcharge->only(['id', 'name',]);
+        $surcharges = Surcharge::where('company_user_id', '=', $company_user_id)->orderBy('name', 'asc')->get()->map(function ($surcharge) {
+            return $surcharge->only(['id', 'name']);
         });
 
-        $calculation_type = CalculationType::get()->map(function ($calculationt) {
+        $calculation_type = CalculationType::orderBy('name', 'asc')->get()->map(function ($calculationt) {
             return $calculationt->only(['id', 'name']);
         });
 
@@ -157,22 +151,22 @@ class SearchApiController extends Controller
             return $type->only(['id', 'description']);
         });
 
-        $company_prices = CompanyPrice::get()->map(function ($comprice){
-            return $comprice->only(['id','company_id','price_id']);
+        $company_prices = CompanyPrice::get()->map(function ($comprice) {
+            return $comprice->only(['id', 'company_id', 'price_id']);
         });
 
         $environment_name = $_ENV['APP_ENV'];
 
-        if($environment_name == "production"){
-            $api_url = "https://carriers.cargofive.com/api/pricing";        
-        }else if(in_array($environment_name,["local","prod"])){
-            $api_url = "https://carriersdev.cargofive.com/api/pricing";    
-        }else{
+        if ($environment_name == "production") {
+            $api_url = "https://carriers.cargofive.com/api/pricing";
+        } else if (in_array($environment_name, ["local", "prod"])) {
+            $api_url = "https://carriersdev.cargofive.com/api/pricing";
+        } else {
             $api_url = "https://carriersdev.cargofive.com/api/pricing";
         }
 
         /**$inland_distances = InlandDistance::get()->map(function ($distance){
-            return $distance->only(['id','display_name','harbor_id']);
+        return $distance->only(['id','display_name','harbor_id']);
         });**/
 
         //Collecting all data retrieved
@@ -214,8 +208,6 @@ class SearchApiController extends Controller
         $company_user = $user->companyUser()->first();
         $company_user_id = $company_user->id;
 
-        
-
         $search_array = $request->validate([
             'originPorts' => 'required|array|min:1',
             'destinationPorts' => 'required|array|min:1',
@@ -233,13 +225,10 @@ class SearchApiController extends Controller
             'pricelevel' => 'sometimes',
             'originCharges' => 'sometimes',
             'destinationCharges' => 'sometimes',
+            'showRateCurrency' => 'sometimes',
             'originAddress' => 'sometimes',
-            'destinationAddress' => 'sometimes'
-  
+            'destinationAddress' => 'sometimes',
         ]);
-
-
-
 
         $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'], 0, 10);
         $search_array['dateRange']['endDate'] = substr($search_array['dateRange']['endDate'], 0, 10);
@@ -269,6 +258,12 @@ class SearchApiController extends Controller
             //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
             $this->setChargesPerContainer($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
 
+            //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
+            $charges = $this->joinCharges($charges, $search_ids['client_currency'], $search_ids['selectedContainerGroup']);
+
+            //Appending Rate Id to Charges
+            $this->addChargesToRate($rate, $charges, $search_ids['client_currency']);
+
             //Getting price levels if requested
             if (array_key_exists('pricelevel', $search_array) && $search_array['pricelevel'] != null) {
                 $price_level_markups = $this->searchPriceLevels($search_ids);
@@ -276,12 +271,6 @@ class SearchApiController extends Controller
                 $price_level_markups = [];
             }
 
-            //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
-            $charges = $this->joinCharges($charges, $search_ids['client_currency'], $search_ids['selectedContainerGroup']);
-
-            //Appending Rate Id to Charges
-            $this->addChargesToRate($rate, $charges, $search_ids['client_currency']);
-            
             //Adding price levels
             if ($price_level_markups != null && count($price_level_markups) != 0) {
                 $this->addMarkups($price_level_markups, $rate, $search_ids['client_currency']);
@@ -291,8 +280,8 @@ class SearchApiController extends Controller
                     }
                 }
             }
-            
-            $this->calculateTotals($rate,$search_ids['client_currency']);
+
+            $this->calculateTotals($rate, $search_ids);
 
             $remarks = $this->searchRemarks($rate, $search_ids);
 
@@ -352,7 +341,7 @@ class SearchApiController extends Controller
             'originCharges' => 'sometimes',
             'destinationCharges' => 'sometimes',
             'originAddress' => 'sometimes',
-            'destinationAddress' => 'sometimes'
+            'destinationAddress' => 'sometimes',
         ]);
 
         //Stripping time stamp from date
@@ -417,26 +406,26 @@ class SearchApiController extends Controller
             }
         }
 
-        if(isset($new_search_data_ids['carriers'])){
+        if (isset($new_search_data_ids['carriers'])) {
             foreach ($new_search_data_ids['carriers'] as $carrier_id) {
-                $carrier = Carrier::where('id',$carrier_id)->first();
-                
+                $carrier = Carrier::where('id', $carrier_id)->first();
+
                 $search_carrier = new SearchCarrier();
 
                 $search_carrier->search_rate_id = $new_search->id;
-                
+
                 $search_carrier->provider()->associate($carrier)->save();
             }
         }
 
-        if(isset($new_search_data_ids['carriersApi'])){
+        if (isset($new_search_data_ids['carriersApi'])) {
             foreach ($new_search_data_ids['carriersApi'] as $provider_id) {
-                $provider = ApiProvider::where('id',$provider_id)->first();
-                
+                $provider = ApiProvider::where('id', $provider_id)->first();
+
                 $search_carrier = new SearchCarrier();
-    
+
                 $search_carrier->search_rate_id = $new_search->id;
-                
+
                 $search_carrier->provider()->associate($provider)->save();
             }
         }
@@ -478,11 +467,11 @@ class SearchApiController extends Controller
                 if ($company_user->future_dates == 1) {
                     $q->where(function ($query) use ($dateSince) {
                         $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased','!=',1)->where('gp_container_id', $container_group);
+                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased', '!=', 1)->where('gp_container_id', $container_group);
                 } else {
                     $q->where(function ($query) use ($dateSince, $dateUntil) {
                         $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased','!=',1)->where('gp_container_id', $container_group);
+                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased', '!=', 1)->where('gp_container_id', $container_group);
                 }
             });
         } else {
@@ -494,11 +483,11 @@ class SearchApiController extends Controller
                 if ($company_user->future_dates == 1) {
                     $q->where(function ($query) use ($dateSince) {
                         $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased','!=',1)->where('gp_container_id', $container_group);
+                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased', '!=', 1)->where('gp_container_id', $container_group);
                 } else {
                     $q->where(function ($query) use ($dateSince, $dateUntil) {
                         $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased','!=',1)->where('gp_container_id', $container_group);
+                    })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased', '!=', 1)->where('gp_container_id', $container_group);
                 }
             });
         }
@@ -531,15 +520,15 @@ class SearchApiController extends Controller
     public function searchInlands($data)
     {
         dd($data);
-        /**Tables 
-         - inland additional_kms (extra KM cost)
-         - inland_distances (distancieros)
-         - inland_kms (costs from kms tabs)
-         - inland_ranges (costs from ranges tab)
-         - inland_types (KM or RANGE)
-         - inlands (names and such)
-         - inlandsports (inland+port association)
-         **/
+        /**Tables
+    - inland additional_kms (extra KM cost)
+    - inland_distances (distancieros)
+    - inland_kms (costs from kms tabs)
+    - inland_ranges (costs from ranges tab)
+    - inland_types (KM or RANGE)
+    - inlands (names and such)
+    - inlandsports (inland+port association)
+     **/
     }
 
     //Finds local charges matching contracts
@@ -548,8 +537,8 @@ class SearchApiController extends Controller
         //Creating empty collection for storing charges
         $local_charges = collect([]);
         //Pulling necessary data from the search IDs array
-        $origin_ports = [$rate->origin_port,1485];
-        $destination_ports = [$rate->destiny_port,1485];
+        $origin_ports = [$rate->origin_port, 1485];
+        $destination_ports = [$rate->destiny_port, 1485];
         $origin_countries = [$rate->port_origin->country()->first()->id, 250];
         $destination_countries = [$rate->port_destiny->country()->first()->id, 250];
         $container_ids = $search_ids['containers'];
@@ -604,8 +593,8 @@ class SearchApiController extends Controller
         //Pulling necessary data from the search IDs array
         $validity_start = $search_ids['dateRange']['startDate'];
         $validity_end = $search_ids['dateRange']['endDate'];
-        $origin_ports = [$rate->origin_port,1485];
-        $destination_ports = [$rate->destiny_port,1485];
+        $origin_ports = [$rate->origin_port, 1485];
+        $destination_ports = [$rate->destiny_port, 1485];
         $origin_countries = [$rate->port_origin->country()->first()->id, 250];
         $destination_countries = [$rate->port_destiny->country()->first()->id, 250];
         $company_user_id = $search_ids['company_user'];
@@ -666,13 +655,13 @@ class SearchApiController extends Controller
 
         $origin_country = $rate->port_origin->country()->first();
         $destination_country = $rate->port_destiny->country()->first();
-        $rate_countries_id = [ $origin_country->id, $destination_country->id, 250];
+        $rate_countries_id = [$origin_country->id, $destination_country->id, 250];
 
-        $rate_ports_id = [$rate->origin_port, $rate->destiny_port , 1485];
+        $rate_ports_id = [$rate->origin_port, $rate->destiny_port, 1485];
 
         $rate_carriers_id = [$rate->carrier_id, 26];
         
-        $remarks = RemarkCondition::where('company_user_id', $company_user->id)->whereHas('remarksCarriers', function ($q) use ($rate_carriers_id) {
+        $remarks = RemarkCondition::where('company_user_id', $company_user->id)->where('level', '!=' , 'api' )->whereHas('remarksCarriers', function ($q) use ($rate_carriers_id) {
             $q->whereIn('carrier_id', $rate_carriers_id);
         })->where(function ($query) use ($rate_countries_id, $rate_ports_id) {
             $query->orwhereHas('remarksHarbors', function ($q) use ($rate_ports_id) {
@@ -710,30 +699,30 @@ class SearchApiController extends Controller
         //Retrieving current companyto filter terms
         $company_user = CompanyUser::where('id', $search_data['company_user'])->first();
 
-        $terms = TermAndConditionV2::where([['company_user_id',$company_user->id],['type',$search_data['type']]])->get();
+        $terms = TermAndConditionV2::where([['company_user_id', $company_user->id], ['type', $search_data['type']]])->get();
 
         $terms_english = '';
         $terms_spanish = '';
         $terms_portuguese = '';
 
-        foreach($terms as $term){
+        foreach ($terms as $term) {
 
-            if($search_data['direction'] == 1){
+            if ($search_data['direction'] == 1) {
                 $terms_to_add = $term->import;
-            }else if($search_data['direction'] == 2){
+            } else if ($search_data['direction'] == 2) {
                 $terms_to_add = $term->export;
             }
 
-            if($term->language_id == 1){
+            if ($term->language_id == 1) {
                 $terms_english .= $terms_to_add . '<br>';
-            }else if($term->language_id == 2){
+            } else if ($term->language_id == 2) {
                 $terms_spanish .= $terms_to_add . '<br>';
-            }else if($term->language_id == 3){
+            } else if ($term->language_id == 3) {
                 $terms_portuguese .= $terms_to_add . '<br>';
             }
         }
 
-        $final_terms = ['english' => $terms_english, 'spanish' => $terms_spanish, 'portuguese' => $terms_portuguese ];
+        $final_terms = ['english' => $terms_english, 'spanish' => $terms_spanish, 'portuguese' => $terms_portuguese];
 
         return $final_terms;
     }
@@ -747,7 +736,7 @@ class SearchApiController extends Controller
         $carrier = $rate->carrier_id;
 
         //Querying
-        $transit_time = TransitTime::where([['origin_id',$origin_port],['destination_id',$destination_port]])->whereIn('carrier_id',[$carrier,26])->first();
+        $transit_time = TransitTime::where([['origin_id', $origin_port], ['destination_id', $destination_port]])->whereIn('carrier_id', [$carrier, 26])->first();
 
         return $transit_time;
     }
@@ -762,11 +751,11 @@ class SearchApiController extends Controller
 
             //Looping through charges by type
             foreach ($charge_direction as $charge) {
-                if(!$charge->hide){   
+                if (!$charge->hide) {
                     array_push($rate_charges[$direction], $charge);
                 }
-                
-                if($direction == 'Freight'){
+
+                if ($direction == 'Freight') {
                     if ($charge->joint_as == 'client_currency') {
                         $rate_currency_containers = $this->convertToCurrency($client_currency, $rate->currency, $charge->containers_client_currency);
                         $charge->containers_client_currency = $rate_currency_containers;
@@ -778,9 +767,9 @@ class SearchApiController extends Controller
                 $ocean_freight_array = [
                     'surcharge' => ['name' => 'Ocean Freight'],
                     'containers' => json_decode($rate->containers, true),
-                    'calculationtype' => ['name' => 'Per Container', 'id' => '5'], 
+                    'calculationtype' => ['name' => 'Per Container', 'id' => '5'],
                     'typedestiny_id' => 3,
-                    'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
+                    'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id],
                 ];
 
                 $ocean_freight_collection = collect($ocean_freight_array);
@@ -829,7 +818,7 @@ class SearchApiController extends Controller
             $fixed = $markups_to_add['freight_amount'];
             $percent = $markups_to_add['freight_percentage'];
             $markups_currency = $markups_to_add['freight_currency'];
-            $target_currency = Currency::where('id',$target['currency']['id'])->first();
+            $target_currency = Currency::where('id', $target['currency']['id'])->first();
             $is_eloquent_collection = false;
             //Price arrays from charge
             $target_containers = $target['containers'];
@@ -854,26 +843,26 @@ class SearchApiController extends Controller
                 if ($cost != 0) {
                     //Storing markup and added container price
                     $markups_array[$code] = $fixed_target_currency[0];
-                    $containers_with_markups[$code] = isDecimal($cost,true) + isDecimal($fixed_target_currency[0], true);
-                }else{
+                    $containers_with_markups[$code] = isDecimal($cost, true) + isDecimal($fixed_target_currency[0], true);
+                } else {
                     //Storing cost 0 in final price array
-                    $containers_with_markups[$code] = isDecimal($cost,true);
+                    $containers_with_markups[$code] = isDecimal($cost, true);
                 }
             }
 
             //Looping through totals (client currency) to populate empty arrays
-            if(isset($target_totals)){
+            if (isset($target_totals)) {
                 $fixed_client_currency = $this->convertToCurrency($markups_currency, $client_currency, array($fixed));
 
                 foreach ($target_totals as $code => $cost) {
                     //Checking if total is not 0
                     if ($cost != 0) {
-                        //Storing markup and added total 
+                        //Storing markup and added total
                         $markups_client_currency[$code] = $fixed_client_currency[0];
-                        $totals_with_markups[$code] = isDecimal($cost,true) + isDecimal($fixed_client_currency[0], true);
-                    }else{
+                        $totals_with_markups[$code] = isDecimal($cost, true) + isDecimal($fixed_client_currency[0], true);
+                    } else {
                         //Storing cost 0 in final totals array
-                        $totals_with_markups[$code] = isDecimal($cost,true);
+                        $totals_with_markups[$code] = isDecimal($cost, true);
                     }
                 }
             }
@@ -882,21 +871,21 @@ class SearchApiController extends Controller
             //Calculating percentage of each container and each total price, storing them directly as final markups array
             $markups_array = $this->calculatePercentage($percent, $target_containers);
 
-            foreach($target_containers as $code => $cost){
-                if($cost != 0){
-                    $containers_with_markups[$code] = isDecimal($cost,true) + isDecimal($markups_array[$code],true);
-                }else{
-                    $containers_with_markups[$code] = isDecimal($cost,true);
+            foreach ($target_containers as $code => $cost) {
+                if ($cost != 0) {
+                    $containers_with_markups[$code] = isDecimal($cost, true) + isDecimal($markups_array[$code], true);
+                } else {
+                    $containers_with_markups[$code] = isDecimal($cost, true);
                 }
             }
 
-            if(isset($target_totals)){
+            if (isset($target_totals)) {
                 $markups_client_currency = $this->calculatePercentage($percent, $target_totals);
-    
-                foreach($target_totals as $code => $cost){
-                    if($cost != 0){
-                        $totals_with_markups[$code] = isDecimal($cost,true) + isDecimal($markups_client_currency[$code],true);
-                    }else{
+
+                foreach ($target_totals as $code => $cost) {
+                    if ($cost != 0) {
+                        $totals_with_markups[$code] = isDecimal($cost, true) + isDecimal($markups_client_currency[$code], true);
+                    } else {
                         $totals_with_markups[$code] = isDecimal($cost, true);
                     }
                 }
@@ -906,30 +895,32 @@ class SearchApiController extends Controller
         }
 
         //Appending markups and added containers and totals to rate or charge
-        if($is_eloquent_collection){
+        if ($is_eloquent_collection) {
             $target->setAttribute('container_markups', $markups_array);
             $target->setAttribute('totals_markups', $markups_client_currency);
             $target->setAttribute('containers_with_markups', $containers_with_markups);
             $target->setAttribute('totals_with_markups', $totals_with_markups);
-        }else{
+        } else {
             $target['container_markups'] = $markups_array;
             $target['containers_with_markups'] = $containers_with_markups;
         }
     }
 
-    public function calculateTotals($rate,$client_currency)
+    public function calculateTotals($rate, $search_data)
     {
+        $client_currency = $search_data['client_currency'];
         $charge_type_totals = [];
+        $totals_array_freight_currency = [];
 
-        if (isset($rate->totals_with_markups)){
+        if (isset($rate->totals_with_markups)) {
             $to_update = 'totals_with_markups';
             $totals_array = $rate->totals_with_markups;
-        }else{
+        } else {
             $to_update = 'totals';
             $totals_array = $rate->totals;
         }
 
-        foreach($totals_array as $code => $total) {
+        foreach ($totals_array as $code => $total) {
             $totals_array[$code] = 0;
         }
 
@@ -938,36 +929,40 @@ class SearchApiController extends Controller
             $charge_type_totals[$direction] = [];
             //Looping through charges by type
             foreach ($charge_direction as $charge) {
-                
-                if (is_a($charge,"App\LocalCharge") || is_a($charge,"App\GlobalCharge")) {
 
-                    if(isset($charge->totals_with_markups)){
-                        if($direction == "Freight"){
-                            if($charge->joint_as == "client_currency"){
+                if (is_a($charge, "App\LocalCharge") || is_a($charge, "App\GlobalCharge")) {
+
+                    if (isset($charge->totals_with_markups)) {
+                        if ($direction == "Freight") {
+                            if ($charge->joint_as == "client_currency") {
                                 $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge->totals_with_markups);
                                 $charges_to_add_original = $charge->totals_with_markups;
-                            }else{
+                            } else {
                                 $charges_to_add = $this->convertToCurrency($charge->currency, $client_currency, $charge->containers_with_markups);
                                 $charges_to_add_original = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers_with_markups);
                             }
-                        }else{
+                            $charges_to_add_rate_currency = $charges_to_add_original;
+                        } else {
                             $charges_to_add = $charge->totals_with_markups;
+                            $charges_to_add_rate_currency = $this->convertToCurrency($charge->currency, $rate->currency, $charge->totals_with_markups);
                         }
-                    }else{
-                        if($direction == "Freight"){
-                            if($charge->joint_as == "client_currency"){
+                    } else {
+                        if ($direction == "Freight") {
+                            if ($charge->joint_as == "client_currency") {
                                 $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge->containers_client_currency);
                                 $charges_to_add_original = $charge->containers_client_currency;
-                            }else{
+                            } else {
                                 $charges_to_add = $this->convertToCurrency($charge->currency, $client_currency, $charge->containers);
-                                $charges_to_add_original = $this->convertToCurrency($charge->currency,$rate->currency,$charge->containers);
+                                $charges_to_add_original = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers);
                             }
-                        }else{
+                            $charges_to_add_rate_currency = $charges_to_add_original;
+                        } else {
                             $charges_to_add = $charge->containers_client_currency;
+                            $charges_to_add_rate_currency = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers_client_currency);
                         }
                     }
 
-                    //Looping through current Rate totals 
+                    //Looping through current Rate totals
                     foreach ($totals_array as $code => $total) {
                         //Checking if charge contains each container present in Rate
                         if (isset($charge->containers_client_currency[$code])) {
@@ -977,28 +972,32 @@ class SearchApiController extends Controller
                         if (!isset($charge_type_totals[$direction][$code])) {
                             $charge_type_totals[$direction][$code] = 0;
                         }
+                        if (!isset($totals_array_freight_currency[$code])) {
+                            $totals_array_freight_currency[$code] = 0;
+                        }
+                        $totals_array_freight_currency[$code] += isDecimal($charges_to_add_rate_currency[$code], true);
                         //Add prices from charge to totals by type
-                        if($direction == "Freight"){
-                            $charge_type_totals[$direction][$code] += isDecimal($charges_to_add_original[$code],true);
-                        }else{
-                            $charge_type_totals[$direction][$code] += isDecimal($charges_to_add[$code],true);
+                        if ($direction == "Freight") {
+                            $charge_type_totals[$direction][$code] += isDecimal($charges_to_add_original[$code], true);
+                        } else {
+                            $charge_type_totals[$direction][$code] += isDecimal($charges_to_add[$code], true);
                         }
                     }
 
                     //Updating rate totals to new added array
                     $rate->$to_update = $totals_array;
 
-                }else{
+                } else {
 
-                    if(isset($charge['containers_with_markups'])){
+                    if (isset($charge['containers_with_markups'])) {
                         $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge['containers_with_markups']);
                         $charges_to_add_original = $charge['containers_with_markups'];
-                    }else{
+                    } else {
                         $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge['containers']);
                         $charges_to_add_original = $charge['containers'];
                     }
 
-                    //Looping through current Rate totals 
+                    //Looping through current Rate totals
                     foreach ($totals_array as $code => $total) {
                         //Checking if charge contains each container present in Rate
                         if (isset($charge['containers'][$code])) {
@@ -1008,8 +1007,12 @@ class SearchApiController extends Controller
                         if (!isset($charge_type_totals[$direction][$code])) {
                             $charge_type_totals[$direction][$code] = 0;
                         }
+                        if (!isset($totals_array_freight_currency[$code])) {
+                            $totals_array_freight_currency[$code] = 0;
+                        }
+                        $totals_array_freight_currency[$code] += isDecimal($charges_to_add_original[$code], true);
                         //Add prices from charge to totals by type
-                        $charge_type_totals[$direction][$code] += isDecimal($charges_to_add_original[$code],true);
+                        $charge_type_totals[$direction][$code] += isDecimal($charges_to_add_original[$code], true);
                     }
 
                     //Updating rate totals to new added array
@@ -1021,10 +1024,14 @@ class SearchApiController extends Controller
 
         }
 
-        $totals_freight_currency = $rate->charge_totals_by_type['Freight'];
-        $rate->setAttribute('totals_freight_currency', $totals_freight_currency);
+        if (isset($search_data['showRateCurrency'])) {
+            $rate->setAttribute('totals_freight_currency', $totals_array_freight_currency);
+        } else {
+            $totals_freight_currency = $rate->charge_totals_by_type['Freight'];
+            $rate->setAttribute('totals_freight_currency', $totals_freight_currency);
+        }
 
-        if(isset($rate->totals_with_markups)){
+        if (isset($rate->totals_with_markups)) {
             $totals_with_markups_freight_currency = $this->convertToCurrency($client_currency, $rate->currency, $rate->totals_with_markups);
             $rate->setAttribute('totals_with_markups_freight_currency', $totals_with_markups_freight_currency);
         }
@@ -1033,7 +1040,7 @@ class SearchApiController extends Controller
 
     public function storeContractNewSearch(StoreContractSearch $request)
     {
-           
+
         $data = $request->validate([
             "dataSurcharger.*.type.id" => 'required',
             "dataSurcharger.*.calculation.id" => 'required',
@@ -1106,10 +1113,10 @@ class SearchApiController extends Controller
             $totalItems = count($mediaItems);
             if ($totalItems > 0) {
                 $contractId = $rate->contract->id;
-            }else{
+            } else {
                 $contractId = "0";
             }
-        }else{
+        } else {
             $contractBackupId = "0";
             $contractRequestId = "0";
             $contractId = "0";
@@ -1179,31 +1186,30 @@ class SearchApiController extends Controller
                     $download = Storage::disk('UpLoadFile')->url($contractFile->namefile, $name);
                 }
             }
-            return response()->json(['success' => $success, 'url' => $download,'zip'=>false ]);
+            return response()->json(['success' => $success, 'url' => $download, 'zip' => false]);
         } else {
             $contract = Contract::find($contractId);
             $downloads = $contract->getMedia('document');
             $total = count($downloads);
-            if ($total > 1) {                                         
-                
-                return response()->json(['success' => true, 'url' => $contract->id,'zip'=>true ]);
+            if ($total > 1) {
+
+                return response()->json(['success' => true, 'url' => $contract->id, 'zip' => true]);
             } else {
                 $media = $downloads->first();
                 $mediaItem = Media::find($media->id);
                 //return $mediaItem;
-                if($mediaItem->disk == 'FclRequest'){
-                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/Request/FCL/".$mediaItem->file_name,'zip'=>false ]);
+                if ($mediaItem->disk == 'FclRequest') {
+                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/Request/FCL/" . $mediaItem->file_name, 'zip' => false]);
                 }
-                if($mediaItem->disk == 'contracts3'){
-                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/contract_manual/".$mediaItem->id."/".$mediaItem->file_name,'zip'=>false ]);
+                if ($mediaItem->disk == 'contracts3') {
+                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/contract_manual/" . $mediaItem->id . "/" . $mediaItem->file_name, 'zip' => false]);
                 }
             }
         }
     }
     public function downloadMultipleContractFile(Contract $contract)
     {
-        
-       
+
         //$contract = Contract::find('41029');
         $downloads = $contract->getMedia('document');
         $objeto = MediaStream::create('export.zip')->addMedia($downloads);
@@ -1211,6 +1217,5 @@ class SearchApiController extends Controller
         return $objeto;
 
     }
-
 
 }

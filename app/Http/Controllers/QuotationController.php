@@ -55,7 +55,7 @@ class QuotationController extends Controller
     function list(Request $request)
     {
         $results = ViewQuoteV2::filterByCurrentCompany()->filter($request);
-        
+
         return QuotationListResource::collection($results);
     }
 
@@ -213,22 +213,24 @@ class QuotationController extends Controller
 
         $result_data = $data['results'];
 
-        if(count($rate_data) != 0){
+        if (count($rate_data) != 0) {
             $search_data = $rate_data[0]['search'];
-        }else{
+        } elseif (count($result_data) != 0) {
             $search_data = $result_data[0]['search'];
+            //Setting terms & conditions when is from API
+            $search_data['terms'] = $this->searchTerms($search_data);
         }
 
         $search_data_ids = $this->getIdsFromArray($search_data);
 
-        $equipment = $container_string = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
+        $equipment = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
 
         $remarks = "";
 
         foreach ($rate_data as $rate) {
             $remarks .= $rate['remarks'];
         }
-
+        
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
             'type' => $search_data_ids['type'],
@@ -247,19 +249,20 @@ class QuotationController extends Controller
             'validity_start' => $search_data_ids['dateRange']['startDate'],
             'validity_end' => $search_data_ids['dateRange']['endDate'],
             'status' => 'Draft',
+            'terms_portuguese' => $search_data['terms'] ? $search_data['terms']['portuguese'] : null,
+            'terms_and_conditions' => $search_data['terms'] ? $search_data['terms']['spanish'] : null,
+            'terms_english' => $search_data['terms'] ? $search_data['terms']['english'] : null,
             'direction_id' => $search_data_ids['direction'],
-            'terms_portuguese' => isset($search_data['terms']) ? $search_data['terms']['portuguese'] : null,
-            'terms_and_conditions' => isset($search_data['terms']) ? $search_data['terms']['spanish'] : null,
-            'terms_english' => isset($search_data['terms']) ? $search_data['terms']['english'] : null
+
         ]);
 
         $quote = $quote->fresh();
 
-        if($quote->language_id == 1){
+        if ($quote->language_id == 1) {
             $quote->update(['remarks_english' => $remarks]);
-        }else if($quote->language_id == 2){
+        } else if ($quote->language_id == 2) {
             $quote->update(['remarks_spanish' => $remarks]);
-        }else if($quote->language_id == 3){
+        } else if ($quote->language_id == 3) {
             $quote->update(['remarks_portuguese' => $remarks]);
         }
 
@@ -316,18 +319,18 @@ class QuotationController extends Controller
 
             $result = $this->formatApiResult($result, $search_data['selectedContainerGroup'], $search_data['containers']);
 
-            if(isset($result['validityFrom'])){
+            if (isset($result['validityFrom'])) {
                 $start_date = substr($result['validityFrom'], 0, 10);
-            }else{
+            } else {
                 $start_date = substr($search_data['dateRange']['startDate'], 0, 10);
             }
 
-            if(isset($result['validityTo'])){
+            if (isset($result['validityTo'])) {
                 $end_date = substr($result['validityTo'], 0, 10);
-            }else{
+            } else {
                 $end_date = substr($search_data['dateRange']['endDate'], 0, 10);
             }
-
+            
             $newRate = AutomaticRate::create([
                 'quote_id' => $quote->id,
                 'contract' => $result['contractReference'] ?? $result['quoteLine'],
@@ -375,6 +378,37 @@ class QuotationController extends Controller
         return new QuotationResource($quote);
     }
 
+    //Retrieves Terms and Conditions
+    public function searchTerms($search_data)
+    {
+        $terms = TermAndConditionV2::where([['company_user_id', \Auth::user()->company_user_id], ['type', $search_data['type']]])->get();
+
+        $terms_english = '';
+        $terms_spanish = '';
+        $terms_portuguese = '';
+
+        foreach ($terms as $term) {
+
+            if ($search_data['direction'] == 1) {
+                $terms_to_add = $term->import;
+            } else if ($search_data['direction'] == 2) {
+                $terms_to_add = $term->export;
+            }
+
+            if ($term->language_id == 1) {
+                $terms_english .= $terms_to_add . '<br>';
+            } else if ($term->language_id == 2) {
+                $terms_spanish .= $terms_to_add . '<br>';
+            } else if ($term->language_id == 3) {
+                $terms_portuguese .= $terms_to_add . '<br>';
+            }
+        }
+
+        $final_terms = ['english' => $terms_english, 'spanish' => $terms_spanish, 'portuguese' => $terms_portuguese];
+
+        return $final_terms;
+    }
+
     public function edit(Request $request, QuoteV2 $quote)
     {
         $this->validateOldQuote($quote);
@@ -383,11 +417,11 @@ class QuotationController extends Controller
     }
 
     public function update(Request $request, QuoteV2 $quote)
-    { 
+    {
         $form_keys = $request->input('keys');
 
         $terms_keys = ['terms_and_conditions', 'terms_portuguese', 'terms_english', 'remarks_spanish', 'remarks_portuguese', 'remarks_english'];
-        
+
         if ($form_keys != null) {
             if (array_intersect($terms_keys, $form_keys) == [] && $request->input('cargo_type_id') == null) {
                 $data = $request->validate([
@@ -411,7 +445,7 @@ class QuotationController extends Controller
                     'total_weight' => 'sometimes|nullable|numeric',
                     'chargeable_weight' => 'sometimes|nullable',
                 ]);
-            } 
+            }
             // else if ($request->input('cargo_type_id') != null) {
             //     $data = $request->validate([
             //         'cargo_type_id' => 'nullable',
@@ -487,45 +521,52 @@ class QuotationController extends Controller
             $quote->update(['pdf_options' => $request->input('pdf_options')]);
         }
 
-        if(isset($request['total_quantity']) || isset($request['total_volume']) || isset($request['total_weight'])){
+        if (isset($request['total_quantity']) || isset($request['total_volume']) || isset($request['total_weight'])) {
 
-            $calc_volume=floatval($request['total_volume']);
-            $calc_weight=floatval($request['total_weight'])/1000;
+            $calc_volume = floatval($request['total_volume']);
+            $calc_weight = floatval($request['total_weight']) / 1000;
 
             $quote->update(['total_quantity' => $request['total_quantity']]);
             $quote->update(['total_volume' => $request['total_volume']]);
             $quote->update(['total_weight' => $request['total_weight']]);
-            if($calc_volume > $calc_weight){
+            if ($calc_volume > $calc_weight) {
                 $quote->update(['chargeable_weight' => $request['total_volume']]);
-            }else{
+            } else {
                 $quote->update(['chargeable_weight' => $request['total_weight']]);
             }
         }
-    
     }
 
     public function updateSearchOptions(Request $request, QuoteV2 $quote)
     {
         $search_data = $request->input();
 
-        $date_range = $search_data['dateRange'];
-        $start_date = substr($date_range['startDate'], 0, 10);
-        $end_date = substr($date_range['endDate'], 0, 10);
+        if(isset($search_data['renew'])){
+            $quote->update(['search_options' => null]);
+        }else{
+            $date_range = $search_data['dateRange'];
+            $start_date = substr($date_range['startDate'], 0, 10);
+            $end_date = substr($date_range['endDate'], 0, 10);
+    
+            $contact = $search_data['contact'];
+            $company = $search_data['company'];
+    
+            $price_level = $search_data['pricelevel'];
+    
+            $origin_charges = $search_data['originCharges'];
+            $destination_charges = $search_data['destinationCharges'];
+            $show_rate_currency = $search_data['showRateCurrency'];
+    
+            $origin_ports = $search_data['originPorts'];
+            $destination_ports = $search_data['destinationPorts'];
+    
+            $search_options = compact(
+                'start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges', 
+                'origin_ports', 'destination_ports', 'show_rate_currency');
+    
+            $quote->update(['search_options' => $search_options, 'direction_id' => $search_data['direction']]);
+        }
 
-        $contact = $search_data['contact'];
-        $company = $search_data['company'];
-
-        $price_level = $search_data['pricelevel'];
-
-        $origin_charges = $search_data['originCharges'];
-        $destination_charges = $search_data['destinationCharges'];
-
-        $origin_ports = $search_data['originPorts'];
-        $destination_ports = $search_data['destinationPorts'];
-
-        $search_options = compact('start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges', 'origin_ports', 'destination_ports');
-
-        $quote->update(['search_options' => $search_options, 'direction_id' => $search_data['direction']]);
     }
 
     public function destroy(QuoteV2 $quote)
@@ -542,7 +583,7 @@ class QuotationController extends Controller
 
     public function duplicate(QuoteV2 $quote)
     {
-        
+
         $new_quote = $quote->duplicate();
 
         $new_quote->update([
@@ -559,9 +600,9 @@ class QuotationController extends Controller
         $rate_data = $data['rates'];
         $result_data = $data['results'];
 
-        if(count($rate_data) != 0){
+        if (count($rate_data) != 0) {
             $search_data = $rate_data[0]['search'];
-        }else{
+        } else {
             $search_data = $result_data[0]['search'];
         }
 
@@ -602,7 +643,7 @@ class QuotationController extends Controller
         }
 
         //Setting Automatic Rates
-        $rate_ports = [ 'origin' => [], 'destination' => [] ];
+        $rate_ports = ['origin' => [], 'destination' => []];
 
         foreach ($rate_data as $rate) {
 
@@ -657,15 +698,15 @@ class QuotationController extends Controller
 
             $result = $this->formatApiResult($result, $search_data['selectedContainerGroup'], $search_data['containers']);
 
-            if(isset($result['validityFrom'])){
+            if (isset($result['validityFrom'])) {
                 $start_date = substr($result['validityFrom'], 0, 10);
-            }else{
+            } else {
                 $start_date = substr($search_data['dateRange']['startDate'], 0, 10);
             }
 
-            if(isset($result['validityTo'])){
+            if (isset($result['validityTo'])) {
                 $end_date = substr($result['validityTo'], 0, 10);
-            }else{
+            } else {
                 $end_date = substr($search_data['dateRange']['endDate'], 0, 10);
             }
 
@@ -713,76 +754,78 @@ class QuotationController extends Controller
         //Deleting Inlands without ports in rates
         $inlands = $new_quote->inland_addresses()->get();
 
-        foreach($inlands as $inland){
-            if($inland->type == "Origin"){
-                if(!in_array($inland->port_id, $rate_ports['origin'])){
+        foreach ($inlands as $inland) {
+            if ($inland->type == "Origin") {
+                if (!in_array($inland->port_id, $rate_ports['origin'])) {
                     $inland->delete();
                 }
-            }elseif($inland->type == "Destination"){
-                if(!in_array($inland->port_id, $rate_ports['destination'])){
+            } elseif ($inland->type == "Destination") {
+                if (!in_array($inland->port_id, $rate_ports['destination'])) {
                     $inland->delete();
                 }
-            } 
+            }
         }
 
         $inlands = $new_quote->inland_addresses()->get();
 
         //Deleting Local Charges without ports in rates
-        $local_charge_quotes = $quote->local_charges()->get();
-        
-        foreach($local_charge_quotes as $localcharge){
-            if($localcharge->type_id == 1){
-                if(!in_array($localcharge->port_id, $rate_ports['origin'])){
+        $local_charge_quotes = $new_quote->local_charges()->get();
+
+        foreach ($local_charge_quotes as $localcharge) {
+            if ($localcharge->type_id == 1) {
+                if (!in_array($localcharge->port_id, $rate_ports['origin'])) {
                     $localcharge->delete();
                 }
-            }elseif($localcharge->type_id == 2){
-                if(!in_array($localcharge->port_id, $rate_ports['destination'])){
+            } elseif ($localcharge->type_id == 2) {
+                if (!in_array($localcharge->port_id, $rate_ports['destination'])) {
                     $localcharge->delete();
                 }
-            } 
+            }
         }
 
-        if($new_quote->type == "FCL"){
+        if ($new_quote->type == "FCL") {
             $locals = $new_quote->local_charges_totals()->get();
-        }elseif($new_quote->type == "FCL"){
+        } elseif ($new_quote->type == "LCL") {
             $locals = $new_quote->local_charges_lcl_totals()->get();
         }
 
-        foreach($locals as $local){
-            if($local->type_id == 1){
-                if(!in_array($local->port_id, $rate_ports['origin'])){
+        foreach ($locals as $local) {
+            if ($local->type_id == 1) {
+                if (!in_array($local->port_id, $rate_ports['origin'])) {
                     $local->delete();
                 }
-            }elseif($local->type_id == 2){
-                if(!in_array($local->port_id, $rate_ports['destination'])){
+            } elseif ($local->type_id == 2) {
+                if (!in_array($local->port_id, $rate_ports['destination'])) {
                     $local->delete();
                 }
-            } 
+            }
         }
 
         $quote->update(['search_options' => null]);
         $new_quote->update(['search_options' => null]);
 
-        $newLocalcharges=$new_quote->local_charges;
+        $newLocalcharges = $new_quote->local_charges;
 
-        foreach($new_quote->automatic_inland_totals as $automaticInlnadT){
-            if($automaticInlnadT["pdf_options"]["groupId"]!=null){
-                foreach ($newLocalcharges as $local){
+        foreach ($new_quote->automatic_inland_totals as $automaticInlnadT) {
+            if ($automaticInlnadT["pdf_options"]["groupId"] != null) {
+                foreach ($newLocalcharges as $local) {
                     $localcharges = LocalChargeQuote::findOrFail($automaticInlnadT["pdf_options"]["groupId"]);
-                    $igual=array_diff($localcharges['price'],$local['price']);
-                    if(count($igual)==0 && $local['surcharge_id']==$localcharges['surcharge_id'] && $local['calculation_type_id']==$localcharges['calculation_type_id'] 
-                    && $local['type_id']==$localcharges['type_id'] && isset($local['provider_name'])==isset($localcharges['provider_name']) && $local['charge']==$localcharges['charge']){
-                        $localcharges=AutomaticInlandTotal::findOrFail($automaticInlnadT->id);
+                    $igual = array_diff($localcharges['price'], $local['price']);
+                    if (
+                        count($igual) == 0 && $local['surcharge_id'] == $localcharges['surcharge_id'] && $local['calculation_type_id'] == $localcharges['calculation_type_id']
+                        && $local['type_id'] == $localcharges['type_id'] && isset($local['provider_name']) == isset($localcharges['provider_name']) && $local['charge'] == $localcharges['charge']
+                    ) {
+                        $localcharges = AutomaticInlandTotal::findOrFail($automaticInlnadT->id);
                         $pdfOptions = [
-                            "groupId"=> $local->id,
-                            "grouped"=> true
+                            "groupId" => $local->id,
+                            "grouped" => true
                         ];
                         $localcharges->pdf_options = $pdfOptions;
                         $localcharges->update();
                     }
                 }
             }
-        }    
+        }
 
         return new QuotationResource($new_quote);
     }
