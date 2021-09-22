@@ -4526,6 +4526,8 @@ export default {
             totalPerCont.total -
             responseData.pricingDetails.totalRatePerType.totalRateOrigin[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total;
 
+            newTotal = newTotal.toFixed(2);
+
           responseData.pricingDetails.totalRatePerContainer[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total = newTotal;
         });
 
@@ -4540,6 +4542,8 @@ export default {
           newTotal =
             totalPerCont.total -
             responseData.pricingDetails.totalRatePerType.totalRateDestination[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total;
+
+            newTotal = newTotal.toFixed(2);
 
           responseData.pricingDetails.totalRatePerContainer[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total = newTotal;
         });
