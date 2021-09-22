@@ -25,7 +25,7 @@
             <img
               :src="
                 'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
-                cmaResult.image
+                  cmaResult.image
               "
               alt="logo"
               width="115px"
@@ -67,9 +67,7 @@
               </h6>
             </div>
             <!-- FIN CONTRACT NAME -->
-            <div class="col-lg-2 col-12 text-center">
-
-            </div>
+            <div class="col-lg-2 col-12 text-center"></div>
             <!-- RUTA Y PRECIOS -->
             <div
               class="row col-12 mr-0 ml-0"
@@ -86,7 +84,9 @@
                   <p class="mb-0">
                     {{ cmaResult.departureName }}
                   </p>
-                  <p v-if="cmaResult.departureDateGmt">{{ cmaResult.departureDateGmt.substring(0, 10) }}</p>
+                  <p v-if="cmaResult.departureDateGmt">
+                    {{ cmaResult.departureDateGmt.substring(0, 10) }}
+                  </p>
                 </div>
                 <!-- FIN ORGIEN -->
 
@@ -127,7 +127,9 @@
                   <p class="mb-0">
                     {{ cmaResult.arrivalName }}
                   </p>
-                  <p v-if="cmaResult.arrivalDateGmt">{{ cmaResult.arrivalDateGmt.substring(0, 10) }}</p>
+                  <p v-if="cmaResult.arrivalDateGmt">
+                    {{ cmaResult.arrivalDateGmt.substring(0, 10) }}
+                  </p>
                 </div>
                 <!-- FIN DESTINO -->
               </div>
@@ -146,7 +148,9 @@
                     <p class="mb-1">
                       {{ cmaResult.departureName }}
                     </p>
-                    <p v-if="cmaResult.departureDateGmt">{{ cmaResult.departureDateGmt.substring(0, 10) }}</p>
+                    <p v-if="cmaResult.departureDateGmt">
+                      {{ cmaResult.departureDateGmt.substring(0, 10) }}
+                    </p>
                   </div>
                   <!-- FIN ORGIEN -->
 
@@ -156,7 +160,9 @@
                     <p class="mb-1">
                       {{ cmaResult.arrivalName }}
                     </p>
-                    <p v-if="cmaResult.arrivalDateGmt">{{ cmaResult.arrivalDateGmt.substring(0, 10) }}</p>
+                    <p v-if="cmaResult.arrivalDateGmt">
+                      {{ cmaResult.arrivalDateGmt.substring(0, 10) }}
+                    </p>
                   </div>
                   <!-- FIN DESTINO -->
                 </div>
@@ -236,8 +242,8 @@
                   <b style="font-size:11px;">VALIDITY:</b>
                   {{
                     cmaResult.validityFrom.substring(0, 10) +
-                    " / " +
-                    cmaResult.validityTo.substring(0, 10)
+                      " / " +
+                      cmaResult.validityTo.substring(0, 10)
                   }}
                 </p>
 
@@ -247,9 +253,10 @@
                   class="pophover-name-account ml-3 mb-0 mt-1"
                   style="border:none !important"
                 >
-                  <b style="font-size:11px; color:#212529;">COMMODITIES</b> &nbsp;<b-icon icon="box"></b-icon>
-              </b-button>
-              <b-popover
+                  <b style="font-size:11px; color:#212529;">COMMODITIES</b>
+                  &nbsp;<b-icon icon="box"></b-icon>
+                </b-button>
+                <b-popover
                   :target="'popover-name-commodity-' + cmaResultKey"
                   triggers="hover"
                   placement="top"
@@ -261,7 +268,7 @@
                       {{ data.name }}
                     </li>
                   </ul>
-              </b-popover>
+                </b-popover>
               </div>
 
               <div class="d-flex justify-content-end align-items-center">
@@ -269,9 +276,9 @@
                   class="rs-btn"
                   v-b-toggle="
                     'schedules_' +
-                    String(cmaResult.contractReference) +
-                    '_' +
-                    String(cmaResult.accordion_id)
+                      String(cmaResult.contractReference) +
+                      '_' +
+                      String(cmaResult.accordion_id)
                   "
                   ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
                 ></b-button>
@@ -279,9 +286,9 @@
                   class="rs-btn"
                   v-b-toggle="
                     'details_' +
-                    String(cmaResult.contractReference) +
-                    '_' +
-                    String(cmaResult.accordion_id)
+                      String(cmaResult.contractReference) +
+                      '_' +
+                      String(cmaResult.accordion_id)
                   "
                   ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
                 ></b-button>
@@ -325,9 +332,9 @@
           <b-collapse
             :id="
               'details_' +
-              String(cmaResult.contractReference) +
-              '_' +
-              String(cmaResult.accordion_id)
+                String(cmaResult.contractReference) +
+                '_' +
+                String(cmaResult.accordion_id)
             "
             class="pt-5 pb-5 pl-5 pr-5 col-12"
             :accordion="'my-accordion-' + cmaResult.accordion_id"
@@ -345,9 +352,9 @@
                     .substring(0, cmaSurchargeKey.length - 10)
                     .charAt(0)
                     .toUpperCase() +
-                  cmaSurchargeKey
-                    .substring(0, cmaSurchargeKey.length - 10)
-                    .slice(1)
+                    cmaSurchargeKey
+                      .substring(0, cmaSurchargeKey.length - 10)
+                      .slice(1)
                 }}</b>
               </h5>
 
@@ -360,9 +367,8 @@
                         <b-th></b-th> -->
                     <b-th
                       style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
-                      v-for="(
-                        requestContainer, rContainerKey
-                      ) in request.containers"
+                      v-for="(requestContainer,
+                      rContainerKey) in request.containers"
                       :key="rContainerKey"
                       >{{ requestContainer.code }}
                     </b-th>
@@ -387,9 +393,8 @@
                     <!-- <b-td></b-td>
                         <b-td></b-td> -->
                     <b-td
-                      v-for="(
-                        cmaSurchargeContainer, cmaContainerKey
-                      ) in cmaSurchargeName.containers"
+                      v-for="(cmaSurchargeContainer,
+                      cmaContainerKey) in cmaSurchargeName.containers"
                       :key="cmaContainerKey"
                       ><p>
                         <b
@@ -412,9 +417,9 @@
                             .substring(0, cmaSurchargeKey.length - 10)
                             .charAt(0)
                             .toUpperCase() +
-                          cmaSurchargeKey
-                            .substring(0, cmaSurchargeKey.length - 10)
-                            .slice(1)
+                            cmaSurchargeKey
+                              .substring(0, cmaSurchargeKey.length - 10)
+                              .slice(1)
                         }}</b
                       ></b-td
                     >
@@ -448,9 +453,9 @@
           <b-collapse
             :id="
               'schedules_' +
-              String(cmaResult.contractReference) +
-              '_' +
-              String(cmaResult.accordion_id)
+                String(cmaResult.contractReference) +
+                '_' +
+                String(cmaResult.accordion_id)
             "
             class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
             :accordion="'my-accordion-' + cmaResult.accordion_id"
@@ -552,7 +557,9 @@
                         <!-- DESTINO -->
                         <div class="destination ml-4">
                           <span>destination</span>
-                          <p class="mb-0">{{ route.details.slice(-1)[0].arrivalName }}</p>
+                          <p class="mb-0">
+                            {{ route.details.slice(-1)[0].arrivalName }}
+                          </p>
                           <p v-if="route.details[0].arrivalDateGmt">
                             {{
                               route.details[0].arrivalDateGmt.substring(0, 10)
@@ -599,8 +606,8 @@
                             <p class="text-schedule">
                               {{
                                 route.details[0].vehiculeName +
-                                " / " +
-                                route.details[0].voyageNumber
+                                  " / " +
+                                  route.details[0].voyageNumber
                               }}
                             </p>
                           </li>
@@ -625,11 +632,11 @@
                             <p class="text-schedule">
                               {{
                                 cmaDeadline.deadline.substring(0, 10) +
-                                " " +
-                                cmaDeadline.deadline.substring(
-                                  11,
-                                  cmaDeadline.deadline.length - 4
-                                )
+                                  " " +
+                                  cmaDeadline.deadline.substring(
+                                    11,
+                                    cmaDeadline.deadline.length - 4
+                                  )
                               }}
                             </p>
                           </li>
@@ -690,9 +697,9 @@
                 <b-button
                   v-b-toggle="
                     'responsiveCollapse_' +
-                    cmaResult.accordion_id +
-                    '_' +
-                    routeKey
+                      cmaResult.accordion_id +
+                      '_' +
+                      routeKey
                   "
                   style="width: 100%"
                 >
@@ -753,9 +760,9 @@
                 <b-collapse
                   :id="
                     'responsiveCollapse_' +
-                    cmaResult.accordion_id +
-                    '_' +
-                    routeKey
+                      cmaResult.accordion_id +
+                      '_' +
+                      routeKey
                   "
                   class="mt-2"
                 >
@@ -791,8 +798,8 @@
                                 <p class="text-schedule">
                                   {{
                                     route.details[0].vehiculeName +
-                                    " / " +
-                                    route.details[0].voyageNumber
+                                      " / " +
+                                      route.details[0].voyageNumber
                                   }}
                                 </p>
                               </li>
@@ -818,11 +825,11 @@
                                 <p class="text-schedule">
                                   {{
                                     cmaDeadline.deadline.substring(0, 10) +
-                                    " " +
-                                    cmaDeadline.deadline.substring(
-                                      11,
-                                      cmaDeadline.deadline.length - 4
-                                    )
+                                      " " +
+                                      cmaDeadline.deadline.substring(
+                                        11,
+                                        cmaDeadline.deadline.length - 4
+                                      )
                                   }}
                                 </p>
                               </li>
@@ -837,9 +844,8 @@
                             </h5>
                             <ul>
                               <li
-                                v-for="(
-                                  routeDetail, detailKey
-                                ) in route.details"
+                                v-for="(routeDetail,
+                                detailKey) in route.details"
                                 :key="detailKey"
                               >
                                 <div>
@@ -916,7 +922,7 @@
             <img
               :src="
                 'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
-                result.image
+                  result.image
               "
               alt="logo"
               width="115px"
@@ -1196,7 +1202,7 @@
                   .substring(0, surchargeKey.length - 10)
                   .charAt(0)
                   .toUpperCase() +
-                surchargeKey.substring(0, surchargeKey.length - 10).slice(1)
+                  surchargeKey.substring(0, surchargeKey.length - 10).slice(1)
               }}</b>
             </h5>
 
@@ -1209,9 +1215,8 @@
                         <b-th></b-th> -->
                   <b-th
                     style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
-                    v-for="(
-                      requestContainer, rContainerKey
-                    ) in request.containers"
+                    v-for="(requestContainer,
+                    rContainerKey) in request.containers"
                     :key="rContainerKey"
                   >
                     {{ requestContainer.code }}
@@ -1237,9 +1242,8 @@
                   <!-- <b-td></b-td>
                         <b-td></b-td> -->
                   <b-td
-                    v-for="(
-                      surchargeContainer, containerKey
-                    ) in surchargeName.containers"
+                    v-for="(surchargeContainer,
+                    containerKey) in surchargeName.containers"
                     :key="containerKey"
                     ><p>
                       <b
@@ -1262,9 +1266,9 @@
                           .substring(0, surchargeKey.length - 10)
                           .charAt(0)
                           .toUpperCase() +
-                        surchargeKey
-                          .substring(0, surchargeKey.length - 10)
-                          .slice(1)
+                          surchargeKey
+                            .substring(0, surchargeKey.length - 10)
+                            .slice(1)
                       }}</b
                     ></b-td
                   >
@@ -1294,7 +1298,7 @@
           <div
             v-if="
               result.additionalData.penaltyFees != null &&
-              result.additionalData.penaltyFees.length > 0
+                result.additionalData.penaltyFees.length > 0
             "
           >
             <h5>
@@ -1308,9 +1312,8 @@
                   <b-th style="width: 325px"></b-th>
                   <b-th
                     style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
-                    v-for="(
-                      requestContainer, rContainerKey
-                    ) in request.containers"
+                    v-for="(requestContainer,
+                    rContainerKey) in request.containers"
                     :key="rContainerKey"
                     >{{ requestContainer.code }}</b-th
                   >
@@ -1327,9 +1330,8 @@
                   >
                   <b-td style="width: 325px"></b-td>
                   <b-td
-                    v-for="(
-                      maerskContainer, maerskContainerKey
-                    ) in containerCodesMaerskPenalties"
+                    v-for="(maerskContainer,
+                    maerskContainerKey) in containerCodesMaerskPenalties"
                     :key="maerskContainerKey"
                     ><p>
                       <b
@@ -1491,10 +1493,10 @@
                         >
                           {{
                             trans.departureName +
-                            " - " +
-                            trans.arrivalName +
-                            " : " +
-                            trans.arrivalDateGmt.substring(0, 10)
+                              " - " +
+                              trans.arrivalName +
+                              " : " +
+                              trans.arrivalDateGmt.substring(0, 10)
                           }}
                         </li>
                       </ul>
@@ -1549,10 +1551,10 @@
                 >
                   {{
                     trans.departureName +
-                    " - " +
-                    trans.arrivalName +
-                    " : " +
-                    trans.arrivalDateGmt.substring(0, 10)
+                      " - " +
+                      trans.arrivalName +
+                      " : " +
+                      trans.arrivalDateGmt.substring(0, 10)
                   }}
                 </li>
               </ul>
@@ -1587,9 +1589,8 @@
                   <b-th></b-th>
                   <b-th
                     style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
-                    v-for="(
-                      requestContainer, rContainerKey
-                    ) in request.containers"
+                    v-for="(requestContainer,
+                    rContainerKey) in request.containers"
                     :key="rContainerKey"
                     >{{ requestContainer.code }}</b-th
                   >
@@ -1598,9 +1599,8 @@
 
               <b-tbody>
                 <b-tr
-                  v-for="(
-                    detention, detentionKey
-                  ) in result.formattedDetentions"
+                  v-for="(detention,
+                  detentionKey) in result.formattedDetentions"
                   :key="detentionKey"
                 >
                   <b-td
@@ -1611,9 +1611,8 @@
                   >
                   <b-td></b-td>
                   <b-td
-                    v-for="(
-                      maerskContainer, maerskContainerKey
-                    ) in containerCodesMaerskDetentions"
+                    v-for="(maerskContainer,
+                    maerskContainerKey) in containerCodesMaerskDetentions"
                     :key="maerskContainerKey"
                     ><p>{{ detention[maerskContainer] }}</p></b-td
                   >
@@ -1709,7 +1708,7 @@
             <img
               :src="
                 'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
-                evergreenResult.image
+                  evergreenResult.image
               "
               alt="logo"
               width="115px"
@@ -1864,9 +1863,9 @@
                   <div
                     class="col-2 pl-0 pr-0 prices-card-res"
                     :class="countContainersClass()"
-                    v-for="(
-                      evergreenGlobalTotal, evergreenTotalKey
-                    ) in evergreenResult.pricingDetails.totalRatePerContainer"
+                    v-for="(evergreenGlobalTotal,
+                    evergreenTotalKey) in evergreenResult.pricingDetails
+                      .totalRatePerContainer"
                     :key="evergreenTotalKey"
                   >
                     <p>
@@ -1889,14 +1888,20 @@
             <div class="col-12 mt-3 mb-3 result-action">
               <div class="d-flex align-items-center">
                 <span style="color: #006bfa; text-transform: capitalize"
-                  ><b-icon icon="check-circle-fill"></b-icon> EVERGREEN SPOT</span
+                  ><b-icon icon="check-circle-fill"></b-icon> EVERGREEN
+                  SPOT</span
                 >
-                <p class="ml-4 mb-0" v-if="evergreenResult.validityFrom && evergreenResult.validityTo">
+                <p
+                  class="ml-4 mb-0"
+                  v-if="
+                    evergreenResult.validityFrom && evergreenResult.validityTo
+                  "
+                >
                   <b style="font-size:11px;">VALIDITY:</b>
                   {{
                     evergreenResult.validityFrom.substring(0, 10) +
-                    " / " +
-                    evergreenResult.validityTo.substring(0, 10)
+                      " / " +
+                      evergreenResult.validityTo.substring(0, 10)
                   }}
                 </p>
               </div>
@@ -1906,9 +1911,9 @@
                   class="rs-btn"
                   v-b-toggle="
                     'schedules_' +
-                    String(evergreenResult.contractReference) +
-                    '_' +
-                    String(evergreenResult.accordion_id)
+                      String(evergreenResult.contractReference) +
+                      '_' +
+                      String(evergreenResult.accordion_id)
                   "
                   ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
                 ></b-button>
@@ -1916,9 +1921,9 @@
                   class="rs-btn"
                   v-b-toggle="
                     'details_' +
-                    String(evergreenResult.contractReference) +
-                    '_' +
-                    String(evergreenResult.accordion_id)
+                      String(evergreenResult.contractReference) +
+                      '_' +
+                      String(evergreenResult.accordion_id)
                   "
                   ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
                 ></b-button>
@@ -1962,9 +1967,9 @@
           <b-collapse
             :id="
               'details_' +
-              String(evergreenResult.contractReference) +
-              '_' +
-              String(evergreenResult.accordion_id)
+                String(evergreenResult.contractReference) +
+                '_' +
+                String(evergreenResult.accordion_id)
             "
             class="pt-5 pb-5 pl-5 pr-5 col-12"
             :accordion="'my-accordion-' + evergreenResult.accordion_id"
@@ -1972,9 +1977,9 @@
             v-model="evergreenResult.detailCollapse"
           >
             <div
-              v-for="(
-                evergreenSurchargeType, evergreenSurchargeKey
-              ) in evergreenResult.pricingDetails.surcharges"
+              v-for="(evergreenSurchargeType,
+              evergreenSurchargeKey) in evergreenResult.pricingDetails
+                .surcharges"
               :key="evergreenSurchargeKey"
             >
               <h5>
@@ -1983,9 +1988,9 @@
                     .substring(0, evergreenSurchargeKey.length - 10)
                     .charAt(0)
                     .toUpperCase() +
-                  evergreenSurchargeKey
-                    .substring(0, evergreenSurchargeKey.length - 10)
-                    .slice(1)
+                    evergreenSurchargeKey
+                      .substring(0, evergreenSurchargeKey.length - 10)
+                      .slice(1)
                 }}</b>
               </h5>
 
@@ -1998,9 +2003,8 @@
                           <b-th></b-th> -->
                     <b-th
                       style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
-                      v-for="(
-                        requestContainer, rContainerKey
-                      ) in request.containers"
+                      v-for="(requestContainer,
+                      rContainerKey) in request.containers"
                       :key="rContainerKey"
                       >{{ requestContainer.code }}
                     </b-th>
@@ -2009,9 +2013,8 @@
 
                 <b-tbody>
                   <b-tr
-                    v-for="(
-                      evergreenSurchargeName, evergreenNameKey
-                    ) in evergreenSurchargeType"
+                    v-for="(evergreenSurchargeName,
+                    evergreenNameKey) in evergreenSurchargeType"
                     :key="evergreenNameKey"
                   >
                     <b-td
@@ -2027,9 +2030,8 @@
                     <!-- <b-td></b-td>
                           <b-td></b-td> -->
                     <b-td
-                      v-for="(
-                        evergreenSurchargeContainer, evergreenContainerKey
-                      ) in evergreenSurchargeName.containers"
+                      v-for="(evergreenSurchargeContainer,
+                      evergreenContainerKey) in evergreenSurchargeName.containers"
                       :key="evergreenContainerKey"
                       ><p>
                         <b
@@ -2052,16 +2054,16 @@
                             .substring(0, evergreenSurchargeKey.length - 10)
                             .charAt(0)
                             .toUpperCase() +
-                          evergreenSurchargeKey
-                            .substring(0, evergreenSurchargeKey.length - 10)
-                            .slice(1)
+                            evergreenSurchargeKey
+                              .substring(0, evergreenSurchargeKey.length - 10)
+                              .slice(1)
                         }}</b
                       ></b-td
                     >
                     <b-td
-                      v-for="(
-                        evergreenTypeTotal, evergreenTypeTotalKey
-                      ) in evergreenResult.pricingDetails.totalRatePerType[
+                      v-for="(evergreenTypeTotal,
+                      evergreenTypeTotalKey) in evergreenResult.pricingDetails
+                        .totalRatePerType[
                         'totalRate' +
                           evergreenSurchargeKey
                             .substring(0, evergreenSurchargeKey.length - 10)
@@ -2089,9 +2091,9 @@
           <b-collapse
             :id="
               'schedules_' +
-              String(evergreenResult.contractReference) +
-              '_' +
-              String(evergreenResult.accordion_id)
+                String(evergreenResult.contractReference) +
+                '_' +
+                String(evergreenResult.accordion_id)
             "
             class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
             :accordion="'my-accordion-' + evergreenResult.accordion_id"
@@ -2240,8 +2242,8 @@
                             <p class="text-schedule">
                               {{
                                 route.details[0].vehiculeName +
-                                " / " +
-                                route.details[0].voyageNumber
+                                  " / " +
+                                  route.details[0].voyageNumber
                               }}
                             </p>
                           </li>
@@ -2256,9 +2258,8 @@
                         </h5>
                         <ul>
                           <li
-                            v-for="(
-                              evergreenDeadline, evergreenDeadlineKey
-                            ) in route.details[0].deadlines"
+                            v-for="(evergreenDeadline,
+                            evergreenDeadlineKey) in route.details[0].deadlines"
                             :key="evergreenDeadlineKey"
                           >
                             <h5 class="sub-title-schedule">
@@ -2267,11 +2268,11 @@
                             <p class="text-schedule">
                               {{
                                 evergreenDeadline.deadline.substring(0, 10) +
-                                " " +
-                                evergreenDeadline.deadline.substring(
-                                  11,
-                                  evergreenDeadline.deadline.length - 4
-                                )
+                                  " " +
+                                  evergreenDeadline.deadline.substring(
+                                    11,
+                                    evergreenDeadline.deadline.length - 4
+                                  )
                               }}
                             </p>
                           </li>
@@ -2332,9 +2333,9 @@
                 <b-button
                   v-b-toggle="
                     'responsiveCollapse_' +
-                    evergreenResult.accordion_id +
-                    '_' +
-                    routeKey
+                      evergreenResult.accordion_id +
+                      '_' +
+                      routeKey
                   "
                   style="width: 100%"
                 >
@@ -2395,9 +2396,9 @@
                 <b-collapse
                   :id="
                     'responsiveCollapse_' +
-                    evergreenResult.accordion_id +
-                    '_' +
-                    routeKey
+                      evergreenResult.accordion_id +
+                      '_' +
+                      routeKey
                   "
                   class="mt-2"
                 >
@@ -2433,8 +2434,8 @@
                                 <p class="text-schedule">
                                   {{
                                     route.details[0].vehiculeName +
-                                    " / " +
-                                    route.details[0].voyageNumber
+                                      " / " +
+                                      route.details[0].voyageNumber
                                   }}
                                 </p>
                               </li>
@@ -2450,9 +2451,9 @@
 
                             <ul>
                               <li
-                                v-for="(
-                                  evergreenDeadline, evergreenDeadlineKey
-                                ) in route.details[0].deadlines"
+                                v-for="(evergreenDeadline,
+                                evergreenDeadlineKey) in route.details[0]
+                                  .deadlines"
                                 :key="evergreenDeadlineKey"
                               >
                                 <h5 class="sub-title-schedule">
@@ -2464,11 +2465,11 @@
                                       0,
                                       10
                                     ) +
-                                    " " +
-                                    evergreenDeadline.deadline.substring(
-                                      11,
-                                      evergreenDeadline.deadline.length - 4
-                                    )
+                                      " " +
+                                      evergreenDeadline.deadline.substring(
+                                        11,
+                                        evergreenDeadline.deadline.length - 4
+                                      )
                                   }}
                                 </p>
                               </li>
@@ -2483,9 +2484,8 @@
                             </h5>
                             <ul>
                               <li
-                                v-for="(
-                                  routeDetail, detailKey
-                                ) in route.details"
+                                v-for="(routeDetail,
+                                detailKey) in route.details"
                                 :key="detailKey"
                               >
                                 <div>
@@ -2560,7 +2560,7 @@
             <img
               :src="
                 'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
-                hapagResult.image
+                  hapagResult.image
               "
               alt="logo"
               width="115px"
@@ -2573,7 +2573,8 @@
             <!-- CONTRACT NAME -->
             <div class="col-12">
               <h6 class="mt-4 mb-5 contract-title">
-                {{ hapagResult.contractReference }}
+                {{ hapagResult.quoteLine }}
+                <!-- {{ hapagResult.contractReference }} -->
               </h6>
             </div>
             <!-- FIN CONTRACT NAME -->
@@ -2594,7 +2595,9 @@
                   <p class="mb-0">
                     {{ hapagResult.departureName }}
                   </p>
-                  <p v-if="hapagResult.departureDateGmt">{{ hapagResult.departureDateGmt.substring(0, 10) }}</p>
+                  <p v-if="hapagResult.departureDateGmt">
+                    {{ hapagResult.departureDateGmt.substring(0, 10) }}
+                  </p>
                 </div>
                 <!-- FIN ORGIEN -->
 
@@ -2622,7 +2625,9 @@
                       <b>Transit Time: </b>
                       {{ hapagResult.transitTime + " days" }}
                     </p>
-                    <p v-if="hapagResult.vehiculeName"><b>Vessel: </b> {{ hapagResult.vehiculeName }}</p>
+                    <p v-if="hapagResult.vehiculeName">
+                      <b>Vessel: </b> {{ hapagResult.vehiculeName }}
+                    </p>
                   </div>
                 </div>
                 <!-- FIN LINEA DE RUTA -->
@@ -2633,7 +2638,9 @@
                   <p class="mb-0">
                     {{ hapagResult.arrivalName }}
                   </p>
-                  <p v-if="hapagResult.arrivalDateGmt">{{ hapagResult.arrivalDateGmt.substring(0, 10) }}</p>
+                  <p v-if="hapagResult.arrivalDateGmt">
+                    {{ hapagResult.arrivalDateGmt.substring(0, 10) }}
+                  </p>
                 </div>
                 <!-- FIN DESTINO -->
               </div>
@@ -2652,7 +2659,9 @@
                     <p class="mb-1">
                       {{ hapagResult.departureName }}
                     </p>
-                    <p v-if="hapagResult.departureDateGmt">{{ hapagResult.departureDateGmt.substring(0, 10) }}</p>
+                    <p v-if="hapagResult.departureDateGmt">
+                      {{ hapagResult.departureDateGmt.substring(0, 10) }}
+                    </p>
                   </div>
                   <!-- FIN ORGIEN -->
 
@@ -2662,7 +2671,9 @@
                     <p class="mb-1">
                       {{ hapagResult.arrivalName }}
                     </p>
-                    <p v-if="hapagResult.arrivalDateGmt">{{ hapagResult.arrivalDateGmt.substring(0, 10) }}</p>
+                    <p v-if="hapagResult.arrivalDateGmt">
+                      {{ hapagResult.arrivalDateGmt.substring(0, 10) }}
+                    </p>
                   </div>
                   <!-- FIN DESTINO -->
                 </div>
@@ -2735,14 +2746,18 @@
             <div class="col-12 mt-3 mb-3 result-action">
               <div class="d-flex align-items-center">
                 <span style="color: #006bfa; text-transform: capitalize"
-                  ><b-icon icon="check-circle-fill"></b-icon> HAPAG-LLOYD QUICK QUOTE</span
+                  ><b-icon icon="check-circle-fill"></b-icon> HAPAG-LLOYD QUICK
+                  QUOTE</span
                 >
-                <p class="ml-4 mb-0" v-if="hapagResult.validityFrom && hapagResult.validityTo">
+                <p
+                  class="ml-4 mb-0"
+                  v-if="hapagResult.validityFrom && hapagResult.validityTo"
+                >
                   <b style="font-size:11px;">VALIDITY:</b>
                   {{
                     hapagResult.validityFrom.substring(0, 10) +
-                    " / " +
-                    hapagResult.validityTo.substring(0, 10)
+                      " / " +
+                      hapagResult.validityTo.substring(0, 10)
                   }}
                 </p>
               </div>
@@ -2752,18 +2767,20 @@
                   class="rs-btn"
                   v-b-toggle="
                     'schedules_' +
-                    String(hapagResult.contractReference) +
-                    '_' +
-                    String(hapagResult.accordion_id)
-                  " v-if="!hapagResult.routingDetails.length"><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
+                      String(hapagResult.contractReference) +
+                      '_' +
+                      String(hapagResult.accordion_id)
+                  "
+                  v-if="!hapagResult.routingDetails.length"
+                  ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
                 ></b-button>
                 <b-button
                   class="rs-btn"
                   v-b-toggle="
                     'details_' +
-                    String(hapagResult.contractReference) +
-                    '_' +
-                    String(hapagResult.accordion_id)
+                      String(hapagResult.contractReference) +
+                      '_' +
+                      String(hapagResult.accordion_id)
                   "
                   ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
                 ></b-button>
@@ -2807,9 +2824,9 @@
           <b-collapse
             :id="
               'details_' +
-              String(hapagResult.contractReference) +
-              '_' +
-              String(hapagResult.accordion_id)
+                String(hapagResult.contractReference) +
+                '_' +
+                String(hapagResult.accordion_id)
             "
             class="pt-5 pb-5 pl-5 pr-5 col-12"
             :accordion="'my-accordion-' + hapagResult.accordion_id"
@@ -2827,9 +2844,9 @@
                     .substring(0, hapagSurchargeKey.length - 10)
                     .charAt(0)
                     .toUpperCase() +
-                  hapagSurchargeKey
-                    .substring(0, hapagSurchargeKey.length - 10)
-                    .slice(1)
+                    hapagSurchargeKey
+                      .substring(0, hapagSurchargeKey.length - 10)
+                      .slice(1)
                 }}</b>
               </h5>
 
@@ -2842,9 +2859,8 @@
                           <b-th></b-th> -->
                     <b-th
                       style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
-                      v-for="(
-                        requestContainer, rContainerKey
-                      ) in request.containers"
+                      v-for="(requestContainer,
+                      rContainerKey) in request.containers"
                       :key="rContainerKey"
                       >{{ requestContainer.code }}
                     </b-th>
@@ -2853,9 +2869,8 @@
 
                 <b-tbody>
                   <b-tr
-                    v-for="(
-                      hapagSurchargeName, hapagNameKey
-                    ) in hapagSurchargeType"
+                    v-for="(hapagSurchargeName,
+                    hapagNameKey) in hapagSurchargeType"
                     :key="hapagNameKey"
                   >
                     <b-td
@@ -2871,9 +2886,8 @@
                     <!-- <b-td></b-td>
                           <b-td></b-td> -->
                     <b-td
-                      v-for="(
-                        hapagSurchargeContainer, hapagContainerKey
-                      ) in hapagSurchargeName.containers"
+                      v-for="(hapagSurchargeContainer,
+                      hapagContainerKey) in hapagSurchargeName.containers"
                       :key="hapagContainerKey"
                       ><p>
                         <b
@@ -2896,9 +2910,9 @@
                             .substring(0, hapagSurchargeKey.length - 10)
                             .charAt(0)
                             .toUpperCase() +
-                          hapagSurchargeKey
-                            .substring(0, hapagSurchargeKey.length - 10)
-                            .slice(1)
+                            hapagSurchargeKey
+                              .substring(0, hapagSurchargeKey.length - 10)
+                              .slice(1)
                         }}</b
                       ></b-td
                     >
@@ -2932,9 +2946,9 @@
           <b-collapse
             :id="
               'schedules_' +
-              String(hapagResult.contractReference) +
-              '_' +
-              String(hapagResult.accordion_id)
+                String(hapagResult.contractReference) +
+                '_' +
+                String(hapagResult.accordion_id)
             "
             class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
             :accordion="'my-accordion-' + hapagResult.accordion_id"
@@ -3083,8 +3097,8 @@
                             <p class="text-schedule">
                               {{
                                 route.details[0].vehiculeName +
-                                " / " +
-                                route.details[0].voyageNumber
+                                  " / " +
+                                  route.details[0].voyageNumber
                               }}
                             </p>
                           </li>
@@ -3109,11 +3123,11 @@
                             <p class="text-schedule">
                               {{
                                 hapagDeadline.deadline.substring(0, 10) +
-                                " " +
-                                hapagDeadline.deadline.substring(
-                                  11,
-                                  hapagDeadline.deadline.length - 4
-                                )
+                                  " " +
+                                  hapagDeadline.deadline.substring(
+                                    11,
+                                    hapagDeadline.deadline.length - 4
+                                  )
                               }}
                             </p>
                           </li>
@@ -3174,9 +3188,9 @@
                 <b-button
                   v-b-toggle="
                     'responsiveCollapse_' +
-                    hapagResult.accordion_id +
-                    '_' +
-                    routeKey
+                      hapagResult.accordion_id +
+                      '_' +
+                      routeKey
                   "
                   style="width: 100%"
                 >
@@ -3237,9 +3251,9 @@
                 <b-collapse
                   :id="
                     'responsiveCollapse_' +
-                    hapagResult.accordion_id +
-                    '_' +
-                    routeKey
+                      hapagResult.accordion_id +
+                      '_' +
+                      routeKey
                   "
                   class="mt-2"
                 >
@@ -3275,8 +3289,8 @@
                                 <p class="text-schedule">
                                   {{
                                     route.details[0].vehiculeName +
-                                    " / " +
-                                    route.details[0].voyageNumber
+                                      " / " +
+                                      route.details[0].voyageNumber
                                   }}
                                 </p>
                               </li>
@@ -3292,9 +3306,8 @@
 
                             <ul>
                               <li
-                                v-for="(
-                                  hapagDeadline, hapagDeadlineKey
-                                ) in route.details[0].deadlines"
+                                v-for="(hapagDeadline,
+                                hapagDeadlineKey) in route.details[0].deadlines"
                                 :key="hapagDeadlineKey"
                               >
                                 <h5 class="sub-title-schedule">
@@ -3303,11 +3316,11 @@
                                 <p class="text-schedule">
                                   {{
                                     hapagDeadline.deadline.substring(0, 10) +
-                                    " " +
-                                    hapagDeadline.deadline.substring(
-                                      11,
-                                      hapagDeadline.deadline.length - 4
-                                    )
+                                      " " +
+                                      hapagDeadline.deadline.substring(
+                                        11,
+                                        hapagDeadline.deadline.length - 4
+                                      )
                                   }}
                                 </p>
                               </li>
@@ -3322,9 +3335,8 @@
                             </h5>
                             <ul>
                               <li
-                                v-for="(
-                                  routeDetail, detailKey
-                                ) in route.details"
+                                v-for="(routeDetail,
+                                detailKey) in route.details"
                                 :key="detailKey"
                               >
                                 <div>
@@ -3374,7 +3386,8 @@
     </div>
     <!-- FIN TARJETA HAPAG -->
 
-    <div v-if="false"><!-- eliminar div par que se muentren las tarjetas -->
+    <div v-if="false">
+      <!-- eliminar div par que se muentren las tarjetas -->
       <!-- TARJETA YML -->
       <div
         class="mb-4"
@@ -3400,7 +3413,7 @@
               <img
                 :src="
                   'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
-                  cmaResult.image
+                    cmaResult.image
                 "
                 alt="logo"
                 width="115px"
@@ -3584,8 +3597,8 @@
                     <b style="font-size:11px;">VALIDITY:</b>
                     {{
                       cmaResult.validityFrom.substring(0, 10) +
-                      " / " +
-                      cmaResult.validityTo.substring(0, 10)
+                        " / " +
+                        cmaResult.validityTo.substring(0, 10)
                     }}
                   </p>
                 </div>
@@ -3595,9 +3608,9 @@
                     class="rs-btn"
                     v-b-toggle="
                       'schedules_' +
-                      String(cmaResult.contractReference) +
-                      '_' +
-                      String(cmaResult.accordion_id)
+                        String(cmaResult.contractReference) +
+                        '_' +
+                        String(cmaResult.accordion_id)
                     "
                     ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
                   ></b-button>
@@ -3605,9 +3618,9 @@
                     class="rs-btn"
                     v-b-toggle="
                       'details_' +
-                      String(cmaResult.contractReference) +
-                      '_' +
-                      String(cmaResult.accordion_id)
+                        String(cmaResult.contractReference) +
+                        '_' +
+                        String(cmaResult.accordion_id)
                     "
                     ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
                   ></b-button>
@@ -3651,9 +3664,9 @@
             <b-collapse
               :id="
                 'details_' +
-                String(cmaResult.contractReference) +
-                '_' +
-                String(cmaResult.accordion_id)
+                  String(cmaResult.contractReference) +
+                  '_' +
+                  String(cmaResult.accordion_id)
               "
               class="pt-5 pb-5 pl-5 pr-5 col-12"
               :accordion="'my-accordion-' + cmaResult.accordion_id"
@@ -3671,9 +3684,9 @@
                       .substring(0, cmaSurchargeKey.length - 10)
                       .charAt(0)
                       .toUpperCase() +
-                    cmaSurchargeKey
-                      .substring(0, cmaSurchargeKey.length - 10)
-                      .slice(1)
+                      cmaSurchargeKey
+                        .substring(0, cmaSurchargeKey.length - 10)
+                        .slice(1)
                   }}</b>
                 </h5>
 
@@ -3688,9 +3701,8 @@
                         style="
                           padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
                         "
-                        v-for="(
-                          requestContainer, rContainerKey
-                        ) in request.containers"
+                        v-for="(requestContainer,
+                        rContainerKey) in request.containers"
                         :key="rContainerKey"
                         >{{ requestContainer.code }}
                       </b-th>
@@ -3715,9 +3727,8 @@
                       <!-- <b-td></b-td>
                           <b-td></b-td> -->
                       <b-td
-                        v-for="(
-                          cmaSurchargeContainer, cmaContainerKey
-                        ) in cmaSurchargeName.containers"
+                        v-for="(cmaSurchargeContainer,
+                        cmaContainerKey) in cmaSurchargeName.containers"
                         :key="cmaContainerKey"
                         ><p>
                           <b
@@ -3740,9 +3751,9 @@
                               .substring(0, cmaSurchargeKey.length - 10)
                               .charAt(0)
                               .toUpperCase() +
-                            cmaSurchargeKey
-                              .substring(0, cmaSurchargeKey.length - 10)
-                              .slice(1)
+                              cmaSurchargeKey
+                                .substring(0, cmaSurchargeKey.length - 10)
+                                .slice(1)
                           }}</b
                         ></b-td
                       >
@@ -3776,9 +3787,9 @@
             <b-collapse
               :id="
                 'schedules_' +
-                String(cmaResult.contractReference) +
-                '_' +
-                String(cmaResult.accordion_id)
+                  String(cmaResult.contractReference) +
+                  '_' +
+                  String(cmaResult.accordion_id)
               "
               class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
               :accordion="'my-accordion-' + cmaResult.accordion_id"
@@ -3937,8 +3948,8 @@
                               <p class="text-schedule">
                                 {{
                                   route.details[0].vehiculeName +
-                                  " / " +
-                                  route.details[0].voyageNumber
+                                    " / " +
+                                    route.details[0].voyageNumber
                                 }}
                               </p>
                             </li>
@@ -3963,11 +3974,11 @@
                               <p class="text-schedule">
                                 {{
                                   cmaDeadline.deadline.substring(0, 10) +
-                                  " " +
-                                  cmaDeadline.deadline.substring(
-                                    11,
-                                    cmaDeadline.deadline.length - 4
-                                  )
+                                    " " +
+                                    cmaDeadline.deadline.substring(
+                                      11,
+                                      cmaDeadline.deadline.length - 4
+                                    )
                                 }}
                               </p>
                             </li>
@@ -4028,9 +4039,9 @@
                   <b-button
                     v-b-toggle="
                       'responsiveCollapse_' +
-                      cmaResult.accordion_id +
-                      '_' +
-                      routeKey
+                        cmaResult.accordion_id +
+                        '_' +
+                        routeKey
                     "
                     style="width: 100%"
                   >
@@ -4097,9 +4108,9 @@
                   <b-collapse
                     :id="
                       'responsiveCollapse_' +
-                      cmaResult.accordion_id +
-                      '_' +
-                      routeKey
+                        cmaResult.accordion_id +
+                        '_' +
+                        routeKey
                     "
                     class="mt-2"
                   >
@@ -4135,8 +4146,8 @@
                                   <p class="text-schedule">
                                     {{
                                       route.details[0].vehiculeName +
-                                      " / " +
-                                      route.details[0].voyageNumber
+                                        " / " +
+                                        route.details[0].voyageNumber
                                     }}
                                   </p>
                                 </li>
@@ -4162,11 +4173,11 @@
                                   <p class="text-schedule">
                                     {{
                                       cmaDeadline.deadline.substring(0, 10) +
-                                      " " +
-                                      cmaDeadline.deadline.substring(
-                                        11,
-                                        cmaDeadline.deadline.length - 4
-                                      )
+                                        " " +
+                                        cmaDeadline.deadline.substring(
+                                          11,
+                                          cmaDeadline.deadline.length - 4
+                                        )
                                     }}
                                   </p>
                                 </li>
@@ -4181,9 +4192,8 @@
                               </h5>
                               <ul>
                                 <li
-                                  v-for="(
-                                    routeDetail, detailKey
-                                  ) in route.details"
+                                  v-for="(routeDetail,
+                                  detailKey) in route.details"
                                   :key="detailKey"
                                 >
                                   <div>
@@ -4308,20 +4318,20 @@ export default {
 
       component.accordion_id = 0;
 
-      component.request.originPorts.forEach(function (originPort) {
+      component.request.originPorts.forEach(function(originPort) {
         if (!apiOriginPorts.includes(originPort.code)) {
           apiOriginPorts.push(originPort.code);
         }
       });
 
-      component.request.destinationPorts.forEach(function (destinationPort) {
+      component.request.destinationPorts.forEach(function(destinationPort) {
         if (!apiDestinationPorts.includes(destinationPort.code)) {
           apiDestinationPorts.push(destinationPort.code);
         }
       });
 
       apiContainers = component.setApiContainers();
-      component.datalists.carriers_api.forEach(function (carrier) {
+      component.datalists.carriers_api.forEach(function(carrier) {
         component.results[carrier.code] = [];
       });
 
@@ -4421,10 +4431,10 @@ export default {
         responseData.additionalData.penaltyFees != null &&
         responseData.additionalData.penaltyFees.length > 0
       ) {
-        responseData.additionalData.penaltyFees.forEach(function (
+        responseData.additionalData.penaltyFees.forEach(function(
           penaltyPerContainer
         ) {
-          penaltyPerContainer.charges.forEach(function (penaltyCont) {
+          penaltyPerContainer.charges.forEach(function(penaltyCont) {
             if (!penaltyCodes.includes(penaltyCont.penaltyType)) {
               penaltyCodes.push(penaltyCont.penaltyType);
               finalPenalties.push({
@@ -4444,11 +4454,11 @@ export default {
           });
         });
 
-        responseData.additionalData.penaltyFees.forEach(function (
+        responseData.additionalData.penaltyFees.forEach(function(
           penaltyPerContainer
         ) {
-          penaltyPerContainer.charges.forEach(function (penaltyCont) {
-            finalPenalties.forEach(function (final) {
+          penaltyPerContainer.charges.forEach(function(penaltyCont) {
+            finalPenalties.forEach(function(final) {
               if (penaltyCont.displayName == final.name) {
                 final[penaltyPerContainer.containerSizeType] =
                   penaltyCont.chargeFee;
@@ -4472,7 +4482,7 @@ export default {
         responseData.additionalData.importDnDConditions != null &&
         responseData.additionalData.importDnDConditions.length > 0
       ) {
-        responseData.additionalData.importDnDConditions.forEach(function (
+        responseData.additionalData.importDnDConditions.forEach(function(
           detention
         ) {
           if (!detentionCodes.includes(detention.chargeType)) {
@@ -4494,10 +4504,10 @@ export default {
           }
         });
 
-        responseData.additionalData.importDnDConditions.forEach(function (
+        responseData.additionalData.importDnDConditions.forEach(function(
           detention
         ) {
-          finalDetentions.forEach(function (final) {
+          finalDetentions.forEach(function(final) {
             if (detention.chargeType == final.name) {
               final[detention.containerSizeType] =
                 detention.freetimeGrantInDays;
@@ -4509,43 +4519,72 @@ export default {
     },
 
     hideCharges(responseData) {
-
-      if (!this.request.originCharges && !this.request.destinationCharges){
+      if (!this.request.originCharges && !this.request.destinationCharges) {
         delete responseData.pricingDetails.surcharges.originSurcharges;
         delete responseData.pricingDetails.surcharges.destinationSurcharges;
 
-        responseData.pricingDetails.totalRatePerContainer.forEach(function (totalPerCont) {
-
+        responseData.pricingDetails.totalRatePerContainer.forEach(function(
+          totalPerCont
+        ) {
           totalPerCont.total =
-            responseData.pricingDetails.totalRatePerType.totalRateFreight[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total;
+            responseData.pricingDetails.totalRatePerType.totalRateFreight[
+              responseData.pricingDetails.totalRatePerContainer.indexOf(
+                totalPerCont
+              )
+            ].total;
         });
-      }else if (!this.request.originCharges && this.request.destinationCharges) {
+      } else if (
+        !this.request.originCharges &&
+        this.request.destinationCharges
+      ) {
         delete responseData.pricingDetails.surcharges.originSurcharges;
 
-        responseData.pricingDetails.totalRatePerContainer.forEach(function (totalPerCont) {
+        responseData.pricingDetails.totalRatePerContainer.forEach(function(
+          totalPerCont
+        ) {
           let newTotal = 0;
           newTotal =
             totalPerCont.total -
-            responseData.pricingDetails.totalRatePerType.totalRateOrigin[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total;
+            responseData.pricingDetails.totalRatePerType.totalRateOrigin[
+              responseData.pricingDetails.totalRatePerContainer.indexOf(
+                totalPerCont
+              )
+            ].total;
 
-          newTotal = newTotal.toFixed(2)
-          responseData.pricingDetails.totalRatePerContainer[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total = newTotal;
+          newTotal = newTotal.toFixed(2);
+          responseData.pricingDetails.totalRatePerContainer[
+            responseData.pricingDetails.totalRatePerContainer.indexOf(
+              totalPerCont
+            )
+          ].total = newTotal;
         });
 
         responseData.pricingDetails.totalRatePerType.totalRateOrigin = null;
-
-      }else if (this.request.originCharges && !this.request.destinationCharges) {
+      } else if (
+        this.request.originCharges &&
+        !this.request.destinationCharges
+      ) {
         delete responseData.pricingDetails.surcharges.destinationSurcharges;
 
-        responseData.pricingDetails.totalRatePerContainer.forEach(function (totalPerCont) {
+        responseData.pricingDetails.totalRatePerContainer.forEach(function(
+          totalPerCont
+        ) {
           let newTotal = 0;
 
           newTotal =
             totalPerCont.total -
-            responseData.pricingDetails.totalRatePerType.totalRateDestination[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total;
+            responseData.pricingDetails.totalRatePerType.totalRateDestination[
+              responseData.pricingDetails.totalRatePerContainer.indexOf(
+                totalPerCont
+              )
+            ].total;
 
-          newTotal = newTotal.toFixed(2)
-          responseData.pricingDetails.totalRatePerContainer[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total = newTotal;
+          newTotal = newTotal.toFixed(2);
+          responseData.pricingDetails.totalRatePerContainer[
+            responseData.pricingDetails.totalRatePerContainer.indexOf(
+              totalPerCont
+            )
+          ].total = newTotal;
         });
 
         responseData.pricingDetails.totalRatePerType.totalRateDestination = null;
@@ -4556,7 +4595,7 @@ export default {
       let component = this;
       let finalContainerString = "";
 
-      component.request.containers.forEach(function (container) {
+      component.request.containers.forEach(function(container) {
         let containerString = "1x" + container.code.substring(0, 2);
 
         if (["NOR", "HCRF", "OT", "FR"].includes(container.code)) {
@@ -4594,7 +4633,7 @@ export default {
       if (result.addToQuote) {
         component.resultsForQuote.push(result);
       } else {
-        component.resultsForQuote.forEach(function (resultQ) {
+        component.resultsForQuote.forEach(function(resultQ) {
           if (result.id == resultQ.id) {
             component.resultsForQuote.splice(
               component.resultsForQuote.indexOf(resultQ),
@@ -4623,7 +4662,7 @@ export default {
       let qty = "";
       let link_str = "";
 
-      $.each(component.container_qty, function (key, value) {
+      $.each(component.container_qty, function(key, value) {
         if (value > 0) {
           qty_array.push(value + "x" + key);
           string += "containers=" + value + "x" + key + "x2&";
@@ -4656,7 +4695,7 @@ export default {
     },
   },
   computed: {
-    orderedMaerskRates: function () {
+    orderedMaerskRates: function() {
       return _.orderBy(
         this.results.maersk,
         (item) => item.pricingDetails.totalRatePerContainer[0].total,
@@ -4684,7 +4723,7 @@ export default {
         return sortedArray;**/
     },
 
-    orderedCmaRates: function () {
+    orderedCmaRates: function() {
       return _.orderBy(
         this.results.cmacgm,
         (item) => item.pricingDetails.totalRatePerContainer[0].total,
@@ -4692,7 +4731,7 @@ export default {
       );
     },
 
-    orderedEvergreenRates: function () {
+    orderedEvergreenRates: function() {
       return _.orderBy(
         this.results.evergreen,
         (item) => item.pricingDetails.totalRatePerContainer[0].total,
@@ -4700,9 +4739,9 @@ export default {
       );
     },
 
-    orderedHapagRates: function () {
+    orderedHapagRates: function() {
       return _.orderBy(
-        this.results['hapag-lloyd'],
+        this.results["hapag-lloyd"],
         (item) => item.pricingDetails.totalRatePerContainer[0].total,
         ["asc"]
       );
