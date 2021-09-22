@@ -182,7 +182,6 @@ export default {
     };
   },
   mounted() {
-    console.log("rate 1", this.rate);
     this.rate.search.pricelevel != null
       ? (this.fields = [
           "Charge",
