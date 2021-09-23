@@ -56,13 +56,20 @@
           type="classic"
         ></ckeditor>
 
-        <restrictions
+        <Restrictions
           v-if="active == 'Only Apply To'"
           style="border: none!important;"
           :datalists="datalists"
           :actions="actions.restrictions_lcl"
           :data="currentData"
-        ></restrictions>
+        />
+
+        <ListPrices 
+        v-if="active == 'Detail'"
+        :filters="false"
+        :thead="thead"
+        :dynamic="true"
+        :prices="prices"/>
       </div>
     </div>
   </section>
@@ -74,13 +81,15 @@ import CustomInput from "../../../components/common/CustomInput.vue";
 import Selectable from "../../../components/common/Selectable.vue";
 import LeftArrow from "../../../components/Icons/LeftArrow.vue";
 import actions from "../../../../../resources/js/actions";
-import axios from "axios";
+import ListPrices from "../../../components/PriceLevel/ListPrices.vue";
+// import axios from "axios";
 export default {
   components: {
     CustomInput,
     Selectable,
     LeftArrow,
     Restrictions,
+    ListPrices,
   },
   data: () => ({
     actions: actions,
@@ -98,6 +107,9 @@ export default {
     price_types: ["FCL", "LCL"],
     selected: "FCL",
     selectable_error: false,
+    thead:['Direction', 'Apply to', '20', '40', 'Currency'],
+    prices: [
+    ],
   }),
   created() {
     this.getData();
@@ -117,8 +129,6 @@ export default {
     },
     setDropdownLists(err, data) {
       this.datalists = data;
-
-      console.log("data dropwdown", data);
 
       this.datalists["route_types"] = [
         { id: "port", name: "Port", vselected: "harbors" },
