@@ -1739,7 +1739,7 @@ trait QuoteV2Trait
         return $amounts;
     }
 
-    public function formatLclChargeForQuote(Array $charge, $charge_client_currency)
+    public function formatLclChargeForQuote(Array $charge)
     {
         $formattedMarkups = [];
         $formattedTotal = [];
@@ -1758,14 +1758,11 @@ trait QuoteV2Trait
             }
         }else{
             if(isset($charge['total_markups'])){
-                $charge_currency = Currency::where('id',$charge['currency']['id'])->first();
-                $client_currency = Currency::where('id',$charge_client_currency)->first();
+                $markup = $charge['total_markups'];
 
                 if($charge['typedestiny_id'] == 3){
-                    $markup = $this->convertToCurrency($charge_currency, $client_currency, array($charge['total_markups']))[0];
                     $total = $charge['total'];
                 }else{
-                    $markup = $charge['total_markups'];
                     $total = $charge['total_with_markups'];
                 }
             }else{
