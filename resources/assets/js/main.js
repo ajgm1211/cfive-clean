@@ -1,25 +1,18 @@
 // IMPORTS
 import Vue from "vue";
 import VueRouter from "vue-router";
-import {TablePlugin, BootstrapVue} from "bootstrap-vue";
+import { TablePlugin, BootstrapVue } from "bootstrap-vue";
 import Vuelidate from "vuelidate";
 import Main from "../views/Main.vue";
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import VueCkeditor from 'vue-ckeditor5';
-import Api from '../../../resources/js/api'; // Api calls controller
-import '../../../resources/sass/custom_app.scss'
-import '../../../resources/js/bootstrap';
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import VueCkeditor from "vue-ckeditor5";
+import Api from "../../../resources/js/api"; // Api calls controller
+import "../../../resources/sass/custom_app.scss";
+import "../../../resources/js/bootstrap";
 
-
-
-// Routes
-//import PriceLevels from "../views/pages/PriceLevels/index.vue";
-//import Rates from "../views/pages/PriceLevels/Rates.vue";
-
-
-
-
-
+// Views
+import PriceLevels from "../views/pages/PriceLevels/index.vue";
+import Rates from "../views/pages/PriceLevels/Rates.vue";
 
 // Const
 const options = {
@@ -29,9 +22,11 @@ const options = {
   name: "ckeditor",
 };
 
+
+// Routes
 const router = new VueRouter({
   mode: "history",
-  routes: [/**
+  routes: [
     {
       path: "/prices/v2",
       name: "price-levels",
@@ -41,12 +36,9 @@ const router = new VueRouter({
       path: "/prices/rates",
       name: "price-rates",
       component: Rates,
-    },**/
+    },
   ],
 });
-
-
-
 
 // USE
 Vue.use(VueRouter);

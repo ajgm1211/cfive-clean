@@ -12,11 +12,12 @@
     <div
       :class="[error === true && !selected ? 'input-err' : '', disabled === true ? 'disabled' : '']"
       class="selectable"
+      :style="{'background-color': background_color, 'border-color': border_color,}"
       @click="open = !open"
     >
       <span v-if="!selected">Select an option</span>
-      <span v-else style="color:#000">{{ selected }}</span>
-      <ChevronDown />
+      <span v-else :style="{color: font_color}">{{ selected }}</span>
+      <ChevronDown v-if="icon == true" />
     </div>
     <div v-if="error === true && !selected" class="error-msj-container">
       <span class="error-msj">You must select one option</span>
@@ -54,6 +55,15 @@ export default {
     value: {
       default: "",
     },
+    font_color: {
+      default: "black",
+    },
+    background_color: {
+      type: String
+    },
+    border_color: {
+      type: String
+    },
     selected: {
       default: null,
     },
@@ -64,6 +74,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
+    },
+    icon: {
+      type: Boolean,
+      default: true,
     },
   },
   components: { ChevronDown },
