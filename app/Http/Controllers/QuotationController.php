@@ -308,7 +308,7 @@ class QuotationController extends Controller
                             'total' => json_encode($charge['total']),
                         ]);
                     }elseif($search_data_ids['type'] == 'LCL'){
-                        $charge = $this->formatLclChargeForQuote($charge, $rate['client_currency']);
+                        $charge = $this->formatLclChargeForQuote($charge);
                         $rate_markups[$direction] += $charge['markup'];
 
                         $freight = ChargeLclAir::create([
