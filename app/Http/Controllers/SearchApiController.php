@@ -49,7 +49,10 @@ use Illuminate\Http\Request;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use App\Http\Traits\MixPanelTrait;
 use App\InlandPerLocation;
+use App\InlandKm;
+use App\InlandPort;
 use App\Location;
+use App\Inland;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
@@ -273,14 +276,16 @@ class SearchApiController extends Controller
         $search_data['dateRange']['endDate'] = substr($search_data['dateRange']['endDate'], 0, 10);
         
         $search_array= $this->changeLocationsByPort($search_data);
+        
 
         $search_ids = $this->getIdsFromArray($search_array);
+        
         $search_ids['company_user'] = $company_user_id;
         $search_ids['user'] = $user_id;
         $search_ids['client_currency'] = $company_user->currency;
 
         //Retrieving rates with search data
-        $rates = $this->searchRates($search_ids,$search_array);
+        $rates = $this->searchRates($search_ids);
 
         //$rateNo = 0;
         foreach ($rates as $rate) {
@@ -328,15 +333,20 @@ class SearchApiController extends Controller
 
             $transit_time = $this->searchTransitTime($rate);
 
+            $inland = $this-> searchInlands($rate,$search_array, $search_ids['client_currency']);
+           
             $rate->setAttribute('transit_time', $transit_time);
 
             $rate->setAttribute('remarks', $remarks);
 
             $rate->setAttribute('request_type', $request->input('requested'));
 
+            $rate->setAttribute('inland', $inland);
+
             $this->stringifyRateAmounts($rate);
 
             $this->setDownloadParameters($rate);
+
         }
 
         if ($rates != null && count($rates) != 0) {
@@ -572,18 +582,32 @@ class SearchApiController extends Controller
     }
 
     //Finds any Inlands matching search search ports, and calculates costs based on Inland data
-    public function searchInlands($data)
+    public function searchInlands($rate,$search_array,$current_client)
     {
-        dd($data);
-        /**Tables 
-         - inland additional_kms (extra KM cost)
-         - inland_distances (distancieros)
-         - inland_kms (costs from kms tabs)
-         - inland_ranges (costs from ranges tab)
-         - inland_types (KM or RANGE)
-         - inlands (names and such)
-         - inlandsports (inland+port association)
-         **/
+        $inland=array();
+        $container_type=$search_array['selectedContainerGroup']['id'];
+        $start_date = $search_array['dateRange']['startDate'];
+        $end_date  = $search_array['dateRange']['endDate'];
+        $direction = $search_array['direction'];
+        $carrier=$rate['carrier_id'];
+        $company_user = \Auth::user()->companyUser->id;
+        $origin_port = $rate['origin_port'];
+        $destiny_port= $rate['destiny_port'];
+        
+        
+        $origInland=$this->originInland($container_type,$start_date,$end_date,$direction,$carrier,$company_user,$search_array,$origin_port);
+       
+        $destInland=$this->destinyInland($container_type,$start_date,$end_date,$direction,$carrier,$company_user,$search_array,$destiny_port);
+
+        $filterOrig= $this->filterInland($origInland); 
+        $filterDest= $this->filterInland($destInland); 
+        
+        $selectOriginInland=$this->selectInland($filterOrig,$search_array,$rate);
+        // $selectDestinyInland=$this->selectInland($filterDest,$search_array,$current_client);
+
+        // array_push($inland,$selectOriginInland,$selectDestinyInland);
+        array_push($inland,$selectOriginInland);
+            return $inland;
     }
 
     //Finds local charges matching contracts
@@ -1282,6 +1306,7 @@ class SearchApiController extends Controller
                 if(count($portOrig)==1){
                     $new_search['originPorts'][$key]=[
                         'id' =>$portOrig[0]['harbors']['id'],
+                        'location_id'=>$portOrig[0]['location_id'],
                         'display_name' => $portOrig[0]['harbors']['display_name']
                     ];
                     $new_search['locationOrig'][$key]=[
@@ -1293,6 +1318,7 @@ class SearchApiController extends Controller
                     foreach($portOrig as $orig){             
                         $new_search['originPorts'][]=[
                             'id'=>$orig['harbors']['id'],
+                            'location_id'=>$orig['location_id'],
                             'display_name' => $orig['harbors']['display_name']
                         ];
                         $new_search['locationOrig'][]=[
@@ -1318,6 +1344,7 @@ class SearchApiController extends Controller
                 if(count($portDest)==1){
                     $new_search['destinationPorts'][$key]=[
                         'id'=>$portDest[0]['harbors']['id'],
+                        'location_id'=>$portDest[0]['location_id'],
                         'display_name' => $portDest[0]['harbors']['display_name']
                     ];
                     $new_search['locationDest'][$key]=[
@@ -1329,6 +1356,7 @@ class SearchApiController extends Controller
                     foreach($portDest as $dest){             
                         $new_search['destinationPorts'][]=[
                             'id'=>$dest['harbors']['id'],
+                            'location_id'=>$dest['location_id'],
                             'display_name' => $dest['harbors']['display_name']
                         ];
                         $new_search['locationDest']=[
@@ -1350,5 +1378,265 @@ class SearchApiController extends Controller
         }
         return $new_search;
     }
+    public function originInland($container_type,$start_date,$end_date,$direction,$carrier,$company_user,$search_array,$origin_port){
+        $i=[];
+        foreach($search_array['locationOrig'] as $locationOrig){
+            if ($locationOrig['id']!=null && $origin_port==$locationOrig['harbor']) {
+                $inlands= Inland::where('validity', '>=', $start_date)->orwhere('expire', '>=', $end_date)
+                ->where('company_user_id',$company_user)->where('gp_container_id',$container_type)
+                ->where('direction_id',$direction)->where('carrier_id',$carrier)->with('inlandkms','inlandLocation','inlandRange')
+                ->whereHas('inlandports', function ($a) use ($origin_port){
+                    $a->where('port',$origin_port);
+                })->get();
+                foreach($inlands as $inland){
+                    if(count($inland['inlandRange'])>0){
+                        foreach($inland['inlandRange'] as $range){
+                            if(isset($range)){
+                                $i['range'][]=$range;
+                            }
+                        }
+                    }
+                    if(count($inland['inlandkms'])>0){
+                        foreach($inland['inlandkms'] as $kms){
+                            if(isset($kms)){
+                                $i['km'][]=$kms;
+                            }
+                        }
+                    }
+                    if(count($inland['inlandLocation'])>0){
+                        foreach($inland['inlandLocation'] as $location){
+                            if(isset($location) && $location['harbor_id'] == $origin_port && $location['location_id'] == $locationOrig['id'] ){
+                                $i['location'][]=$location;
+                            }
+                        }
+                    } 
+                }
+            }
+        }
+        return $i;
+    }
+    
+    public function destinyInland($container_type,$start_date,$end_date,$direction,$carrier,$company_user,$search_array,$destiny_port){
+        $i=[];
+        foreach($search_array['locationDest'] as $locationDest){
+            if ($locationDest['id']!=null && $destiny_port==$locationDest['harbor']) {
+                $inlands= Inland::where('validity', '>=', $start_date)->orwhere('expire', '>=', $end_date)
+                ->where('company_user_id',$company_user)->where('gp_container_id',$container_type)
+                ->where('direction_id',$direction)->where('carrier_id',$carrier)->with('inlandkms','inlandLocation','inlandRange')
+                ->whereHas('inlandports', function ($a) use ($destiny_port){
+                    $a->where('port',$destiny_port);
+                })->get();
+                foreach($inlands as $inland){
+                    if(count($inland['inlandLocation'])>0){
+                        foreach($inland['inlandLocation'] as $location){
+                            if(isset($location) && $location['harbor_id'] == $destiny_port && $location['location_id'] == $locationDest['id'] ){
+                                $i['location'][]=$location;
+                            }
+                        }
+                    }
+                    if(count($inland['inlandRange'])>0){
+                        foreach($inland['inlandRange'] as $range){
+                            if(isset($range)){
+                                $i['range'][]=$range;
+                            }
+                        }
+                    }
+                    if(count($inland['inlandkms'])>0){
+                        foreach($inland['inlandkms'] as $kms){
+                            if(isset($kms)){
+                                $i['km'][]=$kms;
+                            }
+                        }
+                    }  
+                }
+            }
+        }
+        return $i ;
+    }
 
+    public function filterInland($Inland){
+
+        $inlands= array();
+        //location
+        if(isset($Inland['location'])){
+            $l='';
+            foreach($Inland['location'] as $a => $location){
+                if ($location['currency_id']!=149) {
+                    $sum=array_sum($location['json_containers']);
+                    $inputConversion = currency::find($location['currency_id']);
+                    $result=$sum/$inputConversion->rates;
+                    if($l==null){
+                        $l=$Inland['location'][$a];
+                        $l['value']=$result;
+                        $l['type']='location';
+                    }else{
+                        if($l['value']<$result){
+                            $l=$Inland['location'][$a];
+                            $l['value']=$result;
+                            $l['type']='location';
+                        }
+                    }
+                }else{
+                    $result=array_sum($location['json_containers']);
+                    if($l==null){
+                        $l=$Inland['location'][$a];
+                        $l['value']=$result;
+                        $l['type']='location';
+                    }else{
+                        if($l['value']<$result){
+                            $l=$Inland['location'][$a];
+                            $l['value']=$result;
+                            $l['type']='location';
+                        }
+                    }
+                }
+            }
+            $inlands['location'][]=$l;
+        }  
+        //range
+        if(isset($Inland['range'])){
+            $r='';
+            foreach($Inland['range'] as $b => $range){
+                if ($range['currency_id']!=149) {
+                    $sum=array_sum($range['json_containers']);
+                    $inputConversion = currency::find($range['currency_id']);
+                    $result=$sum/$inputConversion->rates;
+                    if($r==null){
+                        $r=$Inland['range'][$b];
+                        $r['value']=$result;
+                        $r['type']='range';
+                    }else{
+                        if($r['value']<$result){
+                            $r=$Inland['range'][$b];
+                            $r['value']=$result;
+                            $r['type']='range';
+                        }
+                    }
+                }else{
+                    $result=array_sum($range['json_containers']);
+                    if($r==null){
+                        $r=$Inland['range'][$b];
+                        $r['value']=$result;
+                        $r['type']='range';
+                    }else{
+                        if($r['value']<$result){
+                            $r=$Inland['range'][$b];
+                            $r['value']=$result;
+                            $r['type']='range';
+                        }
+                    }
+                } 
+            }
+            $inlands['range'][]=$r;
+        }
+        //km
+        if(isset($Inland['km'])){
+            $k='';
+            foreach($Inland['km'] as $c => $km){
+                if ($km['currency_id']!=149) {
+                    $sum=array_sum($km['json_containers']);
+                    $inputConversion = currency::find($km['currency_id']);
+                    $result=$sum/$inputConversion->rates;
+                    if($k==null){
+                        $k=$Inland['km'][$c];
+                        $k['value']=$result;
+                        $k['type']='km';
+                    }else{
+                        if($k['value']<$result){
+                            $k=$Inland['km'][$c];
+                            $k['value']=$result;
+                            $k['type']='km';
+                        }
+                    }
+                }else{
+                    $result=array_sum($km['json_containers']);
+                    if($k==null){
+                        $k=$Inland['km'][$c];
+                        $k['value']=$result;
+                        $k['type']='km';
+                    }else{
+                        if($k['value']<$result){
+                            $k=$Inland['km'][$c];
+                            $k['value']=$result;
+                            $k['type']='km';
+                        }
+                    }
+                } 
+            }
+            $inlands['km'][]=$k;
+        }
+        return $inlands;
+    }
+    
+    public function selectInland($inlands,$searchData,$rate){
+        // dd($inlands);
+        $inland=array();
+        $km = isset($inlands['km']) ? $inlands['km'][0] : null;
+        $range = isset($inlands['range']) ? $inlands['range'][0] : null;
+        $location = isset($inlands['location']) ? $inlands['location'][0] : null;
+
+        if(isset($inlands['location']) && isset($inlands['range']) && isset($inlands['km'])){     
+            $distance=DistanceKmLocation::where('location_id',$location['location_id'])->where('harbors_id',$location['harbor_id'])->first();
+            $upper=$range['upper'];
+            $lower=$range['lower'];
+
+            if($distance['rates']>=$lower && $distance['distance']<=$upper){            
+                $value1=array_sum($range['json_containers']);
+                $value2=array_sum($location['json_containers']);          
+                if($value1>$value2){
+                    $inland=$range;
+                }elseif($value1<$value2){
+                    $inland=$location;
+                }                                    
+            }else{
+                $value1=array_sum($km['json_containers'])*$distance['distance'];
+                $value2=array_sum($location['json_containers']);
+                if($value1>$value2){
+                    $inland=$km;
+                }else{
+                    $inland=$location;
+                }
+            }
+        }elseif(empty($inlands['location']) && isset($inlands['range']) && isset($inlands['km'])){
+            foreach($searchData['locationOrig'] as $location){
+                if($location['harbor']==$rate['origin_port']){
+                    $distance=DistanceKmLocation::where('location_id',$location['id'])->where('harbors_id',$location['harbor_id'])->first();
+                }
+            }
+            $value1=array_sum($range['json_containers']);
+            $value2=array_sum($km['json_containers'])*$distance['distance'];
+            if($value1>$value2){
+                $inland=$km;
+            }else{
+                $inland=$location;
+            }
+        }elseif(isset($inlands['location']) && isset($inlands['range']) && empty($inlands['km'])){
+            $distance=DistanceKmLocation::where('location_id',$location['location_id'])->where('harbors_id',$location['harbor_id'])->first();
+            $upper=$range['upper'];
+            $lower=$range['lower'];
+
+            if($distance['rates']>=$lower && $distance['distance']<=$upper){            
+                $value1=array_sum($range['json_containers']);
+                $value2=array_sum($location['json_containers']);          
+                if($value1>$value2){
+                    $inland=$range;
+                }elseif($value1<$value2){
+                    $inland=$location;
+                }
+            }     
+        }elseif(isset($inlands['location']) && empty($inlands['range']) && isset($inlands['km'])){
+            $distance=DistanceKmLocation::where('location_id',$location['location_id'])->where('harbors_id',$location['harbor_id'])->first();
+            $value1=array_sum($location['json_containers']);
+            $value2=array_sum($km['json_containers'])*$distance['distance'];
+            if($value1>$value2){
+                $inland=$km;
+            }else{
+                $inland=$location;
+            }
+        }elseif(isset($inlands['location']) || isset($inlands['range']) || isset($inlands['km'])){
+            $inland=isset($inlands['location']) ? $location : isset($inlands['range']) ? $range : isset($inlands['km']) ? $km : null;
+        }
+
+        return $inland;
+    }
 }

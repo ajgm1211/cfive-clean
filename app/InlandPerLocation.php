@@ -10,10 +10,10 @@ use Illuminate\Http\Request;
 
 class InlandPerLocation extends Model
 {
-    protected $fillable = ['id, json_container, currency_id, harbor_id, inland_id, location_id, type, service_id'];
+    protected $fillable = ['id, json_containers, currency_id, harbor_id, inland_id, location_id, type, service_id'];
 
     protected $casts = [
-        'json_container' => 'array',
+        'json_containers' => 'array',
     ];
     
     public function inland()

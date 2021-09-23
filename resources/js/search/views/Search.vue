@@ -1,8 +1,5 @@
 <template>
     <div id="search" class="search pt-5">    
-        dd{{originPlacesFrom}}
-        dd{{originPlacesTo}}
-        dd{{optionsPlaces}}
         <!-- dd{{portAndLocation}} -->
         <div v-if="loaded">
 

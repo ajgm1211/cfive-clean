@@ -40,7 +40,7 @@ class InlandPerLocationResource extends JsonResource
     }
     public function addContainers($data)
     {
-        $containers = $this->json_container;
+        $containers = $this->json_containers;
         
         foreach ($this->available_containers as $available_container) {
             
