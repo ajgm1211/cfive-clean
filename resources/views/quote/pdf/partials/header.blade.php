@@ -19,7 +19,7 @@
             <div>
                 <span class="color-title uppercase"><b>{{__('pdf.quote_id')}}:</b></span>
                 <span
-                    style="color: {{ $user->companyUser->colors_pdf }}"><b>{{$quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id}}</b></span>
+                    style="color: {{ @$user->companyUser->colors_pdf }}"><b>{{$quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id}}</b></span>
             </div>
 
             <div>
@@ -36,7 +36,7 @@
     @if(@$user->companyUser->pdf_template_id==2)
         @if(@$user->companyUser->header_type=='image')
             <div class="clearfix">
-                <img src="{{Storage::disk('s3_upload')->url($user->companyUser->header_image)}}" class="img img-fluid" style="max-width:100%;">
+                <img src="{{Storage::disk('s3_upload')->url(@$user->companyUser->header_image)}}" class="img img-fluid" style="max-width:100%;">
             </div>
             <br>
         @endif
@@ -44,7 +44,7 @@
             <div>
                 <span class="color-title uppercase"><b>{{__('pdf.quote_id')}}:</b></span>
                 <span
-                    style="color: {{ $user->companyUser->colors_pdf }}"><b>{{$quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id}}</b></span>
+                    style="color: {{ @$user->companyUser->colors_pdf }}"><b>{{$quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id}}</b></span>
             </div>
 
             <div>
@@ -66,7 +66,7 @@
     @if(@$user->companyUser->pdf_template_id!=2)
         <div id="logo">
 
-            @if($user->companyUser->logo!='')
+            @if(@$user->companyUser->logo!='')
 
             <img src="{{Storage::disk('s3')->url(@$user->companyUser->logo)}}" class="img img-fluid"
                 style="width: 150px; height: auto; margin-bottom:0">
