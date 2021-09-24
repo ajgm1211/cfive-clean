@@ -17,7 +17,7 @@ class ReupdateLclRateRelations extends Migration
             DB::table('rates_lcl')
                 ->update([
                     "calculationtype_id" => 22,
-                    "surcharge_id" => 15044,
+                    "surcharge_id" => 16048,
             ]);
         });
     }
