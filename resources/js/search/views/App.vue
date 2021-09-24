@@ -7,6 +7,7 @@
             @searchSuccess="setSearchData"
             @clearResults="clearDisplay"
             @quoteLoaded="setQuoteData"
+            @searchTypeChanged="setActions"
             ref="searchComponent"
         ></Search>
 
@@ -18,43 +19,6 @@
             <h2 class="mr-5 t-recent">
             results found: <b>{{ resultsTotal }}</b>
             </h2>
-            <!--<div class="d-flex filter-search">
-            <b style="color: #80888b !important; letter-spacing: 2px !important"
-                >filter by:</b
-            >&nbsp;
-            <div
-                style="
-                width: 200px !important;
-                height: 33.5px;
-                position: relative;
-                top: -8px;
-                "
-            >
-                <multiselect
-                v-model="filterBy"
-                :multiple="false"
-                :close-on-select="true"
-                :clear-on-select="false"
-                :hide-selected="true"
-                :show-labels="false"
-                :options="filterOptions"
-                placeholder="Carrier"
-                class="s-input no-select-style"
-                
-                >
-                </multiselect>
-                <button
-                v-if="filterBy != '' && filterBy != null"
-                type="button"
-                class="close custom_close_filter"
-                aria-label="Close"
-                @click="(filterBy = ''), filterCarriers()"
-                >
-                <span aria-hidden="true">&times;</span>
-                </button>
-                <b-icon icon="caret-down-fill" aria-hidden="true" class="delivery-type"></b-icon>
-            </div>
-            </div>-->
         </div>
 
         <div class="col-12 col-sm-6 addcontract-createquote">
@@ -83,7 +47,7 @@
         </div>
 
         <!-- HEADER FCL -->
-        <div class="row mt-4 mb-4 result-header">
+        <div class="row mt-4 mb-4 result-header" v-if="searchType == 'FCL'">
         <div
             class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
         >
@@ -108,7 +72,7 @@
         <!-- FIN HEADER FCL -->
 
         <!-- HEADER LCL -->
-        <div class="row mt-4 mb-4 result-header" v-if="false">
+        <div class="row mt-4 mb-4 result-header" v-else-if="searchType == 'LCL'">
         <div
             class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
         >
@@ -131,8 +95,10 @@
         <!-- FIN RESULTS HEADER -->
 
         <Recent 
-            v-if="resultsTotal == 0 && !searching"
+            v-show="resultsTotal == 0 && !searching"
+            :searchType="searchType"
             @recentSearch="quickSearch"
+            ref="recentComponent"
         ></Recent>
 
         <APIResults
@@ -142,16 +108,19 @@
             @apiSearchStarted="clearDisplay"
             @apiSearchDone="addApiResults"
             @addedToQuote="setResultsForQuote"
-            ref="resultsAPI"
+            ref="resultsAPIComponent"
         ></APIResults>
 
         <Result 
-            v-if="foundRates.length != 0"
-            :rates="foundRates"
+            v-if="foundRates.length != 0 || foundRatesLcl.length != 0"
+            :searchType="searchType"
+            :rates="searchType=='FCL' ? foundRates : foundRatesLcl"
             :request="searchRequest"
             :datalists="datalists"
             @createQuote="createQuote"
             @addedToQuote="setRatesForQuote"
+            @resultsCreated="setActions"
+            ref="resultsComponent"
         ></Result>
 
     </div>
@@ -176,6 +145,7 @@ export default {
             searching: false,
             searchRequested: false,
             foundRates: [],
+            foundRatesLcl: [],
             foundCharges: {},            
             searchRequest: [],
             datalists: {},
@@ -191,6 +161,8 @@ export default {
             apiSearchDone: true,
             searchDone: true,
             quoteData: {},
+            searchType: "FCL",
+            searchLoaded: false,
         }
     },
     created() {
@@ -198,6 +170,27 @@ export default {
     },
     methods :
     {
+        setActions(origin){
+            let component = this;
+
+            this.searchType = this.$refs.searchComponent.searchRequest.type;
+
+            for (var child in component.$refs) {
+                if(component.$refs[child] && component.$refs[child].searchActions){
+                    if(component.$refs[child].searchType){
+                        component.$refs[child].searchType = component.searchType;
+                    }
+                    if(child != 'resultsAPIComponent'){
+                        component.$refs[child].setActions();
+                    }
+                }
+            }
+
+            if(origin == 'dd'){
+                this.clearDisplay('switch');
+            }
+        }, 
+
         countContainersClass() {
             if (
                 this.searchRequest.containers.length == 5 ||
@@ -283,30 +276,50 @@ export default {
             this.searching = true;
             this.searchRequest = searchRequest;
             this.requestData = this.$route.query;
-            this.$nextTick (()=>{
-                this.$refs.resultsAPI.callAPIs();
-            })
+            if(this.searchType == "FCL"){
+                this.$nextTick (()=>{
+                    this.$refs.resultsAPIComponent.callAPIs();
+                })
+            }
         },
 
         setSearchData(searchData){
-            //console.log(this.searchData);
             this.searching = false;
-            this.foundRates = searchData;
-            this.resultsTotal += this.foundRates.length;
+            if(this.searchType == "FCL"){
+                this.foundRates = searchData;
+                this.resultsTotal += this.foundRates.length;
+            }else if(this.searchType == "LCL"){
+                this.foundRatesLcl = searchData;
+                this.resultsTotal += this.foundRatesLcl.length;
+            }
             this.searchDone = true;
-            if(this.apiSearchDone){
+            if(this.apiSearchDone || this.$refs.searchComponent.searchRequest.type == "LCL"){
                 this.$refs.searchComponent.searching = false;
             }
         },
 
-        clearDisplay(){
+        clearDisplay(trigEvent){
             this.foundRates = [];
+            this.foundRatesLcl = [];
             this.ratesForQuote = {
                 rates: [],
                 results: [],
             };
+            if(this.$refs.resultsAPIComponent){
+                this.$refs.searchComponent.foundApiRates = false;
+                this.$refs.resultsAPIComponent.results = {
+                    maersk: [],
+                    cmacgm: [],
+                    evergreen: [],
+                    "hapag-lloyd": [],
+                }
+            }
             this.resultsTotal = 0;
             this.apiSearchDone = false;
+            this.searching = false;
+            if(trigEvent == "switch"){
+                this.$refs.searchComponent.searching = false;
+            }
         },
 
         quickSearch(){

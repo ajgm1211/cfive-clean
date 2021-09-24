@@ -116,7 +116,7 @@ class ContractsLclController extends Controller
             $direction[$d['id']] = $d->name;
         }
         $currency = Currency::all()->pluck('alphacode', 'id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name', 'id');
+        $calculationT = CalculationTypeLcl::where('options->type','!=','rate_only')->pluck('name', 'id');
         $typedestiny = TypeDestiny::all()->pluck('description', 'id');
         $surcharge = Surcharge::where('company_user_id', '=', Auth::user()->company_user_id)->pluck('name', 'id');
         $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name', 'id');
@@ -235,6 +235,8 @@ class ContractsLclController extends Controller
                     $rates->schedule_type_id = $sch;
                     $rates->transit_time = $request->input('transitTi.' . $key);
                     $rates->via = $request->input('via.' . $key);
+                    $rates->calculationtype_id = CalculationTypeLcl::where('name', 'W/M')->pluck('id')[0];
+                    $rates->surcharge_id = Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->pluck('id')[0];
                     $rates->contract()->associate($contract);
                     $rates->save();
                 }
@@ -381,7 +383,7 @@ class ContractsLclController extends Controller
         $carrier = Carrier::all()->pluck('name', 'id');
         $direction = Direction::pluck('name', 'id');
         $currency = Currency::all()->pluck('alphacode', 'id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name', 'id');
+        $calculationT = CalculationTypeLcl::where('options->type','!=','rate_only')->pluck('name', 'id');
         $typedestiny = TypeDestiny::all()->pluck('description', 'id');
         $surcharge = Surcharge::where('company_user_id', '=', Auth::user()->company_user_id)->pluck('name', 'id');
 
@@ -566,7 +568,7 @@ class ContractsLclController extends Controller
         $harbor = Harbor::all()->pluck('display_name', 'id');
         $carrier = Carrier::all()->pluck('name', 'id');
         $currency = Currency::all()->pluck('alphacode', 'id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name', 'id');
+        $calculationT = CalculationTypeLcl::where('options->type','!=','rate_only')->pluck('name', 'id');
         $typedestiny = TypeDestiny::all()->pluck('description', 'id');
         $surcharge = Surcharge::where('company_user_id', '=', Auth::user()->company_user_id)->pluck('name', 'id');
         $company_user = CompanyUser::find(\Auth::user()->company_user_id);
@@ -626,7 +628,7 @@ class ContractsLclController extends Controller
     {
 
         $countries = Country::pluck('name', 'id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name', 'id');
+        $calculationT = CalculationTypeLcl::where('options->type','!=','rate_only')->pluck('name', 'id');
         $typedestiny = TypeDestiny::all()->pluck('description', 'id');
         $surcharge = Surcharge::where('company_user_id', '=', Auth::user()->company_user_id)->pluck('name', 'id');
         $harbor = Harbor::all()->pluck('display_name', 'id');
@@ -699,7 +701,7 @@ class ContractsLclController extends Controller
     {
 
         $countries = Country::pluck('name', 'id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name', 'id');
+        $calculationT = CalculationTypeLcl::where('options->type','!=','rate_only')->pluck('name', 'id');
         $typedestiny = TypeDestiny::all()->pluck('description', 'id');
         $surcharge = Surcharge::where('company_user_id', '=', Auth::user()->company_user_id)->pluck('name', 'id');
         $harbor = Harbor::all()->pluck('display_name', 'id');

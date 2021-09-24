@@ -49,26 +49,44 @@ import actions from "../../actions";
 export default {
     data() {
         return {
-            actions: actions,
+            searchActions: {},
             searches: [],
+            actions: actions,
             loaded: false,
+            searchType: "FCL",
         }
     },
     created() {
-        actions.search
-            .list({})
-            .then((response) => {
-                this.searches = response.data.data;
-                this.loaded = true;
-            })
-            .catch(error => {
-                if(error.status === 403) {
-                    console.log(error.data.errors);
-                }
-            })
+        this.setActions();
     },
     methods:
     {
+        setActions() {
+            if(this.searchType == "FCL"){
+                this.searchActions = this.actions.search;
+            }else if(this.searchType == "LCL"){
+                this.searchActions = this.actions.searchlcl;
+            }
+
+            this.setRecentList();
+        },
+
+        setRecentList(){
+            let component = this;
+        
+            component.searchActions
+                .list({})
+                .then((response) => {
+                    this.searches = response.data.data;
+                    this.loaded = true;
+                })
+                .catch(error => {
+                    if(error.status === 403) {
+                        console.log(error.data.errors);
+                    }
+                })    
+        },
+
         recentSearch(id){
             this.$router.push({ path: `search`, query: { requested: 0, model_id: id} });
             this.$emit("recentSearch");
