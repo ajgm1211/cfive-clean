@@ -594,7 +594,6 @@ class SearchApiController extends Controller
         $origin_port = $rate['origin_port'];
         $destiny_port= $rate['destiny_port'];
         
-        
         $origInland=$this->originInland($container_type,$start_date,$end_date,$direction,$carrier,$company_user,$search_array,$origin_port);
        
         $destInland=$this->destinyInland($container_type,$start_date,$end_date,$direction,$carrier,$company_user,$search_array,$destiny_port);
@@ -602,12 +601,12 @@ class SearchApiController extends Controller
         $filterOrig= $this->filterInland($origInland); 
         $filterDest= $this->filterInland($destInland); 
         
-        $selectOriginInland=$this->selectInland($filterOrig,$search_array,$rate);
-        // $selectDestinyInland=$this->selectInland($filterDest,$search_array,$current_client);
-
-        // array_push($inland,$selectOriginInland,$selectDestinyInland);
-        array_push($inland,$selectOriginInland);
-            return $inland;
+        $selectOriginInland=$this->selectInland($filterOrig,$search_array,$rate,$type=1);
+        $selectDestinyInland=$this->selectInland($filterDest,$search_array,$current_client,$type=2);
+        
+        array_push($inland,$selectOriginInland, $selectDestinyInland);
+       
+        return $inland;
     }
 
     //Finds local charges matching contracts
@@ -1568,19 +1567,19 @@ class SearchApiController extends Controller
         return $inlands;
     }
     
-    public function selectInland($inlands,$searchData,$rate){
+    public function selectInland($inlands,$searchData,$rate,$type){
         // dd($inlands);
         $inland=array();
         $km = isset($inlands['km']) ? $inlands['km'][0] : null;
         $range = isset($inlands['range']) ? $inlands['range'][0] : null;
         $location = isset($inlands['location']) ? $inlands['location'][0] : null;
 
-        if(isset($inlands['location']) && isset($inlands['range']) && isset($inlands['km'])){     
+        if(isset($location) && isset($range) && isset($km)){    
             $distance=DistanceKmLocation::where('location_id',$location['location_id'])->where('harbors_id',$location['harbor_id'])->first();
             $upper=$range['upper'];
             $lower=$range['lower'];
 
-            if($distance['rates']>=$lower && $distance['distance']<=$upper){            
+            if($distance['distance']>=$lower && $distance['distance']<=$upper){            
                 $value1=array_sum($range['json_containers']);
                 $value2=array_sum($location['json_containers']);          
                 if($value1>$value2){
@@ -1597,44 +1596,68 @@ class SearchApiController extends Controller
                     $inland=$location;
                 }
             }
-        }elseif(empty($inlands['location']) && isset($inlands['range']) && isset($inlands['km'])){
-            foreach($searchData['locationOrig'] as $location){
-                if($location['harbor']==$rate['origin_port']){
-                    $distance=DistanceKmLocation::where('location_id',$location['id'])->where('harbors_id',$location['harbor_id'])->first();
+        }elseif($location==null && isset($range) && array_sum($inlands['km'][0]['json_containers'])!=0){
+            if ($type==1) {
+                foreach($searchData['locationOrig'] as $location){
+                    if($location['harbor']==$rate['origin_port']){
+                        $distance=DistanceKmLocation::where('location_id',$location['id'])->where('harbors_id',$location['harbor'])->first();
+                    }
+                } 
+            }else{
+                foreach($searchData['locationDest'] as $location){
+                    if($location['harbor']==$rate['destiny_port']){
+                        $distance=DistanceKmLocation::where('location_id',$location['id'])->where('harbors_id',$location['harbor'])->first();
+                    }
                 }
             }
-            $value1=array_sum($range['json_containers']);
-            $value2=array_sum($km['json_containers'])*$distance['distance'];
-            if($value1>$value2){
-                $inland=$km;
+         
+            $upper=$range['upper'];
+            $lower=$range['lower'];
+            if($distance['distance']>=$lower && $distance['distance']<=$upper){
+                $value1=array_sum($range['json_containers']);
+                $value2=array_sum($km['json_containers'])*$distance['distance'];
+                if($value1>$value2){
+                    $inland=$range;
+                }else{
+                    $inland=$km;
+                }
             }else{
-                $inland=$location;
+                    $inland=$km;
             }
-        }elseif(isset($inlands['location']) && isset($inlands['range']) && empty($inlands['km'])){
+        }elseif(isset($location) && isset($range) && array_sum($inlands['km'][0]['json_containers'])==0){
             $distance=DistanceKmLocation::where('location_id',$location['location_id'])->where('harbors_id',$location['harbor_id'])->first();
             $upper=$range['upper'];
             $lower=$range['lower'];
 
-            if($distance['rates']>=$lower && $distance['distance']<=$upper){            
+            if($distance['distance']>=$lower && $distance['distance']<=$upper){            
                 $value1=array_sum($range['json_containers']);
-                $value2=array_sum($location['json_containers']);          
+                $value2=array_sum($location['json_containers']); 
+
                 if($value1>$value2){
                     $inland=$range;
                 }elseif($value1<$value2){
                     $inland=$location;
                 }
+            }else{
+                $inland=$range;
             }     
-        }elseif(isset($inlands['location']) && empty($inlands['range']) && isset($inlands['km'])){
+        }elseif(isset($location) && $range==null && isset($km)){
             $distance=DistanceKmLocation::where('location_id',$location['location_id'])->where('harbors_id',$location['harbor_id'])->first();
+            
             $value1=array_sum($location['json_containers']);
             $value2=array_sum($km['json_containers'])*$distance['distance'];
+
             if($value1>$value2){
-                $inland=$km;
-            }else{
                 $inland=$location;
+            }else{
+                $inland=$km;
             }
-        }elseif(isset($inlands['location']) || isset($inlands['range']) || isset($inlands['km'])){
-            $inland=isset($inlands['location']) ? $location : isset($inlands['range']) ? $range : isset($inlands['km']) ? $km : null;
+        }elseif($location == null && isset($range) &&  array_sum($km['json_containers'])==0){
+            $inland=$range;
+        }elseif($location == null && $range==null && isset($inlands['km'])){
+            $inland=$km;
+        }elseif(isset($location) && $range==null && $km==null){
+            $inland=$location;
         }
 
         return $inland;
