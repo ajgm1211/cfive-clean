@@ -2436,9 +2436,9 @@ export default {
         component.lclPackaging.forEach(function(pack) {
           component.lclPackagingQuantity += parseFloat(pack.quantity);
           component.lclPackagingVolume +=
-            (parseFloat(pack.depth) / 100 )*
-            (parseFloat(pack.height) / 100) *
-            (parseFloat(pack.width) / 100);
+            (parseFloat(pack.depth) *
+            parseFloat(pack.height) *
+            parseFloat(pack.width)) / 1000000;
           component.lclPackagingWeight += parseFloat(pack.weight);
         });
 
