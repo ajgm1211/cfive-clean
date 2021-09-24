@@ -13,16 +13,26 @@ use EventIntercom;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Barryvdh\DomPDF\Facade as PDF;
 use App\Delegation;
 use App\UserDelegation;
+use Illuminate\Support\Facades\Storage;
 
 class LclPdf
 {
 
     use QuoteV2Trait;
 
+    private $upload;
+
+    public function __construct($upload = false)
+    {
+        $this->upload = $upload;
+    }
+
     public function generate($quote)
     {
+        $user = User::find($quote->user_id);
 
         $freight_charges = AutomaticRate::GetChargeLcl(3)->GetQuote($quote->id)->with('charge_lcl_air')->get();
 
@@ -40,11 +50,20 @@ class LclPdf
 
         $delegation = $this->delegation($quote);
 
-        $view = \View::make('quote.pdf.index_lcl', ['quote' => $quote, 'delegation' => $delegation, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
+        $data = ['quote' => $quote, 'delegation' => $delegation, 'user' => $user, 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals];
+
+        /*$view = \View::make('quote.pdf.index_lcl', ['quote' => $quote, 'delegation' => $delegation, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
 
         $pdf = \App::make('dompdf.wrapper');
 
-        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
+        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');*/
+
+        $pdf = PDF::loadView('quote.pdf.index_lcl', $data);
+
+        if ($this->upload) {
+            Storage::disk('pdfApiS3')->put('quote_'.$quote->id.'.pdf', $pdf->output());
+            return;
+        }
 
         // EVENTO INTERCOM
         $event = new EventIntercom();
