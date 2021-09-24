@@ -4337,7 +4337,7 @@ export default {
 
       if (
         this.request.carriersApi.length > 0 &&
-        (this.request.selectedContainerGroup.id == 1 || this.request.selectedContainerGroup.id == 2)
+        this.request.selectedContainerGroup.id == 1
       ) {
         
         this.request.carriersApi.forEach(function(apiCarrier){
