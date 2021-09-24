@@ -10,20 +10,34 @@
       {{ label }}
     </label>
     <div
-      :class="[error === true && !selected ? 'input-err' : '', disabled === true ? 'disabled' : '']"
+      :class="[
+        error === true && !selected ? 'input-err' : '',
+        disabled === true ? 'disabled' : '',
+        mixed === true ? 'mixedborder' : '',
+      ]"
       class="selectable"
-      :style="{'background-color': background_color, 'border-color': border_color,}"
+      :style="{
+        'background-color': background_color,
+        'border-color': border_color,
+      }"
       @click="open = !open"
     >
       <span v-if="!selected">Select an option</span>
-      <span v-else :style="{color: font_color}">{{ selected }}</span>
+      <span v-else-if="mixed === true" style="color: #fff;">
+        {{ selected === "Fixed Markup" ? "$" : "%" }}
+      </span>
+      <span v-else :style="{ color: font_color }">{{ selected }} </span>
       <ChevronDown v-if="icon == true" />
     </div>
     <div v-if="error === true && !selected" class="error-msj-container">
       <span class="error-msj">You must select one option</span>
     </div>
 
-    <div class="options" v-if="open">
+    <div
+      class="options"
+      v-if="open"
+      :class="mixed == true ? 'mixedOptions' : ''"
+    >
       <p v-for="option in options" :key="option" @click="select(option)">
         {{ option }}
       </p>
@@ -59,15 +73,19 @@ export default {
       default: "black",
     },
     background_color: {
-      type: String
+      type: String,
     },
     border_color: {
-      type: String
+      type: String,
     },
     selected: {
       default: null,
     },
     error: {
+      type: Boolean,
+      default: false,
+    },
+    mixed: {
       type: Boolean,
       default: false,
     },
@@ -96,6 +114,7 @@ export default {
       this.$emit("input", _value || null);
     },
     select(option) {
+      this.selected = option;
       this.$emit("selected", option);
       this.open = false;
     },
@@ -151,7 +170,24 @@ export default {
   }
 }
 
-.disabled{
+.mixedOptions {
+  width: 100px;
+  left: 40.8px;
+  transform: translateX(-100%);
+  font-weight: 200;
+  font-size: 11px;
+
+  & > p {
+    padding: 2px 8px;
+  }
+}
+
+.disabled {
   pointer-events: none;
+}
+
+.mixedborder {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 </style>
