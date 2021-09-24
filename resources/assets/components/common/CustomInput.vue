@@ -1,7 +1,7 @@
 <template>
   <div>
     <label
-    v-if="showLabel == true"
+      v-if="showLabel == true"
       :for="name"
       class="d-block labelv2"
       :class="$v.value.$error ? 'error-msj' : ''"
@@ -12,7 +12,10 @@
       :disabled="disabled"
       class="input-v2"
       autocomplete="off"
-      :class="[$v.value.$error ? 'input-err' : '', mixed  === true ? 'mixedborder' : '']"
+      :class="[
+        $v.value.$error ? 'input-err' : '',
+        mixed === true ? 'mixedborder' : '',
+      ]"
       :placeholder="placeholder"
       :name="name"
       :type="type"
@@ -226,7 +229,7 @@ export default {
   letter-spacing: 0.05em;
 }
 
-.mixedborder{
+.mixedborder {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }

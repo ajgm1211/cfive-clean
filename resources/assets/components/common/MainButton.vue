@@ -1,9 +1,11 @@
 <template>
-  <button class="main-btn" @click="$emit('click')"><Plus v-if="add" class="mr-2"/> {{ text }}</button>
+  <button class="main-btn" @click="$emit('click')">
+    <Plus v-if="add" class="mr-2"/> <Check v-if="save" class="mr-2"/>   {{ text }}</button>
 </template>
 
 <script>
 import Plus from "../Icons/Plus.vue";
+import Check from "../Icons/Check.vue";
 export default {
   props: {
     text: {
@@ -14,9 +16,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    save: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
     Plus,
+    Check
   },
 };
 </script>

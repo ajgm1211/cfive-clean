@@ -64,12 +64,31 @@
           :data="currentData"
         />
 
-        <ListPrices 
-        v-if="active == 'Detail'"
-        :filters="false"
-        :thead="thead"
-        :dynamic="true"
-        :prices="prices"/>
+        <div v-if="active == 'Detail'">
+          <InputSearch style="margin-bottom:20px"/>
+
+          <ListPrices
+            :filters="false"
+            :thead="thead"
+            :dynamic="true"
+            :rates="rates"
+          />
+
+          <Paginate
+            :page-count="10"
+            :prev-text="'Prev'"
+            :next-text="'Next'"
+            :page-class="'page-item'"
+            :page-link-class="'page-link'"
+            :container-class="'pagination'"
+            :prev-class="'page-item'"
+            :prev-link-class="'page-link'"
+            :next-class="'page-item'"
+            :next-link-class="'page-link'"
+            :initialPage="1"
+            style="margin-bottom: 0!important;"
+          />
+        </div>
       </div>
     </div>
   </section>
@@ -82,6 +101,8 @@ import Selectable from "../../../components/common/Selectable.vue";
 import LeftArrow from "../../../components/Icons/LeftArrow.vue";
 import actions from "../../../../../resources/js/actions";
 import ListPrices from "../../../components/PriceLevel/ListPrices.vue";
+import InputSearch from "../../../components/common/InputSearch.vue";
+import Paginate from "../../../../js/components/paginate.vue";
 // import axios from "axios";
 export default {
   components: {
@@ -90,6 +111,8 @@ export default {
     LeftArrow,
     Restrictions,
     ListPrices,
+    InputSearch,
+    Paginate
   },
   data: () => ({
     actions: actions,
@@ -107,8 +130,92 @@ export default {
     price_types: ["FCL", "LCL"],
     selected: "FCL",
     selectable_error: false,
-    thead:['Direction', 'Apply to', '20', '40', 'Currency'],
-    prices: [
+    thead: ["Direction", "Apply to", "20", "40", "Currency"],
+    rates: [
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
     ],
   }),
   created() {
