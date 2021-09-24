@@ -3108,7 +3108,7 @@ class QuoteV2Controller extends Controller
         $containerCode = $containers->whereIn('id', $equipment)->pluck('code')->toArray();
 
         // Historial de busqueda
-        $this->storeSearchV2($origin_port, $destiny_port, $request->input('date'), $containerCode, $delivery_type, $mode, $company_user_id, 'FCL');
+        //$this->storeSearchV2($origin_port, $destiny_port, $request->input('date'), $containerCode, $delivery_type, $mode, $company_user_id, 'FCL');
 
         // Fecha Contrato
         $dateRange = $request->input('date');
@@ -4455,7 +4455,7 @@ class QuoteV2Controller extends Controller
         $arregloNull = array();
         $arregloNull = json_encode($arregloNull);
         //istory
-        $this->storeSearchV2($origin_port, $destiny_port, $request->input('date'), $arregloNull, $delivery_type, $mode, $company_user_id, 'LCL');
+        //$this->storeSearchV2($origin_port, $destiny_port, $request->input('date'), $arregloNull, $delivery_type, $mode, $company_user_id, 'LCL');
 
         $weight = $request->input("chargeable_weight");
         $weight = number_format($weight, 2, '.', '');
