@@ -4298,6 +4298,9 @@ export default {
       let apiDestinationPorts = [];
       let apiDate = component.request.dateRange.startDate.substring(0, 10);
       let apiContainers = "";
+      let fullResponseLength = 0;
+      var params = [];
+      let reqCounter = 0;
 
       component.$emit("apiSearchStarted");
 
@@ -4328,66 +4331,79 @@ export default {
         this.request.carriersApi.forEach(function(apiCarrier){
           apiOriginPorts.forEach(function (origin) {
             apiDestinationPorts.forEach(function (destination) {
-              axios
-                .get(component.datalists.api_url, {
-                  params: {
-                    originPort: origin,
-                    destinationPort: destination,
-                    equipmentSizeType: apiContainers,
-                    departureDate: apiDate,
-                    uemail: component.datalists.user.email,
-                    brands: apiCarrier.code,
-                  },
-                  headers: {
-                    Authorization:
-                      "Bpu7Ijd4iau5zphybdbDUbfiKhPNlSXkmRBkrky0QJPQ1Aj2Ha",
-                    Accept: "application/json",
-                    "Content-type": "application/json",
-                  },
-                })
-                .then((response) => {
-                  response.data.forEach(function (respData) {
-                    if (
-                      respData.company == "Maersk Spot" ||
-                      respData.company == "Sealand Spot"
-                    ) {
-                      component.results["maersk"].push(respData);
-                      component.setPenalties(respData);
-                      component.setDetention(respData);
-                    } else {
-                      component.results[apiCarrier.code].push(respData);
-                    } 
-
-                    respData.image = apiCarrier.image;
-
-                    component.accordion_id += 1;
-                    respData.accordion_id = component.accordion_id;
-
-                    respData.addToQuote = false;
-                    respData.search = component.request;
-                    respData.originPort = origin;
-                    respData.destinationPort = destination;
-                    component.hideCharges(respData);
-                  });
-
-                  component.$emit("apiSearchDone", response.data.length);
-
-                  //Sending data to MixPanel
-                  component.$mixpanel.track("Rates Spot", {
-                    distinct_id: component.datalists.user.id,
-                    Brands: apiCarrier.code,
-                    Company: component.datalists.company_user.name,
-                    Origin: origin,
-                    Destination: destination,
-                    Container_type: apiContainers,
-                  });
-                })
-                .catch((error) => {
-                  console.log(error);
-                  component.$emit("apiSearchDone", 0);
+              params.push({
+                  originPort: origin,
+                  destinationPort: destination,
+                  equipmentSizeType: apiContainers,
+                  departureDate: apiDate,
+                  uemail: component.datalists.user.email,
+                  brands: apiCarrier.code,
                 });
             });
           });
+        });
+
+        params.forEach(function (paramObject){
+          axios
+            .get(component.datalists.api_url, {
+              params: paramObject,
+              headers: {
+                Authorization:
+                  "Bpu7Ijd4iau5zphybdbDUbfiKhPNlSXkmRBkrky0QJPQ1Aj2Ha",
+                Accept: "application/json",
+                "Content-type": "application/json",
+              },
+            })
+            .then((response) => {
+              response.data.forEach(function (respData) {
+                if (
+                  respData.company == "Maersk Spot" ||
+                  respData.company == "Sealand Spot"
+                ) {
+                  component.results["maersk"].push(respData);
+                  component.setPenalties(respData);
+                  component.setDetention(respData);
+                } else {
+                  component.results[paramObject.brands].push(respData);
+                } 
+
+                component.request.carriersApi.forEach(function(apiCarrier){
+                  if(apiCarrier.code == respData.companyCode){
+                    respData.image = apiCarrier.image;
+                  }
+                });
+
+                component.accordion_id += 1;
+                respData.accordion_id = component.accordion_id;
+
+                respData.addToQuote = false;
+                respData.search = component.request;
+                respData.originPort = paramObject.originPort;
+                respData.destinationPort = paramObject.destinationPort;
+                component.hideCharges(respData);
+              });
+
+              //Sending data to MixPanel
+              component.$mixpanel.track("Rates Spot", {
+                distinct_id: component.datalists.user.id,
+                Brands: paramObject.brands,
+                Company: component.datalists.company_user.name,
+                Origin: paramObject.originPort,
+                Destination: paramObject.destinationPort,
+                Container_type: apiContainers,
+              });
+
+              reqCounter += 1;
+              fullResponseLength += response.data.length;
+
+              if(reqCounter == params.length){
+                component.$emit("apiSearchDone", fullResponseLength);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+              component.$emit("apiSearchDone", 0);
+            });
         });
       } else {
         component.$emit("apiSearchDone", 0);
@@ -4510,6 +4526,8 @@ export default {
             totalPerCont.total -
             responseData.pricingDetails.totalRatePerType.totalRateOrigin[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total;
 
+            newTotal = newTotal.toFixed(2);
+
           responseData.pricingDetails.totalRatePerContainer[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total = newTotal;
         });
 
@@ -4524,6 +4542,8 @@ export default {
           newTotal =
             totalPerCont.total -
             responseData.pricingDetails.totalRatePerType.totalRateDestination[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total;
+
+            newTotal = newTotal.toFixed(2);
 
           responseData.pricingDetails.totalRatePerContainer[responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)].total = newTotal;
         });
