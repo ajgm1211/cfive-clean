@@ -485,8 +485,15 @@ Route::middleware(['auth'])->prefix('prices')->group(function () {
     Route::get('add', 'PriceController@add')->name('prices.add');
     Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
     Route::get('destroy/{price_id}', 'PriceController@destroy')->name('prices.destroy');
+
+
+    // V2 
+    Route::view('/v2', 'pricesV2.index');
+    Route::view('/rates', 'pricesV2.index');
 });
 Route::resource('prices', 'PriceController')->middleware('auth');
+
+
 
 //Contacts
 Route::middleware(['auth'])->prefix('contacts')->group(function () {
@@ -1029,6 +1036,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     /* Inlands V2 view routes **/
     Route::get('api/inlands', 'InlandController@index')->name('inlands.index');
+    Route::get('api/inlands/{id}/location', 'InlandPerLocationController@index')->name('inlands.location');
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /* End Inlands routes view **/
@@ -1044,6 +1052,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/search/storeContract', 'SearchApiController@storeContractNewSearch');
     Route::post('/api/search/downloadContract', 'SearchApiController@downloadContractFile');
     Route::get('/api/search/downloadMContract/{contract}', 'SearchApiController@downloadMultipleContractFile')->name('contract.multiple');
+
+    /**New Search LCL */
+    Route::get('/api/search_lcl/list', 'SearchApiLclController@list')->name('searchlclV2.list');
+    Route::post('/api/search_lcl/store', 'SearchApiLclController@store');
+    Route::post('/api/search_lcl/process', 'SearchApiLclController@processSearch');
+    Route::post('/api/search_lcl/downloadContract', 'SearchApiController@downloadContractFile');
 
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
@@ -1159,6 +1173,7 @@ Route::group(['middleware' => ['auth']], function () {
     /** Providers view routes **/
     Route::get('api/providers', 'ProvidersController@index')->name('providers.index');
     /** End providers routes view **/
+    Route::get('inlandperlocation', 'inlandPerLocationController@index')->name('inlandperlocation.index');
 });
 
 /*****************************************************************************************
@@ -1300,7 +1315,15 @@ Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function (
     Route::post('{inland}/km/{km}/update', 'InlandKmController@update')->middleware('check_company:inland');
     Route::get('{inland}/km/retrieve', 'InlandKmController@retrieve')->middleware('check_company:inland');
     /* End API Inland Km EndPoints **/
-
+    
+    /* API Inland location EndPoints **/
+    Route::get('{inland}/location', 'inlandPerLocationController@list');
+    Route::post('{inland}/location/store', 'inlandPerLocationController@store');
+    Route::post('{inland}/location/{location}/update', 'inlandPerLocationController@update');
+    Route::post('location/{location}/duplicate', 'inlandPerLocationController@duplicate');
+    Route::delete('location/{location}/destroy', 'inlandPerLocationController@destroy');
+    Route::post('location/destroyAll', 'inlandPerLocationController@destroyAll');
+    /* End API Inland location EndPoints **/
     /*
     Route::get('groupc/{inland}', 'InlandController@groupInlandContainer')->middleware('check_company:inland');
     // INLAND RANGE
@@ -1370,6 +1393,9 @@ Route::group(['prefix' => 'api/v2/providers', 'middleware' => ['auth']], functio
 
     /** providers **/
 });
+
+
+
 
 /*****************************************************************************************
  **                                   END API ENDPOINTS                                   **
