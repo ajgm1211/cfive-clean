@@ -16,13 +16,23 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use App\Delegation;
 use App\UserDelegation;
+use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Facades\Storage;
 
 class FclPdf
 {
     use QuoteV2Trait;
 
+    private $upload;
+
+    public function __construct($upload = false)
+    {
+        $this->upload = $upload;
+    }
+
     public function generate($quote)
     {
+        $user = User::find($quote->user_id);
 
         $containers = Container::all();
 
@@ -39,24 +49,33 @@ class FclPdf
         $destination_charges = $this->localCharges($quote, 2);
 
         $freight_charges = $this->freightCharges($freight_charges, $quote, $containers);
-        
+
         $freight_charges_detailed = $this->freightChargesDetailed($freight_charges, $quote, $containers);
 
         $quote_totals = $this->quoteTotals($quote, $containers);
 
         $delegation = $this->delegation($quote);
 
-        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'delegation' => $delegation, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
+        $data = ['quote' => $quote, 'delegation' => $delegation, 'inlands' => $inlands, 'user' => $user, 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals];
 
-        $pdf = \App::make('dompdf.wrapper');
+        //$view = \View::make('quote.pdf.index', ['quote' => $quote, 'delegation' => $delegation, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
 
+        //$pdf = \App::make('dompdf.wrapper');
 
-        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
+        $pdf = PDF::loadView('quote.pdf.index', $data);
 
-        // EVENTO INTERCOM
+        if ($this->upload) {
+            Storage::disk('pdf')->put('quote_'.$quote->id.'.pdf', $pdf->output());
+            $quote->addMedia(storage_path().'/app/public/pdf/quote_'.$quote->id.'.pdf')->toMediaCollection('document', 'pdfApiS3');
+            return;
+        }
+
+        //Intercom
         $event = new EventIntercom();
+
+        //Mixpanel
         $event->event_pdfFcl();
-        //$pdf->loadHTML($view);
+
         return $pdf->stream('quote-' . $quote->id . '.pdf');
     }
 
@@ -279,12 +298,12 @@ class FclPdf
             $destination_address = InlandAddress::where(['port_id' => $item->destination_port_id, 'quote_id' => $item->quote_id])
                 ->select('address')->first();
 
-            if($origin_address){
+            if ($origin_address) {
                 $freight_charges_grouped->hasOriginAddress = 1;
                 $item->origin_address = $origin_address->address;
             }
 
-            if($destination_address){
+            if ($destination_address) {
                 $freight_charges_grouped->hasDestinationAddress = 1;
                 $item->destination_address = $destination_address->address;
             }
@@ -503,8 +522,8 @@ class FclPdf
         $routePrefix = 'route_';
         $routeId = 1;
         foreach ($freightTotals as $frTotal) {
-            $totalsArrayOutput[$routePrefix . $routeId]['POL'] = $frTotal->rate()->first()->origin_port()->first()->display_name ?? "--";
-            $totalsArrayOutput[$routePrefix . $routeId]['POD'] = $frTotal->rate()->first()->destination_port()->first()->display_name ?? "--";
+            $totalsArrayOutput[$routePrefix . $routeId]['POL'] = $frTotal->rate()->first() ? $frTotal->rate()->first()->origin_port()->first()->display_name : "--";
+            $totalsArrayOutput[$routePrefix . $routeId]['POD'] = $frTotal->rate()->first() ? $frTotal->rate()->first()->destination_port()->first()->display_name : "--";
             $totalsArrayOutput[$routePrefix . $routeId]['carrier'] = $frTotal->carrier()->first()->name ?? "--";
             $totalsArrayOutput[$routePrefix . $routeId]['currency'] = $quote->pdf_options['totalsCurrency']['alphacode'] ?? "--";
             $routeId++;
@@ -521,8 +540,8 @@ class FclPdf
 
             if (is_a($total, 'App\AutomaticRateTotal')) {
                 $totalsArrayInput = json_decode($total->totals, true);
-                $portArray['origin'] = $total->origin_port()->first()->display_name;
-                $portArray['destination'] = $total->destination_port()->first()->display_name;
+                $portArray['origin'] = $total->origin_port() ? $total->origin_port()->first()->display_name : "--";
+                $portArray['destination'] = $total->destination_port() ? $total->destination_port()->first()->display_name : "--";
                 $portArray['carrier'] = $total->carrier()->first()->name;
             } else if (is_a($total, 'App\AutomaticInlandTotal')) {
                 $totalsArrayInput = json_decode($total->totals, true);
