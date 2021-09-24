@@ -71,7 +71,10 @@ function obtenerRouteKey($keyP)
 
 function isDecimal($monto, $quote = false, $pdf = false)
 {
-    $isDecimal = optional(Auth::user()->companyUser)->decimals;
+    $value = isset(Auth::user()->companyUser) ? optional(Auth::user()->companyUser)->decimals:null;
+    $isDecimal = $value;
+    //$user = User::find($quote->user_id ?? null);
+    //$isDecimal = $user->companyUser->decimals ?? null;
 
     if ($isDecimal != null && $isDecimal == 1) {
         if ($pdf) {

@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\GeneratePdfToApiJob;
 use App\Jobs\SaveFclRatesByContractJob;
 use App\Jobs\SyncCompaniesJob;
 use App\Jobs\SyncCompaniesVforwarding;
@@ -42,6 +43,7 @@ class Kernel extends ConsoleKernel
         //$schedule->job(new SyncCompaniesVforwarding)->cron('0 */4 * * *')->appendOutputTo(storage_path('logs/commands.log'));
         //$schedule->job(new SyncCompaniesVisualtrans)->cron('0 */5 * * *')->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new SaveFclRatesByContractJob)->cron('0 */8 * * *')->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->job(new GeneratePdfToApiJob)->cron('0 */3 * * *')->appendOutputTo(storage_path('logs/commands.log'));
 
         $schedule->command('command:updateCurrenciesUsd')
             ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
