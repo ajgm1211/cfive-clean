@@ -237,6 +237,7 @@ class SearchApiController extends Controller
         $search_ids['company_user'] = $company_user_id;
         $search_ids['user'] = $user_id;
         $search_ids['client_currency'] = Currency::where("id",149)->first();
+        $search_ids['options'] = null;
 
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
