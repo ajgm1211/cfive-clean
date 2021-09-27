@@ -115,13 +115,9 @@ Route::group(['prefix' => 'whitelabel'], function () {
     Route::put('/contacts/{id}', [App\Http\Controllers\Whitelabel\ContactsController::class, 'update']);
     Route::delete('/contacts/{id}', [App\Http\Controllers\Whitelabel\ContactsController::class, 'destroy']);
 
-    Route::get('search/list', 'SearchApiController@listwhitelabel');
-    Route::get('search/data', 'SearchApiController@data');
-    Route::get('search/{search}', 'SearchApiController@retrievewhitelabel');
-    Route::post('search/process', 'SearchApiController@processSearch');
-    Route::post('search/store', 'SearchApiController@store');
-    Route::post('search/storeContract', 'SearchApiController@storeContractNewSearch');
-    Route::post('search/downloadContract', 'SearchApiController@downloadContractFile');
-    Route::get('search/downloadMContract/{id}', 'SearchApiController@downloadMultipleContractFile');
+
+    Route::post('/search/process', 'SearchApiController@processSearch');
+    Route::get('/search', 'SearchApiController@index');
+
 
 });

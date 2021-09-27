@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\SearchApiResource;
 use App\Http\Resources\WhitelabelSearchApiResource;
 use App\Http\Resources\RateResource;
+use App\Http\Resources\WhitelabelRateResource;
 use App\Http\Requests\StoreContractSearch;
 use App\InlandDistance;
 use App\Harbor;
@@ -164,6 +165,8 @@ class SearchApiController extends Controller
             return $comprice->only(['id','company_id','price_id']);
         });
 
+        $options = [];
+
         $environment_name = $_ENV['APP_ENV'];
 
         if($environment_name == "production"){
@@ -202,7 +205,8 @@ class SearchApiController extends Controller
             'surcharges',
             //'inland_distances',
             'calculation_type',
-            'company_prices'
+            'company_prices',
+            'options'
         );
 
         return response()->json(['data' => $data]);
@@ -219,18 +223,20 @@ class SearchApiController extends Controller
         
         $user = \Auth::user();
         $user_id = 1;
-        $company_user = $user->companyUser()->first();
+        $company_user = 1;
         $company_user_id = 1;
 
         $search_array = $request->input();
 
         $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'], 0, 10);
         $search_array['dateRange']['endDate'] = substr($search_array['dateRange']['endDate'], 0, 10);
+        $search_array['options']['whitelabel'] = substr($search_array['options']['whitelabel'], 0, 10);
+        $search_array['options']['containers_quantity'] = substr($search_array['options']['containers_quantity'], 0, 10);
 
         $search_ids = $this->getIdsFromArray($search_array);
         $search_ids['company_user'] = $company_user_id;
         $search_ids['user'] = $user_id;
-        $search_ids['client_currency'] = $company_user->currency;
+        $search_ids['client_currency'] = Currency::where("id",149)->first();
 
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
@@ -290,6 +296,7 @@ class SearchApiController extends Controller
             $this->stringifyRateAmounts($rate);
 
             $this->setDownloadParameters($rate);
+
         }
 
         if ($rates != null && count($rates) != 0) {
@@ -303,20 +310,25 @@ class SearchApiController extends Controller
             $rates[0]->SetAttribute('search', $search_array);
         }
 
-        $track_array = [];
-        $track_array['company_user'] = $company_user;
-        $track_array['data'] = $search_array;
+        // $track_array = [];
+        // $track_array['company_user'] = $company_user;
+        // $track_array['data'] = $search_array;
 
-        /** Tracking search event with Mix Panel*/
-        $this->trackEvents("search_fcl", $track_array);
-
+        
+        // /** Tracking search event with Mix Panel*/
+        // $this->trackEvents("search_fcl", $track_array);
+        
         return RateResource::collection($rates);
 
-        // if ($request->requested == 2  ){
+        // Whitelabel 
 
-        //     echo('Hola');
+         if ($search_array['options']['whitelabel'] == true ) {
 
-        // }
+             return WhitelabelRateResource::collection($rates);
+
+         }
+
+
     }
 
     //Stores current search

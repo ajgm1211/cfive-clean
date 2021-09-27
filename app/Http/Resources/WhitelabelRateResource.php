@@ -47,6 +47,8 @@ class WhitelabelRateResource extends JsonResource
             // 'contract_backup_id' => $this->contractBackupId,
             // 'contract_request_id' => $this->contractRequestId,
             // 'contract_id' => $this->contractId
+            'options' => $this->options,
+
         ];    
     }
 }
