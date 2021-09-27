@@ -706,7 +706,7 @@ class QuotationController extends Controller
                 foreach ($charge_direction as $charge) {
 
                     $currency_id = isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency' ? $rate['client_currency']['id'] : $charge['currency']['id'];
-                    $charge = $this->formatChargeForQuote($charge);
+                    $charge = $this->formatFclChargeForQuote($charge);
 
                     $freight = Charge::create([
                         'automatic_rate_id' => $newRate->id,
