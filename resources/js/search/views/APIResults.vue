@@ -70,12 +70,12 @@
             <div class="col-lg-2 col-12 text-center"></div>
             <!-- RUTA Y PRECIOS -->
             <div
-              class="row col-12 mr-0 ml-0"
-              style="border-bottom: 1px solid #f3f3f3"
+              class="d-flex row flex-lg-nowrap col-12 mr-0 ml-0"
+              style="border-bottom: 1px solid #f3f3f3; width:100%"
             >
               <!-- RUTA -->
               <div
-                class="col-12 col-lg-6 d-none d-lg-flex"
+                class="col-12 col-lg-8 d-none d-lg-flex"
                 style="border-bottom: 1px solid #eeeeee"
               >
                 <!-- ORGIEN -->
@@ -138,7 +138,7 @@
               <!-- RUTA RESPONSIVA -->
               <div
                 class="row col-lg-6 d-lg-none mr-0 ml-0"
-                style="border-bottom: 1px solid #eeeeee"
+                style="border-bottom: 1px solid #eeeeee; "
               >
                 <!-- DESTINOS -->
                 <div class="col-sm-6">
@@ -193,9 +193,9 @@
               <!-- PRECIO -->
               <div class="col-12 col-lg-6">
                 <!-- PRECIO RESPONSIVE -->
-                <div class="row card-amount card-amount-header__res">
+                <div class="row card-amount card-amount-header__res" style="justify-content: flex-start">
                   <div
-                    class="col-2 pl-0 pr-0 prices-card-res"
+                    class="col-2 pl-0 pr-0 prices-card-res "
                     v-for="(cont, contCode) in request.containers"
                     :key="contCode"
                   >
@@ -207,7 +207,7 @@
                 <!-- FIN PRECIO RESPONSIVE -->
 
                 <!-- PRECIO -->
-                <div class="row card-amount card-amount__res">
+                <div class="row card-amount card-amount__res" style="justify-content: flex-start">
                   <div
                     class="col-2 pl-0 pr-0 prices-card-res"
                     :class="countContainersClass()"
@@ -2728,7 +2728,7 @@
                   >
                     <p>
                       <b style="font-size: 16px">
-                        {{ hapagGlobalTotal.total }}
+                        {{ datalists.company_user.decimals === 1 ? hapagGlobalTotal.total : hapagGlobalTotal.total.toFixed(0)}}
                         <span style="font-size: 10px">{{
                           hapagGlobalTotal.currencyCode
                         }}</span></b
@@ -4283,6 +4283,9 @@ export default {
       searchActions: {},
     };
   },
+  created(){
+    //
+  },
   methods: {
     countContainersClass() {
       if (
@@ -4337,7 +4340,7 @@ export default {
 
       if (
         this.request.carriersApi.length > 0 &&
-        this.request.selectedContainerGroup.id == 1
+      (  this.request.selectedContainerGroup.id == 1 ||  this.request.selectedContainerGroup.id == 2)
       ) {
         
         this.request.carriersApi.forEach(function(apiCarrier){
@@ -4528,12 +4531,16 @@ export default {
         responseData.pricingDetails.totalRatePerContainer.forEach(function(
           totalPerCont
         ) {
-          totalPerCont.total =
+          newTotal =
             responseData.pricingDetails.totalRatePerType.totalRateFreight[
               responseData.pricingDetails.totalRatePerContainer.indexOf(
                 totalPerCont
               )
             ].total;
+
+          newTotal = newTotal.toFixed(2);
+          
+          totalPerCont.total = newTotal;
         });
       } else if (
         !this.request.originCharges &&
