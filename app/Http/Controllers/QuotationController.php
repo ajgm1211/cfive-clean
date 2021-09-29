@@ -408,11 +408,8 @@ class QuotationController extends Controller
         }
 
         /** Tracking create quote event with Mix Panel*/
-        if($search_data_ids['type'] == 'FCL'){
-            $this->trackEvents("create_quote_fcl", $quote);
-        }elseif($search_data_ids['type'] == 'LCL'){
-            $this->trackEvents("create_quote_lcl", $quote);
-        }
+        $this->trackEvents("create_quote", $quote);
+        
 
         return new QuotationResource($quote);
     }
