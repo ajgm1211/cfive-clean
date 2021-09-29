@@ -48,12 +48,9 @@ trait MixPanelTrait
             case "search_fcl":
                 $this->trackSearchFclEvent($data, $user);
                 break;
-            case "create_quote_fcl":
-                $this->trackCreateQuoteFclEvent($data, $user);
+            case "create_quote":
+                $this->trackCreateQuoteEvent($data, $user);
                 break;
-            case "create_quote_lcl":
-                $this->trackCreateQuoteLclEvent($data, $user);
-            break;
             case "Request_Status_fcl":
                 $this->trackStatusFclEvent($data, $user);
                 break;
@@ -174,20 +171,24 @@ trait MixPanelTrait
     }
 
     /**
-     * trackCreateQuoteFclEvent
+     * trackCreateQuoteEvent
      *
      * @param  mixed $data
      * @param  mixed $user
      * @return void
      */
-    public function trackCreateQuoteFclEvent($data, $user)
+    public function trackCreateQuoteEvent($data, $user)
     {
-        $containers = $data->getContainersFromEquipment($data->equipment);
-
-        $container_arr = [];
-
-        foreach ($containers as $container) {
-            array_push($container_arr, $container->code);
+        if($data->type == "FCL"){
+            $containers = $data->getContainersFromEquipment($data->equipment);
+    
+            $container_arr = [];
+    
+            foreach ($containers as $container) {
+                array_push($container_arr, $container->code);
+            }
+        }elseif($data->type == "LCL"){
+            $container_arr = [];
         }
 
         $mixPanel = app('mixpanel');
@@ -200,32 +201,6 @@ trait MixPanelTrait
                 'Company' => $data->company_user->name,
                 'Type' => $data->type,
                 'Equipment' => $container_arr,
-                'Delivery_type' => $data->delivery,
-                'Client_company' => $data->company->business_name ?? null,
-                'Client_contact' => $data->contact->fullname ?? null,
-                'User' => $user->fullname,
-            )
-        );
-    }
-
-    /**
-     * trackCreateQuoteLclEvent
-     *
-     * @param  mixed $data
-     * @param  mixed $user
-     * @return void
-     */
-    public function trackCreateQuoteLclEvent($data, $user)
-    {
-        $mixPanel = app('mixpanel');
-
-        $mixPanel->identify($user->id);
-
-        $mixPanel->track(
-            'Create Quote',
-            array(
-                'Company' => $data->company_user->name,
-                'Type' => $data->type,
                 'Delivery_type' => $data->delivery,
                 'Client_company' => $data->company->business_name ?? null,
                 'Client_contact' => $data->contact->fullname ?? null,
