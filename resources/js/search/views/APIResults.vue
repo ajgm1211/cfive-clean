@@ -1740,7 +1740,7 @@
                 <div class="origin mr-4">
                   <span>origin</span>
                   <p class="mb-0">
-                    {{ evergreenResult.departureName }}
+                    {{ evergreenResult.departureTerminal }}
                   </p>
                   <p>{{ evergreenResult.departureDateGmt.substring(0, 10) }}</p>
                 </div>
@@ -1781,7 +1781,7 @@
                 <div class="destination ml-4">
                   <span>destination</span>
                   <p class="mb-0">
-                    {{ evergreenResult.arrivalName }}
+                    {{ evergreenResult.arrivalTerminal }}
                   </p>
                   <p>{{ evergreenResult.arrivalDateGmt.substring(0, 10) }}</p>
                 </div>
@@ -1800,7 +1800,7 @@
                   <div class="origin mb-3">
                     <span>origin</span>
                     <p class="mb-1">
-                      {{ evergreenResult.departureName }}
+                      {{ evergreenResult.departureTerminal }}
                     </p>
                     <p>
                       {{ evergreenResult.departureDateGmt.substring(0, 10) }}
@@ -1812,7 +1812,7 @@
                   <div class="destination align-items-start mb-3">
                     <span>destination</span>
                     <p class="mb-1">
-                      {{ evergreenResult.arrivalName }}
+                      {{ evergreenResult.arrivalTerminal }}
                     </p>
                     <p>{{ evergreenResult.arrivalDateGmt.substring(0, 10) }}</p>
                   </div>

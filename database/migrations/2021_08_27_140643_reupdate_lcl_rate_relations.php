@@ -13,13 +13,13 @@ class ReupdateLclRateRelations extends Migration
      */
     public function up()
     {
-        Schema::table('rates_lcl', function (Blueprint $table) {
+        /**Schema::table('rates_lcl', function (Blueprint $table) {
             DB::table('rates_lcl')
                 ->update([
                     "calculationtype_id" => 22,
-                    "surcharge_id" => 16048,
+                    "surcharge_id" => 11896,
             ]);
-        });
+        });**/
     }
 
     /**
