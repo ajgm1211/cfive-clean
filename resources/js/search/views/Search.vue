@@ -2233,9 +2233,9 @@ export default {
 
     updateQuoteSearchOptions() {
       let component = this;
-
+      
       if (this.searchRequest.requestData.requested == 1) {
-        component.searchActions
+        component.actions.quotes
           .updateSearch(
             this.searchRequest.requestData.model_id,
             this.searchRequest
