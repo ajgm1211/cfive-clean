@@ -43,10 +43,8 @@
                     <tr>
                         <td>{!! $charge->charge ?? 'Inland' !!}</td>
                         <td>{{  @$charge->calculation_type['name'] ?? @$charge->inland_address->address ?? "--" }}</td>
-                        @foreach ($equipmentHides as $hiddenKey=>$hide)
-                            @if($hide == "")
-                                <td>{!!  isDecimal($charge->total["c" . $hiddenKey], false, true) !!} {!! @$charge->currency->alphacode !!}</td>
-                            @endif
+                        @foreach ($charge->total as $total)
+                            <td>{!!  isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
                         @endforeach
                     </tr>
                 @endforeach
