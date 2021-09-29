@@ -4528,6 +4528,8 @@ export default {
         responseData.pricingDetails.totalRatePerContainer.forEach(function(
           totalPerCont
         ) {
+          let newTotal = 0;
+
           newTotal =
             responseData.pricingDetails.totalRatePerType.totalRateFreight[
               responseData.pricingDetails.totalRatePerContainer.indexOf(
@@ -4535,7 +4537,9 @@ export default {
               )
             ].total;
 
-          newTotal = newTotal.toFixed(2);
+          if(newTotal%1 != 0){
+            newTotal = newTotal.toFixed(2);
+          }
           
           totalPerCont.total = newTotal;
         });
