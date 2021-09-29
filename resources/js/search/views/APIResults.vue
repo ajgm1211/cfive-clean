@@ -57,7 +57,9 @@
                   placement="top"
                 >
                   <ul class="pl-2 ml-2">
-                    <li v-for="data,namedKey in cmaResult.additionalData.namedAccounts"
+                    <li
+                      v-for="(data, namedKey) in cmaResult.additionalData
+                        .namedAccounts"
                       :key="namedKey"
                     >
                       {{ data.name }}
@@ -70,12 +72,12 @@
             <div class="col-lg-2 col-12 text-center"></div>
             <!-- RUTA Y PRECIOS -->
             <div
-              class="row col-12 mr-0 ml-0"
-              style="border-bottom: 1px solid #f3f3f3"
+              class="d-flex row flex-lg-nowrap col-12 mr-0 ml-0"
+              style="border-bottom: 1px solid #f3f3f3; width:100%"
             >
               <!-- RUTA -->
               <div
-                class="col-12 col-lg-6 d-none d-lg-flex"
+                class="col-12 col-lg-8 d-none d-lg-flex"
                 style="border-bottom: 1px solid #eeeeee"
               >
                 <!-- ORGIEN -->
@@ -138,7 +140,7 @@
               <!-- RUTA RESPONSIVA -->
               <div
                 class="row col-lg-6 d-lg-none mr-0 ml-0"
-                style="border-bottom: 1px solid #eeeeee"
+                style="border-bottom: 1px solid #eeeeee; "
               >
                 <!-- DESTINOS -->
                 <div class="col-sm-6">
@@ -193,9 +195,12 @@
               <!-- PRECIO -->
               <div class="col-12 col-lg-6">
                 <!-- PRECIO RESPONSIVE -->
-                <div class="row card-amount card-amount-header__res">
+                <div
+                  class="row card-amount card-amount-header__res"
+                  style="justify-content: flex-start"
+                >
                   <div
-                    class="col-2 pl-0 pr-0 prices-card-res"
+                    class="col-2 pl-0 pr-0 prices-card-res "
                     v-for="(cont, contCode) in request.containers"
                     :key="contCode"
                   >
@@ -207,7 +212,10 @@
                 <!-- FIN PRECIO RESPONSIVE -->
 
                 <!-- PRECIO -->
-                <div class="row card-amount card-amount__res">
+                <div
+                  class="row card-amount card-amount__res"
+                  style="justify-content: flex-start"
+                >
                   <div
                     class="col-2 pl-0 pr-0 prices-card-res"
                     :class="countContainersClass()"
@@ -262,7 +270,9 @@
                   placement="top"
                 >
                   <ul class="pl-2 ml-2">
-                    <li v-for="data,commKey in cmaResult.additionalData.commodities"
+                    <li
+                      v-for="(data, commKey) in cmaResult.additionalData
+                        .commodities"
                       :key="commKey"
                     >
                       {{ data.name }}
@@ -4314,7 +4324,7 @@ export default {
       var params = [];
       let reqCounter = 0;
 
-      component.$emit("apiSearchStarted",'apiSearchStart');
+      component.$emit("apiSearchStarted", "apiSearchStart");
 
       component.accordion_id = 0;
 
@@ -4337,27 +4347,31 @@ export default {
 
       if (
         this.request.carriersApi.length > 0 &&
-        this.request.selectedContainerGroup.id == 1
+        (this.request.selectedContainerGroup.id == 1 ||
+          this.request.selectedContainerGroup.id == 2)
       ) {
-        
-        this.request.carriersApi.forEach(function(apiCarrier){
-          apiOriginPorts.forEach(function (origin) {
-            apiDestinationPorts.forEach(function (destination) {
-              if(component.request.selectedContainerGroup.id == 1 || (component.request.selectedContainerGroup.id == 2 && apiCarrier.code == 'cmacgm')){
+        this.request.carriersApi.forEach(function(apiCarrier) {
+          apiOriginPorts.forEach(function(origin) {
+            apiDestinationPorts.forEach(function(destination) {
+              if (
+                component.request.selectedContainerGroup.id == 1 ||
+                (component.request.selectedContainerGroup.id == 2 &&
+                  apiCarrier.code == "cmacgm")
+              ) {
                 params.push({
-                    originPort: origin,
-                    destinationPort: destination,
-                    equipmentSizeType: apiContainers,
-                    departureDate: apiDate,
-                    uemail: component.datalists.user.email,
-                    brands: apiCarrier.code,
-                  });
+                  originPort: origin,
+                  destinationPort: destination,
+                  equipmentSizeType: apiContainers,
+                  departureDate: apiDate,
+                  uemail: component.datalists.user.email,
+                  brands: apiCarrier.code,
+                });
               }
             });
           });
         });
 
-        params.forEach(function (paramObject){
+        params.forEach(function(paramObject) {
           axios
             .get(component.datalists.api_url, {
               params: paramObject,
@@ -4369,7 +4383,7 @@ export default {
               },
             })
             .then((response) => {
-              response.data.forEach(function (respData) {
+              response.data.forEach(function(respData) {
                 if (
                   respData.company == "Maersk Spot" ||
                   respData.company == "Sealand Spot"
@@ -4379,10 +4393,10 @@ export default {
                   component.setDetention(respData);
                 } else {
                   component.results[paramObject.brands].push(respData);
-                } 
+                }
 
-                component.request.carriersApi.forEach(function(apiCarrier){
-                  if(apiCarrier.code == respData.companyCode){
+                component.request.carriersApi.forEach(function(apiCarrier) {
+                  if (apiCarrier.code == respData.companyCode) {
                     respData.image = apiCarrier.image;
                   }
                 });
@@ -4410,7 +4424,7 @@ export default {
               reqCounter += 1;
               fullResponseLength += response.data.length;
 
-              if(reqCounter == params.length){
+              if (reqCounter == params.length) {
                 component.$emit("apiSearchDone", fullResponseLength);
               }
             })
@@ -4536,7 +4550,7 @@ export default {
             ].total;
 
           newTotal = newTotal.toFixed(2);
-          
+
           totalPerCont.total = newTotal;
         });
       } else if (
@@ -4602,7 +4616,7 @@ export default {
       let finalContainers = [];
       let finalContainerString = "";
 
-      component.request.containers.forEach(function (container) {
+      component.request.containers.forEach(function(container) {
         let containerOptions = JSON.parse(container.options);
 
         if (containerOptions.has_api) {
@@ -4610,9 +4624,9 @@ export default {
         }
       });
 
-      finalContainers.forEach(function (container) {
+      finalContainers.forEach(function(container) {
         let containerString = "1x" + container.code.substring(0, 2);
-        
+
         if (container.code.includes("HC")) {
           containerString += "HC";
         }
@@ -4628,9 +4642,7 @@ export default {
         finalContainerString += containerString;
 
         if (
-          finalContainers[
-            finalContainers.indexOf(container) + 1
-          ] != undefined
+          finalContainers[finalContainers.indexOf(container) + 1] != undefined
         ) {
           finalContainerString += ",";
         }
