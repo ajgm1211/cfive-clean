@@ -57,9 +57,7 @@
                   placement="top"
                 >
                   <ul class="pl-2 ml-2">
-                    <li
-                      v-for="(data, namedKey) in cmaResult.additionalData
-                        .namedAccounts"
+                    <li v-for="data,namedKey in cmaResult.additionalData.namedAccounts"
                       :key="namedKey"
                     >
                       {{ data.name }}
@@ -195,10 +193,7 @@
               <!-- PRECIO -->
               <div class="col-12 col-lg-6">
                 <!-- PRECIO RESPONSIVE -->
-                <div
-                  class="row card-amount card-amount-header__res"
-                  style="justify-content: flex-start"
-                >
+                <div class="row card-amount card-amount-header__res" style="justify-content: flex-start">
                   <div
                     class="col-2 pl-0 pr-0 prices-card-res "
                     v-for="(cont, contCode) in request.containers"
@@ -212,10 +207,7 @@
                 <!-- FIN PRECIO RESPONSIVE -->
 
                 <!-- PRECIO -->
-                <div
-                  class="row card-amount card-amount__res"
-                  style="justify-content: flex-start"
-                >
+                <div class="row card-amount card-amount__res" style="justify-content: flex-start">
                   <div
                     class="col-2 pl-0 pr-0 prices-card-res"
                     :class="countContainersClass()"
@@ -270,9 +262,7 @@
                   placement="top"
                 >
                   <ul class="pl-2 ml-2">
-                    <li
-                      v-for="(data, commKey) in cmaResult.additionalData
-                        .commodities"
+                    <li v-for="data,commKey in cmaResult.additionalData.commodities"
                       :key="commKey"
                     >
                       {{ data.name }}
@@ -2738,7 +2728,7 @@
                   >
                     <p>
                       <b style="font-size: 16px">
-                        {{ hapagGlobalTotal.total }}
+                        {{ datalists.company_user.decimals === 1 ? hapagGlobalTotal.total : hapagGlobalTotal.total.toFixed(0)}}
                         <span style="font-size: 10px">{{
                           hapagGlobalTotal.currencyCode
                         }}</span></b
@@ -4293,6 +4283,9 @@ export default {
       searchActions: {},
     };
   },
+  created(){
+    //
+  },
   methods: {
     countContainersClass() {
       if (
@@ -4324,7 +4317,7 @@ export default {
       var params = [];
       let reqCounter = 0;
 
-      component.$emit("apiSearchStarted", "apiSearchStart");
+      component.$emit("apiSearchStarted",'apiSearchStart');
 
       component.accordion_id = 0;
 
@@ -4347,31 +4340,27 @@ export default {
 
       if (
         this.request.carriersApi.length > 0 &&
-        (this.request.selectedContainerGroup.id == 1 ||
-          this.request.selectedContainerGroup.id == 2)
+      (  this.request.selectedContainerGroup.id == 1 ||  this.request.selectedContainerGroup.id == 2)
       ) {
-        this.request.carriersApi.forEach(function(apiCarrier) {
-          apiOriginPorts.forEach(function(origin) {
-            apiDestinationPorts.forEach(function(destination) {
-              if (
-                component.request.selectedContainerGroup.id == 1 ||
-                (component.request.selectedContainerGroup.id == 2 &&
-                  apiCarrier.code == "cmacgm")
-              ) {
+        
+        this.request.carriersApi.forEach(function(apiCarrier){
+          apiOriginPorts.forEach(function (origin) {
+            apiDestinationPorts.forEach(function (destination) {
+              if(component.request.selectedContainerGroup.id == 1 || (component.request.selectedContainerGroup.id == 2 && apiCarrier.code == 'cmacgm')){
                 params.push({
-                  originPort: origin,
-                  destinationPort: destination,
-                  equipmentSizeType: apiContainers,
-                  departureDate: apiDate,
-                  uemail: component.datalists.user.email,
-                  brands: apiCarrier.code,
-                });
+                    originPort: origin,
+                    destinationPort: destination,
+                    equipmentSizeType: apiContainers,
+                    departureDate: apiDate,
+                    uemail: component.datalists.user.email,
+                    brands: apiCarrier.code,
+                  });
               }
             });
           });
         });
 
-        params.forEach(function(paramObject) {
+        params.forEach(function (paramObject){
           axios
             .get(component.datalists.api_url, {
               params: paramObject,
@@ -4383,7 +4372,7 @@ export default {
               },
             })
             .then((response) => {
-              response.data.forEach(function(respData) {
+              response.data.forEach(function (respData) {
                 if (
                   respData.company == "Maersk Spot" ||
                   respData.company == "Sealand Spot"
@@ -4393,10 +4382,10 @@ export default {
                   component.setDetention(respData);
                 } else {
                   component.results[paramObject.brands].push(respData);
-                }
+                } 
 
-                component.request.carriersApi.forEach(function(apiCarrier) {
-                  if (apiCarrier.code == respData.companyCode) {
+                component.request.carriersApi.forEach(function(apiCarrier){
+                  if(apiCarrier.code == respData.companyCode){
                     respData.image = apiCarrier.image;
                   }
                 });
@@ -4424,7 +4413,7 @@ export default {
               reqCounter += 1;
               fullResponseLength += response.data.length;
 
-              if (reqCounter == params.length) {
+              if(reqCounter == params.length){
                 component.$emit("apiSearchDone", fullResponseLength);
               }
             })
@@ -4550,7 +4539,7 @@ export default {
             ].total;
 
           newTotal = newTotal.toFixed(2);
-
+          
           totalPerCont.total = newTotal;
         });
       } else if (
@@ -4616,7 +4605,7 @@ export default {
       let finalContainers = [];
       let finalContainerString = "";
 
-      component.request.containers.forEach(function(container) {
+      component.request.containers.forEach(function (container) {
         let containerOptions = JSON.parse(container.options);
 
         if (containerOptions.has_api) {
@@ -4624,9 +4613,9 @@ export default {
         }
       });
 
-      finalContainers.forEach(function(container) {
+      finalContainers.forEach(function (container) {
         let containerString = "1x" + container.code.substring(0, 2);
-
+        
         if (container.code.includes("HC")) {
           containerString += "HC";
         }
@@ -4642,7 +4631,9 @@ export default {
         finalContainerString += containerString;
 
         if (
-          finalContainers[finalContainers.indexOf(container) + 1] != undefined
+          finalContainers[
+            finalContainers.indexOf(container) + 1
+          ] != undefined
         ) {
           finalContainerString += ",";
         }
