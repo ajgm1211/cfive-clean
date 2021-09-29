@@ -4528,12 +4528,16 @@ export default {
         responseData.pricingDetails.totalRatePerContainer.forEach(function(
           totalPerCont
         ) {
-          totalPerCont.total =
+          newTotal =
             responseData.pricingDetails.totalRatePerType.totalRateFreight[
               responseData.pricingDetails.totalRatePerContainer.indexOf(
                 totalPerCont
               )
             ].total;
+
+          newTotal = newTotal.toFixed(2);
+          
+          totalPerCont.total = newTotal;
         });
       } else if (
         !this.request.originCharges &&
