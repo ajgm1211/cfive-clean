@@ -52,6 +52,7 @@ class QuotationApiResource extends JsonResource
             "english_terms_conditions" => $this->terms_english,
             "portuguese_terms_conditions" => $this->terms_portuguese,
             "payment_conditions" => $this->payment_conditions,
+            "owner_id" => $this->company_user->id ?? null,
             "owner" => $this->company_user->name ?? null,
             "created_by" => $this->user->fullname ?? null,
             "created_at" => $this->created_at->toDateTimeString(),
