@@ -48,7 +48,7 @@ trait MixPanelTrait
             case "search_fcl":
                 $this->trackSearchFclEvent($data, $user);
                 break;
-            case "create_quote_fcl":
+            case "create_quote":
                 $this->trackCreateQuoteEvent($data, $user);
                 break;
             case "Request_Status_fcl":
@@ -171,7 +171,7 @@ trait MixPanelTrait
     }
 
     /**
-     * trackCreateQuoteFclEvent
+     * trackCreateQuoteEvent
      *
      * @param  mixed $data
      * @param  mixed $user
@@ -179,12 +179,16 @@ trait MixPanelTrait
      */
     public function trackCreateQuoteEvent($data, $user)
     {
-        $containers = $data->getContainersFromEquipment($data->equipment);
-
-        $container_arr = [];
-
-        foreach ($containers as $container) {
-            array_push($container_arr, $container->code);
+        if($data->type == "FCL"){
+            $containers = $data->getContainersFromEquipment($data->equipment);
+    
+            $container_arr = [];
+    
+            foreach ($containers as $container) {
+                array_push($container_arr, $container->code);
+            }
+        }elseif($data->type == "LCL"){
+            $container_arr = [];
         }
 
         $mixPanel = app('mixpanel');
