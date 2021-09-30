@@ -179,16 +179,14 @@ trait MixPanelTrait
      */
     public function trackCreateQuoteEvent($data, $user)
     {
+        $container_arr = [];
+
         if($data->type == "FCL"){
             $containers = $data->getContainersFromEquipment($data->equipment);
-    
-            $container_arr = [];
-    
+        
             foreach ($containers as $container) {
                 array_push($container_arr, $container->code);
             }
-        }elseif($data->type == "LCL"){
-            $container_arr = [];
         }
 
         $mixPanel = app('mixpanel');
