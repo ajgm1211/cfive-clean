@@ -4416,11 +4416,11 @@ export default {
             })
             .catch((error) => {
               console.log(error);
-              component.$emit("apiSearchDone", 0);
+              component.$emit("apiSearchDone", fullResponseLength);
             });
         });
       } else {
-        component.$emit("apiSearchDone", 0);
+        component.$emit("apiSearchDone", fullResponseLength);
       }
     },
 
