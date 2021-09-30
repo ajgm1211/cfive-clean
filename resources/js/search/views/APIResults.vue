@@ -2728,7 +2728,7 @@
                   >
                     <p>
                       <b style="font-size: 16px">
-                        {{ hapagGlobalTotal.total }}
+                        {{ datalists.company_user.decimals === 1 ? hapagGlobalTotal.total : parseFloat(hapagGlobalTotal.total).toFixed(0) }}
                         <span style="font-size: 10px">{{
                           hapagGlobalTotal.currencyCode
                         }}</span></b
@@ -4343,7 +4343,7 @@ export default {
         this.request.carriersApi.forEach(function(apiCarrier){
           apiOriginPorts.forEach(function (origin) {
             apiDestinationPorts.forEach(function (destination) {
-              if(component.request.selectedContainerGroup.id == 1 || (component.request.selectedContainerGroup.id == 2 && apiCarrier.code == 'cmacgm')){
+              if(component.request.selectedContainerGroup.id == 1){
                 params.push({
                     originPort: origin,
                     destinationPort: destination,
