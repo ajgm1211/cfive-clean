@@ -1740,7 +1740,7 @@
                 <div class="origin mr-4">
                   <span>origin</span>
                   <p class="mb-0">
-                    {{ evergreenResult.departureName }}
+                    {{ evergreenResult.departureTerminal }}
                   </p>
                   <p>{{ evergreenResult.departureDateGmt.substring(0, 10) }}</p>
                 </div>
@@ -1781,7 +1781,7 @@
                 <div class="destination ml-4">
                   <span>destination</span>
                   <p class="mb-0">
-                    {{ evergreenResult.arrivalName }}
+                    {{ evergreenResult.arrivalTerminal }}
                   </p>
                   <p>{{ evergreenResult.arrivalDateGmt.substring(0, 10) }}</p>
                 </div>
@@ -1800,7 +1800,7 @@
                   <div class="origin mb-3">
                     <span>origin</span>
                     <p class="mb-1">
-                      {{ evergreenResult.departureName }}
+                      {{ evergreenResult.departureTerminal }}
                     </p>
                     <p>
                       {{ evergreenResult.departureDateGmt.substring(0, 10) }}
@@ -1812,7 +1812,7 @@
                   <div class="destination align-items-start mb-3">
                     <span>destination</span>
                     <p class="mb-1">
-                      {{ evergreenResult.arrivalName }}
+                      {{ evergreenResult.arrivalTerminal }}
                     </p>
                     <p>{{ evergreenResult.arrivalDateGmt.substring(0, 10) }}</p>
                   </div>
@@ -2728,7 +2728,7 @@
                   >
                     <p>
                       <b style="font-size: 16px">
-                        {{ hapagGlobalTotal.total }}
+                        {{ datalists.company_user.decimals === 1 ? hapagGlobalTotal.total : parseFloat(hapagGlobalTotal.total).toFixed(0) }}
                         <span style="font-size: 10px">{{
                           hapagGlobalTotal.currencyCode
                         }}</span></b
@@ -4343,7 +4343,7 @@ export default {
         this.request.carriersApi.forEach(function(apiCarrier){
           apiOriginPorts.forEach(function (origin) {
             apiDestinationPorts.forEach(function (destination) {
-              if(component.request.selectedContainerGroup.id == 1 || (component.request.selectedContainerGroup.id == 2 && apiCarrier.code == 'cmacgm')){
+              if(component.request.selectedContainerGroup.id == 1){
                 params.push({
                     originPort: origin,
                     destinationPort: destination,
@@ -4416,11 +4416,11 @@ export default {
             })
             .catch((error) => {
               console.log(error);
-              component.$emit("apiSearchDone", 0);
+              component.$emit("apiSearchDone", fullResponseLength);
             });
         });
       } else {
-        component.$emit("apiSearchDone", 0);
+        component.$emit("apiSearchDone", fullResponseLength);
       }
     },
 
@@ -4528,6 +4528,8 @@ export default {
         responseData.pricingDetails.totalRatePerContainer.forEach(function(
           totalPerCont
         ) {
+          let newTotal = 0;
+
           newTotal =
             responseData.pricingDetails.totalRatePerType.totalRateFreight[
               responseData.pricingDetails.totalRatePerContainer.indexOf(
@@ -4535,7 +4537,9 @@ export default {
               )
             ].total;
 
-          newTotal = newTotal.toFixed(2);
+          if(newTotal%1 != 0){
+            newTotal = newTotal.toFixed(2);
+          }
           
           totalPerCont.total = newTotal;
         });
