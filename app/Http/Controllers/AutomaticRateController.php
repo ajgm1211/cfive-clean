@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\AutomaticRate;
 use App\QuoteV2;
 use App\Charge;
+use App\Surcharge;
 use App\ChargeLclAir;
+use App\CalculationTypeLcl;
 use App\AutomaticInlandTotal;
 use App\AutomaticRateTotal;
 use App\Http\Resources\AutomaticRateResource;
@@ -52,10 +54,14 @@ class AutomaticRateController extends Controller
                 'currency_id' => $rate->currency_id,
             ]);
         }else if($quote->type == 'LCL'){
+            $surcharge_lcl = Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->first();
+            $calculationtype_lcl = CalculationTypeLcl::where('name','W/M')->first();
+
             $freight = ChargeLclAir::create([
                 'automatic_rate_id' => $rate->id,
                 'type_id' => '3',
-                'calculation_type_id' => '4',
+                'calculation_type_id' => $calculationtype_lcl->id,
+                'surcharge_id' => $surcharge_lcl->id,
                 'units' => 1.00,
                 'price_per_unit' => 1.00,
                 'minimum' => 1.00,
