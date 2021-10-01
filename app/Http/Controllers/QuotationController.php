@@ -227,7 +227,7 @@ class QuotationController extends Controller
         if($search_data_ids['type'] == 'FCL'){
             $equipment = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
         }else{
-            $equipment = [];
+            $equipment = "[]";
         }
 
         $remarks = "";
@@ -408,7 +408,8 @@ class QuotationController extends Controller
         }
 
         /** Tracking create quote event with Mix Panel*/
-        $this->trackEvents("create_quote_fcl", $quote);
+        $this->trackEvents("create_quote", $quote);
+        
 
         return new QuotationResource($quote);
     }
