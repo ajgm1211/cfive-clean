@@ -16,8 +16,11 @@ class SearchApiResource extends JsonResource
      */
     public function toArray($request)
     {
-        $origin_ports = $this->origin_ports()->get();
-        $destination_ports = $this->destination_ports()->get();
+        $origin_ports =$this->formatData($this->origin_ports()->get(),$type=1);
+        $destination_ports = $this->formatData($this->destination_ports()->get(),$type=1);
+
+        $origin_address=$this->formatData($this->origin_locations()->get(),$type=2);
+        $destination_address=$this->formatData($this->destination_locations()->get(),$type=2);
         
         $carriers = $this->carriers()->get()->map(function ($carrier) {
             return $carrier->only(['id', 'name', 'image']);
@@ -70,10 +73,39 @@ class SearchApiResource extends JsonResource
             'direction' => isset($this->direction) ? $this->direction()->first() : null,
             'origin_charges' => $this->origin_charges,
             'destination_charges' => $this->destination_charges,
-            'origin_address' => $this->origin_address,
-            'destination_address' => $this->destination_address,
+            'origin_address' => isset($origin_address) ? $origin_address : null,
+            'destination_address' => isset($destination_address) ? $destination_address : null,
             'show_rate_currency' => $this->show_rate_currency,
         ];
+    }
+
+    public function formatData($data,$identificator){
+        $array=[];
+        foreach($data as $key=>$info){
+            if ($identificator==1) {
+                $type='port';
+                $location=$info['display_name'];   
+            
+            $array[$key]=[
+                'id'=>$info['id'],
+                'display_name'=>$location,
+                'country'=>null,
+                'location'=>$location,
+                'type'=>$type
+            ];
+            }else{
+                $type='city';
+                $location=$info['name'];
+                $array[$key]=[
+                    'id'=>$info['id'],
+                    'country'=>null,
+                    'location'=>$location,
+                    'type'=>$type
+                ];
+            }
+        }
+
+        return $array;
     }
 
 

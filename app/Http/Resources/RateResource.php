@@ -48,6 +48,8 @@ class RateResource extends JsonResource
             'contract_request_id' => $this->contractRequestId,
             'contract_id' => $this->contractId,
             'inland' => isset($this->inland) ? $this->inland : null,
+            'origin_address' => isset($this->originAddress) ? $this->originAddress : null,
+            'destination_address' => isset($this->destinationAddress) ? $this->destinationAddress : null,
         ];
     }
 }

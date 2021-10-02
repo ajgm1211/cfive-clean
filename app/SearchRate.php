@@ -28,6 +28,15 @@ class SearchRate extends Model
     {
         return $this->hasManyThrough('App\Harbor', 'App\SearchPort', 'search_rate_id', 'id', 'id', 'port_dest');
     }
+    public function origin_locations()
+    {
+        return $this->hasManyThrough('App\Location', 'App\SearchPort', 'search_rate_id', 'id', 'id', 'location_orig');
+    }
+
+    public function destination_locations()
+    {
+        return $this->hasManyThrough('App\location', 'App\SearchPort', 'search_rate_id', 'id', 'id', 'location_dest');
+    }
 
     public function carriers()
     {
