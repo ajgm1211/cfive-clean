@@ -70,6 +70,7 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                         'name'              => $surchName,
                         'description'       => $surchName,
                         'company_user_id'   => $company_user,
+                        'options' => json_encode(['is_api' => false]),
                     ]);
                     $surcharger = $surcharger->id;
                 }
@@ -211,6 +212,7 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                         'name'              => $surchName,
                         'description'       => $surchName,
                         'company_user_id'   => $company_user,
+                        'options' => json_encode(['is_api' => false]),
                     ]);
                     $surcharger = $surcharger->id;
                 }
