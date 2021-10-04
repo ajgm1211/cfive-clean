@@ -10,6 +10,8 @@ use App\FailRateLcl;
 use App\Harbor;
 use App\Notifications\N_general;
 use App\RateLcl;
+use App\Surcharge;
+use App\CalculationTypeLcl;
 use App\ScheduleType;
 use App\User;
 use Excel;
@@ -158,6 +160,9 @@ class ReprocesarRatesLclJob implements ShouldQueue
                        $curreExitBol == true) {
                     $collecciont = '';
                     if ($values) {
+                        $surcharge_lcl = Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->first();
+                        $calculationtype_lcl = CalculationTypeLcl::where('name','W/M')->first();    
+
                         $collecciont = RateLcl::create([
                                 'origin_port'       => $originV,
                                 'destiny_port'      => $destinationV,
@@ -169,6 +174,8 @@ class ReprocesarRatesLclJob implements ShouldQueue
                                 'schedule_type_id'  => $scheduleTVal,
                                 'transit_time'      => (int) $failrate['transit_time'],
                                 'via'               => $failrate['via'],
+                                'surcharge_id'      => $surcharge_lcl->id,
+                                'calculationtype_id'=> $calculationtype_lcl->id,   
                             ]);
                     }
                     $failrate->forceDelete();
