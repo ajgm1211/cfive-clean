@@ -56,13 +56,39 @@
           type="classic"
         ></ckeditor>
 
-        <restrictions
+        <Restrictions
           v-if="active == 'Only Apply To'"
           style="border: none!important;"
           :datalists="datalists"
           :actions="actions.restrictions_lcl"
           :data="currentData"
-        ></restrictions>
+        />
+
+        <div v-if="active == 'Detail'">
+          <InputSearch style="margin-bottom:20px"/>
+
+          <ListPrices
+            :filters="false"
+            :thead="thead"
+            :dynamic="true"
+            :rates="rates"
+          />
+
+          <Paginate
+            :page-count="10"
+            :prev-text="'Prev'"
+            :next-text="'Next'"
+            :page-class="'page-item'"
+            :page-link-class="'page-link'"
+            :container-class="'pagination'"
+            :prev-class="'page-item'"
+            :prev-link-class="'page-link'"
+            :next-class="'page-item'"
+            :next-link-class="'page-link'"
+            :initialPage="1"
+            style="margin-bottom: 0!important;"
+          />
+        </div>
       </div>
     </div>
   </section>
@@ -74,13 +100,19 @@ import CustomInput from "../../../components/common/CustomInput.vue";
 import Selectable from "../../../components/common/Selectable.vue";
 import LeftArrow from "../../../components/Icons/LeftArrow.vue";
 import actions from "../../../../../resources/js/actions";
-import axios from "axios";
+import ListPrices from "../../../components/PriceLevel/ListPrices.vue";
+import InputSearch from "../../../components/common/InputSearch.vue";
+import Paginate from "../../../../js/components/paginate.vue";
+// import axios from "axios";
 export default {
   components: {
     CustomInput,
     Selectable,
     LeftArrow,
     Restrictions,
+    ListPrices,
+    InputSearch,
+    Paginate
   },
   data: () => ({
     actions: actions,
@@ -98,6 +130,93 @@ export default {
     price_types: ["FCL", "LCL"],
     selected: "FCL",
     selectable_error: false,
+    thead: ["Direction", "Apply to", "20", "40", "Currency"],
+    rates: [
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+      {
+        direction: "export",
+        restriction: "Apply to",
+        type_20: "2.00",
+        type_40: "3.00",
+        currency: "USD",
+      },
+    ],
   }),
   created() {
     this.getData();
@@ -117,8 +236,6 @@ export default {
     },
     setDropdownLists(err, data) {
       this.datalists = data;
-
-      console.log("data dropwdown", data);
 
       this.datalists["route_types"] = [
         { id: "port", name: "Port", vselected: "harbors" },

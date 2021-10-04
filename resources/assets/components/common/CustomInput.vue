@@ -1,6 +1,7 @@
 <template>
   <div>
     <label
+      v-if="showLabel == true"
       :for="name"
       class="d-block labelv2"
       :class="$v.value.$error ? 'error-msj' : ''"
@@ -11,7 +12,10 @@
       :disabled="disabled"
       class="input-v2"
       autocomplete="off"
-      :class="$v.value.$error ? 'input-err' : ''"
+      :class="[
+        $v.value.$error ? 'input-err' : '',
+        mixed === true ? 'mixedborder' : '',
+      ]"
       :placeholder="placeholder"
       :name="name"
       :type="type"
@@ -53,6 +57,10 @@ export default {
       type: String,
       default: "input name",
     },
+    radius: {
+      type: String,
+      default: "8px",
+    },
     value: {
       default: null,
     },
@@ -63,6 +71,14 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
+    },
+    mixed: {
+      type: Boolean,
+      default: false,
+    },
+    showLabel: {
+      type: Boolean,
+      default: true,
     },
   },
   data: () => ({
@@ -175,13 +191,13 @@ export default {
   width: 100%;
   height: 33px;
   border: 1px solid #d9d9d9;
-  border-radius: 8px;
   margin-top: 5px;
   background-color: #fff;
   outline: none;
   padding: 2px 14px;
   letter-spacing: 0.05em;
   font-size: 13px;
+  border-radius: 8px;
 
   &::placeholder {
     color: #d3d2d2;
@@ -211,5 +227,10 @@ export default {
   font-size: 14px;
   line-height: 21px;
   letter-spacing: 0.05em;
+}
+
+.mixedborder {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 </style>
