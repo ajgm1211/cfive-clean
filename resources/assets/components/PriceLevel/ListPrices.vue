@@ -1,7 +1,7 @@
 <template>
-  <table class="table table-striped table-responsive">
+  <b-table-simple checkable class="table table-striped table-responsive">
     <thead>
-      <tr>
+      <tr v-if="filters == true">
         <th scope="col" style="width:40px">
           <b-form-checkbox
             v-model="allSelected"
@@ -22,8 +22,60 @@
           <OptionsButton :standar="false" />
         </th>
       </tr>
+      <tr v-if="dynamic">
+        <th>
+          <b-form-checkbox
+            v-model="allSelected"
+            aria-describedby="rates"
+            aria-controls="rates"
+            @change="toggleAll"
+          >
+          </b-form-checkbox>
+        </th>
+
+        <th v-for="item in thead" :key="item">{{ item }}</th>
+
+        <th scope="col" style="width:40px">
+          <OptionsButton :standar="false" />
+        </th>
+      </tr>
     </thead>
-    <tbody>
+    <thead v-if="dynamic">
+      <tr>
+        <th></th>
+        <th><Selectable style="width: 100px" :selected="directions[0]" :options="directions" /></th>
+        <th><Selectable   style="width: 120px" :selected="restrictions[0]" :options="restrictions" /></th>
+        <th>
+          <MixedInput :v_model="new_rate.price_20" :options="price_types" />
+        </th>
+        <th>
+          <MixedInput :v_model="new_rate.price_40" :options="price_types" />
+        </th>
+        <th><Selectable style="width: 100px" :selected="currencies[0]" :options="currencies" /></th>
+        <th><MainButton :save="true" text="Save" /></th>
+      </tr>
+    </thead>
+    <tbody v-if="dynamic">
+      <tr v-for="(item, index) in rates" :key="index">
+        <td scope="row">
+          <b-form-checkbox-group>
+            <b-form-checkbox
+              v-bind:value="item"
+              v-bind:id="'check' + item.id"
+              v-model="selected"
+            >
+            </b-form-checkbox>
+          </b-form-checkbox-group>
+        </td>
+        <td>{{ item.direction }}</td>
+        <td>{{ item.restriction }}</td>
+        <td>{{ item.type_20 }}</td>
+        <td>{{ item.type_40 }}</td>
+        <td>{{ item.currency }}</td>
+        <td scope="col"><OptionsButton /></td>
+      </tr>
+    </tbody>
+    <tbody v-else>
       <tr v-for="(item, index) in prices" :key="index">
         <td scope="row">
           <b-form-checkbox-group>
@@ -45,28 +97,64 @@
         <td scope="col"><OptionsButton /></td>
       </tr>
     </tbody>
-  </table>
+  </b-table-simple>
 </template>
 
 <script>
 import IconFilter from "../Icons/Filter.vue";
 import OptionsButton from "../common/OptionsButton.vue";
+import Selectable from "../common/Selectable.vue";
+import MixedInput from "../common/MixedInput.vue";
+import MainButton from "../common/MainButton.vue";
 export default {
   props: {
     prices: {
       type: Array,
       default: [],
     },
+    rates: {
+      type: Array,
+      default: [],
+    },
+    filters: {
+      type: Boolean,
+      default: true,
+    },
+    rate: {
+      type: Boolean,
+      default: true,
+    },
+    dynamic: {
+      type: Boolean,
+      default: false,
+    },
+    thead: {
+      type: Array,
+      default: [],
+    },
   },
-  components: { IconFilter, OptionsButton },
+  components: { IconFilter, OptionsButton, Selectable, MixedInput, MainButton },
   data: () => ({
     selected: [],
     allSelected: false,
     indeterminate: false,
+    price_types: ["Percent Markup", "Fixed Markup"],
+    directions: ["Export", "Import", "Both"],
+    restrictions: ["Freight", "Surcharge", "Inland"],
+    currencies: ["USD", "AUSD", "BS"],
+    new_rate: {
+      price_20: "0",
+      price_40: "0",
+    },
   }),
   methods: {
     toggleAll(checked) {
       this.selected = checked ? this.prices.slice() : [];
+
+      if(this.dynamic === true){
+      this.selected = checked ? this.rates.slice() : [];
+
+      }
     },
   },
   watch: {
