@@ -556,6 +556,7 @@ class ContractController extends Controller
             $filename = date("dmY_His") . '_' . $request->file->getClientOriginalName();
 
             //Uploading file to storage
+            $filename = quitar_caracteres($filename);
             $contract->StoreInMedia($request->file, $filename);
 
             //Saving request FCL
