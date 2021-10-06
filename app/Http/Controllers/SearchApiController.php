@@ -165,7 +165,7 @@ class SearchApiController extends Controller
             return $comprice->only(['id','company_id','price_id']);
         });
 
-        $options = [];
+        $options = collect([]);
 
         $environment_name = $_ENV['APP_ENV'];
 
@@ -230,14 +230,12 @@ class SearchApiController extends Controller
 
         $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'], 0, 10);
         $search_array['dateRange']['endDate'] = substr($search_array['dateRange']['endDate'], 0, 10);
-        $search_array['options']['whitelabel'] = substr($search_array['options']['whitelabel'], 0, 10);
-        $search_array['options']['containers_quantity'] = substr($search_array['options']['containers_quantity'], 0, 10);
+
 
         $search_ids = $this->getIdsFromArray($search_array);
         $search_ids['company_user'] = $company_user_id;
         $search_ids['user'] = $user_id;
         $search_ids['client_currency'] = Currency::where("id",149)->first();
-        $search_ids['options'] = null;
 
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
@@ -308,6 +306,7 @@ class SearchApiController extends Controller
 
             $search_array['terms'] = $terms;
 
+
             $rates[0]->SetAttribute('search', $search_array);
         }
 
@@ -323,11 +322,10 @@ class SearchApiController extends Controller
 
         // Whitelabel 
 
-         if ($search_array['options']['whitelabel'] == true ) {
+          if (['options'] == true) {
 
-             return WhitelabelRateResource::collection($rates);
-
-         }
+              return WhitelabelRateResource::collection($rates);
+          }
 
 
     }
@@ -335,12 +333,16 @@ class SearchApiController extends Controller
     //Stores current search
     public function store(Request $request)
     {
+        // dd($request->input());
+
         //Validating request data from form
         $new_search_data = $request->validate([
             'originPorts' => 'required|array|min:1',
             'destinationPorts' => 'required|array|min:1',
             'dateRange.startDate' => 'required',
             'dateRange.endDate' => 'required',
+            'options.whitelabel' => 'sometimes',
+            'options.containers_quantity' => 'sometimes',
             'containers' => 'required|array|min:1',
             'selectedContainerGroup' => 'required',
             'deliveryType.id' => 'required',
@@ -357,9 +359,13 @@ class SearchApiController extends Controller
             'destinationAddress' => 'sometimes'
         ]);
 
+
+
+
         //Stripping time stamp from date
         $new_search_data['dateRange']['startDate'] = substr($new_search_data['dateRange']['startDate'], 0, 10);
         $new_search_data['dateRange']['endDate'] = substr($new_search_data['dateRange']['endDate'], 0, 10);
+
 
         //Getting address text if in array form
         if (is_array($new_search_data['originAddress'])) {
@@ -370,8 +376,8 @@ class SearchApiController extends Controller
 
         //Setting current company and user
         $user = \Auth::user();
-        $user_id = $user->id;
-        $company_user_id = $user->company_user_id;
+        $user_id = 1;
+        $company_user_id = 1;
 
         //Including company and user in search data array
         $new_search_data['user'] = $user_id;
@@ -384,6 +390,12 @@ class SearchApiController extends Controller
 
         //formatting containers
         $container_array = [];
+
+
+        $options = $new_search_data['options']['whitelabel'] . ' , ' . $new_search_data['options']['containers_quantity'];
+
+        // $options = [];
+
 
         //FORMATTING FOR OLD SEARCH, MUST BE REMOVED
         foreach ($new_search_data_ids['containers'] as $container_id) {
@@ -405,9 +417,30 @@ class SearchApiController extends Controller
             'price_level_id' => $new_search_data_ids['pricelevel'],
             'origin_charges' => $new_search_data_ids['originCharges'],
             'destination_charges' => $new_search_data_ids['destinationCharges'],
+            'options' => $options,
+
             //'origin_address' => $new_search_data_ids['originAddress'],
             //'destination_address' => $new_search_data_ids['destinationAddress']
         ]);
+
+        if ($new_search_data['options']['whitelabel'] == true ){
+
+         $new_search = SearchRate::create([
+            'company_user_id' => $new_search_data_ids['company_user'],
+            'pick_up_date' => $pick_up_date,
+            'direction' => $new_search_data_ids['direction'],
+            'type' => $new_search_data_ids['type'],
+            'user_id' => $new_search_data_ids['user'],
+            'price_level_id' => $new_search_data_ids['pricelevel'],
+            'origin_charges' => $new_search_data_ids['originCharges'],
+            'destination_charges' => $new_search_data_ids['destinationCharges'],
+            'options' => $options,
+         ]);
+
+         return new SearchApiResource($new_search);
+
+     }
+
 
         foreach ($new_search_data_ids['originPorts'] as $origPort) {
             foreach ($new_search_data_ids['destinationPorts'] as $destPort) {
@@ -442,6 +475,8 @@ class SearchApiController extends Controller
                 $search_carrier->provider()->associate($provider)->save();
             }
         }
+
+        
 
         return new SearchApiResource($new_search);
     }

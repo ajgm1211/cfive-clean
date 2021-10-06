@@ -118,6 +118,10 @@ Route::group(['prefix' => 'whitelabel'], function () {
 
     Route::post('/search/process', 'SearchApiController@processSearch');
     Route::get('/search', 'SearchApiController@index');
+    Route::get('/search/{search}', 'SearchApiController@retrieve');
+    Route::get('/search/list', 'SearchApiController@list');
+    Route::get('/search/data', 'SearchApiController@data');
+    Route::post('/search/store', 'SearchApiController@store');
 
 
 });
