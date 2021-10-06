@@ -110,11 +110,13 @@ class FclPdf
                 $inlands = $this->InlandTotals($quote->id, $type, $value[0]['port_id']);
                 foreach ($value as $charge) {
                     foreach ($inlands as $inland) {
-                        if ($inland->pdf_options['grouped']) {
 
-                            if ($inland->pdf_options['groupId'] == $charge->id) {
+                        if ($inland->inland_totals->pdf_options['grouped']) {
+
+                            if ($inland->inland_totals->pdf_options['groupId'] == $charge->id) {
                                 $grouping_array = [];
-                                $inland_total = json_decode(json_encode($inland->total), true);
+                                $inland_total = json_decode(json_decode($inland->total));
+                                $inland_total = isset($inland->sum_total) ? $inland->sum_total:(array)$inland_total;
                                 $inland_total = $this->convertToCurrency($inland->currency, $charge->currency, $inland_total);
                                 foreach ($charge->total as $container => $value) {
                                     $grouping_array[$container] = intval($value) + intval($inland_total[$container]);
@@ -173,9 +175,12 @@ class FclPdf
             $type = 'Destination';
         }
 
-        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals as total', 'markups as profit', 'currency_id', 'inland_address_id', 'pdf_options')
+        $inlands = AutomaticInland::select('id', 'quote_id', 'port_id', 'rate as total', 'markup as profit', 'charge', 'currency_id', 'inland_totals_id')
             ->ConditionalPort($port)->Quotation($quote)->Type($type)->get();
 
+        //Adding address and modifying totals in Inlands
+        $this->addAddressTotalToInland($inlands);
+        
         return $inlands;
     }
 
@@ -187,8 +192,11 @@ class FclPdf
             $type = 'Destination';
         }
 
-        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals as total', 'markups as profit', 'currency_id', 'inland_address_id', 'pdf_options')
+        $inlands = AutomaticInland::select('id', 'quote_id', 'port_id', 'rate as total', 'markup as profit', 'charge', 'currency_id', 'inland_totals_id')
             ->whereNotIn('port_id', $port)->Quotation($quote)->Type($type)->get();
+
+        //Adding address and modifying totals in Inlands
+        $this->addAddressTotalToInland($inlands);
 
         $inlands = $inlands->groupBy([
 
@@ -201,11 +209,79 @@ class FclPdf
         return $inlands;
     }
 
+    public function addAddressTotalToInland($inlands){
+        foreach ($inlands as $inland) {
+            $total = $this->processInlandTotal($inland);
+            $address = $inland->getInlandAddress();
+            $inland->address = $address;
+            $inland->sum_total = $total;
+        }
+    }
+
     public function localChargeTotals($quote, $type, $port)
     {
         $total = LocalChargeQuoteTotal::Quotation($quote)->Port($port)->Type($type)->first();
 
         return $total;
+    }
+
+
+    public function processInlandTotal($item)
+    {
+
+        $sum = 'sum_';
+        $total = 'total_';
+        $amount = 'amount_';
+        $markup = 'markup_';
+
+        $containers = Container::all();
+
+        foreach ($containers as $c) {
+            ${$total . $amount . $c->code} = 0;
+            ${$total . $amount . $markup . $c->code} = 0;
+            ${$sum . $amount . $markup . $c->code} = 0;
+        }
+
+        $array_amounts = (array)json_decode(json_decode($item->total));
+        $array_markups = (array)$item->profit;
+
+        //$array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+        //$array_markups = $this->processOldContainers($array_markups, 'markups');
+        
+        $array = array();
+
+        foreach ($containers as $c) {
+            ${$sum . $c->code} = 0;
+            ${$sum . $amount . $markup . $c->code} = $sum . $amount . $markup . $c->code;
+            ${$total . $c->code} = 0;
+            ${$total . $sum . $c->code} = $total . $sum . $c->code;
+            ${'c' . $c->code} = 'c' . $c->code;
+
+            if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                ${$sum . $c->code} = $array_amounts['c' . $c->code] + $array_markups['m' . $c->code];
+                ${$total . $c->code} = ${$sum . $c->code};
+            } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
+                ${$sum . $c->code} = $array_amounts['c' . $c->code];
+                ${$total . $c->code} = ${$sum . $c->code};
+            } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                ${$sum . $c->code} = $array_markups['m' . $c->code];
+                ${$total . $c->code} = ${$sum . $c->code};
+            }
+
+            if (isset($array_amounts['c' . $c->code]) || isset($array_markups['m' . $c->code])) {
+                $item->${$total . $sum . $c->code} = isDecimal(${$total . $c->code}, true);
+            }
+
+            $equipmentHides = $this->hideContainerV2($item->quote->equipment, 'BD', $containers);
+
+            foreach($equipmentHides as $key => $hidden){
+                if($c->code == $key && $hidden != "hidden"){
+                    $array[${'c'. $c->code}]=$item->${$total . $sum . $c->code};
+                }
+            }
+        }
+        
+        return $array;
     }
 
     public function processInland($values, $containers)
