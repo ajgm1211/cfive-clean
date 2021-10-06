@@ -7,14 +7,14 @@
                     <table border="0" cellspacing="1" cellpadding="1">
                         <thead class="title-quote text-left header-table">
                             <tr >
-                                <th class="unit" style="{{isset($freight_charges->hasOriginAddress) && $freight_charges->hasOriginAddress == 1 ? '':'display:none;'}}">
+                                <!--<th class="unit" style="{{isset($freight_charges->hasOriginAddress) && $freight_charges->hasOriginAddress == 1 ? '':'display:none;'}}">
                                     <b>{{__('pdf.origin')}}</b>
-                                </th>
+                                </th>-->
                                 <th class="unit"><b>{{__('pdf.pol')}}</b></th>
                                 <th class="unit"><b>{{__('pdf.pod')}}</b></th>
-                                <th class="unit" style="{{isset($freight_charges->hasDestinationAddress) && $freight_charges->hasDestinationAddress == 1 ? '':'display:none;'}}">
+                                <!--<th class="unit" style="{{isset($freight_charges->hasDestinationAddress) && $freight_charges->hasDestinationAddress == 1 ? '':'display:none;'}}">
                                     <b>{{__('pdf.destination')}}</b>
-                                </th>
+                                </th>-->
                                 <th class="unit" {{@$quote->pdf_options['showCarrier'] ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
                                 @foreach ($equipmentHides as $key=>$hide)
                                     @foreach ($containers as $c)
@@ -61,14 +61,14 @@
                                 ?>
                                 <!-- BODY GROUPED FREIGHTS -->
                                 <tr class="text-left color-table">
-                                    <td style="{{isset($freight_charges->hasOriginAddress) && $freight_charges->hasOriginAddress == 1 ? '':'display:none;'}}">
+                                    <!--<td style="{{isset($freight_charges->hasOriginAddress) && $freight_charges->hasOriginAddress == 1 ? '':'display:none;'}}">
                                         {{$rate->origin_address ?? "--" }}
-                                    </td>
+                                    </td>-->
                                     <td >{{$rate->origin_port->display_name}}</td>
                                     <td >{{$rate->destination_port->display_name}}</td>
-                                    <td style="{{isset($freight_charges->hasDestinationAddress) && $freight_charges->hasDestinationAddress == 1 ? '':'display:none;'}}">
+                                    <!--<td style="{{isset($freight_charges->hasDestinationAddress) && $freight_charges->hasDestinationAddress == 1 ? '':'display:none;'}}">
                                         {{$rate->destination_address ?? "--" }}
-                                    </td>
+                                    </td>-->
                                     <td {{@$quote->pdf_options['showCarrier']==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                                     @foreach ($equipmentHides as $key=>$hide)
                                         @foreach ($containers as $c)

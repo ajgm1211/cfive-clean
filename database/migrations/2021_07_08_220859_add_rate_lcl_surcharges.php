@@ -16,7 +16,7 @@ class AddRateLclSurcharges extends Migration
         Schema::table('surcharges', function (Blueprint $table) {
             array(
                 'name' => 'Ocean Freight',
-                'description' => 'Rate surcharge',
+                'description' => 'Rate surcharge'
             );
         });
     }
