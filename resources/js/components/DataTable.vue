@@ -909,7 +909,6 @@ export default {
             if (params.page) this.initialPage = Number(params.page);
 
             this.getData(params);
-
             /* Set initial form data */
             for (const key in this.inputFields) {
                 if ("initial" in this.inputFields[key])

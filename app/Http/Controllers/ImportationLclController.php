@@ -13,6 +13,8 @@ use App\Direction;
 use App\FailRateLcl;
 use App\FileTmp;
 use App\Harbor;
+use App\Surcharge;
+use App\CalculationTypeLcl;
 use App\Jobs\GeneralJob;
 use App\Jobs\ProcessContractFile;
 use App\Jobs\ReprocesarRatesLclJob;
@@ -150,6 +152,8 @@ class ImportationLclController extends Controller
                        $scheduleTBol == true && $carriExitBol == true &&
                        $curreExitBol == true) {
                         $collecciont = '';
+                        $surcharge_lcl = Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->first();
+                        $calculationtype_lcl = CalculationTypeLcl::where('name','W/M')->first();
                         if ($values) {
                             $collecciont = RateLcl::create([
                                 'origin_port'       => $originV,
@@ -162,6 +166,8 @@ class ImportationLclController extends Controller
                                 'schedule_type_id'  => $scheduleTVal,
                                 'transit_time'      => (int) $failrate['transit_time'],
                                 'via'               => $failrate['via'],
+                                'surcharge_id'      => $surcharge_lcl->id,
+                                'calculationtype_id'=> $calculationtype_lcl->id,
                             ]);
                         }
                         $failrate->forceDelete();
@@ -716,6 +722,9 @@ class ImportationLclController extends Controller
                                                 ->where('via', $viaResul)
                                                 ->get();
                                             if (count($countRL) == 0) {
+                                                $surcharge_lcl = Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->first();
+                                                $calculationtype_lcl = CalculationTypeLcl::where('name','W/M')->first();
+
                                                 $ratesArre = RateLcl::create([
                                                     'origin_port'       => $originVal,
                                                     'destiny_port'      => $destinyVal,
@@ -727,6 +736,8 @@ class ImportationLclController extends Controller
                                                     'schedule_type_id'  => $scheduleTResul,
                                                     'transit_time'      => $transittimeResul,
                                                     'via'               => $viaResul,
+                                                    'surcharge_id'      => $surcharge_lcl->id,
+                                                    'calculationtype_id'=> $calculationtype_lcl->id,
                                                 ]);
                                             }
                                         }
@@ -746,6 +757,8 @@ class ImportationLclController extends Controller
                                             ->where('via', $viaResul)
                                             ->get();
                                         if (count($countRL) == 0) {
+                                            $surcharge_lcl = Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->first();
+                                            $calculationtype_lcl = CalculationTypeLcl::where('name','W/M')->first();
                                             $ratesArre = RateLcl::create([
                                                 'origin_port'       => $originVal,
                                                 'destiny_port'      => $destinyVal,
@@ -757,6 +770,8 @@ class ImportationLclController extends Controller
                                                 'schedule_type_id'  => $scheduleTResul,
                                                 'transit_time'      => $transittimeResul,
                                                 'via'               => $viaResul,
+                                                'surcharge_id'      => $surcharge_lcl->id,
+                                                'calculationtype_id'=> $calculationtype_lcl->id,
                                             ]);
                                         }
                                         //dd($ratesArre);
@@ -1096,6 +1111,8 @@ class ImportationLclController extends Controller
                             ->where('currency_id', $data_currency[$key])
                             ->first();
                         if (count((array)$exists_rate) == 0) {
+                            $surcharge_lcl = Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->first();
+                            $calculationtype_lcl = CalculationTypeLcl::where('name','W/M')->first();
                             $return = RateLcl::create([
                                 'origin_port'       => $origin,
                                 'destiny_port'      => $destiny,
@@ -1107,6 +1124,8 @@ class ImportationLclController extends Controller
                                 'schedule_type_id'  => null,
                                 'transit_time'      => 0,
                                 'via'               => null,
+                                'surcharge_id'      => $surcharge_lcl->id,
+                                'calculationtype_id'=> $calculationtype_lcl->id,
                             ]);
                         }
                     }
@@ -1449,6 +1468,8 @@ class ImportationLclController extends Controller
     // Rates crea desde la edicion fail rates y los elimina de fail Rates
     public function CreateRates(Request $request, $id)
     {
+        $surcharge_lcl = Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->first();
+        $calculationtype_lcl = CalculationTypeLcl::where('name','W/M')->first();
         //dd($request->all());
         $return = RateLcl::create([
             'origin_port'       => $request->origin_port,
@@ -1461,6 +1482,8 @@ class ImportationLclController extends Controller
             'schedule_type_id'  => $request->scheduleT,
             'transit_time'      => $request->transit_time,
             'via'               => $request->via,
+            'surcharge_id'      => $surcharge_lcl->id,
+            'calculationtype_id'=> $calculationtype_lcl->id,
         ]);
 
         $failrate = FailRateLcl::find($id);

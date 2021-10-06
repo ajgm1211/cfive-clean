@@ -279,7 +279,7 @@ class Contract extends Model implements HasMedia, Auditable
     public function ContractSurchargeStore($request, $contract)
     {
 
-        $calculation_type = $request->dataSurcharger;
+        $calculation_type = $request->dataSurcharge;
         $originPort = $request->origin;
         $destinationPort = $request->destination;
         // $typeC = $request->input('type');
@@ -287,7 +287,7 @@ class Contract extends Model implements HasMedia, Auditable
         // $amountC = $request->input('amount');
         if (count((array) $calculation_type) > 0) {
             foreach ($calculation_type as $ct) {
-                if (!empty($request->dataSurcharger['0']['amount'])) {
+                if (!empty($request->dataSurcharge['0']['amount'])) {
                     $localcharge = new LocalCharge();
                     $localcharge->surcharge_id = $ct['type']['id'];
                     $localcharge->typedestiny_id = '3';

@@ -14,14 +14,14 @@
 
         <tr >
 
-            <th class="unit" style="{{isset($freight_charges->hasOriginAddress) && $freight_charges->hasOriginAddress == 1 ? '':'display:none;'}}">
+            <!--<th class="unit" style="{{isset($freight_charges->hasOriginAddress) && $freight_charges->hasOriginAddress == 1 ? '':'display:none;'}}">
                 <b>{{__('pdf.origin')}}</b>
-            </th>
+            </th>-->
             <th class="unit"><b>{{__('pdf.pol')}}</b></th>
             <th class="unit"><b>{{__('pdf.pod')}}</b></th>
-            <th class="unit" style="{{isset($freight_charges->hasDestinationAddress) && $freight_charges->hasDestinationAddress == 1 ? '':'display:none;'}}">
+            <!--<th class="unit" style="{{isset($freight_charges->hasDestinationAddress) && $freight_charges->hasDestinationAddress == 1 ? '':'display:none;'}}">
                 <b>{{__('pdf.destination')}}</b>
-            </th>
+            </th>-->
                        
             <th class="unit" {{@$quote->pdf_options['showCarrier'] ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
 
@@ -50,14 +50,14 @@
                 }
             ?>
             <tr class="text-center color-table">
-                <td style="{{isset($freight_charges->hasOriginAddress) && $freight_charges->hasOriginAddress == 1 ? '':'display:none;'}}">
+                <!--<td style="{{isset($freight_charges->hasOriginAddress) && $freight_charges->hasOriginAddress == 1 ? '':'display:none;'}}">
                     {{$rate->origin_address ?? "--" }}
-                </td>
+                </td>-->
                 <td >{{@$rate->origin_port->name.', '.@$rate->origin_port->code}}</td>
                 <td >{{@$rate->destination_port->name.', '.@$rate->destination_port->code}}</td>
-                <td style="{{isset($freight_charges->hasDestinationAddress) && $freight_charges->hasDestinationAddress == 1 ? '':'display:none;'}}">
+                <!--<td style="{{isset($freight_charges->hasDestinationAddress) && $freight_charges->hasDestinationAddress == 1 ? '':'display:none;'}}">
                     {{$rate->destination_address ?? "--" }}
-                </td>
+                </td>-->
                 <td {{@$quote->pdf_options['showCarrier'] ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                 <td >{{isDecimal(@$total->total, false, true).' '.@$rate->currency->alphacode}}</td>
                 @if($service)
