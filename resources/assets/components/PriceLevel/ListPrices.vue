@@ -22,10 +22,10 @@
           <OptionsButton :standar="false" />
         </th>
       </tr>
-      <tr v-if="dynamic">
+      <tr v-else-if="dynamic">
         <th>
           <b-form-checkbox
-            v-model="allSelected"
+            v-model="allRatesSelected"
             aria-describedby="rates"
             aria-controls="rates"
             @change="toggleAll"
@@ -35,24 +35,47 @@
 
         <th v-for="item in thead" :key="item">{{ item }}</th>
 
-        <th scope="col" style="width:40px">
-          <OptionsButton :standar="false" />
+        <th scope="col" style="width:40px; position: relative;">
+          <OptionsButton :standar="false" style="right:-84px;" />
         </th>
       </tr>
     </thead>
     <thead v-if="dynamic">
       <tr>
         <th></th>
-        <th><Selectable style="width: 100px" :selected="directions[0]" :options="directions" /></th>
-        <th><Selectable   style="width: 120px" :selected="restrictions[0]" :options="restrictions" /></th>
+        <th>
+          <Selectable
+            :defaultFirstOption="true"
+            style="width: 100px"
+            :selected="directions[0]"
+            :options="directions"
+          />
+        </th>
+        <th>
+          <Selectable
+            :defaultFirstOption="true"
+            style="width: 120px"
+            :selected="restrictions[0]"
+            :options="restrictions"
+          />
+        </th>
         <th>
           <MixedInput :v_model="new_rate.price_20" :options="price_types" />
         </th>
         <th>
           <MixedInput :v_model="new_rate.price_40" :options="price_types" />
         </th>
-        <th><Selectable style="width: 100px" :selected="currencies[0]" :options="currencies" /></th>
-        <th><MainButton :save="true" text="Save" /></th>
+        <th>
+          <Selectable
+            :defaultFirstOption="true"
+            style="width: 100px"
+            :selected="currencies[0]"
+            :options="currencies"
+          />
+        </th>
+        <th style="position: relative;">
+          <MainButton :save="true" text="Save" style="right:-84px;" />
+        </th>
       </tr>
     </thead>
     <tbody v-if="dynamic">
@@ -62,7 +85,7 @@
             <b-form-checkbox
               v-bind:value="item"
               v-bind:id="'check' + item.id"
-              v-model="selected"
+              v-model="selectedRate"
             >
             </b-form-checkbox>
           </b-form-checkbox-group>
@@ -72,7 +95,9 @@
         <td>{{ item.type_20 }}</td>
         <td>{{ item.type_40 }}</td>
         <td>{{ item.currency }}</td>
-        <td scope="col"><OptionsButton /></td>
+        <td style="position: relative;">
+          <OptionsButton style="right:-84px;" />
+        </td>
       </tr>
     </tbody>
     <tbody v-else>
@@ -110,11 +135,15 @@ export default {
   props: {
     prices: {
       type: Array,
-      default: [],
+      default() {
+        return [];
+      },
     },
     rates: {
       type: Array,
-      default: [],
+      default() {
+        return [];
+      },
     },
     filters: {
       type: Boolean,
@@ -130,13 +159,17 @@ export default {
     },
     thead: {
       type: Array,
-      default: [],
+       default() {
+        return [];
+      },
     },
   },
   components: { IconFilter, OptionsButton, Selectable, MixedInput, MainButton },
   data: () => ({
     selected: [],
+    selectedRate: [],
     allSelected: false,
+    allRatesSelected: false,
     indeterminate: false,
     price_types: ["Percent Markup", "Fixed Markup"],
     directions: ["Export", "Import", "Both"],
@@ -151,9 +184,8 @@ export default {
     toggleAll(checked) {
       this.selected = checked ? this.prices.slice() : [];
 
-      if(this.dynamic === true){
-      this.selected = checked ? this.rates.slice() : [];
-
+      if (this.dynamic === true) {
+        this.selectedRate = checked ? this.rates.slice() : [];
       }
     },
   },

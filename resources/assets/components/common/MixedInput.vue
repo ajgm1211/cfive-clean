@@ -1,7 +1,8 @@
 <template>
   <form class="d-flex rateselect">
-    <CustomInput v-model="v_model" :mixed="true" :showLabel="false" />
+    <CustomInput v-model="v_model" :mixed="true" type="number" :placeholder="null" :showLabel="false" />
     <Selectable
+    :defaultFirstOption="true"
       @selected="setSelected($event)"
       :options="options"
       background_color="#006bfa"
@@ -9,7 +10,6 @@
       font_color="white"
       :icon="false"
       :mixed="true"
-      :selected="selected"
     />
   </form>
 </template>
@@ -40,6 +40,6 @@ export default {
 
 <style>
 .rateselect {
-  width: 95px;
+  width: 100px;
 }
 </style>

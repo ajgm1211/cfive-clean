@@ -133,6 +133,7 @@ export default {
     thead: ["Direction", "Apply to", "20", "40", "Currency"],
     rates: [
       {
+        id: 1,
         direction: "export",
         restriction: "Apply to",
         type_20: "2.00",
@@ -140,6 +141,7 @@ export default {
         currency: "USD",
       },
       {
+        id: 2,
         direction: "export",
         restriction: "Apply to",
         type_20: "2.00",
@@ -147,6 +149,7 @@ export default {
         currency: "USD",
       },
       {
+        id: 3,
         direction: "export",
         restriction: "Apply to",
         type_20: "2.00",
@@ -154,6 +157,7 @@ export default {
         currency: "USD",
       },
       {
+        id: 4,
         direction: "export",
         restriction: "Apply to",
         type_20: "2.00",
@@ -161,6 +165,7 @@ export default {
         currency: "USD",
       },
       {
+        id: 5,
         direction: "export",
         restriction: "Apply to",
         type_20: "2.00",
@@ -168,6 +173,7 @@ export default {
         currency: "USD",
       },
       {
+        id: 6,
         direction: "export",
         restriction: "Apply to",
         type_20: "2.00",
@@ -175,6 +181,7 @@ export default {
         currency: "USD",
       },
       {
+        id: 7,
         direction: "export",
         restriction: "Apply to",
         type_20: "2.00",
@@ -182,6 +189,7 @@ export default {
         currency: "USD",
       },
       {
+        id: 8,
         direction: "export",
         restriction: "Apply to",
         type_20: "2.00",
@@ -189,6 +197,7 @@ export default {
         currency: "USD",
       },
       {
+        id: 9,
         direction: "export",
         restriction: "Apply to",
         type_20: "2.00",
@@ -196,6 +205,7 @@ export default {
         currency: "USD",
       },
       {
+        id: 10,
         direction: "export",
         restriction: "Apply to",
         type_20: "2.00",
@@ -203,6 +213,7 @@ export default {
         currency: "USD",
       },
       {
+        id: 11,
         direction: "export",
         restriction: "Apply to",
         type_20: "2.00",
@@ -210,6 +221,7 @@ export default {
         currency: "USD",
       },
       {
+        id: 12,
         direction: "export",
         restriction: "Apply to",
         type_20: "2.00",

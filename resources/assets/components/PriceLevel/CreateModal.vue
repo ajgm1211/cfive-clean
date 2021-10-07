@@ -24,7 +24,6 @@
         />
         <Selectable
           @selected="setSelected($event)"
-          :selected="selected"
           label="Price Level Type"
           :options="price_types"
           :error="selectable_error"
