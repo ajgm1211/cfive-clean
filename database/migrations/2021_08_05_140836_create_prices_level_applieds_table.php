@@ -13,10 +13,16 @@ class CreatePricesLevelAppliedsTable extends Migration
      */
     public function up()
     {
-        Schema::create('prices_level_applieds', function (Blueprint $table) {
+        Schema::create('price_level_applies', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
         });
+
+        DB::table('price_level_applies')->insert([
+            ['name' => 'Freight'],
+            ['name' => 'Surcharge'],
+            ['name' => 'Inland'],
+        ]);
     }
 
     /**
@@ -26,6 +32,6 @@ class CreatePricesLevelAppliedsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('prices_level_applieds');
+        Schema::dropIfExists('price_level_applies');
     }
 }

@@ -13,12 +13,12 @@ class CreatePricesLevelGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('prices_level_groups', function (Blueprint $table) {
+        Schema::create('price_level_groups', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedBigInteger('group_id');
             $table->string('group_type');
             $table->integer('price_level_id')->unsigned();
-            $table->foreign('price_level_id')->references('id')->on('prices_levels');
+            $table->foreign('price_level_id')->references('id')->on('price_levels');
             
             
         });
@@ -31,6 +31,6 @@ class CreatePricesLevelGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('prices_level_groups');
+        Schema::dropIfExists('price_level_groups');
     }
 }

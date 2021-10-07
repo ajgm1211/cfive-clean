@@ -11,8 +11,8 @@ import "../../../resources/sass/custom_app.scss";
 import "../../../resources/js/bootstrap";
 
 // Views
-import PriceLevels from "../views/pages/PriceLevels/index.vue";
-import Rates from "../views/pages/PriceLevels/Rates.vue";
+//import PriceLevels from "../views/pages/PriceLevels/index.vue";
+//import Rates from "../views/pages/PriceLevels/Rates.vue";
 
 // Const
 const options = {
@@ -27,7 +27,7 @@ const options = {
 const router = new VueRouter({
   mode: "history",
   routes: [
-    {
+  /**  {
       path: "/prices/v2",
       name: "price-levels",
       component: PriceLevels,
@@ -36,7 +36,7 @@ const router = new VueRouter({
       path: "/prices/rates",
       name: "price-rates",
       component: Rates,
-    },
+    },*/
   ],
 });
 

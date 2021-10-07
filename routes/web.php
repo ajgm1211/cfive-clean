@@ -1430,3 +1430,10 @@ Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
     Route::get('intercom', 'TestController@createIntercom')->name('test.intercom');
     Route::get('contable', 'TestController@contable')->name('teste.intercom')->middleware('check_company:quote');;
 });
+
+
+//NEW PRICE LEVELS VIEWS ROUTES
+Route::group(['prefix' => 'api/pricelevel', 'middleware' => ['auth']], function () {
+    Route::get('', 'PriceLevelController@index');
+    Route::get('{price_level}/edit', 'PriceLevelController@edit');
+});

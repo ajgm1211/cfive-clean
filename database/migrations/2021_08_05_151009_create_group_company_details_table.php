@@ -13,14 +13,13 @@ class CreateGroupCompanyDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('group_company_details', function (Blueprint $table) {
+        Schema::create('company_group_details', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id')->unsigned();
-            $table->integer('group_company_id')->unsigned();
             $table->foreign('company_id')->references('id')->on('companies');
-            $table->foreign('group_company_id')->references('id')->on('group_companies');
-            $table->unique(['group_company_id','company_id']);
-  
+            $table->integer('company_group_id')->unsigned();
+            $table->foreign('company_group_id')->references('id')->on('company_groups');
+            $table->unique(['company_group_id','company_id']);
         });
     }
 
@@ -31,6 +30,6 @@ class CreateGroupCompanyDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('group_company_details');
+        Schema::dropIfExists('company_group_details');
     }
 }

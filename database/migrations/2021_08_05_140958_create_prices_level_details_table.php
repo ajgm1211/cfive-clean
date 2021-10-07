@@ -13,18 +13,18 @@ class CreatePricesLevelDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('prices_level_details', function (Blueprint $table) {
+        Schema::create('price_level_details', function (Blueprint $table) {
             $table->increments('id');
             $table->json('amount');
-            $table->integer('currency_id')->unsigned();
             $table->integer('price_level_id')->unsigned();
-            $table->integer('price_level_applied_id')->unsigned();
+            $table->foreign('price_level_id')->references('id')->on('price_levels');
+            $table->integer('currency_id')->unsigned();
             $table->foreign('currency_id')->references('id')->on('currency');
-            $table->foreign('price_level_id')->references('id')->on('prices_levels');
-            $table->foreign('price_level_applied_id')->references('id')->on('prices_level_applieds');
-
-
-            
+            $table->integer('direction_id')->unsigned();
+            $table->foreign('direction_id')->references('id')->on('directions');
+            $table->integer('price_level_apply_id')->unsigned();
+            $table->foreign('price_level_apply_id')->references('id')->on('price_level_applies');
+            $table->timestamps();
         });
     }
 
@@ -35,6 +35,6 @@ class CreatePricesLevelDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('prices_level_details');
+        Schema::dropIfExists('price_level_details');
     }
 }
