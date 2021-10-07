@@ -13,14 +13,14 @@ class CreateGroupCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::create('group_companies', function (Blueprint $table) {
+        Schema::create('company_groups', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('status');
             $table->integer('company_user_id')->unsigned();
             $table->foreign('company_user_id')->references('id')->on('company_users');
 
-
+            $table->timestamps();
         });
     }
 
@@ -31,6 +31,6 @@ class CreateGroupCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('group_companies');
+        Schema::dropIfExists('company_groups');
     }
 }

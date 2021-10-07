@@ -104,3 +104,23 @@ Route::group(['prefix' => 'requestLCL', 'middleware' => 'auth:api'], function ()
 });
 
 Route::middleware('auth:api')->get('pdf/{id}',['as' => 'pdf.api', 'uses' => 'ApiController@pdfApi']);
+
+// NEW PRICE LEVELS ROUTES
+
+Route::group(['prefix'=>'pricelevel','middleware' => 'auth:api'], function () {
+    Route::get('list', 'PriceLevelController@list');
+    Route::post('store', 'PriceLevelController@store');
+    Route::post('update', 'PriceLevelController@update');
+    Route::post('duplicate', 'PriceLevelController@duplicate');
+    Route::delete('destroy', 'PriceLevelController@destroy');
+    Route::delete('destroyAll', 'PriceLevelController@destroyAll');
+});
+
+Route::group(['prefix'=>'priceleveldetail','middleware' => 'auth:api'], function () {
+    Route::get('list', 'PriceLevelDetailController@list');
+    Route::post('store', 'PriceLevelDetailController@store');
+    Route::post('update', 'PriceLevelDetailController@update');
+    Route::post('duplicate', 'PriceLevelDetailController@duplicate');
+    Route::delete('destroy', 'PriceLevelDetailController@destroy');
+    Route::delete('destroyAll', 'PriceLevelDetailController@destroyAll');
+});
