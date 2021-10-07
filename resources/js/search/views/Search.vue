@@ -1,6 +1,5 @@
 <template>
-    <div id="search" class="search pt-5">    
-        <!-- dd{{portAndLocation}} -->
+    <div id="search" class="search pt-5">
         <div v-if="loaded">
 
             <!-- OPCIONES DE DELIVERY Y ADDITIONAL SERVICES BOTON -->
@@ -1438,7 +1437,6 @@ import "vue-multiselect/dist/vue-multiselect.min.css";
 import "vue2-daterange-picker/dist/vue2-daterange-picker.css";
 import actions from "../../actions";
 import * as VueGoogleMaps from "vue2-google-maps";
-
 export default {
     components: {
         Search,
@@ -1449,7 +1447,6 @@ export default {
     data() {
         return {
             // datos estaticos search con inlands aqui
-            portAndLocation:[],
             originPlacesFrom: '',
             originPlacesTo: '',
             showPlaces: false,
@@ -1461,14 +1458,14 @@ export default {
             placeInShowTo: [],
             placeInShowFrom: [],
             optionsPlaces: [
-                // {  country: 'España', location: 'Madrid', type: 'city' },
-                // {  country: 'España', location: 'Barcelona', type: 'port' },
-                // {  country: 'España', location: 'Canarias', type: 'port' },
-                // {  country: 'España', location: 'Cuenca', type: 'city' },
-                // {  country: 'España', location: 'Cordoba', type: 'city' },
-                // {  country: 'España', location: 'Almeria', type: 'port' },
-                // {  country: 'España', location: 'Malaga', type: 'port' },
-                // {  country: 'España', location: 'Sevilla', type: 'city' }
+                { code:'123_456_2', country: 'España', location: 'Madrid', type: 'city' },
+                { code:'123_567_1', country: 'España', location: 'Barcelona', type: 'port' },
+                { code:'123_321_1', country: 'España', location: 'Canarias', type: 'port' },
+                { code:'123_232_2', country: 'España', location: 'Cuenca', type: 'city' },
+                { code:'123_438_2', country: 'España', location: 'Cordoba', type: 'city' },
+                { code:'123_986_1', country: 'España', location: 'Almeria', type: 'port' },
+                { code:'123_129_1', country: 'España', location: 'Malaga', type: 'port' },
+                { code:'123_457_2', country: 'España', location: 'Sevilla', type: 'city' }
             ],
             // fin datos estaticos search con inlands
             loaded: false,
@@ -1545,7 +1542,6 @@ export default {
             destinationAutocompleteValue: null,
             originAddressPlaceholder: "Select an address",
             destinationAddressPlaceholder: "Select an address",
-
             //Gene defined
             ptdActive: false,
             dtpActive: false,
@@ -1556,7 +1552,6 @@ export default {
             selected: "radio1",
             invalidCalculate: false,
             optionsTypePallet: ["PALLETS", "PACKAGES"],
-
             //DATEPICKER
             locale: "en-US",
             dateFormat: { year: "numeric", month: "long", day: "numeric" },
@@ -1564,7 +1559,6 @@ export default {
                 startDate: "",
                 endDate: "",
             },
-
             //modal
             checked1: false,
             checked2: false,
@@ -1600,7 +1594,6 @@ export default {
             isCompleteFive: false,
             contractAdded: false,
             contractAddedFailed: false,
-            filter:[]
         };
     },
     mounted() {
@@ -1612,33 +1605,19 @@ export default {
     },
     methods: {
         openFinderFrom() {
-            
-            if(this.originPlacesFrom.length>=3){
-                this.filter = this.portAndLocation.filter(location => location.location.toLowerCase().startsWith(this.originPlacesFrom.toLowerCase())); 
-                return this.optionsPlaces= this.filter;
-            }          
-            if(this.inputSearchFrom == false && this.searchRequest.originPorts.length >= 0) {           
+            if(this.inputSearchFrom == false && this.placeInShowFrom.length >= 0) {
                 this.inputSearchFrom = true;
             }
         },
         openFinderTo() {
-            if(this.originPlacesTo.length>=3){
-                this.filter = this.portAndLocation.filter(location => location.location.toLowerCase().startsWith(this.originPlacesTo.toLowerCase()));
-                return this.optionsPlaces= this.filter;
-            }
-            if(this.inputSearchTo == false && this.searchRequest.destinationPorts.length >= 0) { 
+            if(this.inputSearchTo == false && this.placeInShowTo.length >= 0) {
                 this.inputSearchTo = true;
             }
         },
         placeCheckedFrom(data){
-
             let countPort = 0;
             let countCity = 0;
-            
-            this.searchRequest.originPorts=this.placeInShowFrom;
-            // this.placeInShowFrom=this.searchRequest.originPorts;
             //console.log(this.placeInShow);
-
             if (this.placeInShowFrom.length == 0) {
                 this.showTagPlace = false;
                 countPort = 0;
@@ -1647,11 +1626,9 @@ export default {
             }
             //this.placeInShow.push({code: data.code, location: data.location, type: data.type});
             this.originPlacesFrom = '';
-
             if(this.placeInShowFrom.length > 0) {
                 this.inputSearchFrom = false;
             }
-
             this.placeInShowFrom.forEach(function (data) {
                 if(data.type == 'port') {
                     countPort = 1;
@@ -1660,9 +1637,7 @@ export default {
                     countCity = 1;
                 } 
             });
-
             this.showTagPlaceFrom = true;
-
             if(countPort == 1 && countCity == 0) {
                 this.nameTagPlacesFrom = 'port';
             } else if (countCity == 1 && countPort == 0) {
@@ -1670,18 +1645,12 @@ export default {
             } else if (countCity == 1 && countPort == 1) {
                 this.nameTagPlacesFrom = 'multi';
             }
-
      
         },
         placeCheckedTo(data){
-
             let countPort = 0;
             let countCity = 0;
-
-            this.searchRequest.destinationPorts=this.placeInShowTo;
-            // this.placeInShowTo=this.searchRequest.destinationPorts;
             //console.log(this.placeInShow);
-
             if (this.placeInShowTo.length == 0) {
                 this.showTagPlaceTo = false;
                 countPort = 0;
@@ -1690,11 +1659,9 @@ export default {
             }
             //this.placeInShow.push({code: data.code, location: data.location, type: data.type});
             this.originPlacesTo = '';
-
             if(this.placeInShowTo.length > 0) {
                 this.inputSearchTo = false;
             }
-
             this.placeInShowTo.forEach(function (data) {
                 if(data.type == 'port') {
                     countPort = 1;
@@ -1703,9 +1670,7 @@ export default {
                     countCity = 1;
                 } 
             });
-
             this.showTagPlaceTo = true;
-
             if(countPort == 1 && countCity == 0) {
                 this.nameTagPlacesTo = 'port';
             } else if (countCity == 1 && countPort == 0) {
@@ -1713,13 +1678,9 @@ export default {
             } else if (countCity == 1 && countPort == 1) {
                 this.nameTagPlacesTo = 'multi';
             }
-
      
         },
         deletePlaceFrom(e){
-            let countPort = 0;
-            let countCity = 0;
-            
             this.placeInShowFrom.splice(e, 1);
             if (this.placeInShowFrom.length == 0) {
                 this.showTagPlaceFrom = false;
@@ -1729,9 +1690,6 @@ export default {
             }
         },
         deletePlaceTo(e){
-            let countPort = 0;
-            let countCity = 0;
-
             this.placeInShowTo.splice(e, 1);
             if (this.placeInShowTo.length == 0) {
                 this.showTagPlaceTo = false;
@@ -1753,7 +1711,6 @@ export default {
                     this.invalidInput = true;
                     return;
                 }
-
                 this.invalidInput = false;
                 this.stepOne = false;
                 this.stepTwo = !this.stepTwo;
@@ -1770,7 +1727,6 @@ export default {
                     this.invalidInput = true;
                     return;
                 }
-
                 this.invalidInput = false;
                 this.stepTwo = false;
                 this.stepThree = !this.stepThree;
@@ -1788,7 +1744,6 @@ export default {
                 this.isCompleteFive = !this.isCompleteFive;
             }
         },
-
         backStep() {
             if (this.stepFive){
                 this.invalidInput = false;
@@ -1815,7 +1770,6 @@ export default {
                 return;
             }
         },
-
         addSurcharger() {
             if (
                 this.typeContract == "" ||
@@ -1825,33 +1779,26 @@ export default {
                 this.invalidSurcharger = true;
                 return;
             }
-
             this.invalidSurcharger = false;
-
             var surcharge = {
                 type: this.typeContract,
                 calculation: this.calculationType,
                 currency: this.currencySurcharge,
                 amount: this.amount,
             };
-
             this.dataSurcharger.push(surcharge);
-
             this.typeContract = "";
             this.calculationType = "";
             this.currencySurcharge = "";
             this.amount = "";
         },
-
         //FILES OPTIONS Modal
         setFiles(data) {
             let file = {};
             let url = "";
             let vcomponent = this;
             let i = 0;
-
             let url_tags = document.getElementsByClassName("img-link");
-
             data.forEach(function (media) {
                 vcomponent.$refs.myVueDropzone.manuallyAddFile(
                     media,
@@ -1861,25 +1808,20 @@ export default {
                 i += 1;
             });
         },
-
         removeThisFile(file) {
             let id = this.$route.params.id;
-
             this.actions
                 .removefile(id, { id: file.id })
                 .then((response) => {})
                 .catch((data) => {});
         },
-
         //Set lists of data
         setDropdownLists(err, data) {
             this.datalists = data;
             this.$emit("initialDataLoaded", this.datalists);
         },
-
         getQuery() {
             this.searchRequest.requestData = this.$route.query;
-
             if (Object.keys(this.searchRequest.requestData).length != 0) {
                 if (this.searchRequest.requestData.requested == 0) {
                     this.getSearchData(this.searchRequest.requestData.model_id);
@@ -1892,7 +1834,6 @@ export default {
                 this.setSearchDisplay(null);
             }
         },
-
         getSearchData(id) {
             actions.search
                 .retrieve(id)
@@ -1908,7 +1849,6 @@ export default {
                     }
                 });
         },
-
         getQuoteToDuplicate(id) {
             actions.quotes
                 .retrieve(id)
@@ -1925,11 +1865,9 @@ export default {
                     }
                 });
         },
-
         //set UI elements
         setSearchDisplay(requestType) {
             let component = this;
-            component.portAndLocation=component.datalists.harbors;
             component.originPortOptions = component.datalists.harbors;
             component.destinationPortOptions = component.datalists.harbors;
             component.directionOptions = [
@@ -1995,22 +1933,18 @@ export default {
                 component.datalists.company_user.destinationcharge == null
                     ? false
                     : true;
-
             this.fillInitialFields(requestType);
         },
-
         fillInitialFields(requestType) {
             let component = this; 
             let origPortNames = [];
             let destPortNames = [];
             
             if (requestType == null) {
-                console.log('requestType null');
                 this.selectedContainerGroup = this.datalists.container_groups[0];
                 this.searchRequest.carriersApi = this.datalists.carriers_api;
                 this.deliveryType = this.deliveryTypeOptions[0];
             } else if (requestType == 0) {
-                console.log('requestType 0');
                 this.searchRequest.type = this.searchData.type;
                 this.searchRequest.direction = this.searchData.direction_id;
                 //this.deliveryType = this.searchData.delivery_type;
@@ -2063,7 +1997,6 @@ export default {
                 this.searchRequest.surcharges = this.datalists.surcharges;
                 this.requestSearch();
             } else if (requestType == 1) {
-                console.log('requestType 1');
                 if (this.quoteData.search_options != null) {
                     this.searchRequest.company = this.quoteData.search_options.company;
                     this.unlockContacts();
@@ -2104,7 +2037,6 @@ export default {
                 this.searchRequest.surcharges = this.datalists.surcharges;
                 this.requestSearch();
             }
-
             if((this.searchRequest.company != null && this.searchRequest.company != '') || 
                 (this.searchRequest.contact != null && this.searchRequest.contact != '') || 
                 (this.searchRequest.pricelevel != null && this.searchRequest.pricelevel != '')){
@@ -2114,7 +2046,6 @@ export default {
             this.setPriceLevels();
             this.loaded = true;
         },
-
         setSearchParameters() {
             this.searching = true;
             this.searchRequest.selectedContainerGroup = this.selectedContainerGroup;
@@ -2123,13 +2054,10 @@ export default {
             this.searchRequest.carriers = this.carriers;
             this.errorsExist = false;
         },
-
         //Send Search Request to Controller
         searchButtonPressed() {
             this.setSearchParameters();
-
             this.carrierSearchQuery = '';
-
             if (
                 this.searchRequest.requestData.requested == undefined ||
                 this.searchRequest.requestData.requested == 0
@@ -2157,7 +2085,6 @@ export default {
                 this.getQuery();
             }
         },
-
         alert(msg, type) {
             this.$toast.open({
                 message: msg,
@@ -2195,7 +2122,6 @@ export default {
                     vcomponent.$refs.myVueDropzone.dropzone.options.url = `/api/v2/contracts/${response.data.id}/storeMedia`;
                     vcomponent.$refs.myVueDropzone.processQueue();
                     vcomponent.contractAdded = true;
-
                     setTimeout(function () {
                         vcomponent.contractAdded = false;
                         vcomponent.$refs["my-modal"].hide();
@@ -2212,14 +2138,10 @@ export default {
                     }
                 });
         },
-
         requestSearch() {
             this.searching = true;
             this.$emit("clearResults");
             this.$emit("searchRequested",this.searchRequest);
-            // borrar 2 lineas de abajo
-            this.searchRequest.originPorts=this.placeInShowFrom;
-            this.searchRequest.destinationPorts=this.placeInShowTo;
             actions.search
                 .process(this.searchRequest)
                 .then((response) => {
@@ -2244,14 +2166,11 @@ export default {
                     }
                 });
         },
-
         unlockContacts() {
             let component = this;
             let dlist = this.datalists;
-
             if (component.searchRequest.company != null && component.searchRequest.company != '') {
                 component.contactOptions = [];
-
                 dlist.contacts.forEach(function (contact) {
                     if (
                         contact.company_id == component.searchRequest.company.id
@@ -2264,14 +2183,12 @@ export default {
                 component.companyChosen = false;
             }
         },
-
         setPriceLevels() {
             let component = this;
             let dlist = this.datalists;
             let prices = [];
             
             component.priceLevelOptions = [];
-
             if (component.searchRequest.company != null) {
                 dlist.company_prices.forEach(function (comprice) {
                     prices.push(comprice.price_id);
@@ -2283,7 +2200,6 @@ export default {
                         });
                     }
                 });
-
                 dlist.price_levels.forEach(function (price) {
                     if(!prices.includes(price.id) && !component.priceLevelOptions.includes(price)){
                         component.priceLevelOptions.push(price);
@@ -2291,11 +2207,9 @@ export default {
                 });
             } else {
                 let prices = [];
-
                 dlist.company_prices.forEach(function (comprice) {
                     prices.push(comprice.price_id);
                 });
-
                 dlist.price_levels.forEach(function (price) {
                     if(!prices.includes(price.id)){
                         component.priceLevelOptions.push(price);
@@ -2303,7 +2217,6 @@ export default {
                 });
             }
         },
-
         updateQuoteSearchOptions() {
             if (this.searchRequest.requestData.requested == 1) {
                 actions.quotes
@@ -2322,16 +2235,13 @@ export default {
                     });
             }
         },
-
         checkSearchType() {
             if (this.searchRequest.type == "LCL") {
                 window.location = `/v2/quotes/search?opt=1`;
             }
         },
-
         setOriginAddressMode() {
             let component = this;
-
             if (component.searchRequest.originPorts.length > 1) {
                 component.originAddressPlaceholder =
                     "Please select only one Origin Port";
@@ -2348,7 +2258,6 @@ export default {
                             component.originAddressOptions.push(distance);
                         }
                     });
-
                     if (component.originAddressOptions.length == 0) {
                         component.originDistance = false;
                     } else {
@@ -2357,10 +2266,8 @@ export default {
                 }
             }
         },
-
         setDestinationAddressMode() {
             let component = this;
-
             if (component.searchRequest.destinationPorts.length > 1) {
                 component.destinationAddressPlaceholder =
                     "Please select only one Origin Port";
@@ -2377,7 +2284,6 @@ export default {
                             component.destinationAddressOptions.push(distance);
                         }
                     });
-
                     if (component.destinationAddressOptions.length == 0) {
                         component.destinationDistance = false;
                     } else {
@@ -2386,39 +2292,31 @@ export default {
                 }
             }
         },
-
         setOriginPlace(place) {
             this.searchRequest.originAddress = place.formatted_address;
         },
-
         setDestinationPlace(place) {
             this.searchRequest.destinationAddress = place.formatted_address;
         },
-
         commitOriginAutocomplete() {
             this.originAutocompleteValue = this.searchRequest.originAddresses;
         },
-
         commitDestinationAutocomplete() {
             this.destinationAutocompleteValue = this.searchRequest.destinationAddresses;
         },
-
         deleteSurcharger(index) {
             this.dataPackaging.splice(index, 1);
             //console.log(this.dataPackaging);
         },
-
         deleteSurchargerModal(index) {
             this.dataSurcharger.splice(index, 1);
             //console.log(this.dataPackaging);
         },
-
         //upload files
         success(file, response) {
             let url_tags = $(".img-link").last();
             url_tags.attr("href", response.url);
         },
-
         isNumber: function (evt) {
             evt = evt ? evt : window.event;
             var charCode = evt.which ? evt.which : evt.keyCode;
@@ -2437,15 +2335,12 @@ export default {
 /*         placeInShow: function() {
             
             
-
         }, */
         selectedContainerGroup: function () {
             let component = this;
             let fullContainersByGroup = [];
             let selectedContainersByGroup = [];
-
             component.containerOptions = [];
-
             component.datalists.containers.forEach(function (container) {
                 if (
                     component.selectedContainerGroup.id ==
@@ -2455,14 +2350,12 @@ export default {
                     fullContainersByGroup.push(container);
                 }
             });
-
             fullContainersByGroup.forEach(function (cont) {
                 component.containerOptions.push({
                     text: cont.code,
                     value: cont,
                 });
             });
-
             if(Object.keys(component.searchRequest.requestData).length != 0 &&
                 component.searchRequest.requestData.requested == 0 && 
                 component.searchData.container_group.id  == component.selectedContainerGroup.id){
@@ -2472,27 +2365,20 @@ export default {
                     selectedContainersByGroup.splice(3, 2);
                 }
             }
-
             component.containers = selectedContainersByGroup;
         },
-
         containers: function () {
             let component = this;
-
             component.containerText = [];
-
             component.containers.forEach(function (container) {
                 component.containerText.push(container.code);
             });
-
             if (this.containers == []) {
                 this.containerText = ["Select Containers"];
             }
         },
-
         carriers() {
             let component = this;
-
             if (component.carriers.length == component.datalists.carriers.length) {
                 component.carrierText = "All Carriers Selected";
             } else if (component.carriers.length >= 5) {
@@ -2506,18 +2392,14 @@ export default {
                 }
             } else {
                 let selectedCarriers = [];
-
                 component.carriers.forEach(function (carrier) {
                     selectedCarriers.push(carrier.name);
                 });
-
                 component.carrierText = selectedCarriers.join(", ");
             }
         },
-
         allCarriers() {
             let component = this;
-
             if (component.allCarriers) {
                 component.carriers = [];
                 // Check all
@@ -2531,7 +2413,6 @@ export default {
         
         valueEq: function (newValue,oldValue) {
             let component = this;
-
             this.items.splice({});
             if(newValue && newValue != ""){
                 this.datalists.containers.forEach(function (container){
