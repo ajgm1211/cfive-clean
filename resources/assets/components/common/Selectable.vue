@@ -78,8 +78,13 @@ export default {
     border_color: {
       type: String,
     },
-    selected: {
+    defaultFirstOption: {
       default: null,
+      type: Boolean,
+    },
+    default: {
+      default: null,
+      type: String,
     },
     error: {
       type: Boolean,
@@ -101,6 +106,7 @@ export default {
   components: { ChevronDown },
   data: () => ({
     open: false,
+    selected: null,
   }),
   created() {
     window.addEventListener("click", (e) => {
@@ -108,6 +114,13 @@ export default {
         this.open = false;
       }
     });
+  },
+  mounted() {
+    this.$emit("input", this.selected);
+
+    if (this.defaultFirstOption === true) {
+      this.selected = this.options.length > 0 ? this.options[0] : null;
+    }
   },
   methods: {
     handleChange(_value) {

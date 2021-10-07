@@ -194,7 +194,7 @@ export default {
   margin-top: 5px;
   background-color: #fff;
   outline: none;
-  padding: 2px 14px;
+  padding: 2px 10px;
   letter-spacing: 0.05em;
   font-size: 13px;
   border-radius: 8px;
