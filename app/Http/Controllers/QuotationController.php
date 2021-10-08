@@ -296,10 +296,11 @@ class QuotationController extends Controller
 
                     if($search_data_ids['type'] == 'FCL'){
                         $charge = $this->formatFclChargeForQuote($charge);
+                        $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
 
                         $freight = Charge::create([
                             'automatic_rate_id' => $newRate->id,
-                            'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : null,
+                            'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : $ocean_surcharge->id,
                             'type_id' => $charge['typedestiny_id'],
                             'calculation_type_id' => $charge['calculationtype']['id'],
                             'currency_id' => $currency_id,
@@ -349,9 +350,9 @@ class QuotationController extends Controller
 
             $rateTotals->totalize($rate['currency_id']);
         }
-
+        
         foreach ($result_data as $result) {
-
+            
             $result = $this->formatApiResult($result, $search_data['selectedContainerGroup'], $search_data['containers']);
 
             if (isset($result['validityFrom'])) {
@@ -708,10 +709,11 @@ class QuotationController extends Controller
 
                     $currency_id = isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency' ? $rate['client_currency']['id'] : $charge['currency']['id'];
                     $charge = $this->formatFclChargeForQuote($charge);
+                    $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
 
                     $freight = Charge::create([
                         'automatic_rate_id' => $newRate->id,
-                        'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : null,
+                        'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : $ocean_surcharge->id,
                         'type_id' => $charge['typedestiny_id'],
                         'calculation_type_id' => $charge['calculationtype']['id'],
                         'currency_id' => $currency_id,

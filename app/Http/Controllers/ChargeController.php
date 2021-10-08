@@ -16,7 +16,9 @@ class ChargeController extends Controller
 {
     public function list(Request $request, QuoteV2 $quote, AutomaticRate $autorate)
     {   
-        $results = Charge::where([['surcharge_id','!=',null],['type_id',3]])->filterByAutorate($autorate->id)->filter($request);
+        $results = Charge::where('type_id',3)->whereHas('surcharge', function ($query) {
+            return $query->where('name', '!=', 'Ocean Freight');
+        })->filterByAutorate($autorate->id)->filter($request);
         
         return ChargeResource::collection($results);
     }
@@ -131,9 +133,11 @@ class ChargeController extends Controller
 
     public function retrieve(AutomaticRate $autorate)
     {   
-        $charge = Charge::where([['automatic_rate_id',$autorate->id],['surcharge_id',null]])->first();
-        if($charge !=null)        
-         return new ChargeResource($charge);
+        $charge = Charge::where('automatic_rate_id',$autorate->id)->whereHas('surcharge', function ($query) {
+            return $query->where([['name', 'Ocean Freight'],['company_user_id',null]]);
+        })->first();
+               
+        return new ChargeResource($charge);
     }
 
     public function destroy(Charge $charge)
