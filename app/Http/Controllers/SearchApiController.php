@@ -398,11 +398,15 @@ class SearchApiController extends Controller
 
             $remarks = $this->searchRemarks($rate, $search_ids);
 
+            $client_remarks = $this->searchRemarks($rate, $search_ids, ["client","both"]);
+            
             $transit_time = $this->searchTransitTime($rate);
 
             $rate->setAttribute('transit_time', $transit_time);
 
             $rate->setAttribute('remarks', $remarks);
+
+            $rate->setAttribute('client_remarks', $client_remarks);
 
             $rate->setAttribute('request_type', $request->input('requested'));
 
