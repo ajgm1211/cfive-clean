@@ -356,9 +356,7 @@ class SearchApiController extends Controller
 
         //$rateNo = 0;
         foreach ($rates as $rate) {
-            //$rateNo += 1;
-            //dump($rate->contract);
-            //dump('for rate '. strval($rateNo));
+
             //Retrieving local charges with search data
             $local_charges = $this->searchLocalCharges($search_ids, $rate);
 
