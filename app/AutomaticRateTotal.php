@@ -78,9 +78,13 @@ class AutomaticRateTotal extends Model implements Auditable
 
             array_splice($equipArray, -1, 1);
 
-            $charges = $rate->charge()->where([['surcharge_id', '!=', null], ['type_id', 3]])->get();
+            $charges = $rate->charge()->where('type_id', 3)->whereHas('surcharge', function ($query) {
+                return $query->where('name', '!=', 'Ocean Freight');
+            })->get();
 
-            $oceanFreight = $rate->charge()->where('surcharge_id', null)->first();
+            $oceanFreight = $rate->charge()->whereHas('surcharge', function ($query) {
+                return $query->where([['name', 'Ocean Freight'],['company_user_id',null]]);
+            })->first();
 
             $this->update(['currency_id' => $newCurrencyId]);
 
