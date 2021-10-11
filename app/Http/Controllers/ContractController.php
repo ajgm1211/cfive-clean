@@ -554,6 +554,9 @@ class ContractController extends Controller
             //Saving contracts and carriers in ContractCarriers
             $contract->ContractCarrierSync($carriers, $api);
 
+            //Creating custom code
+            $contract->createCustomCode();
+
             $filename = date("dmY_His") . '_' . $request->file->getClientOriginalName();
 
             //Uploading file to storage
@@ -732,6 +735,9 @@ class ContractController extends Controller
         $contract->save();
 
         $contract->ContractCarrierSyncSingle($request->carrierR);
+
+        //Creating custom code
+        $contract->createCustomCode();
 
         $rates = new Rate();
         $rates->origin_port = $request->origin_port;
