@@ -496,7 +496,7 @@ class CompanyController extends Controller
                     // Create a POST request
                 $response = $client->request(
                     'POST',
-                    'http://chirix.localhost:8000/shipper',
+                    'http://backrockstar.cargofive.com/shipper',
                     [
                         'json' => [
                             'business_name' => $business_name,

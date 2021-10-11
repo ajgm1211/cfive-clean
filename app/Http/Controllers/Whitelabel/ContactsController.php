@@ -71,7 +71,7 @@ class ContactsController extends Controller
                      // Create a POST request
                  $response = $client->request(
                      'POST',
-                     'http://chirix.localhost:8000/user',
+                     'http://backrockstar.cargofive.com/user',
                       [
                           'json' => [
                              'name' => $name,

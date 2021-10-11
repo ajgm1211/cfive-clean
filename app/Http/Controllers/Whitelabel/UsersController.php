@@ -75,7 +75,7 @@ class UsersController extends Controller
                  // Create a POST request
              $response = $client->request(
                  'POST',
-                 'http://chirix.localhost:8000/admin',
+                 'http://backrockstar.cargofive.com/admin',
                  [
                      'json' => [
                          'name' => $name,
