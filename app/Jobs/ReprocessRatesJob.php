@@ -1,4 +1,4 @@
-trim(<?ph)p
+<?php
 
 namespace App\Jobs;
 
