@@ -48,11 +48,12 @@ class createContractsIdCommand extends Command
 
             $company = strtoupper(substr($contract->companyUser->name, 0, 3));
 
-            $code = 'FCL-'.$company.'-0001';
+            $code = 'FCL-'.$company.'-1';
     
             if($lastContract->contract_code){
                 $lastContractId = (int)substr($lastContract->contract_code, -3);
-                $lastContractId = str_pad($lastContractId+1, 4, '0', STR_PAD_LEFT);
+                //$lastContractId = str_pad($lastContractId+1, 5, '0', STR_PAD_LEFT);
+                $lastContractId = $lastContractId+1;
                 $code = 'FCL-'.$company.'-'.$lastContractId;
             }
     
@@ -66,11 +67,12 @@ class createContractsIdCommand extends Command
     
             $company = strtoupper(substr($contract->companyUser->name, 0, 3));
     
-            $code = 'LCL-'.$company.'-0001';
+            $code = 'LCL-'.$company.'-1';
             
             if($lastContract->contract_code){
                 $lastContractId = (int)substr($lastContract->contract_code, -3);
-                $lastContractId = str_pad($lastContractId+1, 4, '0', STR_PAD_LEFT);
+                //$lastContractId = str_pad($lastContractId+1, 5, '0', STR_PAD_LEFT);
+                $lastContractId = $lastContractId+1;
                 $code = 'LCL-'.$company.'-'.$lastContractId;
             }
     
