@@ -452,18 +452,16 @@ class Contract extends Model implements HasMedia, Auditable
 
     public function createCustomCode()
     {
-        $lastContract = Contract::where('company_user_id',$this->company_user_id)
-        ->orderBy('contract_code', 'desc')->first();
-        
+        $lastContract = Contract::where('company_user_id', $this->company_user_id)
+            ->whereNotNull('contract_code')->orderBy('id', 'desc')->first();
+
         $company = strtoupper(substr($this->companyUser->name, 0, 3));
 
-        $code = 'FCL-'.$company.'-1';
+        $code = 'FCL-' . $company . '-1';
 
-        if($lastContract->contract_code){
-            $lastContractId = (int)substr($lastContract->contract_code, -3);
-            //$lastContractId = str_pad($lastContractId+1, 5, '0', STR_PAD_LEFT);
-            $lastContractId = $lastContractId+1;
-            $code = 'FCL-'.$company.'-'.$lastContractId;
+        if (!empty($lastContract)) {
+            $lastContractId = intval(str_replace('FCL-' . $company . "-", "", $lastContract->contract_code));
+            $code = 'FCL-' . $company . '-' . strval($lastContractId + 1);
         }
 
         $this->contract_code = $code;
