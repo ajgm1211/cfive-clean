@@ -72,7 +72,9 @@ class PriceLevelController  extends Controller
      */
     public function update(Request $request, PriceLevel $price_level)
     {
-        if(isset($request->input('desciption'))){
+        $fields = $request->input();
+
+        if(array_key_exists('description',$fields)){
             $data = $request->validate([
                 'description' => 'required',
             ]);

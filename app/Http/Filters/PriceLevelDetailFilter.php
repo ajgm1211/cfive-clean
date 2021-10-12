@@ -11,7 +11,7 @@ class PriceLevelDetailFilter extends AbstractFilter
     protected $filter_by_relations = [];
     protected $with = ['price_level',
                         'currency', 
-                        'typedestiny', 
+                        'price_level_apply', 
                         'direction', 
                         ];
 }
