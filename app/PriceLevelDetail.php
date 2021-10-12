@@ -3,13 +3,21 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use App\Http\Filters\PriceLevelDetailFilter;
 
 class PriceLevelDetail extends Model
 {
     protected $table = 'price_level_details';
 
     protected $fillable = [
-        'amount','currency_id','typedestiny_id','direction_id',
+        'amount','currency_id','direction_id', 'price_level_id', 'price_level_apply_id',
+    ];
+    
+    protected $casts = [
+        'amount' => 'array',
     ];
 
     public function price_level()
@@ -40,5 +48,16 @@ class PriceLevelDetail extends Model
     public function scopeFilter(Builder $builder, Request $request)
     {
         return (new PriceLevelDetailFilter($request, $builder))->filter();
+    }
+
+    public function duplicate()
+    {
+        $new_model = $this->replicate();
+
+        $new_model->push();
+
+        $new_model->save();
+
+        return $new_model;
     }
 }
