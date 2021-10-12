@@ -197,6 +197,9 @@ class ContractsLclController extends Controller
         $contract->user_id= Auth::user()->id;
         $contract->save();
 
+        //Creating custom code
+        $contract->createCustomCode();
+
         foreach ($request->carrierAr as $carrierFA) {
             ContractCarrierLcl::create([
                 'carrier_id' => $carrierFA,
