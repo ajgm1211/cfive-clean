@@ -266,23 +266,19 @@ class ContractLcl extends Model implements HasMedia, Auditable
 
     public function createCustomCode()
     {
-        $lastContract = ContractLcl::where('company_user_id',$this->company_user_id)->
-        orderBy('contract_code', 'desc')->first();
+        $lastContract = ContractLcl::where('company_user_id', $this->company_user_id)
+            ->whereNotNull('contract_code')->orderBy('id', 'desc')->first();
 
         $company = strtoupper(substr($this->companyUser->name, 0, 3));
 
-        $code = 'LCL-'.$company.'-1';
-        
-        if($lastContract->contract_code){
-            $lastContractId = (int)substr($lastContract->contract_code, -3);
-            //$lastContractId = str_pad($lastContractId+1, 5, '0', STR_PAD_LEFT);
-            $lastContractId = $lastContractId+1;
-            $code = 'LCL-'.$company.'-'.$lastContractId;
+        $code = 'LCL-' . $company . '-1';
+
+        if (!empty($lastContract)) {
+            $lastContractId = intval(str_replace('LCL-' . $company . "-", "", $lastContract->contract_code));
+            $code = 'LCL-' . $company . '-' . strval($lastContractId + 1);
         }
 
         $this->contract_code = $code;
         $this->save();
-
-        return;
     }
 }

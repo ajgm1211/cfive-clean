@@ -42,42 +42,38 @@ class createContractsIdCommand extends Command
         $contracts = Contract::all();
         $contracts_lcl = ContractLcl::all();
 
-        foreach($contracts as $contract){
-            $lastContract = Contract::where('company_user_id',$contract->company_user_id)
-            ->orderBy('contract_code', 'desc')->first();
+        foreach ($contracts as $contract) {
+            $lastContract = Contract::where('company_user_id', $contract->company_user_id)
+                ->whereNotNull('contract_code')->orderBy('id', 'desc')->first();
 
             $company = strtoupper(substr($contract->companyUser->name, 0, 3));
 
             $code = 'FCL-'.$company.'-1';
-    
-            if($lastContract->contract_code){
-                $lastContractId = (int)substr($lastContract->contract_code, -3);
-                //$lastContractId = str_pad($lastContractId+1, 5, '0', STR_PAD_LEFT);
-                $lastContractId = $lastContractId+1;
-                $code = 'FCL-'.$company.'-'.$lastContractId;
+
+            if (!empty($lastContract)) {
+                $lastContractId = intval(str_replace('FCL-' . $company . "-", "", $lastContract->contract_code));
+                $code = 'FCL-' . $company . '-' . strval($lastContractId + 1);
             }
-    
+
             $contract->contract_code = $code;
-            $contract->save();
+            $contract->update();
         }
 
-        foreach($contracts_lcl as $contract){
-            $lastContract = ContractLcl::where('company_user_id',$contract->company_user_id)->
-            orderBy('contract_code', 'desc')->first();
-    
+        foreach ($contracts_lcl as $contract) {
+            $lastContract = ContractLcl::where('company_user_id', $contract->company_user_id)
+            ->whereNotNull('contract_code')->orderBy('id', 'desc')->first();
+
             $company = strtoupper(substr($contract->companyUser->name, 0, 3));
-    
-            $code = 'LCL-'.$company.'-1';
-            
-            if($lastContract->contract_code){
-                $lastContractId = (int)substr($lastContract->contract_code, -3);
-                //$lastContractId = str_pad($lastContractId+1, 5, '0', STR_PAD_LEFT);
-                $lastContractId = $lastContractId+1;
-                $code = 'LCL-'.$company.'-'.$lastContractId;
+
+            $code = 'LCL-' . $company . '-1';
+
+            if (!empty($lastContract)) {
+                $lastContractId = intval(str_replace('LCL-' . $company . "-", "", $lastContract->contract_code));
+                $code = 'LCL-' . $company . '-' . strval($lastContractId + 1);
             }
-    
+
             $contract->contract_code = $code;
-            $contract->save();
+            $contract->update();
         }
     }
 }
