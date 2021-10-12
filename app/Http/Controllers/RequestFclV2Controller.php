@@ -281,6 +281,9 @@ class RequestFclV2Controller extends Controller
             $contract->gp_container_id = $gpContainer->id;
             $contract->save();
 
+            //Creating custom code
+            $contract->createCustomCode();
+
             $Ncontract = new NewContractRequest();
             $Ncontract->namecontract = $name;
             $Ncontract->validation = $validationexp;
