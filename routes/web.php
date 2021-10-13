@@ -1437,3 +1437,8 @@ Route::group(['prefix' => 'api/pricelevel', 'middleware' => ['auth']], function 
     Route::get('', 'PriceLevelController@index');
     Route::get('{price_level}/edit', 'PriceLevelController@edit');
 });
+
+Route::group(['prefix' => 'api/pricelevel/groups', 'middleware' => ['auth']], function () {
+    Route::get('', 'CompanyGroupController@index');
+    Route::get('{company_group}/edit', 'CompanyGroupController@edit');
+});

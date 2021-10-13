@@ -448,7 +448,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             'name' => $chargeExc_val,
                                             'description' => $chargeExc_val,
                                             'company_user_id' => $company_user_id,
-                                            'options' => json_encode(['is_api' => false]),
                                         ]);
                                         $surchargeVal = $surchargelist->id;
                                     }
