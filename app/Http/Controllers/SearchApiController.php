@@ -345,7 +345,7 @@ class SearchApiController extends Controller
 
             $rate->setAttribute('request_type', $request->input('requested'));
 
-            $rate->setAttribute('inland', $inland);
+            $rate->setAttribute('inlands', $inland);
 
             $this->stringifyRateAmounts($rate);
 
@@ -597,9 +597,16 @@ class SearchApiController extends Controller
 
         $selectOriginInland=$this->selectInland($filterOrig,$rate,$type=1);
         $selectDestinyInland=$this->selectInland($filterDest,$rate,$type=2);
-        
-       $inland['origin_inland']= $selectOriginInland;
-       $inland['destiny_inland']= $selectDestinyInland;
+     
+        $inland['origin_inland']= $selectOriginInland!=null ? $selectOriginInland : null ;
+            if ( $inland['origin_inland']!=null) {
+                $rate->setAttribute('origin_inland_id', $selectOriginInland['inland_id']);
+            }
+
+        $inland['destiny_inland']=  $selectDestinyInland!=null ? $selectDestinyInland : null ;
+            if ( $inland['destiny_inland']!=null) {
+                $rate->setAttribute('destiny_inland_id', $selectDestinyInland['inland_id']);
+            }
 
         return $inland;
     }

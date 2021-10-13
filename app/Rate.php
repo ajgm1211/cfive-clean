@@ -86,4 +86,12 @@ class Rate extends Model implements Auditable
 
         return $query->orwhere($valor, '!=', 0);
     }
+
+    public function inland_origin(){
+        return $this->belongsTo('App\Inland', 'origin_inland_id');
+    }
+    public function inland_destiny(){
+        return $this->belongsTo('App\Inland', 'destiny_inland_id');
+    }
+
 }
