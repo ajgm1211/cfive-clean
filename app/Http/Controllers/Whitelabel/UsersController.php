@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client; 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
+use Hash;
 
 class UsersController extends Controller
 {
@@ -48,10 +49,10 @@ class UsersController extends Controller
     public function store(Request $request)
     {
 
-         $data = $request->validate([
+        $this->validate($request,[
              'name' => 'required',
              'lastname' => 'required',
-             'password' => 'required',
+             'password' => 'required|min:8',
              'email' => 'required|email|unique:users',
              'phone' => 'nullable',
              'type' => 'nullable',
@@ -60,7 +61,17 @@ class UsersController extends Controller
              'whitelabel' => 'nullable',
          ]);
 
-        User::create($data);
+         $data = User::create([
+            'name' => $request->name,
+            'lastname' => $request->lastname,
+            'password' => Hash::make($request->password),
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'type'=> $request->type,
+            'position' => $request->position,
+            'whitelabel'=> $request->whitelabel,
+        ]);
+        
         if ($request->whitelabel == 1){
 
          $name = $request->get('name');

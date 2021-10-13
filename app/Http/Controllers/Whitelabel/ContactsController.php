@@ -44,7 +44,7 @@ class ContactsController extends Controller
      */
     public function store(Request $request)
     {
-           $data = $request->validate(  [
+           $this->validate($request,  [
                'first_name' => 'required',
                'last_name' => 'required',
                'email' => 'required|email',
@@ -52,10 +52,20 @@ class ContactsController extends Controller
                'position'=> 'nullable',
                'whitelabel'=> 'nullable',
                'options' => 'json',
+               'password_wl' =>'nullable|min:8',
            ]);
 
-        Contact::create($data);
-        
+           $data = Contact::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'position' => $request->position,
+            'whitelabel'=> $request->whitelabel,
+            'options'=> $request->options,
+            'password_wl' => \Hash::make($request->password_wl)
+        ]);
+  
          if ($request->whitelabel == 1){
 
              $name = $request->get('first_name');
@@ -64,6 +74,7 @@ class ContactsController extends Controller
              $type = 'user';
              $phone = $request->get('phone');
              $position = $request->get('position');
+             $password = $request->get('password_wl');
             
              $client = new \GuzzleHttp\Client([              
                  'Accept' => 'application/json',
@@ -80,7 +91,7 @@ class ContactsController extends Controller
                              'type' => $type,
                              'phone' => $phone,
                              'position' => $position,
-
+                             'password' => $password,
                           ]
                       ]
                      );
