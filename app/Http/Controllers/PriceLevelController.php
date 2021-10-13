@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\PriceLevel;
 use App\PriceLevelGroup;
 use App\Company;
+use App\Currency;
+use App\Container;
+use App\Direction;
 use App\CompanyGroup;
+use App\CompanyUser;
 use App\Http\Resources\PriceLevelResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +27,52 @@ class PriceLevelController  extends Controller
     public function index()
     {
         return view('pricelevel.index');
+    }
+
+    //Retrieves all data needed for search processing and displaying
+    public function data(Request $request)
+    {
+        $user = \Auth::user();
+        //Querying each model used and mapping only necessary data
+        $company_user_id = $user->company_user_id;
+
+        $company_user = CompanyUser::where('id', $company_user_id)->first();
+
+        $companies = Company::where('company_user_id', '=', $company_user_id)->get();
+        
+        $company_groups = CompanyGroup::where('company_user_id', '=', $company_user_id)->get();
+
+        $currency = Currency::get()->map(function ($curr) {
+            return $curr->only(['id', 'alphacode', 'rates', 'rates_eur']);
+        });
+
+        $common_currencies = Currency::whereIn('id', ['46', '149'])->get()->map(function ($curr) {
+            return $curr->only(['id', 'alphacode', 'rates', 'rates_eur']);
+        });
+
+        $containers = Container::all();
+
+        $directions = Direction::all();
+
+        $price_levels = PriceLevel::where('company_user_id', $company_user_id)->get()->map(function ($price) {
+            return $price->only(['id', 'name']);
+        });
+
+        //Collecting all data retrieved
+        $data = compact(
+            'user',
+            'company_user_id',
+            'company_user',
+            'companies',
+            'company_groups',
+            'currency',
+            'common_currencies',
+            'containers',
+            'directions',
+            'price_levels',
+        );
+
+        return response()->json(['data' => $data]);
     }
 
     public function list(Request $request)
