@@ -108,6 +108,7 @@ Route::middleware('auth:api')->get('pdf/{id}',['as' => 'pdf.api', 'uses' => 'Api
 // NEW PRICE LEVELS ROUTES
 
 Route::group(['prefix'=>'pricelevels','middleware' => 'auth:api'], function () {
+    Route::get('data', 'PriceLevelController@data');
     Route::get('list', 'PriceLevelController@list');
     Route::post('store', 'PriceLevelController@store');
     Route::post('{price_level}/update', 'PriceLevelController@update');
