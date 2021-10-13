@@ -25,7 +25,7 @@
                        
             <th class="unit" {{@$quote->pdf_options['showCarrier'] ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
 
-            <th ><b>TON/M3</b></th>
+            <th ><b>Total</b></th>
                        
             @if($service)
                 <th class="unit"><b>{{__('pdf.tt')}}</b></th>
