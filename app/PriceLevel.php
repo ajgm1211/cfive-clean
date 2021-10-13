@@ -21,6 +21,18 @@ class PriceLevel extends Model
         return $this->belongsTo('App\CompanyUser');
     }
 
+    public function companies()
+    {
+        return $this->hasManyThrough('App\Company', 'App\PriceLevelGroups', 'price_level_id', 'id', 'id', 'group_id')
+        ->where('group_type', 'App\Company');
+    }
+
+    public function company_groups()
+    {
+        return $this->hasManyThrough('App\CompanyGroup', 'App\PriceLevelGroups', 'price_level_id', 'id', 'id', 'group_id')
+        ->where('group_type', 'App\CompanyGroup');
+    }
+
     public function scopeFilterByCurrentCompany($query)
     {
         $company_id = Auth::user()->company_user_id;

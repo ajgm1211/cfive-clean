@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\PriceLevel;
+use App\PriceLevelGroup;
+use App\Company;
+use App\CompanyGroup;
 use App\Http\Resources\PriceLevelResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\SearchTrait;
+
 
 class PriceLevelController  extends Controller
 {
+    use SearchTrait;
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +25,7 @@ class PriceLevelController  extends Controller
         return view('pricelevel.index');
     }
 
-    function list(Request $request)
+    public function list(Request $request)
     {
         $results = PriceLevel::filterByCurrentCompany()->filter($request);
 
@@ -82,6 +88,44 @@ class PriceLevelController  extends Controller
             $price_level->update([
                 'description' => $data['description'],
             ]);
+        }elseif(array_key_exists('companies',$fields) || array_key_exists('groups',$fields)){
+            if(array_key_exists('companies',$fields)){
+                $model = 'App\\Company';
+                $model_type = 'companies';
+            }elseif(array_key_exists('groups',$fields)){
+                $model = 'App\\CompanyGroup';
+                $model_type = 'groups';
+            }
+
+            $model_ids = $this->getIdsFromArray($request->input($model_type));
+            $existing_relations = [];
+
+            $price_level_groups = PriceLevelGroup::where([
+                ['price_level_id',$price_level->id],
+                ['group_type',$model]])
+            ->get();
+
+            foreach($price_level_groups as $group){
+                if(!in_array($group->group_id,$model_ids)){
+                    $group->delete();
+                }else{
+                    array_push($existing_relations,$group->group_id);
+                }
+            }
+            
+            $non_existing_relations = array_diff($model_ids,$existing_relations);
+
+            foreach($non_existing_relations as $new_relation_id){
+                if($model_type == 'companies'){
+                    $new_model = Company::where('id',$new_relation_id)->first();
+                }elseif($model_type == 'groups'){
+                    $new_model = CompanyGroup::where('id',$new_relation_id)->first();
+                }
+
+                $new_relation = new PriceLevelGroup();
+                $new_relation->price_level_id = $price_level->id;
+                $new_relation->group()->associate($new_model)->save();
+            }
         }else{
             $data = $request->validate([
                 'name' => 'required',

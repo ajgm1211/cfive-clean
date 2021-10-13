@@ -342,7 +342,6 @@ class SettingController extends Controller
             $surcharge_duplicate->description = $surcharge->description;
             $surcharge_duplicate->sale_term_id = $surcharge->sale_term_id;
             $surcharge_duplicate->company_user_id = $company_user_duplicate->id;
-            $surcharge_duplicate->options = json_encode(['is_api' => false]);
             $surcharge_duplicate->save();
         }
 
