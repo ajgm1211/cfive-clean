@@ -3,6 +3,7 @@
 namespace App\Http\Traits;
 
 use App\CalculationType;
+use App\CalculationTypeLcl;
 use App\ContainerCalculation;
 use App\CompanyUser;
 use App\Currency;
@@ -12,9 +13,21 @@ use App\Harbor;
 use App\Country;
 use App\TransitTime;
 use App\Container;
+use App\RemarkCondition;
 use App\GroupContainer;
+use App\NewContractRequest;
+use App\NewContractRequestLcl;
+use App\Contract;
+use App\ContractLcl;
+use App\ContractFclFile;
+use App\ContractLclFile;
+use App\TermAndConditionV2;
 use GoogleMaps;
+use App\Surcharge;
 use Illuminate\Support\Collection as Collection;
+use Illuminate\Support\Facades\Storage;
+use Spatie\MediaLibrary\MediaStream;
+use Spatie\MediaLibrary\Models\Media;
 
 trait SearchTrait
 {
@@ -839,6 +852,43 @@ trait SearchTrait
         return str_replace($skips, '', $pluck);
     }
 
+    //groups local + global charges by type (Origin, Destination, Freight)
+    public function groupChargesByType($local_charges, $global_charges, $search_data)
+    {
+        //Creating arrays for every type
+        $origin = [];
+        $destination = [];
+        $freight = [];
+
+        //Creating collection for charges
+        $charges = collect([]);
+
+        //Joining local and global charges to loop through all
+        $all_charges = $local_charges->concat($global_charges);
+        
+        //Looping through charges and including them in the corresponding array
+        foreach($all_charges as $charge){
+            if($charge->typedestiny_id == 1){
+                array_push($origin,$charge);
+            }elseif($charge->typedestiny_id == 2){
+                array_push($destination,$charge);
+            }elseif($charge->typedestiny_id == 3){
+                array_push($freight,$charge);
+            }
+        }
+
+        //Forming final collection
+        if($search_data['originCharges']){
+            $charges->put('Origin',$origin);
+        }
+        $charges->put('Freight',$freight);
+        if($search_data['destinationCharges']){
+            $charges->put('Destination',$destination);
+        }
+        
+        return $charges;
+    }
+
     //If rate data comes separate from mode (twuenty, forty, etc) joins them under the "containers" field 
     //ONLY FOR DRY CONTAINERS
     public function joinRateContainers($rates, $search_containers)
@@ -886,45 +936,80 @@ trait SearchTrait
         }
     }
 
-    //groups local + global charges by type (Origin, Destination, Freight)
-    public function groupChargesByType($local_charges, $global_charges, $search_data)
+    //Necessary calculations for LCL Rate : calculating totals with requested LCL type, and converting to client currency for display
+    public function setLclRateTotals($rate, $search_data)
     {
-        //Creating arrays for every type
-        $origin = [];
-        $destination = [];
-        $freight = [];
+        $amount = $rate->uom;
 
-        //Creating collection for charges
-        $charges = collect([]);
+        $chargeable_weigth = $search_data['chargeableWeight'];
 
-        //Joining local and global charges to loop through all
-        $all_charges = $local_charges->concat($global_charges);
-        
-        //Looping through charges and including them in the corresponding array
-        foreach($all_charges as $charge){
-            if($charge->typedestiny_id == 1){
-                array_push($origin,$charge);
-            }elseif($charge->typedestiny_id == 2){
-                array_push($destination,$charge);
-            }elseif($charge->typedestiny_id == 3){
-                array_push($freight,$charge);
+        $total = $amount * $chargeable_weigth;
+
+        if($total < $rate->minimum){
+            $total = $rate->minimum;
+        }
+
+        $total_client_currency = $this->convertToCurrency($rate->currency, $search_data['client_currency'], array($total));
+
+        $rate->setAttribute('units', $chargeable_weigth);
+        $rate->setAttribute('total',$total);
+        $rate->setAttribute('total_client_currency',$total_client_currency[0]);
+    }
+
+    //Necessary calculations for LCL Charges, using calculation types (business rules)
+    public function calculateLclChargesPerType($charges_direction, $search_data)
+    {
+        foreach($charges_direction as $direction){
+            foreach($direction as $charge){
+                $calculation_options = json_decode($charge->calculationtypelcl->options, true);
+
+                if($calculation_options['type'] == 'unique'){
+                    $units = 1;
+                }else if($calculation_options['type'] == 'chargeable' || $calculation_options['type'] == 'rate_only'){
+                    if($calculation_options['rounded']){
+                        $units = ceil($search_data['chargeableWeight']);
+                    }else{
+                        $units = $search_data['chargeableWeight'];
+                    }
+                }else if($calculation_options['type'] == 'ton'){
+                    if($calculation_options['rounded']){
+                        $units = ceil($search_data['weight'] / 1000);
+                    }else{
+                        $units = $search_data['weight'] / 1000;
+                    }
+                }else if($calculation_options['type'] == 'm3'){
+                    if($calculation_options['rounded']){
+                        $units = ceil($search_data['volume']);
+                    }else{
+                        $units = $search_data['volume'];
+                    }                   
+                }else if($calculation_options['type'] == 'kg'){
+                    $units = $search_data['weight'];
+                }else if($calculation_options['type'] == 'package' || $calculation_options['type'] == 'pallet'){
+                    $units = $search_data['quantity'];
+                }
+
+                $amount = $charge->ammount * $units;
+                $charge->units = $units;
+
+                $minimum = $charge->minimum;
+
+                if($amount < $minimum){
+                    $amount = $minimum;
+                    $charge->ammount = $amount / $units;
+                }
+
+                $total_client_currency = $this->convertToCurrency($charge->currency, $search_data['client_currency'], array($amount));
+
+                $charge->setAttribute('total', $amount);
+                $charge->setAttribute('total_client_currency',$total_client_currency[0]);
+                $charge->setAttribute('client_currency',$search_data['client_currency']);
             }
         }
-
-        //Forming final collection
-        if($search_data['originCharges']){
-            $charges->put('Origin',$origin);
-        }
-        $charges->put('Freight',$freight);
-        if($search_data['destinationCharges']){
-            $charges->put('Destination',$destination);
-        }
-        
-        return $charges;
     }
 
     //Get charges per container from calculation type - inputs a charge collection, outputs ordered collection
-    public function setChargesPerContainer($charges, $containers, $rate_containers, $client_currency)
+    public function calculateFclCharges($charges, $containers, $rate_containers, $client_currency)
     {
         $container_ids = $this->getIdsFromArray($containers);
         $rate_container_array = json_decode($rate_containers,true);
@@ -976,18 +1061,19 @@ trait SearchTrait
         }
     }
 
-    //Joining charges where surcharge, carrier and ports match; when join, amounts are added together
-    public function joinCharges($charges, $client_currency, $container_group_id)
+    //Joining FCL charges where surcharge, carrier and ports match; when join, amounts are added together
+    public function joinCharges($charges, $search_data)
     {
+        $client_currency = $search_data['client_currency'];
         //Empty array for joint charges
         $joint_charges = [];
-        if($container_group_id == 1){
+        if($search_data['selectedContainerGroup'] == 1){
             $per_container_calculation_type = CalculationType::where('id',5)->first();
-        }elseif($container_group_id == 2){
+        }elseif($search_data['selectedContainerGroup'] == 2){
             $per_container_calculation_type = CalculationType::where('id',19)->first();
-        }elseif($container_group_id == 3){
+        }elseif($search_data['selectedContainerGroup'] == 3){
             $per_container_calculation_type = CalculationType::where('id',20)->first();
-        }elseif($container_group_id == 4){
+        }elseif($search_data['selectedContainerGroup'] == 4){
             $per_container_calculation_type = CalculationType::where('id',21)->first();
         }
 
@@ -1011,87 +1097,58 @@ trait SearchTrait
                 foreach($charges_direction as $charge){
                     if(!$charge->hide){
                         //Index of present charge in its array, for control purposes
-                    $original_charge_index = array_search($charge,$charges_direction);
-                    //Control variable that indicates whether a charge has been matched and joint
-                    $charge_matched = false;
-                    //Looping through duplicate array
-                    foreach($comparing_array as $comparing_charge){
-                        if(!$comparing_charge->hide){
-                            //Index of present compared change in its array, for control purposes
-                            $comparing_charge_index = array_search($comparing_charge,$comparing_array);
-                            //Checking that the index of the original charge is lower than the compared charge. This will avoid duplicate joints, as follows:
-                            //Original index 0 only compares with 1,2,3...
-                            //Original index 1 only compares with 2,3,4...
-                            //Original index 2 only compares with 3,4,5... And so on
-                            if($original_charge_index < $comparing_charge_index){
-                                //Checking if charge needs to be joint
-                                    //Surcharges must match
-                                    //Index of compared charge must not be in the compared control array (compared_and_joint)
-                                if($charge->surcharge_id == $comparing_charge->surcharge_id &&
-                                    count(array_intersect([$original_charge_index, $comparing_charge_index], $compared_and_joint)) == 0 ){
-                                    //Converting compared array container rates into corresponding currency:
-                                        //If currencies don't match, join must be done in client currency
-                                        if($charge->currency->id != $comparing_charge->currency->id){
-                                            $joint_containers = $charge->containers_client_currency;
-                                            //Marking charge as joint under client currency
-                                            $charge->setAttribute('joint_as','client_currency');
-                                            unset($charge->calculationtype);
-                                            unset($charge->calculationtype_id);
-                                            $charge->setAttribute('calculationtype', $per_container_calculation_type);
-                                            $charge->setAttribute('calculationtype_id', $per_container_calculation_type->id);
-                                            $comparing_charge_containers = $comparing_charge->containers_client_currency;
-                                        //If currencies match, sum is direct
-                                        }elseif($charge->currency->id == $comparing_charge->currency->id){
-                                            $joint_containers = $charge->containers;
-                                            //Marking as joint under charge currency
-                                            $charge->setAttribute('joint_as','charge_currency');
-                                            unset($charge->calculationtype);
-                                            unset($charge->calculationtype_id);
-                                            $charge->setAttribute('calculationtype', $per_container_calculation_type);
-                                            $charge->setAttribute('calculationtype_id', $per_container_calculation_type->id);
-                                            $comparing_charge_containers = $comparing_charge->containers;
-                                        }
-                                        //Adding container rates together
-                                        foreach($comparing_charge_containers as $code => $container){
-                                            if(!isset($joint_containers[$code])){
-                                                $joint_containers[$code] = 0;
+                        $original_charge_index = array_search($charge,$charges_direction);
+                        //Control variable that indicates whether a charge has been matched and joint
+                        $charge_matched = false;
+                        //Looping through duplicate array
+                        foreach($comparing_array as $comparing_charge){
+                            if(!$comparing_charge->hide){
+                                //Index of present compared change in its array, for control purposes
+                                $comparing_charge_index = array_search($comparing_charge,$comparing_array);
+                                //Checking that the index of the original charge is lower than the compared charge. This will avoid duplicate joints, as follows:
+                                //Original index 0 only compares with 1,2,3...
+                                //Original index 1 only compares with 2,3,4...
+                                //Original index 2 only compares with 3,4,5... And so on
+                                if($original_charge_index < $comparing_charge_index){
+                                    //Checking if charge needs to be joint
+                                        //Surcharges must match
+                                        //Index of compared charge must not be in the compared control array (compared_and_joint)
+                                    if($charge->surcharge_id == $comparing_charge->surcharge_id &&
+                                        count(array_intersect([$original_charge_index, $comparing_charge_index], $compared_and_joint)) == 0 ){
+                                            if($search_data['type'] == 'FCL'){
+                                                $joint_success = $this->calculateJointFclCharge($charge,$comparing_charge, $per_container_calculation_type, $client_currency);
+                                            }elseif($search_data['type'] == 'LCL'){
+                                                $joint_success = $this->calculateJointLclCharge($charge,$comparing_charge, $client_currency);
                                             }
-                                            $joint_containers[$code] += $container;
-                                            //Checking join type and using corresponding container array
-                                            if($charge->joint_as == 'client_currency'){
-                                                $charge->containers_client_currency = $joint_containers;
-                                            }elseif($charge->joint_as == 'charge_currency'){
-                                                $charge->containers = $joint_containers;
-                                                $charge->containers_client_currency = $this->convertToCurrency($charge->currency, $client_currency, $joint_containers);
+
+                                            if($joint_success){
+                                                //if original charge has been joint and included in final array, replace it. This avoids duplicate joint charges as follows:
+                                                    //EXAMPLE
+                                                    //Original charge 0 is joint with compared charge 1, original 0 is included in final array
+                                                    //Original charge 0 is joint with compared charge 2, original 0 is included in final array -> DUPLICATE
+                                                    //SOLUTION -> Original charge must be pulled from final array if present
+                                                foreach($joint_charges[$direction] as $key => $j_charge){
+                                                    if($j_charge->id == $charge->id){
+                                                        unset($joint_charges[$direction][$key]);
+                                                    }
+                                                }
+                                                //Include joint charge in final array
+                                                array_push($joint_charges[$direction],$charge);
+                                                //Include comparing charge in control array, indicating it has been joint already
+                                                array_push($compared_and_joint,$comparing_charge_index);
+                                                //Indicating original charge has been matched with at least one comparin charge
+                                                $charge_matched = true;
                                             }
-                                            
-                                        }
-                                        //if original charge has been joint and included in final array, replace it. This avoids duplicate joint charges as follows:
-                                            //EXAMPLE
-                                            //Original charge 0 is joint with compared charge 1, original 0 is included in final array
-                                            //Original charge 0 is joint with compared charge 2, original 0 is included in final array -> DUPLICATE
-                                            //SOLUTION -> Original charge must be pulled from final array if present
-                                        foreach($joint_charges[$direction] as $key => $j_charge){
-                                            if($j_charge->id == $charge->id){
-                                                unset($joint_charges[$direction][$key]);
-                                            }
-                                        }
-                                        //Include joint charge in final array
-                                        array_push($joint_charges[$direction],$charge);
-                                        //Include comparing charge in control array, indicating it has been joint already
-                                        array_push($compared_and_joint,$comparing_charge_index);
-                                        //Indicating original charge has been matched with at least one comparin charge
-                                        $charge_matched = true;
+                                    }
                                 }
                             }
                         }
-                    }
-                    //Checking if original charge hasnt been matched and joint
-                    if(!$charge_matched && !in_array($original_charge_index,$compared_and_joint)){
-                        //Including unjoint charge in final array
-                        $charge->setAttribute('joint_as', 'charge_currency');
-                        array_push($joint_charges[$direction],$charge);
-                    }
+                        //Checking if original charge hasnt been matched and joint
+                        if(!$charge_matched && !in_array($original_charge_index,$compared_and_joint)){
+                            //Including unjoint charge in final array
+                            $charge->setAttribute('joint_as', 'charge_currency');
+                            array_push($joint_charges[$direction],$charge);
+                        }
                     }
                 }
             }
@@ -1100,8 +1157,320 @@ trait SearchTrait
         return($joint_charges);
     }
 
+    public function calculateJointFclCharge($charge,$comparing_charge, $per_container_calculation_type, $client_currency)
+    {
+        //Converting compared array container rates into corresponding currency:
+            //If currencies don't match, join must be done in client currency
+            if($charge->currency->id != $comparing_charge->currency->id){
+                $joint_containers = $charge->containers_client_currency;
+                //Marking charge as joint under client currency
+                $charge->setAttribute('joint_as','client_currency');
+                unset($charge->calculationtype);
+                unset($charge->calculationtype_id);
+                $charge->setAttribute('calculationtype', $per_container_calculation_type);
+                $charge->setAttribute('calculationtype_id', $per_container_calculation_type->id);
+                $comparing_charge_containers = $comparing_charge->containers_client_currency;
+            //If currencies match, sum is direct
+            }elseif($charge->currency->id == $comparing_charge->currency->id){
+                $joint_containers = $charge->containers;
+                //Marking as joint under charge currency
+                $charge->setAttribute('joint_as','charge_currency');
+                unset($charge->calculationtype);
+                unset($charge->calculationtype_id);
+                $charge->setAttribute('calculationtype', $per_container_calculation_type);
+                $charge->setAttribute('calculationtype_id', $per_container_calculation_type->id);
+                $comparing_charge_containers = $comparing_charge->containers;
+            }
+            //Adding container rates together
+            foreach($comparing_charge_containers as $code => $container){
+                if(!isset($joint_containers[$code])){
+                    $joint_containers[$code] = 0;
+                }
+                $joint_containers[$code] += $container;
+                //Checking join type and using corresponding container array
+                if($charge->joint_as == 'client_currency'){
+                    $charge->containers_client_currency = $joint_containers;
+                }elseif($charge->joint_as == 'charge_currency'){
+                    $charge->containers = $joint_containers;
+                    $charge->containers_client_currency = $this->convertToCurrency($charge->currency, $client_currency, $joint_containers);
+                }
+            }
+
+            return true;
+    }
+
+    public function calculateJointLclCharge($charge,$comparing_charge, $client_currency)
+    {
+        $calculation_options = json_decode($charge->calculationtypelcl->options, true);
+        $comparing_calculation_options = json_decode($comparing_charge->calculationtypelcl->options, true);
+
+        //CASE 1: Type of calculation is the same, or same type but not unique nor chargeable - EXAMPLE: ton and ton, m3 and m3 ,etc
+        if( $charge->calculationtypelcl_id == $comparing_charge->calculationtypelcl_id ){
+            //If currencies don't match, join must be done in client currency
+            if($charge->currency->id != $comparing_charge->currency->id){
+                //Marking charge as joint under client currency
+                $charge->setAttribute('joint_as','client_currency');
+
+                //Adding regular amounts
+                $joint_amount = $charge->total_client_currency + $comparing_charge->total_client_currency;
+                $charge->total_client_currency = $joint_amount;
+
+            //If currencies match, add is direct
+            }elseif($charge->currency->id == $comparing_charge->currency->id){
+                //Marking as joint under charge currency
+                $charge->setAttribute('joint_as','charge_currency');
+
+                //Adding regular amounts
+                $joint_amount = $charge->total + $comparing_charge->total;
+                $charge->total = $joint_amount;
+                $charge->total_client_currency = $this->convertToCurrency($charge->currency, $client_currency, array($joint_amount))[0];
+            }
+
+            $charge->ammount = $charge->total / $charge->units;
+
+            return true;
+        //CASE 2: Both charges adaptable, different types - ton and m3 (Adapt)
+        }/**elseif( $calculation_options['adaptable'] && $comparing_calculation_options['adaptable'] && $calculation_options['type'] != $comparing_calculation_options['type'] ){
+            //If currencies don't match, join must be done in client currency
+            if($charge->currency->id != $comparing_charge->currency->id){
+                //Marking charge as joint under client currency
+                $charge->setAttribute('joint_as','client_currency');
+
+                $joint_amount = $charge->total_client_currency + $comparing_charge->adaptable_total_client_currency;
+                $charge->total_client_currency = $joint_amount;
+
+                $joint_adaptable_amount = $charge->adaptable_total_client_currency + $comparing_charge->total_client_currency;
+                $charge->adaptable_total_client_currency = $joint_adaptable_amount;
+            //If currencies match, add is direct
+            }elseif($charge->currency->id == $comparing_charge->currency->id){
+                //Marking as joint under charge currency
+                $charge->setAttribute('joint_as','charge_currency');
+
+                $joint_amount = $charge->total + $comparing_charge->adaptable_total;
+                $charge->total = $joint_amount;
+                $charge->total_client_currency = $this->convertToCurrency($charge->currency, $client_currency, array($joint_amount))[0];
+
+                $joint_adaptable_amount = $charge->adaptable_total + $comparing_charge->total;
+                $charge->adaptable_total = $joint_adaptable_amount;
+                $charge->adaptable_total_client_currency = $this->convertToCurrency($charge->currency, $client_currency, array($joint_adaptable_amount))[0];
+            }
+
+            return true;
+        //CASE 3: Original charge adaptable, Comparing charge NOT adaptable, types differ 
+        }elseif( $calculation_options['adaptable'] && !$comparing_calculation_options['adaptable'] && $calculation_options['type'] != $comparing_calculation_options['type'] ){
+            //If currencies don't match, join must be done in client currency
+            if($charge->currency->id != $comparing_charge->currency->id){
+                //Marking charge as joint under client currency
+                $charge->setAttribute('joint_as','client_currency');
+
+                $joint_amount = $charge->adaptable_total_client_currency + $comparing_charge->total_client_currency;
+                $charge->adaptable_total_client_currency = $joint_amount;
+            //If currencies match, add is direct
+            }elseif($charge->currency->id == $comparing_charge->currency->id){
+                //Marking as joint under charge currency
+                $charge->setAttribute('joint_as','charge_currency');
+
+                $joint_amount = $charge->adaptable_total + $comparing_charge->total;
+                $charge->adaptable_total = $joint_amount;
+                $charge->adaptable_total_client_currency = $this->convertToCurrency($charge->currency, $client_currency, array($joint_amount))[0];
+            }
+
+            return true;
+        //CASE 4: Original charge NOT adaptable, Comparing charge adaptable, types differ - DONT JOIN, ONLY MODIFIES THE COMPARING ADAPTABLE AMOUNT
+        }elseif( !$calculation_options['adaptable'] && $comparing_calculation_options['adaptable'] && $calculation_options['type'] != $comparing_calculation_options['type'] ){
+            //If currencies don't match, join must be done in client currency
+            if($charge->currency->id != $comparing_charge->currency->id){
+                $joint_amount = $charge->total_client_currency + $comparing_charge->adaptable_total_client_currency;
+                $comparing_charge->adaptable_total_client_currency = $joint_amount;
+            //If currencies match, add is direct
+            }elseif($charge->currency->id == $comparing_charge->currency->id){
+                $joint_amount = $charge->total + $comparing_charge->adaptable_total;
+                $comparing_charge->adaptable_total = $joint_amount;
+                $comparing_charge->adaptable_total_client_currency = $this->convertToCurrency($comparing_charge->currency, $client_currency, array($joint_amount))[0];
+            }
+
+            return false;
+        }**/
+
+        return false;
+    }
+
+    public function checkLclAdaptable($charges)
+    {
+        $final_charges = [];
+
+        foreach($charges as $direction=>$charges_direction){
+            $has_ton_adaptable = false;
+            $has_m3_adaptable = false;
+
+            foreach($charges_direction as $key=>$charge){
+                $calculation_options = json_decode($charge->calculationtypelcl->options, true);
+
+                if($calculation_options['adaptable']){
+                    if($calculation_options['type'] == 'ton'){
+                        $has_ton_adaptable = true;
+                        $ton_adaptable_charge = $charge;
+                        unset($charges_direction[$key]);
+                    }elseif($calculation_options['type'] == 'm3'){
+                        $has_m3_adaptable = true;
+                        $m3_adaptable_charge = $charge;
+                        unset($charges_direction[$key]);
+                    }
+                }
+            }
+
+            if($has_ton_adaptable && $has_m3_adaptable){
+                if($m3_adaptable_charge->total_client_currency > $ton_adaptable_charge->total_client_currency){
+                    array_push($charges_direction, $m3_adaptable_charge);
+                }else{
+                    array_push($charges_direction, $ton_adaptable_charge);
+                }
+            }elseif($has_m3_adaptable && !$has_ton_adaptable){
+                array_push($charges_direction, $m3_adaptable_charge);
+            }elseif(!$has_m3_adaptable && $has_ton_adaptable){
+                array_push($charges_direction, $ton_adaptable_charge);
+            }
+            
+            $final_charges[$direction] = $charges_direction;
+        }
+
+        return $final_charges;
+    }
+
+    //appending charges to corresponding Rate
+    public function addChargesToRate($rate, $target, $search_data)
+    {
+        $client_currency = $search_data['client_currency'];
+        $rate_charges = [];
+        //Looping through charges type for array structure
+        foreach ($target as $direction => $charge_direction) {
+            $rate_charges[$direction] = [];
+
+            //Looping through charges by type
+            foreach ($charge_direction as $charge) {
+                if(!$charge->hide){   
+                    array_push($rate_charges[$direction], $charge);
+                }
+                
+                if($direction == 'Freight'){
+                    if ($charge->joint_as == 'client_currency') {
+                        
+                        if($search_data['type'] == 'FCL'){
+                            $rate_currency_containers = $this->convertToCurrency($client_currency, $rate->currency, $charge->containers_client_currency);
+                            $charge->containers_client_currency = $rate_currency_containers;
+                        }elseif($search_data['type'] == 'LCL'){
+                            $rate_currency_total = $this->convertToCurrency($client_currency, $rate->currency, array($charge->total_client_currency));
+                            $charge->total_client_currency = $rate_currency_total[0];
+                        }
+                    }
+                }
+            }
+
+            if ($direction == 'Freight') {
+                if($search_data['type'] == 'FCL'){
+                    $ocean_freight_array = [
+                        'surcharge' => ['name' => 'Ocean Freight'],
+                        'containers' => json_decode($rate->containers, true),
+                        'calculationtype' => ['name' => 'Per Container', 'id' => '5'], 
+                        'typedestiny_id' => 3,
+                        'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
+                    ];
+                }elseif($search_data['type'] == 'LCL'){
+                    $ocean_freight_array = [
+                        'surcharge' => $rate->surcharge,
+                        'total' => $rate->total > $rate->minimum ? $rate->total : $rate->minimum,
+                        'minimum' => $rate->minimum,
+                        'units' => $rate->total < $rate->minimum ? 1 : $search_data['chargeableWeight'],
+                        'ammount' => $rate->total > $rate->minimum ? $rate->uom : $rate->minimum,
+                        'calculationtypelcl' => $rate->calculation_type, 
+                        'typedestiny_id' => 3,
+                        'currency' => $rate->currency,
+                    ];
+                }
+
+                $ocean_freight_collection = collect($ocean_freight_array);
+
+                array_push($rate_charges[$direction], $ocean_freight_collection);
+            }
+
+            if (count($rate_charges[$direction]) == 0) {
+                unset($rate_charges[$direction]);
+            };
+        }
+        $rate->setAttribute('charges', $rate_charges);
+    }
+
+    //Retrieves Global Remarks
+    public function searchRemarks($rate, $search_data)
+    {
+        //Retrieving current companyto filter remarks
+        $company_user = CompanyUser::where('id', $search_data['company_user'])->first();
+
+        $origin_country = $rate->port_origin->country()->first();
+        $destination_country = $rate->port_destiny->country()->first();
+        $rate_countries_id = [ $origin_country->id, $destination_country->id, 250];
+
+        $rate_ports_id = [$rate->origin_port, $rate->destiny_port , 1485];
+
+        $rate_carriers_id = [$rate->carrier_id, 26];
+        
+        $remarks = RemarkCondition::where('company_user_id', $company_user->id)->whereHas('remarksCarriers', function ($q) use ($rate_carriers_id) {
+            $q->whereIn('carrier_id', $rate_carriers_id);
+        })->where(function ($query) use ($rate_countries_id, $rate_ports_id) {
+            $query->orwhereHas('remarksHarbors', function ($q) use ($rate_ports_id) {
+                $q->whereIn('port_id', $rate_ports_id);
+            })->orwhereHas('remarksCountries', function ($q) use ($rate_countries_id) {
+                $q->whereIn('country_id', $rate_countries_id);
+            });
+        })->get();
+
+        $final_remarks = "";
+        $included_contracts = [];
+        $included_global_remarks = [];
+
+        foreach ($remarks as $remark) {
+            if ($search_data['direction'] == 1 && !in_array($remark->id, $included_global_remarks)) {
+                $final_remarks .= $remark->import . "<br>";
+                array_push($included_global_remarks, $remark->id);
+            } elseif ($search_data['direction'] == 2 && !in_array($remark->id, $included_global_remarks)) {
+                $final_remarks .= $remark->export . "<br>";
+                array_push($included_global_remarks, $remark->id);
+            }
+        }
+
+        if (!in_array($rate->contract_id, $included_contracts)) {
+            $final_remarks .= $rate->contract->remarks . '<br>';
+            array_push($included_contracts, $rate->contract->id);
+        }
+
+        return $final_remarks;
+    }
+
+
+    //Retrives global Transit Times
+    public function searchTransitTime($rate)
+    {
+        //Setting values fo query
+        $origin_port = $rate->origin_port;
+        $destination_port = $rate->destiny_port;
+        $carrier = $rate->carrier_id;
+
+        //Querying
+        $transit_time = TransitTime::where([['origin_id',$origin_port],['destination_id',$destination_port]])->whereIn('carrier_id',[$carrier,26])->first();
+
+        return $transit_time;
+    }
+
+        //get surcharge to apply a rate
+    public function getSurchargeOcean()
+    {
+
+        $surchargeOcean = Surcharge::where('options->onlyrate','yes')->first();
+        return $surchargeOcean;
+    }
+
     //Converting amounts to string so they display decimal places correctly
-    public function stringifyRateAmounts($rate)
+    public function stringifyFclRateAmounts($rate)
     {
         //RATE TOTALS GLOBAL
         if(isset($rate->totals_with_markups)){
@@ -1222,5 +1591,284 @@ trait SearchTrait
                 }
             }
         }
+    }
+
+    public function stringifyLclRateAmounts($rate)
+    {
+        //RATE TOTALS GLOBAL
+        if(isset($rate->total_with_markups)){
+            $total_with_markups_string = strval(isDecimal($rate->total_with_markups, true));
+            $rate->total_with_markups = $total_with_markups_string;
+        }
+        
+        if(isset($rate->total_with_markups_freight_currency)){
+            $total_with_markups_freight_currency_string = strval(isDecimal($rate->total_with_markups_freight_currency, true));
+            $rate->total_with_markups_freight_currency = $total_with_markups_freight_currency_string;
+        }
+
+        if(isset($rate->total_freight_currency)){
+            $total_freight_currency_string = strval(isDecimal($rate->total_freight_currency, true));
+            $rate->total_freight_currency = $total_freight_currency_string;
+        }
+
+        $total_string = strval(isDecimal($rate->total, true));
+        $rate->total = $total_string;
+
+        //RATE TOTALS BY TYPE 
+        $by_type = $rate->charge_totals_by_type;
+        
+        foreach($by_type as $typeKey => $typeAmount){
+            $by_type[$typeKey] = strval(isDecimal($typeAmount, true));
+        }
+
+        $rate->charge_totals_by_type = $by_type;
+
+        //CHARGES
+        foreach($rate->charges as $direction => $charge_direction){
+            foreach($charge_direction as $chargeKey => $charge){
+                if(isset($charge->surcharge)){
+                    //Plain prices
+                    $charge_total_string = strval(isDecimal($charge->total,true));    
+                    $charge->total = $charge_total_string;
+    
+                    //Prices in client currency
+                    $charge_total_client_currency_string = strval(isDecimal($charge->total_client_currency,true));    
+                    $charge->total_client_currency = $charge_total_client_currency_string;
+    
+                    //Checking if markups
+                    if(isset($charge->total_with_markups)){
+                        //Plain prices
+                        $charge_total_with_markups_string = strval(isDecimal($charge->total_with_markups,true));    
+                        $charge->total_with_markups = $charge_total_with_markups_string;
+        
+                        //Prices in client currency
+                        $charge_total_with_markups_client_currency_string = strval(isDecimal($charge->total_with_markups_client_currency,true));    
+                        $charge->total_with_markups_client_currency = $charge_total_with_markups_client_currency_string;
+                        }
+                }else{
+                    //Plain prices
+                    $charge_total_string = strval(isDecimal($charge['total'],true));    
+                    $charge['total'] = $charge_total_string;
+
+                    if(isset($charge['total_with_markups'])){
+                        //Plain prices
+                        $charge_total_string = strval(isDecimal($charge['total_with_markups'],true));    
+                        $charge['total_with_markups'] = $charge_total_string;
+                    }
+                }
+            }
+        }
+    }
+
+    /**public function setDownloadParameters($rate, $search_data)
+    {
+        if ($rate->contract->status != 'api') {
+
+            if( $search_data['type'] == 'FCL'){
+                $contractRequestBackup = ContractFclFile::where('contract_id', $rate->contract->id)->first();
+                $contractRequest = NewContractRequest::where('contract_id', $rate->contract->id)->first();
+            }elseif( $search_data['type'] == 'LCL'){
+                $contractRequestBackup = ContractLclFile::where('contractlcl_id', $rate->contract->id)->first();
+                $contractRequest = NewContractRequestLcl::where('contract_id', $rate->contract->id)->first();
+            }
+
+            if (!empty($contractRequestBackup)) {
+                $contractBackupId = $contractRequestBackup->id;
+            } else {
+                $contractBackupId = "0";
+            }
+
+            if (!empty($contractRequest)) {
+                $contractRequestId = $contractRequest->id;
+            } else {
+                $contractRequestId = "0";
+            }
+
+            $mediaItems = $rate->contract->getMedia('document');
+            $totalItems = count($mediaItems);
+            if ($totalItems > 0) {
+                $contractId = $rate->contract->id;
+            }else{
+                $contractId = "0";
+            }
+        }else{
+            $contractBackupId = "0";
+            $contractRequestId = "0";
+            $contractId = "0";
+        }
+
+        $rate->setAttribute('contractBackupId', $contractBackupId);
+        $rate->setAttribute('contractRequestId', $contractRequestId);
+        $rate->setAttribute('contractId', $contractId);
+    }
+
+    public function downloadContractFromSearch($rate)
+    {
+        if(isset($rate['contract_id'])){
+            $contractId = $rate['contract_id'];
+            $type = 'FCL';
+        }elseif(isset($rate['contractlcl_id'])){
+            $contractId = $rate['contractlcl_id'];
+            $type = 'LCL';
+        }
+        $contractRequestId = $rate['contract_request_id'];
+        $contractBackupId = $rate['contract_backup_id'];
+
+        if ($contractId == 0) {
+            if($type == 'FCL'){
+                $contractFile = NewContractRequest::find($contractRequestId);
+            }elseif($type == 'LCL'){
+                $contractFile = NewContractRequestLcl::find($contractRequestId);
+            }
+            $mode_search = false;
+            if (!empty($contractFile)) {
+                $success = false;
+                $download = null;
+                if (!empty($contractFile->namefile)) {
+                    $time = new \DateTime();
+                    $now = $time->format('d-m-y');
+                    $company = CompanyUser::find($contractFile->company_user_id);
+                    $extObj = new \SplFileInfo($contractFile->namefile);
+                    $ext = $extObj->getExtension();
+                    $name = $contractFile->id . '-' . $company->name . '_' . $now . '-' . $type . '.' . $ext;
+                } else {
+                    $mode_search = true;
+                    $contractFile->load('companyuser');
+                    $data = json_decode($contractFile->data, true);
+                    $time = new \DateTime();
+                    $now = $time->format('d-m-y');
+                    $mediaItem = $contractFile->getFirstMedia('document');
+                    $extObj = new \SplFileInfo($mediaItem->file_name);
+                    $ext = $extObj->getExtension();
+                    $name = $contractFile->id . '-' . $contractFile->companyuser->name . '_' . $data['group_containers']['name'] . '_' . $now . '-' . $type . '.' . $ext;
+                    $download = Storage::disk('s3_upload')->url('Request/' . $type . '/' . $mediaItem->id . '/' . $mediaItem->file_name, $name);
+                    $success = true;
+                }
+            } else {
+                if($type == 'FCL'){
+                    $contractFile = ContractFclFile::find($contractBackupId);
+                    $request_location = 'FclRequest';
+                }elseif($type == 'LCL'){
+                    $contractFile = ContractLclFile::find($contractBackupId);
+                    $request_location = 'LclRequest';
+                }
+                $time = new \DateTime();
+                $now = $time->format('d-m-y');
+                $extObj = new \SplFileInfo($contractFile->namefile);
+                $ext = $extObj->getExtension();
+                $name = $contractFile->id . '-' . $now . '-' . $type . '.' . $ext;
+            }
+
+            if ($mode_search == false) {
+                if (Storage::disk('s3_upload')->exists('Request/' . $type . '/' . $contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk('s3_upload')->url('Request/' . $type . '/' . $contractFile->namefile, $name);
+                } elseif (Storage::disk('s3_upload')->exists('contracts/' . $contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk('s3_upload')->url('contracts/' . $contractFile->namefile, $name);
+                } elseif (Storage::disk($request_location)->exists($contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk($request_location)->url($contractFile->namefile, $name);
+                } elseif (Storage::disk('UpLoadFile')->exists($contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk('UpLoadFile')->url($contractFile->namefile, $name);
+                }
+            }
+            return response()->json(['success' => $success, 'url' => $download,'zip'=>false ]);
+        } else {
+            if($type == 'FCL'){
+                $contract = Contract::find($contractId);
+                $request_location = 'FclRequest';
+            }elseif($type == 'LCL'){
+                $contract = ContractLcl::find($contractId);
+                $request_location = 'LclRequest';
+            }
+            $downloads = $contract->getMedia('document');
+            $total = count($downloads);
+            if ($total > 1) {                                         
+                
+                return response()->json(['success' => true, 'url' => $contract->id,'zip'=>true ]);
+            } else {
+                $media = $downloads->first();
+                $mediaItem = Media::find($media->id);
+                //return $mediaItem;
+                if($mediaItem->disk == $request_location){
+                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/Request/" . $type . '/' .$mediaItem->file_name,'zip'=>false ]);
+                }
+                if($mediaItem->disk == 'contracts3'){
+                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/contract_manual/".$mediaItem->id."/".$mediaItem->file_name,'zip'=>false ]);
+                }
+            }
+        }
+    }**/
+
+    //Ordering rates by totals (cheaper to most expensive)
+    public function sortRates($rates, $search_data_ids)
+    {
+        if($search_data_ids['type'] == 'FCL'){
+            if (isset($search_data_ids['pricelevel'])) {
+                $sortBy = 'totals_with_markups';
+            } else {
+                $sortBy = 'totals';
+            }
+        }elseif($search_data_ids['type'] == 'LCL'){
+            if (isset($search_data_ids['pricelevel'])) {
+                $sortBy = 'total_with_markups';
+            } else {
+                $sortBy = 'total';
+            }
+        }
+
+        $sorted = $rates->sortBy($sortBy)->values();
+
+        return ($sorted);
+    }
+
+    //Retrieves Terms and Conditions
+    public function searchTerms($search_data)
+    {
+        //Retrieving current companyto filter terms
+        $company_user = CompanyUser::where('id', $search_data['company_user'])->first();
+
+        $terms = TermAndConditionV2::where([['company_user_id',$company_user->id],['type',$search_data['type']]])->get();
+
+        $terms_english = '';
+        $terms_spanish = '';
+        $terms_portuguese = '';
+
+        foreach($terms as $term){
+
+            if($search_data['direction'] == 1){
+                $terms_to_add = $term->import;
+            }else if($search_data['direction'] == 2){
+                $terms_to_add = $term->export;
+            }
+
+            if($term->language_id == 1){
+                $terms_english .= $terms_to_add . '<br>';
+            }else if($term->language_id == 2){
+                $terms_spanish .= $terms_to_add . '<br>';
+            }else if($term->language_id == 3){
+                $terms_portuguese .= $terms_to_add . '<br>';
+            }
+        }
+
+        $final_terms = ['english' => $terms_english, 'spanish' => $terms_spanish, 'portuguese' => $terms_portuguese ];
+
+        return $final_terms;
+    }
+
+    //Clears date in 2021-07-13T01:00:00 format. Options can be:
+        // time -> returns only time, no date
+        // date -> returns only date, no time
+    public function formatSearchDate($date, $option)
+    {
+        if($option == 'time'){
+            $date = substr($date, 11, 8);
+        }else if($option == 'date'){
+            $date = substr($date, 0, 10);
+        }
+
+        return $date;
     }
 }

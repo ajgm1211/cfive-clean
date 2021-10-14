@@ -213,7 +213,8 @@ class ContractController extends Controller
             'remarks' => '',
             'is_manual' => 1
         ]);
-
+        
+        $contract->createCustomCode();
         $contract->ContractCarrierSync($data['carriers']);
 
         return new ContractResource($contract);
@@ -553,9 +554,13 @@ class ContractController extends Controller
             //Saving contracts and carriers in ContractCarriers
             $contract->ContractCarrierSync($carriers, $api);
 
+            //Creating custom code
+            $contract->createCustomCode();
+
             $filename = date("dmY_His") . '_' . $request->file->getClientOriginalName();
 
             //Uploading file to storage
+            $filename = quitar_caracteres($filename);
             $contract->StoreInMedia($request->file, $filename);
 
             //Saving request FCL
@@ -730,6 +735,9 @@ class ContractController extends Controller
         $contract->save();
 
         $contract->ContractCarrierSyncSingle($request->carrierR);
+
+        //Creating custom code
+        $contract->createCustomCode();
 
         $rates = new Rate();
         $rates->origin_port = $request->origin_port;

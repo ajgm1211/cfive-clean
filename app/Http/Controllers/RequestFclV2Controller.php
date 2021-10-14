@@ -58,11 +58,10 @@ class RequestFclV2Controller extends Controller
         $date_end = $request->dateE;
         $date_end = Carbon::parse($date_end);
         $date_end = $date_end->addDay(1);
-        //$date_start = '2019-08-26 00:00:00';
-        //$date_end    = '2020-03-03 12:39:54';
         $Ncontract = DB::select('call  select_request_fcl_v2("' . $date_start . '","' . $date_end . '")');
 
         $Ncontracts = $Ncontract;
+
         /*  foreach ($Ncontract as $contract) {
             $request_id = NewContractRequest::find($contract->id);
 
@@ -100,7 +99,10 @@ class RequestFclV2Controller extends Controller
                 return '<span style="color:' . $color . '"><strong>' . $name . '</strong></span>';
             })
             ->addColumn('name', function ($Ncontracts) {
-                return $Ncontracts->namecontract;
+                return $Ncontracts->contract_ref;
+            })
+            ->addColumn('code', function ($Ncontracts) {
+                return $Ncontracts->contract_code;
             })
             ->addColumn('number', function ($Ncontracts) {
                 return $Ncontracts->numbercontract;
@@ -278,6 +280,9 @@ class RequestFclV2Controller extends Controller
             $contract->user_id = Auth::user()->id;
             $contract->gp_container_id = $gpContainer->id;
             $contract->save();
+
+            //Creating custom code
+            $contract->createCustomCode();
 
             $Ncontract = new NewContractRequest();
             $Ncontract->namecontract = $name;

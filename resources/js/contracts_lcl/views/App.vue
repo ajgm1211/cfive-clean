@@ -154,15 +154,16 @@ export default {
           formatter: (value) => {
             return `<p class="truncate-contract" title="${value}">${value}</p>`;
           },
-          filterIsOpen:false,
+          filterIsOpen: false,
         },
+        { key: "contract_code", label: "Code", filterIsOpen: false },
         {
           key: "carriers",
           label: "Carrier",
           formatter: (value) => {
             return this.badgecarriers(value);
           },
-          filterIsOpen:false,
+          filterIsOpen: false,
           filterTrackBy: "name",
           trackLabel: "name",
         },
@@ -172,22 +173,22 @@ export default {
           formatter: (value) => {
             return `<span class="status-st ${value}"></span>`;
           },
-          filterIsOpen:false,
+          filterIsOpen: false,
         },
-        { key: "validity", label: "Valid From", filterIsOpen:false },
-        { key: "expire", label: "Valid Until", filterIsOpen:false },
+        { key: "validity", label: "Valid From", filterIsOpen: false },
+        { key: "expire", label: "Valid Until", filterIsOpen: false },
         {
           key: "direction",
           label: "Direction",
           formatter: (value) => {
             return value.name;
           },
-          filterIsOpen:false,
+          filterIsOpen: false,
           filterTrackBy: "name",
           trackLabel: "name",
         },
-        { key: "user_name", label: "Owner", filterIsOpen:false },
-        { key: "created_at", label: "Created At", filterIsOpen:false },
+        { key: "user_name", label: "Owner", filterIsOpen: false },
+        { key: "created_at", label: "Created At", filterIsOpen: false },
       ],
 
       /* Form Modal Fields */
