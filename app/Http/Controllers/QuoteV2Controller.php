@@ -659,7 +659,7 @@ class QuoteV2Controller extends Controller
             $charge->$name = $value;
         }
         $charge->update();
-        if ($charge->surcharge_id == '') {
+        if ($charge->surcharge_id == '13885') {
             AutomaticRate::find($charge->automatic_rate_id)->update(['currency_id' => $charge->currency_id]);
         }
         $quote_id = $charge->automatic_rate->quote_id;
@@ -2134,11 +2134,11 @@ class QuoteV2Controller extends Controller
 
                 $request->request->add(['contract' => '', 'origin_airport_id' => $request->input('origin_airport_id'), 'destination_airport_id' => $request->input('destination_airport_id'), 'currency_id' => $idCurrency, 'quote_id' => $quote->id]);
                 $rate = AutomaticRate::create($request->all());
-
+                $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
                 $oceanFreight = new ChargeLclAir();
                 $oceanFreight->automatic_rate_id = $rate->id;
                 $oceanFreight->type_id = '3';
-                $oceanFreight->surcharge_id = null;
+                $oceanFreight->surcharge_id = $ocean_surcharge->id;
                 $oceanFreight->calculation_type_id = '4';
                 $oceanFreight->units = "0";
                 $oceanFreight->price_per_unit = "0";
@@ -2278,11 +2278,12 @@ class QuoteV2Controller extends Controller
                     $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'transit_time' => $transitTime, 'via' => $viaT, 'schedule_type' => $service]);
 
                     $rate = AutomaticRate::create($request->all());
-
+                    $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
+                    \Log::info("Getting ocean freight id: ".$ocean_surcharge->id);
                     $oceanFreight = new Charge();
                     $oceanFreight->automatic_rate_id = $rate->id;
                     $oceanFreight->type_id = '3';
-                    $oceanFreight->surcharge_id = null;
+                    $oceanFreight->surcharge_id = $ocean_surcharge->id;
                     $oceanFreight->calculation_type_id = '5';
                     $oceanFreight->amount = $rates;
                     $oceanFreight->markups = $markups;
@@ -3108,7 +3109,7 @@ class QuoteV2Controller extends Controller
         $containerCode = $containers->whereIn('id', $equipment)->pluck('code')->toArray();
 
         // Historial de busqueda
-        $this->storeSearchV2($origin_port, $destiny_port, $request->input('date'), $containerCode, $delivery_type, $mode, $company_user_id, 'FCL');
+        //$this->storeSearchV2($origin_port, $destiny_port, $request->input('date'), $containerCode, $delivery_type, $mode, $company_user_id, 'FCL');
 
         // Fecha Contrato
         $dateRange = $request->input('date');
@@ -4455,7 +4456,7 @@ class QuoteV2Controller extends Controller
         $arregloNull = array();
         $arregloNull = json_encode($arregloNull);
         //istory
-        $this->storeSearchV2($origin_port, $destiny_port, $request->input('date'), $arregloNull, $delivery_type, $mode, $company_user_id, 'LCL');
+        //$this->storeSearchV2($origin_port, $destiny_port, $request->input('date'), $arregloNull, $delivery_type, $mode, $company_user_id, 'LCL');
 
         $weight = $request->input("chargeable_weight");
         $weight = number_format($weight, 2, '.', '');
@@ -7185,11 +7186,11 @@ class QuoteV2Controller extends Controller
                         $priceLevelMarkupsFinal = 0;
                         $priceLevelMarkupsFinalArray = ['per_unit' => 0, 'total' => 0];
                     }
-
+                    $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
                     $oceanFreight = new ChargeLclAir();
                     $oceanFreight->automatic_rate_id = $rate->id;
                     $oceanFreight->type_id = '3';
-                    $oceanFreight->surcharge_id = null;
+                    $oceanFreight->surcharge_id = $ocean_surcharge->id;
                     $oceanFreight->calculation_type_id = '5';
                     $oceanFreight->units = $rateO->cantidad;
                     $oceanFreight->price_per_unit = $rateO->price;

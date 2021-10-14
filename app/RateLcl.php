@@ -14,7 +14,8 @@ class RateLcl extends Model
     protected $dates = ['deleted_at'];
 
     protected $table = 'rates_lcl';
-    protected $fillable = ['id', 'origin_port', 'destiny_port', 'carrier_id', 'contractlcl_id', 'uom', 'minimum', 'currency_id', 'schedule_type_id', 'transit_time', 'via'];
+    protected $fillable = ['id', 'origin_port', 'destiny_port', 'carrier_id', 'contractlcl_id', 'uom', 'minimum', 'currency_id', 
+        'schedule_type_id', 'surcharge_id', 'calculationtype_id', 'transit_time', 'via'];
 
     public function contract()
     {
@@ -44,6 +45,16 @@ class RateLcl extends Model
     public function scheduletype()
     {
         return $this->belongsTo('App\ScheduleType', 'schedule_type_id');
+    }
+
+    public function surcharge()
+    {
+        return $this->belongsTo('App\Surcharge', 'surcharge_id');
+    }
+
+    public function calculation_type()
+    {
+        return $this->belongsTo('App\CalculationTypeLcl', 'calculationtype_id');
     }
 
     /* Duplicate Rate Model instance */

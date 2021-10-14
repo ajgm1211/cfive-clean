@@ -670,6 +670,9 @@ class ImportationController extends Controller
                 $contract->user_id = $contract_owner;
                 $contract->save();
 
+                //Adding custom code to contract
+                $contract->createCustomCode();
+
                 foreach ($request->carrierM as $carrierVal) {
                     ContractCarrier::create([
                         'carrier_id' => $carrierVal,

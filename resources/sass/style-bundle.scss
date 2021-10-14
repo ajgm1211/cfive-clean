@@ -1082,6 +1082,7 @@ pre code {
 .table td {
   padding: 0.75rem;
   vertical-align: top;
+  // width:20px;
   border-top: 1px solid #f4f5f8; }
 .table thead th {
   vertical-align: bottom;
@@ -23437,6 +23438,7 @@ td > .m-checkbox.m-checkbox--single {
   font-weight: 500; }
 
 .table.table-striped thead th {
+  width: 200px;
   border: 0; }
 
 .table.table-striped tbody th, .table.table-striped tbody td {
@@ -30755,8 +30757,9 @@ body.m-content--skin-light2 {
     height: 60px !important;
     padding: 0px 25px;
     z-index: 2; }
-  .m-brand .m-brand__tools .m-brand__icon {
-    margin-left: 15px; }
+  // .m-brand .m-brand__tools .m-brand__icon {
+  //   // margin-left: 15px; 
+  // }
   .m-brand .m-brand__tools .m-brand__icon .flaticon-more {
     position: relative;
     top: 1px; } }

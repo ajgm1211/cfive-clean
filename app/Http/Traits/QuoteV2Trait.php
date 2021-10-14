@@ -1739,7 +1739,45 @@ trait QuoteV2Trait
         return $amounts;
     }
 
-    public function formatChargeForQuote(Array $charge)
+    public function formatLclChargeForQuote(Array $charge)
+    {
+        $formattedMarkups = [];
+        $formattedTotal = [];
+
+        if(isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency'){
+            if(isset($charge['total_markups'])){
+                $markup = $charge['total_markups_client_currency'];
+                if($charge['typedestiny_id'] == 3){
+                    $total = $charge['total_client_currency'];
+                }else{
+                    $total = $charge['total_with_markups_client_currency'];
+                }
+            }else{
+                $markup = 0;
+                $total = $charge['total_client_currency'];
+            }
+        }else{
+            if(isset($charge['total_markups'])){
+                $markup = $charge['total_markups'];
+
+                if($charge['typedestiny_id'] == 3){
+                    $total = $charge['total'];
+                }else{
+                    $total = $charge['total_with_markups'];
+                }
+            }else{
+                $markup = 0;
+                $total = $charge['total'];
+            }
+        }
+
+        $charge['markup'] = $markup;
+        $charge['total'] = $total;
+
+        return $charge;
+    }
+
+    public function formatFclChargeForQuote(Array $charge)
     {
         $formattedAmount = [];
         $formattedMarkups = [];
@@ -1878,7 +1916,8 @@ trait QuoteV2Trait
                     if($surcharge == null){
                         $newSurcharge = Surcharge::create([
                             'name' => $charge['chargeCode'],
-                            'description' => 'from API'
+                            'description' => 'from API',
+                            'options' => json_encode(['is_api' => true]),
                         ]);
 
                         $charge['surcharge_id'] = $newSurcharge->id;
@@ -1886,7 +1925,9 @@ trait QuoteV2Trait
                         $charge['surcharge_id'] = $surcharge->id;
                     }
                 }else{
-                    $charge['surcharge_id'] = null;
+                    $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
+
+                    $charge['surcharge_id'] = $ocean_surcharge->id;
                 }
 
                 if($key == "originSurcharges"){

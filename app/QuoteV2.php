@@ -194,6 +194,11 @@ class QuoteV2 extends Model implements HasMedia, Auditable
         return $this->hasOne('App\CargoType', 'id', 'cargo_type_id');
     }
 
+    public function pdf_quote_status()
+    {
+        return $this->hasOne('App\PdfQuoteStatus', 'quote_id', 'id');
+    }
+
     public function getRate($type, $port, $carrier)
     {
 
