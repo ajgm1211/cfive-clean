@@ -1911,7 +1911,7 @@ trait QuoteV2Trait
 
                 $surcharge = Surcharge::where('name',$charge['chargeCode'])->first();
 
-                if($charge['chargeCode'] != "FRT00" && $charge['chargeCode'] != "bas"){
+                if($charge['chargeCode'] != "FRT00" && $charge['chargeCode'] != "bas" && $charge['chargeCode'] != "SEA"){
                     
                     if($surcharge == null){
                         $newSurcharge = Surcharge::create([
