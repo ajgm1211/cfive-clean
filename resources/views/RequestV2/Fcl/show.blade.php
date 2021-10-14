@@ -348,7 +348,7 @@
 
     $('#carrierM' ).on( 'keyup change', function () {
         carriername = $(this).val();
-        i = 5;
+        i = 6;
         if ( requesttableV.column(i).search() !== carriername ) {
             requesttableV
                 .column(i)
@@ -436,9 +436,9 @@
 
         var state = requesttableV.state.loaded();
         if(state) {
-            var colSearch = state.columns[5].search;
+            var colSearch = state.columns[6].search;
             if (colSearch.search) {
-                $('input', requesttableV.column(5).footer()).val(colSearch.search);
+                $('input', requesttableV.column(6).footer()).val(colSearch.search);
             }
             requesttableV.draw();
         }
