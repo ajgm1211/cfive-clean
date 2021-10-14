@@ -49,6 +49,11 @@ class NewContractRequest extends Model implements HasMedia, Auditable
         return $this->belongsTo('App\Direction');
     }
 
+    public function contract_fcl()
+    {
+        return $this->belongsTo('App\Contract');
+    }
+
     public function Requestcarriers()
     {
         return $this->hasMany('App\RequetsCarrierFcl', 'request_id');

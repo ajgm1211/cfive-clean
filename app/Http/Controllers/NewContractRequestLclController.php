@@ -62,7 +62,10 @@ class NewContractRequestLclController extends Controller
                 return $Ncontracts->company_user;
             })
             ->addColumn('name', function ($Ncontracts) {
-                return $Ncontracts->namecontract;
+                return $Ncontracts->contract_ref;
+            })
+            ->addColumn('code', function ($Ncontracts) {
+                return $Ncontracts->contract_code;
             })
             ->addColumn('direction', function ($Ncontracts) {
                 if (empty($Ncontracts->direction) == true) {
@@ -231,7 +234,7 @@ class NewContractRequestLclController extends Controller
         $nombre = $now . '_' . $nombre;
         // $fileName = HelperAll::removeAcent($nombre);
         $info_file = pathinfo($nombre);
-        $ext = (strtoupper($info_file['extension']) == 'PDF') ? 'PDF':'EXCEL';
+        $ext = (strtoupper($info_file['extension']) == 'PDF') ? 'PDF' : 'EXCEL';
         $fileBoll = \Storage::disk('LclRequest')->put($nombre, \File::get($file));
 
         $typeVal = 1;
@@ -258,6 +261,9 @@ class NewContractRequestLclController extends Controller
             $contract->user_id = $request->user;
             $contract->save();
 
+            //Creating custom code
+            $contract->createCustomCode();
+            
             $Contract_id = $contract->id;
 
             foreach ($request->carrierM as $carrierVal) {
@@ -279,8 +285,8 @@ class NewContractRequestLclController extends Controller
             $Ncontract->data = $data;
             $Ncontract->contract_id = $Contract_id;
             $Ncontract->save();
-            
-            $Ncontract->setAttribute('carrier',null);
+
+            $Ncontract->setAttribute('carrier', null);
             $Ncontract->type = 'LCL';
             foreach ($request->carrierM as $carrierVal) {
                 RequetsCarrierLcl::create([
@@ -314,15 +320,15 @@ class NewContractRequestLclController extends Controller
                 $userNotifique->notify(new N_general($user, $message));
             }
 
-            
+
             if (env('APP_VIEW') == 'operaciones') {
                 ValidateTemplateLclJob::dispatch($Ncontract->id)->onQueue('operaciones');
             } else {
                 ValidateTemplateLclJob::dispatch($Ncontract->id);
             }
-            $Ncontract->setAttribute('file_ext',$ext);
+            $Ncontract->setAttribute('file_ext', $ext);
             $this->trackEvents("new_request_Lcl", $Ncontract);
-            
+
             // EVENTO INTERCOM
             $event = new EventIntercom();
             $event->event_newRequestLCL();
@@ -330,13 +336,11 @@ class NewContractRequestLclController extends Controller
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'Your request was created');
             return redirect()->route('contractslcl.index');
-
         } else {
 
             $request->session()->flash('message.nivel', 'error');
             $request->session()->flash('message.content', 'Your request was not created');
             return redirect()->route('contractslcl.index');
-
         }
     }
 
@@ -374,7 +378,7 @@ class NewContractRequestLclController extends Controller
         $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyyby';
         $name = utf8_decode($name);
         $name = strtr($name, utf8_decode($originales), $modificadas);
-        
+
         $success = false;
         $descarga = null;
 
@@ -438,7 +442,7 @@ class NewContractRequestLclController extends Controller
             $Ncontract = NewContractRequestLcl::find($id);
             $Ncontract->status = $status;
             $Ncontract->updated = $now2;
-            $Ncontract->setAttribute('module','LCL');
+            $Ncontract->setAttribute('module', 'LCL');
             if ($Ncontract->username_load == 'Not assigned') {
                 $Ncontract->username_load = \Auth::user()->name . ' ' . \Auth::user()->lastname;
             }
@@ -469,7 +473,7 @@ class NewContractRequestLclController extends Controller
                     $this->trackEvents("Request_Review", $Ncontract);
                 }
                 //Calling Mix Panel's event
-                
+
 
             } elseif ($Ncontract->status == 'Done') {
 
@@ -497,9 +501,8 @@ class NewContractRequestLclController extends Controller
                     } else {
                         SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id);
                     }
-
                 }
-                if( $Ncontract->contract_id != null){
+                if ($Ncontract->contract_id != null) {
                     $contract = ContractLcl::find($Ncontract->contract_id);
                     $contract->status = 'publish';
                     $contract->update();
@@ -510,7 +513,7 @@ class NewContractRequestLclController extends Controller
             $this->trackEvents("Request_Status_lcl", $Ncontract);
             unset($Ncontract->module);
             $Ncontract->save();
-            
+
             if (strnatcasecmp($Ncontract->status, 'Pending') == 0) {
                 $color = '#f81538';
             } else if (strnatcasecmp($Ncontract->status, 'Processing') == 0) {
@@ -524,7 +527,6 @@ class NewContractRequestLclController extends Controller
         } catch (\Exception $e) {
             return response()->json($data = ['data' => 2]);
         }
-
     }
 
     public function update(Request $request, $id)
@@ -537,7 +539,7 @@ class NewContractRequestLclController extends Controller
         //
     }
     // Api Request SendEmail ---------------------------------------------------------------
-        public function sendEmailRequest(Request $request)
+    public function sendEmailRequest(Request $request)
     {
         $success = false;
         $error = null;
@@ -567,7 +569,7 @@ class NewContractRequestLclController extends Controller
             return response()->json(['success' => $success, 'error' => $error]);
         }
     }
-    
+
     // Delete Request Importation ----------------------------------------------------------
     public function destroyRequest($id)
     {
@@ -699,7 +701,6 @@ class NewContractRequestLclController extends Controller
                         }
                     }
                 });
-
             });
 
             $myFile = $myFile->string('xlsx'); //change xlsx for the format you want, default is xls
@@ -730,7 +731,8 @@ class NewContractRequestLclController extends Controller
 
     public function similarcontracts(Request $request, $id)
     {
-        $contracts = ContractLcl::select(['id',
+        $contracts = ContractLcl::select([
+            'id',
             'name',
             'company_user_id',
             'account_id',
@@ -754,7 +756,6 @@ class NewContractRequestLclController extends Controller
                 if ($request->has('dateO') && $request->get('dateO') != null && $request->has('dateT') && $request->get('dateT') != null) {
                     $query->where('validity', '=', $request->get('dateO'))->where('expire', '=', $request->get('dateT'));
                 }
-
             })
             ->addColumn('carrier', function ($contracts) {
                 $dd = $contracts->load('carriers.carrier');
@@ -763,7 +764,6 @@ class NewContractRequestLclController extends Controller
                 } else {
                     return '-------';
                 }
-
             })
             ->addColumn('direction', function ($contracts) {
                 $dds = $contracts->load('direction');
