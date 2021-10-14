@@ -341,6 +341,7 @@ class ContractController extends Controller
         }
         // $contract->delete();
         $contract->status_erased = $status_erased;
+        $contract->contract_code = null;
         $contract->update();
 
         return response()->json(null, 204);
@@ -378,7 +379,7 @@ class ContractController extends Controller
     public function destroyAll(Request $request)
     {
         $status_erased = 1;
-        DB::table('contracts')->whereIn('id', $request->input('ids'))->update(['status_erased' =>  $status_erased]);
+        DB::table('contracts')->whereIn('id', $request->input('ids'))->update(['status_erased' =>  $status_erased, 'contract_code' => null]);
 
         return response()->json(null, 204);
     }
