@@ -2279,7 +2279,7 @@ class QuoteV2Controller extends Controller
 
                     $rate = AutomaticRate::create($request->all());
                     $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
-                    \Log::info("Getting ocean freight id: ".$ocean_surcharge->id);
+                    
                     $oceanFreight = new Charge();
                     $oceanFreight->automatic_rate_id = $rate->id;
                     $oceanFreight->type_id = '3';
