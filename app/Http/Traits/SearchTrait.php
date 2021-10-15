@@ -1356,7 +1356,7 @@ trait SearchTrait
     }
 
     public function getInland($container_type,$start_date,$end_date,$direction,$carrier,$company_user,$search_array,$port,$address){
-        $inlandsResults=array();
+        $inlandsResults=null;
 
         foreach($search_array as $locations){
             if ($locations['id']!=null && $port==$locations['harbor'] && $locations['id']==$address  ) {
@@ -1396,10 +1396,10 @@ trait SearchTrait
 
     public function filterInland($inland,$containers,$current_client,$rate){
 
-        $inlands= array();
+        $inlands= null;
         //location
         if(isset($inland['location'])){
-            $l='';
+            $l=null;
             foreach($inland['location'] as $a => $location){
                 if (count($location['json_containers'])>0) {
                     $result=$this->selectContainerInland($location,$containers,$current_client,$rate,$type='location');
@@ -1426,7 +1426,7 @@ trait SearchTrait
         }  
         //range
         if(isset($inland['range'])){
-            $r='';
+            $r=null;
             foreach($inland['range'] as $b => $range){
                 if (count($range['json_containers'])>0) {
                     $result=$this->selectContainerInland($range,$containers,$current_client,$rate,$type='range');
@@ -1453,7 +1453,7 @@ trait SearchTrait
         }
         //km
         if(isset($inland['km'])){
-            $k='';
+            $k=null;
             foreach($inland['km'] as $c => $km){
                 if (count($km['json_containers'])>0) {
                     $result=$this->selectContainerInland($km,$containers,$current_client,$rate,$type='km');
@@ -1483,13 +1483,15 @@ trait SearchTrait
     }
 
     public function selectInland($inlands,$rate,$type){
-        
-        $inland=array();
-        $km = isset($inlands['km']) ? $inlands['km'][0] : null;
-        $range = isset($inlands['range']) ? $inlands['range'][0] : null;
-        $location = isset($inlands['location']) ? $inlands['location'][0] : null;
 
-        if(isset($location) && isset($range) && isset($km)){    
+        $inland=array();
+
+        $km = isset($inlands['km'][0]) ? $inlands['km'][0] : null;
+        $range = isset($inlands['range'][0]) ? $inlands['range'][0] : null;
+        $location = isset($inlands['location'][0]) ? $inlands['location'][0] : null;
+
+        if($location!=null && $range!=null && $km!=null && array_sum($inlands['km'][0]['json_containers'])!=0){ 
+ 
             $distance=DistanceKmLocation::where('location_id',$location['location_id'])->where('harbors_id',$location['harbor_id'])->first();
             $upper=$range['upper'];
             $lower=$range['lower'];
@@ -1511,7 +1513,7 @@ trait SearchTrait
                     $inland=$location;
                 }
             }
-        }elseif($location==null && isset($range) && array_sum($inlands['km'][0]['json_containers'])!=0){
+        }elseif($location==null && $range!=null && $km!=null && array_sum($inlands['km'][0]['json_containers'])!=0){
             if ($type==1) {
                 $distance=DistanceKmLocation::where('location_id',$rate['originAddress']['id'])->where('harbors_id',$rate['origin_port'])->first(); 
             }else{
@@ -1530,7 +1532,7 @@ trait SearchTrait
             }else{
                     $inland=$km;
             }
-        }elseif(isset($location) && isset($range) && array_sum($inlands['km'][0]['json_containers'])==0){
+        }elseif($location!=null && $range!=null && $km==null || $km!=null && array_sum($km['json_containers'])==0 ){
             $distance=DistanceKmLocation::where('location_id',$location['location_id'])->where('harbors_id',$location['harbor_id'])->first();
             $upper=$range['upper'];
             $lower=$range['lower'];
@@ -1547,7 +1549,7 @@ trait SearchTrait
             }else{
                 $inland=$range;
             }     
-        }elseif(isset($location) && $range==null && isset($km)){
+        }elseif($location!=null && $range==null && $km!=null){
             
             $value1=$location['value'];
             $value2=$km['value'];
@@ -1557,11 +1559,11 @@ trait SearchTrait
             }else{
                 $inland=$km;
             }
-        }elseif($location == null && isset($range) &&  array_sum($km['json_containers'])==0){
+        }elseif($location == null && $range!=null && $km==null || $km!=null  && array_sum($km['json_containers'])==0){
             $inland=$range;
-        }elseif($location == null && $range==null && isset($inlands['km'])){
+        }elseif($location == null && $range==null && $km!=null){
             $inland=$km;
-        }elseif(isset($location) && $range==null && $km==null){
+        }elseif($location!=null && $range==null && $km==null){
             $inland=$location;
         }
 

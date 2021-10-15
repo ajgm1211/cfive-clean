@@ -1305,7 +1305,7 @@ class SearchApiController extends Controller
     public function calculateTotalsInland($total, $inland){
 
         foreach($inland as $inlandType){
-            if (empty($inlandType)==0) {
+            if (empty($inlandType)==false) {
                 foreach($inlandType['containers'] as $a=>$inlandContainer){
                     foreach($total as $b=>$totalI){
                         if ($a==$b) {
