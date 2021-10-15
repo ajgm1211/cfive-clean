@@ -382,7 +382,7 @@
                                     </span>
                                 </a>
                             </li>
-                            @role('administrator')
+                            @if(Session::has('impersonate'))
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
                                 data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                                 <a href="#" class="m-menu__link m-menu__toggle">
@@ -405,18 +405,18 @@
                                                 </span>
                                             </a>
                                         </li>
-                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                        <!--<li class="m-menu__item " data-redirect="true" aria-haspopup="true">
                                             <a href="{{route('api.settings')}}" class="m-menu__link ">
                                                 <i class="m-menu__link-icon flaticon-network"></i>
                                                 <span class="m-menu__link-text">
                                                     External API Integrations
                                                 </span>
                                             </a>
-                                        </li>
+                                        </li>-->
                                     </ul>
                                 </div>
                             </li>
-                            @endrole
+                            @endif
                             @role('administrator|company|subuser')
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
                                 <a href="{{ route('prices.index') }}" class="m-menu__link ">
