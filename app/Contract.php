@@ -389,8 +389,8 @@ class Contract extends Model implements HasMedia, Auditable
     /* Duplicate Contract Model instance with relations */
     public function duplicate()
     {
-
         $new_contract = $this->replicate();
+        $new_contract->contract_code = null;
         $new_contract->name .= ' copy';
         $new_contract->save();
 
@@ -410,6 +410,7 @@ class Contract extends Model implements HasMedia, Auditable
             }
         }
 
+        $new_contract->createCustomCode();
         return $new_contract;
     }
 
