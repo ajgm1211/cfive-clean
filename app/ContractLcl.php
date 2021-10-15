@@ -238,6 +238,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
     {
 
         $new_contract = $this->replicate();
+        $new_contract->contract_code = null;
         $new_contract->name .= ' copy';
         $new_contract->save();
 
@@ -260,7 +261,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
                 }
             }
         }
-
+        $new_contract->createCustomCode();
         return $new_contract;
     }
 
