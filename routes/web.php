@@ -489,7 +489,7 @@ Route::middleware(['auth'])->prefix('prices')->group(function () {
 
     // V2 
     Route::view('/v2', 'pricesV2.index');
-    Route::view('/rates', 'pricesV2.index');
+    Route::view('/rates/{id}', 'pricesV2.index');
 });
 Route::resource('prices', 'PriceController')->middleware('auth');
 

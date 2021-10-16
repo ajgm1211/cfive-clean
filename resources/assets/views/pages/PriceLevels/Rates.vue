@@ -3,35 +3,36 @@
     <div class="back-btn" @click="$router.back()">
       <LeftArrow /> <span>back</span>
     </div>
-    <div class="inputs-container">
-      <CustomInput
-        :disabled="true"
-        label="Name"
-        name="name"
-        ref="name"
-        v-model="price.name"
-        :rules="{
-          required: true,
-        }"
-      />
-      <CustomInput
-        :disabled="true"
-        label="Display name"
-        name="display name"
-        ref="display_name"
-        v-model="price.display_name"
-        :rules="{
-          required: true,
-        }"
-      />
-      <Selectable
-        :disabled="true"
-        @selected="setSelected($event)"
-        :selected="selected"
-        label="Price Level Type"
-        :options="price_types"
-        :error="selectable_error"
-      />
+    <div class="i-container">
+      <div class="inputs-container">
+        <CustomInput
+          label="Name"
+          name="name"
+          ref="name"
+          v-model="price.name"
+          :rules="{
+            required: true,
+          }"
+        />
+        <CustomInput
+          label="Display name"
+          name="display name"
+          ref="display_name"
+          v-model="price.display_name"
+          :rules="{
+            required: true,
+          }"
+        />
+        <Selectable
+          @selected="setSelected($event)"
+          :value="selected"
+          label="Price Level Type"
+          :options="price_types"
+          :error="selectable_error"
+        />
+      </div>
+
+      <MainButton @click="update()" text="Update" :save="true" />
     </div>
 
     <div class="tabscontainer">
@@ -65,7 +66,7 @@
         />
 
         <div v-if="active == 'Detail'">
-          <InputSearch style="margin-bottom:20px"/>
+          <InputSearch style="margin-bottom:20px" />
 
           <ListPrices
             :filters="false"
@@ -74,7 +75,7 @@
             :rates="rates"
           />
 
-          <Paginate
+          <!-- <Paginate
             :page-count="10"
             :prev-text="'Prev'"
             :next-text="'Next'"
@@ -87,7 +88,7 @@
             :next-link-class="'page-link'"
             :initialPage="1"
             style="margin-bottom: 0!important;"
-          />
+          /> -->
         </div>
       </div>
     </div>
@@ -103,6 +104,8 @@ import actions from "../../../../../resources/js/actions";
 import ListPrices from "../../../components/PriceLevel/ListPrices.vue";
 import InputSearch from "../../../components/common/InputSearch.vue";
 import Paginate from "../../../../js/components/paginate.vue";
+import MainButton from "../../../components/common/MainButton.vue";
+import { mapGetters } from "vuex";
 // import axios from "axios";
 export default {
   components: {
@@ -112,7 +115,8 @@ export default {
     Restrictions,
     ListPrices,
     InputSearch,
-    Paginate
+    Paginate,
+    MainButton,
   },
   data: () => ({
     actions: actions,
@@ -123,121 +127,83 @@ export default {
     active: "Detail",
     tabs: ["Detail", "Only Apply To", "Description"],
     price: {
-      name: "example",
-      display_name: "display example",
-      description: "hola description",
+      name: "",
+      display_name: "",
+      description: "",
     },
     price_types: ["FCL", "LCL"],
-    selected: "FCL",
+    selected: "",
+    value: "",
     selectable_error: false,
     thead: ["Direction", "Apply to", "20", "40", "Currency"],
     rates: [
-      {
-        id: 1,
-        direction: "export",
-        restriction: "Apply to",
-        type_20: "2.00",
-        type_40: "3.00",
-        currency: "USD",
-      },
-      {
-        id: 2,
-        direction: "export",
-        restriction: "Apply to",
-        type_20: "2.00",
-        type_40: "3.00",
-        currency: "USD",
-      },
-      {
-        id: 3,
-        direction: "export",
-        restriction: "Apply to",
-        type_20: "2.00",
-        type_40: "3.00",
-        currency: "USD",
-      },
-      {
-        id: 4,
-        direction: "export",
-        restriction: "Apply to",
-        type_20: "2.00",
-        type_40: "3.00",
-        currency: "USD",
-      },
-      {
-        id: 5,
-        direction: "export",
-        restriction: "Apply to",
-        type_20: "2.00",
-        type_40: "3.00",
-        currency: "USD",
-      },
-      {
-        id: 6,
-        direction: "export",
-        restriction: "Apply to",
-        type_20: "2.00",
-        type_40: "3.00",
-        currency: "USD",
-      },
-      {
-        id: 7,
-        direction: "export",
-        restriction: "Apply to",
-        type_20: "2.00",
-        type_40: "3.00",
-        currency: "USD",
-      },
-      {
-        id: 8,
-        direction: "export",
-        restriction: "Apply to",
-        type_20: "2.00",
-        type_40: "3.00",
-        currency: "USD",
-      },
-      {
-        id: 9,
-        direction: "export",
-        restriction: "Apply to",
-        type_20: "2.00",
-        type_40: "3.00",
-        currency: "USD",
-      },
-      {
-        id: 10,
-        direction: "export",
-        restriction: "Apply to",
-        type_20: "2.00",
-        type_40: "3.00",
-        currency: "USD",
-      },
-      {
-        id: 11,
-        direction: "export",
-        restriction: "Apply to",
-        type_20: "2.00",
-        type_40: "3.00",
-        currency: "USD",
-      },
-      {
-        id: 12,
-        direction: "export",
-        restriction: "Apply to",
-        type_20: "2.00",
-        type_40: "3.00",
-        currency: "USD",
-      },
+      // {
+      //   id: 1,
+      //   direction: "export",
+      //   restriction: "Apply to",
+      //   type_20: "2.00",
+      //   type_40: "3.00",
+      //   currency: "USD",
+      // },
+      // {
+      //   id: 2,
+      //   direction: "export",
+      //   restriction: "Apply to",
+      //   type_20: "2.00",
+      //   type_40: "3.00",
+      //   currency: "USD",
+      // },
+      // {
+      //   id: 3,
+      //   direction: "export",
+      //   restriction: "Apply to",
+      //   type_20: "2.00",
+      //   type_40: "3.00",
+      //   currency: "USD",
+      // },
     ],
   }),
-  created() {
+  mounted() {
     this.getData();
+
+    this.$store.dispatch("getPriceLevelDetail", {
+      id: this.$route.params.id,
+      body: {
+        name: this.price.name,
+        display_name: this.price.display_name,
+        price_level_type: this.selected,
+      },
+    });
+
+    this.$store.dispatch("listPriceLevelRates", {
+      id: this.$route.params.id,
+    });
+
+    setTimeout(() => {
+      this.price.name = this.GET_CURRENT_PRICE_LEVEL.name;
+      this.price.display_name = this.GET_CURRENT_PRICE_LEVEL.display_name;
+      this.selected = this.GET_CURRENT_PRICE_LEVEL.type;
+
+      this.rates = this.GET_PRICE_LEVEL_RATES;
+
+      console.log('rates', this.rates)
+    }, 1000);
   },
   methods: {
     getData() {
       let url = "/api/v2/contractslcl/data";
       api.getData({}, url, (err, data) => {
         this.setDropdownLists(err, data.data);
+      });
+    },
+    update() {
+      this.$store.dispatch("updatePriceLevel", {
+        id: this.$route.params.id,
+        body: {
+          name: this.price.name,
+          display_name: this.price.display_name,
+          price_level_type: this.selected,
+        },
       });
     },
     setSelected(option) {
@@ -254,6 +220,9 @@ export default {
         { id: "country", name: "Country", vselected: "countries" },
       ];
     },
+  },
+  computed: {
+    ...mapGetters(["GET_CURRENT_PRICE_LEVEL", "GET_PRICE_LEVEL_RATES"]),
   },
 };
 </script>
@@ -275,16 +244,15 @@ h2 {
 
 .inputs-container {
   display: grid;
-  grid-template-columns: 200px 200px 200px;
+  grid-template-columns: 200px 200px 200px 200px;
   column-gap: 20px;
-  padding: 0 100px;
-  margin-top: 20px;
 }
 
 .back-btn {
   cursor: pointer;
   display: flex;
   align-items: center;
+  width: fit-content;
 
   & > span {
     margin-left: 5px;
@@ -335,5 +303,13 @@ h2 {
   margin-top: 40px;
   background-color: white;
   border-radius: 5px;
+}
+
+.i-container {
+  padding: 0 100px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

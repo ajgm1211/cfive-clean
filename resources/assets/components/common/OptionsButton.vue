@@ -47,7 +47,12 @@ export default {
   },
   methods:{
     select(option){
-      console.log('option', option)
+     
+      if(this.standar === false) {
+        this.$emit('option', 'deleteSelected')
+      }else{
+         this.$emit('option', option)
+      }
       this.showOptions = false;
     }
   }

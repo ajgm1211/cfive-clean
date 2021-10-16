@@ -11,15 +11,15 @@
           >
           </b-form-checkbox>
         </th>
-        <th scope="col" style="width:60px"><IconFilter /> ID</th>
-        <th scope="col" style="width:93"><IconFilter /> Price Type</th>
-        <th scope="col"><IconFilter /> Name</th>
-        <th scope="col"><IconFilter /> Display name</th>
-        <th scope="col" style="width: 300px;"><IconFilter /> Description</th>
-        <th scope="col"><IconFilter /> Created at</th>
-        <th scope="col"><IconFilter /> Updated at</th>
+        <th scope="col" style="width:60px">ID</th>
+        <th scope="col" style="width:93">Price Type</th>
+        <th scope="col">Name</th>
+        <th scope="col">Display name</th>
+        <th scope="col" style="width: 300px;">Description</th>
+        <th scope="col">Created at</th>
+        <th scope="col">Updated at</th>
         <th scope="col" style="width:40px">
-          <OptionsButton :standar="false" />
+          <OptionsButton @option="action($event)" :standar="false" />
         </th>
       </tr>
       <tr v-else-if="dynamic">
@@ -36,7 +36,11 @@
         <th v-for="item in thead" :key="item">{{ item }}</th>
 
         <th scope="col" style="width:40px; position: relative;">
-          <OptionsButton :standar="false" style="right:-84px;" />
+          <OptionsButton
+            @option="action($event)"
+            :standar="false"
+            style="right:-84px;"
+          />
         </th>
       </tr>
     </thead>
@@ -83,20 +87,20 @@
         <td scope="row">
           <b-form-checkbox-group>
             <b-form-checkbox
-              v-bind:value="item"
+              v-bind:value="item.id"
               v-bind:id="'check' + item.id"
               v-model="selectedRate"
             >
             </b-form-checkbox>
           </b-form-checkbox-group>
         </td>
-        <td>{{ item.direction }}</td>
-        <td>{{ item.restriction }}</td>
-        <td>{{ item.type_20 }}</td>
+        <td>{{ item.direction.name }}</td>
+        <td>{{ item.price_level_apply.name }}</td>
+        <td>{{ item.amount }}</td>
         <td>{{ item.type_40 }}</td>
-        <td>{{ item.currency }}</td>
+        <td>{{ item.currency.alphacode }}</td>
         <td style="position: relative;">
-          <OptionsButton style="right:-84px;" />
+          <OptionsButton @option="action($event, item)" style="right:-84px;" />
         </td>
       </tr>
     </tbody>
@@ -105,7 +109,7 @@
         <td scope="row">
           <b-form-checkbox-group>
             <b-form-checkbox
-              v-bind:value="item"
+              v-bind:value="item.id"
               v-bind:id="'check' + item.id"
               v-model="selected"
             >
@@ -119,18 +123,19 @@
         <td>{{ item.description }}</td>
         <td>{{ item.created_at }}</td>
         <td>{{ item.updated_at }}</td>
-        <td scope="col"><OptionsButton /></td>
+        <td scope="col"><OptionsButton @option="action($event, item.id)" /></td>
       </tr>
     </tbody>
   </b-table-simple>
 </template>
 
 <script>
-import IconFilter from "../Icons/Filter.vue";
+// import IconFilter from "../Icons/Filter.vue";
 import OptionsButton from "../common/OptionsButton.vue";
 import Selectable from "../common/Selectable.vue";
 import MixedInput from "../common/MixedInput.vue";
 import MainButton from "../common/MainButton.vue";
+
 export default {
   props: {
     prices: {
@@ -159,13 +164,14 @@ export default {
     },
     thead: {
       type: Array,
-       default() {
+      default() {
         return [];
       },
     },
   },
-  components: { IconFilter, OptionsButton, Selectable, MixedInput, MainButton },
+  components: { OptionsButton, Selectable, MixedInput, MainButton },
   data: () => ({
+    selection: [],
     selected: [],
     selectedRate: [],
     allSelected: false,
@@ -186,6 +192,27 @@ export default {
 
       if (this.dynamic === true) {
         this.selectedRate = checked ? this.rates.slice() : [];
+      }
+    },
+    action(option, id) {
+      if (option == "edit") {
+        this.$router.push({
+          name: "price-rates",
+          params: { id: id },
+        });
+      }
+      if (option == "duplicate") {
+        this.$store.dispatch("duplicatePriceLevel", { id: id });
+      }
+      if (option == "delete") {
+        this.$store.dispatch("deletePriceLevel", { id: id });
+      }
+      if (option == "deleteSelected") {
+        this.$store.dispatch("deleteSelectedPriceLevel", {
+          body: {
+            ids: this.selected,
+          },
+        });
       }
     },
   },

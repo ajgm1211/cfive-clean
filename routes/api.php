@@ -113,8 +113,10 @@ Route::group(['prefix'=>'pricelevels','middleware' => 'auth:api'], function () {
     Route::post('store', 'PriceLevelController@store');
     Route::post('{price_level}/update', 'PriceLevelController@update');
     Route::post('{price_level}/duplicate', 'PriceLevelController@duplicate');
-    Route::delete('{price_level}/delete', 'PriceLevelController@destroy');
-    Route::delete('deleteAll', 'PriceLevelController@destroyAll');
+    Route::put('{price_level}/delete', 'PriceLevelController@destroy');
+    Route::put('deleteAll', 'PriceLevelController@destroyAll');
+
+    Route::get('get/{id}', 'PriceLevelController@get');
 });
 
 Route::group(['prefix'=>'pricelevels/details','middleware' => 'auth:api'], function () {
@@ -122,8 +124,8 @@ Route::group(['prefix'=>'pricelevels/details','middleware' => 'auth:api'], funct
     Route::post('{price_level}/store', 'PriceLevelDetailController@store');
     Route::post('{price_level_detail}/update', 'PriceLevelDetailController@update');
     Route::post('{price_level_detail}/duplicate', 'PriceLevelDetailController@duplicate');
-    Route::delete('{price_level_detail}/destroy', 'PriceLevelDetailController@destroy');
-    Route::delete('destroyAll', 'PriceLevelDetailController@destroyAll');
+    Route::put('{price_level_detail}/destroy', 'PriceLevelDetailController@destroy');
+    Route::put('destroyAll', 'PriceLevelDetailController@destroyAll');
 });
 
 Route::group(['prefix'=>'pricelevels/groups','middleware' => 'auth:api'], function () {

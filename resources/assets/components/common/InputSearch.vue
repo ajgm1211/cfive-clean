@@ -8,7 +8,7 @@
         <Search color="#d3d2d2" />
       </div>
       <input
-        @input="filterSearch()"
+        @input="filterSearch"
         type="search"
         name=""
         id=""
