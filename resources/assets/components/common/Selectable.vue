@@ -22,7 +22,8 @@
       }"
       @click="open = !open"
     >
-      <span v-if="!selected">Select an option</span>
+      <span v-if="!selected && !value">Select an option</span>
+      <span v-if="!selected && value" :style="{ color: font_color }"> {{value}} </span>
       <span v-else-if="mixed === true" style="color: #fff;">
         {{ selected === "Fixed Markup" ? "$" : "%" }}
       </span>

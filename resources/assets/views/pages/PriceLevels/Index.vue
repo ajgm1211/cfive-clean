@@ -14,15 +14,15 @@
       <InputSearch @filter="filtered = $event" style="margin-bottom: 20px;" />
 
       <div class="list-container">
-        <ListPrices :prices="prices" />
+        <ListPrices :prices="GET_PRICE_LEVELS" />
       </div>
 
       <p v-if="resultsQty" style="margin-top:20px">
-        Total Results: {{ resultsQty }}
+        Total Results: {{ total }}
       </p>
 
-      <Paginate
-        :page-count="resultsQty"
+      <!-- <Paginate
+        :page-count="last_page"
         :prev-text="'Prev'"
         :next-text="'Next'"
         :page-class="'page-item'"
@@ -34,7 +34,7 @@
         :next-link-class="'page-link'"
         :initialPage="1"
         style="margin-bottom: 0!important;"
-      />
+      /> -->
     </div>
 
     <CreateModal v-if="create" @cancel="create = false" />
@@ -47,114 +47,31 @@ import InputSearch from "../../../components/common/InputSearch.vue";
 import ListPrices from "../../../components/PriceLevel/ListPrices.vue";
 import Paginate from "../../../../js/components/paginate.vue";
 import CreateModal from "../../../components/PriceLevel/CreateModal.vue";
+import { mapGetters } from "vuex";
+
 export default {
   components: { MainButton, InputSearch, ListPrices, Paginate, CreateModal },
   data: () => ({
     resultsQty: 319,
     create: false,
-    prices: [
-      {
-        id: 1,
-        type: "LCL",
-        name: "example name",
-        display_name: "display name example",
-        description:
-          "Description example could be a very very very but very large description...",
-        created_at: "2021-10-01 09:31:23",
-        updated_at: "2021-10-01 09:31:23",
-      },
-      {
-        id: 2,
-        type: "LCL",
-        name: "example name",
-        display_name: "display name example",
-        description:
-          "Description example could be a very very very but very large description...",
-        created_at: "2021-10-01 09:31:23",
-        updated_at: "2021-10-01 09:31:23",
-      },
-      {
-        id: 3,
-        type: "LCL",
-        name: "example name",
-        display_name: "display name example",
-        description:
-          "Description example could be a very very very but very large description...",
-        created_at: "2021-10-01 09:31:23",
-        updated_at: "2021-10-01 09:31:23",
-      },
-      {
-        id: 4,
-        type: "LCL",
-        name: "example name",
-        display_name: "display name example",
-        description:
-          "Description example could be a very very very but very large description...",
-        created_at: "2021-10-01 09:31:23",
-        updated_at: "2021-10-01 09:31:23",
-      },
-      {
-        id: 5,
-        type: "LCL",
-        name: "example name",
-        display_name: "display name example",
-        description:
-          "Description example could be a very very very but very large description...",
-        created_at: "2021-10-01 09:31:23",
-        updated_at: "2021-10-01 09:31:23",
-      },
-      {
-        id: 6,
-        type: "LCL",
-        name: "example name",
-        display_name: "display name example",
-        description:
-          "Description example could be a very very very but very large description...",
-        created_at: "2021-10-01 09:31:23",
-        updated_at: "2021-10-01 09:31:23",
-      },
-      {
-        id: 7,
-        type: "LCL",
-        name: "example name",
-        display_name: "display name example",
-        description:
-          "Description example could be a very very very but very large description...",
-        created_at: "2021-10-01 09:31:23",
-        updated_at: "2021-10-01 09:31:23",
-      },
-      {
-        id: 8,
-        type: "LCL",
-        name: "example name",
-        display_name: "display name example",
-        description:
-          "Description example could be a very very very but very large description...",
-        created_at: "2021-10-01 09:31:23",
-        updated_at: "2021-10-01 09:31:23",
-      },
-      {
-        id: 9,
-        type: "LCL",
-        name: "example name",
-        display_name: "display name example",
-        description:
-          "Description example could be a very very very but very large description Description example could be a very very very but very large description.....",
-        created_at: "2021-10-01 09:31:23",
-        updated_at: "2021-10-01 09:31:23",
-      },
-      {
-        id: 10,
-        type: "LCL",
-        name: "example name",
-        display_name: "display name example",
-        description:
-          "Description example could be a very very very but very large description...",
-        created_at: "2021-10-01 09:31:23",
-        updated_at: "2021-10-01 09:31:23",
-      },
-    ],
+    prices: [],
+    current_page: 0,
+    total: 0,
+    last_page: 0,
   }),
+  mounted() {
+    this.$store.dispatch("getPriceLevels");
+
+    setTimeout(() => {
+      // this.prices = this.GET_PRICE_LEVELS.data;
+      // this.current_page = Number(this.GET_PRICE_LEVELS.current_page);
+      // this.total = Number(this.GET_PRICE_LEVELS.total);
+      // this.last_page = Number(this.GET_PRICE_LEVELS.last_page);
+    }, 1000);
+  },
+  computed: {
+    ...mapGetters(["GET_PRICE_LEVELS"]),
+  },
 };
 </script>
 

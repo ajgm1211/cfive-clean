@@ -31,7 +31,7 @@
       </form>
       <div class="controls-container">
         <p @click="$emit('cancel')">Cancel</p>
-        <MainButton @click="validate" text="Add Price Levels" :add="true" />
+        <MainButton @click="postData()" text="Add Price Levels" :add="true" />
       </div>
     </div>
   </section>
@@ -41,6 +41,7 @@
 import MainButton from "../common/MainButton.vue";
 import CustomInput from "../common/CustomInput.vue";
 import Selectable from "../common/Selectable.vue";
+
 export default {
   components: { MainButton, CustomInput, Selectable },
   data: () => ({
@@ -53,6 +54,17 @@ export default {
     selectable_error: false,
   }),
   methods: {
+    postData() {
+      if (!this.validate()) return;
+
+      this.$store.dispatch("createPriceLevel", {
+        body: {
+          name: this.price.name,
+          display_name: this.price.display_name,
+          price_level_type: this.selected,
+        },
+      });
+    },
     validate() {
       if (this.$refs.name.validate()) {
         return false;
@@ -65,7 +77,6 @@ export default {
         return false;
       }
 
-      this.$router.push({ path: "/prices/rates" });
       return true;
     },
     setSelected(option) {

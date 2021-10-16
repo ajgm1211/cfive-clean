@@ -37,6 +37,7 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  height: fit-content;
   align-items: center;
   padding: 5px 25px;
   text-transform: capitalize;
