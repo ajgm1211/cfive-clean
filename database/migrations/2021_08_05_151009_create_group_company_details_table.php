@@ -18,7 +18,7 @@ class CreateGroupCompanyDetailsTable extends Migration
             $table->integer('company_id')->unsigned();
             $table->foreign('company_id')->references('id')->on('companies');
             $table->integer('company_group_id')->unsigned();
-            $table->foreign('company_group_id')->references('id')->on('company_groups');
+            $table->foreign('company_group_id')->references('id')->on('company_groups')->onDelete('cascade');
             $table->unique(['company_group_id','company_id']);
         });
     }

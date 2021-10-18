@@ -21,6 +21,11 @@ class CompanyGroup extends Model
         return $this->belongsTo('App\CompanyUser');
     }
 
+    public function group_details()
+    {
+        return $this->hasMany('App\CompanyGroupDetail', 'company_group_id','id');
+    }
+
     public function companies()
     {
         return $this->hasManyThrough('App\Company', 'App\CompanyGroupDetail', 'company_group_id','id','id','company_id');
@@ -42,9 +47,29 @@ class CompanyGroup extends Model
     {
         $new_model = $this->replicate();
 
+        $this->load(
+            'group_details'
+        );
+
         $new_model->push();
 
         $new_model->save();
+
+        $relations = $this->getRelations();
+
+        foreach ($relations as $relation) {
+            if (!is_a($relation, 'Illuminate\Database\Eloquent\Collection')) {
+                if ($relation != null) {
+                    $relation->duplicate($new_model);
+                }
+            } else {
+                foreach ($relation as $relationRecord) {
+                    if ($relationRecord != null) {
+                        $newRelationship = $relationRecord->duplicate($new_model);
+                    }
+                }
+            }
+        }
 
         return $new_model;
     }
