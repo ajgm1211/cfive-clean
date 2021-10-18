@@ -141,20 +141,19 @@ class Contract extends Model implements HasMedia, Auditable
      */
     public function scopeFilterByCurrentCompany($query)
     {
-  
-            if (Auth::check()) {
 
-                if (Auth::user()->hasRole('subuser')) {
-                    $status_erased = 1;
-                    $company_id = Auth::user()->company_user_id;
-                    return $query->where('company_user_id', '=', $company_id)->where('status_erased', '!=', $status_erased)->where('user_id', '=', Auth::user()->id);
-                } else {
-                    $status_erased = 1;
-                    $company_id = Auth::user()->company_user_id;
-                    return $query->where('company_user_id', '=', $company_id)->where('status_erased', '!=', $status_erased);
-                }
-            } 
- 
+        if (Auth::check()) {
+
+            if (Auth::user()->hasRole('subuser')) {
+                $status_erased = 1;
+                $company_id = Auth::user()->company_user_id;
+                return $query->where('company_user_id', '=', $company_id)->where('status_erased', '!=', $status_erased)->where('user_id', '=', Auth::user()->id);
+            } else {
+                $status_erased = 1;
+                $company_id = Auth::user()->company_user_id;
+                return $query->where('company_user_id', '=', $company_id)->where('status_erased', '!=', $status_erased);
+            }
+        }
     }
 
     /**
@@ -390,8 +389,8 @@ class Contract extends Model implements HasMedia, Auditable
     /* Duplicate Contract Model instance with relations */
     public function duplicate()
     {
-
         $new_contract = $this->replicate();
+        $new_contract->contract_code = null;
         $new_contract->name .= ' copy';
         $new_contract->save();
 
@@ -411,6 +410,7 @@ class Contract extends Model implements HasMedia, Auditable
             }
         }
 
+        $new_contract->createCustomCode();
         return $new_contract;
     }
 
@@ -449,5 +449,23 @@ class Contract extends Model implements HasMedia, Auditable
         }
 
         return $arr;
+    }
+
+    public function createCustomCode()
+    {
+        $lastContract = Contract::where('company_user_id', $this->company_user_id)
+            ->whereNotNull('contract_code')->orderBy('id', 'desc')->first();
+
+        $company = strtoupper(substr($this->companyUser->name, 0, 3));
+
+        $code = 'FCL-' . $company . '-1';
+
+        if (!empty($lastContract)) {
+            $lastContractId = intval(str_replace('FCL-' . $company . "-", "", $lastContract->contract_code));
+            $code = 'FCL-' . $company . '-' . strval($lastContractId + 1);
+        }
+
+        $this->contract_code = $code;
+        $this->save();
     }
 }

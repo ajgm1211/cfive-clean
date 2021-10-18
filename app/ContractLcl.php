@@ -238,6 +238,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
     {
 
         $new_contract = $this->replicate();
+        $new_contract->contract_code = null;
         $new_contract->name .= ' copy';
         $new_contract->save();
 
@@ -260,7 +261,25 @@ class ContractLcl extends Model implements HasMedia, Auditable
                 }
             }
         }
-
+        $new_contract->createCustomCode();
         return $new_contract;
+    }
+
+    public function createCustomCode()
+    {
+        $lastContract = ContractLcl::where('company_user_id', $this->company_user_id)
+            ->whereNotNull('contract_code')->orderBy('id', 'desc')->first();
+
+        $company = strtoupper(substr($this->companyUser->name, 0, 3));
+
+        $code = 'LCL-' . $company . '-1';
+
+        if (!empty($lastContract)) {
+            $lastContractId = intval(str_replace('LCL-' . $company . "-", "", $lastContract->contract_code));
+            $code = 'LCL-' . $company . '-' . strval($lastContractId + 1);
+        }
+
+        $this->contract_code = $code;
+        $this->save();
     }
 }

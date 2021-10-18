@@ -792,6 +792,18 @@
 
         <div class="m-portlet">
             <div class="m-portlet__body">
+                           <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                        <div class="row align-items-center">
+                            <div class="col-xl-12 order-2 order-xl-1">
+                                <div class="alert alert-info" role="alert">
+                                    You are using the deprecated search module, will be available until 2021-10-22 , a new experience is now available. <a
+                                        href="{{ url('/api/search') }}" class="alert-link" style="color:#5E696E ">Try
+                                        out
+                                        the new module.</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 <div class="tab-content">
                     <div>
                         <div class="row">

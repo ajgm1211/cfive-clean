@@ -13,16 +13,26 @@ use EventIntercom;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Barryvdh\DomPDF\Facade as PDF;
 use App\Delegation;
 use App\UserDelegation;
+use Illuminate\Support\Facades\Storage;
 
 class LclPdf
 {
 
     use QuoteV2Trait;
 
+    private $upload;
+
+    public function __construct($upload = false)
+    {
+        $this->upload = $upload;
+    }
+
     public function generate($quote)
     {
+        $user = User::find($quote->user_id);
 
         $freight_charges = AutomaticRate::GetChargeLcl(3)->GetQuote($quote->id)->with('charge_lcl_air')->get();
 
@@ -40,11 +50,20 @@ class LclPdf
 
         $delegation = $this->delegation($quote);
 
-        $view = \View::make('quote.pdf.index_lcl', ['quote' => $quote, 'delegation' => $delegation, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
+        $data = ['quote' => $quote, 'delegation' => $delegation, 'user' => $user, 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals];
+
+        /*$view = \View::make('quote.pdf.index_lcl', ['quote' => $quote, 'delegation' => $delegation, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'service' => $service, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
 
         $pdf = \App::make('dompdf.wrapper');
 
-        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
+        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');*/
+
+        $pdf = PDF::loadView('quote.pdf.index_lcl', $data);
+
+        if ($this->upload) {
+            Storage::disk('pdfApiS3')->put('quote_'.$quote->id.'.pdf', $pdf->output());
+            return;
+        }
 
         // EVENTO INTERCOM
         $event = new EventIntercom();
@@ -86,6 +105,7 @@ class LclPdf
                         foreach ($value as $charge) {
                             if ($inland->pdf_options['groupId'] == $charge->id) {
                                 $inland_total = json_decode($inland->totals, true);
+                                $inland_total = isset($inland->sum_total) ? $inland->sum_total:$inland_total;
                                 $inland_total = $this->convertToCurrency($inland->currency, $charge->currency, $inland_total);
                                 $grouped_total = intval($charge->total) + intval($inland_total['lcl_totals']);
                                 $charge->total = $grouped_total;
@@ -140,8 +160,11 @@ class LclPdf
             $type = 'Destination';
         }
 
-        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals', 'markups as profit', 'currency_id', 'inland_address_id', 'pdf_options')
+        $inlands = AutomaticInlandLclAir::select('id', 'charge', 'inland_totals_id', 'quote_id', 'total', 'price_per_unit', 'units', 'port_id', 'markup as profit', 'currency_id')
             ->ConditionalPort($port)->Quotation($quote)->Type($type)->get();
+
+        //Adding address and modifying totals in Inlands
+        $this->addAddressTotalToInland($inlands);
 
         return $inlands;
     }
@@ -153,9 +176,12 @@ class LclPdf
         } else {
             $type = 'Destination';
         }
-
-        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals as total', 'markups as profit', 'currency_id', 'inland_address_id', 'pdf_options')
+ 
+        $inlands = AutomaticInlandLclAir::select('id', 'charge', 'inland_totals_id', 'quote_id', 'port_id', 'total', 'price_per_unit', 'units', 'markup as profit', 'currency_id')
             ->whereNotIn('port_id', $port)->Quotation($quote)->Type($type)->get();
+
+        //Adding address and modifying totals in Inlands
+        $this->addAddressTotalToInland($inlands);
 
         $inlands = $inlands->groupBy([
 
@@ -166,6 +192,24 @@ class LclPdf
         ]);
 
         return $inlands;
+    }
+
+    public function addAddressTotalToInland($inlands){
+        foreach ($inlands as $inland) {
+            $total = $this->processInlandTotal($inland);
+            $address = $inland->getInlandAddress();
+            $inland->address = $address;
+            $inland->sum_total = $total;
+        }
+    }
+
+    public function processInlandTotal($data){
+        if($data->total != null){
+            $total = $data->total + $data->profit;
+            return $total;
+        }
+        $total = ($data->price_per_unit*$data->unit)+$data->profit;
+        return $total;
     }
 
     public function localChargeTotals($quote, $type, $port)
