@@ -340,10 +340,9 @@ class ImportationLclController extends Controller
                 $contract->account_id = $account->id;
                 $contract->save();
 
-                /* $fileTmp = new FileTmp();
-            $fileTmp->contract_id = $Contract_id;
-            $fileTmp->name_file   = $nombre;
-            $fileTmp->save(); //*/
+                //Adding custom code to contract
+                $contract->createCustomCode();
+                
                 foreach ($request->carrierM as $carrierVal) {
                     ContractCarrierLcl::create([
                         'carrier_id'    => $carrierVal,

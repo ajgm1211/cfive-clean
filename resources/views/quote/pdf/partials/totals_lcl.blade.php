@@ -12,7 +12,7 @@
                                 <th class="unit"><b>{{__('pdf.pol')}}</b></th>
                                 <th class="unit"><b>{{__('pdf.pod')}}</b></th>
                                 <th class="unit" {{@$quote->pdf_options['showCarrier'] ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
-                                <th ><b>TON/M3</b></th>
+                                <th ><b>Total</b></th>
                             </tr>
                         </thead>
                         <tbody>

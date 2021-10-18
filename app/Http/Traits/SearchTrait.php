@@ -23,6 +23,7 @@ use App\ContractFclFile;
 use App\ContractLclFile;
 use App\TermAndConditionV2;
 use GoogleMaps;
+use App\Surcharge;
 use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaStream;
@@ -1458,6 +1459,14 @@ trait SearchTrait
         $transit_time = TransitTime::where([['origin_id',$origin_port],['destination_id',$destination_port]])->whereIn('carrier_id',[$carrier,26])->first();
 
         return $transit_time;
+    }
+
+        //get surcharge to apply a rate
+    public function getSurchargeOcean()
+    {
+
+        $surchargeOcean = Surcharge::where('options->onlyrate','yes')->first();
+        return $surchargeOcean;
     }
 
     //Converting amounts to string so they display decimal places correctly

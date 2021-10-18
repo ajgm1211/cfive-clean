@@ -68,7 +68,8 @@ class SearchApiController extends Controller
     }
 
     //Retrieves last 4 searches made
-    function list(Request $request) {
+    function list(Request $request)
+    {
         $company_user_id = \Auth::user()->company_user_id;
         //Filtering and pagination
         $results = SearchRate::where([['company_user_id', $company_user_id], ['type', 'FCL']])->orderBy('id', 'desc')->take(4)->get();
@@ -160,8 +161,8 @@ class SearchApiController extends Controller
             return $comprice->only(['id', 'company_id', 'price_id']);
         });
 
-        $cargo_types = CargoType::get()->map(function ($cargo_type){
-            return $cargo_type->only(['id','name']);
+        $cargo_types = CargoType::get()->map(function ($cargo_type) {
+            return $cargo_type->only(['id', 'name']);
         });
 
         $environment_name = $_ENV['APP_ENV'];
@@ -325,9 +326,9 @@ class SearchApiController extends Controller
 
     public function retrieve(SearchRate $search)
     {
-        if( $search->type == "FCL" ){
+        if ($search->type == "FCL") {
             return new SearchApiResource($search);
-        }else if( $search->type == "LCL" ){
+        } else if ($search->type == "LCL") {
             return new SearchApiLclResource($search);
         }
     }
@@ -343,8 +344,8 @@ class SearchApiController extends Controller
 
         $search_array = $request->input();
 
-        $search_array['dateRange']['startDate'] = $this->formatSearchDate($search_array['dateRange']['startDate'],'date');
-        $search_array['dateRange']['endDate'] = $this->formatSearchDate($search_array['dateRange']['endDate'],'date');
+        $search_array['dateRange']['startDate'] = $this->formatSearchDate($search_array['dateRange']['startDate'], 'date');
+        $search_array['dateRange']['endDate'] = $this->formatSearchDate($search_array['dateRange']['endDate'], 'date');
 
         $search_ids = $this->getIdsFromArray($search_array);
         $search_ids['company_user'] = $company_user_id;
@@ -373,10 +374,10 @@ class SearchApiController extends Controller
 
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
             $charges = $this->joinCharges($charges, $search_ids);
-            
+
             //Appending Rate Id to Charges
             $this->addChargesToRate($rate, $charges, $search_ids);
-            
+
             //Getting price levels if requested
             if ($search_array['pricelevel']) {
                 $price_level_markups = $this->searchPriceLevels($search_ids);
@@ -393,8 +394,8 @@ class SearchApiController extends Controller
                     }
                 }
             }
-            
-            $this->calculateTotals($rate,$search_ids);
+
+            $this->calculateTotals($rate, $search_ids);
 
             $remarks = $this->searchRemarks($rate, $search_ids);
 
@@ -408,7 +409,7 @@ class SearchApiController extends Controller
 
             $this->stringifyFclRateAmounts($rate);
 
-            $this->setDownloadParameters($rate,$search_ids);
+            $this->setDownloadParameters($rate, $search_ids);
         }
 
         if ($rates != null && count($rates) != 0) {
@@ -522,7 +523,7 @@ class SearchApiController extends Controller
     - inland_types (KM or RANGE)
     - inlands (names and such)
     - inlandsports (inland+port association)
-     **/
+         **/
     }
 
     //Finds local charges matching contracts
@@ -843,7 +844,6 @@ class SearchApiController extends Controller
 
                     //Updating rate totals to new added array
                     $rate->$to_update = $totals_array;
-
                 } else {
 
                     if (isset($charge['containers_with_markups'])) {
@@ -878,7 +878,6 @@ class SearchApiController extends Controller
             }
 
             $rate->setAttribute('charge_totals_by_type', $charge_type_totals);
-
         }
 
         if (isset($search_data['showRateCurrency'])) {
@@ -892,11 +891,10 @@ class SearchApiController extends Controller
             $totals_with_markups_freight_currency = $this->convertToCurrency($client_currency, $rate->currency, $rate->totals_with_markups);
             $rate->setAttribute('totals_with_markups_freight_currency', $totals_with_markups_freight_currency);
         }
-
     }
 
     public function storeContractNewSearch(StoreContractSearch $request)
-    {  
+    {
         $data = $request->validate([
             "dataSurcharge.*.type.id" => 'required',
             "dataSurcharge.*.calculation.id" => 'required',
@@ -922,6 +920,8 @@ class SearchApiController extends Controller
         $contract->ContractCarrierSyncSingle($request->carrier['id']);
         $contract->ContractRateStore($request, $contract, $req, $container);
         $contract->ContractSurchargeStore($request, $contract);
+        //Creating custom code
+        $contract->createCustomCode();
 
         foreach ($request->input('document', []) as $file) {
             $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document', 'contracts3');

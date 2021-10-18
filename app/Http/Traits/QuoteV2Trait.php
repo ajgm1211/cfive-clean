@@ -1911,7 +1911,7 @@ trait QuoteV2Trait
 
                 $surcharge = Surcharge::where('name',$charge['chargeCode'])->first();
 
-                if($charge['chargeCode'] != "FRT00" && $charge['chargeCode'] != "bas"){
+                if($charge['chargeCode'] != "FRT00" && $charge['chargeCode'] != "bas" && $charge['chargeCode'] != "SEA"){
                     
                     if($surcharge == null){
                         $newSurcharge = Surcharge::create([
@@ -1924,7 +1924,9 @@ trait QuoteV2Trait
                         $charge['surcharge_id'] = $surcharge->id;
                     }
                 }else{
-                    $charge['surcharge_id'] = null;
+                    $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
+
+                    $charge['surcharge_id'] = $ocean_surcharge->id;
                 }
 
                 if($key == "originSurcharges"){

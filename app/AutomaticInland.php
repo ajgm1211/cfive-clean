@@ -46,7 +46,7 @@ class AutomaticInland extends Model implements Auditable
 
     public function inland_totals()
 	{
-		return $this->belongsTo('App\AutomaticInlandTotal','inland_totals_id','id');
+		return $this->belongsTo('App\AutomaticInlandTotal','inland_totals_id');
 	}
 
     public function country_code()
@@ -128,4 +128,34 @@ class AutomaticInland extends Model implements Auditable
             ]);
         }
     }
+
+    public function scopeQuotation($query, $quote)
+    {
+        return $query->where('quote_id', $quote);
+    }
+
+    public function scopePort($query, $port)
+    {
+        return $query->where('port_id', $port);
+    }
+
+    public function scopeType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
+
+    public function scopeConditionalPort($q, $port)
+    {
+        return $q->when($port, function ($query, $port) {
+            return $query->where('port_id', $port);
+        });
+    }
+
+    public function getInlandAddress()
+    {
+        $result = AutomaticInlandTotal::find($this->inland_totals_id);
+
+        return $result->inland_address->address ?? null;
+    }
+
 }

@@ -16,13 +16,23 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use App\Delegation;
 use App\UserDelegation;
+use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Facades\Storage;
 
 class FclPdf
 {
     use QuoteV2Trait;
 
+    private $upload;
+
+    public function __construct($upload = false)
+    {
+        $this->upload = $upload;
+    }
+
     public function generate($quote)
     {
+        $user = User::find($quote->user_id);
 
         $containers = Container::all();
 
@@ -39,24 +49,33 @@ class FclPdf
         $destination_charges = $this->localCharges($quote, 2);
 
         $freight_charges = $this->freightCharges($freight_charges, $quote, $containers);
-        
+
         $freight_charges_detailed = $this->freightChargesDetailed($freight_charges, $quote, $containers);
 
         $quote_totals = $this->quoteTotals($quote, $containers);
 
         $delegation = $this->delegation($quote);
 
-        $view = \View::make('quote.pdf.index', ['quote' => $quote, 'delegation' => $delegation, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
+        $data = ['quote' => $quote, 'delegation' => $delegation, 'inlands' => $inlands, 'user' => $user, 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals];
 
-        $pdf = \App::make('dompdf.wrapper');
+        //$view = \View::make('quote.pdf.index', ['quote' => $quote, 'delegation' => $delegation, 'inlands' => $inlands, 'user' => \Auth::user(), 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals]);
 
+        //$pdf = \App::make('dompdf.wrapper');
 
-        $pdf->loadHTML($view)->save('pdf/temp_' . $quote->id . '.pdf');
+        $pdf = PDF::loadView('quote.pdf.index', $data);
 
-        // EVENTO INTERCOM
+        if ($this->upload) {
+            Storage::disk('pdf')->put('quote_'.$quote->id.'.pdf', $pdf->output());
+            $quote->addMedia(storage_path().'/app/public/pdf/quote_'.$quote->id.'.pdf')->toMediaCollection('document', 'pdfApiS3');
+            return;
+        }
+
+        //Intercom
         $event = new EventIntercom();
+
+        //Mixpanel
         $event->event_pdfFcl();
-        //$pdf->loadHTML($view);
+
         return $pdf->stream('quote-' . $quote->id . '.pdf');
     }
 
@@ -91,11 +110,13 @@ class FclPdf
                 $inlands = $this->InlandTotals($quote->id, $type, $value[0]['port_id']);
                 foreach ($value as $charge) {
                     foreach ($inlands as $inland) {
-                        if ($inland->pdf_options['grouped']) {
 
-                            if ($inland->pdf_options['groupId'] == $charge->id) {
+                        if ($inland->inland_totals->pdf_options['grouped']) {
+
+                            if ($inland->inland_totals->pdf_options['groupId'] == $charge->id) {
                                 $grouping_array = [];
-                                $inland_total = json_decode(json_encode($inland->total), true);
+                                $inland_total = json_decode(json_decode($inland->total));
+                                $inland_total = isset($inland->sum_total) ? $inland->sum_total:(array)$inland_total;
                                 $inland_total = $this->convertToCurrency($inland->currency, $charge->currency, $inland_total);
                                 foreach ($charge->total as $container => $value) {
                                     $grouping_array[$container] = intval($value) + intval($inland_total[$container]);
@@ -154,9 +175,12 @@ class FclPdf
             $type = 'Destination';
         }
 
-        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals as total', 'markups as profit', 'currency_id', 'inland_address_id', 'pdf_options')
+        $inlands = AutomaticInland::select('id', 'quote_id', 'port_id', 'rate as total', 'markup as profit', 'charge', 'currency_id', 'inland_totals_id')
             ->ConditionalPort($port)->Quotation($quote)->Type($type)->get();
 
+        //Adding address and modifying totals in Inlands
+        $this->addAddressTotalToInland($inlands);
+        
         return $inlands;
     }
 
@@ -168,8 +192,11 @@ class FclPdf
             $type = 'Destination';
         }
 
-        $inlands = AutomaticInlandTotal::select('id', 'quote_id', 'port_id', 'totals as total', 'markups as profit', 'currency_id', 'inland_address_id', 'pdf_options')
+        $inlands = AutomaticInland::select('id', 'quote_id', 'port_id', 'rate as total', 'markup as profit', 'charge', 'currency_id', 'inland_totals_id')
             ->whereNotIn('port_id', $port)->Quotation($quote)->Type($type)->get();
+
+        //Adding address and modifying totals in Inlands
+        $this->addAddressTotalToInland($inlands);
 
         $inlands = $inlands->groupBy([
 
@@ -182,11 +209,79 @@ class FclPdf
         return $inlands;
     }
 
+    public function addAddressTotalToInland($inlands){
+        foreach ($inlands as $inland) {
+            $total = $this->processInlandTotal($inland);
+            $address = $inland->getInlandAddress();
+            $inland->address = $address;
+            $inland->sum_total = $total;
+        }
+    }
+
     public function localChargeTotals($quote, $type, $port)
     {
         $total = LocalChargeQuoteTotal::Quotation($quote)->Port($port)->Type($type)->first();
 
         return $total;
+    }
+
+
+    public function processInlandTotal($item)
+    {
+
+        $sum = 'sum_';
+        $total = 'total_';
+        $amount = 'amount_';
+        $markup = 'markup_';
+
+        $containers = Container::all();
+
+        foreach ($containers as $c) {
+            ${$total . $amount . $c->code} = 0;
+            ${$total . $amount . $markup . $c->code} = 0;
+            ${$sum . $amount . $markup . $c->code} = 0;
+        }
+
+        $array_amounts = (array)json_decode(json_decode($item->total));
+        $array_markups = (array)$item->profit;
+
+        //$array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+        //$array_markups = $this->processOldContainers($array_markups, 'markups');
+        
+        $array = array();
+
+        foreach ($containers as $c) {
+            ${$sum . $c->code} = 0;
+            ${$sum . $amount . $markup . $c->code} = $sum . $amount . $markup . $c->code;
+            ${$total . $c->code} = 0;
+            ${$total . $sum . $c->code} = $total . $sum . $c->code;
+            ${'c' . $c->code} = 'c' . $c->code;
+
+            if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                ${$sum . $c->code} = $array_amounts['c' . $c->code] + $array_markups['m' . $c->code];
+                ${$total . $c->code} = ${$sum . $c->code};
+            } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
+                ${$sum . $c->code} = $array_amounts['c' . $c->code];
+                ${$total . $c->code} = ${$sum . $c->code};
+            } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                ${$sum . $c->code} = $array_markups['m' . $c->code];
+                ${$total . $c->code} = ${$sum . $c->code};
+            }
+
+            if (isset($array_amounts['c' . $c->code]) || isset($array_markups['m' . $c->code])) {
+                $item->${$total . $sum . $c->code} = isDecimal(${$total . $c->code}, true);
+            }
+
+            $equipmentHides = $this->hideContainerV2($item->quote->equipment, 'BD', $containers);
+
+            foreach($equipmentHides as $key => $hidden){
+                if($c->code == $key && $hidden != "hidden"){
+                    $array[${'c'. $c->code}]=$item->${$total . $sum . $c->code};
+                }
+            }
+        }
+        
+        return $array;
     }
 
     public function processInland($values, $containers)
@@ -279,12 +374,12 @@ class FclPdf
             $destination_address = InlandAddress::where(['port_id' => $item->destination_port_id, 'quote_id' => $item->quote_id])
                 ->select('address')->first();
 
-            if($origin_address){
+            if ($origin_address) {
                 $freight_charges_grouped->hasOriginAddress = 1;
                 $item->origin_address = $origin_address->address;
             }
 
-            if($destination_address){
+            if ($destination_address) {
                 $freight_charges_grouped->hasDestinationAddress = 1;
                 $item->destination_address = $destination_address->address;
             }
@@ -503,8 +598,8 @@ class FclPdf
         $routePrefix = 'route_';
         $routeId = 1;
         foreach ($freightTotals as $frTotal) {
-            $totalsArrayOutput[$routePrefix . $routeId]['POL'] = $frTotal->rate()->first()->origin_port()->first()->display_name ?? "--";
-            $totalsArrayOutput[$routePrefix . $routeId]['POD'] = $frTotal->rate()->first()->destination_port()->first()->display_name ?? "--";
+            $totalsArrayOutput[$routePrefix . $routeId]['POL'] = $frTotal->rate()->first() ? $frTotal->rate()->first()->origin_port()->first()->display_name : "--";
+            $totalsArrayOutput[$routePrefix . $routeId]['POD'] = $frTotal->rate()->first() ? $frTotal->rate()->first()->destination_port()->first()->display_name : "--";
             $totalsArrayOutput[$routePrefix . $routeId]['carrier'] = $frTotal->carrier()->first()->name ?? "--";
             $totalsArrayOutput[$routePrefix . $routeId]['currency'] = $quote->pdf_options['totalsCurrency']['alphacode'] ?? "--";
             $routeId++;
@@ -521,8 +616,8 @@ class FclPdf
 
             if (is_a($total, 'App\AutomaticRateTotal')) {
                 $totalsArrayInput = json_decode($total->totals, true);
-                $portArray['origin'] = $total->origin_port()->first()->display_name;
-                $portArray['destination'] = $total->destination_port()->first()->display_name;
+                $portArray['origin'] = $total->origin_port() ? $total->origin_port()->first()->display_name : "--";
+                $portArray['destination'] = $total->destination_port() ? $total->destination_port()->first()->display_name : "--";
                 $portArray['carrier'] = $total->carrier()->first()->name;
             } else if (is_a($total, 'App\AutomaticInlandTotal')) {
                 $totalsArrayInput = json_decode($total->totals, true);
