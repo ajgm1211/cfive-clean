@@ -60,7 +60,7 @@ class PriceLevelDetailController extends Controller
     {
         $data = $request->validate([
             'amount' => 'required',
-            'currency' => 'required',
+            'currency' => 'unrequired',
             'direction' => 'required',
             'price_level_apply' => 'required',
         ]);

@@ -14,15 +14,17 @@
       <InputSearch @filter="filtered = $event" style="margin-bottom: 20px;" />
 
       <div class="list-container">
-        <ListPrices :prices="GET_PRICE_LEVELS" />
+        <ListPrices :currentPage="currentPage" :prices="GET_PRICE_LEVELS" />
       </div>
 
-      <p v-if="resultsQty" style="margin-top:20px">
-        Total Results: {{ total }}
+      <p v-if="GET_PAGINATE_PRICE_LEVELS.total" style="margin-top:20px">
+        Total Results: {{ GET_PAGINATE_PRICE_LEVELS.total }}
       </p>
 
-      <!-- <Paginate
-        :page-count="last_page"
+      <Paginate
+        @prevPage="prevPage"
+        @nextPage="nextPage"
+        :page-count="GET_PAGINATE_PRICE_LEVELS.last_page"
         :prev-text="'Prev'"
         :next-text="'Next'"
         :page-class="'page-item'"
@@ -34,7 +36,7 @@
         :next-link-class="'page-link'"
         :initialPage="1"
         style="margin-bottom: 0!important;"
-      /> -->
+      />
     </div>
 
     <CreateModal v-if="create" @cancel="create = false" />
@@ -48,29 +50,36 @@ import ListPrices from "../../../components/PriceLevel/ListPrices.vue";
 import Paginate from "../../../../js/components/paginate.vue";
 import CreateModal from "../../../components/PriceLevel/CreateModal.vue";
 import { mapGetters } from "vuex";
+import axios from "axios";
 
 export default {
   components: { MainButton, InputSearch, ListPrices, Paginate, CreateModal },
   data: () => ({
-    resultsQty: 319,
     create: false,
     prices: [],
-    current_page: 0,
-    total: 0,
-    last_page: 0,
+    currentPage: 1,
   }),
   mounted() {
-    this.$store.dispatch("getPriceLevels");
-
-    setTimeout(() => {
-      // this.prices = this.GET_PRICE_LEVELS.data;
-      // this.current_page = Number(this.GET_PRICE_LEVELS.current_page);
-      // this.total = Number(this.GET_PRICE_LEVELS.total);
-      // this.last_page = Number(this.GET_PRICE_LEVELS.last_page);
-    }, 1000);
+    this.$store.dispatch("getPriceLevels", { page: this.currentPage });
+  },
+  methods: {
+    prevPage() {
+      if (this.currentPage > 1) {
+        let prevpage = this.currentPage - 1;
+        this.$store.dispatch("getPriceLevels", { page: prevpage });
+        this.currentPage = this.currentPage - 1;
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.GET_PAGINATE_PRICE_LEVELS.last_page) {
+        let nextPage = this.currentPage + 1;
+        this.$store.dispatch("getPriceLevels", { page: nextPage });
+        this.currentPage = this.currentPage + 1;
+      }
+    },
   },
   computed: {
-    ...mapGetters(["GET_PRICE_LEVELS"]),
+    ...mapGetters(["GET_PRICE_LEVELS", "GET_PAGINATE_PRICE_LEVELS"]),
   },
 };
 </script>
@@ -100,7 +109,7 @@ h2 {
   background-color: #fff;
   border-radius: 10px;
   width: 100%;
-  height: 100%;
+  height: fit-content;
   padding: 20px;
 }
 

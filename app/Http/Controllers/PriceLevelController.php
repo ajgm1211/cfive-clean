@@ -10,6 +10,7 @@ use App\Container;
 use App\Direction;
 use App\CompanyGroup;
 use App\CompanyUser;
+use App\PriceLevelApply;
 use App\Http\Resources\PriceLevelResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,6 +55,8 @@ class PriceLevelController  extends Controller
 
         $directions = Direction::all();
 
+        $applies = PriceLevelApply::all();
+
         $price_levels = PriceLevel::where('company_user_id', $company_user_id)->get()->map(function ($price) {
             return $price->only(['id', 'name']);
         });
@@ -70,6 +73,7 @@ class PriceLevelController  extends Controller
             'containers',
             'directions',
             'price_levels',
+            'applies',
         );
 
         return response()->json(['data' => $data]);
@@ -139,15 +143,7 @@ class PriceLevelController  extends Controller
     {
         $fields = $request->input();
 
-        if(array_key_exists('description',$fields)){
-            $data = $request->validate([
-                'description' => 'required',
-            ]);
-
-            $price_level->update([
-                'description' => $data['description'],
-            ]);
-        }elseif(array_key_exists('companies',$fields) || array_key_exists('groups',$fields)){
+      if(array_key_exists('companies',$fields) || array_key_exists('groups',$fields)){
             if(array_key_exists('companies',$fields)){
                 $model = 'App\\Company';
                 $model_type = 'companies';
@@ -190,12 +186,15 @@ class PriceLevelController  extends Controller
                 'name' => 'required',
                 'display_name' => 'required',
                 'price_level_type' => 'required',
+                'description' => 'required',
             ]);
 
             $price_level->update([
                 'name' => $data['name'],
                 'display_name' => $data['display_name'],
                 'type' => $data['price_level_type'],
+                'description' => $data['description'],
+                
             ]);
         }
 

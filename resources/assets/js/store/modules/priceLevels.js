@@ -4,12 +4,14 @@ import router from "../../main";
 
 const state = {
   priceLevels: "",
+  paginatePriceLevels: "",
 };
 
 const actions = {
-  getPriceLevels({ commit }) {
-    axios.get("/api/pricelevels/list/").then((response) => {
+  getPriceLevels({ commit }, {page}) {
+    axios.get(`/api/pricelevels/list?page=${page}`).then((response) => {
       commit("SET_PRICE_LEVELS", response.data.data);
+      commit("SET_PAGINATE_PRICE_LEVELS", response.data);
     });
   },
   
@@ -24,26 +26,24 @@ const actions = {
 
   updatePriceLevel({ commit }, { id, body }) {
     axios.post(`api/pricelevels/${id}/update`, body).then((response) => {
-      console.log(response)
     });
   },
 
-  duplicatePriceLevel({ dispatch }, { id }) {
+  duplicatePriceLevel({ dispatch }, { id, page }) {
     axios.post(`/api/pricelevels/${id}/duplicate`).then((response) => {
-      dispatch("getPriceLevels");
-      alert('duplicated')
+      dispatch("getPriceLevels", {page: page});
     });
   },
 
-  deletePriceLevel({ dispatch }, { id }) {
+  deletePriceLevel({ dispatch }, { id, page }) {
     axios.put(`/api/pricelevels/${id}/delete`).then((response) => {
-      dispatch("getPriceLevels");
+      dispatch("getPriceLevels", {page: page});
     });
   },
 
-  deleteSelectedPriceLevel({ dispatch }, { body }) {
+  deleteSelectedPriceLevel({ dispatch }, { body, page }) {
     axios.put(`/api/pricelevels/deleteAll`, body).then((response) => {
-      dispatch("getPriceLevels");
+      dispatch("getPriceLevels", {page: page});
     });
   },
 };
@@ -52,11 +52,17 @@ const mutations = {
   SET_PRICE_LEVELS(state, value) {
     state.priceLevels = value;
   },
+  SET_PAGINATE_PRICE_LEVELS(state, value) {
+    state.paginatePriceLevels = value;
+  },
 };
 
 const getters = {
   GET_PRICE_LEVELS() {
     return state.priceLevels;
+  },
+  GET_PAGINATE_PRICE_LEVELS() {
+    return state.paginatePriceLevels;
   },
 };
 

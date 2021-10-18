@@ -10,6 +10,9 @@ import Api from "../../../resources/js/api"; // Api calls controller
 import "../../../resources/sass/custom_app.scss";
 import "../../../resources/js/bootstrap";
 import store from "../js/store/index";
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css';
+
 
 // Views
 import PriceLevels from "../views/pages/PriceLevels/index.vue";
@@ -49,6 +52,8 @@ Vue.use(TablePlugin);
 Vue.use(Vuelidate);
 Vue.use(VueCkeditor.plugin, options);
 Vue.use(BootstrapVue);
+Vue.component('v-select', vSelect)
+
 
 window.api = new Api();
 window.Vuex = require("vuex");
