@@ -18,4 +18,17 @@ class PriceLevelGroup extends Model
     {
         return $this->morphTo();
     }
+
+    public function duplicate($price_level)
+    {
+        $new_model = $this->replicate();
+
+        $new_model->price_level_id = $price_level->id;
+
+        $new_model->push();
+
+        $new_model->save();
+
+        return $new_model;
+    }
 }

@@ -17,7 +17,7 @@ class CreatePricesLevelDetailsTable extends Migration
             $table->increments('id');
             $table->json('amount');
             $table->integer('price_level_id')->unsigned();
-            $table->foreign('price_level_id')->references('id')->on('price_levels');
+            $table->foreign('price_level_id')->references('id')->on('price_levels')->onDelete('cascade');
             $table->integer('currency_id')->unsigned();
             $table->foreign('currency_id')->references('id')->on('currency');
             $table->integer('direction_id')->unsigned();

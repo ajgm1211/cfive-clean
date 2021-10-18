@@ -18,7 +18,7 @@ class CreatePricesLevelGroupsTable extends Migration
             $table->unsignedBigInteger('group_id');
             $table->string('group_type');
             $table->integer('price_level_id')->unsigned();
-            $table->foreign('price_level_id')->references('id')->on('price_levels');
+            $table->foreign('price_level_id')->references('id')->on('price_levels')->onDelete('cascade');;
             
             
         });
