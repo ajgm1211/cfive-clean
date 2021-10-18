@@ -22,12 +22,8 @@
             required: true,
           }"
         />
-        <Selectable
-          @selected="setSelected($event)"
-          label="Price Level Type"
-          :options="price_types"
-          :error="selectable_error"
-        />
+
+        <SorteableDropdown @reset="selected = ''" :error="selectable_error" label="Price Level Type" @selected="setSelected($event)" :itemList="price_types" />
       </form>
       <div class="controls-container">
         <p @click="$emit('cancel')">Cancel</p>
@@ -40,10 +36,10 @@
 <script>
 import MainButton from "../common/MainButton.vue";
 import CustomInput from "../common/CustomInput.vue";
-import Selectable from "../common/Selectable.vue";
+import SorteableDropdown from '../common/SorteableDropdown.vue';
 
 export default {
-  components: { MainButton, CustomInput, Selectable },
+  components: { MainButton, CustomInput, SorteableDropdown },
   data: () => ({
     price: {
       name: "",

@@ -13,6 +13,7 @@
           :rules="{
             required: true,
           }"
+          @blur="update()"
         />
         <CustomInput
           label="Display name"
@@ -22,6 +23,7 @@
           :rules="{
             required: true,
           }"
+          @blur="update()"
         />
         <Selectable
           @selected="setSelected($event)"
@@ -31,8 +33,6 @@
           :error="selectable_error"
         />
       </div>
-
-      <MainButton @click="update()" text="Update" :save="true" />
     </div>
 
     <div class="tabscontainer">
@@ -55,6 +55,7 @@
           v-model="price.description"
           v-if="active == 'Description'"
           type="classic"
+          @blur="update()"
         ></ckeditor>
 
         <Restrictions
@@ -68,15 +69,16 @@
         <div v-if="active == 'Detail'">
           <InputSearch style="margin-bottom:20px" />
 
-          <ListPrices
-            :filters="false"
-            :thead="thead"
-            :dynamic="true"
-            :rates="rates"
-          />
+          <ListPrices :currentPage="currentPage" :rates="GET_PRICE_LEVEL_RATES" :filters="false" :thead="thead" :dynamic="true" />
 
-          <!-- <Paginate
-            :page-count="10"
+          <p style="margin-top:20px">
+            Total Results: {{ GET_PAGINATE_RATES.meta.total }}
+          </p>
+
+          <Paginate
+            @prevPage="prevPage"
+            @nextPage="nextPage"
+            :page-count="GET_PAGINATE_RATES.meta.last_page"
             :prev-text="'Prev'"
             :next-text="'Next'"
             :page-class="'page-item'"
@@ -88,7 +90,7 @@
             :next-link-class="'page-link'"
             :initialPage="1"
             style="margin-bottom: 0!important;"
-          /> -->
+          />
         </div>
       </div>
     </div>
@@ -103,10 +105,10 @@ import LeftArrow from "../../../components/Icons/LeftArrow.vue";
 import actions from "../../../../../resources/js/actions";
 import ListPrices from "../../../components/PriceLevel/ListPrices.vue";
 import InputSearch from "../../../components/common/InputSearch.vue";
+import SorteableDropdown from "../../../components/common/SorteableDropdown.vue";
 import Paginate from "../../../../js/components/paginate.vue";
 import MainButton from "../../../components/common/MainButton.vue";
 import { mapGetters } from "vuex";
-// import axios from "axios";
 export default {
   components: {
     CustomInput,
@@ -117,6 +119,7 @@ export default {
     InputSearch,
     Paginate,
     MainButton,
+    SorteableDropdown,
   },
   data: () => ({
     actions: actions,
@@ -136,32 +139,8 @@ export default {
     value: "",
     selectable_error: false,
     thead: ["Direction", "Apply to", "20", "40", "Currency"],
-    rates: [
-      // {
-      //   id: 1,
-      //   direction: "export",
-      //   restriction: "Apply to",
-      //   type_20: "2.00",
-      //   type_40: "3.00",
-      //   currency: "USD",
-      // },
-      // {
-      //   id: 2,
-      //   direction: "export",
-      //   restriction: "Apply to",
-      //   type_20: "2.00",
-      //   type_40: "3.00",
-      //   currency: "USD",
-      // },
-      // {
-      //   id: 3,
-      //   direction: "export",
-      //   restriction: "Apply to",
-      //   type_20: "2.00",
-      //   type_40: "3.00",
-      //   currency: "USD",
-      // },
-    ],
+    rates: [],
+    currentPage: 1,
   }),
   mounted() {
     this.getData();
@@ -177,16 +156,18 @@ export default {
 
     this.$store.dispatch("listPriceLevelRates", {
       id: this.$route.params.id,
+      page: this.currentPage,
     });
+
+    this.$store.dispatch("getPriceLevelData");
 
     setTimeout(() => {
       this.price.name = this.GET_CURRENT_PRICE_LEVEL.name;
       this.price.display_name = this.GET_CURRENT_PRICE_LEVEL.display_name;
+      this.price.description = this.GET_CURRENT_PRICE_LEVEL.description;
       this.selected = this.GET_CURRENT_PRICE_LEVEL.type;
 
       this.rates = this.GET_PRICE_LEVEL_RATES;
-
-      console.log('rates', this.rates)
     }, 1000);
   },
   methods: {
@@ -203,11 +184,14 @@ export default {
           name: this.price.name,
           display_name: this.price.display_name,
           price_level_type: this.selected,
+          description: this.price.description,
         },
       });
+      this.$forceUpdate();
     },
     setSelected(option) {
       this.selected = option;
+      this.update();
     },
     currentTab(tab) {
       this.active = tab;
@@ -220,9 +204,36 @@ export default {
         { id: "country", name: "Country", vselected: "countries" },
       ];
     },
+    prevPage() {
+      if (this.currentPage > 1) {
+        let prevpage = this.currentPage - 1;
+        this.$store.dispatch("listPriceLevelRates", {
+          id: this.$route.params.id,
+          page: prevpage,
+        });
+        this.currentPage = this.currentPage - 1;
+        this.$forceUpdate();
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.GET_PAGINATE_RATES.meta.last_page) {
+        let nextPage = this.currentPage + 1;
+        this.$store.dispatch("listPriceLevelRates", {
+          id: this.$route.params.id,
+          page: nextPage,
+        });
+        this.currentPage = this.currentPage + 1;
+        this.$forceUpdate();
+      }
+    },
   },
   computed: {
-    ...mapGetters(["GET_CURRENT_PRICE_LEVEL", "GET_PRICE_LEVEL_RATES"]),
+    ...mapGetters([
+      "GET_CURRENT_PRICE_LEVEL",
+      "GET_PRICE_LEVEL_RATES",
+      "GET_PRICE_LEVEL_DATA",
+      "GET_PAGINATE_RATES",
+    ]),
   },
 };
 </script>

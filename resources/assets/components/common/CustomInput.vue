@@ -22,6 +22,7 @@
       :rules="rules"
       :value="value"
       @input="handleChange($event.target.value)"
+      @blur="$emit('blur')"
     />
     <div v-if="$v.value.$error" class="error-msj-container">
       <span class="error-msj" v-text="messageError" />

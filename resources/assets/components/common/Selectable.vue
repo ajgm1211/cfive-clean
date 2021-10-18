@@ -23,15 +23,20 @@
       @click="open = !open"
     >
       <span v-if="!selected && !value">Select an option</span>
-      <span v-if="!selected && value" :style="{ color: font_color }"> {{value}} </span>
+      <span v-if="!selected && value" :style="{ color: font_color }">
+        {{ value }}
+      </span>
       <span v-else-if="mixed === true" style="color: #fff;">
         {{ selected === "Fixed Markup" ? "$" : "%" }}
       </span>
-      <span v-else :style="{ color: font_color }">{{ selected }} </span>
+      <span v-else :style="{ color: font_color }"
+        >{{ selected.name ? selected.name : selected }}
+      </span>
       <ChevronDown v-if="icon == true" />
     </div>
+
     <div v-if="error === true && !selected" class="error-msj-container">
-      <span class="error-msj">You must select one option</span>
+      <span class="error-msj">You must select at least one option</span>
     </div>
 
     <div
@@ -40,7 +45,7 @@
       :class="mixed == true ? 'mixedOptions' : ''"
     >
       <p v-for="option in options" :key="option" @click="select(option)">
-        {{ option }}
+        {{ option.name ? option.name : option }}
       </p>
     </div>
   </div>
