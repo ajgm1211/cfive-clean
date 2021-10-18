@@ -20,6 +20,7 @@ use App\ApiProvider;
 use App\CalculationType;
 use App\Carrier;
 use App\Company;
+use App\CompanyGroup;
 use App\CompanyPrice;
 use App\CompanyUser;
 use App\Contact;
@@ -31,6 +32,7 @@ use App\Currency;
 use App\DeliveryType;
 use App\GlobalCharge;
 use App\TransitTime;
+use App\PriceLevel;
 use App\Surcharge;
 use App\QuoteV2;
 use App\NewContractRequest;
@@ -39,7 +41,6 @@ use Illuminate\Http\Request;
 use App\GroupContainer;
 use App\Http\Traits\MixPanelTrait;
 use App\LocalCharge;
-use App\Price;
 use App\Rate;
 use App\RemarkCondition;
 use App\ScheduleType;
@@ -97,6 +98,8 @@ class SearchApiController extends Controller
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->with('contact')->get();
 
+        $company_groups = CompanyGroup::where('company_user_id', '=', $company_user_id)->with('companies')->get();
+
         $contacts = [];
 
         foreach ($companies as $comp) {
@@ -141,9 +144,10 @@ class SearchApiController extends Controller
         return $country->only(['id','code','name']);
         });**/
 
-        $price_levels = Price::where('company_user_id', $company_user_id)->get()->map(function ($price) {
+        $price_levels = PriceLevel::where('company_user_id', $company_user_id)->with('price_level_groups')->get()->map(function ($price) {
             return $price->only(['id', 'name']);
         });
+
 
         $surcharges = Surcharge::where('company_user_id', '=', $company_user_id)->orderBy('name', 'asc')->get()->map(function ($surcharge) {
             return $surcharge->only(['id', 'name']);
@@ -188,6 +192,7 @@ class SearchApiController extends Controller
             'carriers_api',
             'api_url',
             'companies',
+            'company_groups',
             'contacts',
             'currency',
             'common_currencies',

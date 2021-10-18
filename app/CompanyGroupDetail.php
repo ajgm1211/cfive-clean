@@ -19,4 +19,17 @@ class CompanyGroupDetail extends Model
     {
         return $this->belongsTo('App\Company');
     }
+
+    public function duplicate($company_group)
+    {
+        $new_model = $this->replicate();
+
+        $new_model->company_group_id = $company_group->id;
+
+        $new_model->push();
+
+        $new_model->save();
+
+        return $new_model;
+    }
 }

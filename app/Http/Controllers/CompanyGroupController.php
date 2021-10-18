@@ -9,9 +9,11 @@ use App\CompanyGroupDetail;
 use App\Http\Resources\CompanyGroupResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\SearchTrait;
 
 class CompanyGroupController extends Controller
 {
+    use SearchTrait;
     /**
      * Display a listing of the resource.
      *
@@ -99,24 +101,27 @@ class CompanyGroupController extends Controller
         ]);
 
         if(array_key_exists('companies',$data)){
+            $existing_details = [];
             $company_group_details = CompanyGroupDetail::where('company_group_id',$company_group->id)->get();
 
-            foreach($company_group_details as $detail){
-                foreach($data['companies'] as $company_req){
-                    if(){
-                        CompanyGroupDetail::create([
-                            'company_group_id' => $company_group->id,
-                            'company_id' => $company_req['id'],
-                        ]);
-                    }elseif(){
-        
-                    }
-                }
+            $company_ids = $this->getIdsFromArray($request->input('companies'));
 
+            foreach($company_group_details as $detail){
+                if(!in_array($detail->company_id,$company_ids)){
+                    $detail->delete();
+                }else{
+                    array_push($existing_details,$detail->company_id);
+                }
             }
 
-                
+            $non_existing_details = array_diff($company_ids,$existing_details);
 
+            foreach($non_existing_details as $new_detail_id){
+                $new_detail = CompanyGroupDetail::create([
+                    'company_group_id' => $company_group->id,
+                    'company_id' => $new_detail_id,
+                ]);
+            }
         }
 
         return new CompanyGroupResource($company_group);
