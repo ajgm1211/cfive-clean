@@ -4403,6 +4403,8 @@ export default {
                   uemail: component.datalists.user.email,
                   brands: apiCarrier.code,
                 });
+              } else {
+                component.$emit("apiSearchDone", fullResponseLength);
               }
             });
           });
