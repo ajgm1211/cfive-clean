@@ -50,9 +50,11 @@ class PriceLevelDetail extends Model
         return (new PriceLevelDetailFilter($request, $builder))->filter();
     }
 
-    public function duplicate()
+    public function duplicate($price_level)
     {
         $new_model = $this->replicate();
+
+        $new_model->price_level_id = $price_level->id;
 
         $new_model->push();
 

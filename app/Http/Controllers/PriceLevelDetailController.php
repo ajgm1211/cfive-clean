@@ -83,7 +83,9 @@ class PriceLevelDetailController extends Controller
      */
     public function duplicate(PriceLevelDetail $price_level_detail)
     {
-        $new_price_level_detail = $price_level_detail->duplicate();
+        $price_level = $price_level_detail->price_level();
+
+        $new_price_level_detail = $price_level_detail->duplicate($price_level);
 
         return new PriceLevelDetailResource($new_price_level_detail);
     }

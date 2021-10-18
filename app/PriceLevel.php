@@ -33,6 +33,16 @@ class PriceLevel extends Model
         ->where('group_type', 'App\CompanyGroup');
     }
 
+    public function price_level_details()
+    {
+        return $this->hasMany('App\PriceLevelDetail', 'price_level_id', 'id');
+    }
+
+    public function price_level_groups()
+    {
+        return $this->hasMany('App\PriceLevelGroup', 'price_level_id', 'id');
+    }
+
     public function scopeFilterByCurrentCompany($query)
     {
         $company_id = Auth::user()->company_user_id;
@@ -49,9 +59,30 @@ class PriceLevel extends Model
     {
         $new_model = $this->replicate();
 
+        $this->load(
+            'price_level_details',
+            'price_level_groups'
+        );
+
         $new_model->push();
 
         $new_model->save();
+
+        $relations = $this->getRelations();
+
+        foreach ($relations as $relation) {
+            if (!is_a($relation, 'Illuminate\Database\Eloquent\Collection')) {
+                if ($relation != null) {
+                    $relation->duplicate($new_model);
+                }
+            } else {
+                foreach ($relation as $relationRecord) {
+                    if ($relationRecord != null) {
+                        $newRelationship = $relationRecord->duplicate($new_model);
+                    }
+                }
+            }
+        }
 
         return $new_model;
     }
