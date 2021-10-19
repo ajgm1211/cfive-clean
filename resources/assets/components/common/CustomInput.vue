@@ -22,6 +22,7 @@
       :rules="rules"
       :value="value"
       @input="handleChange($event.target.value)"
+      @blur="$emit('blur')"
     />
     <div v-if="$v.value.$error" class="error-msj-container">
       <span class="error-msj" v-text="messageError" />
@@ -194,7 +195,7 @@ export default {
   margin-top: 5px;
   background-color: #fff;
   outline: none;
-  padding: 2px 14px;
+  padding: 2px 10px;
   letter-spacing: 0.05em;
   font-size: 13px;
   border-radius: 8px;
