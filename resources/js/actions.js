@@ -723,6 +723,9 @@ export default {
         create(data) {
             return api.call('post', `/api/search_lcl/store`, data);
         },
+        downloadContract(data){
+            return api.call('post',`/api/search_lcl/downloadContract`, data);
+        },
     },
     contracts_lcl: {
         list(params, callback, route) {

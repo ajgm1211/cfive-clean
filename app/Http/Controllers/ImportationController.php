@@ -104,16 +104,16 @@ class ImportationController extends Controller
                 $scheduleTBol = false;
                 $containersBol = false;
 
-                $originEX = explode('_', $failrate->origin_port);
-                $destinyEX = explode('_', $failrate->destiny_port);
-                $carrierArr = explode('_', $failrate->carrier_id);
-                $twentyArr = explode('_', $failrate->twuenty);
-                $fortyArr = explode('_', $failrate->forty);
-                $fortyhcArr = explode('_', $failrate->fortyhc);
-                $fortynorArr = explode('_', $failrate->fortynor);
-                $fortyfiveArr = explode('_', $failrate->fortyfive);
-                $currencyArr = explode('_', $failrate->currency_id);
-                $scheduleTArr = explode('_', $failrate->schedule_type);
+                $originEX = explode('_', trim($failrate->origin_port));
+                $destinyEX = explode('_', trim($failrate->destiny_port));
+                $carrierArr = explode('_', trim($failrate->carrier_id));
+                $twentyArr = explode('_', trim($failrate->twuenty));
+                $fortyArr = explode('_', trim($failrate->forty));
+                $fortyhcArr = explode('_', trim($failrate->fortyhc));
+                $fortynorArr = explode('_', trim($failrate->fortynor));
+                $fortyfiveArr = explode('_', trim($failrate->fortyfive));
+                $currencyArr = explode('_', trim($failrate->currency_id));
+                $scheduleTArr = explode('_', trim($failrate->schedule_type));
                 $containers = json_decode($failrate->containers, true);
                 if (!empty($containers)) {
                     foreach ($containers as $containerEq) {
@@ -311,14 +311,14 @@ class ImportationController extends Controller
                 $surcharB = false;
                 $currencyB = false;
 
-                $surchargerEX = explode('_', $FailSurchager['surcharge_id']);
-                $originEX = explode('_', $FailSurchager['port_orig']);
-                $destinyEX = explode('_', $FailSurchager['port_dest']);
-                $typedestinyEX = explode('_', $FailSurchager['typedestiny_id']);
-                $calculationtypeEX = explode('_', $FailSurchager['calculationtype_id']);
-                $ammountEX = explode('_', $FailSurchager['ammount']);
-                $currencyEX = explode('_', $FailSurchager['currency_id']);
-                $carrierEX = explode('_', $FailSurchager['carrier_id']);
+                $surchargerEX = explode('_', trim($FailSurchager['surcharge_id']));
+                $originEX = explode('_', trim($FailSurchager['port_orig']));
+                $destinyEX = explode('_', trim($FailSurchager['port_dest']));
+                $typedestinyEX = explode('_', trim($FailSurchager['typedestiny_id']));
+                $calculationtypeEX = explode('_', trim($FailSurchager['calculationtype_id']));
+                $ammountEX = explode('_', trim($FailSurchager['ammount']));
+                $currencyEX = explode('_', trim($FailSurchager['currency_id']));
+                $carrierEX = explode('_', trim($FailSurchager['carrier_id']));
 
                 if (count($surchargerEX) <= 1 && count($typedestinyEX) <= 1
                     && count($typedestinyEX) <= 1 && count($calculationtypeEX) <= 1
@@ -669,6 +669,9 @@ class ImportationController extends Controller
                 $contract->is_api = $contract_is_api;
                 $contract->user_id = $contract_owner;
                 $contract->save();
+
+                //Adding custom code to contract
+                $contract->createCustomCode();
 
                 foreach ($request->carrierM as $carrierVal) {
                     ContractCarrier::create([

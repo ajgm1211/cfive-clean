@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\ContractLcl;
 use App\Http\Resources\OceanFreightLclResource;
 use App\RateLcl;
+use App\CalculationTypeLcl;
+use App\Surcharge;
 use Illuminate\Http\Request;
 
 class OceanFreightLclController extends Controller
@@ -47,6 +49,8 @@ class OceanFreightLclController extends Controller
                         'uom' => $request->uom,
                         'minimum' => $request->minimum,
                         'currency_id' => $request->currency,
+                        'calculationtype_id' => CalculationTypeLcl::where('name', 'W/M')->pluck('id')[0],
+                        'surcharge_id' => Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->pluck('id')[0],
                         'contractlcl_id' => $contract->id,
                     ]);
                 }

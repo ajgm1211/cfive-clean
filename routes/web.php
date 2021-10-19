@@ -485,8 +485,15 @@ Route::middleware(['auth'])->prefix('prices')->group(function () {
     Route::get('add', 'PriceController@add')->name('prices.add');
     Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
     Route::get('destroy/{price_id}', 'PriceController@destroy')->name('prices.destroy');
+
+
+    // V2 
+    Route::view('/v2', 'pricesV2.index');
+    Route::view('/rates', 'pricesV2.index');
 });
 Route::resource('prices', 'PriceController')->middleware('auth');
+
+
 
 //Contacts
 Route::middleware(['auth'])->prefix('contacts')->group(function () {
@@ -1050,6 +1057,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/api/search_lcl/list', 'SearchApiLclController@list')->name('searchlclV2.list');
     Route::post('/api/search_lcl/store', 'SearchApiLclController@store');
     Route::post('/api/search_lcl/process', 'SearchApiLclController@processSearch');
+    Route::post('/api/search_lcl/downloadContract', 'SearchApiController@downloadContractFile');
 
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');

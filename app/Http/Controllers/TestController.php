@@ -10,6 +10,7 @@ use App\Jobs\SendEmailRequestFclJob;
 use App\Jobs\TestJob;
 use App\NewContractRequest;
 use App\User;
+use App\Surcharge;
 use Goutte\Client;
 use GuzzleHttp\Cookie\FileCookieJar;
 use GuzzleHttp\Exception\RequestException;
@@ -279,15 +280,8 @@ class TestController extends Controller
 
     public function contable(Request $request)
     {
-
-        $frase = "611151464b6d5_19082_Moldtrans-S.L+._DRY+_BC-IMP_FCL";
-
-
-        $patrón = '+';
-        $sustitución = '_';
-        $newphrase = str_replace($patrón, $sustitución, $frase);
-
-        dd($newphrase,$frase);
+        $surchargeOcean = Surcharge::where('options->onlyrate','yes')->first();
+        dd($surchargeOcean);
       
 
     }

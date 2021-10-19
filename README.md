@@ -15,7 +15,5 @@ Despliegue en el servidor:
 	- rm -r /var/www/html/public/storage
 	- cd /var/www/html
   	- php artisan storage:link
-  	- sudo chmod -R 777 /var/www/html/public
-	- sudo chmod -R 777 /var/www/html/storage
 	- php artisan config:cache
 	- php artisan cache:clear

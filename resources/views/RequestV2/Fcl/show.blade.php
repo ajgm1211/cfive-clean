@@ -103,13 +103,14 @@
                                         </div>
                                     </div>
                                     <br />
-                                    <table class="table tableData "  id="requesttable" width="100%" style="width:100%">
+                                    <table class="table tableData" id="requesttable" width="100%" style="width:100%">
                                         <thead >
                                             <tr>
                                                 <th >ID</th>
                                                 <th >Company</th>
                                                 <th >Equiment</th>
                                                 <th >Reference</th>
+                                                <th >Code</th>
                                                 <th >Direction</th>
                                                 <th >Carrier</th>
                                                 <th >C. Validation</th>
@@ -126,7 +127,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="tab-pane " id="AccountCFCL" role="tabpanel">
                     <div class="m-portlet__body">
@@ -139,7 +139,6 @@
                                             <input placeholder="Account Date" class="form-control m-input accountDate" readonly="" id="m_daterangepicker_1" required="required" name="betweenAccount" type="text" value="{{$date}}">
                                         </div>
                                         <div class="col-md-2">
-
                                             <!--<button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary form-control">Search</button>-->
                                             <a href="#" id="btnFiterSubmitSearchAcc"  class="btn btn-primary form-control">Search</a>
                                         </div>
@@ -349,7 +348,7 @@
 
     $('#carrierM' ).on( 'keyup change', function () {
         carriername = $(this).val();
-        i = 5;
+        i = 6;
         if ( requesttableV.column(i).search() !== carriername ) {
             requesttableV
                 .column(i)
@@ -410,6 +409,7 @@
                 { data: 'Company', name: 'Company' },
                 { data: 'equiment', name: 'equiment' },
                 { data: 'name', name: 'name' },
+                { data: 'code', name: 'code' },
                 { data: 'direction', name: 'direction' },
                 { data: 'carrier', name: 'carrier' },
                 { data: 'validation', name: 'validation' },
@@ -436,9 +436,9 @@
 
         var state = requesttableV.state.loaded();
         if(state) {
-            var colSearch = state.columns[5].search;
+            var colSearch = state.columns[6].search;
             if (colSearch.search) {
-                $('input', requesttableV.column(5).footer()).val(colSearch.search);
+                $('input', requesttableV.column(6).footer()).val(colSearch.search);
             }
             requesttableV.draw();
         }
