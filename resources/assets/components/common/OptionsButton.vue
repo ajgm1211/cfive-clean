@@ -1,5 +1,5 @@
 <template>
-  <div style="position:relative;">
+  <div style="position:relative; width:fit-content">
     <div class="options-button" @click="showOptions = !showOptions">
       <DotsMenu />
     </div>
@@ -47,7 +47,12 @@ export default {
   },
   methods:{
     select(option){
-      console.log('option', option)
+     
+      if(this.standar === false) {
+        this.$emit('option', 'deleteSelected')
+      }else{
+         this.$emit('option', option)
+      }
       this.showOptions = false;
     }
   }
@@ -71,7 +76,7 @@ export default {
   background: #fff;
   z-index: 4999999;
   right: 0;
-  top: calc(100% + 23px);
+  top: calc(100% + 10px);
   min-width: 100px;
   border-radius: 4px;
   padding: 8px 0;

@@ -22,15 +22,21 @@
       }"
       @click="open = !open"
     >
-      <span v-if="!selected">Select an option</span>
+      <span v-if="!selected && !value">Select an option</span>
+      <span v-if="!selected && value" :style="{ color: font_color }">
+        {{ value }}
+      </span>
       <span v-else-if="mixed === true" style="color: #fff;">
         {{ selected === "Fixed Markup" ? "$" : "%" }}
       </span>
-      <span v-else :style="{ color: font_color }">{{ selected }} </span>
+      <span v-else :style="{ color: font_color }"
+        >{{ selected.name ? selected.name : selected }}
+      </span>
       <ChevronDown v-if="icon == true" />
     </div>
+
     <div v-if="error === true && !selected" class="error-msj-container">
-      <span class="error-msj">You must select one option</span>
+      <span class="error-msj">You must select at least one option</span>
     </div>
 
     <div
@@ -39,7 +45,7 @@
       :class="mixed == true ? 'mixedOptions' : ''"
     >
       <p v-for="option in options" :key="option" @click="select(option)">
-        {{ option }}
+        {{ option.name ? option.name : option }}
       </p>
     </div>
   </div>
@@ -78,8 +84,13 @@ export default {
     border_color: {
       type: String,
     },
-    selected: {
+    defaultFirstOption: {
       default: null,
+      type: Boolean,
+    },
+    default: {
+      default: null,
+      type: String,
     },
     error: {
       type: Boolean,
@@ -101,6 +112,7 @@ export default {
   components: { ChevronDown },
   data: () => ({
     open: false,
+    selected: null,
   }),
   created() {
     window.addEventListener("click", (e) => {
@@ -108,6 +120,13 @@ export default {
         this.open = false;
       }
     });
+  },
+  mounted() {
+    this.$emit("input", this.selected);
+
+    if (this.defaultFirstOption === true) {
+      this.selected = this.options.length > 0 ? this.options[0] : null;
+    }
   },
   methods: {
     handleChange(_value) {

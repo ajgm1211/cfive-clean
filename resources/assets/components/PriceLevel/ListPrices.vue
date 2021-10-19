@@ -11,48 +11,118 @@
           >
           </b-form-checkbox>
         </th>
-        <th scope="col" style="width:60px"><IconFilter /> ID</th>
-        <th scope="col" style="width:93"><IconFilter /> Price Type</th>
-        <th scope="col"><IconFilter /> Name</th>
-        <th scope="col"><IconFilter /> Display name</th>
-        <th scope="col" style="width: 300px;"><IconFilter /> Description</th>
-        <th scope="col"><IconFilter /> Created at</th>
-        <th scope="col"><IconFilter /> Updated at</th>
+        <th scope="col" style="width:60px">ID</th>
+        <th scope="col" style="width:93">Price Type</th>
+        <th scope="col">Name</th>
+        <th scope="col">Display name</th>
+        <th scope="col" style="width: 300px;">Description</th>
+        <th scope="col">Created at</th>
+        <th scope="col">Updated at</th>
         <th scope="col" style="width:40px">
-          <OptionsButton :standar="false" />
+          <OptionsButton @option="action($event)" :standar="false" />
         </th>
       </tr>
-      <tr v-if="dynamic">
+      <tr v-else-if="dynamic">
         <th>
           <b-form-checkbox
-            v-model="allSelected"
+            v-model="allRatesSelected"
             aria-describedby="rates"
             aria-controls="rates"
-            @change="toggleAll"
+            @change="toggleAll2"
           >
           </b-form-checkbox>
         </th>
 
         <th v-for="item in thead" :key="item">{{ item }}</th>
 
-        <th scope="col" style="width:40px">
-          <OptionsButton :standar="false" />
+        <th scope="col" style="width:40px; position: relative;">
+          <OptionsButton
+            @option="action($event)"
+            :standar="false"
+            style="right:-84px;"
+          />
         </th>
       </tr>
     </thead>
     <thead v-if="dynamic">
       <tr>
         <th></th>
-        <th><Selectable style="width: 100px" :selected="directions[0]" :options="directions" /></th>
-        <th><Selectable   style="width: 120px" :selected="restrictions[0]" :options="restrictions" /></th>
         <th>
-          <MixedInput :v_model="new_rate.price_20" :options="price_types" />
+          <Selectable
+            :defaultFirstOption="true"
+            style="width: 100px"
+            @selected="setDirection($event)"
+            :selected="GET_PRICE_LEVEL_DATA.directions[0]"
+            :options="GET_PRICE_LEVEL_DATA.directions"
+          />
         </th>
         <th>
-          <MixedInput :v_model="new_rate.price_40" :options="price_types" />
+          <Selectable
+            :defaultFirstOption="true"
+            style="width: 120px"
+            @selected="setApply($event)"
+            :selected="GET_PRICE_LEVEL_DATA.applies[0]"
+            :options="GET_PRICE_LEVEL_DATA.applies"
+          />
         </th>
-        <th><Selectable style="width: 100px" :selected="currencies[0]" :options="currencies" /></th>
-        <th><MainButton :save="true" text="Save" /></th>
+        <th>
+          <div class="d-flex" style="width: 100px">
+            <CustomInput
+              v-model="amount.type_20.amount"
+              :mixed="true"
+              type="number"
+              :placeholder="null"
+              :showLabel="false"
+            />
+            <Selectable
+              :defaultFirstOption="true"
+              :options="price_types"
+              background_color="#006bfa"
+              border_color="#006bfa"
+              font_color="white"
+              :icon="false"
+              :mixed="true"
+              @selected="set20Markup($event)"
+            />
+          </div>
+        </th>
+        <th>
+          <div class="d-flex" style="width: 100px">
+            <CustomInput
+              v-model="amount.type_40.amount"
+              :mixed="true"
+              type="number"
+              :placeholder="null"
+              :showLabel="false"
+            />
+            <Selectable
+              :defaultFirstOption="true"
+              :options="price_types"
+              background_color="#006bfa"
+              border_color="#006bfa"
+              font_color="white"
+              :icon="false"
+              :mixed="true"
+              @selected="set40Markup($event)"
+            />
+          </div>
+        </th>
+        <th>
+          <SorteableDropdown
+            @selected="setCurrency($event)"
+            @reset="currency = {}; empty_currency = true"
+            :itemList="GET_PRICE_LEVEL_DATA.currency"
+            :error="selectable_error"
+          />
+        </th>
+        <th style="position: relative;">
+          <MainButton
+            @click="addRate()"
+            :save="true"
+            text="Save"
+            style="right:-84px;"
+          />
+        </th>
       </tr>
     </thead>
     <tbody v-if="dynamic">
@@ -60,19 +130,33 @@
         <td scope="row">
           <b-form-checkbox-group>
             <b-form-checkbox
-              v-bind:value="item"
+              v-bind:value="item.id"
               v-bind:id="'check' + item.id"
-              v-model="selected"
+              v-model="selectedRate"
             >
             </b-form-checkbox>
           </b-form-checkbox-group>
         </td>
-        <td>{{ item.direction }}</td>
-        <td>{{ item.restriction }}</td>
-        <td>{{ item.type_20 }}</td>
-        <td>{{ item.type_40 }}</td>
-        <td>{{ item.currency }}</td>
-        <td scope="col"><OptionsButton /></td>
+        <td>{{ item.direction.name }}</td>
+        <td>{{ item.price_level_apply.name }}</td>
+        <td>
+          {{
+            item.amount.type_20.markup == "Percent Markup"
+              ? item.amount.type_20.amount + " %"
+              : item.amount.type_20.amount + " $"
+          }}
+        </td>
+        <td>
+          {{
+            item.amount.type_40.markup == "Percent Markup"
+              ? item.amount.type_40.amount + " %"
+              : item.amount.type_40.amount + " $"
+          }}
+        </td>
+        <td>{{ item.currency.alphacode }}</td>
+        <td style="position: relative;">
+          <OptionsButton @option="action($event, item)" style="right:-84px;" />
+        </td>
       </tr>
     </tbody>
     <tbody v-else>
@@ -80,7 +164,7 @@
         <td scope="row">
           <b-form-checkbox-group>
             <b-form-checkbox
-              v-bind:value="item"
+              v-bind:value="item.id"
               v-bind:id="'check' + item.id"
               v-model="selected"
             >
@@ -91,30 +175,36 @@
         <td>{{ item.type }}</td>
         <td>{{ item.name }}</td>
         <td>{{ item.display_name }}</td>
-        <td>{{ item.description }}</td>
+        <td v-html="item.description"></td>
         <td>{{ item.created_at }}</td>
         <td>{{ item.updated_at }}</td>
-        <td scope="col"><OptionsButton /></td>
+        <td scope="col"><OptionsButton @option="action($event, item.id)" /></td>
       </tr>
     </tbody>
   </b-table-simple>
 </template>
 
 <script>
-import IconFilter from "../Icons/Filter.vue";
 import OptionsButton from "../common/OptionsButton.vue";
 import Selectable from "../common/Selectable.vue";
-import MixedInput from "../common/MixedInput.vue";
 import MainButton from "../common/MainButton.vue";
+import CustomInput from "../common/CustomInput.vue";
+import { mapGetters } from "vuex";
+import SorteableDropdown from "../common/SorteableDropdown.vue";
+
 export default {
   props: {
     prices: {
       type: Array,
-      default: [],
+      default() {
+        return [];
+      },
     },
     rates: {
       type: Array,
-      default: [],
+      default() {
+        return [];
+      },
     },
     filters: {
       type: Boolean,
@@ -128,48 +218,171 @@ export default {
       type: Boolean,
       default: false,
     },
+    currentPage: {
+      default: 0,
+    },
     thead: {
       type: Array,
-      default: [],
+      default() {
+        return [];
+      },
     },
   },
-  components: { IconFilter, OptionsButton, Selectable, MixedInput, MainButton },
+  components: {
+    OptionsButton,
+    Selectable,
+    MainButton,
+    SorteableDropdown,
+    CustomInput,
+  },
   data: () => ({
+    select: "",
+    selectable_error: false,
+    SorteableDropdownion: [],
     selected: [],
+    direction: {},
+    currency: {},
+    price_level_apply: {},
+    selectedRate: [],
     allSelected: false,
+    allRatesSelected: false,
     indeterminate: false,
     price_types: ["Percent Markup", "Fixed Markup"],
-    directions: ["Export", "Import", "Both"],
-    restrictions: ["Freight", "Surcharge", "Inland"],
-    currencies: ["USD", "AUSD", "BS"],
-    new_rate: {
-      price_20: "0",
-      price_40: "0",
+    directions: [],
+    restrictions: [],
+    empty_currency: true,
+    currencies: [],
+    amount: {
+      type_20: {
+        amount: "0",
+        markup: "Percent Markup",
+      },
+      type_40: {
+        amount: "0",
+        markup: "Percent Markup",
+      },
     },
   }),
+  mounted() {
+    setTimeout(() => {
+      this.direction = this.GET_PRICE_LEVEL_DATA.directions[0];
+      this.price_level_apply = this.GET_PRICE_LEVEL_DATA.applies[0];
+    }, 1000);
+  },
   methods: {
+    addRate() {
+      if (this.empty_currency == true) {
+        this.selectable_error = true;
+        return;
+      };
+
+      this.$store.dispatch("createRate", {
+        id: this.$route.params.id,
+        body: {
+          amount: this.amount,
+          currency: this.currency,
+          price_level_apply: this.price_level_apply,
+          direction: this.direction,
+        },
+        page: this.currentPage,
+        currentId: this.$route.params.id,
+      });
+    },
     toggleAll(checked) {
-      this.selected = checked ? this.prices.slice() : [];
-
-      if(this.dynamic === true){
-      this.selected = checked ? this.rates.slice() : [];
-
+      this.allSelected = checked;
+      if (checked) {
+        this.prices.forEach((item) => {
+          this.selected.push(item.id);
+        });
       }
+      if (!checked) {
+        this.selected = [];
+      }
+    },
+    toggleAll2(checked) {
+      if (checked) {
+        this.rates.forEach((item) => {
+          this.selectedRate.push(item.id);
+        });
+      }
+      if (!checked) {
+        this.selectedRate = [];
+      }
+    },
+    action(option, id) {
+      if (option == "edit") {
+        this.$router.push({
+          name: "price-rates",
+          params: { id: id },
+        });
+      }
+      if (option == "duplicate") {
+        if (this.dynamic === true) {
+          this.$store.dispatch("duplicateRate", {
+            id: id.id,
+            page: this.currentPage,
+            currentId: this.$route.params.id,
+          });
+        } else {
+          this.$store.dispatch("duplicatePriceLevel", {
+            id: id,
+            page: this.currentPage,
+            currentId: this.$route.params.id,
+          });
+        }
+      }
+      if (option == "delete") {
+        if (this.dynamic === true) {
+          this.$store.dispatch("deleteRate", {
+            id: id.id,
+            page: this.currentPage,
+            currentId: this.$route.params.id,
+          });
+        } else {
+          this.$store.dispatch("deletePriceLevel", {
+            id: id,
+            page: this.currentPage,
+          });
+        }
+      }
+      if (option == "deleteSelected") {
+        if (this.dynamic === true) {
+          this.$store.dispatch("deleteMultiple", {
+            body: {
+              ids: this.selectedRate,
+            },
+            id: this.$route.params.id,
+            page: this.currentPage,
+          });
+        } else {
+          this.$store.dispatch("deleteSelectedPriceLevel", {
+            body: {
+              ids: this.selected,
+            },
+            page: this.currentPage,
+          });
+        }
+      }
+    },
+    setDirection(option) {
+      this.direction = option;
+    },
+    setApply(option) {
+      this.price_level_apply = option;
+    },
+    setCurrency(option) {
+      this.currency = option;
+      this.empty_currency = false
+    },
+    set20Markup(option) {
+      this.amount.type_20.markup = option;
+    },
+    set40Markup(option) {
+      this.amount.type_40.markup = option;
     },
   },
-  watch: {
-    selected(newValue, oldValue) {
-      if (newValue.length === 0) {
-        this.indeterminate = false;
-        this.allSelected = false;
-      } else if (newValue.length === this.prices.length) {
-        this.indeterminate = false;
-        this.allSelected = true;
-      } else {
-        this.indeterminate = true;
-        this.allSelected = false;
-      }
-    },
+  computed: {
+    ...mapGetters(["GET_PRICE_LEVEL_DATA", "GET_PRICE_LEVEL_RATES"]),
   },
 };
 </script>
