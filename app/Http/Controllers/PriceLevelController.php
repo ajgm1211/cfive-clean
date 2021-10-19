@@ -88,11 +88,9 @@ class PriceLevelController  extends Controller
     }
 
     
-    public function get(Request $request, $id)
+    public function retrieve(Request $request, PriceLevel $price_level)
     {
-        $currentPL = PriceLevel::find($id);
-
-        return $currentPL;
+        return new PriceLevelResource($price_level);
     }
 
     /**

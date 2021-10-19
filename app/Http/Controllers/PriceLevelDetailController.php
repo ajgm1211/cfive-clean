@@ -7,7 +7,6 @@ use App\PriceLevel;
 use Illuminate\Http\Request;
 use App\Http\Resources\PriceLevelDetailResource;
 
-
 class PriceLevelDetailController extends Controller
 {
     /**
