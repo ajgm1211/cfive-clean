@@ -213,7 +213,8 @@ class ContractController extends Controller
             'remarks' => '',
             'is_manual' => 1
         ]);
-
+        
+        $contract->createCustomCode();
         $contract->ContractCarrierSync($data['carriers']);
 
         return new ContractResource($contract);
@@ -340,6 +341,7 @@ class ContractController extends Controller
         }
         // $contract->delete();
         $contract->status_erased = $status_erased;
+        $contract->contract_code = null;
         $contract->update();
 
         return response()->json(null, 204);
@@ -377,7 +379,7 @@ class ContractController extends Controller
     public function destroyAll(Request $request)
     {
         $status_erased = 1;
-        DB::table('contracts')->whereIn('id', $request->input('ids'))->update(['status_erased' =>  $status_erased]);
+        DB::table('contracts')->whereIn('id', $request->input('ids'))->update(['status_erased' =>  $status_erased, 'contract_code' => null]);
 
         return response()->json(null, 204);
     }
@@ -545,24 +547,37 @@ class ContractController extends Controller
      */
     public function uploadContract($request, $carriers, $api, $direction, $type)
     {
-        //Saving contract
-        $contract = $this->storeContractApi($request, $direction, $type);
+        try{
 
-        //Saving contracts and carriers in ContractCarriers
-        $contract->ContractCarrierSync($carriers, $api);
+            //Saving contract
+            $contract = $this->storeContractApi($request, $direction, $type);
 
-        $filename = date("dmY_His") . '_' . $request->file->getClientOriginalName();
+            //Saving contracts and carriers in ContractCarriers
+            $contract->ContractCarrierSync($carriers, $api);
 
-        //Uploading file to storage
-        $contract->StoreInMedia($request->file, $filename);
+            //Creating custom code
+            $contract->createCustomCode();
 
-        //Saving request FCL
-        $Ncontract = $this->storeContractRequest($contract, $filename, $type);
+            $filename = date("dmY_His") . '_' . $request->file->getClientOriginalName();
 
-        //Saving request and carriers in RequestCarriers
-        $Ncontract->ContractRequestCarrierSync($carriers, $api);
+            //Uploading file to storage
+            $filename = quitar_caracteres($filename);
+            $contract->StoreInMedia($request->file, $filename);
 
-        return $Ncontract;
+            //Saving request FCL
+            $Ncontract = $this->storeContractRequest($contract, $filename, $type);
+
+            //Saving request and carriers in RequestCarriers
+            $Ncontract->ContractRequestCarrierSync($carriers, $api);
+
+            return $Ncontract;
+
+        } catch (Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json([
+                'message' => 'Something went wrong on our side',
+            ], 500);
+        }
     }
 
     /**
@@ -639,7 +654,7 @@ class ContractController extends Controller
                     'user_id' => Auth::user()->id,
                     'created' => date("Y-m-d H:i:s"),
                     'username_load' => 'Not assigned',
-                    'data' => '{"containers": [{"id": 1, "code": "20DV", "name": "20 DV"}, {"id": 2, "code": "40DV", "name": "40 DV"}, {"id": 3, "code": "40HC", "name": "40 HC"}, {"id": 4, "code": "45HC", "name": "45 HC"}, {"id": 5, "code": "40NOR", "name": "40 NOR"}], "group_containers": {"id": 1, "name": "DRY"}, "contract":{"code":' . $contract->code . ',"is_api":' . $contract->is_api . '}}',
+                    'data' => '{"containers": [{"id": 1, "code": "20DV", "name": "20 DV"}, {"id": 2, "code": "40DV", "name": "40 DV"}, {"id": 3, "code": "40HC", "name": "40 HC"}], "group_containers": {"id": 1, "name": "DRY"}, "contract":{"code":"' . $contract->code . '","is_api":' . $contract->is_api . '}}',
                     'contract_id' => $contract->id,
                 ]);
                 break;
@@ -721,6 +736,9 @@ class ContractController extends Controller
         $contract->save();
 
         $contract->ContractCarrierSyncSingle($request->carrierR);
+
+        //Creating custom code
+        $contract->createCustomCode();
 
         $rates = new Rate();
         $rates->origin_port = $request->origin_port;

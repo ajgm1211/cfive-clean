@@ -86,6 +86,7 @@ class SurchargesController extends Controller
         $surcharge->description = $request->description;
         $surcharge->sale_term_id = $request->sale_term_id;
         $surcharge->variation = strtolower(json_encode(['type' => $request->variation]));
+        $surcharge->options = json_encode(['is_api' => false]);
         if (!Auth::user()->hasRole(['administrator', 'data_entry'])) {
             $surcharge->company_user_id = Auth::user()->company_user_id;
         }

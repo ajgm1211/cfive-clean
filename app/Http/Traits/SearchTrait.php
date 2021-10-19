@@ -17,11 +17,17 @@ use App\RemarkCondition;
 use App\GroupContainer;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
+use App\Contract;
+use App\ContractLcl;
 use App\ContractFclFile;
 use App\ContractLclFile;
 use App\TermAndConditionV2;
 use GoogleMaps;
+use App\Surcharge;
 use Illuminate\Support\Collection as Collection;
+use Illuminate\Support\Facades\Storage;
+use Spatie\MediaLibrary\MediaStream;
+use Spatie\MediaLibrary\Models\Media;
 
 trait SearchTrait
 {
@@ -956,49 +962,41 @@ trait SearchTrait
         foreach($charges_direction as $direction){
             foreach($direction as $charge){
                 $calculation_options = json_decode($charge->calculationtypelcl->options, true);
-                $cargo_type = $this->setLclCargoType($search_data);
 
                 if($calculation_options['type'] == 'unique'){
-                    $amount = $charge->ammount;
-                    $charge->units = 1;
+                    $units = 1;
                 }else if($calculation_options['type'] == 'chargeable' || $calculation_options['type'] == 'rate_only'){
-                    $amount = $charge->ammount * $search_data['chargeableWeight'];
-                    $charge->units = $search_data['chargeableWeight'];
+                    if($calculation_options['rounded']){
+                        $units = ceil($search_data['chargeableWeight']);
+                    }else{
+                        $units = $search_data['chargeableWeight'];
+                    }
                 }else if($calculation_options['type'] == 'ton'){
-                    $amount = $charge->ammount * ( $search_data['weight'] / 1000 );
-                    $charge->units = $search_data['weight'] / 1000;
-                    if($calculation_options['adaptable']){
-                        $m3_amount = $charge->ammount * $search_data['volume'];
-                        $m3_amount_client_currency = $this->convertToCurrency($charge->currency, $search_data['client_currency'], array($m3_amount));
-
-                        $charge->setAttribute('adaptable_total', $m3_amount);
-                        $charge->setAttribute('adaptable_total_client_currency',$m3_amount_client_currency[0]);
+                    if($calculation_options['rounded']){
+                        $units = ceil($search_data['weight'] / 1000);
+                    }else{
+                        $units = $search_data['weight'] / 1000;
                     }
                 }else if($calculation_options['type'] == 'm3'){
-                    $amount = $charge->ammount * $search_data['volume'];
-                    $charge->units = $search_data['volume'];                    
-                    if($calculation_options['adaptable']){
-                        $ton_amount = $charge->ammount * ( $search_data['weight'] / 1000 );
-                        $ton_amount_client_currency = $this->convertToCurrency($charge->currency, $search_data['client_currency'], array($ton_amount));
-
-                        $charge->setAttribute('adaptable_total', $ton_amount);
-                        $charge->setAttribute('adaptable_total_client_currency',$ton_amount_client_currency[0]);
-                    }
+                    if($calculation_options['rounded']){
+                        $units = ceil($search_data['volume']);
+                    }else{
+                        $units = $search_data['volume'];
+                    }                   
                 }else if($calculation_options['type'] == 'kg'){
-                    $amount = $charge->ammount * $search_data['weight']; 
-                    $charge->units = $search_data['weight'];
-                }else if($calculation_options['type'] == 'package'){
-                    $amount = $charge->ammount * $cargo_type['Package'];
-                    $charge->units = $cargo_type['Package'];
-                }else if($calculation_options['type'] == 'pallet'){
-                    $amount = $charge->ammount * $cargo_type['Pallets'];
-                    $charge->units = $cargo_type['Pallets'];
+                    $units = $search_data['weight'];
+                }else if($calculation_options['type'] == 'package' || $calculation_options['type'] == 'pallet'){
+                    $units = $search_data['quantity'];
                 }
+
+                $amount = $charge->ammount * $units;
+                $charge->units = $units;
 
                 $minimum = $charge->minimum;
 
                 if($amount < $minimum){
                     $amount = $minimum;
+                    $charge->ammount = $amount / $units;
                 }
 
                 $total_client_currency = $this->convertToCurrency($charge->currency, $search_data['client_currency'], array($amount));
@@ -1008,34 +1006,6 @@ trait SearchTrait
                 $charge->setAttribute('client_currency',$search_data['client_currency']);
             }
         }
-    }
-
-    //Counts Pallets and Packages for LCL search
-    public function setLclCargoType($search_data)
-    {
-        $cargo = [];
-
-        if($search_data['lclTypeIndex'] == 0){
-            if($search_data['cargoType'] == 1 ){ //Pallets
-                $cargo['Pallets'] = $search_data['quantity'];
-                $cargo['Packages'] = 0;
-            }else if($search_data['cargoType'] == 2 ){ //Packages
-                $cargo['Pallets'] = 0;
-                $cargo['Packages'] = $search_data['quantity'];
-            }
-        }else if($search_data['lclTypeIndex'] == 1){
-            $cargo['Pallets'] = 0;
-            $cargo['Packages'] = 0;
-            foreach($search_data['packaging'] as $pack){
-                if($pack['cargoType']['id'] == 1){
-                    $cargo['Pallets'] += $pack['quantity'];
-                }else if($pack['cargoType']['id'] == 2){
-                    $cargo['Packages'] += $pack['quantity'];
-                }
-            }
-        }
-
-        return $cargo;
     }
 
     //Get charges per container from calculation type - inputs a charge collection, outputs ordered collection
@@ -1235,8 +1205,7 @@ trait SearchTrait
         $comparing_calculation_options = json_decode($comparing_charge->calculationtypelcl->options, true);
 
         //CASE 1: Type of calculation is the same, or same type but not unique nor chargeable - EXAMPLE: ton and ton, m3 and m3 ,etc
-        if( ( $charge->calculationtypelcl_id == $comparing_charge->calculationtypelcl_id ) || 
-            ( $calculation_options['type'] != 'unique' && $calculation_options['type'] != 'chargeable' && $calculation_options['type'] == $comparing_calculation_options['type'] ) ){
+        if( $charge->calculationtypelcl_id == $comparing_charge->calculationtypelcl_id ){
             //If currencies don't match, join must be done in client currency
             if($charge->currency->id != $comparing_charge->currency->id){
                 //Marking charge as joint under client currency
@@ -1246,12 +1215,6 @@ trait SearchTrait
                 $joint_amount = $charge->total_client_currency + $comparing_charge->total_client_currency;
                 $charge->total_client_currency = $joint_amount;
 
-                //adding adaptable amounts
-                if( $calculation_options['adaptable'] && $comparing_calculation_options['adaptable'] ){
-                    $joint_adaptable_amount_client_currency = $charge->adaptable_total_client_currency + $comparing_charge->adaptable_total_client_currency;
-    
-                    $charge->adaptable_total_client_currency = $joint_adaptable_amount_client_currency;
-                }
             //If currencies match, add is direct
             }elseif($charge->currency->id == $comparing_charge->currency->id){
                 //Marking as joint under charge currency
@@ -1261,19 +1224,13 @@ trait SearchTrait
                 $joint_amount = $charge->total + $comparing_charge->total;
                 $charge->total = $joint_amount;
                 $charge->total_client_currency = $this->convertToCurrency($charge->currency, $client_currency, array($joint_amount))[0];
-
-                //Adding adaptable amounts
-                if( $calculation_options['adaptable'] && $comparing_calculation_options['adaptable'] ){
-                    $joint_adaptable_amount = $charge->adaptable_total + $comparing_charge->adaptable_total;
-    
-                    $charge->adaptable_total = $joint_adaptable_amount;
-                    $charge->adaptable_total_client_currency = $this->convertToCurrency($charge->currency, $client_currency, array($joint_adaptable_amount))[0];
-                }
             }
+
+            $charge->ammount = $charge->total / $charge->units;
 
             return true;
         //CASE 2: Both charges adaptable, different types - ton and m3 (Adapt)
-        }elseif( $calculation_options['adaptable'] && $comparing_calculation_options['adaptable'] && $calculation_options['type'] != $comparing_calculation_options['type'] ){
+        }/**elseif( $calculation_options['adaptable'] && $comparing_calculation_options['adaptable'] && $calculation_options['type'] != $comparing_calculation_options['type'] ){
             //If currencies don't match, join must be done in client currency
             if($charge->currency->id != $comparing_charge->currency->id){
                 //Marking charge as joint under client currency
@@ -1333,46 +1290,51 @@ trait SearchTrait
             }
 
             return false;
-        }
+        }**/
 
         return false;
     }
 
     public function checkLclAdaptable($charges)
     {
+        $final_charges = [];
+
         foreach($charges as $direction=>$charges_direction){
-            foreach($charges_direction as $charge){
+            $has_ton_adaptable = false;
+            $has_m3_adaptable = false;
+
+            foreach($charges_direction as $key=>$charge){
                 $calculation_options = json_decode($charge->calculationtypelcl->options, true);
 
                 if($calculation_options['adaptable']){
-                    if($charge->adaptable_total > $charge->total){
-                        $charge->total = $charge->adaptable_total;
+                    if($calculation_options['type'] == 'ton'){
+                        $has_ton_adaptable = true;
+                        $ton_adaptable_charge = $charge;
+                        unset($charges_direction[$key]);
+                    }elseif($calculation_options['type'] == 'm3'){
+                        $has_m3_adaptable = true;
+                        $m3_adaptable_charge = $charge;
+                        unset($charges_direction[$key]);
                     }
-
-                    if($charge->adaptable_total_client_currency > $charge->total_client_currency){
-                        $charge->total_client_currency = $charge->adaptable_total_client_currency;
-                    }
-                }
-
-                if($direction != "Freight"){
-                    $charge->ammount = $charge->total / $charge->units; 
                 }
             }
-        }
-    }
 
-    public function checkLclRoundable($charges)
-    {
-        foreach($charges as $direction=>$charges_direction){
-            foreach($charges_direction as $charge){
-                $calculation_options = json_decode($charge->calculationtypelcl->options, true);
-
-                if($calculation_options['rounded']){
-                    $charge->total = floor($charge->total);
-                    $charge->total_client_currency = floor($charge->total_client_currency);
+            if($has_ton_adaptable && $has_m3_adaptable){
+                if($m3_adaptable_charge->total_client_currency > $ton_adaptable_charge->total_client_currency){
+                    array_push($charges_direction, $m3_adaptable_charge);
+                }else{
+                    array_push($charges_direction, $ton_adaptable_charge);
                 }
+            }elseif($has_m3_adaptable && !$has_ton_adaptable){
+                array_push($charges_direction, $m3_adaptable_charge);
+            }elseif(!$has_m3_adaptable && $has_ton_adaptable){
+                array_push($charges_direction, $ton_adaptable_charge);
             }
+            
+            $final_charges[$direction] = $charges_direction;
         }
+
+        return $final_charges;
     }
 
     //appending charges to corresponding Rate
@@ -1416,10 +1378,10 @@ trait SearchTrait
                 }elseif($search_data['type'] == 'LCL'){
                     $ocean_freight_array = [
                         'surcharge' => $rate->surcharge,
-                        'total' => $rate->total,
+                        'total' => $rate->total > $rate->minimum ? $rate->total : $rate->minimum,
                         'minimum' => $rate->minimum,
-                        'units' => $rate->calculation_type->name == "Per Shipment" ? 1 : $search_data['chargeableWeight'],
-                        'ammount' => $rate->uom,
+                        'units' => $rate->total < $rate->minimum ? 1 : $search_data['chargeableWeight'],
+                        'ammount' => $rate->total > $rate->minimum ? $rate->uom : $rate->minimum,
                         'calculationtypelcl' => $rate->calculation_type, 
                         'typedestiny_id' => 3,
                         'currency' => $rate->currency,
@@ -1497,6 +1459,14 @@ trait SearchTrait
         $transit_time = TransitTime::where([['origin_id',$origin_port],['destination_id',$destination_port]])->whereIn('carrier_id',[$carrier,26])->first();
 
         return $transit_time;
+    }
+
+        //get surcharge to apply a rate
+    public function getSurchargeOcean()
+    {
+
+        $surchargeOcean = Surcharge::where('options->onlyrate','yes')->first();
+        return $surchargeOcean;
     }
 
     //Converting amounts to string so they display decimal places correctly
@@ -1690,7 +1660,7 @@ trait SearchTrait
         }
     }
 
-    public function setDownloadParameters($rate, $search_data)
+    /**public function setDownloadParameters($rate, $search_data)
     {
         if ($rate->contract->status != 'api') {
 
@@ -1731,6 +1701,106 @@ trait SearchTrait
         $rate->setAttribute('contractRequestId', $contractRequestId);
         $rate->setAttribute('contractId', $contractId);
     }
+
+    public function downloadContractFromSearch($rate)
+    {
+        if(isset($rate['contract_id'])){
+            $contractId = $rate['contract_id'];
+            $type = 'FCL';
+        }elseif(isset($rate['contractlcl_id'])){
+            $contractId = $rate['contractlcl_id'];
+            $type = 'LCL';
+        }
+        $contractRequestId = $rate['contract_request_id'];
+        $contractBackupId = $rate['contract_backup_id'];
+
+        if ($contractId == 0) {
+            if($type == 'FCL'){
+                $contractFile = NewContractRequest::find($contractRequestId);
+            }elseif($type == 'LCL'){
+                $contractFile = NewContractRequestLcl::find($contractRequestId);
+            }
+            $mode_search = false;
+            if (!empty($contractFile)) {
+                $success = false;
+                $download = null;
+                if (!empty($contractFile->namefile)) {
+                    $time = new \DateTime();
+                    $now = $time->format('d-m-y');
+                    $company = CompanyUser::find($contractFile->company_user_id);
+                    $extObj = new \SplFileInfo($contractFile->namefile);
+                    $ext = $extObj->getExtension();
+                    $name = $contractFile->id . '-' . $company->name . '_' . $now . '-' . $type . '.' . $ext;
+                } else {
+                    $mode_search = true;
+                    $contractFile->load('companyuser');
+                    $data = json_decode($contractFile->data, true);
+                    $time = new \DateTime();
+                    $now = $time->format('d-m-y');
+                    $mediaItem = $contractFile->getFirstMedia('document');
+                    $extObj = new \SplFileInfo($mediaItem->file_name);
+                    $ext = $extObj->getExtension();
+                    $name = $contractFile->id . '-' . $contractFile->companyuser->name . '_' . $data['group_containers']['name'] . '_' . $now . '-' . $type . '.' . $ext;
+                    $download = Storage::disk('s3_upload')->url('Request/' . $type . '/' . $mediaItem->id . '/' . $mediaItem->file_name, $name);
+                    $success = true;
+                }
+            } else {
+                if($type == 'FCL'){
+                    $contractFile = ContractFclFile::find($contractBackupId);
+                    $request_location = 'FclRequest';
+                }elseif($type == 'LCL'){
+                    $contractFile = ContractLclFile::find($contractBackupId);
+                    $request_location = 'LclRequest';
+                }
+                $time = new \DateTime();
+                $now = $time->format('d-m-y');
+                $extObj = new \SplFileInfo($contractFile->namefile);
+                $ext = $extObj->getExtension();
+                $name = $contractFile->id . '-' . $now . '-' . $type . '.' . $ext;
+            }
+
+            if ($mode_search == false) {
+                if (Storage::disk('s3_upload')->exists('Request/' . $type . '/' . $contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk('s3_upload')->url('Request/' . $type . '/' . $contractFile->namefile, $name);
+                } elseif (Storage::disk('s3_upload')->exists('contracts/' . $contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk('s3_upload')->url('contracts/' . $contractFile->namefile, $name);
+                } elseif (Storage::disk($request_location)->exists($contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk($request_location)->url($contractFile->namefile, $name);
+                } elseif (Storage::disk('UpLoadFile')->exists($contractFile->namefile, $name)) {
+                    $success = true;
+                    $download = Storage::disk('UpLoadFile')->url($contractFile->namefile, $name);
+                }
+            }
+            return response()->json(['success' => $success, 'url' => $download,'zip'=>false ]);
+        } else {
+            if($type == 'FCL'){
+                $contract = Contract::find($contractId);
+                $request_location = 'FclRequest';
+            }elseif($type == 'LCL'){
+                $contract = ContractLcl::find($contractId);
+                $request_location = 'LclRequest';
+            }
+            $downloads = $contract->getMedia('document');
+            $total = count($downloads);
+            if ($total > 1) {                                         
+                
+                return response()->json(['success' => true, 'url' => $contract->id,'zip'=>true ]);
+            } else {
+                $media = $downloads->first();
+                $mediaItem = Media::find($media->id);
+                //return $mediaItem;
+                if($mediaItem->disk == $request_location){
+                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/Request/" . $type . '/' .$mediaItem->file_name,'zip'=>false ]);
+                }
+                if($mediaItem->disk == 'contracts3'){
+                    return response()->json(['success' => true, 'url' => "https://cargofive-production-21.s3.eu-central-1.amazonaws.com/contract_manual/".$mediaItem->id."/".$mediaItem->file_name,'zip'=>false ]);
+                }
+            }
+        }
+    }**/
 
     //Ordering rates by totals (cheaper to most expensive)
     public function sortRates($rates, $search_data_ids)
