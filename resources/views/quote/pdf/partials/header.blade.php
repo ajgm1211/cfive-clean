@@ -66,11 +66,7 @@
     @if(@$user->companyUser->pdf_template_id!=2)
         <div id="logo">
 
-<<<<<<< HEAD
         @if(@$user->companyUser->logo!='')
-=======
-            @if(@$user->companyUser->logo!='')
->>>>>>> master
 
             <img src="{{Storage::disk('s3')->url(@$user->companyUser->logo)}}" class="img img-fluid"
                 style="width: 150px; height: auto; margin-bottom:0">
@@ -80,8 +76,6 @@
         </div>
     @endif
     <!-- End Logo -->
-
-
 
 </header>
 
