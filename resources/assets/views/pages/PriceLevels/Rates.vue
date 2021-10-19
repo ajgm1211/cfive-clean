@@ -62,7 +62,7 @@
           v-if="active == 'Only Apply To'"
           style="border: none!important;"
           :datalists="datalists"
-          :actions="actions.restrictions_lcl"
+          :actions="actions"
           :data="currentData"
         />
 
@@ -125,7 +125,7 @@ export default {
     actions: actions,
     datalists: null,
     currentData: {
-      daterange: { startDate: null, endDate: null },
+      
     },
     active: "Detail",
     tabs: ["Detail", "Only Apply To", "Description"],
@@ -172,7 +172,7 @@ export default {
   },
   methods: {
     getData() {
-      let url = "/api/v2/contractslcl/data";
+      let url = "/api/pricelevels/data";
       api.getData({}, url, (err, data) => {
         this.setDropdownLists(err, data.data);
       });

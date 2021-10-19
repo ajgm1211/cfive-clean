@@ -115,8 +115,7 @@ Route::group(['prefix'=>'pricelevels','middleware' => 'auth:api'], function () {
     Route::post('{price_level}/duplicate', 'PriceLevelController@duplicate');
     Route::put('{price_level}/delete', 'PriceLevelController@destroy');
     Route::put('deleteAll', 'PriceLevelController@destroyAll');
-
-    Route::get('get/{id}', 'PriceLevelController@get');
+    Route::get('retrieve/{price_level}', 'PriceLevelController@retrieve');
 });
 
 Route::group(['prefix'=>'pricelevels/details','middleware' => 'auth:api'], function () {

@@ -5,7 +5,8 @@
                 :data="currentData" 
                 :fields="form_fields"
                 :datalists="datalists"
-                :actions="actions"
+                :actions="this.actions.pricelevel_restrictions"
+                :update="true"
                 >
             </FormInlineView>
             <!-- End Form Contract Inline -->
@@ -35,7 +36,7 @@
                 /* Form Fields */
                 form_fields: {
                     companies: { 
-                        label:'Company', 
+                        label:'Companies', 
                         searchable: true, 
                         type: 'multiselect', 
                         trackby: 'business_name', 
@@ -43,13 +44,13 @@
                         options: 'companies',
                         colClass: 'col-sm-12'
                     },
-                    users: { 
-                        label:'Users', 
+                    company_groups: { 
+                        label:'Groups', 
                         searchable: true, 
                         type: 'multiselect',
                         trackby: 'name', 
                         placeholder: 'Select options', 
-                        options: 'users',
+                        options: 'company_groups',
                         colClass: 'col-sm-12'
                     },
                 }

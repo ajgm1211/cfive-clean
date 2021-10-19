@@ -10,7 +10,7 @@ const state = {
 
 const actions = {
   getPriceLevelDetail({ commit }, { id }) {
-    axios.get(`/api/pricelevels/get/${id}`).then((response) => {
+    axios.get(`/api/pricelevels/retrieve/${id}`).then((response) => {
       commit("SET_CURRENT_PRICE_LEVEL", response.data);
     });
   },
