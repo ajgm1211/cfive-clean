@@ -43,7 +43,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new SyncCompaniesVforwarding)->daily()->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new SyncCompaniesVisualtrans)->daily()->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new SaveFclRatesByContractJob)->cron('0 */8 * * *')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->job(new GeneratePdfToApiJob)->cron('0 */3 * * *')->appendOutputTo(storage_path('logs/commands.log'));
+        //$schedule->job(new GeneratePdfToApiJob)->cron('0 */3 * * *')->appendOutputTo(storage_path('logs/commands.log'));
 
         $schedule->command('command:updateCurrenciesUsd')
             ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
@@ -53,6 +53,8 @@ class Kernel extends ConsoleKernel
             ->cron('*/3 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->command('command:processExpiredContracts')
             ->dailyAt('23:50')->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->command('command:generateQuotePdf')
+            ->twiceDaily(5, 13)->appendOutputTo(storage_path('logs/commands.log'));
         //$schedule->exec('php /var/www/html/artisan queue:work --timeout=3600 --tries=7 &')
         //    ->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
         //$schedule->exec('php /var/www/html/artisan queue:work --queue=importation --timeout=3600 --tries=7 &')
