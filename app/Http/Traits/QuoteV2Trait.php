@@ -1917,7 +1917,7 @@ trait QuoteV2Trait
                         $newSurcharge = Surcharge::create([
                             'name' => $charge['chargeCode'],
                             'description' => 'from API',
-                            'options' => json_encode(['is_api' => true]),
+                            'internal_options' => json_encode(['is_api' => true]),
                         ]);
 
                         $charge['surcharge_id'] = $newSurcharge->id;
