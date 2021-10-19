@@ -197,6 +197,9 @@ class ContractsLclController extends Controller
         $contract->user_id= Auth::user()->id;
         $contract->save();
 
+        //Creating custom code
+        $contract->createCustomCode();
+
         foreach ($request->carrierAr as $carrierFA) {
             ContractCarrierLcl::create([
                 'carrier_id' => $carrierFA,
@@ -235,6 +238,8 @@ class ContractsLclController extends Controller
                     $rates->schedule_type_id = $sch;
                     $rates->transit_time = $request->input('transitTi.' . $key);
                     $rates->via = $request->input('via.' . $key);
+                    $rates->calculationtype_id = CalculationTypeLcl::where('name', 'W/M')->pluck('id')[0];
+                    $rates->surcharge_id = Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->pluck('id')[0];
                     $rates->contract()->associate($contract);
                     $rates->save();
                 }
@@ -524,6 +529,8 @@ class ContractsLclController extends Controller
                 $rates->transit_time = $request->input('transit_time');
                 $rates->via = $request->input('via');
                 $rates->contractlcl_id = $id;
+                $rates->calculationtype_id = CalculationTypeLcl::where('name', 'W/M')->pluck('id')[0];
+                $rates->surcharge_id = Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->pluck('id')[0];
                 $rates->save();
             }
         }

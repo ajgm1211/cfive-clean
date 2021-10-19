@@ -556,7 +556,9 @@ export default {
                     this.$emit("success",true);
                     this.downloading = false;
                 })
-                .catch(() => console.log("error"));
+                .catch(function (error) {
+                    console.log(error.toJSON());
+                });
         },
 
         forceFileDownload(response, data) {

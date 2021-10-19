@@ -28,6 +28,8 @@ use App\LocalCharPortLcl;
 use App\NewContractRequest;
 use App\Rate;
 use App\RateLcl;
+use App\CalculationTypeLcl;
+use App\Surcharge;
 use App\ScheduleType;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -281,6 +283,8 @@ class GeneralJob implements ShouldQueue
                 $rate_new->schedule_type_id = $rate_original->schedule_type_id;
                 $rate_new->transit_time = $rate_original->transit_time;
                 $rate_new->via = $rate_original->via;
+                $rate_new->calculationtype_id = CalculationTypeLcl::where('name', 'W/M')->pluck('id')[0];
+                $rate_new->surcharge_id = Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->pluck('id')[0];
                 $rate_new->save();
             }
 
@@ -615,6 +619,9 @@ class GeneralJob implements ShouldQueue
                                 ->where('via', $failrate['via'])
                                 ->first();
                             if (count($exists) == 0) {
+                                $surcharge_lcl = Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->first();
+                                $calculationtype_lcl = CalculationTypeLcl::where('name','W/M')->first();  
+
                                 $collecciont = RateLcl::create([
                                     'origin_port'       => $originV,
                                     'destiny_port'      => $destinationV,
@@ -626,6 +633,8 @@ class GeneralJob implements ShouldQueue
                                     'schedule_type_id'  => $scheduleTVal,
                                     'transit_time'      => (int) $failrate['transit_time'],
                                     'via'               => $failrate['via'],
+                                    'surcharge_id'      => $surcharge_lcl->id,
+                                    'calculationtype_id'=> $calculationtype_lcl->id,   
                                 ]);
                             }
                             $failrate->forceDelete();

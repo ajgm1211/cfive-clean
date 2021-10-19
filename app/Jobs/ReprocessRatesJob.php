@@ -81,16 +81,16 @@ class ReprocessRatesJob implements ShouldQueue
             $scheduleTBol = false;
             $containersBol = false;
 
-            $originEX = explode('_', $failrate->origin_port);
-            $destinyEX = explode('_', $failrate->destiny_port);
-            $carrierArr = explode('_', $failrate->carrier_id);
-            $twentyArr = explode('_', $failrate->twuenty);
-            $fortyArr = explode('_', $failrate->forty);
-            $fortyhcArr = explode('_', $failrate->fortyhc);
-            $fortynorArr = explode('_', $failrate->fortynor);
-            $fortyfiveArr = explode('_', $failrate->fortyfive);
-            $currencyArr = explode('_', $failrate->currency_id);
-            $scheduleTArr = explode('_', $failrate->schedule_type);
+            $originEX = explode('_', trim($failrate->origin_port));
+            $destinyEX = explode('_', trim($failrate->destiny_port));
+            $carrierArr = explode('_', trim($failrate->carrier_id));
+            $twentyArr = explode('_', trim($failrate->twuenty));
+            $fortyArr = explode('_', trim($failrate->forty));
+            $fortyhcArr = explode('_', trim($failrate->fortyhc));
+            $fortynorArr = explode('_', trim($failrate->fortynor));
+            $fortyfiveArr = explode('_', trim($failrate->fortyfive));
+            $currencyArr = explode('_', trim($failrate->currency_id));
+            $scheduleTArr = explode('_', trim($failrate->schedule_type));
             $containers = json_decode($failrate->containers, true);
             if (! empty($containers)) {
                 foreach ($containers as $containerEq) {

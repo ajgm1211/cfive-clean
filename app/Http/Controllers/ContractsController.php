@@ -271,6 +271,9 @@ class ContractsController extends Controller
         $contract->expire = $validation[1];
         $contract->save();
 
+        //Creating custom code
+        $contract->createCustomCode();
+
         $details = $request->input('currency_id');
         $detailscharges = $request->input('localcurrency_id');
         $companies = $request->input('companies');

@@ -201,9 +201,7 @@ class SearchApiLclController extends Controller
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
             $charges = $this->joinCharges($charges, $search_ids);
 
-            $this->checkLclAdaptable($charges);
-
-            $this->checkLclRoundable($charges);
+            $charges = $this->checkLclAdaptable($charges);
 
             //Appending Rate Id to Charges
             $this->addChargesToRate($rate, $charges, $search_ids);
@@ -240,7 +238,7 @@ class SearchApiLclController extends Controller
 
             $this->stringifyLclRateAmounts($rate);
 
-            $this->setDownloadParameters($rate,$search_ids);
+            //$this->setDownloadParameters($rate,$search_ids);
         }
 
         if ($rates != null && count($rates) != 0) {
@@ -428,14 +426,14 @@ class SearchApiLclController extends Controller
         //Same loop but for percentile markups
         } elseif ($percent != 0) {
             //Calculating percentage of each container and each total price, storing them directly as final markups array
-            $markups_array = $this->calculatePercentage($percent, array($target_totals));
+            $markups_array = $this->calculatePercentage($percent, array($target_total));
 
             $total_with_markups =  isDecimal($target_total,true) + isDecimal($markups_array[0],true);
 
             if(isset($target_total_client_currency)){
                 $markups_client_currency = $this->calculatePercentage($percent, array($target_total_client_currency));
     
-                $total_with_markups =  isDecimal($target_total_client_currency,true) + isDecimal($markups_client_currency[0],true);
+                $total_with_markups_client_currency =  isDecimal($target_total_client_currency,true) + isDecimal($markups_client_currency[0],true);
             }
         } else {
             return;
@@ -476,14 +474,14 @@ class SearchApiLclController extends Controller
                     if(isset($charge->total_with_markups)){
                         if($direction == "Freight"){
                             if($charge->joint_as == "client_currency"){
-                                $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, array($charge->total_with_markups))[0];
-                                $charges_to_add_original = $charge->total_with_markups;
+                                $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, array($charge->total_with_markups_client_currency))[0];
+                                $charges_to_add_original = $charge->total_with_markups_client_currency;
                             }else{
-                                $charges_to_add = $this->convertToCurrency($charge->currency, $client_currency, array($charge->total))[0];
-                                $charges_to_add_original = $this->convertToCurrency($charge->currency, $rate->currency, array($charge->total))[0];
+                                $charges_to_add = $this->convertToCurrency($charge->currency, $client_currency, array($charge->total_with_markups))[0];
+                                $charges_to_add_original = $this->convertToCurrency($charge->currency, $rate->currency, array($charge->total_with_markups))[0];
                             }
                         }else{
-                            $charges_to_add = $charge->total_with_markups;
+                            $charges_to_add = $charge->total_with_markups_client_currency;
                         }
                     }else{
                         if($direction == "Freight"){
