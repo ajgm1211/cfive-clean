@@ -64,7 +64,7 @@ class SettingController extends Controller
             } else {
                 $IncludeDestiny = '';
             }
-            if ($company->companyUser->options['totals_in_freight_currency'] == '1') {
+            if (isset($company->companyUser->options['totals_in_freight_currency']) && $company->companyUser->options['totals_in_freight_currency'] == '1') {
                 $ShowFreightCurrency = "checked='true'";
             } else {
                 $ShowFreightCurrency = '';
