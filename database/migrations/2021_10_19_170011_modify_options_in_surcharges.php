@@ -21,19 +21,21 @@ class ModifyOptionsInSurcharges extends Migration
                 $options = json_decode($surcharge->options,true);
                 
                 $internal_options = [];
-                $internal_options['is_api'] = $options['is_api'];
+                if(isset($internal_options['is_api'])){
+                    $internal_options['is_api'] = $options['is_api'];
 
-                unset($options['is_api']);
+                    unset($options['is_api']);
 
-                $options_json = json_encode($options);
-                $internal_options_json = json_encode($internal_options);
+                    $options_json = json_encode($options);
+                    $internal_options_json = json_encode($internal_options);
 
-                DB::table('surcharges')
-                    ->where('id', $surcharge->id)
-                    ->update([
-                        'options' => $options_json,
-                        'internal_options' => $internal_options_json
-                    ]);
+                    DB::table('surcharges')
+                        ->where('id', $surcharge->id)
+                        ->update([
+                            'options' => $options_json,
+                            'internal_options' => $internal_options_json
+                        ]);
+                }
             }
         });
     }
