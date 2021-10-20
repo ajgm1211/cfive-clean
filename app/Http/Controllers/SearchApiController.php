@@ -198,15 +198,15 @@ class SearchApiController extends Controller
             ];
         };
 
-        // $environment_name = $_ENV['APP_ENV'];
+        $environment_name = $_ENV['APP_ENV'];
 
-        // if($environment_name == "production"){
-        //     $api_url = "https://carriers.cargofive.com/api/pricing";        
-        // }else if(in_array($environment_name,["local","prod"])){
-        //     $api_url = "https://carriersdev.cargofive.com/api/pricing";    
-        // }else{
-        //     $api_url = "https://carriersdev.cargofive.com/api/pricing";
-        // }
+        if($environment_name == "production"){
+            $api_url = "https://carriers.cargofive.com/api/pricing";        
+        }else if(in_array($environment_name,["local","prod"])){
+            $api_url = "https://carriersdev.cargofive.com/api/pricing";    
+        }else{
+            $api_url = "https://carriersdev.cargofive.com/api/pricing";
+        }
 
         /**$inland_distances = InlandDistance::get()->map(function ($distance){
             return $distance->only(['id','display_name','harbor_id']);
@@ -1017,8 +1017,13 @@ class SearchApiController extends Controller
             $charge_type_totals[$direction] = [];
             //Looping through charges by type
             foreach ($charge_direction as $charge) {
-                
-                if (is_a($charge,"App\LocalCharge") || is_a($charge,"App\GlobalCharge")) {
+                if (is_a($charge,"App\LocalCharge") || is_a($charge,"App\GlobalCharge") || is_a($charge,"App\InlandRange") || is_a($charge,"App\InlandPerLocation") || is_a($charge,"App\InlandKm")) {
+
+                    if(is_a($charge,"App\InlandRange") || is_a($charge,"App\InlandPerLocation") || is_a($charge,"App\InlandKm")){
+                        $containers=$charge['containers'];
+                    }else{
+                        $containers=$charge->totals_with_markups;
+                    }
 
                     if(isset($charge->totals_with_markups)){
                         if($direction == "Freight"){
@@ -1031,8 +1036,8 @@ class SearchApiController extends Controller
                             }
                             $charges_to_add_rate_currency = $charges_to_add_original;
                         }else{
-                            $charges_to_add = $charge->totals_with_markups;
-                            $charges_to_add_rate_currency = $this->convertToCurrency($charge->currency, $rate->currency, $charge->totals_with_markups);
+                            $charges_to_add = $containers;
+                            $charges_to_add_rate_currency = $this->convertToCurrency($charge->currency, $rate->currency,  $containers);
                         }
                     }else{
                         if($direction == "Freight"){
@@ -1075,35 +1080,6 @@ class SearchApiController extends Controller
                     //Updating rate totals to new added array
                     $rate->$to_update = $totals_array;
 
-                }elseif(is_a($charge,"App\InlandRange") || is_a($charge,"App\InlandPerLocation") || is_a($charge,"App\InlandRange")){
-
-                    if($direction=='origin_inland'){
-                        $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge['json_containers']);
-                        $charges_to_add_original = $charge['json_containers'];
-                    }else{
-                        $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge['json_containers']);
-                        $charges_to_add_original = $charge['json_containers'];
-                    }
-
-                    foreach ($totals_array as $code => $total) {
-                        //Checking if charge contains each container present in Rate
-                        if (isset($charge['containers'][$code])) {
-                            //Adding charge container price to Rate totals
-                            $totals_array[$code] += isDecimal($charges_to_add[$code], true);
-                        }
-                        if (!isset($charge_type_totals[$direction][$code])) {
-                            $charge_type_totals[$direction][$code] = 0;
-                        }
-                        if(!isset($totals_array_freight_currency[$code])){
-                            $totals_array_freight_currency[$code] = 0;
-                        }
-                        $totals_array_freight_currency[$code] += isDecimal($charges_to_add_original[$code],true);
-                        //Add prices from charge to totals by type
-                        $charge_type_totals[$direction][$code] += isDecimal($charges_to_add_original[$code],true);
-                    }
-
-                    //Updating rate totals to new added array
-                    $rate->$to_update = $totals_array;
                 }else{
 
                     if(isset($charge['containers_with_markups'])){
