@@ -198,15 +198,15 @@ class SearchApiController extends Controller
             ];
         };
 
-        $environment_name = $_ENV['APP_ENV'];
+        // $environment_name = $_ENV['APP_ENV'];
 
-        if($environment_name == "production"){
-            $api_url = "https://carriers.cargofive.com/api/pricing";        
-        }else if(in_array($environment_name,["local","prod"])){
-            $api_url = "https://carriersdev.cargofive.com/api/pricing";    
-        }else{
-            $api_url = "https://carriersdev.cargofive.com/api/pricing";
-        }
+        // if($environment_name == "production"){
+        //     $api_url = "https://carriers.cargofive.com/api/pricing";        
+        // }else if(in_array($environment_name,["local","prod"])){
+        //     $api_url = "https://carriersdev.cargofive.com/api/pricing";    
+        // }else{
+        //     $api_url = "https://carriersdev.cargofive.com/api/pricing";
+        // }
 
         /**$inland_distances = InlandDistance::get()->map(function ($distance){
             return $distance->only(['id','display_name','harbor_id']);
@@ -310,11 +310,11 @@ class SearchApiController extends Controller
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
             $charges = $this->joinCharges($charges, $search_ids['client_currency'], $search_ids['selectedContainerGroup']);
 
-            //Appending Rate Id to Charges
-            $this->addChargesToRate($rate, $charges, $search_ids['client_currency']);
-
             //Get inland
             $inland = $this-> searchInlands($rate,$search_array, $search_ids['client_currency']);
+
+            //Appending Rate Id to Charges
+            $this->addChargesToRate($rate, $charges, $search_ids['client_currency'],$inland);
 
             //Getting price levels if requested
             if (array_key_exists('pricelevel', $search_array) && $search_array['pricelevel'] != null) {
@@ -822,7 +822,7 @@ class SearchApiController extends Controller
     }
 
     //appending charges to corresponding Rate
-    public function addChargesToRate($rate, $target, $client_currency)
+    public function addChargesToRate($rate, $target, $client_currency,$inlands)
     {
         $rate_charges = [];
         //Looping through charges type for array structure
@@ -861,6 +861,14 @@ class SearchApiController extends Controller
                 unset($rate_charges[$direction]);
             };
         }
+
+        foreach($inlands as $direction=>$inland ){
+            if ($inland!=null) {
+                $rate_charges[$direction] = [];
+                $rate_charges[$direction][] =$inland;
+            }
+        }
+
         $rate->setAttribute('charges', $rate_charges);
     }
 
@@ -1067,6 +1075,35 @@ class SearchApiController extends Controller
                     //Updating rate totals to new added array
                     $rate->$to_update = $totals_array;
 
+                }elseif(is_a($charge,"App\InlandRange") || is_a($charge,"App\InlandPerLocation") || is_a($charge,"App\InlandRange")){
+
+                    if($direction=='origin_inland'){
+                        $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge['json_containers']);
+                        $charges_to_add_original = $charge['json_containers'];
+                    }else{
+                        $charges_to_add = $this->convertToCurrency($rate->currency, $client_currency, $charge['json_containers']);
+                        $charges_to_add_original = $charge['json_containers'];
+                    }
+
+                    foreach ($totals_array as $code => $total) {
+                        //Checking if charge contains each container present in Rate
+                        if (isset($charge['containers'][$code])) {
+                            //Adding charge container price to Rate totals
+                            $totals_array[$code] += isDecimal($charges_to_add[$code], true);
+                        }
+                        if (!isset($charge_type_totals[$direction][$code])) {
+                            $charge_type_totals[$direction][$code] = 0;
+                        }
+                        if(!isset($totals_array_freight_currency[$code])){
+                            $totals_array_freight_currency[$code] = 0;
+                        }
+                        $totals_array_freight_currency[$code] += isDecimal($charges_to_add_original[$code],true);
+                        //Add prices from charge to totals by type
+                        $charge_type_totals[$direction][$code] += isDecimal($charges_to_add_original[$code],true);
+                    }
+
+                    //Updating rate totals to new added array
+                    $rate->$to_update = $totals_array;
                 }else{
 
                     if(isset($charge['containers_with_markups'])){
@@ -1103,10 +1140,6 @@ class SearchApiController extends Controller
             $rate->setAttribute('charge_totals_by_type', $charge_type_totals);
 
         }
-
-            $totalWithInland=$this->calculateTotalsInland($totals_array,$inland);
-
-            $rate->$to_update = $totalWithInland;
 
         if($search_data['showRateCurrency']){
             $rate->setAttribute('totals_freight_currency', $totals_array_freight_currency);
@@ -1302,19 +1335,5 @@ class SearchApiController extends Controller
         return $objeto;
 
     }
-    public function calculateTotalsInland($total, $inland){
 
-        foreach($inland as $inlandType){
-            if (empty($inlandType)==false) {
-                foreach($inlandType['containers'] as $a=>$inlandContainer){
-                    foreach($total as $b=>$totalI){
-                        if ($a==$b) {
-                            $total[$b]=$total[$b]+$inlandType['containers'][$a];
-                        }
-                    }
-                }
-            }
-        }
-        return $total;
-    }
 }
