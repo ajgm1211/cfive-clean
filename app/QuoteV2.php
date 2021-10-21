@@ -882,8 +882,10 @@ class QuoteV2 extends Model implements HasMedia, Auditable
                 }
             }
         }
-
+        $charge= $this->charge()->get();
+        
         $rateTotals = $this->automatic_rate_totals()->get();
+
         $inlandTotals = $this->automatic_inland_totals()->get();
 
         if ($this->type == 'FCL') {
@@ -896,7 +898,7 @@ class QuoteV2 extends Model implements HasMedia, Auditable
 
         $allTotalsCurrency = [];
 
-        foreach ($allTotals as $total) {
+        foreach ( $charge as $total) {
             $currency = Currency::where('id', $total->currency_id)->first();
 
             array_push($allTotalsCurrency, $currency->alphacode);
