@@ -1499,54 +1499,54 @@ export default {
       placeInShowTo: [],
       placeInShowFrom: [],
       optionsPlaces: [
-        {
-          code: "123_456_2",
-          country: "España",
-          location: "Madrid",
-          type: "city",
-        },
-        {
-          code: "123_567_1",
-          country: "España",
-          location: "Barcelona",
-          type: "port",
-        },
-        {
-          code: "123_321_1",
-          country: "España",
-          location: "Canarias",
-          type: "port",
-        },
-        {
-          code: "123_232_2",
-          country: "España",
-          location: "Cuenca",
-          type: "city",
-        },
-        {
-          code: "123_438_2",
-          country: "España",
-          location: "Cordoba",
-          type: "city",
-        },
-        {
-          code: "123_986_1",
-          country: "España",
-          location: "Almeria",
-          type: "port",
-        },
-        {
-          code: "123_129_1",
-          country: "España",
-          location: "Malaga",
-          type: "port",
-        },
-        {
-          code: "123_457_2",
-          country: "España",
-          location: "Sevilla",
-          type: "city",
-        },
+        // {
+        //   code: "123_456_2",
+        //   country: "España",
+        //   location: "Madrid",
+        //   type: "city",
+        // },
+        // {
+        //   code: "123_567_1",
+        //   country: "España",
+        //   location: "Barcelona",
+        //   type: "port",
+        // },
+        // {
+        //   code: "123_321_1",
+        //   country: "España",
+        //   location: "Canarias",
+        //   type: "port",
+        // },
+        // {
+        //   code: "123_232_2",
+        //   country: "España",
+        //   location: "Cuenca",
+        //   type: "city",
+        // },
+        // {
+        //   code: "123_438_2",
+        //   country: "España",
+        //   location: "Cordoba",
+        //   type: "city",
+        // },
+        // {
+        //   code: "123_986_1",
+        //   country: "España",
+        //   location: "Almeria",
+        //   type: "port",
+        // },
+        // {
+        //   code: "123_129_1",
+        //   country: "España",
+        //   location: "Malaga",
+        //   type: "port",
+        // },
+        // {
+        //   code: "123_457_2",
+        //   country: "España",
+        //   location: "Sevilla",
+        //   type: "city",
+        // },
       ],
       // fin datos estaticos search con inlands
       loaded: false,
@@ -1939,6 +1939,8 @@ export default {
     //set UI elements
     setSearchDisplay(requestType) {
       let component = this;
+      component.optionsPlaces = component.datalists.harbors;
+      //consultar si hay que eliminar originPortOptions y destinationPortOptions
       component.originPortOptions = component.datalists.harbors;
       component.destinationPortOptions = component.datalists.harbors;
       component.directionOptions = [
