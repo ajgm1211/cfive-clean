@@ -93,14 +93,7 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{route('quotes-v2.search')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-search-magnifier-interface-symbol"></i>
-                                    <span class="m-menu__link-text">
-                                        Search Rates
-                                    </span>
-                                </a>
-                            </li>
+                     
                         </ul>
                     </div>
                 </li> 

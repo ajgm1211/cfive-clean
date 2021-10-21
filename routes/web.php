@@ -486,14 +486,11 @@ Route::middleware(['auth'])->prefix('prices')->group(function () {
     Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
     Route::get('destroy/{price_id}', 'PriceController@destroy')->name('prices.destroy');
 
-
-    // V2 
+    // V2
     Route::view('/v2', 'pricesV2.index');
     Route::view('/rates', 'pricesV2.index');
 });
 Route::resource('prices', 'PriceController')->middleware('auth');
-
-
 
 //Contacts
 Route::middleware(['auth'])->prefix('contacts')->group(function () {
@@ -572,7 +569,10 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::post('send', 'PdfV2Controller@send_pdf_quote')->name('quotes-v2.send_pdf');
     Route::post('send/lcl', 'PdfV2Controller@send_pdf_quote_lcl')->name('quotes-v2.send_pdf_lcl');
     Route::post('send/air', 'PdfV2Controller@send_pdf_quote_air')->name('quotes-v2.send_pdf_air');
-    Route::get('search', 'QuoteV2Controller@search')->name('quotes-v2.search');
+    Route::get('search', function () {
+       return redirect()->route('searchV2.index');
+
+    })->name('quotes-v2.search');
     Route::post('processSearch', 'QuoteV2Controller@processSearch')->name('quotes-v2.processSearch');
     Route::post('/store/{type}', 'QuoteV2Controller@store')->name('quotes-v2.store');
     Route::post('/storeLCL/{type}', 'QuoteV2Controller@storeLCL')->name('quotes-v2.storeLCL');
@@ -1315,7 +1315,7 @@ Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function (
     Route::post('{inland}/km/{km}/update', 'InlandKmController@update')->middleware('check_company:inland');
     Route::get('{inland}/km/retrieve', 'InlandKmController@retrieve')->middleware('check_company:inland');
     /* End API Inland Km EndPoints **/
-    
+
     /* API Inland location EndPoints **/
     Route::get('{inland}/location', 'inlandPerLocationController@list');
     Route::post('{inland}/location/store', 'inlandPerLocationController@store');
@@ -1393,9 +1393,6 @@ Route::group(['prefix' => 'api/v2/providers', 'middleware' => ['auth']], functio
 
     /** providers **/
 });
-
-
-
 
 /*****************************************************************************************
  **                                   END API ENDPOINTS                                   **
