@@ -240,7 +240,6 @@ class ContractLclController extends Controller
      */
     public function destroy(ContractLcl $contract)
     {
-        $contract->contract_code = null;
         $contract->delete();
 
         return response()->json(null, 204);
