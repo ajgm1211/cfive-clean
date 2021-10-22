@@ -64,7 +64,7 @@ class SettingController extends Controller
             } else {
                 $IncludeDestiny = '';
             }
-            if ($company->companyUser->options['totals_in_freight_currency'] == '1') {
+            if (isset($company->companyUser->options['totals_in_freight_currency']) && $company->companyUser->options['totals_in_freight_currency'] == '1') {
                 $ShowFreightCurrency = "checked='true'";
             } else {
                 $ShowFreightCurrency = '';
@@ -342,7 +342,7 @@ class SettingController extends Controller
             $surcharge_duplicate->description = $surcharge->description;
             $surcharge_duplicate->sale_term_id = $surcharge->sale_term_id;
             $surcharge_duplicate->company_user_id = $company_user_duplicate->id;
-            $surcharge_duplicate->options = json_encode(['is_api' => false]);
+            $surcharge_duplicate->internal_options = json_encode(['is_api' => false]);
             $surcharge_duplicate->save();
         }
 

@@ -2,7 +2,7 @@
             <!-- Company -->
             <div class="company" style="float: left; width: 350px; line-height: 10px;">
                 <!-- Logo -->
-                @if(isset($quote->company) && $quote->company->logo!='')
+                @if(@$quote->company != null && $quote->company->logo!='')
             
                     <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive img-fluid" style="width: 150px; height: auto; margin-bottom:20px">
                                     
@@ -54,7 +54,7 @@
 
                 <div style="visibility: hidden">
 
-                    @if(isset($quote->company) && $quote->company->logo!='')
+                    @if(@$quote->company->logo!='')
 
                         <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive img-fluid" style="width: 150px; height: auto; margin-bottom:20px">
                                 
@@ -70,7 +70,7 @@
                                 
                     <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$delegation->name}}</b></span></p>
 
-                    @if(isset($user->companyUser->options['company_address_pdf']) && $user->companyUser->options['company_address_pdf']==1)
+                    @if(@$user->companyUser->options['company_address_pdf']==1)
     
                         <p style="line-height:10px;">{{@$delegation->address}}</p>
         
@@ -78,13 +78,13 @@
 
                     @endif
                 @else
-                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$user->companyUser->name}}</b></span></p>
 
-                    @if(isset($user->companyUser->options['company_address_pdf']) && $user->companyUser->options['company_address_pdf']==1)
+                    @if(@$user->companyUser->options['company_address_pdf']==1)
     
-                        <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
+                        <p style="line-height:10px;">{{@@$user->companyUser->address}}</p>
         
-                        <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
+                        <p style="line-height:10px;">{{@@$user->companyUser->phone}}</p>
 
                     @endif
                 @endif
@@ -97,7 +97,7 @@
 
                 <div style="visibility: hidden">
 
-                    @if(isset($quote->company) && $quote->company->logo!='')
+                    @if(@$quote->company != null && $quote->company->logo!='')
 
                         <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive img-fluid" style="width: 150px; height: auto; margin-bottom:20px">
                             
@@ -113,7 +113,7 @@
                                 
                     <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$delegation->name}}</b></span></p>
 
-                    @if(isset($user->companyUser->options['company_address_pdf']) && $user->companyUser->options['company_address_pdf']==1)
+                    @if(@$user->companyUser->options['company_address_pdf'] != null && @$user->companyUser->options['company_address_pdf']==1)
     
                         <p style="line-height:10px;">{{@$delegation->address}}</p>
         
@@ -121,13 +121,13 @@
 
                     @endif
                 @else
-                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$user->companyUser->name}}</b></span></p>
 
-                    @if(isset($user->companyUser->options['company_address_pdf']) && $user->companyUser->options['company_address_pdf']==1)
+                    @if(@$user->companyUser->options['company_address_pdf'] != null && @$user->companyUser->options['company_address_pdf']==1)
     
-                        <p style="line-height:10px;">{{@$user->companyUser->address}}</p>
+                        <p style="line-height:10px;">{{@@$user->companyUser->address}}</p>
         
-                        <p style="line-height:10px;">{{@$user->companyUser->phone}}</p>
+                        <p style="line-height:10px;">{{@@$user->companyUser->phone}}</p>
 
                     @endif
                 @endif
@@ -209,7 +209,7 @@
 
         <div class="company" style="color: #1D3A6E;">
 
-            <p class="title" style="color: {{ $user->companyUser->colors_pdf }}"><b>{{__('pdf.cargo_details')}}</b></p>
+            <p class="title" style="color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.cargo_details')}}</b></p>
 
             
 

@@ -73,7 +73,7 @@ class SyncCompaniesVforwarding implements ShouldQueue
                     ], [
                         'business_name' => $item['nom_com'],
                         'tax_number' => $item['cif'],
-                        'address' => $item['address'],
+                        'address' => $item['address'] ?? null,
                         'phone' => $item['tlf'],
                         'company_user_id' => $setting->company_user_id,
                         'api_id' => $item['id'],

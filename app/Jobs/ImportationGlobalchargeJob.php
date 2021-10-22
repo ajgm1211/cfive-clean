@@ -816,7 +816,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                             'name'              => $read[$requestobj[$Charge]],
                                             'description'       => $read[$requestobj[$Charge]],
                                             'company_user_id'   => $companyUserId,
-                                            'options' => json_encode(['is_api' => false]),
+                                            'internal_options' => json_encode(['is_api' => false]),
                                         ]);
                                         $surchargeVal = $surchargelist->id;
                                     }
