@@ -2186,7 +2186,7 @@ export default {
       }
     },
 
-    setPriceLevels() {
+    /**setPriceLevels() {
       let component = this;
       let dlist = this.datalists;
       let prices = [];
@@ -2229,6 +2229,38 @@ export default {
           }
         });
       }
+    },**/
+
+    setPriceLevels() {
+      let component = this;
+      let dlist = this.datalists;
+
+      component.priceLevelOptions = [];
+
+      dlist.price_levels.forEach(function (priceLevel){
+        if(priceLevel.price_level_groups.length == 0){
+          component.priceLevelOptions.push(priceLevel);
+        }
+
+        if (component.searchRequest.company != null) {
+          priceLevel.price_level_groups.forEach(function (group){
+            if(group.group_type == "App\\Company" && group.group_id == component.searchRequest.company.id){
+              component.priceLevelOptions.push(priceLevel);
+            }else if(group.group_type == "App\\CompanyGroup"){
+              dlist.company_groups.forEach(function (company_group){
+                if(company_group.id == group.group_id){
+                  company_group.companies.forEach(function (company){
+                    if(company.id == component.searchRequest.company.id){
+                      component.priceLevelOptions.push(priceLevel);
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
+      
     },
 
     updateQuoteSearchOptions() {
