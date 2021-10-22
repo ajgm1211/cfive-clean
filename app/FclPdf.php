@@ -111,9 +111,9 @@ class FclPdf
                 foreach ($value as $charge) {
                     foreach ($inlands as $inland) {
 
-                        if ($inland->inland_totals->pdf_options['grouped']) {
+                        if (isset($inland->inland_totals->pdf_options) && $inland->inland_totals->pdf_options['grouped']) {
 
-                            if ($inland->inland_totals->pdf_options['groupId'] == $charge->id) {
+                            if (isset($inland->inland_totals->pdf_options) && $inland->inland_totals->pdf_options['groupId'] == $charge->id) {
                                 $grouping_array = [];
                                 $inland_total = json_decode(json_decode($inland->total));
                                 $inland_total = isset($inland->sum_total) ? $inland->sum_total:(array)$inland_total;
