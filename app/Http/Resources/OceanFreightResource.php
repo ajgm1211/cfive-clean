@@ -22,7 +22,7 @@ class OceanFreightResource extends JsonResource
         //$this->available_containers = Container::where('gp_container_id', '!=', 1)->pluck('code');
         
         //Get the available containers all
-        $this->available_containers = Container::all()->pluck('code');
+        $this->available_containers = Container::pluck('code');
     }
 
     /**
