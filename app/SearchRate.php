@@ -68,7 +68,7 @@ class SearchRate extends Model
 
     public function price_level()
     {
-        return $this->belongsTo('App\Price');
+        return $this->belongsTo('App\PriceLevel');
     }
 
     public function direction()

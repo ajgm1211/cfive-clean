@@ -8,7 +8,7 @@ use App\ContainerCalculation;
 use App\CompanyUser;
 use App\Currency;
 use App\Inland;
-use App\Price;
+use App\PriceLevel;
 use App\Harbor;
 use App\Country;
 use App\TransitTime;
@@ -740,7 +740,7 @@ trait SearchTrait
     }
 
     //Getting markups from price Levels
-    public function getMarkupsFromPriceLevels($price_level_id, $client_currency, $direction, $type)
+    /**public function getMarkupsFromPriceLevels($price_level_id, $client_currency, $direction, $type)
     {
         //Querying for price levels and markups associated (freight,local charges and inlands)
             //First company-specific price levels
@@ -843,6 +843,34 @@ trait SearchTrait
         $collectionMarkup = new Collection($markup_array);
 
         return $collectionMarkup;
+    }**/
+
+    public function getMarkupsFromPriceLevels($price_level_id, $client_currency, $direction, $type)
+    {
+        //Querying for price levels and markups associated (freight,local charges and inlands)
+        $price_level = PriceLevel::where('id', $price_level_id)->with('price_level_details')->first();
+        $markup_array = [];
+        $details = $price_level->price_level_details;
+
+        foreach($details as $detail){
+            //FILTERING FOR DIRECTION: from search or BOTH (3)
+            if(in_array($detail->direction_id,[$direction,3])){
+                //FOR FREIGHT
+                if($detail->price_level_apply_id == 1){
+                    $markup_array['freight'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
+                //FOR SURCHARGE
+                }elseif($detail->price_level_apply_id == 2){
+                    $markup_array['surcharges'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
+                //FOR INLAND
+                }elseif($detail->price_level_apply_id == 3){
+                    $markup_array['inlands'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
+                }
+            }
+        }
+
+        $markup_collection = new Collection($markup_array);
+
+        return $markup_collection;
     }
 
     //Cleans old JSON data which is formatted with string type [] and \
