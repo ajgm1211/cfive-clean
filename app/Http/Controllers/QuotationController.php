@@ -311,13 +311,13 @@ class QuotationController extends Controller
                     }elseif($search_data_ids['type'] == 'LCL'){
                         $charge = $this->formatLclChargeForQuote($charge);
                         $rate_markups[$direction] += $charge['markup'];
-
+// dump($charge['units']);
                         $freight = ChargeLclAir::create([
                             'automatic_rate_id' => $newRate->id,
                             'surcharge_id' => $charge['surcharge']['id'],
                             'type_id' => $charge['typedestiny_id'],
                             'calculation_type_id' => $charge['calculationtypelcl']['id'],
-                            'units' => intval($charge['units']),
+                            'units' => ($charge['units']),
                             'price_per_unit' => intval($charge['ammount']),
                             'minimum' => intval($charge['minimum']),
                             'currency_id' => $currency_id,
