@@ -311,7 +311,7 @@ class QuotationController extends Controller
                     }elseif($search_data_ids['type'] == 'LCL'){
                         $charge = $this->formatLclChargeForQuote($charge);
                         $rate_markups[$direction] += $charge['markup'];
-// dump($charge['units']);
+
                         $freight = ChargeLclAir::create([
                             'automatic_rate_id' => $newRate->id,
                             'surcharge_id' => $charge['surcharge']['id'],
