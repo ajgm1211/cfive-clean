@@ -198,7 +198,7 @@ class SearchApiController extends Controller
             ];
         };
 
-        $environment_name = $_ENV['APP_ENV'];
+        $environment_name = env('APP_ENV');
 
         if($environment_name == "production"){
             $api_url = "https://carriers.cargofive.com/api/pricing";        

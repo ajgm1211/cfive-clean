@@ -1499,18 +1499,17 @@ export default {
       placeInShowTo: [],
       placeInShowFrom: [],
       optionsPlaces: [
-        // {
-        //   code: "123_456_2",
-        //   country: "España",
-        //   location: "Madrid",
-        //   type: "city",
-        // },
-        // {
-        //   code: "123_567_1",
-        //   country: "España",
-        //   location: "Barcelona",
-        //   type: "port",
-        // },
+      {country: "Spain",
+id: 3780,
+location: "ORELLANA LA VIEJA",
+type: "city"},
+        {
+    country: null,
+display_name: "Barcelona, ESBCN",
+id: 949,
+location: "Barcelona, ESBCN",
+type: "port"
+        },
         // {
         //   code: "123_321_1",
         //   country: "España",
@@ -1718,6 +1717,8 @@ export default {
     placeCheckedFrom(data) {
       // //this.placeInShow.push({code: data.code, location: data.location, type: data.type});
       let placeType = [];
+
+
       if (this.placeInShowFrom.length >= 1) {
         this.showTagPlaceFrom = true;
 
@@ -1725,6 +1726,8 @@ export default {
 
         this.placeInShowFrom.forEach((element) => {
           placeType.push(element.type);
+
+          this.searchRequest.originPorts.push(element)
         });
 
         this.fromPort = placeType
@@ -1738,6 +1741,8 @@ export default {
         placeType = [];
         this.showTagPlaceFrom = false;
       }
+
+      console.log('this.searchRequest.originPorts', this.searchRequest.originPorts)
     },
     placeCheckedTo(data) {
       let placeType = [];
@@ -1748,6 +1753,8 @@ export default {
 
         this.placeInShowTo.forEach((element) => {
           placeType.push(element.type);
+
+          this.searchRequest.destinationPorts.push(element)
         });
 
         this.toPort = placeType
@@ -1761,6 +1768,8 @@ export default {
         placeType = [];
         this.showTagPlaceTo = false;
       }
+
+      console.log('  this.searchRequest.destinationPorts',   this.searchRequest.destinationPorts)
     },
     deletePlaceFrom(e) {
       this.placeInShowFrom.splice(e, 1);
@@ -1939,7 +1948,7 @@ export default {
     //set UI elements
     setSearchDisplay(requestType) {
       let component = this;
-      component.optionsPlaces = component.datalists.harbors;
+    //   component.optionsPlaces = component.datalists.harbors;
       //consultar si hay que eliminar originPortOptions y destinationPortOptions
       component.originPortOptions = component.datalists.harbors;
       component.destinationPortOptions = component.datalists.harbors;
@@ -2219,6 +2228,10 @@ export default {
       this.searching = true;
       this.$emit("clearResults");
       this.$emit("searchRequested", this.searchRequest);
+
+    //   this.searchRequest.destinationPorts = this.placeInShowTo;
+    //   this.searchRequest.originPorts = this.placeInShowFrom;
+
       actions.search
         .process(this.searchRequest)
         .then((response) => {
@@ -2262,6 +2275,8 @@ export default {
       let component = this;
       let dlist = this.datalists;
       let prices = [];
+
+
 
       component.priceLevelOptions = [];
       if (component.searchRequest.company != null) {
