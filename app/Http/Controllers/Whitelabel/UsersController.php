@@ -12,6 +12,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use Hash;
+use App\CompanyUser;
+
 
 class UsersController extends Controller
 {

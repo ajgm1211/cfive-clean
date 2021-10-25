@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ApiIntegrationSetting;
 use App\Company;
+use App\CompanyUser;
 use App\CompanyPrice;
 use App\Contact;
 use App\GroupUserCompany;
@@ -459,7 +460,7 @@ class CompanyController extends Controller
             $filepath_tmp = 'Logos/Clients/' . $file->getClientOriginalName();
         }
 
-        $request->request->add(['company_user_id' => Auth::user()->company_user_id, 'owner' => Auth::user()->id, 'options' => $options, 'logo' => $filepath_tmp]);
+        $request->request->add(['company_user_id' => Auth::user()->company_user_id, 'owner' => Auth::user()->id, 'options' => $options, 'logo' => $filepath_tmp,'logo' => $filepath_tmp ]);
 
         //Save Company
         $company = new Company;
@@ -473,7 +474,7 @@ class CompanyController extends Controller
         $company->options = $request->options;
         $company->company_user_id = $request->company_user_id;
         $company->unique_code = $randomString;
-        $company->whitelabel = 1;
+        $company->whitelabel = $request->whitelabel;
         $company->save();
 
 
@@ -510,7 +511,7 @@ class CompanyController extends Controller
                 );
     
             }
-
+            
         // $company = Company::create($request->all());
         if ($file != '') {
             $this->saveLogo($company, $file);
