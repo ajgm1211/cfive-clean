@@ -62,7 +62,7 @@ class GenerateQuotePdf extends Command
                 }
             }
         } catch (\Exception $e) {
-            \Log::error($e->getMessage());
+            \Log::error("Error creating API PDF: ".$e->getMessage());
         }
 
         $this->info('Command Generate Quote PDF executed successfully!');
