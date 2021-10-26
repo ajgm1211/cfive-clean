@@ -317,7 +317,7 @@ class QuotationController extends Controller
                             'surcharge_id' => $charge['surcharge']['id'],
                             'type_id' => $charge['typedestiny_id'],
                             'calculation_type_id' => $charge['calculationtypelcl']['id'],
-                            'units' => intval($charge['units']),
+                            'units' => ($charge['units']),
                             'price_per_unit' => intval($charge['ammount']),
                             'minimum' => intval($charge['minimum']),
                             'currency_id' => $currency_id,
