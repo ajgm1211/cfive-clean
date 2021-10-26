@@ -383,39 +383,39 @@
                                 </a>
                             </li>
                             @if(Session::has('impersonate'))
-                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
-                                data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                                <a href="#" class="m-menu__link m-menu__toggle">
-                                    <i class="m-menu__link-icon flaticon-share"></i>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <span class="m-menu__link-text">
-                                        API Settings
-                                    </span>
-                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
-                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
-                                </a>
-                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
+                                    data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                                    <a href="#" class="m-menu__link m-menu__toggle">
+                                        <i class="m-menu__link-icon flaticon-share"></i>
+                                        &nbsp;&nbsp;&nbsp;
+                                        <span class="m-menu__link-text">
+                                            API Settings
+                                        </span>
+                                        <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                        <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                    </a>
+                                    <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
 
-                                    <ul class="m-menu__subnav">
-                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="{{ route('oauth.tokens') }}" class="m-menu__link ">
-                                                <i class="m-menu__link-icon flaticon-refresh"></i>
-                                                <span class="m-menu__link-text">
-                                                    API tokens
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <!--<li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="{{route('api.settings')}}" class="m-menu__link ">
-                                                <i class="m-menu__link-icon flaticon-network"></i>
-                                                <span class="m-menu__link-text">
-                                                    External API Integrations
-                                                </span>
-                                            </a>
-                                        </li>-->
-                                    </ul>
-                                </div>
-                            </li>
+                                        <ul class="m-menu__subnav">
+                                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                                <a href="{{ route('oauth.tokens') }}" class="m-menu__link ">
+                                                    <i class="m-menu__link-icon flaticon-refresh"></i>
+                                                    <span class="m-menu__link-text">
+                                                        API tokens
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <!--<li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                                <a href="{{route('api.settings')}}" class="m-menu__link ">
+                                                    <i class="m-menu__link-icon flaticon-network"></i>
+                                                    <span class="m-menu__link-text">
+                                                        External API Integrations
+                                                    </span>
+                                                </a>
+                                            </li>-->
+                                        </ul>
+                                    </div>
+                                </li>
                             @endif
                             @role('administrator|company|subuser')
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
