@@ -1449,6 +1449,7 @@ export default {
                     endDate: new Date().toISOString(),
                 },
                 requestData: {},
+                options: {},
             },
             dropzoneOptions: {
                 url: "/",
@@ -1504,6 +1505,7 @@ export default {
             selected: "radio1",
             invalidCalculate: false,
             optionsTypePallet: ["PALLETS", "PACKAGES"],
+            options: {},
 
             //DATEPICKER
             locale: "en-US",

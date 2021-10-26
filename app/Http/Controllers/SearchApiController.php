@@ -216,15 +216,17 @@ class SearchApiController extends Controller
     public function processSearch(Request $request)
     {
         //Setting current company and user
-        // $user = \Auth::user();
-        // $user_id = $user->id;
-        // $company_user = $user->companyUser()->first();
-        // $company_user_id = $company_user->id;
+         $user = \Auth::user();
+
+        //  dd($user);
+         $user_id = $user->id;
+         $company_user = $user->companyUser()->first();
+         $company_user_id = $company_user->id;
         
-        $user = \Auth::user();
-        $user_id = 1;
-        $company_user = 1;
-        $company_user_id = 1;
+        // $user = \Auth::user();
+        // $user_id = 1;
+        // $company_user = 1;
+        // $company_user_id = 1;
 
         $search_array = $request->input();
 
@@ -235,8 +237,7 @@ class SearchApiController extends Controller
         $search_ids = $this->getIdsFromArray($search_array);
         $search_ids['company_user'] = $company_user_id;
         $search_ids['user'] = $user_id;
-        $search_ids['client_currency'] = Currency::where("id",149)->first();
-
+        $search_ids['client_currency'] = $company_user->currency;
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
 
@@ -392,7 +393,7 @@ class SearchApiController extends Controller
         $container_array = [];
 
 
-        $options = $new_search_data['options']['whitelabel'] . ' , ' . $new_search_data['options']['containers_quantity'];
+        // $options = $new_search_data['options']['whitelabel'] . ' , ' . $new_search_data['options']['containers_quantity'];
 
         // $options = [];
 
@@ -417,29 +418,29 @@ class SearchApiController extends Controller
             'price_level_id' => $new_search_data_ids['pricelevel'],
             'origin_charges' => $new_search_data_ids['originCharges'],
             'destination_charges' => $new_search_data_ids['destinationCharges'],
-            'options' => $options,
+            // 'options' => $options,
 
             //'origin_address' => $new_search_data_ids['originAddress'],
             //'destination_address' => $new_search_data_ids['destinationAddress']
         ]);
 
-        if ($new_search_data['options']['whitelabel'] == true ){
+    //     if ($new_search_data['options']['whitelabel'] == true ){
 
-         $new_search = SearchRate::create([
-            'company_user_id' => $new_search_data_ids['company_user'],
-            'pick_up_date' => $pick_up_date,
-            'direction' => $new_search_data_ids['direction'],
-            'type' => $new_search_data_ids['type'],
-            'user_id' => $new_search_data_ids['user'],
-            'price_level_id' => $new_search_data_ids['pricelevel'],
-            'origin_charges' => $new_search_data_ids['originCharges'],
-            'destination_charges' => $new_search_data_ids['destinationCharges'],
-            'options' => $options,
-         ]);
+    //      $new_search = SearchRate::create([
+    //         'company_user_id' => $new_search_data_ids['company_user'],
+    //         'pick_up_date' => $pick_up_date,
+    //         'direction' => $new_search_data_ids['direction'],
+    //         'type' => $new_search_data_ids['type'],
+    //         'user_id' => $new_search_data_ids['user'],
+    //         'price_level_id' => $new_search_data_ids['pricelevel'],
+    //         'origin_charges' => $new_search_data_ids['originCharges'],
+    //         'destination_charges' => $new_search_data_ids['destinationCharges'],
+    //         'options' => $options,
+    //      ]);
 
-         return new SearchApiResource($new_search);
+    //      return new SearchApiResource($new_search);
 
-     }
+    //  }
 
 
         foreach ($new_search_data_ids['originPorts'] as $origPort) {
