@@ -4403,7 +4403,7 @@ export default {
                   uemail: component.datalists.user.email,
                   brands: apiCarrier.code,
                 });
-              }else{
+              } else {
                 component.$emit("apiSearchDone", fullResponseLength);
               }
             });
