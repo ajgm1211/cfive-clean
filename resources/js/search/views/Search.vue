@@ -2453,10 +2453,10 @@ export default {
       if (this.searchRequest.lclTypeIndex == 0) {
         if (this.lclShipmentVolume > this.lclShipmentWeight / 1000) {
           this.lclShipmentChargeableWeight =
-            this.lclShipmentVolume * this.lclShipmentQuantity;
+            this.lclShipmentVolume ;
         } else {
           this.lclShipmentChargeableWeight =
-            (this.lclShipmentWeight / 1000) * this.lclShipmentQuantity;
+            (this.lclShipmentWeight / 1000) ;
         }
       } else if (this.searchRequest.lclTypeIndex == 1) {
         let component = this;
@@ -2476,10 +2476,10 @@ export default {
 
         if (this.lclPackagingVolume > this.lclPackagingWeight / 1000) {
           this.lclPackagingChargeableWeight =
-            this.lclPackagingVolume * this.lclPackagingQuantity;
+            this.lclPackagingVolume ;
         } else {
           this.lclPackagingChargeableWeight =
-            (this.lclPackagingWeight / 1000) * this.lclPackagingQuantity;
+            (this.lclPackagingWeight / 1000);
         }
       }
     },
