@@ -272,14 +272,16 @@ class LocalChargeQuotationController extends Controller
         LocalChargeQuote::where(['sale_term_v3_id' => $request->params['id'], 'quote_id' => $request->params['quote_id']])->delete();
 
         $sale_charges = SaleTermCharge::where('sale_term_id', $request->params['id'])->get();
-
+        
         foreach ($sale_charges as $sale_charge) {
-
+            
             $local_charge = LocalChargeQuote::create([
                 'price' => $sale_charge->total,
                 'profit' => [],
                 'charge' => $sale_charge->sale_term_code->name,
+                'sale_term_code_id' => $sale_charge->sale_term_code->id,
                 'calculation_type_id' => $sale_charge->calculation_type_id,
+                'source' => 2,
                 'currency_id' => $sale_charge->currency_id,
                 'port_id' => $request->params['port_id'],
                 'quote_id' => $request->params['quote_id'],
