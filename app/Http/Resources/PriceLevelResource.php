@@ -20,6 +20,7 @@ class PriceLevelResource extends JsonResource
             'display_name' => $this->display_name,
             'description' => $this->description,
             'type' => $this->type,
+            'options' => $this->options,
             'company_user' => $this->company_user,
         ];
     }

@@ -13,7 +13,11 @@ class PriceLevel extends Model
     protected $table = 'price_levels';
 
     protected $fillable = [
-        'name','display_name','description','company_user_id','type',
+        'name','display_name','description','company_user_id','type','options'
+    ];
+
+    protected $casts = [
+        'options' => 'array',
     ];
 
     public function company_user()
