@@ -17,7 +17,7 @@
 
                     <img src="/images/logo-ship-blue.svg" alt="bote">
 
-                    <p class="mt-4 mb-0" style="padding: 0px 65px">{{ search.origin_ports[0].display_name }}</p>
+                    <p class="mt-4 mb-0" style="padding: 0px 65px">{{ search.origin_address.length ? search.origin_address[0].location : search.origin_ports[0].display_name }}</p>
 
                     <div class="direction-spot mt-2 mb-2">
                         <div class="circle"></div>
@@ -25,7 +25,7 @@
                         <div class="circle fill-circle"></div>
                     </div>
 
-                    <p class="mb-0" style="padding: 0px 10px">{{ search.destination_ports[0].display_name }}</p>
+                    <p class="mb-0" style="padding: 0px 10px">{{ search.destination_address.length ? search.destination_address[0].location : search.destination_ports[0].display_name }}</p>
 
                     <b class="mb-4">{{ search.pick_up_date }}</b>
 
@@ -60,6 +60,8 @@ export default {
             .then((response) => {
                 this.searches = response.data.data;
                 this.loaded = true;
+
+                console.log('response del search', response.data.data)
             })
             .catch(error => {
                 if(error.status === 403) {

@@ -73,7 +73,7 @@
 
         <!-- ORIGIN PORT -->
         <div class="col-lg-3 mb-2 input-search-form origen-search">
-          <div class="od-input" >
+          <div class="od-input">
             <img src="/images/port.svg" class="img-icon" alt="port" />
             <div @click="openFinderFrom" style="cursor:pointer">
               <p class="input-places">
@@ -185,7 +185,12 @@
                 style="color: #333333;border: none !important;background: transparent !important;height: 20px;"
               ></b-form-input>
             </div>
-            <li style="cursor:pointer" v-for="(data, key) in optionsPlaces" :key="key" v-show="filterTo(data)">
+            <li
+              style="cursor:pointer"
+              v-for="(data, key) in optionsPlaces"
+              :key="key"
+              v-show="filterTo(data)"
+            >
               <b-form-checkbox
                 :id="'placeTo-' + key"
                 v-model="placeInShowTo"
@@ -1499,16 +1504,18 @@ export default {
       placeInShowTo: [],
       placeInShowFrom: [],
       optionsPlaces: [
-      {country: "Spain",
-id: 3780,
-location: "ORELLANA LA VIEJA",
-type: "city"},
         {
-    country: null,
-display_name: "Barcelona, ESBCN",
-id: 949,
-location: "Barcelona, ESBCN",
-type: "port"
+          country: "Spain",
+          id: 3780,
+          location: "ORELLANA LA VIEJA",
+          type: "city",
+        },
+        {
+          country: null,
+          display_name: "Barcelona, ESBCN",
+          id: 949,
+          location: "Barcelona, ESBCN",
+          type: "port",
         },
         // {
         //   code: "123_321_1",
@@ -1676,9 +1683,11 @@ type: "port"
     };
   },
   mounted() {
+    // SEARCH DATA
     api.getData({}, "/api/search/data", (err, data) => {
       this.setDropdownLists(err, data.data);
       this.getQuery();
+
     });
 
     this.optionsPlaces.sort((a, b) => (a.location > b.location ? 1 : -1));
@@ -1718,7 +1727,6 @@ type: "port"
       // //this.placeInShow.push({code: data.code, location: data.location, type: data.type});
       let placeType = [];
 
-
       if (this.placeInShowFrom.length >= 1) {
         this.showTagPlaceFrom = true;
 
@@ -1727,7 +1735,7 @@ type: "port"
         this.placeInShowFrom.forEach((element) => {
           placeType.push(element.type);
 
-          this.searchRequest.originPorts.push(element)
+          this.searchRequest.originPorts.push(element);
         });
 
         this.fromPort = placeType
@@ -1741,8 +1749,6 @@ type: "port"
         placeType = [];
         this.showTagPlaceFrom = false;
       }
-
-      console.log('this.searchRequest.originPorts', this.searchRequest.originPorts)
     },
     placeCheckedTo(data) {
       let placeType = [];
@@ -1754,7 +1760,7 @@ type: "port"
         this.placeInShowTo.forEach((element) => {
           placeType.push(element.type);
 
-          this.searchRequest.destinationPorts.push(element)
+          this.searchRequest.destinationPorts.push(element);
         });
 
         this.toPort = placeType
@@ -1768,8 +1774,6 @@ type: "port"
         placeType = [];
         this.showTagPlaceTo = false;
       }
-
-      console.log('  this.searchRequest.destinationPorts',   this.searchRequest.destinationPorts)
     },
     deletePlaceFrom(e) {
       this.placeInShowFrom.splice(e, 1);
@@ -1908,6 +1912,7 @@ type: "port"
     },
     getQuery() {
       this.searchRequest.requestData = this.$route.query;
+
       if (Object.keys(this.searchRequest.requestData).length != 0) {
         if (this.searchRequest.requestData.requested == 0) {
           this.getSearchData(this.searchRequest.requestData.model_id);
@@ -1948,7 +1953,7 @@ type: "port"
     //set UI elements
     setSearchDisplay(requestType) {
       let component = this;
-    //   component.optionsPlaces = component.datalists.harbors;
+      //   component.optionsPlaces = component.datalists.harbors;
       //consultar si hay que eliminar originPortOptions y destinationPortOptions
       component.originPortOptions = component.datalists.harbors;
       component.destinationPortOptions = component.datalists.harbors;
@@ -2229,8 +2234,23 @@ type: "port"
       this.$emit("clearResults");
       this.$emit("searchRequested", this.searchRequest);
 
-    //   this.searchRequest.destinationPorts = this.placeInShowTo;
-    //   this.searchRequest.originPorts = this.placeInShowFrom;
+
+      if (this.placeInShowTo.length && this.placeInShowFrom.length) {
+        this.searchRequest.destinationPorts = this.placeInShowTo;
+        this.searchRequest.originPorts = this.placeInShowFrom;
+      }
+
+      if(this.searchData.destination_address.length){
+        // this.searchRequest.destination_address = this.searchData.destination_address;
+        this.searchRequest.destinationPorts = this.searchData.destination_address;
+        console.log('hi destination address searchRequest', this.searchRequest)
+      }
+
+      if(this.searchData.origin_address.length){
+        this.searchRequest.originPorts = this.searchData.origin_address;
+        console.log('hi origin address searchRequest', this.searchRequest)
+      }
+
 
       actions.search
         .process(this.searchRequest)
@@ -2275,8 +2295,6 @@ type: "port"
       let component = this;
       let dlist = this.datalists;
       let prices = [];
-
-
 
       component.priceLevelOptions = [];
       if (component.searchRequest.company != null) {

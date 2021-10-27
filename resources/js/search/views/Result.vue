@@ -175,7 +175,10 @@
               style="border-right: 1px solid #f3f3f3"
             >
               <img
-                :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' + rate.carrier.image"
+                :src="
+                  'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
+                    rate.carrier.image
+                "
                 alt="logo"
                 width="115px"
               />
@@ -228,7 +231,7 @@
                       <b
                         v-if="
                           rate.transit_time != undefined &&
-                          rate.transit_time != undefined
+                            rate.transit_time != undefined
                         "
                         >{{
                           rate.transit_time.service == 1
@@ -239,7 +242,7 @@
                       <b
                         v-if="
                           rate.transit_time != undefined &&
-                          rate.transit_time != undefined
+                            rate.transit_time != undefined
                         "
                         >{{
                           rate.transit_time.via ? rate.transit_time.via : ""
@@ -248,7 +251,7 @@
                       <p
                         v-if="
                           rate.transit_time != null &&
-                          rate.transit_time.transit_time != null
+                            rate.transit_time.transit_time != null
                         "
                       >
                         <b>TT:</b> {{ rate.transit_time.transit_time }}
@@ -338,11 +341,21 @@
                       :key="contKey"
                     >
                       <p>
-                        <b style="font-size: 16px" v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined) || request.showRateCurrency"
+                        <b
+                          style="font-size: 16px"
+                          v-if="
+                            (rate.charges.Origin == undefined &&
+                              rate.charges.Destination == undefined) ||
+                              request.showRateCurrency
+                          "
                           >{{
                             rate.totals_with_markups_freight_currency
-                              ? rate.totals_with_markups_freight_currency["C" + container.code]
-                              : rate.totals_freight_currency["C" + container.code]
+                              ? rate.totals_with_markups_freight_currency[
+                                  "C" + container.code
+                                ]
+                              : rate.totals_freight_currency[
+                                  "C" + container.code
+                                ]
                           }}
                           <span style="font-size: 10px">{{
                             rate.currency.alphacode
@@ -381,8 +394,8 @@
                   <b-button
                     v-if="
                       rate.contract_id != 0 ||
-                      rate.contract_request_id != 0 ||
-                      rate.contract_backup_id != 0
+                        rate.contract_request_id != 0 ||
+                        rate.contract_backup_id != 0
                     "
                     style="
                       background: transparent;
@@ -391,11 +404,18 @@
                       color: #00c581;
                     "
                     @click="downloadContractFile(rate)"
-                    v-b-tooltip.hover 
+                    v-b-tooltip.hover
                     :title="rate.owner"
                   >
-                    <span class="badge" v-bind:class="{'badge-primary':rate.contract.is_manual == 0, 'badge-secondary':rate.contract.is_manual == 1,'badge-success':rate.contract.is_manual == 2 }">download contract</span>
-                    
+                    <span
+                      class="badge"
+                      v-bind:class="{
+                        'badge-primary': rate.contract.is_manual == 0,
+                        'badge-secondary': rate.contract.is_manual == 1,
+                        'badge-success': rate.contract.is_manual == 2,
+                      }"
+                      >download contract</span
+                    >
                   </b-button>
                 </div>
 
@@ -453,7 +473,7 @@
                 :key="chargeType"
               >
                 <h5>
-                  <b>{{ chargeType }}</b>
+                  <b>{{ chargeType == "destiny_inland" ? "Inland" : chargeType}}</b>
                 </h5>
 
                 <b-table-simple hover small responsive class="sc-table">
@@ -481,11 +501,19 @@
                       :key="chargeKey"
                     >
                       <b-td
-                        ><b>{{ charge.surcharge.name }}</b></b-td
+                        ><b>
+                          {{
+                            charge.surcharge ? charge.surcharge.name : "Inlands"
+                          }}
+                        </b></b-td
                       >
-                      <b-td>{{
-                        charge.calculationtype.name
-                      }}</b-td>
+                      <b-td style="text-transform: capitalize">
+                        {{
+                          charge.calculationtype
+                            ? charge.calculationtype.name
+                            : charge.type
+                        }}
+                      </b-td>
                       <!-- <b-td></b-td>
                                             <b-td></b-td> -->
                       <b-td
@@ -504,8 +532,8 @@
                         <span
                           v-if="
                             charge.container_markups != undefined &&
-                            charge.container_markups['C' + container.code] !=
-                              undefined
+                              charge.container_markups['C' + container.code] !=
+                                undefined
                           "
                           class="profit"
                           >+{{
@@ -547,7 +575,7 @@
                                             <b-td></b-td>
                                             <b-td></b-td> -->
                       <b-td colspan="2" style="text-align: right"
-                        ><b>Total {{ chargeType }}</b></b-td
+                        ><b>Total {{ chargeType == "destiny_inland" ? "Inland" : chargeType }}</b></b-td
                       >
                       <b-td
                         v-for="(container, contKey) in request.containers"
@@ -673,6 +701,9 @@ export default {
   },
   created() {
     this.requestData = this.$route.query;
+
+    console.log('request data in result', this.requestData)
+    console.log('request prop in result', this.request)
   },
   methods: {
     countContainersClass() {
@@ -695,7 +726,7 @@ export default {
       let component = this;
 
       if (component.filterBy != "") {
-        component.rates.forEach(function (rate) {
+        component.rates.forEach(function(rate) {
           if (component.filterBy == rate.carrier.name) {
             component.finalRates.push(rate);
           }
@@ -703,7 +734,7 @@ export default {
       } else {
         component.finalRates = component.rates;
       }
-      component.rates.forEach(function (rate) {
+      component.rates.forEach(function(rate) {
         if (!component.filterOptions.includes(rate.carrier.name)) {
           component.filterOptions.push(rate.carrier.name);
         }
@@ -713,7 +744,7 @@ export default {
       let component = this;
       //console.log(this.request);
       if (component.filterBy != "") {
-        component.rates.forEach(function (rate) {
+        component.rates.forEach(function(rate) {
           if (component.filterBy == rate.carrier.name) {
             component.finalRates.push(rate);
           }
@@ -722,18 +753,20 @@ export default {
         component.finalRates = component.rates;
       }
     },
-    downloadContractFile(rate){
-      let parameters = [rate.contract_id, rate.contract_request_id, rate.contract_backup_id];
+    downloadContractFile(rate) {
+      let parameters = [
+        rate.contract_id,
+        rate.contract_request_id,
+        rate.contract_backup_id,
+      ];
 
       this.actions.search
         .downloadContract(parameters)
         .then((response) => {
-          if(response.data.zip == true){
-          
-
-              console.log('Downloading!', response.data.url);
-              window.open("/api/search/downloadMContract/"+response.data.url);
-/*
+          if (response.data.zip == true) {
+            console.log("Downloading!", response.data.url);
+            window.open("/api/search/downloadMContract/" + response.data.url);
+            /*
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href=url;
@@ -741,23 +774,22 @@ export default {
             document.body.appendChild(link);
             link.click();
 */
-          }else{
-              console.log('Downloading!', response);
-              window.open(response.data.url)
+          } else {
+            console.log("Downloading!", response);
+            window.open(response.data.url);
           }
-     
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    addRateToQuote(rate){
+    addRateToQuote(rate) {
       let component = this;
 
       if (rate.addToQuote) {
         component.ratesForQuote.push(rate);
       } else {
-        component.ratesForQuote.forEach(function (rateQ) {
+        component.ratesForQuote.forEach(function(rateQ) {
           if (rate.id == rateQ.id) {
             component.ratesForQuote.splice(
               component.ratesForQuote.indexOf(rateQ),
@@ -773,25 +805,25 @@ export default {
       this.$emit("createQuote");
     },
   },
-  mounted(){
+  mounted() {
     let component = this;
     //console.log(component.datalists);
     component.searchEndDate = component.request.dateRange.endDate;
-    component.rates.forEach(function (rate) {
+    component.rates.forEach(function(rate) {
       rate.addToQuote = false;
     });
     component.finalRates = component.rates;
     //component.setFilters();
     window.document.onscroll = () => {
-      let navBar = document.getElementById('top-results');
-      if(window.scrollY > navBar.offsetTop){
-          component.isActive = true;
+      let navBar = document.getElementById("top-results");
+      if (window.scrollY > navBar.offsetTop) {
+        component.isActive = true;
       } else {
-          component.isActive = false;
+        component.isActive = false;
       }
-    }
-    
+    };
+
     this.loaded = true;
   },
-}
+};
 </script>
