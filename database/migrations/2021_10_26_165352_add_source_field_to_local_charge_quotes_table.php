@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class IncreaseFieldLimitTotalsInChargeLclAirsTable extends Migration
+class AddSourceFieldToLocalChargeQuotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,9 @@ class IncreaseFieldLimitTotalsInChargeLclAirsTable extends Migration
      */
     public function up()
     {
-        \DB::statement('ALTER TABLE charge_lcl_airs CHANGE total DOUBLE(11,2) NULL');
+        Schema::table('local_charge_quotes', function (Blueprint $table) {
+            $table->integer('source')->after('sale_term_code_id')->nullable();
+        });
     }
 
     /**
@@ -23,7 +25,7 @@ class IncreaseFieldLimitTotalsInChargeLclAirsTable extends Migration
      */
     public function down()
     {
-        Schema::table('charge_lcl_airs', function (Blueprint $table) {
+        Schema::table('local_charge_quotes', function (Blueprint $table) {
             //
         });
     }
