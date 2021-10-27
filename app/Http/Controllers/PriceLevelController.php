@@ -113,7 +113,8 @@ class PriceLevelController  extends Controller
             'name' => $data['name'],
             'display_name' => $data['display_name'],
             'type' => $data['price_level_type'],
-            'company_user_id' => $company_user_id,      
+            'company_user_id' => $company_user_id,
+            'options' => ['whitelabel' => false],
         ]);
 
         return new PriceLevelResource($price_level);

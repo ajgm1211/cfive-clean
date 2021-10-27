@@ -6,9 +6,11 @@ use App\PriceLevelDetail;
 use App\PriceLevel;
 use Illuminate\Http\Request;
 use App\Http\Resources\PriceLevelDetailResource;
+use App\Http\Traits\UtilTrait;
 
 class PriceLevelDetailController extends Controller
 {
+    use UtilTrait;
     /**
      * Display a listing of the resource.
      *
@@ -37,15 +39,21 @@ class PriceLevelDetailController extends Controller
             'price_level_apply' => 'required',
         ]);
 
-        $price_level_detail = PriceLevelDetail::create([
-            'amount' => $data['amount'],
-            'currency_id' => $data['currency']['id'],
-            'direction_id' => $data['direction']['id'],
-            'price_level_apply_id' => $data['price_level_apply']['id'],
-            'price_level_id' => $price_level->id, 
-        ]);
+        $unique = $this->validateUniquePriceLevelDetail($data, $price_level);
 
-        return new PriceLevelDetailResource($price_level_detail);
+        if(!$unique){
+            return response()->json(['message' => 'Price level detail is not unique']);
+        }else{
+            $price_level_detail = PriceLevelDetail::create([
+                'amount' => $data['amount'],
+                'currency_id' => $data['currency']['id'],
+                'direction_id' => $data['direction']['id'],
+                'price_level_apply_id' => $data['price_level_apply']['id'],
+                'price_level_id' => $price_level->id, 
+            ]);
+    
+            return new PriceLevelDetailResource($price_level_detail);    
+        }
     }
 
     /**
@@ -64,29 +72,21 @@ class PriceLevelDetailController extends Controller
             'price_level_apply' => 'required',
         ]);
 
-        $price_level_detail->update([
-            'amount' => $data['amount'],
-            'currency_id' => $data['currency']['id'],
-            'direction_id' => $data['direction']['id'],
-            'price_level_apply_id' => $data['price_level_apply']['id'],
-        ]);
+        $unique = $this->validateUniquePriceLevelDetail($data, $price_level_detail->price_level);
 
-        return new PriceLevelDetailResource($price_level_detail);
-    }
+        if(!$unique){
+            return response()->json(['message' => 'Price level detail is not unique']);
+        }else{
+            $price_level_detail->update([
+                'amount' => $data['amount'],
+                'currency_id' => $data['currency']['id'],
+                'direction_id' => $data['direction']['id'],
+                'price_level_apply_id' => $data['price_level_apply']['id'],
+            ]);
+    
+            return new PriceLevelDetailResource($price_level_detail);
+        }
 
-    /**
-     * Clone the specified resource in storage.
-     *
-     * @param  \App\PriceLevelDetail  $priceLevel
-     * @return \Illuminate\Http\Response
-     */
-    public function duplicate(PriceLevelDetail $price_level_detail)
-    {
-        $price_level = $price_level_detail->price_level();
-
-        $new_price_level_detail = $price_level_detail->duplicate($price_level);
-
-        return new PriceLevelDetailResource($new_price_level_detail);
     }
 
     /**
