@@ -251,7 +251,7 @@ export default {
         origin_port: {
           label: "Origin Port",
           searchable: true,
-          type: "select",
+          type: "multiselect",
           rules: "required",
           trackby: "display_name",
           placeholder: "Select option",
@@ -260,7 +260,7 @@ export default {
         destination_port: {
           label: "Destination Port",
           searchable: true,
-          type: "select",
+          type: "multiselect",
           rules: "required",
           trackby: "display_name",
           placeholder: "Select option",
