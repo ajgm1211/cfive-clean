@@ -386,7 +386,7 @@
                 .pricingDetails.surcharges"
               :key="cmaSurchargeKey"
             >
-              <h5>
+              <h5 v-show="(request.originCharges && cmaSurchargeKey=='originSurcharges') || (request.destinationCharges && cmaSurchargeKey=='destinationSurcharges') || cmaSurchargeKey=='freightSurcharges'">
                 <b>{{
                   cmaSurchargeKey
                     .substring(0, cmaSurchargeKey.length - 10)
@@ -398,7 +398,9 @@
                 }}</b>
               </h5>
 
-              <b-table-simple hover small responsive class="sc-table">
+              <b-table-simple
+                v-show="(request.originCharges && cmaSurchargeKey=='originSurcharges') || (request.destinationCharges && cmaSurchargeKey=='destinationSurcharges') || cmaSurchargeKey=='freightSurcharges'"
+                hover small responsive class="sc-table">
                 <b-thead>
                   <b-tr>
                     <b-th style="width: 300px">Charge</b-th>
@@ -1236,7 +1238,7 @@
               .surcharges"
             :key="surchargeKey"
           >
-            <h5>
+            <h5 v-show="(request.originCharges && surchargeKey=='originSurcharges') || (request.destinationCharges && surchargeKey=='destinationSurcharges') || surchargeKey=='freightSurcharges'">
               <b>{{
                 surchargeKey
                   .substring(0, surchargeKey.length - 10)
@@ -1246,7 +1248,9 @@
               }}</b>
             </h5>
 
-            <b-table-simple hover small responsive class="sc-table">
+            <b-table-simple 
+              v-show="(request.originCharges && surchargeKey=='originSurcharges') || (request.destinationCharges && surchargeKey=='destinationSurcharges') || surchargeKey=='freightSurcharges'"
+              hover small responsive class="sc-table">
               <b-thead>
                 <b-tr>
                   <b-th style="width: 300px">Charge</b-th>
@@ -2022,7 +2026,7 @@
                 .surcharges"
               :key="evergreenSurchargeKey"
             >
-              <h5>
+              <h5 v-show="(request.originCharges && evergreenSurchargeKey=='originSurcharges') || (request.destinationCharges && evergreenSurchargeKey=='destinationSurcharges') || evergreenSurchargeKey=='freightSurcharges'">
                 <b>{{
                   evergreenSurchargeKey
                     .substring(0, evergreenSurchargeKey.length - 10)
@@ -2034,7 +2038,9 @@
                 }}</b>
               </h5>
 
-              <b-table-simple hover small responsive class="sc-table">
+              <b-table-simple 
+                v-show="(request.originCharges && evergreenSurchargeKey=='originSurcharges') || (request.destinationCharges && evergreenSurchargeKey=='destinationSurcharges') || evergreenSurchargeKey=='freightSurcharges'"
+                hover small responsive class="sc-table">
                 <b-thead>
                   <b-tr>
                     <b-th style="width: 300px">Charge</b-th>
@@ -2882,7 +2888,7 @@
                 .pricingDetails.surcharges"
               :key="hapagSurchargeKey"
             >
-              <h5>
+              <h5 v-show="(request.originCharges && hapagSurchargeKey=='originSurcharges') || (request.destinationCharges && hapagSurchargeKey=='destinationSurcharges') || hapagSurchargeKey=='freightSurcharges'">
                 <b>{{
                   hapagSurchargeKey
                     .substring(0, hapagSurchargeKey.length - 10)
@@ -2894,7 +2900,9 @@
                 }}</b>
               </h5>
 
-              <b-table-simple hover small responsive class="sc-table">
+              <b-table-simple 
+                hover small responsive class="sc-table"
+                v-show="(request.originCharges && hapagSurchargeKey=='originSurcharges') || (request.destinationCharges && hapagSurchargeKey=='destinationSurcharges') || hapagSurchargeKey=='freightSurcharges'">
                 <b-thead>
                   <b-tr>
                     <b-th style="width: 300px">Charge</b-th>
@@ -4575,8 +4583,10 @@ export default {
 
     hideCharges(responseData) {
       if (!this.request.originCharges && !this.request.destinationCharges) {
-        delete responseData.pricingDetails.surcharges.originSurcharges;
-        delete responseData.pricingDetails.surcharges.destinationSurcharges;
+        if(!this.datalists.company_user.options.store_hidden_charges){
+          delete responseData.pricingDetails.surcharges.originSurcharges;
+          delete responseData.pricingDetails.surcharges.destinationSurcharges;
+        }
 
         responseData.pricingDetails.totalRatePerContainer.forEach(function(
           totalPerCont
@@ -4600,7 +4610,9 @@ export default {
         !this.request.originCharges &&
         this.request.destinationCharges
       ) {
-        delete responseData.pricingDetails.surcharges.originSurcharges;
+        if(!this.datalists.company_user.options.store_hidden_charges){
+          delete responseData.pricingDetails.surcharges.originSurcharges;
+        }
 
         responseData.pricingDetails.totalRatePerContainer.forEach(function(
           totalPerCont
@@ -4627,7 +4639,9 @@ export default {
         this.request.originCharges &&
         !this.request.destinationCharges
       ) {
-        delete responseData.pricingDetails.surcharges.destinationSurcharges;
+        if(!this.datalists.company_user.options.store_hidden_charges){
+          delete responseData.pricingDetails.surcharges.destinationSurcharges;
+        }
 
         responseData.pricingDetails.totalRatePerContainer.forEach(function(
           totalPerCont
