@@ -217,17 +217,10 @@ class SearchApiController extends Controller
     {
         //Setting current company and user
          $user = \Auth::user();
-
-        //  dd($user);
          $user_id = $user->id;
          $company_user = $user->companyUser()->first();
          $company_user_id = $company_user->id;
         
-        // $user = \Auth::user();
-        // $user_id = 1;
-        // $company_user = 1;
-        // $company_user_id = 1;
-
         $search_array = $request->input();
 
         $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'], 0, 10);
@@ -377,8 +370,8 @@ class SearchApiController extends Controller
 
         //Setting current company and user
         $user = \Auth::user();
-        $user_id = 1;
-        $company_user_id = 1;
+        $user_id = $user->id;
+        $company_user_id = $user->company_user_id;
 
         //Including company and user in search data array
         $new_search_data['user'] = $user_id;
