@@ -124,6 +124,9 @@ Route::group(['prefix' => 'whitelabel'], function () {
         Route::get('/search/{search}', 'SearchApiController@retrieve');
         Route::get('/search/list', 'SearchApiController@list');
         Route::post('/search/store', 'SearchApiController@store');
+
+        Route::post('/settings/save', [App\Http\Controllers\Whitelabel\SettingsController::class, 'store']);
+
     });
 
 });

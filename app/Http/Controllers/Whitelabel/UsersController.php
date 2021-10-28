@@ -12,7 +12,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use Hash;
-use App\CompanyUser;
+use App\CompanyUser; 
+use App\SettingsWhitelabel;
 
 
 class UsersController extends Controller
@@ -51,6 +52,14 @@ class UsersController extends Controller
     public function store(Request $request)
     {
 
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $company_user = $user->companyUser()->first();
+        $company_user_id = $company_user->id;
+        $url = DB::Table('settings_whitelabels')->select('url')->where('company_user_id',$company_user_id)->get();  
+        $url_final = $url. '/admin';
+        // dd($url_final);
+
         $this->validate($request,[
              'name' => 'required',
              'lastname' => 'required',
@@ -84,11 +93,12 @@ class UsersController extends Controller
 
          $client = new \GuzzleHttp\Client([              
              'Accept' => 'application/json',
+             'base_url' => [$url],
              'Content-Type' => 'application/x-www-form-urlencoded']);
                  // Create a POST request
              $response = $client->request(
                  'POST',
-                 'http://chirix.localhost:8000/admin',
+                 '/admin',
                  [
                      'json' => [
                          'name' => $name,

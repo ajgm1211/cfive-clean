@@ -411,29 +411,29 @@ class SearchApiController extends Controller
             'price_level_id' => $new_search_data_ids['pricelevel'],
             'origin_charges' => $new_search_data_ids['originCharges'],
             'destination_charges' => $new_search_data_ids['destinationCharges'],
-            // 'options' => $options,
+            'options' => $options,
 
-            //'origin_address' => $new_search_data_ids['originAddress'],
-            //'destination_address' => $new_search_data_ids['destinationAddress']
+            'origin_address' => $new_search_data_ids['originAddress'],
+            'destination_address' => $new_search_data_ids['destinationAddress']
         ]);
 
-    //     if ($new_search_data['options']['whitelabel'] == true ){
+         if ($new_search_data['options']['whitelabel'] == true ){
 
-    //      $new_search = SearchRate::create([
-    //         'company_user_id' => $new_search_data_ids['company_user'],
-    //         'pick_up_date' => $pick_up_date,
-    //         'direction' => $new_search_data_ids['direction'],
-    //         'type' => $new_search_data_ids['type'],
-    //         'user_id' => $new_search_data_ids['user'],
-    //         'price_level_id' => $new_search_data_ids['pricelevel'],
-    //         'origin_charges' => $new_search_data_ids['originCharges'],
-    //         'destination_charges' => $new_search_data_ids['destinationCharges'],
-    //         'options' => $options,
-    //      ]);
+          $new_search = SearchRate::create([
+             'company_user_id' => $new_search_data_ids['company_user'],
+             'pick_up_date' => $pick_up_date,
+             'direction' => $new_search_data_ids['direction'],
+             'type' => $new_search_data_ids['type'],
+             'user_id' => $new_search_data_ids['user'],
+             'price_level_id' => $new_search_data_ids['pricelevel'],
+             'origin_charges' => $new_search_data_ids['originCharges'],
+             'destination_charges' => $new_search_data_ids['destinationCharges'],
+             'options' => $options,
+          ]);
 
-    //      return new SearchApiResource($new_search);
+          return new SearchApiResource($new_search);
 
-    //  }
+     }
 
 
         foreach ($new_search_data_ids['originPorts'] as $origPort) {
