@@ -69,6 +69,11 @@ class SettingController extends Controller
             } else {
                 $ShowFreightCurrency = '';
             }
+            if ($company->companyUser->options['store_hidden_charges'] == '1') {
+                $StoreHiddenCharges = "checked='true'";
+            } else {
+                $StoreHiddenCharges = '';
+            }
             if ($company->companyUser->colors_pdf != null) {
                 $color_pdf = $company->companyUser->colors_pdf;
             } else {
@@ -80,7 +85,7 @@ class SettingController extends Controller
         $currencies = Currency::where('alphacode', '=', 'USD')->orwhere('alphacode', '=', 'EUR')->pluck('alphacode', 'id');
         $pdf_templates = PdfTemplate::pluck('name', 'id');
 
-        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'ShowFreightCurrency', 'color_pdf','delegations'));
+        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'ShowFreightCurrency','StoreHiddenCharges', 'color_pdf','delegations'));
     }
 
     public function store(StoreSettings $request)
@@ -163,6 +168,7 @@ class SettingController extends Controller
                 'api_providers'=> [],
                 'company_address_pdf'=> 1,
                 'totals_in_freight_currency' => false,
+                'store_hidden_charges' => false,
             ];
             $company->options=$options;
             $company->save();
@@ -183,6 +189,7 @@ class SettingController extends Controller
             $company = CompanyUser::findOrFail($request->company_id);
             $company_options = $company->options;
             $company_options['totals_in_freight_currency'] = $request->showfreightcurrency;
+            $company_options['store_hidden_charges'] = $request->storehiddencharges;
             $company->options = $company_options;
             $company->name = $request->name;
             $company->phone = $request->phone;
