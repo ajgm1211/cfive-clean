@@ -52,7 +52,6 @@ class SendExcelFile implements ShouldQueue
     public function handle()
     {
 
-        \Log::info($this->data['data']);
         $origin_port = $this->data['data']['origin_port'];
         $destiny_port = $this->data['data']['destination_port'];
         $direction = $this->data['data']['direction']; //'2020/10/01';
@@ -66,10 +65,16 @@ class SendExcelFile implements ShouldQueue
         $company_setting = CompanyUser::where('id', $company_user_id)->first();
         $container_calculation = ContainerCalculation::get();
         $styleArray = array(
-          'font' => array(
-          'bold' => true
-          )
-      );
+            'font' => array(
+                'bold' => true,
+            ),
+        );
+        $styleArrayALL = array(
+            'font' => array(
+                'bold' => true,
+                'color' => array('rgb' => 'CD0000'),
+            ),
+        );
 
         if ($direction == 3) {
             $direction = array(1, 2, 3);
@@ -95,14 +100,14 @@ class SendExcelFile implements ShouldQueue
         $now = new \DateTime();
         $now = $now->format('dmY_His');
         $nameFile = str_replace([' '], '_', $now . '_rates');
-        $file = Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers, $container_calculation,$styleArray) {
-            $excel->sheet('Rates', function ($sheet) use ($arreglo, $arrayComplete, $containers, $container_calculation , $styleArray) {
+        $file = Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers, $container_calculation, $styleArray,$styleArrayALL) {
+            $excel->sheet('Rates', function ($sheet) use ($arreglo, $arrayComplete, $containers, $container_calculation, $styleArray,$styleArrayALL) {
 
-              $sheet->cells('A1:AG1', function ($cells) {
-                $cells->setBackground('#2525ba');
-                $cells->setFontColor('#ffffff');
-                $cells->setValignment('center');
-            });
+                $sheet->cells('A1:AG1', function ($cells) {
+                    $cells->setBackground('#2525ba');
+                    $cells->setFontColor('#ffffff');
+                    $cells->setValignment('center');
+                });
 
                 $sheet->row(1, $arrayComplete);
                 $a = 2;
@@ -145,7 +150,7 @@ class SendExcelFile implements ShouldQueue
 
                     }
                     //
-                    $sheet->getStyle('G'.$a)->applyFromArray($styleArray);
+                    $sheet->getStyle('A'.$a.':O'.$a.'')->applyFromArray($styleArray);
 
                     $arrayCompleteAmount = $this->get_header_rate($data, $montos);
 
@@ -184,6 +189,13 @@ class SendExcelFile implements ShouldQueue
                         }
 
                     }
+
+                    //Montos All IN
+                    $sheet->getStyle('G' . $a)->applyFromArray($styleArrayALL);
+                    $arrayCompleteAmountAllIn = $this->get_amount_allIn($data,$montosAllInTot);
+                    $sheet->row($a, $arrayCompleteAmountAllIn);
+                    $a++;
+                    //Fin montos all in 
 
                     $i = 1;
                     $sheet->setBorder('A1:I' . $i, 'thin');
@@ -293,6 +305,30 @@ class SendExcelFile implements ShouldQueue
         $arrayCompleteLocal = array_merge($arrayFirstPartLocal, $arraySecondPartLocal);
 
         return $arrayCompleteLocal;
+
+    }
+
+    public function get_amount_allIn($data,$montosAllInTot )
+    {
+
+        $arrayFirstPartAmountAllIn = array(
+            'Contract' => $data->contract->name,
+            'Reference' => $data->contract->id,
+            'Carrier' => $data->carrier->name,
+            'Direction' => $data->contract->direction->name,
+            'Origin' => ucwords(strtolower($data->port_origin->name)),
+            'Destination' => ucwords(strtolower($data->port_destiny->name)),
+            'Charge' => 'Freight - ALL IN',
+        );
+        $arrayFirstPartAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $montosAllInTot);
+        $arraySecondPartAmountAllIn = array(
+            'Currency' => $data->currency->alphacode,
+            'From' => $data->contract->validity,
+            'Until' => $data->contract->expire,
+
+        );
+        $arrayCompleteAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $arraySecondPartAmountAllIn);
+        return $arrayCompleteAmountAllIn;
 
     }
 
