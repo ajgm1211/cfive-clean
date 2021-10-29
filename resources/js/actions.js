@@ -846,11 +846,4 @@ export default {
             return api.call('post', `/api/v2/contractslcl/${contract_id}/remarks`, data);
         },
     },
-    pricelevel_restrictions: {
-        update(data, route) {
-            let price_level = route.params.id;
-            return api.call('post', `/api/pricelevels/${price_level}/update`, data);
-        },
-    },
-
 };

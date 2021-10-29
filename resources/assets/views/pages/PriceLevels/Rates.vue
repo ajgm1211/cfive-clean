@@ -13,7 +13,7 @@
           :rules="{
             required: true,
           }"
-          @blur="update()"
+          @blur="update('main')"
         />
         <CustomInput
           label="Display name"
@@ -23,10 +23,10 @@
           :rules="{
             required: true,
           }"
-          @blur="update()"
+          @blur="update('main')"
         />
         <Selectable
-          @selected="setSelected($event)"
+          @selected="setSelected($event);update('main')"
           :value="selected"
           label="Price Level Type"
           :options="price_types"
@@ -55,16 +55,44 @@
           v-model="price.description"
           v-if="active == 'Description'"
           type="classic"
-          @blur="update()"
+          @blur="update('description')"
         ></ckeditor>
 
-        <Restrictions
-          v-if="active == 'Only Apply To'"
-          style="border: none!important;"
-          :datalists="datalists"
-          :actions="actions"
-          :data="currentData"
-        />
+        <div v-if="active == 'Only Apply To'">
+          <h6>Companies:</h6>
+          <multiselect
+            v-model="price.company_restrictions"
+            :options="datalists.companies"
+            :multiple="true"
+            :close-on-select="true"
+            :clear-on-select="true"
+            :show-labels="false"
+            :searchable="true"
+            track-by="business_name"
+            label="business_name"
+            placeholder="Select companies"
+            @input="update('companies')"
+            class="input-h"
+            style="cursor:pointer"
+          ></multiselect>
+          <br>
+          <h6>Groups:</h6>
+          <multiselect
+            v-model="price.group_restrictions"
+            :options="datalists.company_groups"
+            :multiple="true"
+            :close-on-select="true"
+            :clear-on-select="true"
+            :show-labels="false"
+            :searchable="true"
+            track-by="name"
+            label="name"
+            placeholder="Select company groups"
+            @input="update('groups')"
+            class="input-h"
+            style="cursor:pointer"
+          ></multiselect>
+        </div>
 
         <div v-if="active == 'Detail'">
           <InputSearch style="margin-bottom:20px" />
@@ -98,7 +126,6 @@
 </template>
 
 <script>
-import Restrictions from "../../../../js/components/contracts/Restrictions.vue";
 import CustomInput from "../../../components/common/CustomInput.vue";
 import Selectable from "../../../components/common/Selectable.vue";
 import LeftArrow from "../../../components/Icons/LeftArrow.vue";
@@ -108,18 +135,20 @@ import InputSearch from "../../../components/common/InputSearch.vue";
 import SorteableDropdown from "../../../components/common/SorteableDropdown.vue";
 import Paginate from "../../../../js/components/paginate.vue";
 import MainButton from "../../../components/common/MainButton.vue";
+import Multiselect from "vue-multiselect";
+import "vue-multiselect/dist/vue-multiselect.min.css";
 import { mapGetters } from "vuex";
 export default {
   components: {
     CustomInput,
     Selectable,
     LeftArrow,
-    Restrictions,
     ListPrices,
     InputSearch,
     Paginate,
     MainButton,
     SorteableDropdown,
+    Multiselect,
   },
   data: () => ({
     actions: actions,
@@ -133,6 +162,8 @@ export default {
       name: "",
       display_name: "",
       description: "",
+      company_restrictions:[],
+      group_restrictions:[],
     },
     price_types: ["FCL", "LCL"],
     selected: "",
@@ -151,6 +182,8 @@ export default {
         name: this.price.name,
         display_name: this.price.display_name,
         price_level_type: this.selected,
+        company_restrictions: this.price.company_restrictions,
+        group_restrictions: this.price.group_restrictions,
       },
     });
 
@@ -166,6 +199,8 @@ export default {
       this.price.display_name = this.GET_CURRENT_PRICE_LEVEL.display_name;
       this.price.description = this.GET_CURRENT_PRICE_LEVEL.description;
       this.selected = this.GET_CURRENT_PRICE_LEVEL.type;
+      this.price.company_restrictions = this.GET_CURRENT_PRICE_LEVEL.company_restrictions;
+      this.price.group_restrictions = this.GET_CURRENT_PRICE_LEVEL.group_restrictions;
 
       this.rates = this.GET_PRICE_LEVEL_RATES;
     }, 1000);
@@ -177,15 +212,30 @@ export default {
         this.setDropdownLists(err, data.data);
       });
     },
-    update() {
-      this.$store.dispatch("updatePriceLevel", {
-        id: this.$route.params.id,
-        body: {
+    update(key=null) {
+      if(key == 'main'){
+        var updateBody = {
           name: this.price.name,
           display_name: this.price.display_name,
           price_level_type: this.selected,
+        }
+      }else if(key == 'description'){
+        var updateBody = {
           description: this.price.description,
-        },
+        }
+      }else if(key == 'companies'){
+        var updateBody = {
+          companies: this.price.company_restrictions,
+        }
+      }else if(key == 'groups'){
+        var updateBody = {
+          groups: this.price.group_restrictions,
+        }
+      }
+
+      this.$store.dispatch("updatePriceLevel", {
+        id: this.$route.params.id,
+        body: updateBody,
       });
       this.$forceUpdate();
     },
