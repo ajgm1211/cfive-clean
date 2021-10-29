@@ -27,13 +27,13 @@ class PriceLevel extends Model
 
     public function companies()
     {
-        return $this->hasManyThrough('App\Company', 'App\PriceLevelGroups', 'price_level_id', 'id', 'id', 'group_id')
+        return $this->hasManyThrough('App\Company', 'App\PriceLevelGroup', 'price_level_id', 'id', 'id', 'group_id')
         ->where('group_type', 'App\Company');
     }
 
     public function company_groups()
     {
-        return $this->hasManyThrough('App\CompanyGroup', 'App\PriceLevelGroups', 'price_level_id', 'id', 'id', 'group_id')
+        return $this->hasManyThrough('App\CompanyGroup', 'App\PriceLevelGroup', 'price_level_id', 'id', 'id', 'group_id')
         ->where('group_type', 'App\CompanyGroup');
     }
 
