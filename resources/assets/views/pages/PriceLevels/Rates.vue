@@ -3,35 +3,36 @@
     <div class="back-btn" @click="$router.back()">
       <LeftArrow /> <span>back</span>
     </div>
-    <div class="inputs-container">
-      <CustomInput
-        :disabled="true"
-        label="Name"
-        name="name"
-        ref="name"
-        v-model="price.name"
-        :rules="{
-          required: true,
-        }"
-      />
-      <CustomInput
-        :disabled="true"
-        label="Display name"
-        name="display name"
-        ref="display_name"
-        v-model="price.display_name"
-        :rules="{
-          required: true,
-        }"
-      />
-      <Selectable
-        :disabled="true"
-        @selected="setSelected($event)"
-        :selected="selected"
-        label="Price Level Type"
-        :options="price_types"
-        :error="selectable_error"
-      />
+    <div class="i-container">
+      <div class="inputs-container">
+        <CustomInput
+          label="Name"
+          name="name"
+          ref="name"
+          v-model="price.name"
+          :rules="{
+            required: true,
+          }"
+          @blur="update()"
+        />
+        <CustomInput
+          label="Display name"
+          name="display name"
+          ref="display_name"
+          v-model="price.display_name"
+          :rules="{
+            required: true,
+          }"
+          @blur="update()"
+        />
+        <Selectable
+          @selected="setSelected($event)"
+          :value="selected"
+          label="Price Level Type"
+          :options="price_types"
+          :error="selectable_error"
+        />
+      </div>
     </div>
 
     <div class="tabscontainer">
@@ -54,15 +55,43 @@
           v-model="price.description"
           v-if="active == 'Description'"
           type="classic"
+          @blur="update()"
         ></ckeditor>
 
-        <restrictions
+        <Restrictions
           v-if="active == 'Only Apply To'"
           style="border: none!important;"
           :datalists="datalists"
           :actions="actions.restrictions_lcl"
           :data="currentData"
-        ></restrictions>
+        />
+
+        <div v-if="active == 'Detail'">
+          <InputSearch style="margin-bottom:20px" />
+
+          <ListPrices :currentPage="currentPage" :rates="GET_PRICE_LEVEL_RATES" :filters="false" :thead="thead" :dynamic="true" />
+
+          <p style="margin-top:20px">
+            Total Results: {{ GET_PAGINATE_RATES.meta.total }}
+          </p>
+
+          <Paginate
+            @prevPage="prevPage"
+            @nextPage="nextPage"
+            :page-count="GET_PAGINATE_RATES.meta.last_page"
+            :prev-text="'Prev'"
+            :next-text="'Next'"
+            :page-class="'page-item'"
+            :page-link-class="'page-link'"
+            :container-class="'pagination'"
+            :prev-class="'page-item'"
+            :prev-link-class="'page-link'"
+            :next-class="'page-item'"
+            :next-link-class="'page-link'"
+            :initialPage="1"
+            style="margin-bottom: 0!important;"
+          />
+        </div>
       </div>
     </div>
   </section>
@@ -74,13 +103,23 @@ import CustomInput from "../../../components/common/CustomInput.vue";
 import Selectable from "../../../components/common/Selectable.vue";
 import LeftArrow from "../../../components/Icons/LeftArrow.vue";
 import actions from "../../../../../resources/js/actions";
-import axios from "axios";
+import ListPrices from "../../../components/PriceLevel/ListPrices.vue";
+import InputSearch from "../../../components/common/InputSearch.vue";
+import SorteableDropdown from "../../../components/common/SorteableDropdown.vue";
+import Paginate from "../../../../js/components/paginate.vue";
+import MainButton from "../../../components/common/MainButton.vue";
+import { mapGetters } from "vuex";
 export default {
   components: {
     CustomInput,
     Selectable,
     LeftArrow,
     Restrictions,
+    ListPrices,
+    InputSearch,
+    Paginate,
+    MainButton,
+    SorteableDropdown,
   },
   data: () => ({
     actions: actions,
@@ -91,16 +130,45 @@ export default {
     active: "Detail",
     tabs: ["Detail", "Only Apply To", "Description"],
     price: {
-      name: "example",
-      display_name: "display example",
-      description: "hola description",
+      name: "",
+      display_name: "",
+      description: "",
     },
     price_types: ["FCL", "LCL"],
-    selected: "FCL",
+    selected: "",
+    value: "",
     selectable_error: false,
+    thead: ["Direction", "Apply to", "20", "40", "Currency"],
+    rates: [],
+    currentPage: 1,
   }),
-  created() {
+  mounted() {
     this.getData();
+
+    this.$store.dispatch("getPriceLevelDetail", {
+      id: this.$route.params.id,
+      body: {
+        name: this.price.name,
+        display_name: this.price.display_name,
+        price_level_type: this.selected,
+      },
+    });
+
+    this.$store.dispatch("listPriceLevelRates", {
+      id: this.$route.params.id,
+      page: this.currentPage,
+    });
+
+    this.$store.dispatch("getPriceLevelData");
+
+    setTimeout(() => {
+      this.price.name = this.GET_CURRENT_PRICE_LEVEL.name;
+      this.price.display_name = this.GET_CURRENT_PRICE_LEVEL.display_name;
+      this.price.description = this.GET_CURRENT_PRICE_LEVEL.description;
+      this.selected = this.GET_CURRENT_PRICE_LEVEL.type;
+
+      this.rates = this.GET_PRICE_LEVEL_RATES;
+    }, 1000);
   },
   methods: {
     getData() {
@@ -109,8 +177,21 @@ export default {
         this.setDropdownLists(err, data.data);
       });
     },
+    update() {
+      this.$store.dispatch("updatePriceLevel", {
+        id: this.$route.params.id,
+        body: {
+          name: this.price.name,
+          display_name: this.price.display_name,
+          price_level_type: this.selected,
+          description: this.price.description,
+        },
+      });
+      this.$forceUpdate();
+    },
     setSelected(option) {
       this.selected = option;
+      this.update();
     },
     currentTab(tab) {
       this.active = tab;
@@ -118,13 +199,41 @@ export default {
     setDropdownLists(err, data) {
       this.datalists = data;
 
-      console.log("data dropwdown", data);
-
       this.datalists["route_types"] = [
         { id: "port", name: "Port", vselected: "harbors" },
         { id: "country", name: "Country", vselected: "countries" },
       ];
     },
+    prevPage() {
+      if (this.currentPage > 1) {
+        let prevpage = this.currentPage - 1;
+        this.$store.dispatch("listPriceLevelRates", {
+          id: this.$route.params.id,
+          page: prevpage,
+        });
+        this.currentPage = this.currentPage - 1;
+        this.$forceUpdate();
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.GET_PAGINATE_RATES.meta.last_page) {
+        let nextPage = this.currentPage + 1;
+        this.$store.dispatch("listPriceLevelRates", {
+          id: this.$route.params.id,
+          page: nextPage,
+        });
+        this.currentPage = this.currentPage + 1;
+        this.$forceUpdate();
+      }
+    },
+  },
+  computed: {
+    ...mapGetters([
+      "GET_CURRENT_PRICE_LEVEL",
+      "GET_PRICE_LEVEL_RATES",
+      "GET_PRICE_LEVEL_DATA",
+      "GET_PAGINATE_RATES",
+    ]),
   },
 };
 </script>
@@ -146,16 +255,15 @@ h2 {
 
 .inputs-container {
   display: grid;
-  grid-template-columns: 200px 200px 200px;
+  grid-template-columns: 200px 200px 200px 200px;
   column-gap: 20px;
-  padding: 0 100px;
-  margin-top: 20px;
 }
 
 .back-btn {
   cursor: pointer;
   display: flex;
   align-items: center;
+  width: fit-content;
 
   & > span {
     margin-left: 5px;
@@ -206,5 +314,13 @@ h2 {
   margin-top: 40px;
   background-color: white;
   border-radius: 5px;
+}
+
+.i-container {
+  padding: 0 100px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

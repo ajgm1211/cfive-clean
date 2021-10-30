@@ -488,7 +488,7 @@ Route::middleware(['auth'])->prefix('prices')->group(function () {
 
     // V2
     Route::view('/v2', 'pricesV2.index');
-    Route::view('/rates', 'pricesV2.index');
+    Route::view('/rates/{id}', 'pricesV2.index');
 });
 Route::resource('prices', 'PriceController')->middleware('auth');
 
@@ -1426,4 +1426,16 @@ Route::resource('provinces', 'ProvinceController')->middleware('auth');
 Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
     Route::get('intercom', 'TestController@createIntercom')->name('test.intercom');
     Route::get('contable', 'TestController@contable')->name('teste.intercom')->middleware('check_company:quote');;
+});
+
+
+//NEW PRICE LEVELS VIEWS ROUTES
+Route::group(['prefix' => 'api/pricelevel', 'middleware' => ['auth']], function () {
+    Route::get('', 'PriceLevelController@index');
+    Route::get('{price_level}/edit', 'PriceLevelController@edit');
+});
+
+Route::group(['prefix' => 'api/pricelevel/groups', 'middleware' => ['auth']], function () {
+    Route::get('', 'CompanyGroupController@index');
+    Route::get('{company_group}/edit', 'CompanyGroupController@edit');
 });
