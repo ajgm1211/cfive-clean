@@ -173,7 +173,7 @@ class SearchApiController extends Controller
             $api_url = "https://carriersdev.cargofive.com/api/pricing";
         } else {
             $api_url = "https://carriersdev.cargofive.com/api/pricing";
-        }
+        } 
 
         /**$inland_distances = InlandDistance::get()->map(function ($distance){
         return $distance->only(['id','display_name','harbor_id']);
