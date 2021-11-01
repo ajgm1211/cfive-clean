@@ -52,13 +52,14 @@ class UsersController extends Controller
     public function store(Request $request)
     {
 
+        // Obtain url from settingsWhitelabel with company_user_id
         $user = \Auth::user();
         $user_id = $user->id;
         $company_user = $user->companyUser()->first();
         $company_user_id = $company_user->id;
-        $url = DB::Table('settings_whitelabels')->select('url')->where('company_user_id',$company_user_id)->get();  
-        $url_final = $url. '/admin';
-        // dd($url_final);
+        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url')->get();  
+        $url_1= $url[0]['url'] ;
+        $url_final = $url_1. '/admin';
 
         $this->validate($request,[
              'name' => 'required',
@@ -93,12 +94,11 @@ class UsersController extends Controller
 
          $client = new \GuzzleHttp\Client([              
              'Accept' => 'application/json',
-             'base_url' => [$url],
              'Content-Type' => 'application/x-www-form-urlencoded']);
                  // Create a POST request
              $response = $client->request(
                  'POST',
-                 '/admin',
+                 $url_final,
                  [
                      'json' => [
                          'name' => $name,

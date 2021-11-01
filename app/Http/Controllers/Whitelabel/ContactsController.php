@@ -10,6 +10,8 @@ use App\Http\Requests\StoreContact;
 use GuzzleHttp\Client; 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
+use App\CompanyUser; 
+use App\SettingsWhitelabel;
 use Exception;
 
 class ContactsController extends Controller
@@ -44,6 +46,15 @@ class ContactsController extends Controller
      */
     public function store(Request $request)
     {
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $company_user = $user->companyUser()->first();
+        $company_user_id = $company_user->id;
+        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url')->get();  
+        $url_1= $url[0]['url'] ;
+        $url_final = $url_1. '/user';
+
+
            $this->validate($request,  [
                'first_name' => 'required',
                'last_name' => 'required',
@@ -82,7 +93,7 @@ class ContactsController extends Controller
                      // Create a POST request
                  $response = $client->request(
                      'POST',
-                     'http://chirix.localhost:8000/user',
+                     $url_final,
                       [
                           'json' => [
                              'name' => $name,
