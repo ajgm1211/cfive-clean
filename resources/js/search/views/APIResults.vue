@@ -310,8 +310,19 @@
                   </ul>
                 </b-popover>
               </div>
-
+              
               <div class="d-flex justify-content-end align-items-center">
+                <b-button
+                  v-if="cmaResult.remarks && cmaResult.remarks != ''"
+                  class="rs-btn"
+                  v-b-toggle="
+                    'remarks_' +
+                      String(cmaResult.contractReference) +
+                      '_' +
+                      String(cmaResult.accordion_id)
+                  "
+                  ><b>remarks</b><b-icon icon="caret-down-fill"></b-icon
+                ></b-button>
                 <b-button
                   class="rs-btn"
                   v-b-toggle="
@@ -368,6 +379,26 @@
           class="row mr-0 ml-0 accordion"
           role="tablist"
         >
+          <!-- REMARKS -->
+          <b-collapse
+            :id="
+              'remarks_' +
+                String(cmaResult.contractReference) +
+                '_' +
+                String(cmaResult.accordion_id)"
+            class="pt-5 pb-5 pl-5 pr-5 col-12"
+            :accordion="'my-accordion-' + cmaResult.accordion_id"
+            role="tabpanel"
+            v-model="cmaResult.remarksCollapse"
+          >
+            <h5><b>Remarks</b></h5>
+
+            <b-card>
+              <p v-html="cmaResult.remarks"></p>
+            </b-card>
+          </b-collapse>
+          <!-- FIN REMARKS -->
+
           <!-- DETALLES DE TARIFA -->
           <b-collapse
             :id="
@@ -1171,6 +1202,13 @@
                   role="tablist"
                 >
                   <b-button
+                    v-if="result.remarks && result.remarks != ''"
+                    class="rs-btn"
+                    v-b-toggle="'remarks_' + String(result.quoteLine)"
+                    ><b>remarks</b><b-icon icon="caret-down-fill"></b-icon
+                  ></b-button>
+
+                  <b-button
                     class="rs-btn"
                     v-b-toggle="'details_' + String(result.quoteLine)"
                     ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
@@ -1224,6 +1262,22 @@
           </div>
         </div>
         <!-- FIN INFORMACION DE TARIFA -->
+
+        <!-- REMARKS -->
+          <b-collapse
+            :id="'remarks_' + String(result.quoteLine)"
+            class="pt-5 pb-5 pl-5 pr-5 col-12"
+            :accordion="'my-accordion-' + result.accordion_id"
+            role="tabpanel"
+            v-model="result.remarksCollapse"
+          >
+            <h5><b>Remarks</b></h5>
+
+            <b-card>
+              <p v-html="result.remarks"></p>
+            </b-card>
+          </b-collapse>
+        <!-- FIN REMARKS -->
 
         <!-- DETALLES DE TARIFA -->
         <b-collapse
@@ -1952,6 +2006,17 @@
 
               <div class="d-flex justify-content-end align-items-center">
                 <b-button
+                  v-if="evergreenResult.remarks && evergreenResult.remarks != ''"
+                  class="rs-btn"
+                  v-b-toggle="
+                    'remarks_' +
+                      String(evergreenResult.contractReference) +
+                      '_' +
+                      String(evergreenResult.accordion_id)
+                  "
+                  ><b>remarks</b><b-icon icon="caret-down-fill"></b-icon
+                ></b-button>
+                <b-button
                   class="rs-btn"
                   v-b-toggle="
                     'schedules_' +
@@ -2007,6 +2072,26 @@
           class="row mr-0 ml-0 accordion"
           role="tablist"
         >
+          <!-- REMARKS -->
+          <b-collapse
+            :id="
+              'remarks_' +
+                String(evergreenResult.contractReference) +
+                '_' +
+                String(evergreenResult.accordion_id)"
+            class="pt-5 pb-5 pl-5 pr-5 col-12"
+            :accordion="'my-accordion-' + evergreenResult.accordion_id"
+            role="tabpanel"
+            v-model="evergreenResult.remarksCollapse"
+          >
+            <h5><b>Remarks</b></h5>
+
+            <b-card>
+              <p v-html="evergreenResult.remarks"></p>
+            </b-card>
+          </b-collapse>
+          <!-- FIN REMARKS -->
+
           <!-- DETALLES DE TARIFA -->
           <b-collapse
             :id="
@@ -2814,6 +2899,17 @@
 
               <div class="d-flex justify-content-end align-items-center">
                 <b-button
+                  v-if="hapagResult.remarks && hapagResult.remarks != ''"
+                  class="rs-btn"
+                  v-b-toggle="
+                    'remarks_' +
+                      String(hapagResult.contractReference) +
+                      '_' +
+                      String(hapagResult.accordion_id)
+                  "
+                  ><b>remarks</b><b-icon icon="caret-down-fill"></b-icon
+                ></b-button>
+                <b-button
                   class="rs-btn"
                   v-b-toggle="
                     'schedules_' +
@@ -2870,6 +2966,27 @@
           class="row mr-0 ml-0 accordion"
           role="tablist"
         >
+
+          <!-- REMARKS -->
+          <b-collapse
+            :id="
+              'remarks_' +
+                String(hapagResult.contractReference) +
+                '_' +
+                String(hapagResult.accordion_id)"
+            class="pt-5 pb-5 pl-5 pr-5 col-12"
+            :accordion="'my-accordion-' + hapagResult.accordion_id"
+            role="tabpanel"
+            v-model="hapagResult.remarksCollapse"
+          >
+            <h5><b>Remarks</b></h5>
+
+            <b-card>
+              <p v-html="hapagResult.remarks"></p>
+            </b-card>
+          </b-collapse>
+          <!-- FIN REMARKS -->
+
           <!-- DETALLES DE TARIFA -->
           <b-collapse
             :id="
@@ -4457,6 +4574,7 @@ export default {
                 respData.originPort = paramObject.originPort;
                 respData.destinationPort = paramObject.destinationPort;
                 component.hideCharges(respData);
+                component.setRemarks(respData);
               });
 
               //Sending data to MixPanel
@@ -4774,6 +4892,34 @@ export default {
         Destination: destination,
         Qty: qty_array,
       });
+    },
+
+    setRemarks(responseData) {
+      let finalRemarks = "";
+
+      if(responseData.additionalData.remarks){
+        if(this.searchData.direction == 1){
+          var initialRemarksPort = responseData.additionalData.remarks.port ? responseData.additionalData.remarks.port.import : null;
+          var initialRemarksCountry = responseData.additionalData.remarks.country ? responseData.additionalData.remarks.country.import : null;
+        }else if(this.searchData.direction == 2){
+          var initialRemarksPort = responseData.additionalData.remarks.port ? responseData.additionalData.remarks.port.export : null;
+          var initialRemarksCountry = responseData.additionalData.remarks.country ? responseData.additionalData.remarks.country.export : null;
+        }
+      }
+
+      if(initialRemarksPort){
+        for(const remarkLang in initialRemarksPort){
+          finalRemarks +=initialRemarksPort[remarkLang];
+        }
+      }
+
+      if(initialRemarksCountry){
+        for(const remarkLang in initialRemarksCountry){
+          finalRemarks +=initialRemarksPort[remarkLang];
+        }
+      }
+
+      responseData.remarks = finalRemarks;
     },
   },
   computed: {
