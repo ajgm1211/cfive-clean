@@ -28,6 +28,11 @@ window.api = new Api();
  
 Vue.component('show-component', require('./components/quotes/Show.vue'));
  
-const app = new Vue({
-    el: '#app'
-});
+const appElement = document.getElementById('app');
+
+if (appElement) {
+    const app = new Vue({
+        el: '#app'
+    });
+}
+
