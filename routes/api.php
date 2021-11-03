@@ -136,3 +136,9 @@ Route::group(['prefix'=>'pricelevels/groups','middleware' => 'auth:api'], functi
     Route::delete('{company_group}/destroy', 'CompanyGroupController@destroy');
     Route::delete('destroyAll', 'CompanyGroupController@destroyAll');
 });
+
+// API INTEGRATIONS
+Route::group(['prefix'=>'apiCredentials','middleware' => 'auth:api'], function () {
+    Route::get('companyUsers', 'ApiCredentialsController@listCompanyUsers');
+    Route::get('{companyUser}', 'ApiCredentialsController@listApiProviders');
+});

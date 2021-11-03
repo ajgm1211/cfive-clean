@@ -2,29 +2,23 @@
   <section>
     <div class="price-container">
       <div class="head">
-        <h2>Price levels</h2>
-
-        <MainButton
-          @click="create = true"
-          text="Add Price Levels"
-          :add="true"
-        />
+        <h2>Clients available</h2>
       </div>
 
       <InputSearch @filter="filtered = $event" style="margin-bottom: 20px;" />
 
       <div class="list-container">
-        <ListPrices :currentPage="currentPage" :prices="GET_PRICE_LEVELS" />
+        <ListCompanyUsers :currentPage="currentPage" :companyUsers="GET_COMPANY_USERS" />
       </div>
 
-      <p v-if="GET_PAGINATE_PRICE_LEVELS.total" style="margin-top:20px">
-        Total Results: {{ GET_PAGINATE_PRICE_LEVELS.total }}
+      <p v-if="GET_PAGINATE_COMPANY_USERS.total" style="margin-top:20px">
+        Total Results: {{ GET_PAGINATE_COMPANY_USERS.total }}
       </p>
 
       <Paginate
         @prevPage="prevPage"
         @nextPage="nextPage"
-        :page-count="GET_PAGINATE_PRICE_LEVELS.last_page"
+        :page-count="GET_PAGINATE_COMPANY_USERS.last_page"
         :prev-text="'Prev'"
         :next-text="'Next'"
         :page-class="'page-item'"
@@ -44,42 +38,40 @@
 </template>
 
 <script>
-import MainButton from "../../../components/common/MainButton.vue";
-import InputSearch from "../../../components/common/InputSearch.vue";
-import ListPrices from "../../../components/PriceLevel/ListPrices.vue";
-import Paginate from "../../../../js/components/Paginate.vue";
-import CreateModal from "../../../components/PriceLevel/CreateModal.vue";
+import InputSearch from "../../../../components/common/InputSearch.vue";
+import ListCompanyUsers from "../../../../components/Integrations/ApiCredentials/ListCompanyUsers.vue";
+import Paginate from "../../../../../js/components/paginate.vue";
+import CreateModal from "../../../../components/PriceLevel/CreateModal.vue";
 import { mapGetters } from "vuex";
 import axios from "axios";
 
 export default {
-  components: { MainButton, InputSearch, ListPrices, Paginate, CreateModal },
+  components: { InputSearch, ListCompanyUsers, Paginate, CreateModal },
   data: () => ({
     create: false,
-    prices: [],
     currentPage: 1,
   }),
   mounted() {
-    this.$store.dispatch("getPriceLevels", { page: this.currentPage });
+    this.$store.dispatch("getCompanyUsers", { page: this.currentPage });
   },
   methods: {
     prevPage() {
       if (this.currentPage > 1) {
         let prevpage = this.currentPage - 1;
-        this.$store.dispatch("getPriceLevels", { page: prevpage });
+        this.$store.dispatch("getCompanyUsers", { page: prevpage });
         this.currentPage = this.currentPage - 1;
       }
     },
     nextPage() {
-      if (this.currentPage < this.GET_PAGINATE_PRICE_LEVELS.last_page) {
+      if (this.currentPage < this.GET_PAGINATE_COMPANY_USERS.last_page) {
         let nextPage = this.currentPage + 1;
-        this.$store.dispatch("getPriceLevels", { page: nextPage });
+        this.$store.dispatch("getCompanyUsers", { page: nextPage });
         this.currentPage = this.currentPage + 1;
       }
     },
   },
   computed: {
-    ...mapGetters(["GET_PRICE_LEVELS", "GET_PAGINATE_PRICE_LEVELS"]),
+    ...mapGetters(["GET_COMPANY_USERS", "GET_PAGINATE_COMPANY_USERS"]),
   },
 };
 </script>

@@ -17,6 +17,8 @@ import 'vue-select/dist/vue-select.css';
 // Views
 import PriceLevels from "../views/pages/PriceLevels/index.vue";
 import Rates from "../views/pages/PriceLevels/Rates.vue";
+import CompanyUsers from "../views/pages/Integrations/ApiCredentials/CompanyUsers.vue";
+import ApiProviders from "../views/pages/Integrations/ApiCredentials/ApiProviders.vue";
 
 // Const
 const options = {
@@ -30,7 +32,7 @@ const options = {
 const router = new VueRouter({
   mode: "history",
   routes: [
-    {
+  {
       path: "/prices/v2",
       name: "price-levels",
       component: PriceLevels,
@@ -39,6 +41,16 @@ const router = new VueRouter({
       path: "/prices/rates/:id",
       name: "price-rates",
       component: Rates,
+    },
+    {
+      path: "/api-credentials",
+      name: "api-credentials",
+      component: CompanyUsers,
+    },
+    {
+      path: "/api-credentials/:id",
+      name: "api-credentials-integrations",
+      component: ApiProviders,
     },
   ],
 });
