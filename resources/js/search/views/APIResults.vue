@@ -386,7 +386,7 @@
                 .pricingDetails.surcharges"
               :key="cmaSurchargeKey"
             >
-              <h5 v-show="(request.originCharges && cmaSurchargeKey=='originSurcharges') || (request.destinationCharges && cmaSurchargeKey=='destinationSurcharges') || cmaSurchargeKey=='freightSurcharges'">
+              <h5 v-show="(searchData.originCharges && cmaSurchargeKey=='originSurcharges') || (searchData.destinationCharges && cmaSurchargeKey=='destinationSurcharges') || cmaSurchargeKey=='freightSurcharges'">
                 <b>{{
                   cmaSurchargeKey
                     .substring(0, cmaSurchargeKey.length - 10)
@@ -399,7 +399,7 @@
               </h5>
 
               <b-table-simple
-                v-show="(request.originCharges && cmaSurchargeKey=='originSurcharges') || (request.destinationCharges && cmaSurchargeKey=='destinationSurcharges') || cmaSurchargeKey=='freightSurcharges'"
+                v-show="(searchData.originCharges && cmaSurchargeKey=='originSurcharges') || (searchData.destinationCharges && cmaSurchargeKey=='destinationSurcharges') || cmaSurchargeKey=='freightSurcharges'"
                 hover small responsive class="sc-table">
                 <b-thead>
                   <b-tr>
@@ -1238,7 +1238,7 @@
               .surcharges"
             :key="surchargeKey"
           >
-            <h5 v-show="(request.originCharges && surchargeKey=='originSurcharges') || (request.destinationCharges && surchargeKey=='destinationSurcharges') || surchargeKey=='freightSurcharges'">
+            <h5 v-show="(searchData.originCharges && surchargeKey=='originSurcharges') || (searchData.destinationCharges && surchargeKey=='destinationSurcharges') || surchargeKey=='freightSurcharges'">
               <b>{{
                 surchargeKey
                   .substring(0, surchargeKey.length - 10)
@@ -1249,7 +1249,7 @@
             </h5>
 
             <b-table-simple 
-              v-show="(request.originCharges && surchargeKey=='originSurcharges') || (request.destinationCharges && surchargeKey=='destinationSurcharges') || surchargeKey=='freightSurcharges'"
+              v-show="(searchData.originCharges && surchargeKey=='originSurcharges') || (searchData.destinationCharges && surchargeKey=='destinationSurcharges') || surchargeKey=='freightSurcharges'"
               hover small responsive class="sc-table">
               <b-thead>
                 <b-tr>
@@ -2026,7 +2026,7 @@
                 .surcharges"
               :key="evergreenSurchargeKey"
             >
-              <h5 v-show="(request.originCharges && evergreenSurchargeKey=='originSurcharges') || (request.destinationCharges && evergreenSurchargeKey=='destinationSurcharges') || evergreenSurchargeKey=='freightSurcharges'">
+              <h5 v-show="(searchData.originCharges && evergreenSurchargeKey=='originSurcharges') || (searchData.destinationCharges && evergreenSurchargeKey=='destinationSurcharges') || evergreenSurchargeKey=='freightSurcharges'">
                 <b>{{
                   evergreenSurchargeKey
                     .substring(0, evergreenSurchargeKey.length - 10)
@@ -2039,7 +2039,7 @@
               </h5>
 
               <b-table-simple 
-                v-show="(request.originCharges && evergreenSurchargeKey=='originSurcharges') || (request.destinationCharges && evergreenSurchargeKey=='destinationSurcharges') || evergreenSurchargeKey=='freightSurcharges'"
+                v-show="(searchData.originCharges && evergreenSurchargeKey=='originSurcharges') || (searchData.destinationCharges && evergreenSurchargeKey=='destinationSurcharges') || evergreenSurchargeKey=='freightSurcharges'"
                 hover small responsive class="sc-table">
                 <b-thead>
                   <b-tr>
@@ -2888,7 +2888,7 @@
                 .pricingDetails.surcharges"
               :key="hapagSurchargeKey"
             >
-              <h5 v-show="(request.originCharges && hapagSurchargeKey=='originSurcharges') || (request.destinationCharges && hapagSurchargeKey=='destinationSurcharges') || hapagSurchargeKey=='freightSurcharges'">
+              <h5 v-show="(searchData.originCharges && hapagSurchargeKey=='originSurcharges') || (searchData.destinationCharges && hapagSurchargeKey=='destinationSurcharges') || hapagSurchargeKey=='freightSurcharges'">
                 <b>{{
                   hapagSurchargeKey
                     .substring(0, hapagSurchargeKey.length - 10)
@@ -2902,7 +2902,7 @@
 
               <b-table-simple 
                 hover small responsive class="sc-table"
-                v-show="(request.originCharges && hapagSurchargeKey=='originSurcharges') || (request.destinationCharges && hapagSurchargeKey=='destinationSurcharges') || hapagSurchargeKey=='freightSurcharges'">
+                v-show="(searchData.originCharges && hapagSurchargeKey=='originSurcharges') || (searchData.destinationCharges && hapagSurchargeKey=='destinationSurcharges') || hapagSurchargeKey=='freightSurcharges'">
                 <b-thead>
                   <b-tr>
                     <b-th style="width: 300px">Charge</b-th>
@@ -4303,6 +4303,7 @@ export default {
   props: {
     request: Object,
     datalists: Object,
+    searchData: Object,
   },
   data() {
     return {
@@ -4582,7 +4583,7 @@ export default {
     },
 
     hideCharges(responseData) {
-      if (!this.request.originCharges && !this.request.destinationCharges) {
+      if (!this.searchData.originCharges && !this.searchData.destinationCharges) {
         if(!this.datalists.company_user.options.store_hidden_charges){
           delete responseData.pricingDetails.surcharges.originSurcharges;
           delete responseData.pricingDetails.surcharges.destinationSurcharges;
@@ -4607,8 +4608,8 @@ export default {
           totalPerCont.total = newTotal;
         });
       } else if (
-        !this.request.originCharges &&
-        this.request.destinationCharges
+        !this.searchData.originCharges &&
+        this.searchData.destinationCharges
       ) {
         if(!this.datalists.company_user.options.store_hidden_charges){
           delete responseData.pricingDetails.surcharges.originSurcharges;
@@ -4636,8 +4637,8 @@ export default {
 
         responseData.pricingDetails.totalRatePerType.totalRateOrigin = null;
       } else if (
-        this.request.originCharges &&
-        !this.request.destinationCharges
+        this.searchData.originCharges &&
+        !this.searchData.destinationCharges
       ) {
         if(!this.datalists.company_user.options.store_hidden_charges){
           delete responseData.pricingDetails.surcharges.destinationSurcharges;

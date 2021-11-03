@@ -7,6 +7,7 @@
           v-for="(item, index) in finalRates"
           :key="index"
           :rate="item"
+          :searchData="searchData"
           @QuoteToAdd="addRateToQuote"
         />
       </div>
@@ -192,7 +193,7 @@
                           style="font-size: 16px"
                           v-if="
                             (rate.charges.Origin == undefined && rate.charges.Destination == undefined) ||
-                            (!request.originCharges && !request.destinationCharges) ||
+                            (!searchData.originCharges && !searchData.destinationCharges) ||
                               request.showRateCurrency
                           "
                           >{{
@@ -319,12 +320,12 @@
                 v-for="(chargeArray, chargeType) in rate.charges"
                 :key="chargeType"
               >
-                <h5 v-show="(request.originCharges && chargeType=='Origin') || (request.destinationCharges && chargeType=='Destination') || chargeType=='Freight'">
+                <h5 v-show="(searchData.originCharges && chargeType=='Origin') || (searchData.destinationCharges && chargeType=='Destination') || chargeType=='Freight'">
                   <b>{{ chargeType }}</b>
                 </h5>
 
                 <b-table-simple 
-                  v-show="(request.originCharges && chargeType=='Origin') || (request.destinationCharges && chargeType=='Destination') || chargeType=='Freight'"
+                  v-show="(searchData.originCharges && chargeType=='Origin') || (searchData.destinationCharges && chargeType=='Destination') || chargeType=='Freight'"
                   hover small responsive class="sc-table"
                 >
                   <b-thead>
@@ -519,6 +520,7 @@ export default {
     pricelevels: Array,
     request: Object,
     datalists: Object,
+    searchData: Object,
   },
   components: {
     Multiselect,
