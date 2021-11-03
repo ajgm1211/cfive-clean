@@ -212,7 +212,6 @@
                 ]"
               >
                 <!-- PRECIO RESPONSIVE -->
-<<<<<<< HEAD
                 <div
                   class="row card-amount-header__res"
                   :class="[
@@ -221,9 +220,6 @@
                       : ['justify-content-end'],
                   ]"
                 >
-=======
-                <div class="row card-amount card-amount-header__res" style="justify-content: flex-start">
->>>>>>> grivero
                   <div
                     class="col-2 pl-0 pr-0 prices-card-res "
                     v-for="(cont, contCode) in request.containers"
@@ -237,7 +233,6 @@
                 <!-- FIN PRECIO RESPONSIVE -->
 
                 <!-- PRECIO -->
-<<<<<<< HEAD
                 <div
                   class="row  card-amount__res"
                   :class="[
@@ -246,9 +241,6 @@
                       : ['justify-content-end'],
                   ]"
                 >
-=======
-                <div class="row card-amount card-amount__res" style="justify-content: flex-start">
->>>>>>> grivero
                   <div
                     :class="[
                       request.selectedContainerGroup.id == 2
@@ -4335,11 +4327,7 @@ export default {
       searchActions: {},
     };
   },
-<<<<<<< HEAD
   created() {
-=======
-  created(){
->>>>>>> grivero
     //
   },
   methods: {
@@ -4396,12 +4384,8 @@ export default {
 
       if (
         this.request.carriersApi.length > 0 &&
-<<<<<<< HEAD
         (this.request.selectedContainerGroup.id == 1 ||
           this.request.selectedContainerGroup.id == 2)
-=======
-      (  this.request.selectedContainerGroup.id == 1 ||  this.request.selectedContainerGroup.id == 2)
->>>>>>> grivero
       ) {
         this.request.carriersApi.forEach(function(apiCarrier) {
           apiOriginPorts.forEach(function(origin) {
@@ -4831,7 +4815,6 @@ export default {
     },
   },
 };
-<<<<<<< HEAD
 </script>
 
 <style lang="scss" scoped>
@@ -4847,6 +4830,3 @@ export default {
   margin-right: 32px;
 }
 </style>
-=======
-</script>
->>>>>>> grivero
