@@ -1,4 +1,4 @@
-CREATE PROCEDURE proc_getLocalChargeExcel2 (
+CREATE PROCEDURE proc_getLocalChargeExcel (
   IN idcontract INT,
   IN port_o INT,
   IN port_d INT,
