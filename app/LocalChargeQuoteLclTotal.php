@@ -57,7 +57,8 @@ class LocalChargeQuoteLclTotal extends Model
         
         foreach ($charges as $charge) {
             if ($charge->total != null) {
-                $exchange = ratesCurrencyFunction($charge->currency_id, $this->currency->alphacode);
+                $quote = $this->quote()->first();
+                $exchange = ratesCurrencyQuote($charge->currency_id, $this->currency->alphacode,$quote['pdf_options']['exchangeRates']);
                 $total_w_exchange = $charge->total / $exchange;
                 $totals += number_format((float)$total_w_exchange, 2, '.', '');
             }
