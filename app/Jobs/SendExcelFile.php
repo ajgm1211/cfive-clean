@@ -9,6 +9,7 @@ use App\ContainerCalculation;
 use App\Currency;
 use App\Mail\EmailForExcelFile;
 use App\Rate;
+use App\Harbor;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -54,6 +55,7 @@ class SendExcelFile implements ShouldQueue
 
         $origin_port = $this->data['data']['origin_port'];
         $destiny_port = $this->data['data']['destination_port'];
+
         $direction = $this->data['data']['direction']; //'2020/10/01';
         $code = $this->data['data']['gp_container']; //'2020/10/01';
         $containers = Container::where('gp_container_id', $code)->get();
@@ -100,8 +102,8 @@ class SendExcelFile implements ShouldQueue
         $now = new \DateTime();
         $now = $now->format('dmY_His');
         $nameFile = str_replace([' '], '_', $now . '_rates');
-        $file = Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers, $container_calculation, $styleArray,$styleArrayALL) {
-            $excel->sheet('Rates', function ($sheet) use ($arreglo, $arrayComplete, $containers, $container_calculation, $styleArray,$styleArrayALL) {
+        $file = Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers, $container_calculation, $styleArray, $styleArrayALL) {
+            $excel->sheet('Rates', function ($sheet) use ($arreglo, $arrayComplete, $containers, $container_calculation, $styleArray, $styleArrayALL) {
 
                 $sheet->cells('A1:AG1', function ($cells) {
                     $cells->setBackground('#2525ba');
@@ -150,15 +152,17 @@ class SendExcelFile implements ShouldQueue
 
                     }
                     //
-                    $sheet->getStyle('A'.$a.':O'.$a.'')->applyFromArray($styleArray);
+                    $sheet->getStyle('A' . $a . ':O' . $a . '')->applyFromArray($styleArray);
 
                     $arrayCompleteAmount = $this->get_header_rate($data, $montos);
 
                     $sheet->row($a, $arrayCompleteAmount);
                     $a++;
                     // Local charges
+                    $orig_country = $this->getArrayPortCountry($data->port_origin->id);
+                    $dest_country = $this->getArrayPortCountry($data->port_destiny->id);
 
-                    $localCharge = \DB::select(\DB::raw('call proc_getLocalChargeExcel(' . $data->contract->id . ',' . $data->port_origin->id . ',' . $data->port_destiny->id . ')'));
+                    $localCharge = \DB::select(\DB::raw('call proc_getLocalChargeExcel2(' . $data->contract->id . ',' . $data->port_origin->id . ',' . $data->port_destiny->id . ',' . $orig_country . ',' . $dest_country . ')'));
                     if ($localCharge != null) {
 
                         for ($i = 0; $i < count($localCharge); $i++) {
@@ -192,10 +196,10 @@ class SendExcelFile implements ShouldQueue
 
                     //Montos All IN
                     $sheet->getStyle('G' . $a)->applyFromArray($styleArrayALL);
-                    $arrayCompleteAmountAllIn = $this->get_amount_allIn($data,$montosAllInTot);
+                    $arrayCompleteAmountAllIn = $this->get_amount_allIn($data, $montosAllInTot);
                     $sheet->row($a, $arrayCompleteAmountAllIn);
                     $a++;
-                    //Fin montos all in 
+                    //Fin montos all in
 
                     $i = 1;
                     $sheet->setBorder('A1:I' . $i, 'thin');
@@ -284,13 +288,22 @@ class SendExcelFile implements ShouldQueue
     public function get_header_localcharge($localCharge, $data, $montosLocal)
     {
 
+        if ($localCharge->port_orig != null) {
+            $origin = $localCharge->port_orig;
+            $destination = $localCharge->port_dest;
+        } else {
+            $origin = $localCharge->country_orig;
+            $destination = $localCharge->country_dest;
+
+        }
+
         $arrayFirstPartLocal = array(
             'Contract' => $data->contract->name,
             'Reference' => $data->contract->id,
             'Carrier' => $localCharge->carrier,
             'Direction' => $data->contract->direction->name,
-            'Origin' => $localCharge->port_orig,
-            'Destination' => $localCharge->port_dest,
+            'Origin' => $origin,
+            'Destination' => $destination,
             'Charge' => $localCharge->surcharge,
 
         );
@@ -308,7 +321,7 @@ class SendExcelFile implements ShouldQueue
 
     }
 
-    public function get_amount_allIn($data,$montosAllInTot )
+    public function get_amount_allIn($data, $montosAllInTot)
     {
 
         $arrayFirstPartAmountAllIn = array(
@@ -359,5 +372,11 @@ class SendExcelFile implements ShouldQueue
         } else {
             return $monto;
         }
+    }
+
+    public function getArrayPortCountry($id)
+    {
+        $info = Harbor::find($id);
+        return $info->country_id;
     }
 }
