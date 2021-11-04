@@ -89416,9 +89416,13 @@ window.api = new __WEBPACK_IMPORTED_MODULE_1__api_js__["a" /* default */]();
 
 Vue.component('show-component', __webpack_require__(463));
 
-var app = new Vue({
-  el: '#app'
-});
+var appElement = document.getElementById('app');
+
+if (appElement) {
+  var app = new Vue({
+    el: '#app'
+  });
+}
 
 /***/ }),
 /* 460 */
