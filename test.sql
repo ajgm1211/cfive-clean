@@ -1,4 +1,10 @@
-CREATE PROCEDURE proc_getLocalChargeExcel (IN idcontract INT, IN port_o INT, IN port_d INT)
+CREATE PROCEDURE proc_getLocalChargeExcel2 (
+  IN idcontract INT,
+  IN port_o INT,
+  IN port_d INT,
+  IN country_o INT,
+  IN country_d INT
+)
 select
   lc.id,
   lc.contract_id,
@@ -39,6 +45,42 @@ select
     WHERE
       lcP.localcharge_id = lc.id
   ) as port_dest_id,
+  (
+    SELECT
+      GROUP_CONCAT(DISTINCT(coun.name) SEPARATOR ', ')
+    FROM
+      localcharcountry lcCO
+      INNER JOIN countries coun on coun.id = lcCO.country_orig
+    WHERE
+      lcCO.localcharge_id = lc.id
+  ) as country_orig,
+  (
+    SELECT
+      GROUP_CONCAT(DISTINCT(coun.id) SEPARATOR ', ')
+    FROM
+      localcharcountry lcCO
+      INNER JOIN countries coun on coun.id = lcCO.country_orig
+    WHERE
+      lcCO.localcharge_id = lc.id
+  ) as country_orig_id,
+  (
+    SELECT
+      GROUP_CONCAT(DISTINCT(counD.name) SEPARATOR ', ')
+    FROM
+      localcharcountry lcCD
+      INNER JOIN countries counD on counD.id = lcCD.country_dest
+    WHERE
+      lcCD.localcharge_id = lc.id
+  ) as country_dest,
+  (
+    SELECT
+      GROUP_CONCAT(DISTINCT(counD.id) SEPARATOR ', ')
+    FROM
+      localcharcountry lcCD
+      INNER JOIN countries counD on counD.id = lcCD.country_dest
+    WHERE
+      lcCD.localcharge_id = lc.id
+  ) as country_dest_id,
   td.description changetype,
   (
     SELECT
@@ -60,9 +102,18 @@ from
   INNER JOIN typedestiny td on td.id = lc.typedestiny_id
   INNER JOIN currency cur on cur.id = lc.currency_id
   INNER JOIN calculationtype ctype on ctype.id = lc.calculationtype_id
-  INNER JOIN localcharports lcharP on lcharP.localcharge_id = lc.id
+  LEFT JOIN localcharports lcharP on lcharP.localcharge_id = lc.id
+  LEFT JOIN localcharcountry lcharC on lcharC.localcharge_id = lc.id
 WHERE
   lc.contract_id = idcontract
   and td.id = 3
-  and lcharP.port_orig = port_o
-  and lcharP.port_dest = port_d
+  and (
+    (
+      lcharP.port_orig = port_o
+      and lcharP.port_dest = port_d
+    )
+    OR (
+      lcharC.country_orig = country_o
+      and lcharC.country_dest = country_d
+    )
+  )
