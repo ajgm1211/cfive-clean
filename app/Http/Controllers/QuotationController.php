@@ -235,6 +235,9 @@ class QuotationController extends Controller
         foreach ($rate_data as $rate) {
             $remarks .= $rate['remarks'];
         }
+        foreach ($result_data as $result) {
+            $remarks .= $result['remarks'];
+        }
         
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
