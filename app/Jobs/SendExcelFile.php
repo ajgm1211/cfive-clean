@@ -162,7 +162,7 @@ class SendExcelFile implements ShouldQueue
                     $orig_country = $this->getArrayPortCountry($data->port_origin->id);
                     $dest_country = $this->getArrayPortCountry($data->port_destiny->id);
 
-                    $localCharge = \DB::select(\DB::raw('call proc_getLocalChargeExcel2(' . $data->contract->id . ',' . $data->port_origin->id . ',' . $data->port_destiny->id . ',' . $orig_country . ',' . $dest_country . ')'));
+                    $localCharge = \DB::select(\DB::raw('call proc_getLocalChargeExcel(' . $data->contract->id . ',' . $data->port_origin->id . ',' . $data->port_destiny->id . ',' . $orig_country . ',' . $dest_country . ')'));
                     if ($localCharge != null) {
 
                         for ($i = 0; $i < count($localCharge); $i++) {
