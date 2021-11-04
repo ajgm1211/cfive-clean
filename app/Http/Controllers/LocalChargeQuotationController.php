@@ -371,8 +371,10 @@ class LocalChargeQuotationController extends Controller
     {
 
         $total = LocalChargeQuoteTotal::where(['quote_id' => $request->quote_id, 'port_id' => $request->port_id])->with('currency')->first();
+        if (isset($total)) {
+            $total->totalize();
+        }
         
-        $total->totalize();
         
 
         return $total;
@@ -425,7 +427,7 @@ class LocalChargeQuotationController extends Controller
                 break;
             case 2:
                 $index = $request->index;
-                dd($id);
+
                 $local_charge = Charge::findOrFail($id);
                 
                 $local_charge->$index = $request->data;
@@ -488,6 +490,10 @@ class LocalChargeQuotationController extends Controller
 
                 $total->totalLcl($index);
                 $total->totalize();
+
+                $quote=QuoteV2::find($total->quote_id);
+
+                $quote->updatePdfOptions('exchangeRates');
                 break;
             case 7:
                 $index = $request->index;
@@ -505,6 +511,11 @@ class LocalChargeQuotationController extends Controller
                 $total = ChargeLclAir::findOrFail($id);
                 $total->$index = $request->data;
                 $total->update();
+
+                $autoRate= $total->automatic_rate()->first();
+
+                $quote=QuoteV2::findOrFail($autoRate['quote_id']);
+                $quote->updatePdfOptions('exchangeRates');
                 break;
             case 9:
                 $request->validate([
@@ -653,6 +664,9 @@ class LocalChargeQuotationController extends Controller
             $local_charge_quote = LocalChargeQuote::findOrFail($local_id);
             $local_charge_quote->delete();
             $local_charge_quote->totalize();
+            $quote=QuoteV2::find($local_charge_quote->quote_id);
+
+            $quote->updatePdfOptions('exchangeRates');
         }
         return response()->json(['success' => 'Ok']);
     }
