@@ -208,7 +208,23 @@
                   <!-- ORIGIN -->
                   <div class="origin mr-4">
                     <span>origin</span>
-                    <p>{{ rate.port_origin.display_name }}</p>
+                    <p>
+                      {{
+                        rate.origin_address
+                          ? rate.origin_address.name
+                          : rate.port_origin.display_name
+                      }}
+                    </p>
+                    <div
+                      style="height:1px; background: gray; width: 100%; margin: 6px 0;"
+                      v-if="rate.origin_address && rate.port_origin"
+                    ></div>
+
+                    <p v-if="rate.origin_address && rate.port_origin">
+                      {{
+                        rate.port_origin ? rate.port_origin.display_name : ""
+                      }}
+                    </p>
                   </div>
 
                   <!-- LINEA DE RUTA -->
@@ -262,7 +278,24 @@
                   <!-- DESTINO -->
                   <div class="destination ml-4">
                     <span>destination</span>
-                    <p>{{ rate.port_destiny.display_name }}</p>
+                    <p style="margin-bottom: 0">
+                      {{
+                        rate.destination_address
+                          ? rate.destination_address.name
+                          : rate.port_destiny.display_name
+                      }}
+                    </p>
+
+                    <div
+                      style="height:1px; background: gray; width: 100%; margin: 6px 0;"
+                      v-if="rate.destination_address && rate.port_destiny"
+                    ></div>
+
+                    <p v-if="rate.destination_address && rate.port_destiny">
+                      {{
+                        rate.port_destiny ? rate.port_destiny.display_name : ""
+                      }}
+                    </p>
                   </div>
                 </div>
 
@@ -473,7 +506,9 @@
                 :key="chargeType"
               >
                 <h5>
-                  <b>{{ chargeType == "destiny_inland" ? "Inland" : chargeType}}</b>
+                  <b>{{
+                    chargeType == "destiny_inland" ? "Inland" : chargeType
+                  }}</b>
                 </h5>
 
                 <b-table-simple hover small responsive class="sc-table">
@@ -575,7 +610,14 @@
                                             <b-td></b-td>
                                             <b-td></b-td> -->
                       <b-td colspan="2" style="text-align: right"
-                        ><b>Total {{ chargeType == "destiny_inland" ? "Inland" : chargeType }}</b></b-td
+                        ><b
+                          >Total
+                          {{
+                            chargeType == "destiny_inland"
+                              ? "Inland"
+                              : chargeType
+                          }}</b
+                        ></b-td
                       >
                       <b-td
                         v-for="(container, contKey) in request.containers"
@@ -701,9 +743,6 @@ export default {
   },
   created() {
     this.requestData = this.$route.query;
-
-    console.log('request data in result', this.requestData)
-    console.log('request prop in result', this.request)
   },
   methods: {
     countContainersClass() {

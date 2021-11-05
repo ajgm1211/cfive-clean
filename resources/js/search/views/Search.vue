@@ -1243,6 +1243,7 @@
               <div
                 class="row col-12 mt-3 mb-3 mr-0 ml-0 pr-0 pl-0 data-surcharges"
                 v-for="(item, index) in dataSurcharger"
+                :key="index"
               >
                 <div class="col-12 col-sm-3">
                   <p>{{ item.type.name }}</p>
@@ -1687,7 +1688,6 @@ export default {
     api.getData({}, "/api/search/data", (err, data) => {
       this.setDropdownLists(err, data.data);
       this.getQuery();
-
     });
 
     this.optionsPlaces.sort((a, b) => (a.location > b.location ? 1 : -1));
@@ -1695,6 +1695,7 @@ export default {
     window.addEventListener("click", (e) => {
       if (!this.$el.contains(e.target)) {
         this.openOriginPlacesFrom = false;
+        this.openOriginPlacesTo = false;
       }
     });
   },
@@ -1929,6 +1930,17 @@ export default {
         .then((response) => {
           this.searchData = response.data.data;
           this.setSearchDisplay(this.searchRequest.requestData.requested);
+          if (this.searchData.destination_address.length) {
+            this.placeInShowTo = this.searchData.destination_address;
+          } else {
+            this.placeInShowTo = this.searchData.destination_ports;
+          }
+
+          if (this.searchData.origin_address.length) {
+            this.placeInShowFrom = this.searchData.origin_address;
+          } else {
+            this.placeInShowFrom = this.searchData.origin_ports;
+          }
         })
         .catch((error) => {
           if (error.status === 422) {
@@ -2234,23 +2246,19 @@ export default {
       this.$emit("clearResults");
       this.$emit("searchRequested", this.searchRequest);
 
-
       if (this.placeInShowTo.length && this.placeInShowFrom.length) {
         this.searchRequest.destinationPorts = this.placeInShowTo;
+
         this.searchRequest.originPorts = this.placeInShowFrom;
       }
 
-      if(this.searchData.destination_address.length){
-        // this.searchRequest.destination_address = this.searchData.destination_address;
+      if (this.searchData.destination_address.length) {
         this.searchRequest.destinationPorts = this.searchData.destination_address;
-        console.log('hi destination address searchRequest', this.searchRequest)
       }
 
-      if(this.searchData.origin_address.length){
+      if (this.searchData.origin_address.length) {
         this.searchRequest.originPorts = this.searchData.origin_address;
-        console.log('hi origin address searchRequest', this.searchRequest)
       }
-
 
       actions.search
         .process(this.searchRequest)
