@@ -16,6 +16,7 @@ use App\AutomaticInland;
 use App\AutomaticInlandTotal;
 use App\InlandDistance;
 use App\Http\Traits\SearchTrait;
+use App\InlandLocalChargeGroup;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use GoogleMaps;
@@ -352,6 +353,13 @@ class AutomaticInlandController extends Controller
 
         foreach($totals as $total){
             $total->update(['pdf_options'=>$request->input('pdf_options')]);
+            $id = $request->input('pdf_options')['groupId'];
+            foreach($total->inlands as $inland){
+                InlandLocalChargeGroup::where('automatic_inland_id', $inland->id)->delete();
+                if(!is_array($id)){
+                    InlandLocalChargeGroup::create(['automatic_inland_id'=>$inland->id,'local_charge_quote_id'=>$id]);
+                }
+            }
         }
     }
 
