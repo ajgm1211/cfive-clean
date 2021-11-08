@@ -24,6 +24,12 @@
                     {!! Form::select('countries[]',$countries,@$selected_countries, 
                     ['class' => 'm-select2-general form-control', 'multiple' => 'multiple','disabled' => 'true']) !!}
                 </div>
+
+                <div class="form-group m-form__group">
+                    {!! Form::label('Level', 'Level') !!}
+                    {!! Form::select('level',['api'=>'Api','both'=>'Both','web'=>'Web'],$remark['level'], 
+                    ['class' => 'm-select2-general form-control','disabled' => 'true']) !!}
+                </div>
                 
                 <div class="form-group m-form__group {{$remark->mode == 'port' ? '':'hide'}}">
                     {!! Form::label('Port', 'Ports') !!}
@@ -40,6 +46,12 @@
                 <div class="form-group m-form__group">
                     {!! Form::label('Language', 'Language') !!}
                     {!! Form::select('language',$languages,$remark['language_id'], 
+                    ['class' => 'm-select2-general form-control','disabled' => 'true']) !!}
+                </div>
+
+                <div class="form-group m-form__group">
+                    {!! Form::label('Apply to', 'Apply to') !!}
+                    {!! Form::select('apply_to',['client'=>'Client','internal'=>'Internal','both'=>'Both'],$remark['apply_to'], 
                     ['class' => 'm-select2-general form-control','disabled' => 'true']) !!}
                 </div>
 

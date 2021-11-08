@@ -1409,7 +1409,7 @@ trait SearchTrait
     }
 
     //Retrieves Global Remarks
-    public function searchRemarks($rate, $search_data)
+    public function searchRemarks($rate, $search_data, $apply = null)
     {
         //Retrieving current companyto filter remarks
         $company_user = CompanyUser::where('id', $search_data['company_user'])->first();
@@ -1430,6 +1430,8 @@ trait SearchTrait
             })->orwhereHas('remarksCountries', function ($q) use ($rate_countries_id) {
                 $q->whereIn('country_id', $rate_countries_id);
             });
+        })->when($apply != null, function ($q) use($apply) {
+            return $q->whereIn('apply_to', $apply);
         })->get();
 
         $final_remarks = "";
