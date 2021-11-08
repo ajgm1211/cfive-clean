@@ -196,7 +196,10 @@ class LocalChargeQuotationLclController extends Controller
     {
 
         $total = LocalChargeQuoteLclTotal::where(['quote_id' => $request->quote_id, 'port_id' => $request->port_id])->with('currency')->first();
-
+        if (isset($total)) {
+            $total->totalize();
+        }
+        
         return $total;
     }
 
@@ -355,6 +358,11 @@ class LocalChargeQuotationLclController extends Controller
             $local_charge_quote = LocalChargeQuoteLcl::findOrFail($local_id);
             $local_charge_quote->delete();
             $local_charge_quote->totalize();
+            
+            $quote=QuoteV2::find($local_charge_quote->quote_id);
+
+            $quote->updatePdfOptions('exchangeRates');
+            
         }
         return response()->json(['success' => 'Ok']);
     }
