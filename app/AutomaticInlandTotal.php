@@ -96,7 +96,7 @@ class AutomaticInlandTotal extends Model implements Auditable
                 }
                 $inland_currency = $inland->currency()->first();
                 if(!$single){
-                    $amount_array = $this->convertToCurrency($inland_currency,$currency,$amount_array);
+                    $amount_array = $this->convertToCurrencyQuote($inland_currency,$currency,$amount_array,$quote);
                 }
                 foreach($amount_array as $key=>$value){
                     $totals[$key] += isDecimal($value,true);
@@ -108,7 +108,7 @@ class AutomaticInlandTotal extends Model implements Auditable
                         $markup_array[$key] = $value;
                     }
                     if(!$single){
-                        $markup_array = $this->convertToCurrency($inland_currency,$currency,$markup_array);
+                        $markup_array = $this->convertToCurrencyQuote($inland_currency,$currency,$markup_array,$quote);
                     }
                     foreach($markup_array as $key=>$value){
                         $markups[$key] += isDecimal($value,true);
@@ -118,8 +118,8 @@ class AutomaticInlandTotal extends Model implements Auditable
             }
 
             if(!$single){
-                $totals = $this->convertToCurrency($currency, $this->currency()->first(), $totals);
-                $markups = $this->convertToCurrency($currency, $this->currency()->first(), $markups);
+                $totals = $this->convertToCurrencyQuote($currency, $this->currency()->first(), $totals,$quote);
+                $markups = $this->convertToCurrencyQuote($currency, $this->currency()->first(), $markups,$quote);
             }elseif($single){
                 foreach($totals as $code => $price){
                     $totals[$code] = isDecimal($price, true);
@@ -159,7 +159,7 @@ class AutomaticInlandTotal extends Model implements Auditable
                     $inlandCharges[1] = 0;
                 }
                 if(!$single){
-                    $inlandCharges = $this->convertToCurrency($inlandCurrency,$currency,$inlandCharges);
+                    $inlandCharges = $this->convertToCurrencyQuote($inlandCurrency,$currency,$inlandCharges,$quote);
                 }
                 $full = $inlandCharges[0] + $inlandCharges[1];
                 $totals['lcl_totals'] += isDecimal($full,true);
@@ -167,8 +167,8 @@ class AutomaticInlandTotal extends Model implements Auditable
             }
 
             if(!$single){
-                $totals = $this->convertToCurrency($currency, $this->currency()->first(), $totals);
-                $markups = $this->convertToCurrency($currency, $this->currency()->first(), $markups);
+                $totals = $this->convertToCurrencyQuote($currency, $this->currency()->first(), $totals,$quote);
+                $markups = $this->convertToCurrencyQuote($currency, $this->currency()->first(), $markups,$quote);
             }elseif($single){
                 foreach($totals as $code => $price){
                     $totals[$code] = isDecimal($price, true);
