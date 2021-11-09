@@ -12,7 +12,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use Hash;
-use App\CompanyUser;
+use App\CompanyUser; 
+use App\SettingsWhitelabel;
 
 
 class UsersController extends Controller
@@ -51,6 +52,15 @@ class UsersController extends Controller
     public function store(Request $request)
     {
 
+        // Obtain url from settingsWhitelabel with company_user_id
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $company_user = $user->companyUser()->first();
+        $company_user_id = $company_user->id;
+        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url')->get();  
+        $url_1= $url[0]['url'] ;
+        $url_final = $url_1. '/admin';
+
         $this->validate($request,[
              'name' => 'required',
              'lastname' => 'required',
@@ -88,7 +98,7 @@ class UsersController extends Controller
                  // Create a POST request
              $response = $client->request(
                  'POST',
-                 'http://backrockstar.cargofive.com/admin',
+                 $url_final,
                  [
                      'json' => [
                          'name' => $name,
