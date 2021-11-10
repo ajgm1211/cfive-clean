@@ -193,7 +193,7 @@ class SearchApiLclController extends Controller
             $global_charges = $this->searchGlobalCharges($search_ids, $rate);
 
             //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
-            $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids);
+            $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids, $company_user);
 
             //SEARCH TRAIT - Calculates charges appends the cost array to each charge instance
             $this->calculateLclChargesPerType($charges, $search_ids);

@@ -73,7 +73,7 @@ class LocalChargeQuoteLcl extends Model implements Auditable
 
         foreach ($charges as $charge) {
             if ($charge->total != null) {
-                $exchange = ratesCurrencyFunction($charge->currency_id, $currency);
+                $exchange = ratesCurrencyQuote($charge->currency_id, $currency,$quote['pdf_options']['exchangeRates']);
                 $total_w_exchange = $charge->total / $exchange;
                 $totals += number_format((float)$total_w_exchange, 2, '.', '');
             }
