@@ -882,21 +882,26 @@ class QuoteV2 extends Model implements HasMedia, Auditable
                 }
             }
         }
-
+        
         $rateTotals = $this->automatic_rate_totals()->get();
+
         $inlandTotals = $this->automatic_inland_totals()->get();
 
         if ($this->type == 'FCL') {
             $localchargeTotals = $this->local_charges_totals()->get();
+            $localCharge=$this->local_charges()->get();
+            $charge= $this->charge()->get();
         } else if ($this->type == 'LCL') {
             $localchargeTotals = $this->local_charges_lcl_totals()->get();
+            $localCharge=$this->local_charges_lcl()->get();
+            $charge= $this->charge_lcl()->get();
         }
 
-        $allTotals = $rateTotals->concat($inlandTotals)->concat($localchargeTotals);
+        $allTotals = $rateTotals->concat($inlandTotals)->concat($localchargeTotals)->concat($localCharge)->concat($charge);
 
         $allTotalsCurrency = [];
 
-        foreach ($allTotals as $total) {
+        foreach ( $allTotals as $total) {
             $currency = Currency::where('id', $total->currency_id)->first();
 
             array_push($allTotalsCurrency, $currency->alphacode);

@@ -233,7 +233,10 @@ class QuotationController extends Controller
         $remarks = "";
 
         foreach ($rate_data as $rate) {
-            $remarks .= $rate['remarks'];
+            $remarks .= $rate['client_remarks'];
+        }
+        foreach ($result_data as $result) {
+            $remarks .= $result['remarks'];
         }
         
         $quote = QuoteV2::create([

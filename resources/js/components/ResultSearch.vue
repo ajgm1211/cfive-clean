@@ -60,8 +60,10 @@
           <div class="d-flex justify-content-center align-items-center">
             <div
               v-if="
-                rate.charges.Origin == undefined &&
-                  rate.charges.Destination == undefined
+                (rate.charges.Origin == undefined &&
+                  rate.charges.Destination == undefined) ||
+                  (!searchData.originCharges && !searchData.destinationCharges) ||
+                  searchData.showRateCurrency
               "
             >
               <b style="margin-right:5px; font-size: 15px">{{
@@ -146,6 +148,7 @@
         :search_pricelevel="rate.search.pricelevel"
         :total_markups="rate.total_markups"
         :currency="rate.currency"
+        :searchData="searchData"
       />
     </b-collapse>
 
@@ -168,6 +171,9 @@ import CustomTable from "./CustomTable.vue";
 export default {
   props: {
     rate: {
+      required: true,
+    },
+    searchData: {
       required: true,
     },
   },
