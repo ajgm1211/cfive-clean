@@ -186,6 +186,7 @@ class AutomaticRateController extends Controller
     public function retrieveTotals(QuoteV2 $quote, AutomaticRate $autorate)
     {
         $totals = $autorate->totals()->first();
+        $totals->totalize($autorate->currency_id);
 
         return new AutomaticRateTotalResource($totals);
     }

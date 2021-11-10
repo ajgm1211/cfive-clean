@@ -103,7 +103,7 @@ class AutomaticRateTotal extends Model implements Auditable
                 foreach($amountObject as $key=>$value){
                     @$amountArray[$key] = $value;
                 }
-                $amountArray = $this->convertToCurrency($chargeCurrency,$currency,$amountArray);
+                $amountArray = $this->convertToCurrencyQuote($chargeCurrency,$currency,$amountArray,$quote);
                 foreach($amountArray as $key=>$value){
                     @$totals[$key] += isDecimal($value,true);
                 }
@@ -163,7 +163,7 @@ class AutomaticRateTotal extends Model implements Auditable
                 $partials = [];
                 $partials['total'] = $charge->total;
                 $partials['per_unit'] = $charge->price_per_unit;
-                $partials = $this->convertToCurrency($chargeCurrency,$currency,$partials);
+                $partials = $this->convertToCurrencyQuote($chargeCurrency,$currency,$partials,$quote);
                 foreach($partials as $key=>$amount){
                     @$totals[$key] += $amount;
                 }

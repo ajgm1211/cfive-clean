@@ -15,6 +15,7 @@ use App\AutomaticRate;
 use App\AutomaticInlandLclAir;
 use App\AutomaticInlandTotal;
 use App\Http\Traits\SearchTrait;
+use App\InlandLocalChargeLclGroup;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use GoogleMaps;
@@ -223,9 +224,17 @@ class AutomaticInlandLclController extends Controller
     public function updatePdfOptions(Request $request, QuoteV2 $quote, $port_id)
     {
         $totals = AutomaticInlandTotal::where([['quote_id',$quote->id],['port_id',$port_id]])->get();
-
         foreach($totals as $total){
+
             $total->update(['pdf_options'=>$request->input('pdf_options')]);
+            $id = $request->input('pdf_options')['groupId'];
+            
+            foreach($total->inlands_lcl as $inland){
+                InlandLocalChargeLclGroup::where('automatic_inland_lcl_id', $inland->id)->delete();
+                if(!is_array($id)){
+                    InlandLocalChargeLclGroup::create(['automatic_inland_lcl_id'=>$inland->id,'local_charge_quote_lcl_id'=>$id]);
+                }
+            }
         }
     }
 

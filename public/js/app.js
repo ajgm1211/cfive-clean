@@ -85048,7 +85048,7 @@ var resetConfig = function resetConfig() {
  */
 var getEnv = function getEnv(key) {
   var fallback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  var env = typeof process !== 'undefined' && process ? Object({"MIX_PUSHER_APP_CLUSTER":"us2","MIX_PUSHER_APP_KEY":"1052abebf4043210e7f1","NODE_ENV":"development"}) || {} : {};
+  var env = typeof process !== 'undefined' && process ? Object({"MIX_APP_URL":"http://cargofive.local","NODE_ENV":"development"}) || {} : {};
 
   if (!key) {
     /* istanbul ignore next */
@@ -89416,9 +89416,13 @@ window.api = new __WEBPACK_IMPORTED_MODULE_1__api_js__["a" /* default */]();
 
 Vue.component('show-component', __webpack_require__(463));
 
-var app = new Vue({
-  el: '#app'
-});
+var appElement = document.getElementById('app');
+
+if (appElement) {
+  var app = new Vue({
+    el: '#app'
+  });
+}
 
 /***/ }),
 /* 460 */
