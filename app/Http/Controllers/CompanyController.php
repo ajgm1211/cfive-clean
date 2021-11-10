@@ -25,6 +25,8 @@ use Illuminate\Support\Str;
 use GuzzleHttp\Client; 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
+use App\SettingsWhitelabel;
+
 
 
 class CompanyController extends Controller
@@ -474,8 +476,18 @@ class CompanyController extends Controller
         $company->options = $request->options;
         $company->company_user_id = $request->company_user_id;
         $company->unique_code = $randomString;
-        $company->whitelabel = $request->whitelabel;
+        $company->whitelabel = 1;
         $company->save();
+
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $company_user = $user->companyUser()->first();
+        $company_user_id = $company_user->id;
+        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url')->get();  
+        $url_1= $url[0]['url'] ;
+        $url_final = $url_1. '/shipper';
+
 
 
         //  Save Whitelabel
@@ -497,7 +509,7 @@ class CompanyController extends Controller
                     // Create a POST request
                 $response = $client->request(
                     'POST',
-                    'http://backrockstar.cargofive.com/shipper',
+                    $url_final,
                     [
                         'json' => [
                             'business_name' => $business_name,

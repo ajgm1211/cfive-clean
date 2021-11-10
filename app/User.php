@@ -119,4 +119,9 @@ class User extends Authenticatable implements Auditable
         $delegation->save();
         
      }
+
+     public function settingsWhitelabel()
+     {
+         return $this->hasOne('App\SettingsWhitelabel');
+     }
 }
