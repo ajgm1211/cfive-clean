@@ -9,6 +9,7 @@ use App\ContainerCalculation;
 use App\Currency;
 use App\Mail\EmailForExcelFile;
 use App\Rate;
+use App\LocalCharge;
 use App\Harbor;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -163,7 +164,8 @@ class SendExcelFile implements ShouldQueue
                     $orig_country = $this->getArrayPortCountry($data->port_origin->id);
                     $dest_country = $this->getArrayPortCountry($data->port_destiny->id);
 
-                    $localCharge = DB::select(DB::raw('call proc_getLocalChargeExcel(' . $data->contract->id . ',' . $data->port_origin->id . ',' . $data->port_destiny->id . ',' . $orig_country . ',' . $dest_country . ')'));
+                    $localCharge = new LocalCharge();
+                    $localCharge = $localCharge->getLocalChargeExcelSync($data->contract_id,$data->port_origin->id,$data->port_destiny->id,$orig_country,$dest_country); 
                     if ($localCharge != null) {
 
                         for ($i = 0; $i < count($localCharge); $i++) {
