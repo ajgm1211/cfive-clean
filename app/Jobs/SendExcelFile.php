@@ -16,6 +16,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
 
 class SendExcelFile implements ShouldQueue
 {
@@ -162,7 +163,7 @@ class SendExcelFile implements ShouldQueue
                     $orig_country = $this->getArrayPortCountry($data->port_origin->id);
                     $dest_country = $this->getArrayPortCountry($data->port_destiny->id);
 
-                    $localCharge = \DB::select(\DB::raw('call proc_getLocalChargeExcel(' . $data->contract->id . ',' . $data->port_origin->id . ',' . $data->port_destiny->id . ',' . $orig_country . ',' . $dest_country . ')'));
+                    $localCharge = DB::select(DB::raw('call proc_getLocalChargeExcel(' . $data->contract->id . ',' . $data->port_origin->id . ',' . $data->port_destiny->id . ',' . $orig_country . ',' . $dest_country . ')'));
                     if ($localCharge != null) {
 
                         for ($i = 0; $i < count($localCharge); $i++) {
