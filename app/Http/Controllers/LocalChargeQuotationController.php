@@ -284,6 +284,7 @@ class LocalChargeQuotationController extends Controller
                 'port_id' => $request->params['port_id'],
                 'quote_id' => $request->params['quote_id'],
                 'sale_term_v3_id' => $request->params['id'],
+                'sale_term_code_id' => $sale_charge->sale_term_code->id,
                 'type_id' => $request->params['type_id'],
             ]);
 
