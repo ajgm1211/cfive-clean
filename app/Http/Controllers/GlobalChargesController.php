@@ -227,7 +227,42 @@ class GlobalChargesController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Register created successfully!');
-        return redirect()->action('GlobalChargesController@index');
+        return
+         redirect()->action('GlobalChargesController@index');
+    }
+
+
+    public function validateAll(Request $request){
+
+        
+
+
+        if ($request->input('allOriginPort') == null && $request->input('allOriginPortCountry') == null ) {
+           
+            $request->replace(['exceptionPortOrig' => null]);
+
+        }
+        if ($request->input('allDestinationPort') == null && $request->input('allDestinationCountryPort') == null) {
+            
+            $request->replace(['exceptionPortDest' => null]);
+
+        }
+        //COUNTRY TO COUNTRY
+        dd($request,$request->input('allOriginCountry'),$request->input('allOriginCountryPort'));
+
+        if ($request->input('allOriginCountry') == null && $request->input('allOriginCountryPort') == null) {
+           
+            $request->replace(['exceptionCountryOrig' => null]);
+        }
+
+        if ($request->input('allDestinationCountry') == null && $request->input('allDestinationPortCountry') == null) {
+            
+            $request->replace(['exceptionCountryDest' => null]);
+        }
+
+        return $request;
+        
+
     }
     
     public function validateData($request)
@@ -564,6 +599,8 @@ class GlobalChargesController extends Controller
                 }
             }
 
+            
+            $request = $this->validateAll($request);
             //Excepciones Ports
             if ($request->input('exceptionPortOrig') != null) {
                 $exceptionPortOrig = $request->input('exceptionPortOrig');
