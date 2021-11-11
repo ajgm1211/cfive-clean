@@ -28,6 +28,8 @@
           :name="item"
           :ref="item"
           :placeholder="item"
+          :value="item === 'auth_uri' ? auth_uri : item === 'api_key' ? api_key : ''"
+          :disabled="item === 'auth_uri' ? true : item === 'api_key' ? true : false"
           @input="updateCredentialValues(item, $event)"
           :rules="{
             required: true,
@@ -56,7 +58,9 @@ export default {
     selected: {},
     selectable_error: false,
     credential_keys: [],
-    credential_values: {}
+    credential_values: {},
+    auth_uri: "https://login.api.hlag.cloud",
+    api_key: "V4_snHlkS9CxC7JeIfGm8w"
   }),
   mounted() {    
     this.$store.dispatch("getAvailableApiProviders", {
@@ -82,6 +86,13 @@ export default {
   },
   methods: {
     postData() {
+      // Asignamos un valor constante cuando se registra "api_key" o "auth_uri"
+      if( this.credential_values.hasOwnProperty("api_key") ) {
+        this.credential_values["api_key"] = this.api_key;
+      }
+      if( this.credential_values.hasOwnProperty("auth_uri") ) {
+        this.credential_values["auth_uri"] = this.auth_uri;
+      }
       this.$store.dispatch("createApiCredentials", {
         body: {
           model_id: this.GET_COMPANY_USER.id,
