@@ -56,7 +56,7 @@ export default {
   methods: {
     redirect(id) {
       this.$router.push({
-       name: "api-credentials-integrations",
+       name: "api-credentials-by-company-user",
        params: { id: id },
       });
     },

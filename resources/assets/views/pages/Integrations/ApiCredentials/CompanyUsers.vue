@@ -32,8 +32,6 @@
         style="margin-bottom: 0!important;"
       />
     </div>
-
-    <CreateModal v-if="create" @cancel="create = false" />
   </section>
 </template>
 
@@ -41,12 +39,10 @@
 import InputSearch from "../../../../components/common/InputSearch.vue";
 import ListCompanyUsers from "../../../../components/Integrations/ApiCredentials/ListCompanyUsers.vue";
 import Paginate from "../../../../../js/components/paginate.vue";
-import CreateModal from "../../../../components/PriceLevel/CreateModal.vue";
 import { mapGetters } from "vuex";
-import axios from "axios";
 
 export default {
-  components: { InputSearch, ListCompanyUsers, Paginate, CreateModal },
+  components: { InputSearch, ListCompanyUsers, Paginate },
   data: () => ({
     create: false,
     currentPage: 1,
@@ -107,7 +103,7 @@ h2 {
 
 .list-container {
   padding: 10px 10px 0 0;
-  max-height: 415px;
+  max-height: 100vh;
   overflow: auto;
 }
 

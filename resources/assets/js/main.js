@@ -48,8 +48,8 @@ const router = new VueRouter({
       component: CompanyUsers,
     },
     {
-      path: "/api-credentials/:id",
-      name: "api-credentials-integrations",
+      path: "/api-credentials/company-user/:id",
+      name: "api-credentials-by-company-user",
       component: ApiProviders,
     },
   ],

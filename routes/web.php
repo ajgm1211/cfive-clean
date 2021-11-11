@@ -1440,7 +1440,7 @@ Route::group(['prefix' => 'api/pricelevel/groups', 'middleware' => ['auth']], fu
     Route::get('{company_group}/edit', 'CompanyGroupController@edit');
 });
 
-Route::middleware(['auth', 'role:administrator|data_entry'])->prefix('api-credentials')->group(function () {
+Route::middleware(['auth', 'role:administrator'])->prefix('api-credentials')->group(function () {
     Route::view('/', 'integrations.api-credentials.index');
-    Route::view('/{companyUser}', 'integrations.api-credentials.index');
+    Route::view('company-user/{companyUser}', 'integrations.api-credentials.index');
 });
