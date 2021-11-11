@@ -276,6 +276,7 @@ class LocalChargeQuotationLclController extends Controller
 
         if (!empty($localcharge['sale_codes'])) {
             $charge = $localcharge['sale_codes']['name'];
+            $sale_code_id = $localcharge['sale_codes']['id'];
             $units = $localcharge['units'] == 0 ? 1:$localcharge['units'];
             $previous_charge = LocalChargeQuoteLcl::where([
                 'charge' => $charge,
@@ -296,6 +297,7 @@ class LocalChargeQuotationLclController extends Controller
                     'profit' => $localcharge['markup'],
                     'total' => ((float)$localcharge['price_per_unit'] * (float)$units) + (float)$localcharge['markup'],
                     'charge' => $charge,
+                    'sale_term_code_id' => $sale_code_id,
                     'surcharge_id' => $localcharge['surcharge_id'],
                     'calculation_type_id' => $localcharge['calculation_type_id'],
                     'provider_name' => $localcharge['provider_name'] ?? $localcharge['automatic_rate']['carrier']['name'] ?? null,
