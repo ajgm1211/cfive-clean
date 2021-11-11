@@ -39,22 +39,15 @@ class ApiCredentialsController extends Controller
         
         $companyUser->providers = $providers->map(function ($provider) use ($companyUserId) {
             
-            $provider->image = 'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' . $provider->image; // Storage::get($image);
-            
+            $provider->image = 'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' . $provider->image; // Storage::get($image);            
             $apiCredential = ApiCredential::where("model_id", $companyUserId)->where("api_provider_id", $provider->id)->first([
                 'id', 'status', 'credentials'
             ]);
-            
-            //Solo si existen credenciales, se agregan los campos correspondientes. 
             if ($apiCredential) {
                 $provider->api_credential = $apiCredential; 
             }
-
             return $provider;
         });
-
-        //dd($companyUser);
-
         return $companyUser;
     }
 
