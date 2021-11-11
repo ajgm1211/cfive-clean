@@ -102,6 +102,9 @@
                     <thead>
                     <tr>
                         <th title="Field #1">
+                            ID
+                        </th>
+                        <th title="Field #1">
                             Name
                         </th>
                         <th title="Field #2">
@@ -138,6 +141,7 @@
                     @foreach ($arreglo as $arr)
 
                         <tr>
+                            <td>{{ $arr->id }}</td>
                             <td>{{ $arr->name }}</td>
                             <td>{{ $arr->lastname }}</td>
                             <td>{{ $arr->email }}</td>
