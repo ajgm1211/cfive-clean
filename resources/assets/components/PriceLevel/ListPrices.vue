@@ -98,6 +98,7 @@
             @reset="currency = {}"
             :itemList="GET_PRICE_LEVEL_DATA.currency"
             :error="selectable_error"
+            ref="currencyDropdown"
           />
         </th>
         <th style="position: relative;">
@@ -247,8 +248,8 @@ export default {
     }, 1000);
   },
   methods: {
-    addRate() {
-      this.$store.dispatch("createRate", {
+    async addRate() {
+      await this.$store.dispatch("createRate", {
         id: this.$route.params.id,
         body: {
           amount: this.amount,
@@ -260,6 +261,8 @@ export default {
         page: this.currentPage,
         currentId: this.$route.params.id,
       });
+
+      this.clearDisplay();
     },
     toggleAll(checked) {
       this.allSelected = checked;
@@ -362,6 +365,17 @@ export default {
       }
 
       this.only_percent = !fixedMatch;
+    },
+    clearDisplay(){
+      let component = this;
+
+      for(const amountObject in this.amount){
+        component.amount[amountObject].markup = "Fixed Markup";
+        component.amount[amountObject].amount = 0;    
+      }
+
+      this.$refs.currencyDropdown.resetSelection();
+      this.checkIfOnlyPercent();
     },
   },
   computed: {
