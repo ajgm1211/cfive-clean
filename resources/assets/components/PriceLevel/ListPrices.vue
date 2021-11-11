@@ -109,8 +109,9 @@
         </th>
         <th>
           <SorteableDropdown
+            v-show="!only_percent"
             @selected="setCurrency($event)"
-            @reset="currency = {}; empty_currency = true"
+            @reset="currency = {}"
             :itemList="GET_PRICE_LEVEL_DATA.currency"
             :error="selectable_error"
           />
@@ -247,35 +248,31 @@ export default {
     allSelected: false,
     allRatesSelected: false,
     indeterminate: false,
-    price_types: ["Percent Markup", "Fixed Markup"],
+    price_types: ["Fixed Markup", "Percent Markup"],
     directions: [],
     restrictions: [],
-    empty_currency: true,
     currencies: [],
     amount: {
       type_20: {
         amount: "0",
-        markup: "Percent Markup",
+        markup: "Fixed Markup",
       },
       type_40: {
         amount: "0",
-        markup: "Percent Markup",
+        markup: "Fixed Markup",
       },
     },
+    only_percent: false,
   }),
   mounted() {
     setTimeout(() => {
       this.direction = this.GET_PRICE_LEVEL_DATA.directions[0];
       this.price_level_apply = this.GET_PRICE_LEVEL_DATA.applies[0];
     }, 1000);
+    console.log(this.amount)
   },
   methods: {
     addRate() {
-      if (this.empty_currency == true) {
-        this.selectable_error = true;
-        return;
-      };
-
       this.$store.dispatch("createRate", {
         id: this.$route.params.id,
         body: {
@@ -283,6 +280,7 @@ export default {
           currency: this.currency,
           price_level_apply: this.price_level_apply,
           direction: this.direction,
+          only_percent: this.only_percent,
         },
         page: this.currentPage,
         currentId: this.$route.params.id,
@@ -372,13 +370,21 @@ export default {
     },
     setCurrency(option) {
       this.currency = option;
-      this.empty_currency = false
     },
     set20Markup(option) {
       this.amount.type_20.markup = option;
+      this.checkIfOnlyPercent();
     },
     set40Markup(option) {
       this.amount.type_40.markup = option;
+      this.checkIfOnlyPercent();
+    },
+    checkIfOnlyPercent() {
+      if(this.amount.type_20.markup == "Percent Markup" && this.amount.type_40.markup  == "Percent Markup"){
+        this.only_percent = true;
+      }else{
+        this.only_percent = false;
+      }
     },
   },
   computed: {

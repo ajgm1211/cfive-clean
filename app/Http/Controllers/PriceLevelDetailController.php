@@ -34,9 +34,10 @@ class PriceLevelDetailController extends Controller
     {
         $data = $request->validate([
             'amount' => 'required',
-            'currency' => 'required',
+            'currency' => 'required_if:only_percent,false',
             'direction' => 'required',
             'price_level_apply' => 'required',
+            'only_percent' => 'required',
         ]);
 
         $unique = $this->validateUniquePriceLevelDetail($data, $price_level);
