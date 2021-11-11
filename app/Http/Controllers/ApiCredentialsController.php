@@ -20,7 +20,6 @@ class ApiCredentialsController extends Controller
         $used_api_providers = $options["api_providers"];        
         
         if(sizeof($used_api_providers)) {
-            //dd("hay elementos para filtrar");
             $apiProviders = ApiProvider::whereNotIn('id', $used_api_providers)->get();
         } else {
             $apiProviders = ApiProvider::all();
@@ -52,17 +51,19 @@ class ApiCredentialsController extends Controller
     }
 
     public function store(Request $request){
-         $company_user_id = $request->input("model_id");
-         $api_provider_id = $request->input("api_provider_id");
+        $company_user_id = $request->input("model_id");
+        $api_provider_id = $request->input("api_provider_id");
 
         //Agregar api_provider id al arreglo de options
-         $company_user = CompanyUser::find($company_user_id);
-         $options = $company_user->options;
-         array_push($options["api_providers"], $api_provider_id);
-         $company_user->options = $options;
-         $company_user->save();
-
+        $company_user = CompanyUser::find($company_user_id);
+        $options = $company_user->options;
+        array_push($options["api_providers"], $api_provider_id);
+        $company_user->options = $options;
+        $company_user->save();
+        
+        //Obtenemos credenciales del request
         $credentials = $request->input("credentials");
+
         if ($credentials) {
             $credentialsStr = json_encode($credentials);
             // Registrar en api_credentials
