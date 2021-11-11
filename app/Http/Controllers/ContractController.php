@@ -135,7 +135,7 @@ class ContractController extends Controller
             'calculation_types',
             'destination_types',
             'companies',
-            'rol',
+            'rol',   
             'users'
         );
 
