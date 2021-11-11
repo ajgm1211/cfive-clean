@@ -65,10 +65,14 @@
             :options="GET_PRICE_LEVEL_DATA.applies"
           />
         </th>
-        <th>
+
+        <th
+          v-for="(amountObject, amountKey) in amount"
+          :key="amountKey"
+        >
           <div class="d-flex" style="width: 100px">
             <CustomInput
-              v-model="amount.type_20.amount"
+              v-model="amountObject.amount"
               :mixed="true"
               type="number"
               :placeholder="null"
@@ -82,31 +86,11 @@
               font_color="white"
               :icon="false"
               :mixed="true"
-              @selected="set20Markup($event)"
+              @selected="setMarkup(amountObject,$event)"
             />
           </div>
         </th>
-        <th>
-          <div class="d-flex" style="width: 100px">
-            <CustomInput
-              v-model="amount.type_40.amount"
-              :mixed="true"
-              type="number"
-              :placeholder="null"
-              :showLabel="false"
-            />
-            <Selectable
-              :defaultFirstOption="true"
-              :options="price_types"
-              background_color="#006bfa"
-              border_color="#006bfa"
-              font_color="white"
-              :icon="false"
-              :mixed="true"
-              @selected="set40Markup($event)"
-            />
-          </div>
-        </th>
+
         <th>
           <SorteableDropdown
             v-show="!only_percent"
@@ -140,21 +124,17 @@
         </td>
         <td>{{ item.direction.name }}</td>
         <td>{{ item.price_level_apply.name }}</td>
-        <td>
+        <td
+          v-for="(itemAmount,itemAmountKey) in item.amount"
+          :key="itemAmountKey"  
+        >
           {{
-            item.amount.type_20.markup == "Percent Markup"
-              ? item.amount.type_20.amount + " %"
-              : item.amount.type_20.amount + " $"
+            itemAmount.markup == "Percent Markup"
+              ? itemAmount.amount + " %"
+              : itemAmount.amount + " $"
           }}
         </td>
-        <td>
-          {{
-            item.amount.type_40.markup == "Percent Markup"
-              ? item.amount.type_40.amount + " %"
-              : item.amount.type_40.amount + " $"
-          }}
-        </td>
-        <td>{{ item.currency.alphacode }}</td>
+        <td>{{ item.currency != null ? item.currency.alphacode : '-' }}</td>
         <td style="position: relative;">
           <OptionsButton @option="action($event, item)" style="right:-84px;" />
         </td>
@@ -228,6 +208,12 @@ export default {
         return [];
       },
     },
+    amount: {
+      type: Object,
+      default() {
+        return {};
+      },
+    },
   },
   components: {
     OptionsButton,
@@ -252,16 +238,6 @@ export default {
     directions: [],
     restrictions: [],
     currencies: [],
-    amount: {
-      type_20: {
-        amount: "0",
-        markup: "Fixed Markup",
-      },
-      type_40: {
-        amount: "0",
-        markup: "Fixed Markup",
-      },
-    },
     only_percent: false,
   }),
   mounted() {
@@ -269,7 +245,6 @@ export default {
       this.direction = this.GET_PRICE_LEVEL_DATA.directions[0];
       this.price_level_apply = this.GET_PRICE_LEVEL_DATA.applies[0];
     }, 1000);
-    console.log(this.amount)
   },
   methods: {
     addRate() {
@@ -277,7 +252,7 @@ export default {
         id: this.$route.params.id,
         body: {
           amount: this.amount,
-          currency: this.currency,
+          currency: this.only_percent ? null : this.currency,
           price_level_apply: this.price_level_apply,
           direction: this.direction,
           only_percent: this.only_percent,
@@ -371,20 +346,22 @@ export default {
     setCurrency(option) {
       this.currency = option;
     },
-    set20Markup(option) {
-      this.amount.type_20.markup = option;
-      this.checkIfOnlyPercent();
-    },
-    set40Markup(option) {
-      this.amount.type_40.markup = option;
+    setMarkup(object,option) {
+      object.markup = option;
+
       this.checkIfOnlyPercent();
     },
     checkIfOnlyPercent() {
-      if(this.amount.type_20.markup == "Percent Markup" && this.amount.type_40.markup  == "Percent Markup"){
-        this.only_percent = true;
-      }else{
-        this.only_percent = false;
+      var fixedMatch = false;
+      let component = this;
+
+      for(const amountObject in this.amount){
+        if(component.amount[amountObject].markup == "Fixed Markup"){
+          fixedMatch = true;
+        }
       }
+
+      this.only_percent = !fixedMatch;
     },
   },
   computed: {

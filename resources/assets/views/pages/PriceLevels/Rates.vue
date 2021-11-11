@@ -25,12 +25,10 @@
           }"
           @blur="update('main')"
         />
-        <Selectable
-          @selected="setSelected($event);update('main')"
+        <CustomInput
+          :disabled="true"
           :value="selected"
           label="Price Level Type"
-          :options="price_types"
-          :error="selectable_error"
         />
       </div>
     </div>
@@ -97,7 +95,14 @@
         <div v-if="active == 'Detail'">
           <InputSearch style="margin-bottom:20px" />
 
-          <ListPrices :currentPage="currentPage" :rates="GET_PRICE_LEVEL_RATES" :filters="false" :thead="thead" :dynamic="true" />
+          <ListPrices
+            v-if="tableSet"
+            :currentPage="currentPage" 
+            :rates="GET_PRICE_LEVEL_RATES" 
+            :filters="false" 
+            :thead="thead" 
+            :amount="amount"
+            :dynamic="true" />
 
           <p style="margin-top:20px">
             Total Results: {{ GET_PAGINATE_RATES.meta.total }}
@@ -165,11 +170,12 @@ export default {
       company_restrictions:[],
       group_restrictions:[],
     },
-    price_types: ["FCL", "LCL"],
     selected: "",
     value: "",
     selectable_error: false,
-    thead: ["Direction", "Apply to", "20", "40", "Currency"],
+    thead: [],
+    amount: {},
+    tableSet: false,
     rates: [],
     currentPage: 1,
   }),
@@ -203,6 +209,8 @@ export default {
       this.price.group_restrictions = this.GET_CURRENT_PRICE_LEVEL.group_restrictions;
 
       this.rates = this.GET_PRICE_LEVEL_RATES;
+
+      this.setTable();
     }, 1000);
   },
   methods: {
@@ -239,10 +247,6 @@ export default {
       });
       this.$forceUpdate();
     },
-    setSelected(option) {
-      this.selected = option;
-      this.update();
-    },
     currentTab(tab) {
       this.active = tab;
     },
@@ -275,6 +279,34 @@ export default {
         this.currentPage = this.currentPage + 1;
         this.$forceUpdate();
       }
+    },
+    setTable() {
+      if(this.selected == "FCL"){
+        this.thead = ["Direction", "Apply to", "20", "40", "Currency"];
+
+        this.amount = {
+          type_20: {
+            amount: "0",
+            markup: "Fixed Markup",
+          },
+          type_40: {
+            amount: "0",
+            markup: "Fixed Markup",
+          },
+        };
+      }else if(this.selected == "LCL"){
+        this.thead = ["Direction", "Apply to", "Amount", "Currency"];
+
+        this.amount = {
+          type_lcl: {
+            amount: "0",
+            markup: "Fixed Markup",
+          },
+        };
+      }
+
+      this.tableSet = true;
+      
     },
   },
   computed: {
