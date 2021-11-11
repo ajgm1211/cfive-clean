@@ -101,7 +101,7 @@
                 <table class="m-datatable" id="html_table" width="100%">
                     <thead>
                     <tr>
-                        <th title="Field #1">
+                        <th title="Field #0">
                             ID
                         </th>
                         <th title="Field #1">
