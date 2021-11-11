@@ -235,31 +235,41 @@ class GlobalChargesController extends Controller
     public function validateAll(Request $request){
 
         
-
+        
 
         if ($request->input('allOriginPort') == null && $request->input('allOriginPortCountry') == null ) {
            
-            $request->replace(['exceptionPortOrig' => null]);
+            $request->merge([
+                'exceptionPortOrig' => null,
+            ]);
+        
 
         }
         if ($request->input('allDestinationPort') == null && $request->input('allDestinationCountryPort') == null) {
             
-            $request->replace(['exceptionPortDest' => null]);
+           $request->merge([
+               'exceptionPortDest' => null,
+            ]);
 
         }
         //COUNTRY TO COUNTRY
-        dd($request,$request->input('allOriginCountry'),$request->input('allOriginCountryPort'));
+        
 
         if ($request->input('allOriginCountry') == null && $request->input('allOriginCountryPort') == null) {
            
-            $request->replace(['exceptionCountryOrig' => null]);
+            $request->merge([
+                'exceptionCountryOrig' => null,
+            ]);
         }
 
         if ($request->input('allDestinationCountry') == null && $request->input('allDestinationPortCountry') == null) {
             
-            $request->replace(['exceptionCountryDest' => null]);
+            $request->merge(
+                ['exceptionCountryDest' => null,
+            ]);
         }
 
+        
         return $request;
         
 
