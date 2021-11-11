@@ -9,6 +9,7 @@ use App\ContainerCalculation;
 use App\Currency;
 use App\Mail\EmailForExcelFile;
 use App\Rate;
+use App\Harbor;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -52,10 +53,12 @@ class SendExcelFile implements ShouldQueue
     public function handle()
     {
 
+        $origin_port = $this->data['data']['origin_port'];
+        $destiny_port = $this->data['data']['destination_port'];
+
         $direction = $this->data['data']['direction']; //'2020/10/01';
         $code = $this->data['data']['gp_container']; //'2020/10/01';
         $containers = Container::where('gp_container_id', $code)->get();
-        $contArray = $containers->pluck('code')->toArray();
         $dateSince = $this->data['data']['validity']; //'2020/10/01';
         $dateUntil = $this->data['data']['expire']; //'2020/10/30';
         $company_id = '';
@@ -63,6 +66,17 @@ class SendExcelFile implements ShouldQueue
         $user_id = $this->id_user;
         $company_setting = CompanyUser::where('id', $company_user_id)->first();
         $container_calculation = ContainerCalculation::get();
+        $styleArray = array(
+            'font' => array(
+                'bold' => true,
+            ),
+        );
+        $styleArrayALL = array(
+            'font' => array(
+                'bold' => true,
+                'color' => array('rgb' => 'CD0000'),
+            ),
+        );
 
         if ($direction == 3) {
             $direction = array(1, 2, 3);
@@ -70,25 +84,10 @@ class SendExcelFile implements ShouldQueue
             $direction = array($direction);
         }
 
-        $arrayFirstPart = array(
-            'Contract',
-            'Reference',
-            'Carrier',
-            'Direction',
-            'Origin',
-            'Destination',
-            'Charge',
+        // Construcion Del header Inicial
+        $arrayComplete = $this->get_header_inicial($containers);
 
-        );
-        $arrayFirstPart = array_merge($arrayFirstPart, $contArray);
-        $arraySecondPart = array(
-            'Currency',
-            'From',
-            'Until',
-        );
-        $arrayComplete = array_merge($arrayFirstPart, $arraySecondPart);
-
-        $arreglo = Rate::with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $company_setting, $direction, $code) {
+        $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $company_setting, $direction, $code) {
             if ($company_setting->future_dates == 1) {
                 $q->where(function ($query) use ($dateSince) {
                     $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
@@ -103,15 +102,14 @@ class SendExcelFile implements ShouldQueue
         $now = new \DateTime();
         $now = $now->format('dmY_His');
         $nameFile = str_replace([' '], '_', $now . '_rates');
-        $file = Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers, $container_calculation) {
-            $excel->sheet('Rates', function ($sheet) use ($arreglo, $arrayComplete, $containers, $container_calculation) {
-                //dd($contract);
+        $file = Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers, $container_calculation, $styleArray, $styleArrayALL) {
+            $excel->sheet('Rates', function ($sheet) use ($arreglo, $arrayComplete, $containers, $container_calculation, $styleArray, $styleArrayALL) {
+
                 $sheet->cells('A1:AG1', function ($cells) {
                     $cells->setBackground('#2525ba');
                     $cells->setFontColor('#ffffff');
                     $cells->setValignment('center');
                 });
-                //$sheet->setBorder('A1:AO1', 'thin');
 
                 $sheet->row(1, $arrayComplete);
                 $a = 2;
@@ -153,106 +151,57 @@ class SendExcelFile implements ShouldQueue
                         $montosAllInTot = array_merge($montosAllInTot, $montosAllIn);
 
                     }
-                    $arrayFirstPartAmount = array(
-                        'Contract' => $data->contract->name,
-                        'Reference' => $data->contract->id,
-                        'Carrier' => $data->carrier->name,
-                        'Direction' => $data->contract->direction->name,
-                        'Origin' => ucwords(strtolower($data->port_origin->name)),
-                        'Destination' => ucwords(strtolower($data->port_destiny->name)),
-                        'Charge' => 'freight',
-                    );
-                    $arrayFirstPartAmount = array_merge($arrayFirstPartAmount, $montos);
-                    $arraySecondPartAmount = array(
-                        'Currency' => $data->currency->alphacode,
-                        'From' => $data->contract->validity,
-                        'Until' => $data->contract->expire,
+                    //
+                    $sheet->getStyle('A' . $a . ':O' . $a . '')->applyFromArray($styleArray);
 
-                    );
-                    $arrayCompleteAmount = array_merge($arrayFirstPartAmount, $arraySecondPartAmount);
+                    $arrayCompleteAmount = $this->get_header_rate($data, $montos);
+
                     $sheet->row($a, $arrayCompleteAmount);
                     $a++;
                     // Local charges
-                    if ($contractId != $data->contract->id) {
+                    $orig_country = $this->getArrayPortCountry($data->port_origin->id);
+                    $dest_country = $this->getArrayPortCountry($data->port_destiny->id);
 
-                        $contractId = $data->contract->id;
-                        $data1 = \DB::select(\DB::raw('call proc_localchar(' . $data->contract->id . ')'));
+                    $localCharge = \DB::select(\DB::raw('call proc_getLocalChargeExcel(' . $data->contract->id . ',' . $data->port_origin->id . ',' . $data->port_destiny->id . ',' . $orig_country . ',' . $dest_country . ')'));
+                    if ($localCharge != null) {
 
-                        if ($data1 != null) {
-                            for ($i = 0; $i < count($data1); $i++) {
-                                //'country_orig' =>  $data1[$i]->country_orig,
-                                //  'country_dest' =>   $data1[$i]->country_dest,
-                                $montosLocal = array();
-                                $montosLocal2 = array();
-                                $arrayFirstPartLocal = array(
-                                    'Contract' => $data->contract->name,
-                                    'Reference' => $data->contract->id,
-                                    'Carrier' => $data1[$i]->carrier,
-                                    'Direction' => $data->contract->direction->name,
-                                    'Origin' => $data1[$i]->port_orig,
-                                    'Destination' => $data1[$i]->port_dest,
-                                    'Charge' => $data1[$i]->surcharge,
+                        for ($i = 0; $i < count($localCharge); $i++) {
+                            $montosLocal = array();
+                            $montosLocal2 = array();
 
-                                );
+                            foreach ($containers as $cont) {
+                                $name_arreglo = 'array' . $cont->code;
+                                $name_rate = 'rate' . $cont->code;
+                                if (in_array($localCharge[$i]->calculation_type_id, $$name_arreglo)) {
+                                    $monto = $this->perTeu($localCharge[$i]->ammount, $localCharge[$i]->calculation_type_id, $cont->code);
+                                    $currency_rate = $this->ratesCurrency($localCharge[$i]->currency_id, $data->currency->alphacode);
+                                    $$name_rate = number_format($$name_rate + ($monto / $currency_rate), 2, '.', '');
+                                    $montosAllInTot[$cont->code] = $$name_rate;
+                                    $montosLocal2 = array($cont->code => $monto);
+                                    $montosLocal = array_merge($montosLocal, $montosLocal2);
+                                } else {
+                                    $montosLocal2 = array($cont->code => '0');
 
-                                $calculationID = CalculationType::where('name', $data1[$i]->calculation_type)->first();
-                                $currencyID = Currency::where('alphacode', $data1[$i]->currency)->first();
-
-                                foreach ($containers as $cont) {
-                                    $name_arreglo = 'array' . $cont->code;
-                                    $name_rate = 'rate' . $cont->code;
-                                    if (in_array($calculationID->id, $$name_arreglo)) {
-                                        $monto = $this->perTeu($data1[$i]->ammount, $calculationID->id, $cont->code);
-                                        $currency_rate = $this->ratesCurrency($currencyID->id, $data->currency->alphacode);
-                                        $$name_rate = number_format($$name_rate + ($monto / $currency_rate), 2, '.', '');
-                                        $montosAllInTot[$cont->code] = $$name_rate;
-                                        $montosLocal2 = array($cont->code => $monto);
-                                        $montosLocal = array_merge($montosLocal, $montosLocal2);
-                                    } else {
-                                        $montosLocal2 = array($cont->code => '0');
-
-                                        $montosLocal = array_merge($montosLocal, $montosLocal2);
-                                    }
+                                    $montosLocal = array_merge($montosLocal, $montosLocal2);
                                 }
-                                $arrayFirstPartLocal = array_merge($arrayFirstPartLocal, $montosLocal);
-
-                                $arraySecondPartLocal = array(
-                                    'Currency' => $data1[$i]->currency,
-                                    'From' => $data->contract->validity,
-                                    'Until' => $data->contract->expire,
-                                );
-                                $arrayCompleteLocal = array_merge($arrayFirstPartLocal, $arraySecondPartLocal);
-
-                                $sheet->row($a, $arrayCompleteLocal);
-                                $a++;
                             }
+
+                            $arrayCompleteLocal = $this->get_header_localcharge($localCharge[$i], $data, $montosLocal);
+
+                            $sheet->row($a, $arrayCompleteLocal);
+                            $a++;
                         }
 
                     }
 
-                    // MONTOS ALL IN
+                    //Montos All IN
+                    $sheet->getStyle('G' . $a)->applyFromArray($styleArrayALL);
+                    $arrayCompleteAmountAllIn = $this->get_amount_allIn($data, $montosAllInTot);
+                    $sheet->row($a, $arrayCompleteAmountAllIn);
+                    $a++;
+                    //Fin montos all in
 
-                 /*   $arrayFirstPartAmountAllIn = array(
-                        'Contract' => $data->contract->name,
-                        'Reference' => $data->contract->id,
-                        'Carrier' => $data->carrier->name,
-                        'Direction' => $data->contract->direction->name,
-                        'Origin' => ucwords(strtolower($data->port_origin->name)),
-                        'Destination' => ucwords(strtolower($data->port_destiny->name)),
-                        'Charge' => 'freight - ALL IN',
-                    );
-                    $arrayFirstPartAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $montosAllInTot);
-                    $arraySecondPartAmountAllIn = array(
-                        'Currency' => $data->currency->alphacode,
-                        'From' => $data->contract->validity,
-                        'Until' => $data->contract->expire,
-
-                    );
-                    $arrayCompleteAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $arraySecondPartAmountAllIn);
-                    $sheet->row($a, $arrayCompleteAmountAllIn);*/
-                   // $a++;
-                    // Fin montos All In
-
+                    $i = 1;
                     $sheet->setBorder('A1:I' . $i, 'thin');
                     $sheet->cells('C' . $a, function ($cells) {
                         $cells->setAlignment('center');
@@ -267,13 +216,12 @@ class SendExcelFile implements ShouldQueue
         //$path = storage_path('excel/exports') . '/' . $nameFile . '.xls'; // or storage_path() if needed
         $nameFile = $nameFile . '.xls';
 
-        $fileExcel = \File::get(storage_path('excel/exports') . '/' . $nameFile );
-        \Log::info('Store file excel');
-        \Storage::disk('s3_upload')->put('contract_excel/' . $nameFile, $fileExcel,'public');
-        \Log::info('Push in s3');
+        $fileExcel = \File::get(storage_path('excel/exports') . '/' . $nameFile);
+        // \Log::info('Store file excel');
+        \Storage::disk('s3_upload')->put('contract_excel/' . $nameFile, $fileExcel, 'public');
+        //\Log::info('Push in s3');
         $descarga = \Storage::disk('s3_upload')->url('contract_excel/' . $nameFile, $nameFile);
-        \Log::info('Link of download');
-        
+        //\Log::info('Link of download');
 
         try {
             if ($this->to != '') {
@@ -286,6 +234,114 @@ class SendExcelFile implements ShouldQueue
         } catch (\Exception $e) {
             $e->getMessage();
         }
+
+    }
+
+    public function get_header_inicial($containers)
+    {
+
+        $contHeaderArray = $containers->pluck('code')->toArray();
+        $arrayHeaderFirstPart = array(
+            'Contract',
+            'Reference',
+            'Carrier',
+            'Direction',
+            'Origin',
+            'Destination',
+            'Charge',
+
+        );
+        $arrayHeaderFirstPart = array_merge($arrayHeaderFirstPart, $contHeaderArray);
+        $arrayHeaderSecondPart = array(
+            'Currency',
+            'From',
+            'Until',
+        );
+        $arrayComplete = array_merge($arrayHeaderFirstPart, $arrayHeaderSecondPart);
+        return $arrayComplete;
+    }
+
+    public function get_header_rate($data, $montos)
+    {
+
+        $arrayFirstPartAmount = array(
+            'Contract' => $data->contract->name,
+            'Reference' => $data->contract->id,
+            'Carrier' => $data->carrier->name,
+            'Direction' => $data->contract->direction->name,
+            'Origin' => ucwords(strtolower($data->port_origin->name)),
+            'Destination' => ucwords(strtolower($data->port_destiny->name)),
+            'Charge' => htmlentities('Freight'),
+        );
+        $arrayFirstPartAmount = array_merge($arrayFirstPartAmount, $montos);
+        $arraySecondPartAmount = array(
+            'Currency' => $data->currency->alphacode,
+            'From' => $data->contract->validity,
+            'Until' => $data->contract->expire,
+
+        );
+        $arrayCompleteAmount = array_merge($arrayFirstPartAmount, $arraySecondPartAmount);
+
+        return $arrayCompleteAmount;
+
+    }
+    public function get_header_localcharge($localCharge, $data, $montosLocal)
+    {
+
+        if ($localCharge->port_orig != null) {
+            $origin = $localCharge->port_orig;
+            $destination = $localCharge->port_dest;
+        } else {
+            $origin = $localCharge->country_orig;
+            $destination = $localCharge->country_dest;
+
+        }
+
+        $arrayFirstPartLocal = array(
+            'Contract' => $data->contract->name,
+            'Reference' => $data->contract->id,
+            'Carrier' => $localCharge->carrier,
+            'Direction' => $data->contract->direction->name,
+            'Origin' => $origin,
+            'Destination' => $destination,
+            'Charge' => $localCharge->surcharge,
+
+        );
+
+        $arrayFirstPartLocal = array_merge($arrayFirstPartLocal, $montosLocal);
+
+        $arraySecondPartLocal = array(
+            'Currency' => $localCharge->currency,
+            'From' => $data->contract->validity,
+            'Until' => $data->contract->expire,
+        );
+        $arrayCompleteLocal = array_merge($arrayFirstPartLocal, $arraySecondPartLocal);
+
+        return $arrayCompleteLocal;
+
+    }
+
+    public function get_amount_allIn($data, $montosAllInTot)
+    {
+
+        $arrayFirstPartAmountAllIn = array(
+            'Contract' => $data->contract->name,
+            'Reference' => $data->contract->id,
+            'Carrier' => $data->carrier->name,
+            'Direction' => $data->contract->direction->name,
+            'Origin' => ucwords(strtolower($data->port_origin->name)),
+            'Destination' => ucwords(strtolower($data->port_destiny->name)),
+            'Charge' => 'Freight - ALL IN',
+        );
+        $arrayFirstPartAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $montosAllInTot);
+        $arraySecondPartAmountAllIn = array(
+            'Currency' => $data->currency->alphacode,
+            'From' => $data->contract->validity,
+            'Until' => $data->contract->expire,
+
+        );
+        $arrayCompleteAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $arraySecondPartAmountAllIn);
+        return $arrayCompleteAmountAllIn;
 
     }
 
@@ -316,5 +372,11 @@ class SendExcelFile implements ShouldQueue
         } else {
             return $monto;
         }
+    }
+
+    public function getArrayPortCountry($id)
+    {
+        $info = Harbor::find($id);
+        return $info->country_id;
     }
 }
