@@ -44,6 +44,11 @@ class Harbor extends Model
         return $this->belongsTo('App\Habor', 'harbor_parent');
     }
 
+    public function getCountryHarborIdAttribute()
+    {
+        return "{$this->country_id}-{$this->id}";
+    }
+
     public function getIdCompleteAttribute()
     {
         return "{$this->id}-{$this->country_id}-{$this->harbor_parent}";
