@@ -31,8 +31,8 @@
       <div
         v-show="itemVisible(item)"
         class="dropdown-item"
-        v-for="item in itemList"
-        :key="item"
+        v-for="(item, index) in itemList"
+        :key="index"
         @click="selectItem(item)"
       >
         {{ item.alphacode ? item.alphacode : item }}

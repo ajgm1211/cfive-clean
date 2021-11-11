@@ -3,6 +3,7 @@ import router from "../../main";
 
 const state = {
     companyUsers: [],
+    apiProviders: [],
     paginateCompanyUsers: {
         "current_page": 1,
         "data": [],
@@ -27,12 +28,31 @@ const actions = {
             commit("SET_PAGINATE_COMPANY_USERS", json);
         });
     },
-    getApiProviders({ commit }, {id}) {
-        axios.get(`/api/apiCredentials/${id}`).then(response => {
+    getApiProvidersByCompanyUser({ commit }, {id}) {
+        axios.get(`/api/apiCredentials/companyUser/${id}`).then(response => {
             const json = response.data;
             commit("SET_COMPANY_USER", json);
         });
-    }
+    },
+    getAvailableApiProviders({ commit }, { body }) {
+        axios.post(`/api/apiCredentials/apiProviders`, body).then(response => {
+            const json = response.data;
+            commit("SET_AVAILABLE_API_PROVIDERS", json);
+        });
+    },
+    createApiCredentials({ commit }, { body }) {
+        return axios.post(`/api/apiCredentials/store`, body);
+    },
+
+    updateApiCredentials({ commit }, { id, body }) {
+        return axios.post(`/api/apiCredentials/update/${id}`, body);
+    },
+    updateApiCredentialsStatus({ commit }, { id, body }) {
+        return axios.post(`/api/apiCredentials/status/${id}`, body);
+    },
+    deleteApiProviderOfCompanyUser({ commit }, { id, body }) {
+        return axios.post(`/api/apiCredentials/companyUser/${id}/deleteApiProvider`, body);
+    }    
 };
 
 const mutations = {
@@ -40,9 +60,12 @@ const mutations = {
         state.paginateCompanyUsers = value;
         state.companyUsers = value.data;
     },
+    SET_AVAILABLE_API_PROVIDERS(state, value) {
+        state.apiProviders = value;
+    },
     SET_COMPANY_USER(state, value) {
         state.companyUser = value;
-    },
+    }
 };
 
 const getters = {
@@ -51,6 +74,9 @@ const getters = {
     },
     GET_PAGINATE_COMPANY_USERS() {
         return state.paginateCompanyUsers;
+    },
+    GET_AVAILABLE_API_PROVIDERS() {
+        return state.apiProviders;
     },
     GET_COMPANY_USER() {
         return state.companyUser;
