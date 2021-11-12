@@ -228,7 +228,12 @@ class SearchApiLclController extends Controller
             //ADDING ATTRIBUTES AT THE END            
             $remarks = $this->searchRemarks($rate,$search_ids);
 
+            $client_remarks = $this->searchRemarks($rate, $search_ids, ["client","both"]);
+
+            $rate->setAttribute('client_remarks', $client_remarks);
+
             $rate->setAttribute('remarks', $remarks);
+            
 
             //$transit_time = $this->searchTransitTime($rate);
 
@@ -375,7 +380,7 @@ class SearchApiLclController extends Controller
     public function addMarkups($markups, $target, $client_currency)
     {
         //If markups will be added to a Rate, extracts 'freight' variables from markups array
-        if (is_a($target, 'App\Rate')) {
+        if (is_a($target, 'App\RateLcl')) {
             //Info from markups array
             $markups_to_add = $markups['freight'];
             $fixed = $markups_to_add['freight_amount'];
@@ -384,6 +389,7 @@ class SearchApiLclController extends Controller
             $target_currency = $target->currency;
             $is_eloquent_collection = true;
             //Price arrays from rate
+            $target_total_client_currency = $target->total_client_currency;
             $target_total = $target->total;
             //If markups will be added to a Local or Global Charge, extracts 'charge' variables from markups array
         } elseif (is_a($target, 'App\LocalChargeLcl') || is_a($target, 'App\GlobalChargeLcl')) {
