@@ -15,6 +15,12 @@ const actions = {
             commit("SET_PAGINATE_COMPANY_USERS", json);
         });
     },
+    getSearchCompanyUsers({ commit }, {search}) {
+        axios.get(`/api/apiCredentials/companyUsers/search/${search}`).then(response => { 
+            const json = response.data;
+            commit("SET_SEARCH_COMPANY_USERS", json);
+        });
+    },
     getApiProvidersByCompanyUser({ commit }, {id}) {
         axios.get(`/api/apiCredentials/companyUser/${id}`).then(response => {
             const json = response.data;
@@ -44,6 +50,10 @@ const actions = {
 
 const mutations = {
     SET_PAGINATE_COMPANY_USERS(state, value) {
+        state.paginateCompanyUsers = value;
+        state.companyUsers = value.data;
+    },
+    SET_SEARCH_COMPANY_USERS(state, value) {
         state.paginateCompanyUsers = value;
         state.companyUsers = value.data;
     },

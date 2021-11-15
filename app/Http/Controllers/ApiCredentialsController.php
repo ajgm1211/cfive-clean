@@ -27,7 +27,10 @@ class ApiCredentialsController extends Controller
         
         return $apiProviders;
     }
-
+    public function searchCompanyUsers($search) { 
+        $clients = CompanyUser::where('name', 'like', '%'.$search.'%')->paginate(10);
+        return $clients;
+    }
     public function listApiProvidersByCompanyUser(CompanyUser $companyUser) {
         
         $companyUserId = $companyUser->id; 

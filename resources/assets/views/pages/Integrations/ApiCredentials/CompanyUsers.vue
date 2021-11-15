@@ -5,7 +5,7 @@
         <h2>Clients available</h2>
       </div>
 
-      <InputSearch @filter="filtered = $event" style="margin-bottom: 20px;" />
+      <InputSearch @filter="filtered" style="margin-bottom: 20px;"/>
 
       <div class="list-container">
         <ListCompanyUsers :currentPage="currentPage" :companyUsers="GET_COMPANY_USERS" />
@@ -65,6 +65,14 @@ export default {
         this.currentPage = this.currentPage + 1;
       }
     },
+    filtered(event){
+      if(event){
+        this.$store.dispatch("getSearchCompanyUsers", { search: event });
+      } else {
+        this.$store.dispatch("getCompanyUsers", { page: this.currentPage });
+      }
+      
+    }
   },
   computed: {
     ...mapGetters(["GET_COMPANY_USERS", "GET_PAGINATE_COMPANY_USERS"]),

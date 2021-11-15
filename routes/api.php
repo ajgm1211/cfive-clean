@@ -141,6 +141,7 @@ Route::group(['prefix'=>'pricelevels/groups','middleware' => 'auth:api'], functi
 Route::group(['prefix'=>'apiCredentials','middleware' => 'auth:api'], function () {
     Route::get('companyUsers', 'ApiCredentialsController@listCompanyUsers');
     Route::get('companyUser/{companyUser}', 'ApiCredentialsController@listApiProvidersByCompanyUser');
+    Route::get('companyUsers/search/{search}', 'ApiCredentialsController@searchCompanyUsers');
     Route::post('apiProviders', 'ApiCredentialsController@listAvailableApiProviders');
     Route::post('store', 'ApiCredentialsController@store');
     Route::post('update/{apiCredential}', 'ApiCredentialsController@update');
