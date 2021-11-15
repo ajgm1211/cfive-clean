@@ -26,7 +26,7 @@ export default {
   data: () => ({
     search: null,
   }),
-  computed: {
+  methods: {
     filterSearch() {
       this.$emit("filter", this.search);
     },
