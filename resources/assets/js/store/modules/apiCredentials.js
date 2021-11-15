@@ -4,20 +4,7 @@ import router from "../../main";
 const state = {
     companyUsers: [],
     apiProviders: [],
-    paginateCompanyUsers: {
-        "current_page": 1,
-        "data": [],
-        "first_page_url": "http://cargofive.test.com/api/apiCredentials/companyUsers?page=1",
-        "from": 1,
-        "last_page": 1,
-        "last_page_url": "http://cargofive.test.com/api/apiCredentials/companyUsers?page=1",
-        "next_page_url": "http://cargofive.test.com/api/apiCredentials/companyUsers?page=1",
-        "path": "http://cargofive.test.com/api/apiCredentials/companyUsers",
-        "per_page": 5,
-        "prev_page_url": null,
-        "to": 1,
-        "total": 0
-    },
+    paginateCompanyUsers: {},
     companyUser: {},
 };
 
