@@ -28,7 +28,7 @@ class AddCascadeInlandLocalChargeLclGroupsLocalcharge extends Migration
      */
     public function down()
     {
-        Schema::table('inland_local_charge_groups', function (Blueprint $table) {
+        Schema::table('inland_local_charge_lcl_groups', function (Blueprint $table) {
             //
         });
     }
