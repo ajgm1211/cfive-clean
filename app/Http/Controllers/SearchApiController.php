@@ -86,8 +86,8 @@ class SearchApiController extends Controller
     {
         $user = \Auth::user();
         //Querying each model used and mapping only necessary data
-        // $company_user_id = $user->company_user_id;
-        $company_user_id = 1;
+        $company_user_id = $user->company_user_id;
+        // $company_user_id = 1;
 
         $company_user = CompanyUser::where('id', $company_user_id)->first();
 
@@ -165,8 +165,6 @@ class SearchApiController extends Controller
             return $comprice->only(['id','company_id','price_id']);
         });
 
-        $options = collect([]);
-
         $environment_name = $_ENV['APP_ENV'];
 
         if($environment_name == "production"){
@@ -225,7 +223,8 @@ class SearchApiController extends Controller
 
         $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'], 0, 10);
         $search_array['dateRange']['endDate'] = substr($search_array['dateRange']['endDate'], 0, 10);
-
+        $search_array['options']['whitelabel'] . ' , ' . $search_array['options']['containers_quantity'];
+        
 
         $search_ids = $this->getIdsFromArray($search_array);
         $search_ids['company_user'] = $company_user_id;
@@ -233,6 +232,8 @@ class SearchApiController extends Controller
         $search_ids['client_currency'] = $company_user->currency;
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
+
+
 
         //$rateNo = 0;
         foreach ($rates as $rate) {
@@ -311,15 +312,17 @@ class SearchApiController extends Controller
         
         // /** Tracking search event with Mix Panel*/
         // $this->trackEvents("search_fcl", $track_array);
-        
-        return RateResource::collection($rates);
 
         // Whitelabel 
 
-          if (['options'] == true) {
+          if ($search_array['options']['whitelabel'] == 1) {
 
-              return WhitelabelRateResource::collection($rates);
+            return WhitelabelRateResource::collection($rates);
+            // return $search_array['options'] ;
           }
+        
+        return RateResource::collection($rates);
+
 
 
     }
@@ -386,9 +389,8 @@ class SearchApiController extends Controller
         $container_array = [];
 
 
-        // $options = $new_search_data['options']['whitelabel'] . ' , ' . $new_search_data['options']['containers_quantity'];
+        $options = $new_search_data['options']['whitelabel'] . ' , ' . $new_search_data['options']['containers_quantity'];
 
-        // $options = [];
 
 
         //FORMATTING FOR OLD SEARCH, MUST BE REMOVED
@@ -417,7 +419,7 @@ class SearchApiController extends Controller
             'destination_address' => $new_search_data_ids['destinationAddress']
         ]);
 
-         if ($new_search_data['options']['whitelabel'] == true ){
+         if ($new_search_data['options']['whitelabel'] == 1 ){
 
           $new_search = SearchRate::create([
              'company_user_id' => $new_search_data_ids['company_user'],
@@ -496,9 +498,10 @@ class SearchApiController extends Controller
         $arregloCarrier = $search_data['carriers'];
         $dateSince = $search_data['dateRange']['startDate'];
         $dateUntil = $search_data['dateRange']['endDate'];
+        $options = $search_data['options']['whitelabel'] . ' , ' . $search_data['options']['containers_quantity'];
 
         //Querying rates database
-        if ($company_user_id != null || $company_user_id != 0) {
+        if ($company_user_id != null || $company_user_id != 0  || $options != null) {
             $rates_query = Rate::whereIn('origin_port', $origin_ports)->whereIn('destiny_port', $destiny_ports)->whereIn('carrier_id', $arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier', 'currency')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id) {
                 $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
                     $a->where('user_id', '=', $user_id);

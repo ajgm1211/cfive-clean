@@ -37,17 +37,17 @@ class WhitelabelRateResource extends JsonResource
             'totals_freight_currency' => $this->totals_freight_currency,
             'client_currency' => $this->client_currency,
             'totals_markups' => isset($this->totals_markups) ? $this->totals_markups : null,
-            // 'container_markups' => isset($this->container_markups) ? $this->container_markups : null,
+            'container_markups' => isset($this->container_markups) ? $this->container_markups : null,
             // 'totals_with_markups' => isset($this->totals_with_markups) ? $this->totals_with_markups : null,
             // 'totals_with_markups_freight_currency' => isset($this->totals_with_markups_freight_currency) ? $this->totals_with_markups_freight_currency : null,
             // 'containers_with_markups' => isset($this->containers_with_markups) ? $this->containers_with_markups : null,
             'search' => $this->search,
-            // 'price_level' => isset($this->price_level) ? $this->price_level : null,
+            'price_level' => isset($this->price_level) ? $this->price_level : null,
             // 'remarks' => isset($this->remarks) ? $this->remarks : null,
             // 'contract_backup_id' => $this->contractBackupId,
             // 'contract_request_id' => $this->contractRequestId,
             // 'contract_id' => $this->contractId
-            'options' => $this->options,
+            // 'options' => $this->options,
 
         ];    
     }
