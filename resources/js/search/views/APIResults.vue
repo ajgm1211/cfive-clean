@@ -4327,7 +4327,7 @@ export default {
       searchActions: {},
     };
   },
-  created(){
+  created() {
     //
   },
   methods: {

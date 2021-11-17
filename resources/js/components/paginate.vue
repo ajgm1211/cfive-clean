@@ -27,13 +27,14 @@
     </li>
 
     <li
-      v-for="page in pages"
+      v-for="(page, index) in pages"
       :class="[
         pageClass,
         page.selected ? activeClass : '',
         page.disabled ? disabledClass : '',
         page.breakView ? breakViewClass : '',
       ]"
+      :key="index"
     >
       <a
         v-if="page.breakView"
@@ -98,7 +99,7 @@
       tabindex="0"
       v-html="prevText"
     ></a>
-    <template v-for="page in pages">
+    <template v-for="(page, index) in pages">
       <a
         v-if="page.breakView"
         :class="[
@@ -106,7 +107,7 @@
           breakViewLinkClass,
           page.disabled ? disabledClass : '',
         ]"
-        tabindex="0"
+        tabindex="0" :key="index"
         ><slot name="breakViewContent">{{ breakViewText }}</slot></a
       >
       <a
@@ -116,7 +117,7 @@
           page.selected ? activeClass : '',
           disabledClass,
         ]"
-        tabindex="0"
+        tabindex="0" :key="index"
         >{{ page.content }}</a
       >
       <a
@@ -124,9 +125,8 @@
         @click.prevent="handlePageSelected(page.index + 1)"
         @keyup.enter="handlePageSelected(page.index + 1)"
         :class="[pageLinkClass, page.selected ? activeClass : '']"
-        tabindex="0"
-        >{{ page.content }}</a
-      >
+        tabindex="0" :key="index"
+        >{{ page.content }}</a>
     </template>
     <a
       v-if="!(lastPageSelected() && hidePrevNext)"
@@ -156,6 +156,7 @@ export default {
     pageCount: {
       type: Number,
       required: true,
+      default: 0
     },
     forcePage: {
       type: Number,

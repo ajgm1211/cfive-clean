@@ -138,7 +138,7 @@ import actions from "../../../../../resources/js/actions";
 import ListPrices from "../../../components/PriceLevel/ListPrices.vue";
 import InputSearch from "../../../components/common/InputSearch.vue";
 import SorteableDropdown from "../../../components/common/SorteableDropdown.vue";
-import Paginate from "../../../../js/components/paginate.vue";
+import Paginate from "../../../../js/components/Paginate.vue";
 import MainButton from "../../../components/common/MainButton.vue";
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.min.css";
