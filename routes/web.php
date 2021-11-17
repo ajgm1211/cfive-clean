@@ -1430,17 +1430,12 @@ Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
 
 
 //NEW PRICE LEVELS VIEWS ROUTES
-Route::group(['prefix' => 'api/pricelevel', 'middleware' => ['auth']], function () {
-    Route::get('', 'PriceLevelController@index');
-    Route::get('{price_level}/edit', 'PriceLevelController@edit');
-});
-
-Route::group(['prefix' => 'api/pricelevel/groups', 'middleware' => ['auth']], function () {
-    Route::get('', 'CompanyGroupController@index');
-    Route::get('{company_group}/edit', 'CompanyGroupController@edit');
+Route::group(['prefix' => 'prices/v2', 'middleware' => ['auth']], function () {
+    Route::view('/', 'pricesV2.index')->name('pricelevels.index');
+    Route::view('/price/rates/{price_level}', 'pricesV2.index');
 });
 
 Route::middleware(['auth', 'role:administrator'])->prefix('api-credentials')->group(function () {
-    Route::view('/', 'integrations.api-credentials.index');
+    Route::view('/', 'integrations.api-credentials.index')->name('apicredentials.index');
     Route::view('company-user/{companyUser}', 'integrations.api-credentials.index');
 });

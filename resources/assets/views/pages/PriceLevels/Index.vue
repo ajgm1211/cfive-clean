@@ -47,7 +47,7 @@
 import MainButton from "../../../components/common/MainButton.vue";
 import InputSearch from "../../../components/common/InputSearch.vue";
 import ListPrices from "../../../components/PriceLevel/ListPrices.vue";
-import Paginate from "../../../../js/components/Paginate.vue";
+import Paginate from "../../../../js/components/paginate.vue";
 import CreateModal from "../../../components/PriceLevel/CreateModal.vue";
 import { mapGetters } from "vuex";
 import axios from "axios";
