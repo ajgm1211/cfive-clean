@@ -19,7 +19,6 @@ class OceanFreightController extends Controller
      */
     function list(Request $request, Contract $contract) {
         $results = Rate::filterByContract($contract->id)->filter($request);
-
         return OceanFreightResource::collection($results);
     }
 
@@ -97,11 +96,11 @@ class OceanFreightController extends Controller
             $prepared_data['fortyhc'] = 0;
             $prepared_data['fortynor'] = 0;
             $prepared_data['fortyfive'] = 0;
+        }
 
-            foreach ($data as $key => $value) {
-                if (strpos($key, 'rates_') === 0 and !empty($value)) {
-                    $containers['C' . substr($key, 6)] = number_format(floatval($value), 2, '.', '');
-                }
+        foreach ($data as $key => $value) {
+            if (strpos($key, 'rates_') === 0 and !empty($value)) {
+                $containers['C' . substr($key, 6)] = number_format(floatval($value), 2, '.', '');
             }
         }
 
