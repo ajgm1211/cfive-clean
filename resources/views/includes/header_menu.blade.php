@@ -412,7 +412,7 @@
                             @endif
                             @role('administrator|company|subuser')
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{ route('prices.index') }}" class="m-menu__link ">
+                                <a href="{{ route('pricelevels.index') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-sellsy"></i>
                                     <span class="m-menu__link-text">
                                         Price levels
@@ -485,6 +485,14 @@
                                     <i class="m-menu__link-icon flaticon-calendar"></i>
                                     <span class="m-menu__link-text">
                                         Transit Times
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{ route('apicredentials.index') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-lock"></i>
+                                    <span class="m-menu__link-text">
+                                        Carrier APIs Credentials
                                     </span>
                                 </a>
                             </li>
