@@ -5,11 +5,15 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\BrowserTrait;
 use App\User;
+use App\OauthClient;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Intercom\IntercomClient;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use App\Http\Traits\MixPanelTrait;
+use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Client;  
 
 class LoginController extends Controller
 {
@@ -80,7 +84,6 @@ class LoginController extends Controller
     // @overwrite
     public function authenticated(Request $request, $user)
     {
-
         $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.4']);
         $this->intercom($client, $user);
 
@@ -129,9 +132,43 @@ class LoginController extends Controller
             return redirect('/settings');
         }
 
+        $this->storeApiToken($request->input(), $user);
+
         /** Tracking login event with Mix Panel*/
         $this->trackEvents("login", $user);
 
         return redirect()->intended($this->redirectPath());
+    }
+
+    public function storeApiToken($loginData, $user)
+    {
+        $user_secret = OauthClient::where('user_id',$user->id)->select('secret')->first()->secret; 
+        $app_url = $_ENV['APP_URL'] . "/oauth/token";
+
+        $client = new \GuzzleHttp\Client([              
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/x-www-form-urlencoded',
+           ]);
+                // Create a POST request
+            $response = $client->request(
+                'POST',
+                $app_url,
+                [
+                    'json' => [
+                        'grant_type' => 'password',
+                        'username' =>  $loginData['email'],
+                        'password' => $loginData['password'],
+                        'client_secret'=> $user_secret ,
+                        'client_id' => $user->id,
+                    ]
+                ]
+            );
+
+        $body = $response->getBody()->getContents();
+
+        $token = json_decode($body,true);
+        $bearer_token = 'Bearer ' . $token['access_token'];
+
+        $user->update(['api_token' => $bearer_token]);
     }
 }
