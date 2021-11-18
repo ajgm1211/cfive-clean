@@ -133,6 +133,7 @@ Route::group(['prefix' => 'whitelabel'], function () {
         Route::post('/settings/save', [App\Http\Controllers\Whitelabel\SettingsController::class, 'store']);
 
     });
+});
 
 // NEW PRICE LEVELS ROUTES
 

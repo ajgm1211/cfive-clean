@@ -229,7 +229,9 @@ class SearchApiController extends Controller
 
         $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'], 0, 10);
         $search_array['dateRange']['endDate'] = substr($search_array['dateRange']['endDate'], 0, 10);
-        $search_array['options']['whitelabel'] . ' , ' . $search_array['options']['containers_quantity'];
+        if(isset($search_array['options'])){
+            $search_array['options']['whitelabel'] . ' , ' . $search_array['options']['containers_quantity'];
+        }
         
 
         $search_ids = $this->getIdsFromArray($search_array);
@@ -256,21 +258,21 @@ class SearchApiController extends Controller
             $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids);
 
             //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
-            $this->setChargesPerContainer($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
+            $this->calculateFclCharges($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
+
+            //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
+            $charges = $this->joinCharges($charges, $search_ids);
+
+            //Appending Rate Id to Charges
+            $this->addChargesToRate($rate, $charges, $search_ids);
 
             //Getting price levels if requested
-            if (array_key_exists('pricelevel', $search_array) && $search_array['pricelevel'] != null) {
+            if ($search_array['pricelevel']) {
                 $price_level_markups = $this->searchPriceLevels($search_ids);
             } else {
                 $price_level_markups = [];
             }
 
-            //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
-            $charges = $this->joinCharges($charges, $search_ids['client_currency'], $search_ids['selectedContainerGroup']);
-
-            //Appending Rate Id to Charges
-            $this->addChargesToRate($rate, $charges, $search_ids['client_currency']);
-            
             //Adding price levels
             if ($price_level_markups != null && count($price_level_markups) != 0) {
                 $this->addMarkups($price_level_markups, $rate, $search_ids['client_currency']);
@@ -280,8 +282,8 @@ class SearchApiController extends Controller
                     }
                 }
             }
-            
-            $this->calculateTotals($rate,$search_ids['client_currency']);
+
+            $this->calculateTotals($rate, $search_ids);
 
             $remarks = $this->searchRemarks($rate, $search_ids);
 
@@ -293,9 +295,9 @@ class SearchApiController extends Controller
 
             $rate->setAttribute('request_type', $request->input('requested'));
 
-            $this->stringifyRateAmounts($rate);
+            $this->stringifyFclRateAmounts($rate);
 
-            $this->setDownloadParameters($rate);
+            $this->setDownloadParameters($rate, $search_ids);
 
         }
 
@@ -321,12 +323,14 @@ class SearchApiController extends Controller
 
         // Whitelabel 
 
+        if(isset($search_array['options'])){
           if ($search_array['options']['whitelabel'] == 1) {
 
             return WhitelabelRateResource::collection($rates);
             // return $search_array['options'] ;
           }
-        
+        }
+
         return RateResource::collection($rates);
 
 
@@ -394,10 +398,9 @@ class SearchApiController extends Controller
         //formatting containers
         $container_array = [];
 
-
-        $options = $new_search_data['options']['whitelabel'] . ' , ' . $new_search_data['options']['containers_quantity'];
-
-
+        if(isset($search_array['options'])){
+            $options = $new_search_data['options']['whitelabel'] . ' , ' . $new_search_data['options']['containers_quantity'];
+        }
 
         //FORMATTING FOR OLD SEARCH, MUST BE REMOVED
         foreach ($new_search_data_ids['containers'] as $container_id) {
@@ -425,19 +428,21 @@ class SearchApiController extends Controller
             'destination_address' => $new_search_data_ids['destinationAddress']
         ]);
 
-         if ($new_search_data['options']['whitelabel'] == 1 ){
+        if(isset($search_array['options'])){
+            if ($new_search_data['options']['whitelabel'] == 1 ){
 
-          $new_search = SearchRate::create([
-             'company_user_id' => $new_search_data_ids['company_user'],
-             'pick_up_date' => $pick_up_date,
-             'direction' => $new_search_data_ids['direction'],
-             'type' => $new_search_data_ids['type'],
-             'user_id' => $new_search_data_ids['user'],
-             'price_level_id' => $new_search_data_ids['pricelevel'],
-             'origin_charges' => $new_search_data_ids['originCharges'],
-             'destination_charges' => $new_search_data_ids['destinationCharges'],
-             'options' => $options,
-          ]);
+            $new_search = SearchRate::create([
+                'company_user_id' => $new_search_data_ids['company_user'],
+                'pick_up_date' => $pick_up_date,
+                'direction' => $new_search_data_ids['direction'],
+                'type' => $new_search_data_ids['type'],
+                'user_id' => $new_search_data_ids['user'],
+                'price_level_id' => $new_search_data_ids['pricelevel'],
+                'origin_charges' => $new_search_data_ids['originCharges'],
+                'destination_charges' => $new_search_data_ids['destinationCharges'],
+                'options' => $options,
+            ]);
+        }
 
           return new SearchApiResource($new_search);
 
@@ -493,106 +498,6 @@ class SearchApiController extends Controller
         }
     }
 
-    //Validates search request data
-    public function processSearch(Request $request)
-    {
-        //Setting current company and user
-        $user = \Auth::user();
-        $user_id = $user->id;
-        $company_user = $user->companyUser()->first();
-        $company_user_id = $company_user->id;
-
-        $search_array = $request->input();
-
-        $search_array['dateRange']['startDate'] = $this->formatSearchDate($search_array['dateRange']['startDate'], 'date');
-        $search_array['dateRange']['endDate'] = $this->formatSearchDate($search_array['dateRange']['endDate'], 'date');
-
-        $search_ids = $this->getIdsFromArray($search_array);
-        $search_ids['company_user'] = $company_user_id;
-        $search_ids['user'] = $user_id;
-        $search_ids['client_currency'] = $company_user->currency;
-
-        //Retrieving rates with search data
-        $rates = $this->searchRates($search_ids);
-
-        //$rateNo = 0;
-        foreach ($rates as $rate) {
-            //$rateNo += 1;
-            //dump($rate->contract);
-            //dump('for rate '. strval($rateNo));
-            //Retrieving local charges with search data
-            $local_charges = $this->searchLocalCharges($search_ids, $rate);
-
-            //Retrieving global charges with search data
-            $global_charges = $this->searchGlobalCharges($search_ids, $rate);
-
-            //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
-            $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids);
-
-            //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
-            $this->calculateFclCharges($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
-
-            //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
-            $charges = $this->joinCharges($charges, $search_ids);
-
-            //Appending Rate Id to Charges
-            $this->addChargesToRate($rate, $charges, $search_ids);
-
-            //Getting price levels if requested
-            if ($search_array['pricelevel']) {
-                $price_level_markups = $this->searchPriceLevels($search_ids);
-            } else {
-                $price_level_markups = [];
-            }
-
-            //Adding price levels
-            if ($price_level_markups != null && count($price_level_markups) != 0) {
-                $this->addMarkups($price_level_markups, $rate, $search_ids['client_currency']);
-                foreach ($rate->charges as $charge_direction) {
-                    foreach ($charge_direction as $charge) {
-                        $this->addMarkups($price_level_markups, $charge, $search_ids['client_currency']);
-                    }
-                }
-            }
-
-            $this->calculateTotals($rate, $search_ids);
-
-            $remarks = $this->searchRemarks($rate, $search_ids);
-
-            $transit_time = $this->searchTransitTime($rate);
-
-            $rate->setAttribute('transit_time', $transit_time);
-
-            $rate->setAttribute('remarks', $remarks);
-
-            $rate->setAttribute('request_type', $request->input('requested'));
-
-            $this->stringifyFclRateAmounts($rate);
-
-            $this->setDownloadParameters($rate, $search_ids);
-        }
-
-        if ($rates != null && count($rates) != 0) {
-            //Ordering rates by totals (cheaper to most expensive)
-            $rates = $this->sortRates($rates, $search_ids);
-
-            $terms = $this->searchTerms($search_ids);
-
-            $search_array['terms'] = $terms;
-
-            $rates[0]->SetAttribute('search', $search_array);
-        }
-
-        $track_array = [];
-        $track_array['company_user'] = $company_user;
-        $track_array['data'] = $search_array;
-
-        /** Tracking search event with Mix Panel*/
-        $this->trackEvents("search_fcl", $track_array);
-
-        return RateResource::collection($rates);
-    }
-
 
     //Finds any Rates associated to a contract valid in search dates, matching search ports
     public function searchRates($search_data)
@@ -608,7 +513,9 @@ class SearchApiController extends Controller
         $carriers = $search_data['carriers'];
         $dateSince = $search_data['dateRange']['startDate'];
         $dateUntil = $search_data['dateRange']['endDate'];
-        $options = $search_data['options']['whitelabel'] . ' , ' . $search_data['options']['containers_quantity'];
+        if(isset($search_array['options'])){
+            $options = $search_data['options']['whitelabel'] . ' , ' . $search_data['options']['containers_quantity'];
+        }
 
         //Querying rates database
         if ($company_user_id != null || $company_user_id != 0) {
