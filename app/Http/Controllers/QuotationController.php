@@ -904,6 +904,10 @@ class QuotationController extends Controller
         $inlandAddress = $quote->automatic_inland_address()->get();
         $quote_rate_totals = $quote->automatic_rate_totals()->get();
 
+        if(isset($quote->company)){
+            $quote->update(['payment_conditions' => $quote->company->payment_conditions]);
+        }
+
         if (count($rates) != 0) {
             foreach ($rates as $rate) {
                 $rateTotal = $rate->totals()->first();
