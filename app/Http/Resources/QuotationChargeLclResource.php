@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\CarrierResource;
+use App\PivotLocalChargeLclQuote;
 
 class QuotationChargeLclResource extends JsonResource
 {
@@ -14,6 +16,9 @@ class QuotationChargeLclResource extends JsonResource
      */
     public function toArray($request)
     {
+        $pivot_local_charge = PivotLocalChargeLclQuote::where(['charge_lcl_air_id' => $this->id, 
+        'quote_id' => $this->quote_id])->count();
+
         return [
             'id' => $this->id,
             'type' => $this->type->description,
@@ -28,7 +33,8 @@ class QuotationChargeLclResource extends JsonResource
             'profit' => $this->profit ?? 0,
             'total' => $this->total ?? $this->setTotal(),
             'currency' => $this->currency->alphacode ?? null,
-            'provider' => $this->automatic_rate->carrier->name ?? null,
+            'provider' => (new CarrierResource($this->automatic_rate->carrier ?? null))->companyUser($this->automatic_rate->quote->company_user ?? null),
+            'added' => $pivot_local_charge>0 ? true:false,
         ];
     }
 

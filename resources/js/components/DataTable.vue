@@ -15,7 +15,7 @@
             </div>
         </div>
         <!-- End Search Input -->
-
+        <!-- dd{{filterOptions}} -->
         <!-- DataTable -->
         <b-table-simple small responsive borderless :class="classTable">
             <!-- Header table -->
@@ -790,6 +790,8 @@ export default {
             filtered: {},
             filterSet: false,
             fullListData: {},
+            data_cliente:null,
+            field_filter:null,
         };
     },
     computed: {
@@ -808,7 +810,98 @@ export default {
     methods: {
         /* Response the lists data*/
         openFilter(filter) {
+            let component = this;
+
             filter.filterIsOpen = !filter.filterIsOpen;
+            component.fullListData = component.data_cliente;
+            
+            component.fields.forEach(function (field) {
+                if(component.filterOptions[field.key] == null || component.filterOptions[field.key].length == 0 ){
+
+                    component.filterOptions[field.key] = [];
+                    component.field_filter=field;
+                    
+                    component.data_cliente.forEach(function (listElement) {
+                    
+                        if (
+                            typeof listElement[field.key] == "object" &&
+                            listElement[field.key] != null && component.field_filter.filterIsOpen === true
+                        ) {
+                            if (
+                                Array.isArray(listElement[field.key]) &&
+                                listElement[field.key].length != 0
+                            ) {
+                                listElement[field.key].forEach(function (address) {
+                                    if (typeof address == "string") {
+                                        if (
+                                            !component.filterOptions[
+                                                field.key
+                                            ].includes(address)
+                                        ) {
+                                            component.filterOptions[field.key].push(
+                                                address
+                                            );
+                                        }
+                                    } else if (typeof address == "object") {
+                                        var objectAdded = false;
+
+                                        component.filterOptions[field.key].forEach(
+                                            function (added) {
+                                                if (added.id == address.id) {
+                                                    objectAdded = true;
+                                                }
+                                            }
+                                        );
+                                        if (!objectAdded) {
+                                            component.filterOptions[field.key].push(
+                                                address
+                                            );
+                                        }
+                                    }
+                                });
+                            } else if (!Array.isArray(listElement[field.key])) {
+                                if (
+                                    Object.keys(component.filterOptions[field.key])
+                                        .length == 0
+                                ) {
+                                    component.filterOptions[field.key].push(
+                                        listElement[field.key]
+                                    );
+                                } else {
+                                    var objectAdded = false;
+
+                                    component.filterOptions[field.key].forEach(
+                                        function (added) {
+                                            if (
+                                                added.id ==
+                                                listElement[field.key].id
+                                            ) {
+                                                objectAdded = true;
+                                            }
+                                        }
+                                    );
+                                    if (!objectAdded) {
+                                        component.filterOptions[field.key].push(
+                                            listElement[field.key]
+                                        );
+                                    }
+                                }
+                            }
+                        } else if (component.field_filter.filterIsOpen === true && typeof listElement[field.key] == "string" || typeof listElement[field.key] == "number") {
+                            if (
+                                !component.filterOptions[field.key].includes(
+                                    listElement[field.key]
+                                )
+                            ) {
+                                component.filterOptions[field.key].push(
+                                    listElement[field.key]
+                                );
+                            }
+                        }
+                    });
+                }
+            });
+            component.filterSet = true;
         },
         initialData() {
             let params = this.$route.query;
@@ -816,7 +909,6 @@ export default {
             if (params.page) this.initialPage = Number(params.page);
 
             this.getData(params);
-
             /* Set initial form data */
             for (const key in this.inputFields) {
                 if ("initial" in this.inputFields[key])
@@ -903,7 +995,7 @@ export default {
                 this.actions.list(
                     filterParams,
                     (err, data) => {
-                        this.setFilters(data.data);
+                        this.data_cliente=data.data;
                     },
                     this.$route
                 );
@@ -1299,9 +1391,17 @@ export default {
 
         onSpecialDuplicate(quote_id){
             let searchRequestType = 1;
+            var searchRequest = { renew: true };
 
-            this.$router.push({ name: 'searchV2.index', query: { requested: searchRequestType, model_id: quote_id } });
-            this.$router.go();
+            this.actions
+                .updateSearch(
+                    quote_id,
+                    searchRequest
+                )
+                .then((response) => {
+                    this.$router.push({ name: 'searchV2.index', query: { requested: searchRequestType, model_id: quote_id } });
+                    this.$router.go();
+                })
         },
         /* End single actions */
 
@@ -1394,93 +1494,93 @@ export default {
             this.autoAddRequested = !this.autoAddRequested;
         },
 
-        setFilters(data) {
-            let component = this;
+        // setFilters(data) {
+        //     let component = this;
 
-            component.fullListData = data;
+        //     component.fullListData = data;
 
-            component.fields.forEach(function (field) {
-                component.filterOptions[field.key] = [];
-                data.forEach(function (listElement) {
-                    if (
-                        typeof listElement[field.key] == "object" &&
-                        listElement[field.key] != null
-                    ) {
-                        if (
-                            Array.isArray(listElement[field.key]) &&
-                            listElement[field.key].length != 0
-                        ) {
-                            listElement[field.key].forEach(function (address) {
-                                if (typeof address == "string") {
-                                    if (
-                                        !component.filterOptions[
-                                            field.key
-                                        ].includes(address)
-                                    ) {
-                                        component.filterOptions[field.key].push(
-                                            address
-                                        );
-                                    }
-                                } else if (typeof address == "object") {
-                                    var objectAdded = false;
+        //     component.fields.forEach(function (field) {
+        //         component.filterOptions[field.key] = [];
+        //         data.forEach(function (listElement) {
+        //             if (
+        //                 typeof listElement[field.key] == "object" &&
+        //                 listElement[field.key] != null
+        //             ) {
+        //                 if (
+        //                     Array.isArray(listElement[field.key]) &&
+        //                     listElement[field.key].length != 0
+        //                 ) {
+        //                     listElement[field.key].forEach(function (address) {
+        //                         if (typeof address == "string") {
+        //                             if (
+        //                                 !component.filterOptions[
+        //                                     field.key
+        //                                 ].includes(address)
+        //                             ) {
+        //                                 component.filterOptions[field.key].push(
+        //                                     address
+        //                                 );
+        //                             }
+        //                         } else if (typeof address == "object") {
+        //                             var objectAdded = false;
 
-                                    component.filterOptions[field.key].forEach(
-                                        function (added) {
-                                            if (added.id == address.id) {
-                                                objectAdded = true;
-                                            }
-                                        }
-                                    );
-                                    if (!objectAdded) {
-                                        component.filterOptions[field.key].push(
-                                            address
-                                        );
-                                    }
-                                }
-                            });
-                        } else if (!Array.isArray(listElement[field.key])) {
-                            if (
-                                Object.keys(component.filterOptions[field.key])
-                                    .length == 0
-                            ) {
-                                component.filterOptions[field.key].push(
-                                    listElement[field.key]
-                                );
-                            } else {
-                                var objectAdded = false;
+        //                             component.filterOptions[field.key].forEach(
+        //                                 function (added) {
+        //                                     if (added.id == address.id) {
+        //                                         objectAdded = true;
+        //                                     }
+        //                                 }
+        //                             );
+        //                             if (!objectAdded) {
+        //                                 component.filterOptions[field.key].push(
+        //                                     address
+        //                                 );
+        //                             }
+        //                         }
+        //                     });
+        //                 } else if (!Array.isArray(listElement[field.key])) {
+        //                     if (
+        //                         Object.keys(component.filterOptions[field.key])
+        //                             .length == 0
+        //                     ) {
+        //                         component.filterOptions[field.key].push(
+        //                             listElement[field.key]
+        //                         );
+        //                     } else {
+        //                         var objectAdded = false;
 
-                                component.filterOptions[field.key].forEach(
-                                    function (added) {
-                                        if (
-                                            added.id ==
-                                            listElement[field.key].id
-                                        ) {
-                                            objectAdded = true;
-                                        }
-                                    }
-                                );
-                                if (!objectAdded) {
-                                    component.filterOptions[field.key].push(
-                                        listElement[field.key]
-                                    );
-                                }
-                            }
-                        }
-                    } else if (typeof listElement[field.key] == "string" || typeof listElement[field.key] == "number") {
-                        if (
-                            !component.filterOptions[field.key].includes(
-                                listElement[field.key]
-                            )
-                        ) {
-                            component.filterOptions[field.key].push(
-                                listElement[field.key]
-                            );
-                        }
-                    }
-                });
-            });
-            component.filterSet = true;
-        },
+        //                         component.filterOptions[field.key].forEach(
+        //                             function (added) {
+        //                                 if (
+        //                                     added.id ==
+        //                                     listElement[field.key].id
+        //                                 ) {
+        //                                     objectAdded = true;
+        //                                 }
+        //                             }
+        //                         );
+        //                         if (!objectAdded) {
+        //                             component.filterOptions[field.key].push(
+        //                                 listElement[field.key]
+        //                             );
+        //                         }
+        //                     }
+        //                 }
+        //             } else if (typeof listElement[field.key] == "string" || typeof listElement[field.key] == "number") {
+        //                 if (
+        //                     !component.filterOptions[field.key].includes(
+        //                         listElement[field.key]
+        //                     )
+        //                 ) {
+        //                     component.filterOptions[field.key].push(
+        //                         listElement[field.key]
+        //                     );
+        //                 }
+        //             }
+        //         });
+        //     });
+        //     component.filterSet = true;
+        // },
 
         filterTable() {
             let component = this;

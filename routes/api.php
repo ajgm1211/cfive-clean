@@ -87,6 +87,9 @@ Route::group(['prefix' => 'v2'], function () {
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('quotes', 'QuotationApiController@list');
         Route::get('quotes/{id}', 'QuotationApiController@retrieve');
+
+        // Providers
+        Route::put('provider/{id}/update/refcode', 'ProvidersController@updateRefCode');
     });
 });
 
@@ -101,6 +104,8 @@ Route::group(['prefix' => 'requestLCL', 'middleware' => 'auth:api'], function ()
 });
 
 $router->get('pdf/{id}',['as' => 'pdf.api', 'uses' => 'ApiController@pdfApi']);
+
+// WHITELABEL ROUTES
 
 Route::group(['prefix' => 'whitelabel'], function () {
 
@@ -129,4 +134,45 @@ Route::group(['prefix' => 'whitelabel'], function () {
 
     });
 
+// NEW PRICE LEVELS ROUTES
+
+Route::group(['prefix'=>'pricelevels','middleware' => 'auth:api'], function () {
+    Route::get('data', 'PriceLevelController@data');
+    Route::get('list', 'PriceLevelController@list');
+    Route::post('store', 'PriceLevelController@store');
+    Route::post('{price_level}/update', 'PriceLevelController@update');
+    Route::post('{price_level}/duplicate', 'PriceLevelController@duplicate');
+    Route::put('{price_level}/delete', 'PriceLevelController@destroy');
+    Route::put('deleteAll', 'PriceLevelController@destroyAll');
+    Route::get('retrieve/{price_level}', 'PriceLevelController@retrieve');
+});
+
+Route::group(['prefix'=>'pricelevels/details','middleware' => 'auth:api'], function () {
+    Route::get('{price_level}/list', 'PriceLevelDetailController@list');
+    Route::post('{price_level}/store', 'PriceLevelDetailController@store');
+    Route::post('{price_level_detail}/update', 'PriceLevelDetailController@update');
+    Route::post('{price_level_detail}/duplicate', 'PriceLevelDetailController@duplicate');
+    Route::put('{price_level_detail}/destroy', 'PriceLevelDetailController@destroy');
+    Route::put('destroyAll', 'PriceLevelDetailController@destroyAll');
+});
+
+Route::group(['prefix'=>'pricelevels/groups','middleware' => 'auth:api'], function () {
+    Route::get('list', 'CompanyGroupController@list');
+    Route::post('store', 'CompanyGroupController@store');
+    Route::post('{company_group}/update', 'CompanyGroupController@update');
+    Route::post('{company_group}/duplicate', 'CompanyGroupController@duplicate');
+    Route::delete('{company_group}/delete', 'CompanyGroupController@destroy');
+    Route::delete('deleteAll', 'CompanyGroupController@destroyAll');
+});
+
+// API INTEGRATIONS
+Route::group(['prefix'=>'apiCredentials','middleware' => 'auth:api'], function () {
+    Route::get('companyUsers', 'ApiCredentialsController@listCompanyUsers');
+    Route::get('companyUser/{companyUser}', 'ApiCredentialsController@listApiProvidersByCompanyUser');
+    Route::get('companyUsers/search/{search}', 'ApiCredentialsController@searchCompanyUsers');
+    Route::post('apiProviders', 'ApiCredentialsController@listAvailableApiProviders');
+    Route::post('store', 'ApiCredentialsController@store');
+    Route::post('update/{apiCredential}', 'ApiCredentialsController@update');
+    Route::post('status/{apiCredential}', 'ApiCredentialsController@updateStatus');
+    Route::post('companyUser/{companyUser}/deleteApiProvider', 'ApiCredentialsController@deleteApiProviderOfCompanyUser');
 });

@@ -1,4 +1,4 @@
-@if($quote->pdf_options['selectPDF']['id'] ==2 || $quote->pdf_options['selectPDF']['id'] ==3 )
+@if(@$quote->pdf_options['selectPDF']['id'] ==2 || @$quote->pdf_options['selectPDF']['id'] ==3 )
 <!-- Origins detailed -->
 @if($origin_charges->count()>0)
     @foreach($origin_charges as $port => $value)
@@ -40,12 +40,19 @@
             <!-- Table Body -->
             <tbody>
                 @foreach($value as $key => $charge)
+                    @php $amounts = is_array($charge->total) ? $charge->total:json_decode(json_decode($charge->total)) @endphp
                     <tr>
-                        <td>{!! $charge->charge ?? 'Inland' !!}</td>
-                        <td>{{  @$charge->calculation_type['name'] ?? @$charge->inland_address->address ?? "--" }}</td>
-                        @foreach ($charge->total as $total)
-                            <td>{!!  isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
-                        @endforeach
+                        <td>{!! $charge->charge !!}</td>
+                        <td>{{  @$charge->calculation_type['name'] ?? @$charge->address ?? "--" }}</td>
+                        @if(isset($charge->sum_total))
+                            @foreach ($charge->sum_total as $total)
+                                <td>{!! isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
+                            @endforeach
+                        @else
+                            @foreach ($amounts as $total)
+                                <td>{!! isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
+                            @endforeach
+                        @endif
                     </tr>
                 @endforeach
             </tbody>

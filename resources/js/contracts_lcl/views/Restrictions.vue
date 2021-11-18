@@ -35,7 +35,7 @@
                 /* Form Fields */
                 form_fields: {
                     companies: { 
-                        label:'Company', 
+                        label:'Companies', 
                         searchable: true, 
                         type: 'multiselect', 
                         trackby: 'business_name', 

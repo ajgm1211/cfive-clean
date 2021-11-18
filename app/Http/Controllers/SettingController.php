@@ -64,6 +64,11 @@ class SettingController extends Controller
             } else {
                 $IncludeDestiny = '';
             }
+            if (isset($company->companyUser->options['totals_in_freight_currency']) && $company->companyUser->options['totals_in_freight_currency'] == '1') {
+                $ShowFreightCurrency = "checked='true'";
+            } else {
+                $ShowFreightCurrency = '';
+            }
             if ($company->companyUser->colors_pdf != null) {
                 $color_pdf = $company->companyUser->colors_pdf;
             } else {
@@ -75,17 +80,20 @@ class SettingController extends Controller
         $currencies = Currency::where('alphacode', '=', 'USD')->orwhere('alphacode', '=', 'EUR')->pluck('alphacode', 'id');
         $pdf_templates = PdfTemplate::pluck('name', 'id');
 
-        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'color_pdf','delegations'));
+        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'ShowFreightCurrency', 'color_pdf','delegations'));
     }
 
     public function store(StoreSettings $request)
     {
         $file = Input::file('image');
         $footer_image = Input::file('footer_image');
+        $header_image = Input::file('header_image');
         $signature_image = Input::file('email_signature_image');
         $filepath = '';
         $filepath_footer_image = '';
+        $filepath_header_image = '';
         $filepath_signature_image = '';
+
         if ($file != '') {
             $filepath = 'Logos/Companies/' . $file->getClientOriginalName();
             $name = $file->getClientOriginalName();
@@ -110,6 +118,11 @@ class SettingController extends Controller
             $s3->put($filepath_signature_image, file_get_contents($signature_image), 'public');
             //ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
         }
+        if ($header_image != '') {
+            $filepath_header_image = 'Header/' . $header_image->getClientOriginalName();
+            $s3 = \Storage::disk('s3_upload');
+            $s3->put($filepath_header_image, \File::get($header_image), 'public');
+        } 
         if ($request->decimals) {
             $decimals = 1;
         } else {
@@ -131,11 +144,15 @@ class SettingController extends Controller
             $company->pdf_language = $request->pdf_language;
             $company->footer_type = $request->footer_type;
             $company->footer_text = $request->footer_text_content;
+            $company->header_type = $request->header_type;
             $company->pdf_template_id = $request->pdf_template_id;
             $company->colors_pdf = $request->colors_pdf;
 
             if ($footer_image != "") {
                 $company->footer_image = $filepath_footer_image;
+            }
+            if ($header_image != "") {
+                $company->header_image = $filepath_header_image;
             }
             $company->type_pdf = 2;
             $company->pdf_ammounts = 2;
@@ -144,7 +161,8 @@ class SettingController extends Controller
             }
             $options=[
                 'api_providers'=> [],
-                'company_address_pdf'=> 1
+                'company_address_pdf'=> 1,
+                'totals_in_freight_currency' => false,
             ];
             $company->options=$options;
             $company->save();
@@ -163,6 +181,9 @@ class SettingController extends Controller
             $email_settings->save();
         } else {
             $company = CompanyUser::findOrFail($request->company_id);
+            $company_options = $company->options;
+            $company_options['totals_in_freight_currency'] = $request->showfreightcurrency;
+            $company->options = $company_options;
             $company->name = $request->name;
             $company->phone = $request->phone;
             $company->address = $request->address;
@@ -174,10 +195,14 @@ class SettingController extends Controller
             $company->pdf_language = $request->pdf_language;
             $company->footer_type = $request->footer_type;
             $company->footer_text = $request->footer_text_content;
+            $company->header_type = $request->header_type;
             $company->pdf_template_id = $request->pdf_template_id;
             $company->colors_pdf = $request->colors_pdf;
             if ($footer_image != "") {
                 $company->footer_image = $filepath_footer_image;
+            }
+            if ($header_image != "") {
+                $company->header_image = $filepath_header_image;
             }
             if ($file != '') {
                 $company->logo = $filepath;
@@ -317,6 +342,7 @@ class SettingController extends Controller
             $surcharge_duplicate->description = $surcharge->description;
             $surcharge_duplicate->sale_term_id = $surcharge->sale_term_id;
             $surcharge_duplicate->company_user_id = $company_user_duplicate->id;
+            $surcharge_duplicate->internal_options = json_encode(['is_api' => false]);
             $surcharge_duplicate->save();
         }
 

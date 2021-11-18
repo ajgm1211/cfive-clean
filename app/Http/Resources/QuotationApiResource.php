@@ -22,7 +22,6 @@ class QuotationApiResource extends JsonResource
      */
     public function toArray($request)
     {
-
         $data = [
             'id' => $this->id,
             'type' => $this->type,
@@ -53,12 +52,14 @@ class QuotationApiResource extends JsonResource
             "english_terms_conditions" => stripslashes($this->utf8_ansi($this->terms_english)),
             "portuguese_terms_conditions" => stripslashes($this->utf8_ansi($this->terms_portuguese)),
             "payment_conditions" => $this->payment_conditions,
+            "owner_id" => $this->company_user->id ?? null,
             "owner" => $this->company_user->name ?? null,
             "created_by" => $this->user->fullname ?? null,
             "created_at" => $this->created_at->toDateTimeString(),
             "updated_at" => $this->updated_at->toDateTimeString(),
-            "company" => $this->company()->select('business_name', 'address', 'phone', 'options')->first() ?? null,
-            "contact" => $this->contact()->select('first_name', 'last_name', 'email', 'phone')->first() ?? null,
+            "company" => $this->company()->select('id', 'business_name', 'address', 'phone', 'options')->first() ?? null,
+            "contact" => $this->contact()->select('id', 'first_name', 'last_name', 'email', 'phone')->first() ?? null,
+            "exchange_rates" => $this->pdf_options["exchangeRates"] ?? null,
             'ocean_freight' => QuotationOceanFreightResource::collection($this->rates_v2()->SelectFields()->SelectChargeApi($this->type)->CarrierRelation()->get()),
             'origin_charges' => QuotationLocalChargeResource::collection($this->localCharges($this->id, 1, $this->type)),
             'destination_charges' => QuotationLocalChargeResource::collection($this->localCharges($this->id, 2, $this->type)),
@@ -68,12 +69,6 @@ class QuotationApiResource extends JsonResource
             'original_destination_charges' => $this->type == 'FCL' ?
                 QuotationChargeResource::collection($this->charge()->where('charges.type_id', 2)->SelectFields()->get()) : QuotationChargeLclResource::collection($this->charge_lcl()->where('charge_lcl_airs.type_id', 2)->SelectFields()->get()),
         ];
-
-        /** Displaying original local charges if costs is true **/
-        /*if($request->costs=="true"){
-            $data['original_local_charges'] = $this->type == 'FCL' ? 
-            QuotationChargeResource::collection($this->charge()->where('charges.type_id',[1,2])->SelectFields()->get()) : QuotationChargeLclResource::collection($this->charge_lcl()->where('charge_lcl_airs.type_id',[1,2])->SelectFields()->get());
-        }*/
 
         return $data;
     }
@@ -125,11 +120,11 @@ class QuotationApiResource extends JsonResource
     {
         switch ($quote_type) {
             case 'FCL':
-                $localcharges = LocalChargeQuote::select('id', 'price', 'profit', 'total', 'charge', 'currency_id', 'port_id', 'calculation_type_id', 'provider_name', 'surcharge_id')
+                $localcharges = LocalChargeQuote::select('id', 'price', 'profit', 'total', 'charge', 'currency_id', 'port_id', 'calculation_type_id', 'provider_name', 'surcharge_id', 'quote_id')
                     ->Quote($id)->GetPort()->Type($type)->get();
                 break;
             case 'LCL':
-                $localcharges = LocalChargeQuoteLcl::select('id', 'price', 'units', 'total', 'charge', 'currency_id', 'port_id', 'calculation_type_id', 'provider_name')
+                $localcharges = LocalChargeQuoteLcl::select('id', 'price', 'units', 'total', 'charge', 'currency_id', 'port_id', 'calculation_type_id', 'provider_name', 'quote_id')
                     ->Quote($id)->GetPort()->Type($type)->get();
                 break;
         }

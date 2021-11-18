@@ -71,7 +71,10 @@ function obtenerRouteKey($keyP)
 
 function isDecimal($monto, $quote = false, $pdf = false)
 {
-    $isDecimal = optional(Auth::user()->companyUser)->decimals;
+    $value = isset(Auth::user()->companyUser) ? optional(Auth::user()->companyUser)->decimals:null;
+    $isDecimal = $value;
+    //$user = User::find($quote->user_id ?? null);
+    //$isDecimal = $user->companyUser->decimals ?? null;
 
     if ($isDecimal != null && $isDecimal == 1) {
         if ($pdf) {
@@ -183,11 +186,21 @@ function Quitar_Espacios($cadena)
     return implode(' ', array_filter(explode(' ', $cadena)));
 }
 
-function quitar_acentos($cadena){
+function quitar_acentos($cadena)
+{
     $originales = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿ';
     $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyyby';
     $cadena = utf8_decode($cadena);
     $cadena = strtr($cadena, utf8_decode($originales), $modificadas);
     return utf8_encode($cadena);
 }
- 
+
+function quitar_caracteres($cadena)
+{
+
+    $patrón = '+';
+    $sustitución = '_';
+    $newphrase = str_replace($patrón, $sustitución, $cadena);
+
+    return $newphrase;
+}

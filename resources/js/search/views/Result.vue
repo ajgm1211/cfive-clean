@@ -2,171 +2,18 @@
   <div class="container-cards" v-if="loaded">
     <!-- RESULTS -->
     <div v-if="finalRates.length != 0" class="row" id="top-results">
-      <!-- LCL CARD -->
-      <div class="col-12 mb-4" v-if="false">
-        <div class="result-search">
-          <!-- CONTENT MAIN CARD -->
-          <div class="row">
-            <!-- CARRIER -->
-            <div
-              class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
-              style="border-right: 1px solid #f3f3f3"
-            >
-              <img src="/images/maersk.png" alt="logo" width="115px" />
-            </div>
-
-            <!-- NAME, ORIGEN AND DESTINATION INFO -->
-            <div class="row col-12 col-sm-8">
-              <!-- NAME -->
-              <div class="col-12">
-                <h6 class="mt-4 mb-5">contract reference title</h6>
-              </div>
-
-              <!-- INFO CONTRACT -->
-              <div
-                class="row col-12 mr-0 ml-0"
-                style="border-bottom: 1px solid #f3f3f3"
-              >
-                <!-- INFO CONTRACT -->
-                <div class="col-12 col-sm-6 d-flex">
-                  <!-- ORIGEN -->
-                  <div class="origin mr-4">
-                    <span>origin</span>
-                    <p>Lisboa, Lis</p>
-                  </div>
-
-                  <!-- TT -->
-                  <div
-                    class="via d-flex flex-column justify-content-center align-items-center"
-                  >
-                    <div class="direction-form">
-                      <img src="/images/logo-ship-blue.svg" alt="bote" />
-
-                      <div class="line-route-direct">
-                        <div class="circle mr-2"></div>
-                        <div class="line"></div>
-                        <div class="circle fill-circle ml-2"></div>
-                      </div>
-                    </div>
-                    <div class="direction-desc">
-                      <b>direct</b>
-                      <p><b>TT:</b> 45 Days</p>
-                    </div>
-                  </div>
-
-                  <!-- DESTINATION -->
-                  <div class="destination ml-4">
-                    <span>destination</span>
-                    <p>Buenos Aires, Arg</p>
-                  </div>
-                </div>
-
-                <!-- PRICE -->
-                <div class="col-12 col-sm-6">
-                  <div class="row justify-content-center card-amount">
-                    <div class="col-12 col-sm-2">
-                      <p><b>50.00</b>USD</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- OPTIONS AND VALIDITY -->
-              <div
-                class="col-12 mt-3 mb-3 result-action d-flex justify-content-between align-items-center"
-              >
-                <!-- VALIDITY -->
-                <div class="d-flex align-items-center">
-                  <p class="mr-4 mb-0">
-                    <b>Vality:</b> 2020-20-20 / 2020-20-20
-                  </p>
-                  <a href="#">download contract</a>
-                </div>
-
-                <!-- OPTIONS -->
-                <div class="d-flex justify-content-end align-items-center">
-                  <b-button v-b-toggle.remarks1 class="rs-btn"
-                    >remarks <b-icon icon="caret-down-fill"></b-icon
-                  ></b-button>
-                  <b-button v-b-toggle.detailed1 class="rs-btn"
-                    >detailed cost <b-icon icon="caret-down-fill"></b-icon
-                  ></b-button>
-                </div>
-              </div>
-            </div>
-
-            <!-- ADD QUOTE BTN -->
-            <div
-              class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
-              style="border-left: 1px solid #f3f3f3"
-            >
-              <b-form-checkbox
-                v-model="rate.addToQuote"
-                class="btn-add-quote"
-                name="check-button"
-                button
-                @change="addRateToQuote(rate)"
-              >
-                <b>add to quote</b>
-              </b-form-checkbox>
-            </div>
-          </div>
-
-          <div class="row">
-            <b-collapse id="detailed1" class="pt-5 pb-5 pl-5 pr-5 col-12">
-              <h5><b>Freight</b></h5>
-
-              <b-table-simple
-                hover
-                small
-                responsive
-                borderless
-                class="sc-table"
-              >
-                <b-thead>
-                  <b-tr>
-                    <b-th>Charge</b-th>
-                    <b-th></b-th>
-                    <b-th></b-th>
-                    <b-th>Units</b-th>
-                    <b-th>Price Per Units</b-th>
-                    <b-th>Amount</b-th>
-                    <b-th>Markup</b-th>
-                    <b-th>Total</b-th>
-                  </b-tr>
-                </b-thead>
-
-                <b-tbody>
-                  <b-tr>
-                    <b-td>
-                      <b>Ocean Freight</b>
-                      <p>W/M</p>
-                    </b-td>
-                    <b-td></b-td>
-                    <b-td></b-td>
-                    <b-td>1.00</b-td>
-                    <b-td><b>20.00</b> EUR</b-td>
-                    <b-td>20</b-td>
-                    <b-td>0.00</b-td>
-                    <b-td><b>20.00</b> EUR</b-td>
-                  </b-tr>
-                </b-tbody>
-              </b-table-simple>
-            </b-collapse>
-            <b-collapse id="remarks1" class="pt-5 pb-5 pl-5 pr-5 col-12">
-              <h5><b>Remarks</b></h5>
-
-              <b-card>
-                <p v-html="rate.remarks"></p>
-              </b-card>
-            </b-collapse>
-          </div>
-        </div>
+      <div v-if="searchType == 'LCL'" class="col-12 mb-4">
+        <ResultSearch
+          v-for="(item, index) in finalRates"
+          :key="index"
+          :rate="item"
+          @QuoteToAdd="addRateToQuote"
+        />
       </div>
 
       <!-- FCL CARD -->
-      <div class="col-12 mb-4" v-for="(rate, key) in finalRates" :key="key">
-        <div class="result-search">
+      <div class="col-12 mb-4" v-else-if="searchType == 'FCL'">
+        <div class="result-search" v-for="(rate, key) in finalRates" :key="key">
           <!-- INFORMACION DE TARIFA -->
           <div class="row">
             <!-- CARRIER -->
@@ -175,7 +22,10 @@
               style="border-right: 1px solid #f3f3f3"
             >
               <img
-                :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' + rate.carrier.image"
+                :src="
+                  'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
+                    rate.carrier.image
+                "
                 alt="logo"
                 width="115px"
               />
@@ -228,7 +78,7 @@
                       <b
                         v-if="
                           rate.transit_time != undefined &&
-                          rate.transit_time != undefined
+                            rate.transit_time != undefined
                         "
                         >{{
                           rate.transit_time.service == 1
@@ -239,7 +89,7 @@
                       <b
                         v-if="
                           rate.transit_time != undefined &&
-                          rate.transit_time != undefined
+                            rate.transit_time != undefined
                         "
                         >{{
                           rate.transit_time.via ? rate.transit_time.via : ""
@@ -248,7 +98,7 @@
                       <p
                         v-if="
                           rate.transit_time != null &&
-                          rate.transit_time.transit_time != null
+                            rate.transit_time.transit_time != null
                         "
                       >
                         <b>TT:</b> {{ rate.transit_time.transit_time }}
@@ -338,11 +188,21 @@
                       :key="contKey"
                     >
                       <p>
-                        <b style="font-size: 16px" v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined)"
+                        <b
+                          style="font-size: 16px"
+                          v-if="
+                            (rate.charges.Origin == undefined &&
+                              rate.charges.Destination == undefined) ||
+                              request.showRateCurrency
+                          "
                           >{{
                             rate.totals_with_markups_freight_currency
-                              ? rate.totals_with_markups_freight_currency["C" + container.code]
-                              : rate.totals_freight_currency["C" + container.code]
+                              ? rate.totals_with_markups_freight_currency[
+                                  "C" + container.code
+                                ]
+                              : rate.totals_freight_currency[
+                                  "C" + container.code
+                                ]
                           }}
                           <span style="font-size: 10px">{{
                             rate.currency.alphacode
@@ -368,7 +228,7 @@
               <div class="col-12 mt-3 mb-3 result-action">
                 <div class="d-flex align-items-center">
                   <p class="mr-4 mb-0">
-                    <b>Validity:</b>
+                    <b style="font-size:11px;">VALIDITY:</b>
                     {{ rate.contract.validity + " / " + rate.contract.expire }}
                     <img
                       v-if="rate.contract.validity > searchEndDate"
@@ -381,8 +241,8 @@
                   <b-button
                     v-if="
                       rate.contract_id != 0 ||
-                      rate.contract_request_id != 0 ||
-                      rate.contract_backup_id != 0
+                        rate.contract_request_id != 0 ||
+                        rate.contract_backup_id != 0
                     "
                     style="
                       background: transparent;
@@ -391,11 +251,18 @@
                       color: #00c581;
                     "
                     @click="downloadContractFile(rate)"
-                    v-b-tooltip.hover 
+                    v-b-tooltip.hover
                     :title="rate.owner"
                   >
-                    <span class="badge" v-bind:class="{'badge-primary':rate.contract.is_manual == 0, 'badge-secondary':rate.contract.is_manual == 1,'badge-success':rate.contract.is_manual == 2 }">download contract</span>
-                    
+                    <span
+                      class="badge"
+                      v-bind:class="{
+                        'badge-primary': rate.contract.is_manual == 0,
+                        'badge-secondary': rate.contract.is_manual == 1,
+                        'badge-success': rate.contract.is_manual == 2,
+                      }"
+                      >download contract</span
+                    >
                   </b-button>
                 </div>
 
@@ -462,7 +329,7 @@
                       <b-th style="width: 300px">Charge</b-th>
                       <b-th style="width: 325px">Detail</b-th>
                       <!-- <b-th></b-th>
-                                            <b-th></b-th> -->
+                      <b-th></b-th> -->
                       <b-th
                         v-for="(container, contKey) in request.containers"
                         :key="contKey"
@@ -483,9 +350,7 @@
                       <b-td
                         ><b>{{ charge.surcharge.name }}</b></b-td
                       >
-                      <b-td>{{
-                        charge.calculationtype.name
-                      }}</b-td>
+                      <b-td>{{ charge.calculationtype.name }}</b-td>
                       <!-- <b-td></b-td>
                                             <b-td></b-td> -->
                       <b-td
@@ -504,8 +369,8 @@
                         <span
                           v-if="
                             charge.container_markups != undefined &&
-                            charge.container_markups['C' + container.code] !=
-                              undefined
+                              charge.container_markups['C' + container.code] !=
+                                undefined
                           "
                           class="profit"
                           >+{{
@@ -644,6 +509,7 @@
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import actions from "../../actions";
+import ResultSearch from "../../components/ResultSearch.vue";
 export default {
   props: {
     rates: Array,
@@ -653,11 +519,13 @@ export default {
   },
   components: {
     Multiselect,
+    ResultSearch,
   },
   data() {
     return {
       loaded: false,
       actions: actions,
+      searchActions: {},
       requestData: {},
       finalRates: [],
       errorsExist: false,
@@ -669,12 +537,22 @@ export default {
       items: [],
       ratesForQuote: [],
       creatingQuote: false,
+      searchType: "FCL",
     };
   },
   created() {
     this.requestData = this.$route.query;
+    this.setActions();
   },
   methods: {
+    setActions() {
+      if (this.searchType == "FCL") {
+        this.searchActions = this.actions.search;
+      } else if (this.searchType == "LCL") {
+        this.searchActions = this.actions.searchlcl;
+      }
+    },
+
     countContainersClass() {
       if (
         this.request.containers.length == 5 ||
@@ -690,61 +568,12 @@ export default {
         return "col-4";
       }
     },
-    createQuote() {
-      let component = this;
-      let ratesForQuote = [];
-
-      component.creatingQuote = true;
-      component.finalRates.forEach(function (rate) {
-        if (rate.addToQuote) {
-          ratesForQuote.push(rate);
-        }
-      });
-
-      if (ratesForQuote.length == 0) {
-        component.noRatesAdded = true;
-        component.creatingQuote = false;
-        setTimeout(function () {
-          component.noRatesAdded = false;
-        }, 2000);
-      } else {
-        if (component.requestData.requested == 0) {
-          component.actions.quotes
-            .create(ratesForQuote, component.$route)
-            .then((response) => {
-              window.location.href =
-                "/api/quote/" + response.data.data.id + "/edit";
-              component.creatingQuote = false;
-            })
-            .catch((error) => {
-              if (error.status === 422) {
-                component.responseErrors = error.data.errors;
-                component.creatingQuote = false;
-              }
-            });
-        } else if (component.requestData.requested == 1) {
-          component.actions.quotes
-            .specialduplicate(ratesForQuote)
-            .then((response) => {
-              window.location.href =
-                "/api/quote/" + response.data.data.id + "/edit";
-              component.creatingQuote = false;
-            })
-            .catch((error) => {
-              if (error.status === 422) {
-                component.responseErrors = error.data.errors;
-                component.creatingQuote = false;
-              }
-            });
-        }
-      }
-    },
 
     setFilters() {
       let component = this;
 
       if (component.filterBy != "") {
-        component.rates.forEach(function (rate) {
+        component.rates.forEach(function(rate) {
           if (component.filterBy == rate.carrier.name) {
             component.finalRates.push(rate);
           }
@@ -752,7 +581,7 @@ export default {
       } else {
         component.finalRates = component.rates;
       }
-      component.rates.forEach(function (rate) {
+      component.rates.forEach(function(rate) {
         if (!component.filterOptions.includes(rate.carrier.name)) {
           component.filterOptions.push(rate.carrier.name);
         }
@@ -762,7 +591,7 @@ export default {
       let component = this;
       //console.log(this.request);
       if (component.filterBy != "") {
-        component.rates.forEach(function (rate) {
+        component.rates.forEach(function(rate) {
           if (component.filterBy == rate.carrier.name) {
             component.finalRates.push(rate);
           }
@@ -771,18 +600,17 @@ export default {
         component.finalRates = component.rates;
       }
     },
-    downloadContractFile(rate){
+    downloadContractFile(rate) {
+      let component = this;
       let parameters = [rate.contract_id, rate.contract_request_id, rate.contract_backup_id];
 
-      this.actions.search
+      component.searchActions
         .downloadContract(parameters)
         .then((response) => {
-          if(response.data.zip == true){
-          
-
-              console.log('Downloading!', response.data.url);
-              window.open("/api/search/downloadMContract/"+response.data.url);
-/*
+          if (response.data.zip == true) {
+            console.log("Downloading!", response.data.url);
+            window.open("/api/search/downloadMContract/" + response.data.url);
+            /*
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href=url;
@@ -790,23 +618,22 @@ export default {
             document.body.appendChild(link);
             link.click();
 */
-          }else{
-              console.log('Downloading!', response);
-              window.open(response.data.url)
+          } else {
+            console.log("Downloading!", response);
+            window.open(response.data.url);
           }
-     
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    addRateToQuote(rate){
+    addRateToQuote(rate) {
       let component = this;
 
       if (rate.addToQuote) {
         component.ratesForQuote.push(rate);
       } else {
-        component.ratesForQuote.forEach(function (rateQ) {
+        component.ratesForQuote.forEach(function(rateQ) {
           if (rate.id == rateQ.id) {
             component.ratesForQuote.splice(
               component.ratesForQuote.indexOf(rateQ),
@@ -821,29 +648,26 @@ export default {
     createQuote() {
       this.$emit("createQuote");
     },
-    createQuote(){
-      this.$emit('createQuote');
-    },
   },
-  mounted(){
+  mounted() {
     let component = this;
-    //console.log(component.datalists);
     component.searchEndDate = component.request.dateRange.endDate;
-    component.rates.forEach(function (rate) {
+    component.rates.forEach(function(rate) {
       rate.addToQuote = false;
     });
     component.finalRates = component.rates;
     //component.setFilters();
     window.document.onscroll = () => {
-      let navBar = document.getElementById('top-results');
-      if(window.scrollY > navBar.offsetTop){
-          component.isActive = true;
+      let navBar = document.getElementById("top-results");
+      if (window.scrollY > navBar.offsetTop) {
+        component.isActive = true;
       } else {
-          component.isActive = false;
+        component.isActive = false;
       }
-    }
-    
+    };
+
+    this.$emit("resultsCreated");
     this.loaded = true;
   },
-}
+};
 </script>

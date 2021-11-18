@@ -9,6 +9,15 @@
         <div v-else>
             <div class="card" style="width: 100%">
                 <div class="card-body row" style="overflow: inherit">
+                    <div class="col-lg-8">
+                        <div
+                            v-if="errorsExist"
+                            class="alert alert-danger"
+                            role="alert"
+                        >
+                            Exchange rates can't be zero!
+                        </div>
+                    </div>
                     <div class="col-lg-12">
                         <!-- Show Totals Checkbox-->
                         <div class="col-12 d-flex align-items-center justify-content-start flex-wrap mt-5 mb-5">
@@ -39,7 +48,8 @@
                                 style="width: 120px; top: -4px"
                                 @input="updatePdfOptions('totalsCheck')"
                             > -->
-                            <span v-show="showTotals" ><b>Show totals in:  </b></span>
+                            
+                            <span v-show="showTotals" ><b class="mr-3">Show totals in:</b></span>
                             <multiselect
                                 v-show="showTotals" 
                                 v-model="totalsCurrency"
@@ -122,8 +132,10 @@ export default {
             selectPDFOptions: [
                 {id:1, name:"PDF totals only"},
                 {id:2, name:"PDF totals + detailed costs"},
-                {id:3, name:"PDF detailed costs only"}]
-            };
+                {id:3, name:"PDF detailed costs only"}
+            ],
+            errorsExist: false,
+            }
     },
     created() {
         let id = this.$route.params.id;
@@ -170,8 +182,6 @@ export default {
                 }
             }
 
-            
-
             let pdfOptions = {
                 pdf_options: {
                     allIn: component.pdfOptions["allIn"],
@@ -191,6 +201,10 @@ export default {
                     component.$emit("freightAdded", id);
                 })
                 .catch((data) => {
+                    component.errorsExist = true;
+                    setTimeout(() => {
+                        component.errorsExist = false;
+                    }, 2000);
                     component.$refs.observer.setErrors(data.data.errors);
                 });
         },

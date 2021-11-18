@@ -1,4 +1,4 @@
-@if($quote->pdf_options['selectPDF']['id'] ==2 || $quote->pdf_options['selectPDF']['id'] ==3 )
+@if(@$quote->pdf_options['selectPDF']['id'] ==2 || @$quote->pdf_options['selectPDF']['id'] ==3 )
 <!-- Origins detailed -->
 @if($origin_charges->count()>0)
     @foreach($origin_charges as $port => $value)
@@ -39,10 +39,9 @@
             <tbody>
                 @foreach($value as $key => $charge)
                     <tr>
-                        <td>{!! $charge->charge ?? 'Inland' !!}</td>
-                        <td>{{  $charge->calculation_type['name'] ?? @$charge->inland_address->address ?? "--" }}</td>
+                        <td>{!! $charge->charge !!}</td>
+                        <td>{{  $charge->calculation_type['name'] ?? @$charge->address ?? "--" }}</td>
                         <td>{{ ($charge->units != 0 || $charge->units != "")? isDecimal($charge->units, false, true):1 }}</td>
-                        <!--<td>{{ isDecimal($charge->price, false, true) ?? "--" }}</td>-->
                         @if($charge->price != 0 || $charge->price != "")
                             <td>{{ isDecimal($charge->price, false, true) ?? "--" }}</td>
                         @elseif(isset($charge->totals))
@@ -53,7 +52,7 @@
                                     <td>{!! isDecimal($total, false, true) !!}</td>
                                 @endforeach
                         @else
-                                <td>{!! isDecimal($charge->total, false, true) !!}</td>
+                                <td>{!! isDecimal(@$charge->sum_total, false, true) !!}</td>
                         @endif
                         @if(isset($charge->totals))
                             @php
@@ -62,6 +61,8 @@
                             @foreach($array_total_inland as $total)
                                 <td>{!! isDecimal($total, false, true).' '.$charge->currency->alphacode !!}</td>
                             @endforeach
+                        @elseif(isset($charge->sum_total))
+                            <td>{!! isDecimal($charge->sum_total, false, true).' '.$charge->currency->alphacode !!}</td>
                         @else
                             <td>{!! isDecimal($charge->total, false, true).' '.$charge->currency->alphacode !!}</td>
                         @endif

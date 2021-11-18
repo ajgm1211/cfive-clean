@@ -93,14 +93,7 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{route('quotes-v2.search')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-search-magnifier-interface-symbol"></i>
-                                    <span class="m-menu__link-text">
-                                        Search Rates
-                                    </span>
-                                </a>
-                            </li>
+                     
                         </ul>
                     </div>
                 </li> 
@@ -382,44 +375,44 @@
                                     </span>
                                 </a>
                             </li>
-                            @role('administrator')
-                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
-                                data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                                <a href="#" class="m-menu__link m-menu__toggle">
-                                    <i class="m-menu__link-icon flaticon-share"></i>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <span class="m-menu__link-text">
-                                        API Settings
-                                    </span>
-                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
-                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
-                                </a>
-                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                            @if(Session::has('impersonate'))
+                                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
+                                    data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                                    <a href="#" class="m-menu__link m-menu__toggle">
+                                        <i class="m-menu__link-icon flaticon-share"></i>
+                                        &nbsp;&nbsp;&nbsp;
+                                        <span class="m-menu__link-text">
+                                            API Settings
+                                        </span>
+                                        <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                        <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                    </a>
+                                    <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
 
-                                    <ul class="m-menu__subnav">
-                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="{{ route('oauth.tokens') }}" class="m-menu__link ">
-                                                <i class="m-menu__link-icon flaticon-refresh"></i>
-                                                <span class="m-menu__link-text">
-                                                    API tokens
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="{{route('api.settings')}}" class="m-menu__link ">
-                                                <i class="m-menu__link-icon flaticon-network"></i>
-                                                <span class="m-menu__link-text">
-                                                    External API Integrations
-                                                </span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            @endrole
+                                        <ul class="m-menu__subnav">
+                                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                                <a href="{{ route('oauth.tokens') }}" class="m-menu__link ">
+                                                    <i class="m-menu__link-icon flaticon-refresh"></i>
+                                                    <span class="m-menu__link-text">
+                                                        API tokens
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <!--<li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                                <a href="{{route('api.settings')}}" class="m-menu__link ">
+                                                    <i class="m-menu__link-icon flaticon-network"></i>
+                                                    <span class="m-menu__link-text">
+                                                        External API Integrations
+                                                    </span>
+                                                </a>
+                                            </li>-->
+                                        </ul>
+                                    </div>
+                                </li>
+                            @endif
                             @role('administrator|company|subuser')
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{ route('prices.index') }}" class="m-menu__link ">
+                                <a href="{{ route('pricelevels.index') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-sellsy"></i>
                                     <span class="m-menu__link-text">
                                         Price levels
@@ -495,6 +488,14 @@
                                     </span>
                                 </a>
                             </li>
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{ route('apicredentials.index') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-lock"></i>
+                                    <span class="m-menu__link-text">
+                                        Carrier APIs Credentials
+                                    </span>
+                                </a>
+                            </li>
                             @endrole
 
 
@@ -510,31 +511,6 @@
                             </li>
                 
                             @endrole
-                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
-                            data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                                <a href="#" class="m-menu__link m-menu__toggle">
-                                    <i class="m-menu__link-icon flaticon-warning-sign"></i>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <span class="m-menu__link-text">
-                                        Deprecated
-                                    </span>
-                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
-                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
-                                </a>
-                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--right">
-
-                                    <ul class="m-menu__subnav">
-                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a href="{{ route('quotes-v2.index') }}" class="m-menu__link ">
-                                                <i class="m-menu__link-icon flaticon-list-1"></i>
-                                                <span class="m-menu__link-text">
-                                                    Quotes V1
-                                                </span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
                             @if(Session::has('impersonate'))
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
                                 <a href="{{route('impersonate.revert')}}" class="m-menu__link ">

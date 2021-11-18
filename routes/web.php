@@ -485,6 +485,10 @@ Route::middleware(['auth'])->prefix('prices')->group(function () {
     Route::get('add', 'PriceController@add')->name('prices.add');
     Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
     Route::get('destroy/{price_id}', 'PriceController@destroy')->name('prices.destroy');
+
+    // V2
+    Route::view('/v2', 'pricesV2.index');
+    Route::view('/rates/{id}', 'pricesV2.index');
 });
 Route::resource('prices', 'PriceController')->middleware('auth');
 
@@ -565,7 +569,10 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::post('send', 'PdfV2Controller@send_pdf_quote')->name('quotes-v2.send_pdf');
     Route::post('send/lcl', 'PdfV2Controller@send_pdf_quote_lcl')->name('quotes-v2.send_pdf_lcl');
     Route::post('send/air', 'PdfV2Controller@send_pdf_quote_air')->name('quotes-v2.send_pdf_air');
-    Route::get('search', 'QuoteV2Controller@search')->name('quotes-v2.search');
+    Route::get('search', function () {
+       return redirect()->route('searchV2.index');
+
+    })->name('quotes-v2.search');
     Route::post('processSearch', 'QuoteV2Controller@processSearch')->name('quotes-v2.processSearch');
     Route::post('/store/{type}', 'QuoteV2Controller@store')->name('quotes-v2.store');
     Route::post('/storeLCL/{type}', 'QuoteV2Controller@storeLCL')->name('quotes-v2.storeLCL');
@@ -1029,6 +1036,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     /* Inlands V2 view routes **/
     Route::get('api/inlands', 'InlandController@index')->name('inlands.index');
+    Route::get('api/inlands/{id}/location', 'InlandPerLocationController@index')->name('inlands.location');
     //Route::get('api/inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit');
     Route::get('inlands/{id}/edit', 'InlandController@edit')->name('inlands.edit')->middleware('check_company:inland');
     /* End Inlands routes view **/
@@ -1043,7 +1051,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/search/store', 'SearchApiController@store');
     Route::post('/api/search/storeContract', 'SearchApiController@storeContractNewSearch');
     Route::post('/api/search/downloadContract', 'SearchApiController@downloadContractFile');
-    Route::get('/api/search/downloadMContract/{id}', 'SearchApiController@downloadMultipleContractFile');
+    Route::get('/api/search/downloadMContract/{contract}', 'SearchApiController@downloadMultipleContractFile')->name('contract.multiple');
+
+    /**New Search LCL */
+    Route::get('/api/search_lcl/list', 'SearchApiLclController@list')->name('searchlclV2.list');
+    Route::post('/api/search_lcl/store', 'SearchApiLclController@store');
+    Route::post('/api/search_lcl/process', 'SearchApiLclController@processSearch');
+    Route::post('/api/search_lcl/downloadContract', 'SearchApiController@downloadContractFile');
 
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
@@ -1159,6 +1173,7 @@ Route::group(['middleware' => ['auth']], function () {
     /** Providers view routes **/
     Route::get('api/providers', 'ProvidersController@index')->name('providers.index');
     /** End providers routes view **/
+    Route::get('inlandperlocation', 'inlandPerLocationController@index')->name('inlandperlocation.index');
 });
 
 /*****************************************************************************************
@@ -1301,6 +1316,14 @@ Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function (
     Route::get('{inland}/km/retrieve', 'InlandKmController@retrieve')->middleware('check_company:inland');
     /* End API Inland Km EndPoints **/
 
+    /* API Inland location EndPoints **/
+    Route::get('{inland}/location', 'inlandPerLocationController@list');
+    Route::post('{inland}/location/store', 'inlandPerLocationController@store');
+    Route::post('{inland}/location/{location}/update', 'inlandPerLocationController@update');
+    Route::post('location/{location}/duplicate', 'inlandPerLocationController@duplicate');
+    Route::delete('location/{location}/destroy', 'inlandPerLocationController@destroy');
+    Route::post('location/destroyAll', 'inlandPerLocationController@destroyAll');
+    /* End API Inland location EndPoints **/
     /*
     Route::get('groupc/{inland}', 'InlandController@groupInlandContainer')->middleware('check_company:inland');
     // INLAND RANGE
@@ -1402,19 +1425,17 @@ Route::resource('provinces', 'ProvinceController')->middleware('auth');
 
 Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
     Route::get('intercom', 'TestController@createIntercom')->name('test.intercom');
-    Route::get('contable', 'TestController@contable')->name('teste.intercom');
+    Route::get('contable', 'TestController@contable')->name('teste.intercom')->middleware('check_company:quote');;
 });
 
-//  Route::group(['prefix' => 'whitelabel'], function () {
 
-//      Route::get('/api/search', 'SearchApiController@index')->name('searchV2.index');
-//      Route::get('/api/search/list', 'SearchApiController@list')->name('searchV2.list');
-//      Route::get('/api/search/data', 'SearchApiController@data')->name('searchV2.data');
-//      Route::get('/api/search/{search}', 'SearchApiController@retrieve')->name('searchV2.retrieve');
-//      Route::post('/api/search/process', 'SearchApiController@processSearch');
-//      Route::post('/api/search/store', 'SearchApiController@store');
-//      Route::post('/api/search/storeContract', 'SearchApiController@storeContractNewSearch');
-//      Route::post('/api/search/downloadContract', 'SearchApiController@downloadContractFile');
-//      Route::get('/api/search/downloadMContract/{id}', 'SearchApiController@downloadMultipleContractFile');
+//NEW PRICE LEVELS VIEWS ROUTES
+Route::group(['prefix' => 'prices/v2', 'middleware' => ['auth']], function () {
+    Route::view('/', 'pricesV2.index')->name('pricelevels.index');
+    Route::view('/price/rates/{price_level}', 'pricesV2.index');
+});
 
-//  });
+Route::middleware(['auth', 'role:administrator'])->prefix('api-credentials')->group(function () {
+    Route::view('/', 'integrations.api-credentials.index')->name('apicredentials.index');
+    Route::view('company-user/{companyUser}', 'integrations.api-credentials.index');
+});

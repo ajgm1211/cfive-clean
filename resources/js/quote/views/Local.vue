@@ -236,6 +236,7 @@
                                         v-model="charge.total['c' + item]"
                                         class="q-input local_charge_total_input"
                                         @keypress="isNumber($event)"
+                                        disabled
                                         v-on:blur="
                                             onUpdate(
                                                 charge.id,
@@ -252,6 +253,7 @@
                                         v-model="charge.units"
                                         class="q-input local_charge_total_input"
                                         @keypress="isNumber($event)"
+                                        disabled
                                         v-on:change="
                                             onUpdate(
                                                 charge.id,
@@ -268,6 +270,7 @@
                                         v-model="charge.price"
                                         class="q-input local_charge_total_input"
                                         @keypress="isNumber($event)"
+                                        disabled
                                         v-on:change="
                                             onUpdate(
                                                 charge.id,
@@ -349,7 +352,7 @@
                                 class="q-total"
                                 v-if="currentQuoteData.type == 'LCL'"
                             >
-                                <b-td colspan="3"></b-td>
+                                <b-td colspan="4"></b-td>
 
                                 <b-td
                                     ><span><b>Total</b></span></b-td
@@ -393,7 +396,7 @@
                                 class="q-total"
                                 v-if="currentQuoteData.type == 'FCL'"
                             >
-                                <b-td></b-td>
+                                <b-td colspan="2"></b-td>
 
                                 <b-td>
                                     <span>
@@ -972,7 +975,8 @@
                                         v-model="input.units"
                                         style="width:80px;"
                                         @keypress="isNumber($event)"
-                                        class="q-input data-profit"
+                                        @blur='validateUnits(input.units)'
+                                        class="q-input"
                                     ></b-form-input>
                                 </b-td>
 
@@ -999,7 +1003,13 @@
                                 <!-- Profits -->
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
-                                        v-model="input.total"
+                                        :value="
+                                            setTotal(
+                                                input.units,
+                                                input.price,
+                                                input.profit
+                                            )
+                                        "
                                         style="width:80px;"
                                         class="q-input"
                                         disabled
@@ -1105,6 +1115,7 @@ export default {
     },
     data() {
         return {
+            ceroUnits: null,
             actions: actions.localcharges,
             currencies: this.datalists.currency,
             openModal: false,
@@ -1413,6 +1424,18 @@ export default {
                     port_id: this.value.id,
                     type_id: this.value.type,
                 };
+
+                data.selectedCharges.forEach(element => {
+                    if(element.units === 0 || element.units === '0'){
+                        this.alert("Units can't be 0", "error");
+                        this.ceroUnits = true;
+                    }else{
+                        this.ceroUnits = null;
+                    }
+                });
+
+                if(this.ceroUnits)return;
+
                 if (this.currentQuoteData.type == "FCL") {
                     actions.localcharges
                         .create(data)
@@ -1536,6 +1559,9 @@ export default {
                     this.getTotal();
                 })
                 .catch((data) => {
+                if(data.status == 422){
+                    this.alert("Please complete the fields", "error");
+                }
                     this.$refs.observer.setErrors(data.data.errors);
                 });
         },

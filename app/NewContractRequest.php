@@ -37,6 +37,7 @@ class NewContractRequest extends Model implements HasMedia, Auditable
         'code',
         'is_api'
     ];
+    
 
     public function user()
     {
@@ -46,6 +47,11 @@ class NewContractRequest extends Model implements HasMedia, Auditable
     public function direction()
     {
         return $this->belongsTo('App\Direction');
+    }
+
+    public function contract_fcl()
+    {
+        return $this->belongsTo('App\Contract');
     }
 
     public function Requestcarriers()

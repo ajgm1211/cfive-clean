@@ -62,7 +62,20 @@ return [
             'visibility' => 'public',
         ],
 
+        'pdf' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/pdf'),
+            'url' => 'storage/app/public/pdf',
+            'visibility' => 'public',
+        ],
+
         'UpLoadFile' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            'url' => 'storage',
+            'visibility' => 'public',
+        ],
+        'UpLoadFileComp' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
             'url' => 'storage',
@@ -243,6 +256,7 @@ return [
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_UPLOAD'),
+            'visibility' => 'public',
         ],  
         'media' => [
             'driver' => 'local',

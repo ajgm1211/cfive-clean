@@ -17,7 +17,7 @@ class User extends Authenticatable implements Auditable
     use \OwenIt\Auditing\Auditable;
 
     protected $fillable = [
-        'id', 'name', 'lastname', 'password', 'email', 'phone', 'type', 'company_user_id', 'position', 'verified', 'access', 'whitelabel'
+        'id', 'name', 'lastname', 'password', 'email', 'phone', 'type', 'company_user_id', 'position', 'verified', 'access', 'api_token', 'whitelabel',
     ];
 
     protected $hidden = [

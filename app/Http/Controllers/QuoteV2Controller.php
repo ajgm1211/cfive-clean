@@ -659,7 +659,7 @@ class QuoteV2Controller extends Controller
             $charge->$name = $value;
         }
         $charge->update();
-        if ($charge->surcharge_id == '') {
+        if ($charge->surcharge_id == '13885') {
             AutomaticRate::find($charge->automatic_rate_id)->update(['currency_id' => $charge->currency_id]);
         }
         $quote_id = $charge->automatic_rate->quote_id;
@@ -1708,19 +1708,19 @@ class QuoteV2Controller extends Controller
         if ($type == 'port') {
 
             $remarks_all = RemarkHarbor::where('port_id', $port_all->id)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('remark_conditions.level','!=','api')->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
 
             $remarks_origin = RemarkHarbor::wherein('port_id', $rem_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('remark_conditions.level','!=','api')->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
 
             $remarks_destination = RemarkHarbor::wherein('port_id', $rem_dest)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('remark_conditions.level','!=','api')->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
@@ -1729,19 +1729,19 @@ class QuoteV2Controller extends Controller
         if ($type == 'country') {
 
             $remarks_all = RemarkCountry::where('country_id', $country_all->id)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('remark_conditions.level','!=','api')->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
 
             $remarks_origin = RemarkCountry::wherein('country_id', $rem_orig)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('remark_conditions.level','!=','api')->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
 
             $remarks_destination = RemarkCountry::wherein('country_id', $rem_dest)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
-                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
+                $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('remark_conditions.level','!=','api')->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
                     $b->wherein('carrier_id', $rem_carrier_id);
                 });
             })->get();
@@ -2134,11 +2134,11 @@ class QuoteV2Controller extends Controller
 
                 $request->request->add(['contract' => '', 'origin_airport_id' => $request->input('origin_airport_id'), 'destination_airport_id' => $request->input('destination_airport_id'), 'currency_id' => $idCurrency, 'quote_id' => $quote->id]);
                 $rate = AutomaticRate::create($request->all());
-
+                $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
                 $oceanFreight = new ChargeLclAir();
                 $oceanFreight->automatic_rate_id = $rate->id;
                 $oceanFreight->type_id = '3';
-                $oceanFreight->surcharge_id = null;
+                $oceanFreight->surcharge_id = $ocean_surcharge->id;
                 $oceanFreight->calculation_type_id = '4';
                 $oceanFreight->units = "0";
                 $oceanFreight->price_per_unit = "0";
@@ -2278,11 +2278,12 @@ class QuoteV2Controller extends Controller
                     $request->request->add(['contract' => $info_D->contract->name . " / " . $info_D->contract->number, 'origin_port_id' => $info_D->port_origin->id, 'destination_port_id' => $info_D->port_destiny->id, 'carrier_id' => $info_D->carrier->id, 'currency_id' => $info_D->currency->id, 'quote_id' => $quote->id, 'remarks' => $remarks, 'transit_time' => $transitTime, 'via' => $viaT, 'schedule_type' => $service]);
 
                     $rate = AutomaticRate::create($request->all());
-
+                    $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
+                    
                     $oceanFreight = new Charge();
                     $oceanFreight->automatic_rate_id = $rate->id;
                     $oceanFreight->type_id = '3';
-                    $oceanFreight->surcharge_id = null;
+                    $oceanFreight->surcharge_id = $ocean_surcharge->id;
                     $oceanFreight->calculation_type_id = '5';
                     $oceanFreight->amount = $rates;
                     $oceanFreight->markups = $markups;
@@ -3108,7 +3109,7 @@ class QuoteV2Controller extends Controller
         $containerCode = $containers->whereIn('id', $equipment)->pluck('code')->toArray();
 
         // Historial de busqueda
-        $this->storeSearchV2($origin_port, $destiny_port, $request->input('date'), $containerCode, $delivery_type, $mode, $company_user_id, 'FCL');
+        //$this->storeSearchV2($origin_port, $destiny_port, $request->input('date'), $containerCode, $delivery_type, $mode, $company_user_id, 'FCL');
 
         // Fecha Contrato
         $dateRange = $request->input('date');
@@ -4455,7 +4456,7 @@ class QuoteV2Controller extends Controller
         $arregloNull = array();
         $arregloNull = json_encode($arregloNull);
         //istory
-        $this->storeSearchV2($origin_port, $destiny_port, $request->input('date'), $arregloNull, $delivery_type, $mode, $company_user_id, 'LCL');
+        //$this->storeSearchV2($origin_port, $destiny_port, $request->input('date'), $arregloNull, $delivery_type, $mode, $company_user_id, 'LCL');
 
         $weight = $request->input("chargeable_weight");
         $weight = number_format($weight, 2, '.', '');
@@ -7185,11 +7186,11 @@ class QuoteV2Controller extends Controller
                         $priceLevelMarkupsFinal = 0;
                         $priceLevelMarkupsFinalArray = ['per_unit' => 0, 'total' => 0];
                     }
-
+                    $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
                     $oceanFreight = new ChargeLclAir();
                     $oceanFreight->automatic_rate_id = $rate->id;
                     $oceanFreight->type_id = '3';
-                    $oceanFreight->surcharge_id = null;
+                    $oceanFreight->surcharge_id = $ocean_surcharge->id;
                     $oceanFreight->calculation_type_id = '5';
                     $oceanFreight->units = $rateO->cantidad;
                     $oceanFreight->price_per_unit = $rateO->price;
@@ -7472,7 +7473,7 @@ class QuoteV2Controller extends Controller
         //return Excel::download(new QuotesExport, 'quotes.xlsx');
         $company_user_id = \Auth::user()->company_user_id;
         if (\Auth::user()->hasRole('subuser')) {
-            $quotes = QuoteV2::where('owner', \Auth::user()->id)->whereHas('user', function ($q) use ($company_user_id) {
+            $quotes = QuoteV2::where('user_id', \Auth::user()->id)->whereHas('user', function ($q) use ($company_user_id) {
                 $q->where('company_user_id', '=', $company_user_id);
             })->orderBy('created_at', 'desc')->get();
         } else {

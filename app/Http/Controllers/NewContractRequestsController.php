@@ -164,7 +164,9 @@ class NewContractRequestsController extends Controller
         $time = new \DateTime();
         $now = $time->format('dmY_His');
         $now2 = $time->format('Y-m-d H:i:s');
+
         $file = $request->file('file');
+
         $ext = strtolower($file->getClientOriginalExtension());
         /*$validator = \Validator::make(
         array('ext' => $ext),
@@ -177,7 +179,10 @@ class NewContractRequestsController extends Controller
         }*/
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
+        $nombre = quitar_caracteres($nombre);
+
         $nombre = $now . '_' . $nombre;
+
         $fileBoll = \Storage::disk('FclRequest')->put($nombre, \File::get($file));
         $typeVal = 1;
         $arreglotype = '';
@@ -199,6 +204,9 @@ class NewContractRequestsController extends Controller
             $contract->status = 'incomplete';
             $contract->company_user_id = $CompanyUserId;
             $contract->save();
+
+            //Creating custom code
+            $contract->createCustomCode();
 
             foreach ($request->carrierM as $carrierVal) {
                 ContractCarrier::create([
@@ -287,7 +295,6 @@ class NewContractRequestsController extends Controller
             $request->session()->flash('message.content', 'Error. File not found');
             return back();
         }
-
     }
 
     public function showStatus($id)
@@ -343,7 +350,6 @@ class NewContractRequestsController extends Controller
             if ($type->values == 1) {
                 $contenValuesSome = 'Las columnas valores solo contiene los valores';
                 $ValuesSomeBol = true;
-
             } else if ($type->values == 2) {
                 $contenValuesWithCurre = 'Las columnas de los valores, contienen los currency';
                 $ValuesWithCurreBol = true;
@@ -508,7 +514,6 @@ class NewContractRequestsController extends Controller
         } catch (\Exception $e) {
             return response()->json($data = ['data' => 2]);
         }
-
     }
 
     public function destroy($id)
@@ -548,7 +553,8 @@ class NewContractRequestsController extends Controller
 
     public function similarcontracts(Request $request, $id)
     {
-        $contracts = Contract::select(['id',
+        $contracts = Contract::select([
+            'id',
             'name',
             'number',
             'company_user_id',
@@ -573,7 +579,6 @@ class NewContractRequestsController extends Controller
                 if ($request->has('dateO') && $request->get('dateO') != null && $request->has('dateT') && $request->get('dateT') != null) {
                     $query->where('validity', '=', $request->get('dateO'))->where('expire', '=', $request->get('dateT'));
                 }
-
             })
             ->addColumn('carrier', function ($contracts) {
                 $dd = $contracts->load('carriers.carrier');
@@ -582,7 +587,6 @@ class NewContractRequestsController extends Controller
                 } else {
                     return '-------';
                 }
-
             })
             ->addColumn('direction', function ($contracts) {
                 $dds = $contracts->load('direction');
@@ -697,7 +701,6 @@ class NewContractRequestsController extends Controller
                         }
                     }
                 });
-
             });
 
             $myFile = $myFile->string('xlsx'); //change xlsx for the format you want, default is xls
