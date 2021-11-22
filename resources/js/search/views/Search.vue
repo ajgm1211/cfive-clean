@@ -1821,7 +1821,11 @@ export default {
         });
       }
       component.contactOptions = component.datalists.contacts;
-      component.priceLevelOptions = component.datalists.price_levels;
+      if(component.searchRequest.type == "FCL"){
+        component.priceLevelOptions = component.datalists.price_levels_fcl;
+      }else if(component.searchRequest.type == "LCL"){
+        component.priceLevelOptions = component.datalists.price_levels_lcl;
+      }
       component.deliveryTypeOptions = component.datalists.delivery_types.filter(
         function byGroup(dtype) {
           return !dtype.name.includes("Door");
@@ -2186,58 +2190,14 @@ export default {
       }
     },
 
-    /**setPriceLevels() {
-      let component = this;
-      let dlist = this.datalists;
-      let prices = [];
-
-      component.priceLevelOptions = [];
-
-      if (component.searchRequest.company != null) {
-        dlist.company_prices.forEach(function(comprice) {
-          prices.push(comprice.price_id);
-          if (component.searchRequest.company.id == comprice.company_id) {
-            dlist.price_levels.forEach(function(price) {
-              if (
-                price.id == comprice.price_id &&
-                !component.priceLevelOptions.includes(price)
-              ) {
-                component.priceLevelOptions.push(price);
-              }
-            });
-          }
-        });
-
-        dlist.price_levels.forEach(function(price) {
-          if (
-            !prices.includes(price.id) &&
-            !component.priceLevelOptions.includes(price)
-          ) {
-            component.priceLevelOptions.push(price);
-          }
-        });
-      } else {
-        let prices = [];
-
-        dlist.company_prices.forEach(function(comprice) {
-          prices.push(comprice.price_id);
-        });
-
-        dlist.price_levels.forEach(function(price) {
-          if (!prices.includes(price.id)) {
-            component.priceLevelOptions.push(price);
-          }
-        });
-      }
-    },**/
-
     setPriceLevels() {
       let component = this;
       let dlist = this.datalists;
+      let pricelevels = this.searchRequest.type == "FCL" ? dlist.price_levels_fcl : dlist.price_levels_lcl;
 
       component.priceLevelOptions = [];
 
-      dlist.price_levels.forEach(function (priceLevel){
+      pricelevels.forEach(function (priceLevel){
         if(priceLevel.price_level_groups.length == 0){
           component.priceLevelOptions.push(priceLevel);
         }
@@ -2362,6 +2322,8 @@ export default {
           this.addPackagingBar.cargoType = this.datalists.cargo_types[0];
         }
       }
+      this.searchRequest.pricelevel = "";
+      this.setPriceLevels();
       this.$emit("searchTypeChanged", "dd");
     },
 
