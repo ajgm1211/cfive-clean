@@ -707,7 +707,7 @@ class SearchApiController extends Controller
         //Freight markups (fixed & percent)
         //Local Charge markups (fixed & percent)
         //Inland markups (fixed & percent)
-        $markups = $this->getMarkupsFromPriceLevels($search_data['pricelevel'], $search_data['client_currency'], $search_data['direction'], $search_data['type']);
+        $markups = $this->getMarkupsFromPriceLevels($search_data);
 
         return $markups;
     }
