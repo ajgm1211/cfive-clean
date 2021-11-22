@@ -32,6 +32,15 @@
             </div>
         @endif
         <div class="m-portlet__body">
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
