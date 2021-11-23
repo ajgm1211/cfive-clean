@@ -215,10 +215,10 @@ class SearchApiLclController extends Controller
 
             //Adding price levels
             if ($price_level_markups != null && count($price_level_markups) != 0) {
-                $this->addMarkups($price_level_markups, $rate, $search_ids['client_currency']);
+                $this->addMarkups($price_level_markups, $rate, $search_ids);
                 foreach ($rate->charges as $charge_direction) {
                     foreach ($charge_direction as $charge) {
-                        $this->addMarkups($price_level_markups, $charge, $search_ids['client_currency']);
+                        $this->addMarkups($price_level_markups, $charge, $search_ids);
                     }
                 }
             }
@@ -366,21 +366,19 @@ class SearchApiLclController extends Controller
         //Freight markups (fixed & percent)
         //Local Charge markups (fixed & percent)
         //Inland markups (fixed & percent)
-        $markups = $this->getMarkupsFromPriceLevels($search_data['pricelevel'], $search_data['client_currency'], $search_data['direction'], $search_data['type']);
+        $markups = $this->getMarkupsFromPriceLevels($search_data);
 
         return $markups;
     }
 
     //Adds PriceLevels markups to target collection
-    public function addMarkups($markups, $target, $client_currency)
+    public function addMarkups($markups, $target, $search_data)
     {
         //If markups will be added to a Rate, extracts 'freight' variables from markups array
         if (is_a($target, 'App\Rate')) {
             //Info from markups array
             $markups_to_add = $markups['freight'];
-            $fixed = $markups_to_add['freight_amount'];
-            $percent = $markups_to_add['freight_percentage'];
-            $markups_currency = $markups_to_add['freight_currency'];
+            $markups_currency = $markups_to_add['currency'];
             $target_currency = $target->currency;
             $is_eloquent_collection = true;
             //Price arrays from rate
@@ -388,22 +386,28 @@ class SearchApiLclController extends Controller
             //If markups will be added to a Local or Global Charge, extracts 'charge' variables from markups array
         } elseif (is_a($target, 'App\LocalChargeLcl') || is_a($target, 'App\GlobalChargeLcl')) {
             //Info from markups array
-            $markups_to_add = $markups['local_charges'];
-            $fixed = $markups_to_add['local_charge_amount'];
-            $percent = $markups_to_add['local_charge_percentage'];
-            $markups_currency = $markups_to_add['local_charge_currency'];
+            $markups_to_add = $markups['surcharges'];
+            $markups_currency = $markups_to_add['currency'];
             $target_currency = $target->currency;
             $is_eloquent_collection = true;
             //Price arrays from charge
             $target_total_client_currency = $target->total_client_currency;
             $target_total = $target->total;
+        //INLANDS - CHECK AFTER INTEGRATION W INLANDS FLAT
+        } elseif (is_a($target, 'App\Inland') && isset($markups['inlands'])) {
+            //Info from markups array
+            $markups_to_add = $markups['inlands'];
+            $markups_currency = $markups_to_add['currency'];
+            $target_currency = $target->currency;
+            $is_eloquent_collection = true;
+            //Price arrays from charge
+            $target_containers = $target->containers;
+            $target_totals = $target->containers_client_currency;
             //SPECIAL CASE - OCEAN FREIGHT
         } elseif (isset($target['surcharge']) && $target['surcharge']->name == "Ocean Freight") {
             //Info from markups array
             $markups_to_add = $markups['freight'];
-            $fixed = $markups_to_add['freight_amount'];
-            $percent = $markups_to_add['freight_percentage'];
-            $markups_currency = $markups_to_add['freight_currency'];
+            $markups_currency = $markups_to_add['currency'];
             $target_currency = $target['currency'];
             $is_eloquent_collection = false;
             //Price arrays from charge
@@ -411,7 +415,8 @@ class SearchApiLclController extends Controller
         }
 
         //Checking if markups are fixed rate
-        if ($fixed != 0) {
+        if ($markups_to_add['amount']['type_lcl']['markup'] == "Fixed Markup") {
+            $fixed = $markups_to_add['amount']['type_lcl']['amount'];
             //Converting amount to Charge and Client currency to add directly
             $markups_array = $this->convertToCurrency($markups_currency, $target_currency, array($fixed));
 
@@ -419,12 +424,13 @@ class SearchApiLclController extends Controller
 
             //Looping through totals (client currency) to populate empty arrays
             if(isset($target_total_client_currency)){
-                $markups_client_currency = $this->convertToCurrency($markups_currency, $client_currency, array($fixed));
+                $markups_client_currency = $this->convertToCurrency($markups_currency, $search_data['client_currency'], array($fixed));
 
                 $total_with_markups_client_currency = isDecimal($target_total_client_currency,true) + isDecimal($markups_client_currency[0],true);
             }
         //Same loop but for percentile markups
-        } elseif ($percent != 0) {
+        } elseif ($markups_to_add['amount']['type_lcl']['markup'] == "Percent Markup") {
+            $percent = $markups_to_add['amount']['type_lcl']['amount'];
             //Calculating percentage of each container and each total price, storing them directly as final markups array
             $markups_array = $this->calculatePercentage($percent, array($target_total));
 
@@ -441,12 +447,16 @@ class SearchApiLclController extends Controller
 
         //Appending markups and added totals and totals to rate or charge
         if($is_eloquent_collection){
-            $target->setAttribute('total_markups', $markups_array[0]);
-            $target->setAttribute('total_markups_client_currency', $markups_client_currency[0]);
+            if($search_data['requestData']['requested'] != 2) {
+                $target->setAttribute('total_markups', $markups_array[0]);
+                $target->setAttribute('total_markups_client_currency', $markups_client_currency[0]);
+            }
             $target->setAttribute('total_with_markups', $total_with_markups);
             $target->setAttribute('total_with_markups_client_currency', $total_with_markups_client_currency);
         }else{
-            $target['total_markups'] = $markups_array[0];
+            if($search_data['requestData']['requested'] != 2) {
+                $target['total_markups'] = $markups_array[0];
+            }
             $target['total_with_markups'] = $total_with_markups;
         }
     }
