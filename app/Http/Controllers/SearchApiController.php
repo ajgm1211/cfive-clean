@@ -777,6 +777,7 @@ class SearchApiController extends Controller
         //Looping through charges type for array structure
         foreach ($rate->charges as $direction => $charge_direction) {
             $charge_type_totals[$direction] = [];
+
             //Looping through charges by type
             foreach ($charge_direction as $charge) {
 
@@ -825,7 +826,11 @@ class SearchApiController extends Controller
                         if (!isset($totals_array_freight_currency[$code])) {
                             $totals_array_freight_currency[$code] = 0;
                         }
-                        $totals_array_freight_currency[$code] += isDecimal($charges_to_add_rate_currency[$code], true);
+                        if(($direction == "Origin" && $search_data['originCharges']) || 
+                        ($direction == "Destination" && $search_data['destinationCharges'])
+                        || $direction == "Freight"){
+                            $totals_array_freight_currency[$code] += isDecimal($charges_to_add_rate_currency[$code], true);
+                        }
                         //Add prices from charge to totals by type
                         if ($direction == "Freight") {
                             $charge_type_totals[$direction][$code] += isDecimal($charges_to_add_original[$code], true);
@@ -835,7 +840,11 @@ class SearchApiController extends Controller
                     }
 
                     //Updating rate totals to new added array
-                    $rate->$to_update = $totals_array;
+                    if(($direction == "Origin" && $search_data['originCharges']) || 
+                        ($direction == "Destination" && $search_data['destinationCharges'])
+                        || $direction == "Freight"){
+                            $rate->$to_update = $totals_array;
+                        }
                 } else {
 
                     if (isset($charge['containers_with_markups'])) {

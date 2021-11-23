@@ -59,6 +59,12 @@
 </div>
 
 <div class="form-group m-form__group">
+  {!! Form::label('Apply to', 'Apply to') !!}
+  {!! Form::select('apply_to',['client'=>'Client','internal'=>'Internal','both'=>'Both'],@$remark->apply_to,
+  ['class' => 'm-select2-general form-control','placeholder'=>'Select an option','required']) !!}
+</div>
+
+<div class="form-group m-form__group">
     {!! Form::label('Import', 'Import') !!}
     {!! Form::textarea('import', null, ['placeholder' => 'Please enter your import text','class' => 'form-control editor
     m-input','id'=>'Import']) !!}

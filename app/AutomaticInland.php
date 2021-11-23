@@ -54,6 +54,11 @@ class AutomaticInland extends Model implements Auditable
         return $this->hasManyThrough('App\Country', 'App\Harbor', 'country_id', 'id');
     }
 
+    public function inland_local_group()
+    {
+        return $this->hasOne('App\InlandLocalChargeGroup', 'automatic_inland_id');
+    }
+
     public function getPriceAttribute($array)
     {
         $array = json_decode(json_decode($array));
