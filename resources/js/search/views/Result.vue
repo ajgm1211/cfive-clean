@@ -7,6 +7,7 @@
           v-for="(item, index) in finalRates"
           :key="index"
           :rate="item"
+          :searchData="searchData"
           @QuoteToAdd="addRateToQuote"
         />
       </div>
@@ -191,8 +192,8 @@
                         <b
                           style="font-size: 16px"
                           v-if="
-                            (rate.charges.Origin == undefined &&
-                              rate.charges.Destination == undefined) ||
+                            (rate.charges.Origin == undefined && rate.charges.Destination == undefined) ||
+                            (!searchData.originCharges && !searchData.destinationCharges) ||
                               request.showRateCurrency
                           "
                           >{{
@@ -319,11 +320,14 @@
                 v-for="(chargeArray, chargeType) in rate.charges"
                 :key="chargeType"
               >
-                <h5>
+                <h5 v-show="(searchData.originCharges && chargeType=='Origin') || (searchData.destinationCharges && chargeType=='Destination') || chargeType=='Freight'">
                   <b>{{ chargeType }}</b>
                 </h5>
 
-                <b-table-simple hover small responsive class="sc-table">
+                <b-table-simple 
+                  v-show="(searchData.originCharges && chargeType=='Origin') || (searchData.destinationCharges && chargeType=='Destination') || chargeType=='Freight'"
+                  hover small responsive class="sc-table"
+                >
                   <b-thead>
                     <b-tr>
                       <b-th style="width: 300px">Charge</b-th>
@@ -516,6 +520,7 @@ export default {
     pricelevels: Array,
     request: Object,
     datalists: Object,
+    searchData: Object,
   },
   components: {
     Multiselect,
@@ -552,7 +557,6 @@ export default {
         this.searchActions = this.actions.searchlcl;
       }
     },
-
     countContainersClass() {
       if (
         this.request.containers.length == 5 ||
@@ -568,7 +572,6 @@ export default {
         return "col-4";
       }
     },
-
     setFilters() {
       let component = this;
 

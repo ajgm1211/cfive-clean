@@ -10,7 +10,7 @@ class LocalChargeQuote extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
 
-    protected $fillable = ['price', 'profit', 'total', 'charge', 'surcharge_id', 'calculation_type_id', 'currency_id', 'port_id', 'quote_id', 'type_id', 'sale_term_v3_id', 'provider_name'];
+    protected $fillable = ['price', 'profit', 'total', 'charge', 'surcharge_id', 'calculation_type_id', 'currency_id', 'port_id', 'quote_id', 'type_id', 'sale_term_v3_id', 'provider_name', 'sale_term_code_id'];
 
     protected $casts = [
         'price' => 'array',
@@ -126,7 +126,8 @@ class LocalChargeQuote extends Model implements Auditable
                 foreach ($equip_array as $eq) {
                     foreach ($charge->total as $key => $total) {
                         if ($key == 'c' . $eq) {
-                            $exchange = ratesCurrencyFunction($charge->currency_id, $currency);
+                            $quote = $this->quotev2()->first();
+                            $exchange = ratesCurrencyQuote($charge->currency_id, $currency,$quote['pdf_options']['exchangeRates']);
                             $total_w_exchange = $total / $exchange;
                             $totals[$key] += number_format((float)$total_w_exchange, 2, '.', '');
                         }

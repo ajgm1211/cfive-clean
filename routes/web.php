@@ -1124,7 +1124,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/port/{port_id}/automatic_inlands_lcl/search', 'AutomaticInlandLclController@searchInlands');
     Route::post('api/quotes/{quote}/automatic_inlands_lcl/harbors', 'AutomaticInlandLclController@harbors');
     Route::post('api/quotes/{quote}/automatic_inland_lcl/{combo}/delete_full', 'AutomaticInlandLclController@deleteFull');
-    Route::post('/api/quotes/{quote}/automatic_inland_lcl/{port_id}/update_pdf_options', 'AutomaticInlandController@updatePdfOptions');
+    Route::post('/api/quotes/{quote}/automatic_inland_lcl/{port_id}/update_pdf_options', 'AutomaticInlandLclController@updatePdfOptions');
     Route::get('/api/quotes/automatic_inlands/{port_id}/get_harbor_address', 'AutomaticInlandController@getHarborAddresses');
 
     /** Local charges routes */

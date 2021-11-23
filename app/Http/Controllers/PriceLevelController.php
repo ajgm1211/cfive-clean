@@ -181,20 +181,27 @@ class PriceLevelController  extends Controller
                 $new_relation->group()->associate($new_model)->save();
             }
         }else{
-            $data = $request->validate([
-                'name' => 'required',
-                'display_name' => 'required',
-                'price_level_type' => 'required',
-                'description' => 'required',
-            ]);
+            if($request->input('description') === null){
+                $data = $request->validate([
+                    'name' => 'required',
+                    'display_name' => 'required',
+                    'price_level_type' => 'required',
+                ]);
+    
+                $price_level->update([
+                    'name' => $data['name'],
+                    'display_name' => $data['display_name'],
+                    'type' => $data['price_level_type'],
+                ]);
+            }else{  
+                $data = $request->validate([
+                    'description' => 'required',
+                ]);
 
-            $price_level->update([
-                'name' => $data['name'],
-                'display_name' => $data['display_name'],
-                'type' => $data['price_level_type'],
-                'description' => $data['description'],
-                
-            ]);
+                $price_level->update([
+                    'description' => $data['description'],
+                ]);
+            }
         }
 
         return new PriceLevelResource($price_level);
