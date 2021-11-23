@@ -142,6 +142,8 @@ class Contract extends Model implements HasMedia, Auditable
     public function scopeFilterByCurrentCompany($query)
     {
 
+        $company_id = null;
+
         if (Auth::check()) {
 
             if (Auth::user()->hasRole('subuser')) {
@@ -153,7 +155,10 @@ class Contract extends Model implements HasMedia, Auditable
                 $company_id = Auth::user()->company_user_id;
                 return $query->where('company_user_id', '=', $company_id)->where('status_erased', '!=', $status_erased);
             }
+            
         }
+
+        return $query->where('company_user_id', '=', $company_id);
     }
 
     /**
