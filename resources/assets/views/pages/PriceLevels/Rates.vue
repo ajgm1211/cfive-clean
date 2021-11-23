@@ -180,7 +180,7 @@ export default {
     currentPage: 1,
   }),
   mounted() {
-    this.getData();
+    this.$store.dispatch("getInitialData");
 
     this.$store.dispatch("getPriceLevelDetail", {
       id: this.$route.params.id,
@@ -201,6 +201,7 @@ export default {
     this.$store.dispatch("getPriceLevelData");
 
     setTimeout(() => {
+      this.datalists = this.GET_PRICE_LEVEL_DATA;
       this.price.name = this.GET_CURRENT_PRICE_LEVEL.name;
       this.price.display_name = this.GET_CURRENT_PRICE_LEVEL.display_name;
       this.price.description = this.GET_CURRENT_PRICE_LEVEL.description;
@@ -214,12 +215,6 @@ export default {
     }, 1000);
   },
   methods: {
-    getData() {
-      let url = "/api/pricelevels/data";
-      api.getData({}, url, (err, data) => {
-        this.setDropdownLists(err, data.data);
-      });
-    },
     update(key=null) {
       if(key == 'main'){
         var updateBody = {
@@ -249,14 +244,6 @@ export default {
     },
     currentTab(tab) {
       this.active = tab;
-    },
-    setDropdownLists(err, data) {
-      this.datalists = data;
-
-      this.datalists["route_types"] = [
-        { id: "port", name: "Port", vselected: "harbors" },
-        { id: "country", name: "Country", vselected: "countries" },
-      ];
     },
     prevPage() {
       if (this.currentPage > 1) {

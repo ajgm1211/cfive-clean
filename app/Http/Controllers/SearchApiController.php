@@ -144,8 +144,9 @@ class SearchApiController extends Controller
         return $country->only(['id','code','name']);
         });**/
 
-        $price_levels = PriceLevel::where('company_user_id', $company_user_id)->with('price_level_groups')->get();
+        $price_levels_fcl = PriceLevel::where([['company_user_id', $company_user_id],['type','FCL']])->with('price_level_groups')->get();
 
+        $price_levels_lcl = PriceLevel::where([['company_user_id', $company_user_id],['type','LCL']])->with('price_level_groups')->get();
 
         $surcharges = Surcharge::where('company_user_id', '=', $company_user_id)->orderBy('name', 'asc')->get()->map(function ($surcharge) {
             return $surcharge->only(['id', 'name']);
@@ -200,7 +201,8 @@ class SearchApiController extends Controller
             'delivery_types',
             'directions',
             'harbors',
-            'price_levels',
+            'price_levels_fcl',
+            'price_levels_lcl',
             'schedule_types',
             'type_destiny',
             'surcharges',
@@ -213,130 +215,6 @@ class SearchApiController extends Controller
         return response()->json(['data' => $data]);
     }
 
-    //Stores current search
-    public function store(Request $request)
-    {
-        //Validating request data from form
-        $new_search_data = $request->validate([
-            'originPorts' => 'required|array|min:1',
-            'destinationPorts' => 'required|array|min:1',
-            'dateRange.startDate' => 'required',
-            'dateRange.endDate' => 'required',
-            'containers' => 'required_if:type,FCL|array|min:1',
-            'selectedContainerGroup' => 'required_if:type,FCL',
-            'deliveryType.id' => 'required',
-            'direction' => 'required',
-            'carriers' => 'sometimes',
-            'carriersApi' => 'sometimes',
-            'type' => 'required',
-            'company' => 'sometimes',
-            'contact' => 'sometimes',
-            'pricelevel' => 'sometimes',
-            'originCharges' => 'sometimes',
-            'destinationCharges' => 'sometimes',
-            'originAddress' => 'sometimes',
-            'destinationAddress' => 'sometimes',
-        ]);
-
-        //Stripping time stamp from date
-        $new_search_data['dateRange']['startDate'] = substr($new_search_data['dateRange']['startDate'], 0, 10);
-        $new_search_data['dateRange']['endDate'] = substr($new_search_data['dateRange']['endDate'], 0, 10);
-
-        //Getting address text if in array form
-        if (is_array($new_search_data['originAddress'])) {
-            $new_search_data['originAddress'] = $new_search_data['originAddress']['display_name'];
-        } else if (is_array($new_search_data['destinationAddress'])) {
-            $new_search_data['destinationAddress'] = $new_search_data['destinationAddress']['display_name'];
-        }
-
-        //Setting current company and user
-        $user = \Auth::user();
-        $user_id = $user->id;
-        $company_user_id = $user->company_user_id;
-
-        //Including company and user in search data array
-        $new_search_data['user'] = $user_id;
-        $new_search_data['company_user'] = $company_user_id;
-
-        //SEARCH TRAIT - Getting new array that contains only ids, for queries
-        $new_search_data_ids = $this->getIdsFromArray($new_search_data);
-        //Formatting date
-        $pick_up_date = $new_search_data_ids['dateRange']['startDate'] . ' / ' . $new_search_data_ids['dateRange']['endDate'];
-
-        //formatting containers
-        $container_array = [];
-
-        //FORMATTING FOR OLD SEARCH, MUST BE REMOVED
-        foreach ($new_search_data_ids['containers'] as $container_id) {
-            $container = Container::where('id', $container_id)->first();
-
-            array_push($container_array, $container->code);
-        }
-
-        $new_search = SearchRate::create([
-            'company_user_id' => $new_search_data_ids['company_user'],
-            'pick_up_date' => $pick_up_date,
-            'equipment' => $container_array,
-            'delivery' => $new_search_data_ids['deliveryType'],
-            'direction' => $new_search_data_ids['direction'],
-            'type' => $new_search_data_ids['type'],
-            'user_id' => $new_search_data_ids['user'],
-            'contact_id' => $new_search_data_ids['contact'],
-            'company_id' => $new_search_data_ids['company'],
-            'price_level_id' => $new_search_data_ids['pricelevel'],
-            'origin_charges' => $new_search_data_ids['originCharges'],
-            'destination_charges' => $new_search_data_ids['destinationCharges'],
-            //'origin_address' => $new_search_data_ids['originAddress'],
-            //'destination_address' => $new_search_data_ids['destinationAddress']
-        ]);
-
-        foreach ($new_search_data_ids['originPorts'] as $origPort) {
-            foreach ($new_search_data_ids['destinationPorts'] as $destPort) {
-                $searchPort = new SearchPort();
-                $searchPort->port_orig = $origPort;
-                $searchPort->port_dest = $destPort;
-                $searchPort->search_rate()->associate($new_search);
-                $searchPort->save();
-            }
-        }
-
-        if (isset($new_search_data_ids['carriers'])) {
-            foreach ($new_search_data_ids['carriers'] as $carrier_id) {
-                $carrier = Carrier::where('id', $carrier_id)->first();
-
-                $search_carrier = new SearchCarrier();
-
-                $search_carrier->search_rate_id = $new_search->id;
-
-                $search_carrier->provider()->associate($carrier)->save();
-            }
-        }
-
-        if (isset($new_search_data_ids['carriersApi'])) {
-            foreach ($new_search_data_ids['carriersApi'] as $provider_id) {
-                $provider = ApiProvider::where('id', $provider_id)->first();
-
-                $search_carrier = new SearchCarrier();
-
-                $search_carrier->search_rate_id = $new_search->id;
-
-                $search_carrier->provider()->associate($provider)->save();
-            }
-        }
-
-        return new SearchApiResource($new_search);
-    }
-
-    public function retrieve(SearchRate $search)
-    {
-        if ($search->type == "FCL") {
-            return new SearchApiResource($search);
-        } else if ($search->type == "LCL") {
-            return new SearchApiLclResource($search);
-        }
-    }
-
-    //Validates search request data
     public function processSearch(Request $request)
     {
         //Setting current company and user
@@ -434,6 +312,130 @@ class SearchApiController extends Controller
         $this->trackEvents("search_fcl", $track_array);
 
         return RateResource::collection($rates);
+    }
+
+    //Stores current search
+    public function store(Request $request)
+    {
+        //Validating request data from form
+        $new_search_data = $request->validate([
+            'originPorts' => 'required|array|min:1',
+            'destinationPorts' => 'required|array|min:1',
+            'dateRange.startDate' => 'required',
+            'dateRange.endDate' => 'required',
+            'containers' => 'required_if:type,FCL|array|min:1',
+            'selectedContainerGroup' => 'required_if:type,FCL',
+            'deliveryType.id' => 'required',
+            'direction' => 'required',
+            'carriers' => 'sometimes',
+            'carriersApi' => 'sometimes',
+            'type' => 'required',
+            'company' => 'sometimes',
+            'contact' => 'sometimes',
+            'pricelevel' => 'sometimes',
+            'originCharges' => 'sometimes',
+            'destinationCharges' => 'sometimes',
+            'originAddress' => 'sometimes',
+            'destinationAddress' => 'sometimes',
+        ]);
+
+        //Stripping time stamp from date
+        $new_search_data['dateRange']['startDate'] = substr($new_search_data['dateRange']['startDate'], 0, 10);
+        $new_search_data['dateRange']['endDate'] = substr($new_search_data['dateRange']['endDate'], 0, 10);
+
+        //Getting address text if in array form
+        if (is_array($new_search_data['originAddress'])) {
+            $new_search_data['originAddress'] = $new_search_data['originAddress']['display_name'];
+        } else if (is_array($new_search_data['destinationAddress'])) {
+            $new_search_data['destinationAddress'] = $new_search_data['destinationAddress']['display_name'];
+        }
+
+        //Setting current company and user
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $company_user_id = $user->company_user_id;
+
+        //Including company and user in search data array
+        $new_search_data['user'] = $user_id;
+        $new_search_data['company_user'] = $company_user_id;
+
+        //SEARCH TRAIT - Getting new array that contains only ids, for queries
+        $new_search_data_ids = $this->getIdsFromArray($new_search_data);
+        //Formatting date
+        $pick_up_date = $new_search_data_ids['dateRange']['startDate'] . ' / ' . $new_search_data_ids['dateRange']['endDate'];
+
+        //formatting containers
+        $container_array = [];
+
+        //FORMATTING FOR OLD SEARCH, MUST BE REMOVED
+        foreach ($new_search_data_ids['containers'] as $container_id) {
+            $container = Container::where('id', $container_id)->first();
+
+            array_push($container_array, $container->code);
+        }
+
+        $new_search = SearchRate::create([
+            'company_user_id' => $new_search_data_ids['company_user'],
+            'pick_up_date' => $pick_up_date,
+            'equipment' => $container_array,
+            'delivery' => $new_search_data_ids['deliveryType'],
+            'direction' => $new_search_data_ids['direction'],
+            'type' => $new_search_data_ids['type'],
+            'user_id' => $new_search_data_ids['user'],
+            'contact_id' => $new_search_data_ids['contact'],
+            'company_id' => $new_search_data_ids['company'],
+            'price_level_id' => $new_search_data_ids['pricelevel'],
+            'origin_charges' => $new_search_data_ids['originCharges'],
+            'destination_charges' => $new_search_data_ids['destinationCharges'],
+
+            //'origin_address' => $new_search_data_ids['originAddress'],
+            //'destination_address' => $new_search_data_ids['destinationAddress']
+        ]);
+
+        foreach ($new_search_data_ids['originPorts'] as $origPort) {
+            foreach ($new_search_data_ids['destinationPorts'] as $destPort) {
+                $searchPort = new SearchPort();
+                $searchPort->port_orig = $origPort;
+                $searchPort->port_dest = $destPort;
+                $searchPort->search_rate()->associate($new_search);
+                $searchPort->save();
+            }
+        }
+
+        if (isset($new_search_data_ids['carriers'])) {
+            foreach ($new_search_data_ids['carriers'] as $carrier_id) {
+                $carrier = Carrier::where('id', $carrier_id)->first();
+
+                $search_carrier = new SearchCarrier();
+
+                $search_carrier->search_rate_id = $new_search->id;
+
+                $search_carrier->provider()->associate($carrier)->save();
+            }
+        }
+
+        if (isset($new_search_data_ids['carriersApi'])) {
+            foreach ($new_search_data_ids['carriersApi'] as $provider_id) {
+                $provider = ApiProvider::where('id', $provider_id)->first();
+
+                $search_carrier = new SearchCarrier();
+
+                $search_carrier->search_rate_id = $new_search->id;
+
+                $search_carrier->provider()->associate($provider)->save();
+            }
+        }
+
+        return new SearchApiResource($new_search);
+    }
+
+    public function retrieve(SearchRate $search)
+    {
+        if ($search->type == "FCL") {
+            return new SearchApiResource($search);
+        } else if ($search->type == "LCL") {
+            return new SearchApiLclResource($search);
+        }
     }
 
     //Finds any Rates associated to a contract valid in search dates, matching search ports
@@ -640,136 +642,13 @@ class SearchApiController extends Controller
         //Freight markups (fixed & percent)
         //Local Charge markups (fixed & percent)
         //Inland markups (fixed & percent)
-        $markups = $this->getMarkupsFromPriceLevels($search_data['pricelevel'], $search_data['client_currency'], $search_data['direction'], $search_data['type']);
+        $markups = $this->getMarkupsFromPriceLevels($search_data);
 
         return $markups;
     }
 
-/**Adds PriceLevels markups to target collection
-    public function addMarkups($markups, $target, $client_currency)
-    {
-        //If markups will be added to a Rate, extracts 'freight' variables from markups array
-        if (is_a($target, 'App\Rate')) {
-            //Info from markups array
-            $markups_to_add = $markups['freight'];
-            $fixed = $markups_to_add['freight_amount'];
-            $percent = $markups_to_add['freight_percentage'];
-            $markups_currency = $markups_to_add['freight_currency'];
-            $target_currency = $target->currency;
-            $is_eloquent_collection = true;
-            //Price arrays from rate
-            $target_containers = json_decode($target->containers, true);
-            $target_totals = $target->totals;
-            //If markups will be added to a Local or Global Charge, extracts 'charge' variables from markups array
-        } elseif (is_a($target, 'App\LocalCharge') || is_a($target, 'App\GlobalCharge')) {
-            //Info from markups array
-            $markups_to_add = $markups['local_charges'];
-            $fixed = $markups_to_add['local_charge_amount'];
-            $percent = $markups_to_add['local_charge_percentage'];
-            $markups_currency = $markups_to_add['local_charge_currency'];
-            $target_currency = $target->currency;
-            $is_eloquent_collection = true;
-            //Price arrays from charge
-            $target_totals = $target->containers_client_currency;
-            $target_containers = $target->containers;
-            //SPECIAL CASE - OCEAN FREIGHT
-        } elseif (isset($target['surcharge']) && $target['surcharge']['name'] == "Ocean Freight") {
-            //Info from markups array
-            $markups_to_add = $markups['freight'];
-            $fixed = $markups_to_add['freight_amount'];
-            $percent = $markups_to_add['freight_percentage'];
-            $markups_currency = $markups_to_add['freight_currency'];
-            $target_currency = Currency::where('id', $target['currency']['id'])->first();
-            $is_eloquent_collection = false;
-            //Price arrays from charge
-            $target_containers = $target['containers'];
-        }
-
-        //Empty arrays to store final added values
-        $containers_with_markups = [];
-        $totals_with_markups = [];
-
-        //Checking if markups are fixed rate
-        if ($fixed != 0) {
-            //Converting amount to Charge and Client currency to add directly
-            $fixed_target_currency = $this->convertToCurrency($markups_currency, $target_currency, array($fixed));
-
-            //Empty arrays for markups in each currency
-            $markups_array = [];
-            $markups_client_currency = [];
-
-            //Looping through containers (charge currency) to populate empty arrays
-            foreach ($target_containers as $code => $cost) {
-                //Checking if container price is not 0
-                if ($cost != 0) {
-                    //Storing markup and added container price
-                    $markups_array[$code] = $fixed_target_currency[0];
-                    $containers_with_markups[$code] = isDecimal($cost, true) + isDecimal($fixed_target_currency[0], true);
-                } else {
-                    //Storing cost 0 in final price array
-                    $containers_with_markups[$code] = isDecimal($cost, true);
-                }
-            }
-
-            //Looping through totals (client currency) to populate empty arrays
-            if (isset($target_totals)) {
-                $fixed_client_currency = $this->convertToCurrency($markups_currency, $client_currency, array($fixed));
-
-                foreach ($target_totals as $code => $cost) {
-                    //Checking if total is not 0
-                    if ($cost != 0) {
-                        //Storing markup and added total
-                        $markups_client_currency[$code] = $fixed_client_currency[0];
-                        $totals_with_markups[$code] = isDecimal($cost, true) + isDecimal($fixed_client_currency[0], true);
-                    } else {
-                        //Storing cost 0 in final totals array
-                        $totals_with_markups[$code] = isDecimal($cost, true);
-                    }
-                }
-            }
-            //Same loop but for percentile markups
-        } elseif ($percent != 0) {
-            //Calculating percentage of each container and each total price, storing them directly as final markups array
-            $markups_array = $this->calculatePercentage($percent, $target_containers);
-
-            foreach ($target_containers as $code => $cost) {
-                if ($cost != 0) {
-                    $containers_with_markups[$code] = isDecimal($cost, true) + isDecimal($markups_array[$code], true);
-                } else {
-                    $containers_with_markups[$code] = isDecimal($cost, true);
-                }
-            }
-
-            if (isset($target_totals)) {
-                $markups_client_currency = $this->calculatePercentage($percent, $target_totals);
-
-                foreach ($target_totals as $code => $cost) {
-                    if ($cost != 0) {
-                        $totals_with_markups[$code] = isDecimal($cost, true) + isDecimal($markups_client_currency[$code], true);
-                    } else {
-                        $totals_with_markups[$code] = isDecimal($cost, true);
-                    }
-                }
-            }
-        } else {
-            return;
-        }
-
-        //Appending markups and added containers and totals to rate or charge
-        if ($is_eloquent_collection) {
-            $target->setAttribute('container_markups', $markups_array);
-            $target->setAttribute('totals_markups', $markups_client_currency);
-            $target->setAttribute('containers_with_markups', $containers_with_markups);
-            $target->setAttribute('totals_with_markups', $totals_with_markups);
-        } else {
-            $target['container_markups'] = $markups_array;
-            $target['containers_with_markups'] = $containers_with_markups;
-        }
-    }
-**/
-
     //Adds PriceLevels markups to target collection
-    public function addMarkups($markups, $target, $client_currency)
+    public function addMarkups($markups, $target, $search_data)
     {
         //If markups will be added to a Rate, extracts 'freight' variables from markups array
         if (is_a($target, 'App\Rate') && isset($markups['freight'])) {
@@ -836,7 +715,7 @@ class SearchApiController extends Controller
                     $fixed = $markups_to_add['amount'][$markup_key]['amount'];
                     //Converting amount to Charge and Client currency to add directly
                     $markups_array[$code] = $this->convertToCurrency($markups_currency, $target_currency, array($fixed))[0];
-                    $markups_client_currency[$code] = $this->convertToCurrency($markups_currency, $client_currency, array($fixed))[0];
+                    $markups_client_currency[$code] = $this->convertToCurrency($markups_currency, $search_data['client_currency'], array($fixed))[0];
                     $percent = false;
                 }elseif($markups_to_add['amount'][$markup_key]['markup'] == "Percent Markup"){
                     $percent = $markups_to_add['amount'][$markup_key]['amount'];
@@ -863,12 +742,16 @@ class SearchApiController extends Controller
 
         //Appending markups and added containers and totals to rate or charge
         if ($is_eloquent_collection) {
-            $target->setAttribute('container_markups', $markups_array);
-            $target->setAttribute('totals_markups', $markups_client_currency);
+            if($search_data['requestData']['requested'] != 2) {
+                $target->setAttribute('container_markups', $markups_array);
+                $target->setAttribute('totals_markups', $markups_client_currency);
+            }
             $target->setAttribute('containers_with_markups', $containers_with_markups);
             $target->setAttribute('totals_with_markups', $totals_with_markups);
         } else {
-            $target['container_markups'] = $markups_array;
+            if($search_data['requestData']['requested'] != 2) {
+                $target['container_markups'] = $markups_array;
+            }
             $target['containers_with_markups'] = $containers_with_markups;
         }
     }
