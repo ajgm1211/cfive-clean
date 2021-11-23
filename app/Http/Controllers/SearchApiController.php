@@ -268,10 +268,10 @@ class SearchApiController extends Controller
 
             //Adding price levels
             if ($price_level_markups != null && count($price_level_markups) != 0) {
-                $this->addMarkups($price_level_markups, $rate, $search_ids['client_currency']);
+                $this->addMarkups($price_level_markups, $rate, $search_ids);
                 foreach ($rate->charges as $charge_direction) {
                     foreach ($charge_direction as $charge) {
-                        $this->addMarkups($price_level_markups, $charge, $search_ids['client_currency']);
+                        $this->addMarkups($price_level_markups, $charge, $search_ids);
                     }
                 }
             }
