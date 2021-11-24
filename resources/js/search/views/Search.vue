@@ -747,7 +747,7 @@
               !foundApiRates"
           class="alert alert-danger"
           role="alert"
-        >{{foundApiRates}}
+        >
           No results for this particular route. Create an express contract or
           try another search
         </div>
