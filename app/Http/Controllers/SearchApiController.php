@@ -230,12 +230,8 @@ class SearchApiController extends Controller
         
         $search_array = $request->input();
 
-        $search_array['dateRange']['startDate'] = substr($search_array['dateRange']['startDate'], 0, 10);
-        $search_array['dateRange']['endDate'] = substr($search_array['dateRange']['endDate'], 0, 10);
-        if(isset($search_array['options'])){
-            $search_array['options']['whitelabel'] . ' , ' . $search_array['options']['containers_quantity'];
-        }
-        
+        $search_array['dateRange'] = $this->formatSearchDate($search_array);
+        $search_array['client_currency'] = $company_user->currency;
 
         $search_ids = $this->getIdsFromArray($search_array);
         $search_ids['company_user'] = $company_user_id;
@@ -243,8 +239,6 @@ class SearchApiController extends Controller
         $search_ids['client_currency'] = $company_user->currency;
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
-
-
 
         //$rateNo = 0;
         foreach ($rates as $rate) {
@@ -270,7 +264,7 @@ class SearchApiController extends Controller
             $this->addChargesToRate($rate, $charges, $search_ids);
 
             //Getting price levels if requested
-            if ($search_array['pricelevel']) {
+            if ($search_array['pricelevel'] || $search_array['requestData']['requested'] == 2) {
                 $price_level_markups = $this->searchPriceLevels($search_ids);
             } else {
                 $price_level_markups = [];
@@ -286,7 +280,7 @@ class SearchApiController extends Controller
                 }
             }
 
-            $this->calculateTotals($rate, $search_ids);
+            $this->calculateTotals($rate, $search_array);
 
             $remarks = $this->searchRemarks($rate, $search_ids);
 
@@ -315,28 +309,21 @@ class SearchApiController extends Controller
             $rates[0]->SetAttribute('search', $search_array);
         }
 
-        // $track_array = [];
-        // $track_array['company_user'] = $company_user;
-        // $track_array['data'] = $search_array;
+        $track_array = [];
+        $track_array['company_user'] = $company_user;
+        $track_array['data'] = $search_array;
 
         
-        // /** Tracking search event with Mix Panel*/
-        // $this->trackEvents("search_fcl", $track_array);
+        /** Tracking search event with Mix Panel*/
+        $this->trackEvents("search_fcl", $track_array);
 
         // Whitelabel 
 
-        if(isset($search_array['options'])){
-          if ($search_array['options']['whitelabel'] == 1) {
-
+        if($search_array['requestData']['requested'] == 2){
             return WhitelabelRateResource::collection($rates);
-            // return $search_array['options'] ;
-          }
         }
 
         return RateResource::collection($rates);
-
-
-
     }
 
     //Stores current search
@@ -350,8 +337,6 @@ class SearchApiController extends Controller
             'destinationPorts' => 'required|array|min:1',
             'dateRange.startDate' => 'required',
             'dateRange.endDate' => 'required',
-            'options.whitelabel' => 'sometimes',
-            'options.containers_quantity' => 'sometimes',
             'containers' => 'required_if:type,FCL|array|min:1',
             'selectedContainerGroup' => 'required_if:type,FCL',
             'deliveryType.id' => 'required',
@@ -400,10 +385,6 @@ class SearchApiController extends Controller
         //formatting containers
         $container_array = [];
 
-        if(isset($search_array['options'])){
-            $options = $new_search_data['options']['whitelabel'] . ' , ' . $new_search_data['options']['containers_quantity'];
-        }
-
         //FORMATTING FOR OLD SEARCH, MUST BE REMOVED
         foreach ($new_search_data_ids['containers'] as $container_id) {
             $container = Container::where('id', $container_id)->first();
@@ -428,26 +409,6 @@ class SearchApiController extends Controller
             //'origin_address' => $new_search_data_ids['originAddress'],
             //'destination_address' => $new_search_data_ids['destinationAddress']
         ]);
-
-        if(isset($search_array['options'])){
-            if ($new_search_data['options']['whitelabel'] == 1 ){
-
-            $new_search = SearchRate::create([
-                'company_user_id' => $new_search_data_ids['company_user'],
-                'pick_up_date' => $pick_up_date,
-                'direction' => $new_search_data_ids['direction'],
-                'type' => $new_search_data_ids['type'],
-                'user_id' => $new_search_data_ids['user'],
-                'price_level_id' => $new_search_data_ids['pricelevel'],
-                'origin_charges' => $new_search_data_ids['originCharges'],
-                'destination_charges' => $new_search_data_ids['destinationCharges'],
-            ]);
-        }
-
-          return new SearchApiResource($new_search);
-
-     }
-
 
         foreach ($new_search_data_ids['originPorts'] as $origPort) {
             foreach ($new_search_data_ids['destinationPorts'] as $destPort) {
@@ -483,8 +444,6 @@ class SearchApiController extends Controller
             }
         }
 
-        
-
         return new SearchApiResource($new_search);
     }
 
@@ -512,9 +471,6 @@ class SearchApiController extends Controller
         $carriers = $search_data['carriers'];
         $dateSince = $search_data['dateRange']['startDate'];
         $dateUntil = $search_data['dateRange']['endDate'];
-        if(isset($search_array['options'])){
-            $options = $search_data['options']['whitelabel'] . ' , ' . $search_data['options']['containers_quantity'];
-        }
 
         //Querying rates database
         if ($company_user_id != null || $company_user_id != 0) {
@@ -805,16 +761,12 @@ class SearchApiController extends Controller
 
         //Appending markups and added containers and totals to rate or charge
         if ($is_eloquent_collection) {
-            if($search_data['requestData']['requested'] != 2) {
-                $target->setAttribute('container_markups', $markups_array);
-                $target->setAttribute('totals_markups', $markups_client_currency);
-            }
+            $target->setAttribute('container_markups', $markups_array);
+            $target->setAttribute('totals_markups', $markups_client_currency);
             $target->setAttribute('containers_with_markups', $containers_with_markups);
             $target->setAttribute('totals_with_markups', $totals_with_markups);
         } else {
-            if($search_data['requestData']['requested'] != 2) {
-                $target['container_markups'] = $markups_array;
-            }
+            $target['container_markups'] = $markups_array;
             $target['containers_with_markups'] = $containers_with_markups;
         }
     }
@@ -954,6 +906,15 @@ class SearchApiController extends Controller
         if (isset($rate->totals_with_markups)) {
             $totals_with_markups_freight_currency = $this->convertToCurrency($client_currency, $rate->currency, $rate->totals_with_markups);
             $rate->setAttribute('totals_with_markups_freight_currency', $totals_with_markups_freight_currency);
+        }
+
+        if( $search_data['requestData']['requested'] == 2 ){
+            $single_totals = $rate->$to_update; 
+            foreach($search_data['containers'] as $container){
+                $single_totals['C'.$container['code']] *= $container['qty'];
+            }
+
+            $rate->$to_update = $single_totals;
         }
     }
 
