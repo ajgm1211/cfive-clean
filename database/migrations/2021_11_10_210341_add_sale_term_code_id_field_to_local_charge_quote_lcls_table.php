@@ -13,10 +13,10 @@ class AddSaleTermCodeIdFieldToLocalChargeQuoteLclsTable extends Migration
      */
     public function up()
     {
-        Schema::table('local_charge_quote_lcls', function (Blueprint $table) {
+        /*Schema::table('local_charge_quote_lcls', function (Blueprint $table) {
             $table->integer('sale_term_code_id')->nullable()->unsigned()->after('calculation_type_id');
             $table->foreign('sale_term_code_id')->references('id')->on('sale_term_codes');
-        });
+        });*/
     }
 
     /**

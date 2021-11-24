@@ -13,10 +13,10 @@ class CreateLocalChargeSaleCodesTable extends Migration
      */
     public function up()
     {
-        Schema::create('local_charge_sale_codes', function (Blueprint $table) {
+        /*Schema::create('local_charge_sale_codes', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-        });
+        });*/
     }
 
     /**
