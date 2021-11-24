@@ -258,7 +258,7 @@ class SearchApiController extends Controller
             $global_charges = $this->searchGlobalCharges($search_ids, $rate);
 
             //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
-            $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids);
+            $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids,$company_user);
 
             //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
             $this->calculateFclCharges($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
