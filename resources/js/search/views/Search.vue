@@ -2132,6 +2132,7 @@ export default {
 
     requestSearch() {
       let component = this;
+      let currentSearch = _.cloneDeep(component.searchRequest);
       this.$emit("clearResults",'searchStarted');
       this.searching = true;
       this.$emit("searchRequested", this.searchRequest);

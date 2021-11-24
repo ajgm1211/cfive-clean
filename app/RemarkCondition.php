@@ -17,6 +17,7 @@ class RemarkCondition extends Model
         'company_user_id',
         'language_id',
         'level',
+        'apply_to'
 
     ];
 

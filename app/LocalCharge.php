@@ -112,6 +112,14 @@ class LocalCharge extends Model implements Auditable
         }
     }
 
+
+    public function getLocalChargeExcelSync($contract_id,$port_origin,$port_destiny,$orig_country,$dest_country)
+    {
+       $result = DB::select(DB::raw('call proc_getLocalChargeExcel(' . $contract_id . ',' . $port_origin . ',' . $port_destiny . ',' . $orig_country . ',' . $dest_country . ')'));
+        return $result;
+
+    }
+
     /**
      * Sync LocalCharge Ports.
      *
