@@ -57,8 +57,8 @@ class UsersController extends Controller
         $user_id = $user->id;
         $company_user = $user->companyUser()->first();
         $company_user_id = $company_user->id;
-        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url')->get();  
-        $url_1= $url[0]['url'] ;
+        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url')->first();  
+        $url_1= $url['url'] ;
         $url_final = $url_1. '/admin';
 
         $this->validate($request,[
