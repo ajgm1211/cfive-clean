@@ -1974,4 +1974,47 @@ trait QuoteV2Trait
 
         return $result;
     }
+    public function convertToCurrencyQuote(Currency $fromCurrency, Currency $toCurrency, Array $amounts,$quote)
+    {    
+       if (isset($quote['pdf_options']['exchangeRates'])) {
+            foreach($quote['pdf_options']['exchangeRates'] as $key=>$exchangeRate){
+                
+                if ($fromCurrency->alphacode==$exchangeRate['alphacode']) {
+                    $exchangeRatefrom=$quote['pdf_options']['exchangeRates'][$key];
+                }elseif($toCurrency['alphacode']==$exchangeRate['alphacode']){
+                    $exchangeRateTo=$quote['pdf_options']['exchangeRates'][$key];
+                }
+            }
+        } 
+        if (isset($exchangeRatefrom)) {
+            $fromCurrency=$exchangeRatefrom;
+            $inputConversion=$exchangeRatefrom['exchangeUSD'];
+        }
+        else {
+            $inputConversion=$fromCurrency->rates;
+        }
+        if (isset($exchangeRateTo)) {
+            $toCurrency=$exchangeRateTo;
+            $outputConversion=$exchangeRateTo['exchangeUSD'];
+        }else {
+            $outputConversion=$toCurrency->rates;
+        }
+
+        if ($fromCurrency['alphacode'] != $toCurrency['alphacode']) {
+            foreach ($amounts as $container => $price) {
+                $convertedPrice = $price / $inputConversion;
+                $amounts[$container] = isDecimal($convertedPrice,true);
+            }
+            if($toCurrency['alphacode']=='USD'){
+                return $amounts;
+            }else{
+                foreach ($amounts as $container => $price) {
+                    $convertedPrice = $price * $outputConversion;
+                    $amounts[$container] = isDecimal($convertedPrice,true);
+                }
+            }
+        }
+
+        return $amounts;
+    }
 }

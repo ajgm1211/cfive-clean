@@ -55,6 +55,7 @@ export default {
       fields: [
         { key: "id", label: "ID", filterIsOpen:false },
         { key: "quote_id", label: "Quote ID", filterIsOpen:false },
+        { key: "custom_quote_id", label: "Custom ID", filterIsOpen:false },
         {
           key: "status",
           label: "status",
