@@ -751,20 +751,23 @@ trait SearchTrait
         }
         
         $markup_array = [];
-        $details = $price_level->price_level_details;
 
-        foreach($details as $detail){
-            //FILTERING FOR DIRECTION: from search or BOTH (3)
-            if(in_array($detail->direction_id,[$direction,3])){
-                //FOR FREIGHT
-                if($detail->price_level_apply_id == 1){
-                    $markup_array['freight'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
-                //FOR SURCHARGE
-                }elseif($detail->price_level_apply_id == 2){
-                    $markup_array['surcharges'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
-                //FOR INLAND
-                }elseif($detail->price_level_apply_id == 3){
-                    $markup_array['inlands'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
+        if($price_level != null){
+            $details = $price_level->price_level_details;
+    
+            foreach($details as $detail){
+                //FILTERING FOR DIRECTION: from search or BOTH (3)
+                if(in_array($detail->direction_id,[$direction,3])){
+                    //FOR FREIGHT
+                    if($detail->price_level_apply_id == 1){
+                        $markup_array['freight'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
+                    //FOR SURCHARGE
+                    }elseif($detail->price_level_apply_id == 2){
+                        $markup_array['surcharges'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
+                    //FOR INLAND
+                    }elseif($detail->price_level_apply_id == 3){
+                        $markup_array['inlands'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
+                    }
                 }
             }
         }
