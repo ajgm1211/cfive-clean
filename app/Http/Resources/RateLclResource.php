@@ -42,6 +42,7 @@ class RateLclResource extends JsonResource
             'total_with_markups_freight_currency' => isset($this->total_with_markups_freight_currency) ? $this->total_with_markups_freight_currency : null,
             'search' => $this->search,
             'remarks' => isset($this->remarks) ? $this->remarks : null,
+            'client_remarks' => isset($this->client_remarks) ? $this->client_remarks : null,
             'contract_backup_id' => $this->contractBackupId,
             'contract_request_id' => $this->contractRequestId,
         ];

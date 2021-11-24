@@ -783,7 +783,8 @@ class ExcelController extends Controller
     public function downloadRates(Request $request)
     {
         $data = $request->validate([
-
+            'data.origin_port' => 'required',
+            'data.destination_port' => 'required',
             'data.direction' => 'required',
             'data.validity' => 'required',
             'data.expire' => 'required',

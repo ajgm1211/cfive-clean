@@ -43,6 +43,7 @@ class RateResource extends JsonResource
             'containers_with_markups' => isset($this->containers_with_markups) ? $this->containers_with_markups : null,
             'search' => $this->search,
             'remarks' => isset($this->remarks) ? $this->remarks : null,
+            'client_remarks' => isset($this->client_remarks) ? $this->client_remarks : null,
             'contract_backup_id' => $this->contractBackupId,
             'contract_request_id' => $this->contractRequestId,
             'contract_id' => $this->contractId

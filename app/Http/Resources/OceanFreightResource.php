@@ -18,8 +18,11 @@ class OceanFreightResource extends JsonResource
         parent::__construct($resource);
         $this->resource = $resource;
 
-        // Get the available containers except dry
+        // Get the available containers except dry 
         $this->available_containers = Container::where('gp_container_id', '!=', 1)->pluck('code');
+
+        //Get the available containers all
+        // $this->available_containers = Container::pluck('code');
     }
 
     /**

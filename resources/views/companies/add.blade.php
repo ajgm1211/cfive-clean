@@ -40,7 +40,7 @@
                 </div>
             </div>
             <br>
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-6">
                     {!! Form::text('key_name[]', null, ['placeholder' => 'Please enter a key name','class' =>
                     'form-control
@@ -51,7 +51,7 @@
                     'form-control
                     m-input']) !!}
                 </div>
-            </div>
+            </div> -->
             <div class="hide" id="hide_extra_field">
                 <div class="row" style="margin-top:3px;">
                     <div class="col-6">
