@@ -40,23 +40,21 @@ class SettingsController extends Controller
     public function store(Request $request)
     {
         //Validate requests
-        $this->validate($request,  [
-            'url' => 'required',
+        $data = $request->validate([
+            'url' => 'required|unique:settings_whitelabels,url',
+            'company_user_id' => 'required|unique:settings_whitelabels,company_user_id',
+            'user_id' => 'required',
         ]);
 
-        $user = \Auth::user();
-        $user_id = $user->id;
-        $company_user = $user->companyUser()->first();
-        $company_user_id = $company_user->id;
-        
-        $data = SettingsWhitelabel::create([
-            'url' => $request->url,
-            'company_user_id' => $company_user_id,
+        $settings = SettingsWhitelabel::create([
+            'url' => $data['url'],
+            'company_user_id' => $data['company_user_id'],
+            'user_id' => $data['user_id'],
         ]);
 
         return response()->json([
             'message' => 'Settings successfully registered',
-            'data' => $data
+            'data' => $settings
         ], 201);    
        
     }

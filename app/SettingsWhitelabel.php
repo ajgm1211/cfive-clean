@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SettingsWhitelabel extends Model
 {
-    protected $fillable = ['url', 'company_user_id','user_id'];
+    protected $fillable = ['url', 'company_user_id','user_id', 'token'];
 
 
     public function companyUser()

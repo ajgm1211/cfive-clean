@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTokenWhitelabelInCompanyUsersTable extends Migration
+class AddTokenToSettingsWhitelabels extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddTokenWhitelabelInCompanyUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('company_users', function (Blueprint $table) {
-            $table->text('token_whitelabel')->nullable();
+        Schema::table('settings_whitelabels', function (Blueprint $table) {
+            $table->text('token')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddTokenWhitelabelInCompanyUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('company_users', function (Blueprint $table) {
-            Schema::dropIfExists('token_whitelabel');
+        Schema::table('settings_whitelabels', function (Blueprint $table) {
+            //
         });
     }
 }
