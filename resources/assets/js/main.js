@@ -33,12 +33,12 @@ const router = new VueRouter({
   mode: "history",
   routes: [
   {
-      path: "/prices/v2",
+      path: "/pricelevels",
       name: "price-levels",
       component: PriceLevels,
     },
     {
-      path: "/prices/rates/:id",
+      path: "/pricelevels/edit/:id",
       name: "price-rates",
       component: Rates,
     },
