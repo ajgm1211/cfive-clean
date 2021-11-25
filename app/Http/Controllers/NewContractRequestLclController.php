@@ -118,7 +118,7 @@ class NewContractRequestLclController extends Controller
                 <samp class="la la-pencil-square-o statusHrf' . $Ncontracts->id . '" for="" id="statusSamp' . $Ncontracts->id . '"  style="font-size:15px;' . $color . '"></samp>';
             })
             ->addColumn('action', function ($Ncontracts) use ($permiso_eliminar) {
-
+            if ($Ncontracts->erased_contract == false || empty($Ncontracts->erased_contract) == true) {
                 $buttons = '&nbsp;&nbsp;
                 <a href="' . route("RequestImportationLcl.show", $Ncontracts->id) . '" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
@@ -150,6 +150,14 @@ class NewContractRequestLclController extends Controller
                 </a>';
                     $buttons = $butPrRq . $buttons;
                 }
+            }else{
+                $delete = '<center><h5 style="color:#f81538"><u>Contract Deleted By Customer </u></h5></center>';
+                $change_status_erased = '
+                <center><a href="#" class="eliminarrequest" data-id-request="' . $Ncontracts->id . '" data-info="id:' . $Ncontracts->id . '"  title="Delete" >
+                <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
+                </a></center>';
+                $buttons = $delete . $change_status_erased;
+            }    
 
                 return $buttons;
             })

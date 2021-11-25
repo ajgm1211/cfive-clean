@@ -240,6 +240,16 @@ class ContractLclController extends Controller
      */
     public function destroy(ContractLcl $contract)
     {
+        $status_erased = 1;
+        if ($contract->status == 'incomplete') {
+
+            $requestContract = NewContractRequestLcl::where('contract_id', $contract->id);
+            if (empty($requestContract) == 0) {
+
+                $requestContract->update(['erased_contract' => $status_erased]);
+            }
+        }
+
         $contract->delete();
 
         return response()->json(null, 204);
