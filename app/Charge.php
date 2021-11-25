@@ -49,6 +49,11 @@ class Charge extends Model implements Auditable
         return $this->hasOne('App\CalculationType', 'id', 'calculation_type_id');
     }
 
+    public function charge_sale_code_quote()
+    {
+        return $this->hasOne('App\ChargeSaleCodeQuote');
+    }
+
     public function scopeCalculationType($query)
     {
         return $query->with(['calculation_type' => function ($q) {
