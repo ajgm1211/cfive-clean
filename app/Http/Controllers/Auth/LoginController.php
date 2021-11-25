@@ -142,7 +142,20 @@ class LoginController extends Controller
 
     public function storeApiToken($loginData, $user)
     {
-        $user_secret = OauthClient::where('user_id',$user->id)->select('secret')->first()->secret; 
+        $oauth_client = OauthClient::where('user_id',$user->id)->first();
+        
+        if($oauth_client != null){
+            $username = $loginData['email'];
+            $password = $loginData['password'];
+            $user_id = $user->id;
+        }else{
+            $oauth_client = OauthClient::where('user_id',1)->first();
+            $username = 'info@cargofive.com';
+            $password = 'gencomex18';
+            $user_id = 1;
+        }
+        
+        $user_secret = $oauth_client->secret; 
         $app_url = $_ENV['APP_URL'] . "/oauth/token";
 
         $client = new \GuzzleHttp\Client([              
@@ -156,10 +169,10 @@ class LoginController extends Controller
                 [
                     'json' => [
                         'grant_type' => 'password',
-                        'username' =>  $loginData['email'],
-                        'password' => $loginData['password'],
+                        'username' =>  $username,
+                        'password' => $password,
                         'client_secret'=> $user_secret ,
-                        'client_id' => $user->id,
+                        'client_id' => $user_id,
                     ]
                 ]
             );
