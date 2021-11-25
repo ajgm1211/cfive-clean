@@ -9,6 +9,7 @@ use App\AutomaticRate;
 use App\Carrier;
 use App\Charge;
 use App\ChargeLclAir;
+use App\ChargeSaleCodeQuote;
 use App\Harbor;
 use App\Http\Requests\StoreLocalChargeQuote;
 use App\Http\Resources\SaleTermChargeResource;
@@ -289,7 +290,7 @@ class LocalChargeQuotationController extends Controller
                 'sale_term_code_id' => $sale_charge->sale_term_code->id,
                 'type_id' => $request->params['type_id'],
             ]);
-
+            
             $local_charge->sumarize();
             $local_charge->totalize();
         }
@@ -572,7 +573,7 @@ class LocalChargeQuotationController extends Controller
 
         if (!empty($localcharge['sale_codes'])) {
             $charge = $localcharge['sale_codes']['name'];
-
+            $sale_code_term_id = $localcharge['sale_codes']['id'] ?? null;
             $previous_charge = LocalChargeQuote::where([
                 'charge' => $charge,
                 'port_id' => $port,
@@ -592,6 +593,7 @@ class LocalChargeQuotationController extends Controller
                     'price' => $localcharge['price'],
                     'profit' => $localcharge['markup'],
                     'charge' => $charge,
+                    'sale_term_code_id' => $sale_code_term_id,
                     'surcharge_id' => $localcharge['surcharge_id'],
                     'calculation_type_id' => $localcharge['calculation_type_id'],
                     'provider_name' => $localcharge['provider_name'] ?? $localcharge['automatic_rate']['carrier']['name'] ?? null,
@@ -603,6 +605,7 @@ class LocalChargeQuotationController extends Controller
                 $quoteV2->updatePdfOptions('exchangeRates');
                 $local_charge->sumarize();
                 $local_charge->totalize();
+                $this->storeInPivotChargeSaleCodeQuote($sale_code_term_id, $localcharge, $local_charge);
             }
         } else {
             $local_charge = LocalChargeQuote::create([
@@ -629,6 +632,14 @@ class LocalChargeQuotationController extends Controller
         }
 
         $this->storeInPivotLocalChargeQuote($charge_data, $local_charge);
+    }
+
+    public function storeInPivotChargeSaleCodeQuote($sale_code_id, $charge, $local_charge_quote){
+        ChargeSaleCodeQuote::create([
+            'charge_id' => $charge['id'],
+            'sale_term_code_id' => $sale_code_id,
+            'local_charge_quote_id' => $local_charge_quote->id,
+        ]);
     }
 
     public function storeInPivotLocalChargeQuote($charge, $localcharge){
