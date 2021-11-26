@@ -35,7 +35,7 @@ class QuotationChargeLclResource extends JsonResource
             'currency' => $this->currency->alphacode ?? null,
             'provider' => (new CarrierResource($this->automatic_rate->carrier ?? null))->companyUser($this->automatic_rate->quote->company_user ?? null),
             'added' => $pivot_local_charge>0 ? true:false,
-            'sale_code_id' => $this->charge_sale_code_quote['sale_term_code_id'],
+            'sale_code_id' => $this->charge_sale_code_quote['sale_term_code_id'] ?? null,
         ];
     }
 
