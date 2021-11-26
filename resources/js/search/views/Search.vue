@@ -736,17 +736,15 @@
       </div>
       <!-- FIN LCL FORM INPUTS -->
 
-      <div class="col-lg-8">
+      <div v-if="!searching" class="col-lg-8">
         <div
-          v-if="
-            ((searchRequest.type == 'FCL' &&
+          v-if="((searchRequest.type == 'FCL' &&
               Array.isArray(foundRates) &&
               foundRates.length == 0) ||
               (searchRequest.type == 'LCL' &&
                 Array.isArray(foundRatesLcl) &&
                 foundRatesLcl.length == 0)) &&
-              !foundApiRates
-          "
+              !foundApiRates"
           class="alert alert-danger"
           role="alert"
         >
@@ -1587,7 +1585,7 @@ export default {
       this.getQuery();
     });
   },
-  methods: {
+  methods: {    
     //modal
     nextStep() {
       if (this.stepOne) {
@@ -2132,7 +2130,6 @@ export default {
 
     requestSearch() {
       let component = this;
-      let currentSearch = _.cloneDeep(component.searchRequest);
       this.$emit("clearResults",'searchStarted');
       this.searching = true;
       this.$emit("searchRequested", this.searchRequest);
@@ -2603,7 +2600,7 @@ export default {
       return this.carrierOptions.filter((c) =>
         c.text.toLowerCase().includes(this.carrierSearchQuery.toLowerCase())
       );
-    },
+    }
   },
 };
 </script>
