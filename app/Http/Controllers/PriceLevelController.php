@@ -73,7 +73,7 @@ class PriceLevelController  extends Controller
             'containers',
             'directions',
             'price_levels',
-            'applies',
+            'applies'
         );
 
         return response()->json(['data' => $data]);
@@ -83,8 +83,8 @@ class PriceLevelController  extends Controller
     {
         $results = PriceLevel::filterByCurrentCompany()->orderBy('id', 'asc')->filter($request);
 
-        return $results;
-        // return PriceLevelResource::collection($results);
+        //return $results;
+        return PriceLevelResource::collection($results);
     }
 
     
