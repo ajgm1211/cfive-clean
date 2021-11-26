@@ -379,7 +379,7 @@ class SearchApiLclController extends Controller
     public function addMarkups($markups, $target, $search_data)
     {
         //If markups will be added to a Rate, extracts 'freight' variables from markups array
-        if (is_a($target, 'App\RateLcl')) {
+        if (is_a($target, 'App\RateLcl') && isset($markups['freight'])) {
             //Info from markups array
             $markups_to_add = $markups['freight'];
             $markups_currency = $markups_to_add['currency'];
@@ -389,7 +389,7 @@ class SearchApiLclController extends Controller
             $target_total_client_currency = $target->total_client_currency;
             $target_total = $target->total;
             //If markups will be added to a Local or Global Charge, extracts 'charge' variables from markups array
-        } elseif (is_a($target, 'App\LocalChargeLcl') || is_a($target, 'App\GlobalChargeLcl')) {
+        } elseif (is_a($target, 'App\LocalChargeLcl') || is_a($target, 'App\GlobalChargeLcl') && isset($markups['surcharges'])) {
             //Info from markups array
             $markups_to_add = $markups['surcharges'];
             $markups_currency = $markups_to_add['currency'];
@@ -409,7 +409,7 @@ class SearchApiLclController extends Controller
             $target_containers = $target->containers;
             $target_totals = $target->containers_client_currency;
             //SPECIAL CASE - OCEAN FREIGHT
-        } elseif (isset($target['surcharge']) && $target['surcharge']->name == "Ocean Freight") {
+        } elseif (isset($target['surcharge']) && $target['surcharge']->name == "Ocean Freight" && isset($markups['freight'])) {
             //Info from markups array
             $markups_to_add = $markups['freight'];
             $markups_currency = $markups_to_add['currency'];
@@ -417,6 +417,8 @@ class SearchApiLclController extends Controller
             $is_eloquent_collection = false;
             //Price arrays from charge
             $target_total = $target['total'];
+        }else{
+            return;
         }
 
         //Checking if markups are fixed rate
