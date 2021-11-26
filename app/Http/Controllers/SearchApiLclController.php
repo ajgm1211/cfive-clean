@@ -167,8 +167,7 @@ class SearchApiLclController extends Controller
 
         $search_array = $request->input();
 
-        $search_array['dateRange']['startDate'] = $this->formatSearchDate($search_array['dateRange']['startDate'],'date');
-        $search_array['dateRange']['endDate'] = $this->formatSearchDate($search_array['dateRange']['endDate'],'date');
+        $search_array['dateRange'] = $this->formatSearchDate($search_array);
         
         $search_ids = $this->getIdsFromArray($search_array);
         $search_ids['company_user'] = $company_user_id;
