@@ -13,6 +13,7 @@ use GuzzleHttp\Exception\RequestException;
 use App\CompanyUser; 
 use App\SettingsWhitelabel;
 use Exception;
+use Illuminate\Support\Facades\Hash;
 
 class ContactsController extends Controller
 {
@@ -50,22 +51,25 @@ class ContactsController extends Controller
         $user_id = $user->id;
         $company_user = $user->companyUser()->first();
         $company_user_id = $company_user->id;
-        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url')->first();  
+        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url','token')->first();  
         $url_1= $url['url'] ;
         $url_final = $url_1. '/user';
-
-           $this->validate($request,  [
-               'first_name' => 'required',
-               'last_name' => 'required',
-               'email' => 'required|email',
-               'phone'=> 'nullable',
-               'position'=> 'nullable',
-               'whitelabel'=> 'nullable',
-               'options' => 'json',
-               'password_wl' =>'nullable|min:8',
-           ]);
-
-           $data = Contact::create([
+        $token = $url['token'];
+        $token_final = 'Bearer '. $token;
+        
+        $this->validate($request,  [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email',
+            'phone'=> 'nullable',
+            'position'=> 'nullable',
+            'whitelabel'=> 'nullable',
+            'options' => 'json',
+            'password_wl' =>'nullable|min:8',
+        ]);
+        
+        
+        $data = Contact::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
@@ -73,22 +77,24 @@ class ContactsController extends Controller
             'position' => $request->position,
             'whitelabel'=> $request->whitelabel,
             'options'=> $request->options,
-            'password_wl' => \Hash::make($request->password_wl)
+            'password_wl' => Hash::make($request->password_wl)
         ]);
-  
-         if ($request->whitelabel == 1){
 
-             $name = $request->get('first_name');
-             $lastname = $request->get('last_name');
-             $email = $request->get('email');
-             $type = 'user';
-             $phone = $request->get('phone');
-             $position = $request->get('position');
-             $password = $request->get('password_wl');
+        
+        if ($request->whitelabel == 1){
             
-             $client = new \GuzzleHttp\Client([              
+            $name = $request->get('first_name');
+            $lastname = $request->get('last_name');
+            $email = $request->get('email');
+            $type = 'user';
+            $phone = $request->get('phone');
+            $position = $request->get('position');
+            $password = $request->get('password_wl');
+                 $client = new \GuzzleHttp\Client([              
                  'Accept' => 'application/json',
-                 'Content-Type' => 'application/x-www-form-urlencoded']);
+                 'Content-Type' => 'application/x-www-form-urlencoded',
+                 'Authorization' =>  $token_final,
+                ]);
                      // Create a POST request
                  $response = $client->request(
                      'POST',
@@ -105,12 +111,14 @@ class ContactsController extends Controller
                           ]
                       ]
                      );
+
         }
 
         return response()->json([
             'message' => 'Contact successfully registered',
             'data' => $data
-        ], 201);    }
+        ], 201);    
+    }
 
     /**
      * Display the specified resource.

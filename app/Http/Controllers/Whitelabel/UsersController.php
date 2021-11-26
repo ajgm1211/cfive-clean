@@ -56,9 +56,11 @@ class UsersController extends Controller
         $user_id = $user->id;
         $company_user = $user->companyUser()->first();
         $company_user_id = $company_user->id;
-        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url')->first();  
+        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url','token')->first();  
         $url_1= $url['url'] ;
         $url_final = $url_1. '/admin';
+        $token = $url['token'];
+        $token_final = 'Bearer '. $token;
 
         $this->validate($request,[
              'name' => 'required',
@@ -78,7 +80,6 @@ class UsersController extends Controller
             'password' => Hash::make($request->password),
             'email' => $request->email,
             'phone' => $request->phone,
-            'type'=> $request->type,
             'position' => $request->position,
             //'whitelabel'=> $request->whitelabel,
         ]);
@@ -93,7 +94,9 @@ class UsersController extends Controller
 
          $client = new \GuzzleHttp\Client([              
              'Accept' => 'application/json',
-             'Content-Type' => 'application/x-www-form-urlencoded']);
+             'Content-Type' => 'application/x-www-form-urlencoded',
+             'Authorization' =>  $token_final,
+            ]);
                  // Create a POST request
              $response = $client->request(
                  'POST',
