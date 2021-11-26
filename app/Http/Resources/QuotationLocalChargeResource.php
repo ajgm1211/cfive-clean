@@ -31,7 +31,7 @@ class QuotationLocalChargeResource extends JsonResource
             'charge_options' => $this->surcharge->options ?? null,
             'calculation_type' => $this->calculation_type->name ?? null,
             'calculation_type_code' => $this->calculation_type->unique_code ?? null,
-            'source' => $this->source == 2 ? 'templates':'surcharges',
+            'source' => $this->source == 2 ? 'templates':'charges',
             'port' => $this->port->display_name ?? null,
             'price' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($this->price) : $this->price,
             'profit' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($this->profit) : $this->profit,
