@@ -484,10 +484,11 @@ class CompanyController extends Controller
         $user_id = $user->id;
         $company_user = $user->companyUser()->first();
         $company_user_id = $company_user->id;
-        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url')->get();  
+        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url','token')->first();  
         $url_1= $url[0]['url'] ;
         $url_final = $url_1. '/shipper';
-
+        $token = $url['token'];
+        $token_final = 'Bearer '. $token;
 
 
         //  Save Whitelabel
