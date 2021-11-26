@@ -476,11 +476,11 @@ class CompanyController extends Controller
         $company->options = $request->options;
         $company->company_user_id = $request->company_user_id;
         $company->unique_code = $randomString;
-        $company->whitelabel = 1;
+        //$company->whitelabel = 1;
         $company->save();
 
 
-        $user = \Auth::user();
+        /**$user = \Auth::user();
         $user_id = $user->id;
         $company_user = $user->companyUser()->first();
         $company_user_id = $company_user->id;
@@ -488,11 +488,7 @@ class CompanyController extends Controller
         $url_1= $url[0]['url'] ;
         $url_final = $url_1. '/shipper';
 
-
-
-        //  Save Whitelabel
-
-         if ($company->whitelabel == 1){
+        if ($company->whitelabel == 1){
 
             $business_name = $request->get('business_name');
             $phone = $request->get('phone');
@@ -522,7 +518,7 @@ class CompanyController extends Controller
                     ]
                 );
     
-            }
+        }**/
             
         // $company = Company::create($request->all());
         if ($file != '') {

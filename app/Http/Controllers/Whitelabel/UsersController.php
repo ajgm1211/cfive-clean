@@ -51,9 +51,8 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-
         // Obtain url from settingsWhitelabel with company_user_id
-        $user = \Auth::user();
+        /**$user = \Auth::user();
         $user_id = $user->id;
         $company_user = $user->companyUser()->first();
         $company_user_id = $company_user->id;
@@ -71,7 +70,7 @@ class UsersController extends Controller
              'company_user_id' => 'nullable',
              'position' => 'nullable',
              'whitelabel' => 'nullable',
-         ]);
+         ]);**/
 
          $data = User::create([
             'name' => $request->name,
@@ -81,10 +80,10 @@ class UsersController extends Controller
             'phone' => $request->phone,
             'type'=> $request->type,
             'position' => $request->position,
-            'whitelabel'=> $request->whitelabel,
+            //'whitelabel'=> $request->whitelabel,
         ]);
         
-        if ($request->whitelabel == 1){
+        /**if ($request->whitelabel == 1){
 
          $name = $request->get('name');
          $lastname = $request->get('lastname');
@@ -113,7 +112,7 @@ class UsersController extends Controller
                 'message' => 'User successfully registered',
                 'data' => $data
             ], 201);
-        }
+        }**/
 
         
     }
