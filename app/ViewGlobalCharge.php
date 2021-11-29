@@ -27,6 +27,7 @@ class ViewGlobalCharge extends Model
     public function scopeCarrier($query, $carrier)
     {
         if ($carrier != '') {
+
             $carrier = Carrier::find($carrier);
 
             return $query->where('carrier', 'like', '%'.$carrier->name.'%');
