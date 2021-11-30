@@ -39,7 +39,14 @@
       />
     </div>
 
-    <CreateModal v-if="create" @cancel="create = false" />
+    <CreateModal 
+      v-if="create" 
+      :fields="modal_fields"
+      :title="'Price Level'"
+      :action="'Add'"
+      :dispatch="'createPriceLevel'"
+      @cancel="create = false"
+    />
   </section>
 </template>
 
@@ -58,6 +65,30 @@ export default {
     create: false,
     prices: [],
     currentPage: 1,
+    modal_fields: [
+      {
+        type: "input",
+        label: "Name",
+        name: "name",
+        rules: {
+          required: true,
+        }
+      },
+      {
+        type: "input",
+        label: "Display name",
+        name: "display_name",
+        rules: {
+          required: true,
+        }
+      },
+      {
+        type: "dropdown",
+        label: "Price Level Type",
+        name: "price_level_type",
+        items: [ "FCL","LCL" ],
+      },
+    ],
   }),
   mounted() {
     this.$store.dispatch("getPriceLevels", { page: this.currentPage });
