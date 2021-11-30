@@ -23,7 +23,12 @@
           }"
         />
 
-        <SorteableDropdown @reset="selected = ''" :error="selectable_error" label="Price Level Type" @selected="setSelected($event)" :itemList="price_types" />
+        <SorteableDropdown 
+          @reset="selected = ''" 
+          :error="selectable_error" 
+          label="Price Level Type" 
+          @selected="setSelected($event)" 
+          :itemList="price_types" />
       </form>
       <div class="controls-container">
         <p @click="$emit('cancel')">Cancel</p>
