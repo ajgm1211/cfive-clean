@@ -1431,9 +1431,9 @@ Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
 
 
 //NEW PRICE LEVELS VIEWS ROUTES
-Route::group(['prefix' => 'prices/v2', 'middleware' => ['auth']], function () {
+Route::group(['prefix' => 'pricelevels', 'middleware' => ['auth']], function () {
     Route::view('/', 'pricesV2.index')->name('pricelevels.index');
-    Route::view('/price/rates/{price_level}', 'pricesV2.index');
+    Route::view('/edit/{price_level}', 'pricesV2.index');
 });
 
 Route::middleware(['auth', 'role:administrator'])->prefix('api-credentials')->group(function () {

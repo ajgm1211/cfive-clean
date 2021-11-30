@@ -747,23 +747,27 @@ trait SearchTrait
         if($search_data['requestData']['requested'] != 2){
             $price_level = PriceLevel::where('id', $price_level_id)->with('price_level_details')->first();
         }else{
-            $price_level = PriceLevel::where('options->whitelabel', true)->with('price_level_details')->first();
+            $price_level = PriceLevel::where('options->whitelabel','=', true)->with('price_level_details')->first();
         }
+        
         $markup_array = [];
-        $details = $price_level->price_level_details;
 
-        foreach($details as $detail){
-            //FILTERING FOR DIRECTION: from search or BOTH (3)
-            if(in_array($detail->direction_id,[$direction,3])){
-                //FOR FREIGHT
-                if($detail->price_level_apply_id == 1){
-                    $markup_array['freight'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
-                //FOR SURCHARGE
-                }elseif($detail->price_level_apply_id == 2){
-                    $markup_array['surcharges'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
-                //FOR INLAND
-                }elseif($detail->price_level_apply_id == 3){
-                    $markup_array['inlands'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
+        if($price_level != null){
+            $details = $price_level->price_level_details;
+    
+            foreach($details as $detail){
+                //FILTERING FOR DIRECTION: from search or BOTH (3)
+                if(in_array($detail->direction_id,[$direction,3])){
+                    //FOR FREIGHT
+                    if($detail->price_level_apply_id == 1){
+                        $markup_array['freight'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
+                    //FOR SURCHARGE
+                    }elseif($detail->price_level_apply_id == 2){
+                        $markup_array['surcharges'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
+                    //FOR INLAND
+                    }elseif($detail->price_level_apply_id == 3){
+                        $markup_array['inlands'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
+                    }
                 }
             }
         }
@@ -1799,14 +1803,19 @@ trait SearchTrait
     //Clears date in 2021-07-13T01:00:00 format. Options can be:
         // time -> returns only time, no date
         // date -> returns only date, no time
-    public function formatSearchDate($date, $option)
+    public function formatSearchDate($search_data)
     {
-        if($option == 'time'){
-            $date = substr($date, 11, 8);
-        }else if($option == 'date'){
-            $date = substr($date, 0, 10);
+        if($search_data['requestData']['requested'] != 2){
+            $search_data['dateRange']['startDate'] = substr($search_data['dateRange']['startDate'], 0, 10);
+            $search_data['dateRange']['endDate'] = substr($search_data['dateRange']['endDate'], 0, 10);       
+        }else{
+            $start_array = explode('/',$search_data['dateRange']['startDate']);
+            $end_array = explode('/',$search_data['dateRange']['endDate']);
+
+            $search_data['dateRange']['startDate'] = $start_array[2] . '-' . $start_array[1] . '-' . $start_array[0];
+            $search_data['dateRange']['endDate'] = $end_array[2] . '-' . $end_array[1] . '-' . $end_array[0];
         }
 
-        return $date;
+        return $search_data['dateRange'];
     }
 }
