@@ -10,7 +10,7 @@ class ViewGlobalchargeLcl extends Model
 
     public function scopeCarrier($query, $carrier)
     {
-        if ($carrier != '') {
+        if ($carrier != 0) {
             $carrier = Carrier::find($carrier);
 
             return $query->where('carrier', 'like', '%'.$carrier->name.'%');
@@ -19,7 +19,7 @@ class ViewGlobalchargeLcl extends Model
 
     public function scopeCompanyUser($query, $companyUser)
     {
-        if ($companyUser != '') {
+        if ($companyUser != 0) {
             return $query->where('company_user_id', $companyUser);
         }
     }
