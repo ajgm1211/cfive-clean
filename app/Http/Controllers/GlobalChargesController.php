@@ -1052,9 +1052,7 @@ class GlobalChargesController extends Controller
             $ca = $request->carrier;
         }
         
-        $query = $this->buildQueryGlobalCharges($co, $ca);
-                        
-        $data1 = DB::select(DB::raw($query));
+        $data1 = \DB::select(\DB::raw('call select_globalcharge_adm(' . $co . ',' . $ca . ')'));
 
         $globalcharges = new Collection;
         
@@ -1761,57 +1759,5 @@ class GlobalChargesController extends Controller
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You successfully updated.');
         return redirect()->route('gcadm.index', compact('company_user_id_selec', 'carrier_id_selec', 'reload_DT'));
-    }
-
-    public function buildQueryGlobalCharges($companyId, $carrierId)
-    {
-        // Query que devuelve los global charges por compañia
-        $query =   "SELECT   
-                    gc.id AS id,
-                    sr.name AS charge,
-                    td.description AS charge_type, 
-                    ctype.name AS calculation_type, 
-                    (SELECT GROUP_CONCAT(DISTINCT har.code SEPARATOR ', ') FROM globalcharport gcP JOIN harbors har ON har.id = gcP.port_orig
-                     WHERE gcP.globalcharge_id = gc.id) AS origin_port,
-                    (SELECT GROUP_CONCAT(DISTINCT har.code SEPARATOR ', ') FROM globalcharport gcP  JOIN harbors har ON har.id = gcP.port_dest 
-                     WHERE gcP.globalcharge_id = gc.id) AS destination_port, 
-                    (SELECT GROUP_CONCAT(DISTINCT coun.name SEPARATOR ', ') FROM globalcharcountry gcCO JOIN countries coun ON coun.id = gcCO.country_orig
-                     WHERE gcCO.globalcharge_id = gc.id) AS origin_country,
-                    (SELECT GROUP_CONCAT(DISTINCT counD.name SEPARATOR ', ') FROM globalcharcountry gcCD JOIN countries counD ON counD.id = gcCD.country_dest
-                     WHERE gcCD.globalcharge_id = gc.id) AS destination_country, 
-                    (SELECT GROUP_CONCAT(DISTINCT portPC.name SEPARATOR ', ') FROM global_char_port_countries gcPC JOIN harbors portPC on portPC.id = gcPC.port_orig 
-                     WHERE gcPC.globalcharge_id = gc.id ) as portcountry_orig , 
-                    (SELECT GROUP_CONCAT(DISTINCT counPC.name SEPARATOR ', ') FROM global_char_port_countries gcPCd JOIN countries counPC on counPC.id = gcPCd.country_dest 
-                     WHERE gcPCd.globalcharge_id = gc.id ) as portcountry_dest ,
-                    (SELECT GROUP_CONCAT(DISTINCT counCP.name SEPARATOR ', ') FROM global_char_country_ports gcCP JOIN countries counCP on counCP.id = gcCP.country_orig 
-                     WHERE gcCP.globalcharge_id = gc.id ) as countryport_orig , 
-                    (SELECT GROUP_CONCAT(DISTINCT counCPd.name SEPARATOR ', ') FROM global_char_country_ports gcCPd JOIN harbors counCPd on counCPd.id = gcCPd.port_dest 
-                     WHERE gcCPd.globalcharge_id = gc.id ) as countryport_dest ,
-                    (SELECT GROUP_CONCAT(DISTINCT carr.name SEPARATOR ', ') FROM globalcharcarrier gcC JOIN carriers carr ON carr.id = gcC.carrier_id
-                     WHERE gcC.globalcharge_id = gc.id) AS carrier, 
-                    (SELECT GROUP_CONCAT(DISTINCT carr.uncode SEPARATOR ', ') FROM globalcharcarrier gcC JOIN carriers carr ON carr.id =  gcC.carrier_id
-                     WHERE gcC.globalcharge_id = gc.id) AS carriers,
-                    gc.ammount AS amount,
-                    cur.alphacode AS currency_code,
-                    gc.validity AS valid_from,
-                    gc.expire AS valid_until,
-                    gc.company_user_id AS company_user_id,
-                    cmpu.name AS company_user    
-                    FROM globalcharges gc 
-                    JOIN surcharges sr ON sr.id = gc.surcharge_id
-                    JOIN typedestiny td ON td.id = gc.typedestiny_id
-                    JOIN currency cur ON cur.id = gc.currency_id
-                    JOIN calculationtype ctype ON ctype.id = gc.calculationtype_id
-                    JOIN company_users cmpu ON cmpu.id = gc.company_user_id 
-                    JOIN globalcharcarrier gcC ON gc.id = gcC.globalcharge_id
-                    WHERE gc.company_user_id =". $companyId;
-        /**
-         *  Solo en caso carrierId sea -1 o vacío se filtra solo por compañía 
-         *  En caso sea diferente se agrega un filtro por carrier
-         * */ 
-        if($carrierId != "0"){
-            $query = $query.' AND gcC.carrier_id = '. $carrierId;
-        }
-        return $query;
     }
 }
