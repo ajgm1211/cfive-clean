@@ -150,7 +150,7 @@
               <!-- RUTA RESPONSIVA -->
               <div
                 class="row col-lg-6 d-lg-none mr-0 ml-0"
-                style="border-bottom: 1px solid #eeeeee"
+                style="border-bottom: 1px solid #eeeeee; "
               >
                 <!-- DESTINOS -->
                 <div class="col-sm-6">
@@ -221,7 +221,7 @@
                   ]"
                 >
                   <div
-                    class="col-2 pl-0 pr-0 prices-card-res"
+                    class="col-2 pl-0 pr-0 prices-card-res "
                     v-for="(cont, contCode) in request.containers"
                     :key="contCode"
                   >
@@ -4595,6 +4595,7 @@ export default {
               }
             })
             .catch((error) => {
+              console.log(error);
               component.$emit("apiSearchDone", fullResponseLength);
             });
         });
