@@ -1784,6 +1784,8 @@ trait SearchTrait
                 $terms_to_add = $term->import;
             }else if($search_data['direction'] == 2){
                 $terms_to_add = $term->export;
+            }else if($search_data['direction'] == 3){
+                $terms_to_add = $term->import . '<br>' . $term->export;
             }
 
             if($term->language_id == 1){
