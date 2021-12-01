@@ -1019,6 +1019,7 @@
                                         v-model="input.units"
                                         style="width:80px;"
                                         @keypress="isNumber($event)"
+                                        @blur='validateUnits(input.units)'
                                         class="q-input"
                                     ></b-form-input>
                                 </b-td>
@@ -1158,6 +1159,7 @@ export default {
     },
     data() {
         return {
+            ceroUnits: null,
             actions: actions.localcharges,
             currencies: this.datalists.currency,
             openModal: false,
@@ -1466,6 +1468,18 @@ export default {
                     port_id: this.value.id,
                     type_id: this.value.type,
                 };
+
+                data.selectedCharges.forEach(element => {
+                    if(element.units === 0 || element.units === '0'){
+                        this.alert("Units can't be 0", "error");
+                        this.ceroUnits = true;
+                    }else{
+                        this.ceroUnits = null;
+                    }
+                });
+
+                if(this.ceroUnits)return;
+
                 if (this.currentQuoteData.type == "FCL") {
                     actions.localcharges
                         .create(data)

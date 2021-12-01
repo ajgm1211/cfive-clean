@@ -50,6 +50,7 @@
 								:datalists="datalists"
 								:actions="actions.restrictions"
 								:data="currentData['restrictions']"
+								:type="'contracts'"
 							></restrictions>
 						</b-tab>
 
@@ -170,7 +171,6 @@
 
 			actions.contracts.retrieve(id)
 			.then( ( response ) => {
-				console.log(this.currentData = response.data.data);
 				this.currentData = response.data.data;
 				this.onSuccess(this.currentData);
 				this.currentData['daterange'] = { startDate: this.currentData.validity, endDate: this.currentData.expire };

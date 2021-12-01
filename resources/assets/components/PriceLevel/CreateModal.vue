@@ -1,38 +1,39 @@
 <template>
   <section>
     <div class="layer" @click="$emit('cancel')"></div>
-    <div class="create-modal">
-      <div class="modal-head"><h3>add price level</h3></div>
+    <div v-if="dataLoaded" class="create-modal">
+      <div class="modal-head"><h3>{{ action + ' ' + title }}</h3></div>
       <form action="" class="create-form" autocomplete="off">
-        <CustomInput
-          label="Name"
-          name="name"
-          ref="name"
-          v-model="price.name"
-          :rules="{
-            required: true,
-          }"
-        />
-        <CustomInput
-          label="Display name"
-          name="display name"
-          ref="display_name"
-          v-model="price.display_name"
-          :rules="{
-            required: true,
-          }"
-        />
-        <Selectable
-          @selected="setSelected($event)"
-          :selected="selected"
-          label="Price Level Type"
-          :options="price_types"
-          :error="selectable_error"
-        />
+        <div
+          v-for="field, fieldKey in fields"
+          :key="fieldKey"
+        >
+          <CustomInput
+          v-if="field.type == 'input'"
+          :label="field.label"
+          :name="field.name"
+          :ref="field.name"
+          v-model="model[field.name]"
+          :rules="field.rules"
+          />
+
+          <SorteableDropdown 
+            v-else-if="field.type=='dropdown'"
+            @reset="selected = ''" 
+            :error="selectable_error" 
+            :label="field.label" 
+            @selected="setSelected($event,field.name)" 
+            :itemList="field.items" 
+          />
+        </div>        
       </form>
       <div class="controls-container">
         <p @click="$emit('cancel')">Cancel</p>
-        <MainButton @click="validate" text="Add Price Levels" :add="true" />
+        <MainButton 
+          @click="postData()" 
+          :text="action + ' ' + title" 
+          :add="true" 
+        />
       </div>
     </div>
   </section>
@@ -41,36 +42,88 @@
 <script>
 import MainButton from "../common/MainButton.vue";
 import CustomInput from "../common/CustomInput.vue";
-import Selectable from "../common/Selectable.vue";
-export default {
-  components: { MainButton, CustomInput, Selectable },
-  data: () => ({
-    price: {
-      name: "",
-      display_name: "",
-    },
-    price_types: ["FCL", "LCL"],
-    selected: "",
-    selectable_error: false,
-  }),
-  methods: {
-    validate() {
-      if (this.$refs.name.validate()) {
-        return false;
-      }
-      if (this.$refs.display_name.validate()) {
-        return false;
-      }
-      if (!this.selected) {
-        this.selectable_error = true;
-        return false;
-      }
+import SorteableDropdown from '../common/SorteableDropdown.vue';
 
-      this.$router.push({ path: "/prices/rates" });
+export default {
+  components: { MainButton, CustomInput, SorteableDropdown },
+  props: {
+    fields: {
+      type: Array,
+      default() {
+        return [];
+      },
+    },
+      title: {
+        type: String,
+    },
+      action: {
+        type: String,
+    },
+      dispatch: {
+        type: String
+    },
+  },
+  data: () => ({
+    model: {},
+    selectable_error: false,
+    dataLoaded: false,
+  }),
+  mounted() {
+    this.setInitialData();
+  },
+  methods: {
+    postData() {
+      if (!this.validate()) return;
+
+      let dispatchBody = this.setBody();
+
+      this.$store.dispatch(this.dispatch, {
+        body: dispatchBody,
+      });
+    },
+    validate() {
+      let component = this;
+      let index = 0;
+
+      this.fields.forEach(function (field){
+        if(field.type == 'input'){
+          if (component.$refs[field.name][index].validate()) {
+            return false;
+          }
+        }else if(field.type == 'dropdown'){
+          if (!component.model[field.name]) {
+            component.selectable_error = true;
+            return false;
+          }
+        }
+      });
+      
       return true;
     },
-    setSelected(option) {
-      this.selected = option;
+    setSelected(option, field_name) {
+      this.model[field_name] = option;
+    },
+    setInitialData() {
+      let component = this;
+      var dataIndex = 0;
+
+      this.fields.forEach(function (field){
+        field.id = dataIndex;
+        component.model[field.name] = "";
+        dataIndex += 1;
+      });
+
+      this.dataLoaded = true;
+    },
+    setBody() {
+      var body = {};
+      let component = this;
+
+      this.fields.forEach(function (field){
+        body[field.name] = component.model[field.name]; 
+      });
+
+      return body;
     },
   },
 };

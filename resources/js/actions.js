@@ -846,11 +846,4 @@ export default {
             return api.call('post', `/api/v2/contractslcl/${contract_id}/remarks`, data);
         },
     },
-    restrictions_lcl: {
-        create(data, route) {
-            let contract_id = route.params.id;
-            return api.call('post', `/api/v2/contractslcl/${contract_id}/restrictions`, data);
-        },
-    },
-
 };
