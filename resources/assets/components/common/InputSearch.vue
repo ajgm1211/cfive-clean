@@ -8,7 +8,7 @@
         <Search color="#d3d2d2" />
       </div>
       <input
-        @input="filterSearch()"
+        @input="filterSearch"
         type="search"
         name=""
         id=""
@@ -26,7 +26,7 @@ export default {
   data: () => ({
     search: null,
   }),
-  computed: {
+  methods: {
     filterSearch() {
       this.$emit("filter", this.search);
     },
