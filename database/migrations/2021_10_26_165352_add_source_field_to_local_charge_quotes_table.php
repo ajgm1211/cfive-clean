@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddSaleCodeIdToLocalChargeQuotes extends Migration
+class AddSourceFieldToLocalChargeQuotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class AddSaleCodeIdToLocalChargeQuotes extends Migration
     public function up()
     {
         Schema::table('local_charge_quotes', function (Blueprint $table) {
-            $table->integer('sale_term_code_id')->nullable()->unsigned()->after('calculation_type_id');
-            $table->foreign('sale_term_code_id')->references('id')->on('sale_term_codes');
+            $table->integer('source')->after('sale_term_code_id')->nullable();
         });
     }
 

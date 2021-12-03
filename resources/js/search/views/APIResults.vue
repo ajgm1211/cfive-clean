@@ -4595,7 +4595,6 @@ export default {
               }
             })
             .catch((error) => {
-              console.log(error);
               component.$emit("apiSearchDone", fullResponseLength);
             });
         });

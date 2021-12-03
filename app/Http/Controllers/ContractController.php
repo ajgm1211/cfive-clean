@@ -114,6 +114,7 @@ class ContractController extends Controller
         $users = User::whereHas('companyUser', function ($q) use ($company_user_id) {
             $q->where('company_user_id', '=', $company_user_id);
         })->get()->map(function ($company) {
+            $company->name = $company->getFullNameAttribute();
             return $company->only(['id', 'name']);
         });
 
@@ -354,7 +355,7 @@ class ContractController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function retrieve(Contract $contract)
-    {
+    {   
         return new ContractResource($contract);
     }
 
