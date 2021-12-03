@@ -62,7 +62,7 @@ class NewContractRequestLclController extends Controller
                 return $Ncontracts->company_user;
             })
             ->addColumn('name', function ($Ncontracts) {
-                return $Ncontracts->contract_ref;
+                return $Ncontracts->namecontract;
             })
             ->addColumn('code', function ($Ncontracts) {
                 return $Ncontracts->contract_code;
