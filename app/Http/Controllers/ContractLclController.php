@@ -250,6 +250,8 @@ class ContractLclController extends Controller
             }
         }
 
+        $contract->contract_code = null;
+        $contract->update();
         $contract->delete();
 
         return response()->json(null, 204);
