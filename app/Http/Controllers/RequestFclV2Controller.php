@@ -99,7 +99,7 @@ class RequestFclV2Controller extends Controller
                 return '<span style="color:' . $color . '"><strong>' . $name . '</strong></span>';
             })
             ->addColumn('name', function ($Ncontracts) {
-                return $Ncontracts->contract_ref;
+                return $Ncontracts->namecontract;
             })
             ->addColumn('code', function ($Ncontracts) {
                 return $Ncontracts->contract_code;
