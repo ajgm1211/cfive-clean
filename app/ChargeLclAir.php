@@ -21,6 +21,11 @@ class ChargeLclAir extends Model
         return $this->belongsTo('App\AutomaticRate', 'automatic_rate_id', 'id');
     }
 
+    public function charge_sale_code_quote()
+    {
+        return $this->hasOne('App\ChargeLclSaleCodeQuote');
+    }
+
     public function currency()
     {
         return $this->belongsTo('App\Currency');

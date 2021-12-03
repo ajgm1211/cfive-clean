@@ -139,7 +139,10 @@ class CompanyController extends Controller
      */
     public function add()
     {
-        $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('id', '!=', \Auth::user()->id)->where('type', '!=', 'company')->pluck('name', 'id');
+        $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('id', '!=', \Auth::user()->id)->where('type', '!=', 'company')->get()->map(function ($user) {
+            $user->name = $user->getFullNameAttribute();
+            return $user;
+        })->pluck('name', 'id');
         $prices = Price::where('company_user_id', \Auth::user()->company_user_id)->pluck('name', 'id');
 
         return view('companies.add', compact('prices', 'users'));
@@ -534,7 +537,10 @@ class CompanyController extends Controller
     {
         $company = $this->repository->find($id);
 
-        $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('type', '!=', 'company')->where('id', '!=', $company->owner)->pluck('name', 'id');
+        $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('type', '!=', 'company')->where('id', '!=', $company->owner)->get()->map(function ($user) {
+            $user->name = $user->getFullNameAttribute();
+            return $user;
+        })->pluck('name', 'id');
 
         $prices = Price::where('company_user_id', \Auth::user()->company_user_id)->pluck('name', 'id');
 
