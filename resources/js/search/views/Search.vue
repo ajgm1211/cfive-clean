@@ -736,17 +736,15 @@
       </div>
       <!-- FIN LCL FORM INPUTS -->
 
-      <div class="col-lg-8">
+      <div v-if="!searching" class="col-lg-8">
         <div
-          v-if="
-            ((searchRequest.type == 'FCL' &&
+          v-if="((searchRequest.type == 'FCL' &&
               Array.isArray(foundRates) &&
               foundRates.length == 0) ||
               (searchRequest.type == 'LCL' &&
                 Array.isArray(foundRatesLcl) &&
                 foundRatesLcl.length == 0)) &&
-              !foundApiRates
-          "
+              !foundApiRates"
           class="alert alert-danger"
           role="alert"
         >
@@ -1587,7 +1585,7 @@ export default {
       this.getQuery();
     });
   },
-  methods: {
+  methods: {    
     //modal
     nextStep() {
       if (this.stepOne) {
@@ -2421,10 +2419,10 @@ export default {
       if (this.searchRequest.lclTypeIndex == 0) {
         if (this.lclShipmentVolume > this.lclShipmentWeight / 1000) {
           this.lclShipmentChargeableWeight =
-            this.lclShipmentVolume * this.lclShipmentQuantity;
+            this.lclShipmentVolume ;
         } else {
           this.lclShipmentChargeableWeight =
-            (this.lclShipmentWeight / 1000) * this.lclShipmentQuantity;
+            (this.lclShipmentWeight / 1000) ;
         }
       } else if (this.searchRequest.lclTypeIndex == 1) {
         let component = this;
@@ -2444,10 +2442,10 @@ export default {
 
         if (this.lclPackagingVolume > this.lclPackagingWeight / 1000) {
           this.lclPackagingChargeableWeight =
-            this.lclPackagingVolume * this.lclPackagingQuantity;
+            this.lclPackagingVolume ;
         } else {
           this.lclPackagingChargeableWeight =
-            (this.lclPackagingWeight / 1000) * this.lclPackagingQuantity;
+            (this.lclPackagingWeight / 1000);
         }
       }
     },
@@ -2602,7 +2600,7 @@ export default {
       return this.carrierOptions.filter((c) =>
         c.text.toLowerCase().includes(this.carrierSearchQuery.toLowerCase())
       );
-    },
+    }
   },
 };
 </script>

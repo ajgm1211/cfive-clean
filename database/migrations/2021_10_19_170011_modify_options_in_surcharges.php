@@ -21,7 +21,7 @@ class ModifyOptionsInSurcharges extends Migration
                 $options = json_decode($surcharge->options,true);
                 
                 $internal_options = [];
-                if(isset($internal_options['is_api'])){
+                if(isset($options['is_api'])){
                     $internal_options['is_api'] = $options['is_api'];
 
                     unset($options['is_api']);

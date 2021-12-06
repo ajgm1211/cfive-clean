@@ -35,6 +35,7 @@ class QuotationListResource extends JsonResource
             'id' => $this->id,
             'type' => $this->type,
             'quote_id' => $this->quote_id,
+            'custom_quote_id' => $this->custom_quote_id ?? '--',
             'company_id' => $this->company,
             'status' => $this->status_quote()->first(),
             'rates' => $this->rates_v2,

@@ -1,10 +1,12 @@
 <template>
   <section class="custom-table">
-    <h5>
+    <h5 v-show="(searchData.originCharges && charge=='Origin') || (searchData.destinationCharges && charge=='Destination') || charge=='Freight'">
       <b>{{ charge }}</b>
     </h5>
 
-    <b-table striped hover responsive :items="tbody" :fields="thead">
+    <b-table 
+      v-show="(searchData.originCharges && charge=='Origin') || (searchData.destinationCharges && charge=='Destination') || charge=='Freight'"
+      striped hover responsive :items="tbody" :fields="thead">
       <template slot="custom-foot">
         <td></td>
         <td></td>
@@ -44,6 +46,9 @@ export default {
       required: true,
     },
     currency: {
+      required: true,
+    },
+    searchData: {
       required: true,
     },
   },

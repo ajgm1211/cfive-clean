@@ -268,7 +268,7 @@ class ContractLcl extends Model implements HasMedia, Auditable
     public function createCustomCode()
     {
         $lastContract = ContractLcl::where('company_user_id', $this->company_user_id)
-            ->whereNotNull('contract_code')->orderBy('id', 'desc')->first();
+            ->whereNotNull('contract_code')->withTrashed()->orderBy('id', 'desc')->first();
 
         $company = strtoupper(substr($this->companyUser->name, 0, 3));
 
