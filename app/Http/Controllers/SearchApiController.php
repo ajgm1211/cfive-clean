@@ -164,6 +164,7 @@ class SearchApiController extends Controller
         $cargo_types = CargoType::get()->map(function ($cargo_type) {
             return $cargo_type->only(['id', 'name']);
         });
+        
         /**
          * Cuándo no encuentre definida usar helper env()
          */

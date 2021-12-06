@@ -163,7 +163,7 @@
           <b-dropdown
             id="dropdown-containers"
             :disabled="searchRequest.requestData.requested == 1"
-            :text="containerText.join(', ')"
+            :text="sortedContainers"
             ref="dropdown"
             class="m-2"
           >
@@ -2600,6 +2600,17 @@ export default {
       return this.carrierOptions.filter((c) =>
         c.text.toLowerCase().includes(this.carrierSearchQuery.toLowerCase())
       );
+    },
+    sortedContainers() {
+      //Arreglo con todos los contenedores ordenados
+      let containersAll = this.datalists.containers.map(e => e.code);
+      
+      //Ordenamos los container checkeados
+      let results = containersAll.filter(e => {
+        return this.containerText.find(container => container === e );
+      });
+
+      return results.join(', ');
     }
   },
 };
