@@ -60,6 +60,11 @@ class AutomaticInlandLclAir extends Model implements Auditable
 		return $this->belongsTo('App\AutomaticInlandTotal','inland_totals_id','id');
 	}
 
+    public function inland_local_group()
+    {
+        return $this->hasOne('App\InlandLocalChargeLclGroup', 'automatic_inland_lcl_id');
+    }
+
     public function scopeSelectFields($query)
     {
         return $query->select('id', 'provider_id', 'contract', 'distance', 'port_id', 'type', 'distance', 'units', 'price_per_unit as price', 'markup as profit', 'total', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');

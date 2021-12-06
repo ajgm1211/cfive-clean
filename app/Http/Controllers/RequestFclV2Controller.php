@@ -63,11 +63,11 @@ class RequestFclV2Controller extends Controller
         $Ncontracts = $Ncontract;
 
         /*  foreach ($Ncontract as $contract) {
-            $request_id = NewContractRequest::find($contract->id);
+        $request_id = NewContractRequest::find($contract->id);
 
-            if ($request_id->status_erased == 0) {
-                $Ncontracts[] = $contract;
-            }
+        if ($request_id->status_erased == 0) {
+        $Ncontracts[] = $contract;
+        }
         }*/
 
         $permiso_eliminar = false;
@@ -99,7 +99,7 @@ class RequestFclV2Controller extends Controller
                 return '<span style="color:' . $color . '"><strong>' . $name . '</strong></span>';
             })
             ->addColumn('name', function ($Ncontracts) {
-                return $Ncontracts->contract_ref;
+                return $Ncontracts->namecontract;
             })
             ->addColumn('code', function ($Ncontracts) {
                 return $Ncontracts->contract_code;
@@ -260,13 +260,13 @@ class RequestFclV2Controller extends Controller
         $ext = null;
         if (!empty($file)) {
             $info_file = pathinfo($file);
-            $ext = (strtoupper($info_file['extension']) == 'PDF') ? 'PDF':'EXCEL';
+            $ext = (strtoupper($info_file['extension']) == 'PDF') ? 'PDF' : 'EXCEL';
             $gpContainer = GroupContainer::find($groupContainer);
-            $ArrayData['group_containers'] = ['id' => $gpContainer->id,'name' => $gpContainer->name];
+            $ArrayData['group_containers'] = ['id' => $gpContainer->id, 'name' => $gpContainer->name];
             $ArrayData['containers'] = [];
             foreach ($containers as $containerId) {
                 $container = Container::find($containerId);
-                $ArrayData['containers'][] = ['id' => $container->id,'name' => $container->name,'code' => $container->code];
+                $ArrayData['containers'][] = ['id' => $container->id, 'name' => $container->name, 'code' => $container->code];
             }
             $data = json_encode($ArrayData);
 
@@ -295,7 +295,7 @@ class RequestFclV2Controller extends Controller
             $Ncontract->data = $data;
             $Ncontract->contract_id = $contract->id;
             $Ncontract->save();
-            $Ncontract->setAttribute('carrier',null);
+            $Ncontract->setAttribute('carrier', null);
             foreach ($carriers as $carrierVal) {
                 ContractCarrier::create([
                     'carrier_id' => $carrierVal,
@@ -313,7 +313,7 @@ class RequestFclV2Controller extends Controller
                 //Calling Mix Panel's event
                 $this->trackEvents("new_request_by_carrier", $Ncontract);
             }
-            
+
             $contract->addMedia(storage_path('tmp/request/' . $file))->preservingOriginal()->toMediaCollection('document', 'contracts3');
             $Ncontract->addMedia(storage_path('tmp/request/' . $file))->toMediaCollection('document', 'FclRequest-New');
             $ext_at_sl = strtolower(pathinfo($file, PATHINFO_EXTENSION));
@@ -343,7 +343,7 @@ class RequestFclV2Controller extends Controller
             $message = 'has created a new request: ' . $Ncontract->id;
 
             //Calling Mix Panel's event
-            $Ncontract->setAttribute('file_ext',$ext);
+            $Ncontract->setAttribute('file_ext', $ext);
             $this->trackEvents("new_request_Fcl", $Ncontract);
 
             // EVENTO INTERCOM
@@ -430,18 +430,20 @@ class RequestFclV2Controller extends Controller
             $Ncontract = NewContractRequest::find($id);
             $Ncontract->status = $status;
             $Ncontract->updated = $now2;
-            $Ncontract->setAttribute('module','FCL');
+            $Ncontract->setAttribute('module', 'FCL');
             if ($Ncontract->username_load == 'Not assigned' || empty($Ncontract->username_load) == true) {
                 $Ncontract->username_load = \Auth::user()->name . ' ' . \Auth::user()->lastname;
             }
 
             if ($Ncontract->status == 'Processing') {
+                $this->setStatusContract($Ncontract->contract_id,'incomplete');
                 if ($Ncontract->time_star_one == false) {
                     $Ncontract->time_star = $now2;
                     $Ncontract->time_star_one = true;
                 }
                 //Calling Mix Panel's event
             } elseif ($Ncontract->status == 'Review') {
+                $this->setStatusContract($Ncontract->contract_id,'incomplete');
                 if ($Ncontract->time_total == null) {
                     $fechaEnd = Carbon::parse($now2);
                     if (empty($Ncontract->time_star) == true) {
@@ -461,9 +463,11 @@ class RequestFclV2Controller extends Controller
                 }
                 //Calling Mix Panel's event
             } elseif ($Ncontract->status == 'Done') {
-                $contractObj = Contract::find($Ncontract->contract_id);
+            /*    $contractObj = Contract::find($Ncontract->contract_id);
                 $contractObj->status = 'publish';
-                $contractObj->update();
+                $contractObj->update();*/
+
+                $this->setStatusContract($Ncontract->contract_id,'publish');
                 if ($Ncontract->time_manager == null) {
                     $fechaEnd = Carbon::parse($now2);
                     $fechaStar = Carbon::parse($Ncontract->created);
@@ -474,7 +478,7 @@ class RequestFclV2Controller extends Controller
 
                 if ($Ncontract->sentemail == false) {
                     $users = User::all()->where('company_user_id', '=', $Ncontract->company_user_id);
-                    $message = 'The request '.$Ncontract->id.' was processed';
+                    $message = 'The request ' . $Ncontract->id . ' was processed';
                     foreach ($users as $user) {
 
                         $user->notify(new N_general(\Auth::user(), $message));
@@ -501,6 +505,18 @@ class RequestFclV2Controller extends Controller
             print($e);
             return response()->json($data = ['data' => 2]);
         }
+    }
+
+    public function setStatusContract($contract_id,$new_status)
+    {
+
+        $contractObj = Contract::find($contract_id);
+        if($contractObj->status != $new_status ){
+            $contractObj->status = $new_status;
+            $contractObj->update();
+    
+        }
+ 
     }
 
     public function sendEmailRequest(Request $request)
