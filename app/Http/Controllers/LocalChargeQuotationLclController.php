@@ -8,6 +8,7 @@ use App\QuoteV2;
 use App\AutomaticRate;
 use App\Charge;
 use App\ChargeLclAir;
+use App\ChargeLclSaleCodeQuote;
 use App\Harbor;
 use App\Http\Requests\StoreLocalChargeLclQuote;
 use App\LocalChargeQuote;
@@ -307,7 +308,7 @@ class LocalChargeQuotationLclController extends Controller
                     'type_id' => $type,
                 ]);
 
-                //$local_charge->sumarize();
+                $this->storeInPivotChargeSaleCodeQuote($sale_code_id, $localcharge, $local_charge);
                 $local_charge->totalize();
             }
         } else {
@@ -343,6 +344,14 @@ class LocalChargeQuotationLclController extends Controller
 
         //Creating relationship between buy and sale charges
         $this->storeInPivotLocalChargeQuote($charge_data, $local_charge);
+    }
+
+    public function storeInPivotChargeSaleCodeQuote($sale_code_id, $charge, $local_charge_quote){
+        ChargeLclSaleCodeQuote::create([
+            'charge_lcl_air_id' => $charge['id'],
+            'sale_term_code_id' => $sale_code_id,
+            'local_charge_quote_lcl_id' => $local_charge_quote->id,
+        ]);
     }
 
     public function storeInPivotLocalChargeQuote($charge, $localcharge){

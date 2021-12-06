@@ -114,6 +114,7 @@ class ContractController extends Controller
         $users = User::whereHas('companyUser', function ($q) use ($company_user_id) {
             $q->where('company_user_id', '=', $company_user_id);
         })->get()->map(function ($company) {
+            $company->name = $company->getFullNameAttribute();
             return $company->only(['id', 'name']);
         });
 
@@ -135,7 +136,7 @@ class ContractController extends Controller
             'calculation_types',
             'destination_types',
             'companies',
-            'rol',   
+            'rol',
             'users'
         );
 
@@ -213,7 +214,7 @@ class ContractController extends Controller
             'remarks' => '',
             'is_manual' => 1
         ]);
-        
+
         $contract->createCustomCode();
         $contract->ContractCarrierSync($data['carriers']);
 
@@ -354,7 +355,7 @@ class ContractController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function retrieve(Contract $contract)
-    {
+    {   
         return new ContractResource($contract);
     }
 
@@ -480,9 +481,9 @@ class ContractController extends Controller
             $contract = $query->first();
             $contract_lcl = $query_lcl->first();
 
-            if ($contract != null || $contract_lcl != null) {
+            /*if ($contract != null || $contract_lcl != null) {
                 return response()->json(['message' => 'There is already a contract with the code/reference entered'], 400);
-            }
+            }*/
 
             $regex = "/^\d+(?:,\d+)*$/";
             $carriers = str_replace(' ', '', $request->carriers);
@@ -547,7 +548,7 @@ class ContractController extends Controller
      */
     public function uploadContract($request, $carriers, $api, $direction, $type)
     {
-        try{
+        try {
 
             //Saving contract
             $contract = $this->storeContractApi($request, $direction, $type);
@@ -571,7 +572,6 @@ class ContractController extends Controller
             $Ncontract->ContractRequestCarrierSync($carriers, $api);
 
             return $Ncontract;
-
         } catch (Exception $e) {
             \Log::error($e->getMessage());
             return response()->json([
@@ -590,12 +590,7 @@ class ContractController extends Controller
      */
     public function storeContractApi($request, $direction, $type)
     {
-
-        if ($request->code) {
-            $code = $request->code;
-        } else {
-            $code = $request->reference;
-        }
+        $code = $request->code ?? null;
 
         switch ($type) {
             case 'FCL':
@@ -722,7 +717,7 @@ class ContractController extends Controller
             'amountC' => 'sometimes|required',
             'document' => 'required',
         ]);
-            // dd(Auth::user()->id);
+        // dd(Auth::user()->id);
         $contract->company_user_id = Auth::user()->company_user_id;
         $contract->name = $request->referenceC;
         $validation = explode('/', $request->validityC);

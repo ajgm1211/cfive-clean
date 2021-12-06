@@ -120,7 +120,7 @@ class QuotationApiResource extends JsonResource
     {
         switch ($quote_type) {
             case 'FCL':
-                $localcharges = LocalChargeQuote::select('id', 'price', 'profit', 'total', 'charge', 'currency_id', 'port_id', 'calculation_type_id', 'provider_name', 'surcharge_id', 'quote_id', 'sale_term_code_id')
+                $localcharges = LocalChargeQuote::select('id', 'price', 'profit', 'total', 'charge', 'currency_id', 'port_id', 'calculation_type_id', 'provider_name', 'surcharge_id', 'quote_id', 'sale_term_code_id', 'source')
                     ->Quote($id)->GetPort()->Type($type)->get();
                 break;
             case 'LCL':
