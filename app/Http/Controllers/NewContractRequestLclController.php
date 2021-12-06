@@ -62,7 +62,7 @@ class NewContractRequestLclController extends Controller
                 return $Ncontracts->company_user;
             })
             ->addColumn('name', function ($Ncontracts) {
-                return $Ncontracts->contract_ref;
+                return $Ncontracts->namecontract;
             })
             ->addColumn('code', function ($Ncontracts) {
                 return $Ncontracts->contract_code;
@@ -101,24 +101,33 @@ class NewContractRequestLclController extends Controller
                 }
             })
             ->addColumn('status', function ($Ncontracts) {
-                $color = '';
-                if (strnatcasecmp($Ncontracts->status, 'Pending') == 0) {
-                    //$color = 'color:#031B4E';
-                    $color = 'color:#f81538';
-                } else if (strnatcasecmp($Ncontracts->status, 'Processing') == 0) {
-                    $color = 'color:#5527f0';
-                } else if (strnatcasecmp($Ncontracts->status, 'Review') == 0) {
-                    $color = 'color:#e07000';
-                } else {
-                    $color = 'color:#04950f';
+                $color = '';    
+                    if (strnatcasecmp($Ncontracts->status, 'Pending') == 0) {
+                        //$color = 'color:#031B4E';
+                        $color = 'color:#f81538';
+                    } else if (strnatcasecmp($Ncontracts->status, 'Processing') == 0) {
+                        $color = 'color:#5527f0';
+                    } else if (strnatcasecmp($Ncontracts->status, 'Review') == 0) {
+                        $color = 'color:#e07000';
+                    } else {
+                        $color = 'color:#04950f';
+                    }
+
+                if ($Ncontracts->erased_contract == false || empty($Ncontracts->erased_contract) == true) {
+                    return '<a href="#" onclick="showModal(' . $Ncontracts->id . ')"style="' . $color . '" id="statusHrf' . $Ncontracts->id . '" class="statusHrf' . $Ncontracts->id . '">' . $Ncontracts->status . '</a>
+                    &nbsp;
+                    <samp class="la la-pencil-square-o statusHrf' . $Ncontracts->id . '" for="" id="statusSamp' . $Ncontracts->id . '"  style="font-size:15px;' . $color . '"></samp>';
+
+                }else{
+                    return '<a  style="' . $color . '" id="statusHrf' . $Ncontracts->id . '" class="statusHrf' . $Ncontracts->id . '">' . $Ncontracts->status . '</a>
+                    &nbsp;
+                    <samp class="la la-unlock" id="statusSamp' . $Ncontracts->id . '" class="statusHrf' . $Ncontracts->id . '" for="" style="' . $color . '"></samp>';
                 }
 
-                return '<a href="#" onclick="showModal(' . $Ncontracts->id . ')"style="' . $color . '" id="statusHrf' . $Ncontracts->id . '" class="statusHrf' . $Ncontracts->id . '">' . $Ncontracts->status . '</a>
-                &nbsp;
-                <samp class="la la-pencil-square-o statusHrf' . $Ncontracts->id . '" for="" id="statusSamp' . $Ncontracts->id . '"  style="font-size:15px;' . $color . '"></samp>';
+               
             })
             ->addColumn('action', function ($Ncontracts) use ($permiso_eliminar) {
-
+            if ($Ncontracts->erased_contract == false || empty($Ncontracts->erased_contract) == true) {
                 $buttons = '&nbsp;&nbsp;
                 <a href="' . route("RequestImportationLcl.show", $Ncontracts->id) . '" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
@@ -150,6 +159,14 @@ class NewContractRequestLclController extends Controller
                 </a>';
                     $buttons = $butPrRq . $buttons;
                 }
+            }else{
+                $delete = '<center><h5 style="color:#f81538"><u>Contract Deleted By Customer </u></h5></center>';
+                $change_status_erased = '
+                <center><a href="#" class="eliminarrequest" data-id-request="' . $Ncontracts->id . '" data-info="id:' . $Ncontracts->id . '"  title="Delete" >
+                <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
+                </a></center>';
+                $buttons = $delete . $change_status_erased;
+            }    
 
                 return $buttons;
             })

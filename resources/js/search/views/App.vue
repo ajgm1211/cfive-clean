@@ -123,6 +123,7 @@
       v-if="searchRequest.length != 0"
       :request="searchRequest"
       :datalists="datalists"
+      :searchData="searchData"
       @apiSearchStarted="clearDisplay"
       @apiSearchDone="addApiResults"
       @addedToQuote="setResultsForQuote"
@@ -135,6 +136,7 @@
       :rates="searchType == 'FCL' ? foundRates : foundRatesLcl"
       :request="searchRequest"
       :datalists="datalists"
+      :searchData="searchData"
       @createQuote="createQuote"
       @addedToQuote="setRatesForQuote"
       @resultsCreated="setActions"
@@ -180,6 +182,7 @@ export default {
       quoteData: {},
       searchType: "FCL",
       searchLoaded: false,
+      searchData: {},
     };
   },
   created() {
@@ -296,6 +299,7 @@ export default {
     setSearchStatus(searchRequest) {
       this.searching = true;
       this.searchRequest = searchRequest;
+      this.searchData = _.cloneDeep(searchRequest);
       this.requestData = this.$route.query;
       if (this.searchType == "FCL") {
         this.$nextTick(() => {
@@ -304,13 +308,13 @@ export default {
       }
     },
 
-    setSearchData(searchData) {
+    setSearchData(rateData) {
       this.searching = false;
       if (this.searchType == "FCL") {
-        this.foundRates = searchData;
+        this.foundRates = rateData;
         this.resultsTotal += this.foundRates.length;
       } else if (this.searchType == "LCL") {
-        this.foundRatesLcl = searchData;
+        this.foundRatesLcl = rateData;
         this.resultsTotal += this.foundRatesLcl.length;
       }
       this.searchDone = true;

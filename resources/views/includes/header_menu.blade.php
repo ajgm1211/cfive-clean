@@ -488,6 +488,14 @@
                                     </span>
                                 </a>
                             </li>
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{ route('apicredentials.index') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-lock"></i>
+                                    <span class="m-menu__link-text">
+                                        Carrier APIs Credentials
+                                    </span>
+                                </a>
+                            </li>
                             @endrole
 
 
