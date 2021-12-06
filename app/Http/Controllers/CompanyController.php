@@ -654,7 +654,7 @@ class CompanyController extends Controller
      * @return void
      */
     public function destroy(Request $request, $id)
-    {
+    {   
         try {
 
             $company = Company::findOrFail($id);
@@ -670,8 +670,7 @@ class CompanyController extends Controller
                     'message' => 'Record not found',
                 ], 404);
             }
-
-            return response()->json(['message' => $e]);
+            return response()->json(['message' => $e]);            
         }
     }
 
