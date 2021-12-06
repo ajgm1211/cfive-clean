@@ -670,6 +670,7 @@ class CompanyController extends Controller
                     'message' => 'Record not found',
                 ], 404);
             }
+            \Log::info("Error company destroy".$e);
             return response()->json(['message' => $e]);            
         }
     }
