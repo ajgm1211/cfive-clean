@@ -164,8 +164,15 @@ class SearchApiController extends Controller
         $cargo_types = CargoType::get()->map(function ($cargo_type) {
             return $cargo_type->only(['id', 'name']);
         });
-
-        $environment_name = $_ENV['APP_ENV'];
+        
+        /**
+         * Cuándo no encuentre definida usar helper env()
+         */
+        if (!isset($_ENV['APP_ENV'])){
+            $environment_name = env('APP_ENV');
+        } else {
+            $environment_name = $_ENV['APP_ENV'];
+        }
 
         if ($environment_name == "production") {
             $api_url = "https://carriers.cargofive.com/api/pricing";
