@@ -256,35 +256,13 @@ class SearchApiController extends Controller
         $company_user = $user->companyUser()->first();
         $company_user_id = $company_user->id;
 
-        $search_data = $request->validate([
-            'originPorts' => 'required|array|min:1',
-            'destinationPorts' => 'required|array|min:1',
-            'dateRange.startDate' => 'required',
-            'dateRange.endDate' => 'required',
-            'containers' => 'required|array|min:1',
-            'selectedContainerGroup' => 'required',
-            'deliveryType.id' => 'required',
-            'direction' => 'required',
-            'carriers' => 'sometimes',
-            'carriersApi' => 'sometimes',
-            'type' => 'required',
-            'company' => 'sometimes',
-            'contact' => 'sometimes',
-            'pricelevel' => 'sometimes',
-            'originCharges' => 'sometimes',
-            'destinationCharges' => 'sometimes',
-            'showRateCurrency' => 'sometimes',
-            'originAddress' => 'sometimes',
-            'destinationAddress' => 'sometimes',
-            'requestData'=> 'required'
-        ]);
+        $search_array = $request->input();
 
         $search_array['dateRange']['startDate'] = $this->formatSearchDate($search_array['dateRange']['startDate'], 'date');
         $search_array['dateRange']['endDate'] = $this->formatSearchDate($search_array['dateRange']['endDate'], 'date');
 
-        $search_array= $this->changeLocationsByPort($search_data);
+        $search_array= $this->changeLocationsByPort($search_array);
         
-
         $search_ids = $this->getIdsFromArray($search_array);
         
         $search_ids['company_user'] = $company_user_id;
