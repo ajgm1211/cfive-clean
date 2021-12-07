@@ -4762,19 +4762,22 @@ export default {
           delete responseData.pricingDetails.surcharges.destinationSurcharges;
         }
 
-        responseData.pricingDetails.totalRatePerContainer.forEach(function(
-          totalPerCont
-        ) {
+        responseData.pricingDetails.totalRatePerContainer.forEach( function(totalPerCont) {
           let newTotal = 0;
+          let totalDestination = 0;
+          let totalRateDestination = responseData.pricingDetails.totalRatePerType.totalRateDestination;
+          let index = responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont);
+          let totalRateDestinationSelected = totalRateDestination[index];
 
-          newTotal =
-            totalPerCont.total -
-            responseData.pricingDetails.totalRatePerType.totalRateDestination[
-              responseData.pricingDetails.totalRatePerContainer.indexOf(
-                totalPerCont
-              )
-            ].total;
+          //En caso exista un totalCommon debe usarse para evitar diferencias entre monedas diferentes y resultados negativos
+          if(totalRateDestinationSelected.totalCommon) {
+            totalDestination = totalRateDestinationSelected.totalCommon;
+          } else {
+            totalDestination = totalRateDestinationSelected.total;
+          }
 
+          newTotal = totalPerCont.total - totalDestination;
+    
           newTotal = newTotal.toFixed(2);
           responseData.pricingDetails.totalRatePerContainer[
             responseData.pricingDetails.totalRatePerContainer.indexOf(
@@ -4786,7 +4789,6 @@ export default {
         responseData.pricingDetails.totalRatePerType.totalRateDestination = null;
       }
     },
-
     setApiContainers() {
       let component = this;
       let finalContainers = [];
