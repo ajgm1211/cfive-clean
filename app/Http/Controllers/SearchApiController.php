@@ -288,7 +288,7 @@ class SearchApiController extends Controller
             $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids, $company_user);
 
             //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
-            $this->setChargesPerContainer($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
+            $this->calculateFclCharges($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
 
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
             $charges = $this->joinCharges($charges, $search_ids);
@@ -334,7 +334,7 @@ class SearchApiController extends Controller
 
             $rate->setAttribute('inlands', $inland);
 
-            $this->stringifyRateAmounts($rate);
+            $this->stringifyFclRateAmounts($rate);
 
             $this->setDownloadParameters($rate);
 
