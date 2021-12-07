@@ -16,6 +16,9 @@ class RemarkCondition extends Model
         'mode',
         'company_user_id',
         'language_id',
+        'level',
+        'apply_to'
+
     ];
 
     public function user()

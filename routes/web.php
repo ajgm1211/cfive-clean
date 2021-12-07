@@ -59,6 +59,7 @@ Route::middleware(['auth'])->prefix('users')->group(function () {
     Route::resource('users', 'UsersController');
     Route::get('home', 'UsersController@datahtml')->name('users.home');
     Route::get('info', 'UsersController@show')->name('user.info');
+    Route::get('data', 'UsersController@retrieve');
     Route::post('update/{id}', 'UsersController@UpdateUser')->name('user.update');
     Route::get('add', 'UsersController@add')->name('users.add');
     Route::get('msg/{user_id}', 'UsersController@destroymsg')->name('users.msg');
@@ -485,6 +486,12 @@ Route::middleware(['auth'])->prefix('prices')->group(function () {
     Route::get('add', 'PriceController@add')->name('prices.add');
     Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
     Route::get('destroy/{price_id}', 'PriceController@destroy')->name('prices.destroy');
+
+    // V2
+    Route::view('/v2', 'pricesV2.index');
+    //CAMBIAR PARA PRICELEVELS
+    Route::view('/rates', 'pricesV2.index');
+    //Route::view('/rates/{id}', 'pricesV2.index');
 });
 Route::resource('prices', 'PriceController')->middleware('auth');
 
@@ -565,7 +572,10 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::post('send', 'PdfV2Controller@send_pdf_quote')->name('quotes-v2.send_pdf');
     Route::post('send/lcl', 'PdfV2Controller@send_pdf_quote_lcl')->name('quotes-v2.send_pdf_lcl');
     Route::post('send/air', 'PdfV2Controller@send_pdf_quote_air')->name('quotes-v2.send_pdf_air');
-    Route::get('search', 'QuoteV2Controller@search')->name('quotes-v2.search');
+    Route::get('search', function () {
+       return redirect()->route('searchV2.index');
+
+    })->name('quotes-v2.search');
     Route::post('processSearch', 'QuoteV2Controller@processSearch')->name('quotes-v2.processSearch');
     Route::post('/store/{type}', 'QuoteV2Controller@store')->name('quotes-v2.store');
     Route::post('/storeLCL/{type}', 'QuoteV2Controller@storeLCL')->name('quotes-v2.storeLCL');
@@ -1046,6 +1056,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/search/downloadContract', 'SearchApiController@downloadContractFile');
     Route::get('/api/search/downloadMContract/{contract}', 'SearchApiController@downloadMultipleContractFile')->name('contract.multiple');
 
+    /**New Search LCL */
+    Route::get('/api/search_lcl/list', 'SearchApiLclController@list')->name('searchlclV2.list');
+    Route::post('/api/search_lcl/store', 'SearchApiLclController@store');
+    Route::post('/api/search_lcl/process', 'SearchApiLclController@processSearch');
+    Route::post('/api/search_lcl/downloadContract', 'SearchApiController@downloadContractFile');
+
     /** Quotes V2 new routes **/
     Route::get('/api/quotes', 'QuotationController@index')->name('quote.index');
     Route::get('/api/quotes/{quote}', 'QuotationController@retrieve')->middleware('check_company:quote');
@@ -1110,7 +1126,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/port/{port_id}/automatic_inlands_lcl/search', 'AutomaticInlandLclController@searchInlands');
     Route::post('api/quotes/{quote}/automatic_inlands_lcl/harbors', 'AutomaticInlandLclController@harbors');
     Route::post('api/quotes/{quote}/automatic_inland_lcl/{combo}/delete_full', 'AutomaticInlandLclController@deleteFull');
-    Route::post('/api/quotes/{quote}/automatic_inland_lcl/{port_id}/update_pdf_options', 'AutomaticInlandController@updatePdfOptions');
+    Route::post('/api/quotes/{quote}/automatic_inland_lcl/{port_id}/update_pdf_options', 'AutomaticInlandLclController@updatePdfOptions');
     Route::get('/api/quotes/automatic_inlands/{port_id}/get_harbor_address', 'AutomaticInlandController@getHarborAddresses');
 
     /** Local charges routes */
@@ -1302,7 +1318,7 @@ Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function (
     Route::post('{inland}/km/{km}/update', 'InlandKmController@update')->middleware('check_company:inland');
     Route::get('{inland}/km/retrieve', 'InlandKmController@retrieve')->middleware('check_company:inland');
     /* End API Inland Km EndPoints **/
-    
+
     /* API Inland location EndPoints **/
     Route::get('{inland}/location', 'inlandPerLocationController@list');
     Route::post('{inland}/location/store', 'inlandPerLocationController@store');
@@ -1381,9 +1397,6 @@ Route::group(['prefix' => 'api/v2/providers', 'middleware' => ['auth']], functio
     /** providers **/
 });
 
-
-
-
 /*****************************************************************************************
  **                                   END API ENDPOINTS                                   **
  *****************************************************************************************/
@@ -1416,4 +1429,16 @@ Route::resource('provinces', 'ProvinceController')->middleware('auth');
 Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
     Route::get('intercom', 'TestController@createIntercom')->name('test.intercom');
     Route::get('contable', 'TestController@contable')->name('teste.intercom')->middleware('check_company:quote');;
+});
+
+
+//NEW PRICE LEVELS VIEWS ROUTES
+/**Route::group(['prefix' => 'pricelevels', 'middleware' => ['auth']], function () {
+    Route::view('/', 'pricesV2.index')->name('pricelevels.index');
+    Route::view('/edit/{price_level}', 'pricesV2.index');
+});**/
+
+Route::middleware(['auth', 'role:administrator'])->prefix('api-credentials')->group(function () {
+    Route::view('/', 'integrations.api-credentials.index')->name('apicredentials.index');
+    Route::view('company-user/{companyUser}', 'integrations.api-credentials.index');
 });

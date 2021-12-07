@@ -30,6 +30,7 @@ class QuotationApiController extends Controller
     public function list(Request $request)
     {
         $type = $request->type;
+        $sort = $request->sort ?? "asc";
         $status = $request->status;
         $integration = $request->integration;
         $costs = $request->costs;
@@ -41,7 +42,7 @@ class QuotationApiController extends Controller
 
         $company_user_id = Auth::user()->company_user_id;
 
-        $quotes = QuoteV2::ConditionalWhen($type, $status, $integration)->FilterByType()->AuthUserCompany($company_user_id)->paginate($paginate);
+        $quotes = QuoteV2::ConditionalWhen($type, $status, $integration)->FilterByType()->AuthUserCompany($company_user_id)->orderBy("id", $sort)->paginate($paginate);
 
         //Update Integration Quote Status
         if ($integration) {

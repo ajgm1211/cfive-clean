@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\AutomaticRate;
 use App\QuoteV2;
 use App\Charge;
+use App\Surcharge;
 use App\ChargeLclAir;
+use App\CalculationTypeLcl;
 use App\AutomaticInlandTotal;
 use App\AutomaticRateTotal;
 use App\Http\Resources\AutomaticRateResource;
@@ -43,19 +45,25 @@ class AutomaticRateController extends Controller
             'currency_id' => $currency->id,
             'carrier_id' => $data['carrier'],
         ]);
+
+        $ocean_surcharge = Surcharge::where([['name', 'Ocean Freight'],['company_user_id',null]])->first();
         
         if($quote->type == 'FCL'){
             $freight = Charge::create([
                 'automatic_rate_id' => $rate->id,
                 'type_id' => '3',
+                'surcharge_id' => $ocean_surcharge->id,
                 'calculation_type_id' => '5',
                 'currency_id' => $rate->currency_id,
             ]);
         }else if($quote->type == 'LCL'){
+            $calculationtype_lcl = CalculationTypeLcl::where('name','W/M')->first();
+
             $freight = ChargeLclAir::create([
                 'automatic_rate_id' => $rate->id,
                 'type_id' => '3',
-                'calculation_type_id' => '4',
+                'calculation_type_id' => $calculationtype_lcl->id,
+                'surcharge_id' => $ocean_surcharge->id,
                 'units' => 1.00,
                 'price_per_unit' => 1.00,
                 'minimum' => 1.00,
@@ -178,6 +186,7 @@ class AutomaticRateController extends Controller
     public function retrieveTotals(QuoteV2 $quote, AutomaticRate $autorate)
     {
         $totals = $autorate->totals()->first();
+        $totals->totalize($autorate->currency_id);
 
         return new AutomaticRateTotalResource($totals);
     }

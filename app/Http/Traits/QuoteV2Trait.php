@@ -6,6 +6,7 @@ use App\AutomaticRate;
 use App\Charge;
 use App\ChargeLclAir;
 use App\Container;
+use App\Carrier;
 use App\Currency;
 use App\Harbor;
 use App\Inland;
@@ -1738,7 +1739,45 @@ trait QuoteV2Trait
         return $amounts;
     }
 
-    public function formatChargeForQuote(Array $charge)
+    public function formatLclChargeForQuote(Array $charge)
+    {
+        $formattedMarkups = [];
+        $formattedTotal = [];
+
+        if(isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency'){
+            if(isset($charge['total_markups'])){
+                $markup = $charge['total_markups_client_currency'];
+                if($charge['typedestiny_id'] == 3){
+                    $total = $charge['total_client_currency'];
+                }else{
+                    $total = $charge['total_with_markups_client_currency'];
+                }
+            }else{
+                $markup = 0;
+                $total = $charge['total_client_currency'];
+            }
+        }else{
+            if(isset($charge['total_markups'])){
+                $markup = $charge['total_markups'];
+
+                if($charge['typedestiny_id'] == 3){
+                    $total = $charge['total'];
+                }else{
+                    $total = $charge['total_with_markups'];
+                }
+            }else{
+                $markup = 0;
+                $total = $charge['total'];
+            }
+        }
+
+        $charge['markup'] = $markup;
+        $charge['total'] = $total;
+
+        return $charge;
+    }
+
+    public function formatFclChargeForQuote(Array $charge)
     {
         $formattedAmount = [];
         $formattedMarkups = [];
@@ -1843,6 +1882,9 @@ trait QuoteV2Trait
         $user = \Auth::user('web');
         $company_user = $user->worksAt();
         $company_user_id = $company_user->id;
+        $carriers = Carrier::get()->map(function ($carrier) {
+            return $carrier->only(['id', 'options']);
+        });
 
         $currency = Currency::where('alphacode',$result['pricingDetails']['surcharges']['freightSurcharges'][0]['containers'][0]['currencyCode'])->first();
         $result['currency_id'] = $currency->id;
@@ -1853,16 +1895,12 @@ trait QuoteV2Trait
         $result['origin_port'] = $origin_port->id;
         $result['destiny_port'] = $destination_port->id;
 
-        if($result['companyCode'] == 'cmacgm'){
-            $result['carrier_id'] = 3;
-        }else if($result['companyCode'] == 'maersk'){
-            $result['carrier_id'] = 12;
-        }else if($result['companyCode'] == 'sealand'){
-            $result['carrier_id'] = 24;
-        }else if($result['companyCode'] == 'evergreen'){
-            $result['carrier_id'] = 6;
-        }else if($result['companyCode'] == 'hapag-lloyd'){
-            $result['carrier_id'] = 9;
+        foreach($carriers as $carrier){
+            $carrier_options = json_decode($carrier['options'], true);
+            
+            if($carrier_options['api_code'] == $result['companyCode']){
+                $result['carrier_id'] = $carrier['id'];
+            }
         }
 
         foreach ($result['pricingDetails']['surcharges'] as $key => $charge_direction) {
@@ -1873,12 +1911,13 @@ trait QuoteV2Trait
 
                 $surcharge = Surcharge::where('name',$charge['chargeCode'])->first();
 
-                if($charge['chargeCode'] != "FRT00" && $charge['chargeCode'] != "bas"){
+                if($charge['chargeCode'] != "FRT00" && $charge['chargeCode'] != "bas" && $charge['chargeCode'] != "SEA"){
                     
                     if($surcharge == null){
                         $newSurcharge = Surcharge::create([
                             'name' => $charge['chargeCode'],
-                            'description' => 'from API'
+                            'description' => 'from API',
+                            'internal_options' => json_encode(['is_api' => true]),
                         ]);
 
                         $charge['surcharge_id'] = $newSurcharge->id;
@@ -1886,7 +1925,9 @@ trait QuoteV2Trait
                         $charge['surcharge_id'] = $surcharge->id;
                     }
                 }else{
-                    $charge['surcharge_id'] = null;
+                    $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
+
+                    $charge['surcharge_id'] = $ocean_surcharge->id;
                 }
 
                 if($key == "originSurcharges"){
@@ -1897,7 +1938,7 @@ trait QuoteV2Trait
                     $charge['type_id'] = 3;
                 }
 
-                if($charge['calculationType'] == 'Per Container' || $charge['calculationType'] == null ){
+                if($charge['calculationType'] == 'Per Container' || $charge['calculationType'] == null || $charge['calculationType'] == 'PER CONTAINER' ){
                     if($containerGroup['id'] == 1){
                         $charge['calculationtype_id'] = 5;
                     }elseif($containerGroup['id'] == 2){
@@ -1907,7 +1948,7 @@ trait QuoteV2Trait
                     }elseif($containerGroup['id'] == 4){
                         $charge['calculationtype_id'] = 21;
                     }
-                }elseif($charge['calculationType'] == 'Per Doc' || $charge['calculationType'] == 'Per Document' ){
+                }elseif($charge['calculationType'] == 'Per Doc' || $charge['calculationType'] == 'Per Document' || $charge['calculationType'] == 'PER DOC' ){
                     if($containerGroup['id'] == 1){
                         $charge['calculationtype_id'] = 9;
                     }elseif($containerGroup['id'] == 2){
@@ -1932,5 +1973,48 @@ trait QuoteV2Trait
         }
 
         return $result;
+    }
+    public function convertToCurrencyQuote(Currency $fromCurrency, Currency $toCurrency, Array $amounts,$quote)
+    {    
+       if (isset($quote['pdf_options']['exchangeRates'])) {
+            foreach($quote['pdf_options']['exchangeRates'] as $key=>$exchangeRate){
+                
+                if ($fromCurrency->alphacode==$exchangeRate['alphacode']) {
+                    $exchangeRatefrom=$quote['pdf_options']['exchangeRates'][$key];
+                }elseif($toCurrency['alphacode']==$exchangeRate['alphacode']){
+                    $exchangeRateTo=$quote['pdf_options']['exchangeRates'][$key];
+                }
+            }
+        } 
+        if (isset($exchangeRatefrom)) {
+            $fromCurrency=$exchangeRatefrom;
+            $inputConversion=$exchangeRatefrom['exchangeUSD'];
+        }
+        else {
+            $inputConversion=$fromCurrency->rates;
+        }
+        if (isset($exchangeRateTo)) {
+            $toCurrency=$exchangeRateTo;
+            $outputConversion=$exchangeRateTo['exchangeUSD'];
+        }else {
+            $outputConversion=$toCurrency->rates;
+        }
+
+        if ($fromCurrency['alphacode'] != $toCurrency['alphacode']) {
+            foreach ($amounts as $container => $price) {
+                $convertedPrice = $price / $inputConversion;
+                $amounts[$container] = isDecimal($convertedPrice,true);
+            }
+            if($toCurrency['alphacode']=='USD'){
+                return $amounts;
+            }else{
+                foreach ($amounts as $container => $price) {
+                    $convertedPrice = $price * $outputConversion;
+                    $amounts[$container] = isDecimal($convertedPrice,true);
+                }
+            }
+        }
+
+        return $amounts;
     }
 }

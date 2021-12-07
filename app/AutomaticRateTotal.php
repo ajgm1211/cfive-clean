@@ -78,9 +78,13 @@ class AutomaticRateTotal extends Model implements Auditable
 
             array_splice($equipArray, -1, 1);
 
-            $charges = $rate->charge()->where([['surcharge_id', '!=', null], ['type_id', 3]])->get();
+            $charges = $rate->charge()->where('type_id', 3)->whereHas('surcharge', function ($query) {
+                return $query->where('name', '!=', 'Ocean Freight');
+            })->get();
 
-            $oceanFreight = $rate->charge()->where('surcharge_id', null)->first();
+            $oceanFreight = $rate->charge()->whereHas('surcharge', function ($query) {
+                return $query->where([['name', 'Ocean Freight'],['company_user_id',null]]);
+            })->first();
 
             $this->update(['currency_id' => $newCurrencyId]);
 
@@ -99,7 +103,7 @@ class AutomaticRateTotal extends Model implements Auditable
                 foreach($amountObject as $key=>$value){
                     @$amountArray[$key] = $value;
                 }
-                $amountArray = $this->convertToCurrency($chargeCurrency,$currency,$amountArray);
+                $amountArray = $this->convertToCurrencyQuote($chargeCurrency,$currency,$amountArray,$quote);
                 foreach($amountArray as $key=>$value){
                     @$totals[$key] += isDecimal($value,true);
                 }
@@ -134,9 +138,13 @@ class AutomaticRateTotal extends Model implements Auditable
 
         } else if ($quote->type == 'LCL') {
 
-            $charges = $rate->charge_lcl_air()->where([['surcharge_id', '!=', null], ['type_id', 3]])->get();
+            $charges = $rate->charge_lcl_air()->where('type_id', 3)->whereHas('surcharge', function ($query) {
+                return $query->where('name', '!=', 'Ocean Freight');
+            })->get();
 
-            $oceanFreight = $rate->charge_lcl_air()->where('surcharge_id', null)->first();
+            $oceanFreight = $rate->charge_lcl_air()->whereHas('surcharge', function ($query) {
+                return $query->where([['name', 'Ocean Freight'],['company_user_id',null]]);
+            })->first();
 
             $this->update(['currency_id' => $newCurrencyId]);
 
@@ -155,20 +163,10 @@ class AutomaticRateTotal extends Model implements Auditable
                 $partials = [];
                 $partials['total'] = $charge->total;
                 $partials['per_unit'] = $charge->price_per_unit;
-                $partials = $this->convertToCurrency($chargeCurrency,$currency,$partials);
+                $partials = $this->convertToCurrencyQuote($chargeCurrency,$currency,$partials,$quote);
                 foreach($partials as $key=>$amount){
                     @$totals[$key] += $amount;
                 }
-                /**if($charge->markup){
-                    $chargeUnits = $charge->units;
-                    $partialMarkups = [];
-                    $partialMarkups['per_unit'] = $charge->markup;
-                    $partialMarkups['total'] = $partialMarkups['per_unit'] * $chargeUnits;
-                    $partialMarkups = $this->convertToCurrency($chargeCurrency,$currency,$partialMarkups);
-                    foreach($partialMarkups as $key=>$amount){
-                        @$markups[$key] += $amount;
-                    }
-                }**/
             }
 
             //adding ocean freight
@@ -179,13 +177,6 @@ class AutomaticRateTotal extends Model implements Auditable
             $totals['per_unit'] += $freightPerUnit;
             $totals['total'] = isDecimal($totals['total'], true);
             $totals['per_unit'] = isDecimal($totals['per_unit'], true);
-            /**if($oceanFreight->markup){
-                $freightMarkup = $oceanFreight->markup;
-                $markups['per_unit'] += isDecimal($freightMarkup,true);
-                $markups['total'] += isDecimal($markups['per_unit'] * $freightUnits,true);
-                $totals['total'] += $markups['total'];
-                $totals['per_unit'] += $markups['per_unit'];
-            }**/
 
             //adding markups
             if($this->markups){

@@ -48,11 +48,14 @@ trait MixPanelTrait
             case "search_fcl":
                 $this->trackSearchFclEvent($data, $user);
                 break;
-            case "create_quote_fcl":
+            case "create_quote":
                 $this->trackCreateQuoteEvent($data, $user);
                 break;
             case "Request_Status_fcl":
                 $this->trackStatusFclEvent($data, $user);
+                break;
+            case "Request_Review":
+                $this->trackReviewEvent($data, $user);
                 break;
             case "Request_Status_lcl":
                 $this->trackStatusLclEvent($data, $user);
@@ -74,6 +77,12 @@ trait MixPanelTrait
                 break;
             case "new_request_Lcl":
                 $this->trackNewRequestLclEvent($data, $user);
+                break;
+            case "new_request_carrier_lcl":
+                $this->trackNewRequestLclEvent($data, $user);
+                break;
+            case "search_lcl":
+                $this->trackSearchLclEvent($data, $user);
                 break;
         }
     }
@@ -162,7 +171,7 @@ trait MixPanelTrait
     }
 
     /**
-     * trackCreateQuoteFclEvent
+     * trackCreateQuoteEvent
      *
      * @param  mixed $data
      * @param  mixed $user
@@ -170,12 +179,14 @@ trait MixPanelTrait
      */
     public function trackCreateQuoteEvent($data, $user)
     {
-        $containers = $data->getContainersFromEquipment($data->equipment);
-
         $container_arr = [];
 
-        foreach ($containers as $container) {
-            array_push($container_arr, $container->code);
+        if($data->type == "FCL"){
+            $containers = $data->getContainersFromEquipment($data->equipment);
+        
+            foreach ($containers as $container) {
+                array_push($container_arr, $container->code);
+            }
         }
 
         $mixPanel = app('mixpanel');
@@ -326,7 +337,6 @@ trait MixPanelTrait
         }else{
             $event = 'Request FCL Status Updates';
         }
-
         $mixPanel->track(
             $event,
             array(
@@ -337,10 +347,62 @@ trait MixPanelTrait
                 'Valid_until'   => $date[1],
                 'Status'        => $data->status,
                 'Owner'         => $user->username_load,
-                'Created_at'    => $data->created_at,
+                'Created_at'    => $data->created_at->format('Y-m-d'),
+                'Type'          => $data->module,
                 'App'           => 'Cargofive'
             )
         );
+    }
+    
+    /**
+     * trackReviewEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
+    
+    public function trackReviewEvent($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+        $mixPanel->identify($user->id);
+        $date = explode("/", $data->validation);
+        $event = 'Request Review';
+        $parameters = array(
+                'Company'       => $data->companyuser->name,
+                'User'          => $user->fullname,
+                'Contract'      => $data->namecontract,
+                'Valid_from'    => $date[0],
+                'Valid_until'   => $date[1],
+                'Status'        => $data->status,
+                'Owner'         => $data->username_load,
+                'Created_at'    => $data->created_at->format('Y-m-d'),
+                'Average'       => $data->time_total,
+                'Type'          => $data->module,
+                'Created_at'    => $data->created_at->format('Y-m-d'),
+                'App'           => 'Cargofive'
+            );
+        $mixPanel->track($event,$parameters);
+        $parameters['Request_id'] = $data->id;
+        $parameters['App'] = ($data->manage_app == 'others') ? 'Cargofive':'Barracuda';
+        $this->trackRequestByAppEvent($parameters,$user);
+    }
+    
+    /**
+     * trackRequestByAppEvent
+     *
+     * @param  mixed $parameters
+     * @param  mixed $user
+     * @return void
+     */
+    
+    public function trackRequestByAppEvent($parameters,$user)
+    {
+        $mixPanel = app('mixpanel');
+        $mixPanel->identify($user->id);
+        $data = $parameters;
+        unset($data['Average']);
+        $mixPanel->track('Request By App',$data);
     }
 
     /**
@@ -373,7 +435,8 @@ trait MixPanelTrait
                 'Valid_from'    => $date[0],
                 'Valid_until'   => $date[1],
                 'Owner'         => $data->username_load,
-                'Created_at'    => $data->created_at,
+                'Created_at'    => $data->created_at->format('Y-m-d'),
+                'Type'          => 'LCL',
                 'App'           => 'Cargofive'
             )
         );
@@ -516,7 +579,8 @@ trait MixPanelTrait
                 'Contract_id' => $data->contract_id,
                 'Container_type' => $container->group_containers->name,
                 'User' => $user->fullname,
-                'Created_at' => $data->created_at,
+                'Created_at' => $data->created_at->format('Y-m-d'),
+                'Extension' => $data->file_ext,
                 'App' => 'Cargofive'
             )
         );
@@ -540,9 +604,10 @@ trait MixPanelTrait
             array(
                 'Type' => 'LCL',
                 'Company' => $user->companyUser->name,
-                'Contract_id' => $data->id,
+                'Contract_id' => $data->contract_id,
                 'User' => $user->fullname,
-                'Created_at' => $data->created_at,
+                'Created_at' => $data->created_at->format('Y-m-d'),
+                'Extension' => $data->file_ext,
                 'App' => 'Cargofive'
             )
         );
@@ -562,21 +627,61 @@ trait MixPanelTrait
         $mixPanel->identify($user->id);
 
         $carrier = Carrier::find($data->carrier);
-
         $container = json_decode($data->data);
-
+        $data_container = null;
+        if(!empty($container->group_containers)){
+            $data_container = $container->group_containers->name;
+        }
         $mixPanel->track(
             'New Request By Carrier',
             array(
                 'Type' => $data->type,
                 'Company' => $user->companyUser->name,
                 'Contract_id' => $data->contract_id,
-                'Container_type' => $container->group_containers->name,
+                'Container_type' => $data_container,
                 'Carrier' => $carrier->name,
                 'User' => $user->fullname,
-                'Created_at' => $data->created_at,
+                'Created_at' => $data->created_at->format('Y-m-d'),
                 'App' => 'Cargofive'
             )
         );
+    }
+
+    /**
+     * trackSearchLclEvent
+     *
+     * @param  mixed $data
+     * @param  mixed $user
+     * @return void
+     */
+    public function trackSearchLclEvent($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        foreach ($data['data']['originPorts'] as $orig) {
+            $origin[] = $orig['display_name'];
+        }
+        foreach ($data['data']['destinationPorts'] as $dest) {
+            $destiny[] = $dest['display_name'];
+        }
+        if (!empty($origin) &&  !empty($destiny)) {
+            $mixPanel->track(
+                'Rate Finder LCL',
+                array(
+                    'Type'           =>$data['data']['type'],
+                    'Company'        => $data['company_user']['name'],
+                    'Origin'         => $origin,
+                    'Destination'    => $destiny,
+                    'Client_company' => $data['data']['company']['business_name'] ?? null,
+                    'Client_contact' => ['data']['contact']['name'] ?? null,
+                    'Container_type' => $data['data']['cargoType']['name'],
+                    'User'           => $user->fullname,
+                )
+            );
+        } else {
+            \Log::error('The origin port or destination port is empty , the user is ' . $user->email);
+        }
     }
 }

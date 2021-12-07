@@ -71,7 +71,10 @@ function obtenerRouteKey($keyP)
 
 function isDecimal($monto, $quote = false, $pdf = false)
 {
-    $isDecimal = optional(Auth::user()->companyUser)->decimals;
+    $value = isset(Auth::user()->companyUser) ? optional(Auth::user()->companyUser)->decimals:null;
+    $isDecimal = $value;
+    //$user = User::find($quote->user_id ?? null);
+    //$isDecimal = $user->companyUser->decimals ?? null;
 
     if ($isDecimal != null && $isDecimal == 1) {
         if ($pdf) {
@@ -200,4 +203,36 @@ function quitar_caracteres($cadena)
     $newphrase = str_replace($patrón, $sustitución, $cadena);
 
     return $newphrase;
+}
+
+function ratesCurrencyQuote($id, $typeCurrency,$exchangeRates)
+{
+
+    $currency = Currency::where('id', '=', $id)->get();
+    $rates=null;
+
+    foreach($exchangeRates as $key=>$exchangeRate){
+        if ($currency[0]['alphacode']==$exchangeRate['alphacode']) {
+            $rates[]=$exchangeRates[$key];
+        }
+    }
+    if ($rates==null) {  
+       $rates=$currency;
+       foreach ($rates as $rate) {
+            if ($typeCurrency == 'USD') {
+                $rateC = $rate->rates;
+            } else {
+                $rateC = $rate->rates_eur;
+            }
+        }
+    }else{
+        foreach ($rates as $rate) {
+            if ($typeCurrency == 'USD') {
+                $rateC = $rate['exchangeUSD'];
+            } else {
+                $rateC = $rate['exchangeEUR'];
+            }
+        }
+    }
+    return $rateC;
 }

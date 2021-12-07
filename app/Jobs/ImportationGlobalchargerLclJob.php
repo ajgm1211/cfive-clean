@@ -582,6 +582,7 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                                             'name'              => $chargerValRead,
                                             'description'       => $chargerValRead,
                                             'company_user_id'   => $companyUserIdVal,
+                                            'internal_options' => json_encode(['is_api' => false]),
                                         ]);
                                         $surchargeVal = $surchargelist->id;
                                     }

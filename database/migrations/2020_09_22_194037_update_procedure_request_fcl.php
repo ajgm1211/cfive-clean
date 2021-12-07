@@ -1,21 +1,4 @@
 <?php
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> efeaa7f461b6a16d7ffdff9ef2fe6b4d80ad16d7
-/*
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-=======
-
-<<<<<<< HEAD
->>>>>>> 635a6bb04b09cf0ae26bc51143db2ae5d465fff3
->>>>>>> cf376bd2d763f631506156e2aab3912b4c0c8c39
-=======
->>>>>>> ae3db67bff763b585167d51297f9d0414cfd7111
->>>>>>> efeaa7f461b6a16d7ffdff9ef2fe6b4d80ad16d7
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

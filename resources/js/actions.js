@@ -689,11 +689,9 @@ export default {
         },
     },
     excel: {
-
         create(data, route) {
             return api.call('post', `/contracts/export`, data);
         }
-
     },
     search: {
         list(data) {
@@ -713,6 +711,20 @@ export default {
         },
         downloadContract(data){
             return api.call('post',`/api/search/downloadContract`, data);
+        },
+    },
+    searchlcl: {
+        list(data) {
+            return api.call('get', `/api/search_lcl/list`, data);
+        },
+        process(id) {
+            return api.call('post', `/api/search_lcl/process`, id);
+        },
+        create(data) {
+            return api.call('post', `/api/search_lcl/store`, data);
+        },
+        downloadContract(data){
+            return api.call('post',`/api/search_lcl/downloadContract`, data);
         },
     },
     contracts_lcl: {
@@ -834,11 +846,4 @@ export default {
             return api.call('post', `/api/v2/contractslcl/${contract_id}/remarks`, data);
         },
     },
-    restrictions_lcl: {
-        create(data, route) {
-            let contract_id = route.params.id;
-            return api.call('post', `/api/v2/contractslcl/${contract_id}/restrictions`, data);
-        },
-    },
-
 };

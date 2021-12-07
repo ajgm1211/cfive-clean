@@ -15,7 +15,11 @@
     {!! Form::select('mode',['' => 'Select an option','port'=>'Port','country'=>'Country'],@$remark->mode,
     ['class' => 'm-select2-general form-control','id'=>'remark_mode','required']) !!}
 </div>
-
+<div class="form-group m-form__group">
+  {!! Form::label('Level', 'Level') !!}
+  {!! Form::select('level',['' => 'Select an option','web'=>'Web','api'=>'Api','both'=>'Both'],@$remark->level,
+  ['class' => 'm-select2-general form-control','id'=>'remark_level','required']) !!}
+</div>
 @if(isset($remark))
     <div class="form-group m-form__group {{$remark->mode == 'country' ? '':'hide'}}" id="remark_country">
         {!! Form::label('Countries', 'Countries') !!}
@@ -52,6 +56,12 @@
     {!! Form::label('Language', 'Language') !!}
     {!! Form::select('language_id',$languages,@$remark->language_id,
     ['class' => 'm-select2-general form-control','placeholder'=>'Select an option','required']) !!}
+</div>
+
+<div class="form-group m-form__group">
+  {!! Form::label('Apply to', 'Apply to') !!}
+  {!! Form::select('apply_to',['client'=>'Client','internal'=>'Internal','both'=>'Both'],@$remark->apply_to,
+  ['class' => 'm-select2-general form-control','placeholder'=>'Select an option','required']) !!}
 </div>
 
 <div class="form-group m-form__group">

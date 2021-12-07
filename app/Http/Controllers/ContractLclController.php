@@ -82,7 +82,7 @@ class ContractLclController extends Controller
             return $surcharge->only(['id', 'name']);
         });
 
-        $calculation_types = CalculationTypeLcl::get()->map(function ($calculation) {
+        $calculation_types = CalculationTypeLcl::where('options->type','!=','rate_only')->get()->map(function ($calculation) {
             return $calculation->only(['id', 'name']);
         });
 
@@ -191,6 +191,7 @@ class ContractLclController extends Controller
             'is_manual' => 1
         ]);
 
+        $contract->createCustomCode();
         $contract->ContractCarrierSync($data['carriers']);
 
         return new ContractLclResource($contract);
@@ -239,6 +240,18 @@ class ContractLclController extends Controller
      */
     public function destroy(ContractLcl $contract)
     {
+        $status_erased = 1;
+        if ($contract->status == 'incomplete') {
+
+            $requestContract = NewContractRequestLcl::where('contract_id', $contract->id);
+            if (empty($requestContract) == 0) {
+
+                $requestContract->update(['erased_contract' => $status_erased]);
+            }
+        }
+
+        $contract->contract_code = null;
+        $contract->update();
         $contract->delete();
 
         return response()->json(null, 204);

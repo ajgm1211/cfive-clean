@@ -60,6 +60,11 @@ class AutomaticInlandLclAir extends Model implements Auditable
 		return $this->belongsTo('App\AutomaticInlandTotal','inland_totals_id','id');
 	}
 
+    public function inland_local_group()
+    {
+        return $this->hasOne('App\InlandLocalChargeLclGroup', 'automatic_inland_lcl_id');
+    }
+
     public function scopeSelectFields($query)
     {
         return $query->select('id', 'provider_id', 'contract', 'distance', 'port_id', 'type', 'distance', 'units', 'price_per_unit as price', 'markup as profit', 'total', 'currency_id', 'validity_start as valid_from', 'validity_start as valid_until');
@@ -86,5 +91,33 @@ class AutomaticInlandLclAir extends Model implements Auditable
 				'automatic_inland_id' => $this->id,
 			]);
 		}
+    }
+
+	public function scopeQuotation($query, $quote)
+    {
+        return $query->where('quote_id', $quote);
+    }
+
+    public function scopePort($query, $port)
+    {
+        return $query->where('port_id', $port);
+    }
+
+    public function scopeType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
+
+    public function scopeConditionalPort($q, $port)
+    {
+        return $q->when($port, function ($query, $port) {
+            return $query->where('port_id', $port);
+        });
+    }
+
+    public function getInlandAddress()
+    {
+        $result = AutomaticInlandTotal::find($this->inland_totals_id);
+        return $result->inland_address->address ?? null;
     }
 }

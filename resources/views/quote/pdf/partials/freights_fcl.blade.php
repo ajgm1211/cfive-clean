@@ -1,19 +1,20 @@
-                    <!-- Section Title -->
                 @if(@$quote->pdf_options['selectPDF']['id'] ==2 || @$quote->pdf_options['selectPDF']['id'] ==3 )
                     <div>
-                                 
                         <p class="title" style="margin-bottom: 0px; color: {{ @$user->companyUser->colors_pdf }}"><b>{{__('pdf.freight_charges')}}</b></p>
-                        
-                       
-
                     </div>
                     
-                    <!-- End Section Title -->
+                    <!-- HEADER FREIGHTS GROUPED TABLE -->
                     <table border="0" cellspacing="1" cellpadding="1">
                         <thead class="title-quote text-left header-table">
                             <tr >
+                                <!--<th class="unit" style="{{isset($freight_charges->hasOriginAddress) && $freight_charges->hasOriginAddress == 1 ? '':'display:none;'}}">
+                                    <b>{{__('pdf.origin')}}</b>
+                                </th>-->
                                 <th class="unit"><b>{{__('pdf.pol')}}</b></th>
                                 <th class="unit"><b>{{__('pdf.pod')}}</b></th>
+                                <!--<th class="unit" style="{{isset($freight_charges->hasDestinationAddress) && $freight_charges->hasDestinationAddress == 1 ? '':'display:none;'}}">
+                                    <b>{{__('pdf.destination')}}</b>
+                                </th>-->
                                 <th class="unit" {{@$quote->pdf_options['showCarrier'] ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
                                 @foreach ($equipmentHides as $key=>$hide)
                                     @foreach ($containers as $c)
@@ -30,6 +31,7 @@
                         </thead>
                         <tbody>
                             @php
+                                //Setting dynamic variables
                                 foreach ($containers as $c){
                                     ${'freight_'.$c->code} = 'freight_'.$c->code;
                                     ${'inland_freight_'.$c->code} = 'inland_freight_'.$c->code;
@@ -39,6 +41,7 @@
                             @endphp
                             @foreach($freight_charges as $rate)
                                 <?php
+                                    //Working on rate values
                                     if(!is_array($rate->total)){
                                         $total = json_decode($rate->total);
                                     }else{
@@ -56,9 +59,16 @@
                                         }
                                     }
                                 ?>
+                                <!-- BODY GROUPED FREIGHTS -->
                                 <tr class="text-left color-table">
-                                    <td >@if($rate->origin_address=='' && $rate->origin_port_id!='') {{$rate->origin_port->name}}, {{$rate->origin_port->code}} @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}} @else  {{$rate->origin_address}} @endif</td>
-                                    <td >@if($rate->destination_address=='' && $rate->destination_port_id!='') {{$rate->destination_port->name}}, {{$rate->destination_port->code}} @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}@else {{$rate->destination_address}} @endif</td>
+                                    <!--<td style="{{isset($freight_charges->hasOriginAddress) && $freight_charges->hasOriginAddress == 1 ? '':'display:none;'}}">
+                                        {{$rate->origin_address ?? "--" }}
+                                    </td>-->
+                                    <td >{{$rate->origin_port->display_name}}</td>
+                                    <td >{{$rate->destination_port->display_name}}</td>
+                                    <!--<td style="{{isset($freight_charges->hasDestinationAddress) && $freight_charges->hasDestinationAddress == 1 ? '':'display:none;'}}">
+                                        {{$rate->destination_address ?? "--" }}
+                                    </td>-->
                                     <td {{@$quote->pdf_options['showCarrier']==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                                     @foreach ($equipmentHides as $key=>$hide)
                                         @foreach ($containers as $c)

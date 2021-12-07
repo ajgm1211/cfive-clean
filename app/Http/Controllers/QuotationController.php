@@ -11,6 +11,7 @@ use App\CargoKind;
 use App\CargoType;
 use App\Carrier;
 use App\Charge;
+use App\ChargeLclAir;
 use App\Company;
 use App\CompanyUser;
 use App\Contact;
@@ -223,12 +224,21 @@ class QuotationController extends Controller
 
         $search_data_ids = $this->getIdsFromArray($search_data);
 
-        $equipment = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
+        if($search_data_ids['type'] == 'FCL'){
+            $equipment = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
+        }else{
+            $equipment = "[]";
+        }
 
         $remarks = "";
 
         foreach ($rate_data as $rate) {
-            $remarks .= $rate['remarks'];
+            $remarks .= $rate['client_remarks'];
+        }
+        foreach ($result_data as $result) {
+            if(isset($result['remarks'])){
+                $remarks .= $result['remarks'];
+            }
         }
         
         $quote = QuoteV2::create([
@@ -251,7 +261,11 @@ class QuotationController extends Controller
             'status' => 'Draft',
             'terms_portuguese' => $search_data['terms'] ? $search_data['terms']['portuguese'] : null,
             'terms_and_conditions' => $search_data['terms'] ? $search_data['terms']['spanish'] : null,
-            'terms_english' => $search_data['terms'] ? $search_data['terms']['english'] : null
+            'terms_english' => $search_data['terms'] ? $search_data['terms']['english'] : null,
+            'total_quantity' => $search_data['quantity'],
+            'total_weight' => $search_data['weight'],
+            'total_volume' => $search_data['volume'],
+            'chargeable_weight' => $search_data['chargeableWeight'],
         ]);
 
         $quote = $quote->fresh();
@@ -280,41 +294,70 @@ class QuotationController extends Controller
                 'carrier_id' => $rate['carrier_id'],
             ]);
 
-            foreach ($rate['charges'] as $charge_direction) {
+            foreach ($rate['charges'] as $direction=>$charge_direction) {
+                $rate_markups[$direction] = 0;
                 foreach ($charge_direction as $charge) {
-
                     $currency_id = isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency' ? $rate['client_currency']['id'] : $charge['currency']['id'];
-                    $charge = $this->formatChargeForQuote($charge);
 
-                    $freight = Charge::create([
-                        'automatic_rate_id' => $newRate->id,
-                        'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : null,
-                        'type_id' => $charge['typedestiny_id'],
-                        'calculation_type_id' => $charge['calculationtype']['id'],
-                        'currency_id' => $currency_id,
-                        'amount' => json_encode($charge['amount']),
-                        'markups' => json_encode($charge['markups']),
-                        'total' => json_encode($charge['total']),
-                    ]);
+                    if($search_data_ids['type'] == 'FCL'){
+                        $charge = $this->formatFclChargeForQuote($charge);
+                        $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
+
+                        $freight = Charge::create([
+                            'automatic_rate_id' => $newRate->id,
+                            'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : $ocean_surcharge->id,
+                            'type_id' => $charge['typedestiny_id'],
+                            'calculation_type_id' => $charge['calculationtype']['id'],
+                            'currency_id' => $currency_id,
+                            'amount' => json_encode($charge['amount']),
+                            'markups' => json_encode($charge['markups']),
+                            'total' => json_encode($charge['total']),
+                        ]);
+                    }elseif($search_data_ids['type'] == 'LCL'){
+                        $charge = $this->formatLclChargeForQuote($charge);
+                        $rate_markups[$direction] += $charge['markup'];
+
+                        $freight = ChargeLclAir::create([
+                            'automatic_rate_id' => $newRate->id,
+                            'surcharge_id' => $charge['surcharge']['id'],
+                            'type_id' => $charge['typedestiny_id'],
+                            'calculation_type_id' => $charge['calculationtypelcl']['id'],
+                            'units' => ($charge['units']),
+                            'price_per_unit' => intval($charge['ammount']),
+                            'minimum' => intval($charge['minimum']),
+                            'currency_id' => $currency_id,
+                            'markup' => intval($charge['markup']),
+                            'total' => intval($charge['total']),
+                        ]);
+                    }
                 }
             }
 
+            if($search_data_ids['type'] == 'FCL'){
+                $markups = isset($rate['container_markups']) ? $this->formatMarkupsForQuote($rate['container_markups']) : null;
+            }else{
+                $markups = [ 
+                    'total' => 0,
+                    'per_unit' => $rate_markups['Freight'] / $rate['units'],
+                ];
+            }
+
             $rateTotals = AutomaticRateTotal::create([
-                "quote_id" => $quote->id,
+                'quote_id' => $quote->id,
                 'automatic_rate_id' => $newRate->id,
                 'origin_port_id' => $newRate->origin_port_id,
                 'destination_port_id' => $newRate->destination_port_id,
                 'carrier_id' => $newRate->carrier_id,
                 'currency_id' => $rate['currency_id'],
                 'totals' => null,
-                'markups' => isset($rate['container_markups']) ? $this->formatMarkupsForQuote($rate['container_markups']) : null,
+                'markups' => $markups,
             ]);
 
             $rateTotals->totalize($rate['currency_id']);
         }
-
+        
         foreach ($result_data as $result) {
-
+            
             $result = $this->formatApiResult($result, $search_data['selectedContainerGroup'], $search_data['containers']);
 
             if (isset($result['validityFrom'])) {
@@ -359,7 +402,7 @@ class QuotationController extends Controller
             }
 
             $rateTotals = AutomaticRateTotal::create([
-                "quote_id" => $quote->id,
+                'quote_id' => $quote->id,
                 'automatic_rate_id' => $newRate->id,
                 'origin_port_id' => $newRate->origin_port_id,
                 'destination_port_id' => $newRate->destination_port_id,
@@ -371,7 +414,8 @@ class QuotationController extends Controller
         }
 
         /** Tracking create quote event with Mix Panel*/
-        $this->trackEvents("create_quote_fcl", $quote);
+        $this->trackEvents("create_quote", $quote);
+        
 
         return new QuotationResource($quote);
     }
@@ -516,6 +560,12 @@ class QuotationController extends Controller
         }
 
         if ($request->input('pdf_options') != null) {
+
+            $request->validate([
+                'pdf_options.exchangeRates.*.exchangeEUR' => 'gt:0',
+                'pdf_options.exchangeRates.*.exchangeUSD' => 'gt:0',
+            ]);
+
             $quote->update(['pdf_options' => $request->input('pdf_options')]);
         }
 
@@ -539,27 +589,32 @@ class QuotationController extends Controller
     {
         $search_data = $request->input();
 
-        $date_range = $search_data['dateRange'];
-        $start_date = substr($date_range['startDate'], 0, 10);
-        $end_date = substr($date_range['endDate'], 0, 10);
+        if(isset($search_data['renew'])){
+            $quote->update(['search_options' => null]);
+        }else{
+            $date_range = $search_data['dateRange'];
+            $start_date = substr($date_range['startDate'], 0, 10);
+            $end_date = substr($date_range['endDate'], 0, 10);
+    
+            $contact = $search_data['contact'];
+            $company = $search_data['company'];
+    
+            $price_level = $search_data['pricelevel'];
+    
+            $origin_charges = $search_data['originCharges'];
+            $destination_charges = $search_data['destinationCharges'];
+            $show_rate_currency = $search_data['showRateCurrency'];
+    
+            $origin_ports = $search_data['originPorts'];
+            $destination_ports = $search_data['destinationPorts'];
+    
+            $search_options = compact(
+                'start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges', 
+                'origin_ports', 'destination_ports', 'show_rate_currency');
+    
+            $quote->update(['search_options' => $search_options, 'direction_id' => $search_data['direction']]);
+        }
 
-        $contact = $search_data['contact'];
-        $company = $search_data['company'];
-
-        $price_level = $search_data['pricelevel'];
-
-        $origin_charges = $search_data['originCharges'];
-        $destination_charges = $search_data['destinationCharges'];
-        $show_rate_currency = $search_data['showRateCurrency'];
-
-        $origin_ports = $search_data['originPorts'];
-        $destination_ports = $search_data['destinationPorts'];
-
-        $search_options = compact(
-            'start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges', 
-            'origin_ports', 'destination_ports', 'show_rate_currency');
-
-        $quote->update(['search_options' => $search_options, 'direction_id' => $search_data['direction']]);
     }
 
     public function destroy(QuoteV2 $quote)
@@ -658,11 +713,12 @@ class QuotationController extends Controller
                 foreach ($charge_direction as $charge) {
 
                     $currency_id = isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency' ? $rate['client_currency']['id'] : $charge['currency']['id'];
-                    $charge = $this->formatChargeForQuote($charge);
+                    $charge = $this->formatFclChargeForQuote($charge);
+                    $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
 
                     $freight = Charge::create([
                         'automatic_rate_id' => $newRate->id,
-                        'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : null,
+                        'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : $ocean_surcharge->id,
                         'type_id' => $charge['typedestiny_id'],
                         'calculation_type_id' => $charge['calculationtype']['id'],
                         'currency_id' => $currency_id,
@@ -849,6 +905,10 @@ class QuotationController extends Controller
         $inlandTotals = $quote->automatic_inland_totals()->get();
         $inlandAddress = $quote->automatic_inland_address()->get();
         $quote_rate_totals = $quote->automatic_rate_totals()->get();
+
+        if(isset($quote->company)){
+            $quote->update(['payment_conditions' => $quote->company->payment_conditions]);
+        }
 
         if (count($rates) != 0) {
             foreach ($rates as $rate) {
