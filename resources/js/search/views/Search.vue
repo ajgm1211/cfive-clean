@@ -2527,12 +2527,14 @@ export default {
     containers: function() {
       let component = this;
 
+      //Invocamos un computed method que ordena la propiedad containers
+      this.sortedContainers;
+
       component.containerText = [];
 
       component.containers.forEach(function(container) {
         component.containerText.push(container.code);
       });
-
       if (this.containers == []) {
         this.containerText = ["Select Containers"];
       }
@@ -2600,6 +2602,9 @@ export default {
       return this.carrierOptions.filter((c) =>
         c.text.toLowerCase().includes(this.carrierSearchQuery.toLowerCase())
       );
+    },
+    sortedContainers(){
+      return this.containers.sort((a,b) => a.id-b.id);
     }
   },
 };
