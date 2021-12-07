@@ -163,7 +163,7 @@
           <b-dropdown
             id="dropdown-containers"
             :disabled="searchRequest.requestData.requested == 1"
-            :text="sortedContainers"
+            :text="containerText.join(', ')"
             ref="dropdown"
             class="m-2"
           >
@@ -2527,12 +2527,14 @@ export default {
     containers: function() {
       let component = this;
 
+      //Invocamos un computed method que ordena la propiedad containers
+      this.sortedContainers;
+
       component.containerText = [];
 
       component.containers.forEach(function(container) {
         component.containerText.push(container.code);
       });
-
       if (this.containers == []) {
         this.containerText = ["Select Containers"];
       }
@@ -2601,16 +2603,8 @@ export default {
         c.text.toLowerCase().includes(this.carrierSearchQuery.toLowerCase())
       );
     },
-    sortedContainers() {
-      //Arreglo con todos los contenedores ordenados
-      let containersAll = this.datalists.containers.map(e => e.code);
-      
-      //Ordenamos los container checkeados
-      let results = containersAll.filter(e => {
-        return this.containerText.find(container => container === e );
-      });
-
-      return results.join(', ');
+    sortedContainers(){
+      return this.containers.sort((a,b) => a.id-b.id);
     }
   },
 };
