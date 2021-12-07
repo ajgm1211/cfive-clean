@@ -2310,6 +2310,17 @@ export default {
       this.searching = true;
       this.$emit("searchRequested", this.searchRequest);
 
+      if (this.placeInShowTo.length && this.placeInShowFrom.length) {
+        this.searchRequest.destinationPorts = this.placeInShowTo;
+        this.searchRequest.originPorts = this.placeInShowFrom;
+      }
+      if (this.searchData.destination_address.length) {
+        this.searchRequest.destinationPorts = this.searchData.destination_address;
+      }
+      if (this.searchData.origin_address.length) {
+        this.searchRequest.originPorts = this.searchData.origin_address;
+      }
+
       component.searchActions
         .process(this.searchRequest)
         .then((response) => {
