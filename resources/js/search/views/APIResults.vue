@@ -4737,15 +4737,22 @@ export default {
           totalPerCont
         ) {
           let newTotal = 0;
-          newTotal =
-            totalPerCont.total -
-            responseData.pricingDetails.totalRatePerType.totalRateOrigin[
-              responseData.pricingDetails.totalRatePerContainer.indexOf(
-                totalPerCont
-              )
-            ].total;
+          let totalOrigin = 0;
+          let totalRateOrigin = responseData.pricingDetails.totalRatePerType.totalRateOrigin;
+          let indexOrigin = responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)
+          let totalRateOriginSelected = totalRateOrigin[indexOrigin]
 
+          //En caso exista un totalCommon debe usarse para evitar diferencias entre monedas diferentes y resultados negativos
+          if(totalRateOriginSelected.totalCommon) {
+            totalOrigin = totalRateOriginSelected.totalCommon;
+          } else {
+            totalOrigin = totalRateOriginSelected.total;
+          }
+          
+          newTotal = totalPerCont.total - totalOrigin;
+          console.log(newTotal);
           newTotal = newTotal.toFixed(2);
+
           responseData.pricingDetails.totalRatePerContainer[
             responseData.pricingDetails.totalRatePerContainer.indexOf(
               totalPerCont
@@ -4766,8 +4773,8 @@ export default {
           let newTotal = 0;
           let totalDestination = 0;
           let totalRateDestination = responseData.pricingDetails.totalRatePerType.totalRateDestination;
-          let index = responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont);
-          let totalRateDestinationSelected = totalRateDestination[index];
+          let indexDestination = responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont);
+          let totalRateDestinationSelected = totalRateDestination[indexDestination];
 
           //En caso exista un totalCommon debe usarse para evitar diferencias entre monedas diferentes y resultados negativos
           if(totalRateDestinationSelected.totalCommon) {
