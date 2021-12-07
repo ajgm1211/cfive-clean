@@ -52,7 +52,7 @@
         <div
           class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
         >
-          <b>carrierr</b>
+          <b>carrier</b>
         </div>
         <div
           class="row col-12 "
