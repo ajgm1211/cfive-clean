@@ -413,9 +413,9 @@ class CompanyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StoreCompany $request)
-    {
+    {   
         $data = $this->validateData($request);
-    
+
         //Check if company exists by options field
         if ($request->ajax() && $request->options) {
             $data = json_decode($request->options, true);
@@ -952,7 +952,7 @@ class CompanyController extends Controller
         return \Response::json($formatted_companies);
     }
     public function validateData($request)
-    {
+    {   
         $vdata=[
             'business_name' => 'required',
             'logo' => 'max:1000',
@@ -980,6 +980,7 @@ class CompanyController extends Controller
             }
         }
         $validator = \Validator::make($request->all(), $vdata);
-        return $validator->validate();
+        
+        return $validator->validated();
     }
 }
