@@ -1511,6 +1511,7 @@ export default {
       additionalVisible: false,
       searching: false,
       actions: actions,
+      searchActions: {},
       datalists: {},
       IDRequest: {},
       searchRequest: {
