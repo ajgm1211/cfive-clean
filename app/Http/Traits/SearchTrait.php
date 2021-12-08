@@ -1350,7 +1350,7 @@ trait SearchTrait
     }
 
     //appending charges to corresponding Rate
-    public function addChargesToRate($rate, $target, $search_data)
+    public function addChargesToRate($rate, $target, $search_data, $inlands)
     {
         $client_currency = $search_data['client_currency'];
         $rate_charges = [];
@@ -1408,6 +1408,13 @@ trait SearchTrait
             if (count($rate_charges[$direction]) == 0) {
                 unset($rate_charges[$direction]);
             };
+        }
+
+        foreach($inlands as $direction=>$inland ){
+            if ($inland!=null) {
+                $rate_charges[$direction] = [];
+                $rate_charges[$direction][] =$inland;
+            }
         }
         $rate->setAttribute('charges', $rate_charges);
     }
@@ -1739,7 +1746,7 @@ trait SearchTrait
 
         foreach($search_array as $locations){
             if ($locations['id']!=null && $port==$locations['harbor'] && $locations['id']==$address  ) {
-                $inlands= Inland::where('validity', '>=', $start_date)->orwhere('expire', '>=', $end_date)
+                $inlands= Inland::where('validity', '>=', $start_date)->orwhere('expire', '<=', $end_date)
                 ->where('company_user_id',$company_user)->where('gp_container_id',$container_type)
                 ->where('direction_id',$direction)->where('carrier_id',$carrier)->with('inlandkms','inlandLocation','inlandRange')
                 ->whereHas('inlandports', function ($a) use ($port){
