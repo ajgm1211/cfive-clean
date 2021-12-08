@@ -353,12 +353,12 @@
                 v-for="(chargeArray, chargeType) in rate.charges"
                 :key="chargeType"
               >
-                <h5 v-show="(searchData.originCharges && chargeType=='Origin') || (searchData.destinationCharges && chargeType=='Destination') || chargeType=='Freight'">
+                <h5  v-show="(searchData.originCharges && chargeType=='Origin') || (searchData.destinationCharges && chargeType=='Destination') || chargeType=='Freight' || chargeType=='destiny_inland'">
                   <b>{{ chargeType == "destiny_inland" ? "Inland" : chargeType }}</b>
                 </h5>
 
                 <b-table-simple 
-                  v-show="(searchData.originCharges && chargeType=='Origin') || (searchData.destinationCharges && chargeType=='Destination') || chargeType=='Freight'"
+                  v-show="(searchData.originCharges && chargeType=='Origin') || (searchData.destinationCharges && chargeType=='Destination') || chargeType=='Freight' || chargeType=='destiny_inland'"
                   hover small responsive class="sc-table"
                 >
                   <b-thead>

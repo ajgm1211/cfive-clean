@@ -753,13 +753,15 @@
 
       <div v-if="!searching" class="col-lg-8">
         <div
-          v-if="((searchRequest.type == 'FCL' &&
+          v-if="
+            ((searchRequest.type == 'FCL' &&
               Array.isArray(foundRates) &&
               foundRates.length == 0) ||
               (searchRequest.type == 'LCL' &&
                 Array.isArray(foundRatesLcl) &&
                 foundRatesLcl.length == 0)) &&
-              !foundApiRates"
+              !foundApiRates
+          "
           class="alert alert-danger"
           role="alert"
         >
@@ -1706,7 +1708,9 @@ export default {
         this.placeInShowFrom.forEach((element) => {
           placeType.push(element.type);
 
-          this.searchRequest.originPorts.push(element);
+          if (!this.searchRequest.originPorts.includes(element)) {
+            this.searchRequest.originPorts.push(element);
+          }
         });
 
         this.fromPort = placeType
@@ -1720,6 +1724,8 @@ export default {
         placeType = [];
         this.showTagPlaceFrom = false;
       }
+
+      this.openOriginPlacesFrom = false;
     },
     placeCheckedTo(data) {
       let placeType = [];
@@ -1745,6 +1751,7 @@ export default {
         placeType = [];
         this.showTagPlaceTo = false;
       }
+      this.openOriginPlacesTo = false;
     },
     deletePlaceFrom(e) {
       this.placeInShowFrom.splice(e, 1);
@@ -1897,6 +1904,7 @@ export default {
     },
 
     getQuery() {
+      console.log('get query', this.searchRequest)
       this.searchRequest.requestData = this.$route.query;
 
       if (Object.keys(this.searchRequest.requestData).length != 0) {
@@ -1914,13 +1922,23 @@ export default {
     getSearchData(id) {
       let component = this;
 
-      component.actions.search
+      this.actions.search
         .retrieve(id)
         .then((response) => {
-          component.searchData = response.data.data;
-          component.setSearchDisplay(
-            component.searchRequest.requestData.requested
-          );
+          this.searchData = response.data.data;
+          this.setSearchDisplay(this.searchRequest.requestData.requested);
+          
+          if (this.searchData.destination_address.length) {
+            this.placeInShowTo = this.searchData.destination_address;
+          } else {
+            this.placeInShowTo = this.searchData.destination_ports;
+          }
+
+          if (this.searchData.origin_address.length) {
+            this.placeInShowFrom = this.searchData.origin_address;
+          } else {
+            this.placeInShowFrom = this.searchData.origin_ports;
+          }
         })
         .catch((error) => {
           if (error.status === 422) {
@@ -1930,12 +1948,15 @@ export default {
     },
 
     getQuoteToDuplicate(id) {
+
       actions.quotes
         .retrieve(id)
         .then((response) => {
           this.quoteData = response.data.data;
           this.$emit("quoteLoaded", this.quoteData);
           this.setSearchDisplay(this.searchRequest.requestData.requested);
+
+          console.log('get quote to duplicate ', this.searchRequest.requestData.requested)
         })
         .catch((error) => {
           if (error.status === 422) {
@@ -1947,6 +1968,9 @@ export default {
     //set UI elements
     setSearchDisplay(requestType) {
       let component = this;
+
+      console.log('setSearchDisplay', requestType)
+      console.log('setSearchDisplay', this.searchRequest)
 
       component.originPortOptions = component.datalists.harbors;
       component.destinationPortOptions = component.datalists.harbors;
@@ -2014,6 +2038,7 @@ export default {
     },
 
     fillInitialFields(requestType) {
+      console.log('fillInitialFields', requestType)
       let component = this;
       let origPortNames = [];
       let destPortNames = [];
@@ -2023,6 +2048,7 @@ export default {
         this.searchRequest.carriersApi = this.datalists.carriers_api;
         this.deliveryType = this.deliveryTypeOptions[0];
       } else if (requestType == 0) {
+        console.log('fillInitialFields REQUEST',  component.searchRequest)
         this.searchRequest.type = this.searchData.type;
         this.$emit("searchTypeChanged", "code");
         this.searchRequest.direction = this.searchData.direction_id;
@@ -2030,6 +2056,7 @@ export default {
         this.searchRequest.deliveryType = this.searchData.delivery_type;
         this.searchRequest.originPorts = [];
         component.searchData.origin_ports.forEach(function(origPort) {
+          console.log('fillInitialFields origPort ?', origPort)
           if (!origPortNames.includes(origPort.name)) {
             origPortNames.push(origPort.name);
             component.searchRequest.originPorts.push(origPort);
@@ -2151,10 +2178,16 @@ export default {
 
       this.setPriceLevels();
       this.loaded = true;
+
+      console.log('fillInitialFields origin ports', this.searchRequest.originPorts)
+      console.log('fillInitialFields destination ports', this.searchRequest.destinationPorts)
+
     },
 
     //Send Search Request to Controller
     searchButtonPressed() {
+      console.log('search button presed')
+      console.log('search button presed', this.searchRequest)
       let component = this;
 
       this.setSearchParameters();
@@ -2186,6 +2219,7 @@ export default {
         this.searchRequest.requestData.requested == undefined ||
         this.searchRequest.requestData.requested == 0
       ) {
+        console.log('this.searchRequesT', this.searchRequest)
         component.searchActions
           .create(this.searchRequest)
           .then((response) => {
@@ -2197,8 +2231,11 @@ export default {
               },
             });
             this.getQuery();
+
+
           })
           .catch((error) => {
+            console.log('error', error)
             this.errorsExist = true;
             this.searching = false;
             if (error.status === 422) {
@@ -2221,10 +2258,13 @@ export default {
           });
       } else if (this.searchRequest.requestData.requested == 1) {
         this.getQuery();
+
+        console.log('this.searchRequest.requestData.requested IF (this.searchRequest.requestData.requested == 1)', this.searchRequest.requestData.requested) 
       }
     },
 
     setSearchParameters() {
+      console.log('setSearchParameters')
       this.searching = true;
       if (this.searchRequest.type == "FCL") {
         this.searchRequest.selectedContainerGroup = this.selectedContainerGroup;
@@ -2306,7 +2346,7 @@ export default {
 
     requestSearch() {
       let component = this;
-      this.$emit("clearResults",'searchStarted');
+      this.$emit("clearResults", "searchStarted");
       this.searching = true;
       this.$emit("searchRequested", this.searchRequest);
 
@@ -2418,7 +2458,7 @@ export default {
 
     updateQuoteSearchOptions() {
       let component = this;
-      
+
       if (this.searchRequest.requestData.requested == 1) {
         component.actions.quotes
           .updateSearch(
@@ -2535,11 +2575,9 @@ export default {
     setChargeableWeight() {
       if (this.searchRequest.lclTypeIndex == 0) {
         if (this.lclShipmentVolume > this.lclShipmentWeight / 1000) {
-          this.lclShipmentChargeableWeight =
-            this.lclShipmentVolume ;
+          this.lclShipmentChargeableWeight = this.lclShipmentVolume;
         } else {
-          this.lclShipmentChargeableWeight =
-            (this.lclShipmentWeight / 1000) ;
+          this.lclShipmentChargeableWeight = this.lclShipmentWeight / 1000;
         }
       } else if (this.searchRequest.lclTypeIndex == 1) {
         let component = this;
@@ -2552,17 +2590,16 @@ export default {
           component.lclPackagingQuantity += parseFloat(pack.quantity);
           component.lclPackagingVolume +=
             (parseFloat(pack.depth) *
-            parseFloat(pack.height) *
-            parseFloat(pack.width)) / 1000000;
+              parseFloat(pack.height) *
+              parseFloat(pack.width)) /
+            1000000;
           component.lclPackagingWeight += parseFloat(pack.weight);
         });
 
         if (this.lclPackagingVolume > this.lclPackagingWeight / 1000) {
-          this.lclPackagingChargeableWeight =
-            this.lclPackagingVolume ;
+          this.lclPackagingChargeableWeight = this.lclPackagingVolume;
         } else {
-          this.lclPackagingChargeableWeight =
-            (this.lclPackagingWeight / 1000);
+          this.lclPackagingChargeableWeight = this.lclPackagingWeight / 1000;
         }
       }
     },
@@ -2682,7 +2719,7 @@ export default {
       return this.carrierOptions.filter((c) =>
         c.text.toLowerCase().includes(this.carrierSearchQuery.toLowerCase())
       );
-    }
+    },
   },
 };
 </script>
