@@ -137,7 +137,10 @@
         </td>
         <td>{{ item.currency != null ? item.currency.alphacode : '-' }}</td>
         <td style="position: relative;">
-          <OptionsButton @option="action($event, item)" style="right:-84px;" />
+          <OptionsButton 
+            @option="action($event, item, 'modal')" 
+            style="right:-84px;" 
+          />
         </td>
       </tr>
     </tbody>
@@ -285,12 +288,16 @@ export default {
         this.selectedRate = [];
       }
     },
-    action(option, id) {
+    action(option, id, target = "view") {
       if (option == "edit") {
-        this.$router.push({
-          name: "price-rates",
-          params: { id: id },
-        });
+        if(target == "view"){
+          this.$router.push({
+            name: "price-rates",
+            params: { id: id },
+          });
+        }else if(target == "modal"){
+          this.$emit('editModal', id);
+        }
       }
       if (option == "duplicate") {
         if (this.dynamic === true) {
