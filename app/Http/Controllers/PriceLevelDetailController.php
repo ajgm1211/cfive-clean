@@ -68,7 +68,7 @@ class PriceLevelDetailController extends Controller
     {
         $data = $request->validate([
             'amount' => 'required',
-            'currency' => 'unrequired',
+            'currency' => 'required',
             'direction' => 'required',
             'price_level_apply' => 'required',
         ]);
@@ -76,7 +76,10 @@ class PriceLevelDetailController extends Controller
         $unique = $this->validateUniquePriceLevelDetail($data, $price_level_detail->price_level);
 
         if(!$unique){
-            return response()->json(['message' => 'Price level detail is not unique']);
+            return response()->json([
+                'success' => false,
+                'message' => 'Price level detail is not unique'
+            ], 403);
         }else{
             $price_level_detail->update([
                 'amount' => $data['amount'],

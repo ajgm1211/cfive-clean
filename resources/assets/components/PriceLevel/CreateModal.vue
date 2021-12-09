@@ -2,39 +2,38 @@
   <section>
     <div class="layer" @click="$emit('cancel')"></div>
     <div v-if="dataLoaded" class="create-modal">
-      <div class="modal-head"><h3>{{ action + ' ' + title }}</h3></div>
+      <div class="modal-head">
+        <h3>{{ action + " " + title }}</h3>
+      </div>
       <form action="" class="create-form" autocomplete="off">
-        <div
-          v-for="field, fieldKey in fields"
-          :key="fieldKey"
-        >
+        <div v-for="(field, fieldKey) in fields" :key="fieldKey">
           <CustomInput
-          v-if="field.type == 'input'"
-          :label="field.label"
-          :name="field.name"
-          :ref="field.name"
-          v-model="model[field.name]"
-          :rules="field.rules"
+            v-if="field.type == 'input'"
+            :label="field.label"
+            :name="field.name"
+            :ref="field.name"
+            v-model="model[field.name]"
+            :rules="field.rules"
           />
 
-          <SorteableDropdown 
-            v-else-if="field.type=='dropdown'"
-            @reset="selected = ''" 
-            :error="selectable_error" 
-            :label="field.label" 
-            @selected="setSelected($event,field.name)" 
+          <SorteableDropdown
+            v-else-if="field.type == 'dropdown'"
+            @reset="selected = ''"
+            :error="selectable_error"
+            :label="field.label"
+            @selected="setSelected($event, field.name)"
             :itemList="field.items"
             :show_by="field.show_by"
             :preselected="model[field.name]"
           />
-        </div>        
+        </div>
       </form>
       <div class="controls-container">
         <p @click="$emit('cancel')">Cancel</p>
-        <MainButton 
-          @click="postData()" 
-          :text="action + ' ' + title" 
-          :add="true" 
+        <MainButton
+          @click="postData()"
+          :text="action + ' ' + title"
+          :add="true"
         />
       </div>
     </div>
@@ -44,7 +43,7 @@
 <script>
 import MainButton from "../common/MainButton.vue";
 import CustomInput from "../common/CustomInput.vue";
-import SorteableDropdown from '../common/SorteableDropdown.vue';
+import SorteableDropdown from "../common/SorteableDropdown.vue";
 
 export default {
   components: { MainButton, CustomInput, SorteableDropdown },
@@ -61,14 +60,14 @@ export default {
         return {};
       },
     },
-      title: {
-        type: String,
+    title: {
+      type: String,
     },
-      action: {
-        type: String,
+    action: {
+      type: String,
     },
-      dispatch: {
-        type: String
+    dispatch: {
+      type: String,
     },
   },
   data: () => ({
@@ -78,7 +77,8 @@ export default {
   mounted() {
     this.setInitialData();
 
-    console.log(this.model)
+    console.log(this.model);
+    console.log(this.dispatch);
   },
   methods: {
     postData() {
@@ -86,27 +86,57 @@ export default {
 
       let dispatchBody = this.setBody();
 
-      this.$store.dispatch(this.dispatch, {
-        body: dispatchBody,
-      });
+      if (this.dispatch == "editPriceLevel") {
+        
+              console.log("dispatchBody", dispatchBody);
+        console.log("hello");
+        let body = {
+          currency: dispatchBody.currency,
+          direction: dispatchBody.direction,
+          price_level_apply: dispatchBody.price_level_apply,
+          amount: {
+            type_20: {
+              amount: dispatchBody.type_20,
+              markup: dispatchBody.type_20_t,
+            },
+            type_40: {
+              amount: dispatchBody.type_40,
+              markup: dispatchBody.type_40_t,
+            },
+          },
+        };
+
+        console.log("body", body);
+        this.$store.dispatch(this.dispatch, {
+          body: body,
+          id: this.model.id,
+          currentId: this.$route.params.id,
+          page: 1
+        });
+        
+      } else {
+        this.$store.dispatch(this.dispatch, {
+          body: dispatchBody,
+        });
+      }
     },
     validate() {
       let component = this;
       let index = 0;
 
-      this.fields.forEach(function (field){
-        if(field.type == 'input'){
+      this.fields.forEach(function(field) {
+        if (field.type == "input") {
           if (component.$refs[field.name][index].validate()) {
             return false;
           }
-        }else if(field.type == 'dropdown'){
+        } else if (field.type == "dropdown") {
           if (!component.model[field.name] && field.rules.required) {
             component.selectable_error = true;
             return false;
           }
         }
       });
-      
+
       return true;
     },
     setSelected(option, field_name) {
@@ -116,9 +146,9 @@ export default {
       let component = this;
       var dataIndex = 0;
 
-      this.fields.forEach(function (field){
+      this.fields.forEach(function(field) {
         field.id = dataIndex;
-        if(!component.model[field.name]){
+        if (!component.model[field.name]) {
           component.model[field.name] = "";
         }
         dataIndex += 1;
@@ -130,8 +160,8 @@ export default {
       var body = {};
       let component = this;
 
-      this.fields.forEach(function (field){
-        body[field.name] = component.model[field.name]; 
+      this.fields.forEach(function(field) {
+        body[field.name] = component.model[field.name];
       });
 
       return body;
@@ -155,7 +185,7 @@ section {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.397);
   z-index: 5000;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
 }

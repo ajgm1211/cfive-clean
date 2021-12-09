@@ -51,6 +51,16 @@ const actions = {
       dispatch("listPriceLevelRates", {id: id, page:page});
     });
   },
+
+  editPriceLevel({ dispatch }, { body, id, currentId, page }) {
+    axios.post(`/api/pricelevels/details/${id}/update`, body).then((response) => {
+      console.log('edit rate', response)
+      dispatch("listPriceLevelRates", {id: currentId, page:page});
+      
+    });
+  },
+
+
 };
 
 const mutations = {
