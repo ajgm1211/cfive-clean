@@ -66,10 +66,7 @@
           />
         </th>
 
-        <th
-          v-for="(amountObject, amountKey) in amount"
-          :key="amountKey"
-        >
+        <th v-for="(amountObject, amountKey) in amount" :key="amountKey">
           <div class="d-flex" style="width: 100px">
             <CustomInput
               v-model="amountObject.amount"
@@ -86,7 +83,7 @@
               font_color="white"
               :icon="false"
               :mixed="true"
-              @selected="setMarkup(amountObject,$event)"
+              @selected="setMarkup(amountObject, $event)"
             />
           </div>
         </th>
@@ -101,7 +98,7 @@
             ref="currencyDropdown"
           />
         </th>
-        <th style="position: relative;">
+        <th>
           <MainButton
             @click="addRate()"
             :save="true"
@@ -126,8 +123,8 @@
         <td>{{ item.direction.name }}</td>
         <td>{{ item.price_level_apply.name }}</td>
         <td
-          v-for="(itemAmount,itemAmountKey) in item.amount"
-          :key="itemAmountKey"  
+          v-for="(itemAmount, itemAmountKey) in item.amount"
+          :key="itemAmountKey"
         >
           {{
             itemAmount.markup == "Percent Markup"
@@ -135,11 +132,11 @@
               : itemAmount.amount + " $"
           }}
         </td>
-        <td>{{ item.currency != null ? item.currency.alphacode : '-' }}</td>
-        <td style="position: relative;">
-          <OptionsButton 
-            @option="action($event, item, 'modal')" 
-            style="right:-84px;" 
+        <td>{{ item.currency != null ? item.currency.alphacode : "-" }}</td>
+        <td style="position: absolute;">
+          <OptionsButton
+            @option="action($event, item, 'modal')"
+            style="right:-84px;"
           />
         </td>
       </tr>
@@ -163,7 +160,9 @@
         <td v-html="item.description"></td>
         <td>{{ item.created_at }}</td>
         <td>{{ item.updated_at }}</td>
-        <td scope="col"><OptionsButton @option="action($event, item.id)" /></td>
+        <td style="position:absolute;">
+          <OptionsButton @option="action($event, item.id)" />
+        </td>
       </tr>
     </tbody>
   </b-table-simple>
@@ -290,13 +289,14 @@ export default {
     },
     action(option, id, target = "view") {
       if (option == "edit") {
-        if(target == "view"){
+        if (target == "view") {
           this.$router.push({
             name: "price-rates",
             params: { id: id },
           });
-        }else if(target == "modal"){
-          this.$emit('editModal', id);
+        } else if (target == "modal") {
+          this.$store.commit("SET_MODAL_EDIT", true);
+          this.$emit("editModal", id);
         }
       }
       if (option == "duplicate") {
@@ -356,7 +356,7 @@ export default {
     setCurrency(option) {
       this.currency = option;
     },
-    setMarkup(object,option) {
+    setMarkup(object, option) {
       object.markup = option;
 
       this.checkIfOnlyPercent();
@@ -365,20 +365,20 @@ export default {
       var fixedMatch = false;
       let component = this;
 
-      for(const amountObject in this.amount){
-        if(component.amount[amountObject].markup == "Fixed Markup"){
+      for (const amountObject in this.amount) {
+        if (component.amount[amountObject].markup == "Fixed Markup") {
           fixedMatch = true;
         }
       }
 
       this.only_percent = !fixedMatch;
     },
-    clearDisplay(){
+    clearDisplay() {
       let component = this;
 
-      for(const amountObject in this.amount){
+      for (const amountObject in this.amount) {
         component.amount[amountObject].markup = "Fixed Markup";
-        component.amount[amountObject].amount = 0;    
+        component.amount[amountObject].amount = 0;
       }
 
       this.$refs.currencyDropdown.resetSelection();
@@ -395,5 +395,8 @@ export default {
 .table th,
 .table td {
   vertical-align: middle;
+}
+.table{
+  min-height: 200px;
 }
 </style>

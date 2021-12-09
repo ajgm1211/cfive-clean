@@ -1,11 +1,13 @@
 import axios from "axios";
-import router from "../../main";
+import toastr from "toastr";
 
 const state = {
   currentPriceLevel: "",
   priceLevelRates: "",
   paginateRates: "",
   priceLevelData: "",
+  modalEdit: false,
+  duplicated: false,
 };
 
 const actions = {
@@ -16,10 +18,12 @@ const actions = {
   },
 
   listPriceLevelRates({ commit }, { id, page }) {
-    axios.get(`api/pricelevels/details/${id}/list?page=${page}`).then((response) => {
-      commit("SET_PRICE_LEVEL_RATES", response.data.data);
-      commit("SET_PAGINATE_RATES", response.data);
-    });
+    axios
+      .get(`api/pricelevels/details/${id}/list?page=${page}`)
+      .then((response) => {
+        commit("SET_PRICE_LEVEL_RATES", response.data.data);
+        commit("SET_PAGINATE_RATES", response.data);
+      });
   },
 
   getPriceLevelData({ commit }) {
@@ -29,38 +33,51 @@ const actions = {
   },
 
   createRate({ dispatch }, { id, body, page, currentId }) {
-    axios.post(`api/pricelevels/details/${id}/store`, body).then((response) => {
-      dispatch("listPriceLevelRates", {id: currentId, page:page});
-    });
+    axios
+      .post(`api/pricelevels/details/${id}/store`, body)
+      .then((response) => {
+        dispatch("listPriceLevelRates", { id: currentId, page: page });
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+        if (error.response.data.message == "Price level detail is not unique") {
+          toastr.error("Price level detail must be unique");
+        }
+      });
   },
 
   duplicateRate({ dispatch }, { id, page, currentId }) {
     axios.post(`/api/pricelevels/details/${id}/duplicate`).then((response) => {
-      dispatch("listPriceLevelRates", {id: currentId, page:page});
+      dispatch("listPriceLevelRates", { id: currentId, page: page });
     });
   },
 
   deleteRate({ dispatch }, { id, page, currentId }) {
     axios.put(`/api/pricelevels/details/${id}/destroy`).then((response) => {
-      dispatch("listPriceLevelRates", {id: currentId, page:page});
+      dispatch("listPriceLevelRates", { id: currentId, page: page });
     });
   },
 
   deleteMultiple({ dispatch }, { body, id, page }) {
     axios.put(`/api/pricelevels/details/destroyAll`, body).then((response) => {
-      dispatch("listPriceLevelRates", {id: id, page:page});
+      dispatch("listPriceLevelRates", { id: id, page: page });
     });
   },
 
-  editPriceLevel({ dispatch }, { body, id, currentId, page }) {
-    axios.post(`/api/pricelevels/details/${id}/update`, body).then((response) => {
-      console.log('edit rate', response)
-      dispatch("listPriceLevelRates", {id: currentId, page:page});
-      
-    });
+  editPriceLevel({ dispatch, commit }, { body, id, currentId, page }) {
+    axios
+      .post(`/api/pricelevels/details/${id}/update`, body)
+      .then((response) => {
+        console.log("edit rate", response);
+        dispatch("listPriceLevelRates", { id: currentId, page: page });
+        commit("SET_MODAL_EDIT", false);
+      })
+      .catch((error) => {
+        if (error.response.data.message == "Price level detail is not unique") {
+          toastr.error("Price level detail must be unique");
+        }
+      });
   },
-
-
 };
 
 const mutations = {
@@ -79,6 +96,14 @@ const mutations = {
   SET_PAGINATE_RATES(state, value) {
     state.paginateRates = value;
   },
+
+  SET_MODAL_EDIT(state, value) {
+    state.modalEdit = value;
+  },
+
+  SET_DUPLICATED(state, value) {
+    state.duplicated = value;
+  },
 };
 
 const getters = {
@@ -96,6 +121,14 @@ const getters = {
 
   GET_PAGINATE_RATES() {
     return state.paginateRates;
+  },
+
+  GET_MODAL_EDIT() {
+    return state.modalEdit;
+  },
+
+  GET_DUPLICATED() {
+    return state.duplicated;
   },
 };
 
