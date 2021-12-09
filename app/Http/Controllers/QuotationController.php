@@ -236,7 +236,9 @@ class QuotationController extends Controller
             $remarks .= $rate['client_remarks'];
         }
         foreach ($result_data as $result) {
-            $remarks .= $result['remarks'];
+            if(isset($result['remarks'])){
+                $remarks .= $result['remarks'];
+            }
         }
         
         $quote = QuoteV2::create([
@@ -903,6 +905,10 @@ class QuotationController extends Controller
         $inlandTotals = $quote->automatic_inland_totals()->get();
         $inlandAddress = $quote->automatic_inland_address()->get();
         $quote_rate_totals = $quote->automatic_rate_totals()->get();
+
+        if(isset($quote->company)){
+            $quote->update(['payment_conditions' => $quote->company->payment_conditions]);
+        }
 
         if (count($rates) != 0) {
             foreach ($rates as $rate) {
