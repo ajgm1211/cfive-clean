@@ -17,8 +17,8 @@ class ApiCredentialsController extends Controller
         $company_user_id = $request->input("company_user_id");
         $company_user = CompanyUser::find($company_user_id);
         $options = $company_user->options;
-        $used_api_providers = $options["api_providers"];        
-        
+        $used_api_providers = $options["api_providers"];       
+                
         if(sizeof($used_api_providers)) {
             $apiProviders = ApiProvider::whereNotIn('id', $used_api_providers)->get();
         } else {
@@ -54,6 +54,11 @@ class ApiCredentialsController extends Controller
     }
 
     public function store(Request $request){
+        $request->validate([
+            'model_id' => 'required',
+            'api_provider_id' => 'required'
+        ]);
+
         $company_user_id = $request->input("model_id");
         $api_provider_id = $request->input("api_provider_id");
 

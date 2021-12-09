@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLocalChargeSaleCodesTable extends Migration
+class AddColumnRequestLclContracts extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateLocalChargeSaleCodesTable extends Migration
      */
     public function up()
     {
-        /*Schema::create('local_charge_sale_codes', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
-        });*/
+        Schema::table('new_contract_request_lcl', function (Blueprint $table) {
+            $table->boolean('erased_contract')->default(false)->after('contract_id'); 
+        });
     }
 
     /**
@@ -26,6 +25,6 @@ class CreateLocalChargeSaleCodesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('local_charge_sale_codes');
+        //
     }
 }

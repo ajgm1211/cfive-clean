@@ -290,7 +290,7 @@ class GlobalChargesLclController extends Controller
     public function indexAdm(Request $request)
     {
         $companies = CompanyUser::pluck('name', 'id');
-        $carriers = Carrier::pluck('name', 'id');
+        $carriers = Carrier::pluck('name', 'id')->prepend('All Carriers', '0');        
         $company_user_id_selec = $request->input('company_user_id_selec');
         $carrier_id_selec = $request->input('carrier_id_selec');
         $reload_DT = $request->input('reload_DT');
@@ -299,9 +299,20 @@ class GlobalChargesLclController extends Controller
     }
 
     public function createAdm(Request $request)
-    {
-        $globalcharges = ViewGlobalchargeLcl::select(['id', 'port_orig', 'port_dest', 'country_orig', 'country_dest', 'carrier', 'surcharges', 'typedestiny', 'calculationtype', 'ammount', 'minimum', 'validity', 'expire', 'currency', 'company_user'])->companyUser($request->company_id)->carrier($request->carrier);
-        //dd($globalcharges);
+    {   
+        $co = 0;
+        $ca = 0;
+
+        if ($request->company_id) {
+            $co = $request->company_id;
+        }
+        if ($request->carrier) {
+            $ca = $request->carrier;
+        }
+        $globalcharges = ViewGlobalchargeLcl::select(['id', 'port_orig', 'port_dest', 'country_orig', 'country_dest', 'carrier', 'surcharges', 'typedestiny', 'calculationtype', 'ammount', 'minimum', 'validity', 'expire', 'currency', 'company_user'])
+                        ->companyUser($co)
+                        ->carrier($ca);
+        
         return DataTables::of($globalcharges)
             ->editColumn('surchargelb', function ($globalcharges) {
                 return $globalcharges->surcharges;

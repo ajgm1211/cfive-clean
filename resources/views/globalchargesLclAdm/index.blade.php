@@ -216,7 +216,7 @@
             var idAr = [];
             var oTable = $("#requesttable").dataTable();
             var length=table.rows('.selected').data().length;
-
+            console.log(length);
             if(length > 0)
             {
                 for (var i = 0; i < length; i++) { 
