@@ -24,6 +24,7 @@
       <Paginate
         @prevPage="prevPage"
         @nextPage="nextPage"
+        @input="handlePageSelected($event)"
         :page-count="GET_PAGINATE_PRICE_LEVELS.last_page"
         :prev-text="'Prev'"
         :next-text="'Next'"
@@ -39,8 +40,8 @@
       />
     </div>
 
-    <CreateModal 
-      v-if="create" 
+    <CreateModal
+      v-if="create"
       :fields="modal_fields"
       :title="'Price Level'"
       :action="'Add'"
@@ -86,7 +87,7 @@ export default {
         type: "dropdown",
         label: "Price Level Type",
         name: "price_level_type",
-        items: [ "FCL","LCL" ],
+        items: ["FCL", "LCL"],
         show_by: "",
         rules: {
           required: true,
@@ -111,6 +112,9 @@ export default {
         this.$store.dispatch("getPriceLevels", { page: nextPage });
         this.currentPage = this.currentPage + 1;
       }
+    },
+    handlePageSelected(page) {
+      this.$store.dispatch("getPriceLevels", { page: page });
     },
   },
   computed: {
@@ -146,12 +150,6 @@ h2 {
   width: 100%;
   height: fit-content;
   padding: 20px;
-}
-
-.list-container {
-  padding: 10px 10px 0 0;
-  max-height: 415px;
-  overflow: auto;
 }
 
 /* width */

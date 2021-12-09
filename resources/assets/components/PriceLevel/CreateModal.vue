@@ -44,6 +44,7 @@
 import MainButton from "../common/MainButton.vue";
 import CustomInput from "../common/CustomInput.vue";
 import SorteableDropdown from "../common/SorteableDropdown.vue";
+import { mapGetters } from "vuex";
 
 export default {
   components: { MainButton, CustomInput, SorteableDropdown },
@@ -76,9 +77,6 @@ export default {
   }),
   mounted() {
     this.setInitialData();
-
-    console.log(this.model);
-    console.log(this.dispatch);
   },
   methods: {
     postData() {
@@ -87,33 +85,43 @@ export default {
       let dispatchBody = this.setBody();
 
       if (this.dispatch == "editPriceLevel") {
-        
-              console.log("dispatchBody", dispatchBody);
-        console.log("hello");
-        let body = {
-          currency: dispatchBody.currency,
-          direction: dispatchBody.direction,
-          price_level_apply: dispatchBody.price_level_apply,
-          amount: {
-            type_20: {
-              amount: dispatchBody.type_20,
-              markup: dispatchBody.type_20_t,
-            },
-            type_40: {
-              amount: dispatchBody.type_40,
-              markup: dispatchBody.type_40_t,
-            },
-          },
-        };
+        let body;
 
-        console.log("body", body);
+        if ("type_lcl" in this.model) {
+          body = {
+            currency: dispatchBody.currency,
+            direction: dispatchBody.direction,
+            price_level_apply: dispatchBody.price_level_apply,
+            amount: {
+              type_lcl: {
+                amount: dispatchBody.type_lcl,
+                markup: dispatchBody.type_lcl_t,
+              },
+            },
+          };
+        } else {
+          body = {
+            currency: dispatchBody.currency,
+            direction: dispatchBody.direction,
+            price_level_apply: dispatchBody.price_level_apply,
+            amount: {
+              type_20: {
+                amount: dispatchBody.type_20,
+                markup: dispatchBody.type_20_t,
+              },
+              type_40: {
+                amount: dispatchBody.type_40,
+                markup: dispatchBody.type_40_t,
+              },
+            },
+          };
+        }
         this.$store.dispatch(this.dispatch, {
           body: body,
           id: this.model.id,
           currentId: this.$route.params.id,
-          page: 1
+          page: 1,
         });
-        
       } else {
         this.$store.dispatch(this.dispatch, {
           body: dispatchBody,
@@ -167,6 +175,19 @@ export default {
       return body;
     },
   },
+  computed: {
+    ...mapGetters(["GET_DUPLICATED"]),
+    modal() {
+      if (this.GET_DUPLICATED == true) {
+        this.$toast.open({
+          message: "HOLA",
+          type: "error",
+          duration: 5000,
+          dismissible: true,
+        });
+      }
+    },
+  },
 };
 </script>
 
@@ -208,6 +229,7 @@ section {
   column-gap: 20px;
   row-gap: 30px;
   padding: 40px 40px 20px 40px;
+  grid-template-rows:  repeat(3, 1fr);
 }
 
 .controls-container {
