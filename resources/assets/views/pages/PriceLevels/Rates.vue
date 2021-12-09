@@ -102,7 +102,9 @@
             :filters="false" 
             :thead="thead" 
             :amount="amount"
-            :dynamic="true" />
+            :dynamic="true"
+            @editModal="setModalData" 
+          />
 
           <p style="margin-top:20px">
             Total Results: {{ GET_PAGINATE_RATES.meta.total }}
@@ -127,6 +129,16 @@
         </div>
       </div>
     </div>
+
+    <CreateModal 
+      v-if="editing" 
+      :fields="modal_fields"
+      :title="'Price Level'"
+      :action="'Edit'"
+      :dispatch="'editPriceLevel'"
+      :model="detail_to_edit"
+      @cancel="editing = false"
+    />
   </section>
 </template>
 
@@ -142,6 +154,7 @@ import Paginate from "../../../../js/components/paginate.vue";
 import MainButton from "../../../components/common/MainButton.vue";
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.min.css";
+import CreateModal from "../../../components/PriceLevel/CreateModal.vue";
 import { mapGetters } from "vuex";
 export default {
   components: {
@@ -154,6 +167,7 @@ export default {
     MainButton,
     SorteableDropdown,
     Multiselect,
+    CreateModal,
   },
   data: () => ({
     actions: actions,
@@ -178,10 +192,11 @@ export default {
     tableSet: false,
     rates: [],
     currentPage: 1,
+    modal_fields: [],
+    editing: false,
+    detail_to_edit: {},
   }),
   mounted() {
-    this.$store.dispatch("getInitialData");
-
     this.$store.dispatch("getPriceLevelDetail", {
       id: this.$route.params.id,
       body: {
@@ -212,6 +227,7 @@ export default {
       this.rates = this.GET_PRICE_LEVEL_RATES;
 
       this.setTable();
+      this.setModalData();
     }, 1000);
   },
   methods: {
@@ -294,6 +310,141 @@ export default {
 
       this.tableSet = true;
       
+    },
+    setModalData(detail) {
+      let formattedDetail = this.formatDetail(detail);
+
+      this.modal_fields = 
+        [
+          {
+            type: "dropdown",
+            label: "Direction",
+            name: "direction",
+            items: this.datalists.directions,
+            rules: {
+              required: true,
+            },
+            show_by:"name"
+          },
+          {
+            type: "dropdown",
+            label: "Apply to",
+            name: "price_level_apply",
+            items: this.datalists.applies,
+            rules: {
+              required: true,
+            },
+            show_by:"name"
+          },
+        ];
+
+      if(this.selected == "FCL"){
+        this.modal_fields.push(
+          {
+            type: "input",
+            label: "20",
+            name: "type_20",
+            rules: {
+              required: true,
+            }
+          },
+          {
+            type: "dropdown",
+            label: "Type",
+            name: "type_20_t",
+            items: ["Fixed Markup", "Percent Markup"],
+            rules: {
+              required: true,
+            }
+          },
+          {
+            type: "input",
+            label: "40",
+            name: "type_40",
+            rules: {
+              required: true,
+            }
+          },
+          {
+            type: "dropdown",
+            label: "Type",
+            name: "type_40_t",
+            items: ["Fixed Markup", "Percent Markup"],
+            rules: {
+              required: true,
+            }
+          },
+        )
+      }else if(this.selected == "LCL"){
+        this.modal_fields.push(
+          {
+            type: "input",
+            label: "Amount",
+            name: "type_lcl",
+            rules: {
+              required: true,
+            }
+          },
+          {
+            type: "dropdown",
+            label: "Type",
+            name: "type_lcl_t",
+            items: ["Fixed Markup", "Percent Markup"],
+            rules: {
+              required: true,
+            }
+          },
+        )
+      }
+
+      if(formattedDetail.showModalCurrency){
+        this.modal_fields.push(
+          {
+            type: "dropdown",
+            label: "Currency",
+            name: "currency",
+            items: this.datalists.currency,
+            rules: {
+              required: true,
+            }
+          }
+        )
+      }
+
+      this.detail_to_edit = formattedDetail;
+      this.editing = true;
+    },
+    formatDetail(detail){
+      var formatted = {};
+
+      formatted.id = detail.id;
+      formatted.direction = detail.direction;
+      formatted.price_level_apply = detail.price_level_apply;
+      formatted.showModalCurrency = true;
+      
+      if(this.selected == "FCL"){
+        formatted.type_20 = detail.amount.type_20.amount;
+        formatted.type_20_t = detail.amount.type_20.markup;
+        formatted.type_40 = detail.amount.type_40.amount;
+        formatted.type_40_t = detail.amount.type_40.markup;
+
+        if(formatted.type_20_t == "Percent Markup" && formatted.type_40_t == "Percent Markup"){
+          formatted.showModalCurrency = false;
+        }
+      }else if(this.selected == "LCL"){
+        formatted.type_lcl = detail.amount.type_lcl.amount;
+        formatted.type_lcl_t = detail.amount.type_lcl.markup;
+
+        if(formatted.type_lcl_t == "Percent Markup"){
+          formatted.showModalCurrency = false;
+        }
+      }
+
+      if(formatted.showModalCurrency){
+        formatted.currency = detail.currency;
+      }
+
+      return formatted;
     },
   },
   computed: {

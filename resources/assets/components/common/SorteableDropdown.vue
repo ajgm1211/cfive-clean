@@ -16,11 +16,17 @@
       class="dropdown-input"
       type="text"
       :placeholder="placeholder"
-      @click="open = !open"
+      @click="(selectedItem=='' && open) ? open = open : open = !open"
       :class="error === true && !selectedItem ? 'error-border' : ''"
     />
-    <div v-else @click="resetSelection()" class="dropdown-selected">
-      {{ selectedItem.alphacode ? selectedItem.alphacode : selectedItem }}
+    <div 
+      v-else 
+      class="dropdown-selected"
+      @click="open = !open" 
+      @keydown.delete="selectedItem = ''"
+      tabindex="0"
+    >
+      {{ selectedItem[show_by] ? selectedItem[show_by] : selectedItem }}
     </div>
 
     <div v-if="error === true && !selectedItem" class="error-msj-container">
@@ -35,7 +41,7 @@
         :key="index"
         @click="selectItem(item)"
       >
-        {{ item.alphacode ? item.alphacode : item }}
+        {{ item[show_by] ? item[show_by] : item }}
       </div>
     </div>
   </div>
@@ -63,9 +69,28 @@ export default {
       type: String,
       default: "Select an option",
     },
+    show_by: {
+      type: String,
+      default: "alphacode",
+    },
+    preselected: {
+      type: [Object, String, Boolean],
+      default() { 
+        return false 
+      },
+    },
   },
   mounted() {
     // console.log(this.itemList);
+    if(this.preselected){
+      this.selectedItem = this.preselected;
+    }
+
+    window.addEventListener("click", (e) => {
+      if (!this.$el.contains(e.target)) {
+        this.open = false;
+      }
+    });
     window.addEventListener("click", (e) => {
       if (!this.$el.contains(e.target)) {
         this.open = false;
@@ -74,8 +99,8 @@ export default {
   },
   methods: {
     itemVisible(item) {
-      if (item.alphacode) {
-        let currentName = item.alphacode.toLowerCase();
+      if (item[this.show_by]) {
+        let currentName = item[this.show_by].toLowerCase();
         let currentInput = this.inputValue.toLowerCase();
         return currentName.includes(currentInput);
       } else {
@@ -95,6 +120,10 @@ export default {
       // this.$nextTick(() => this.$refs.dropdowninput.focus());
       this.$emit("reset");
     },
+    focusInput(){
+      this.$nextTick(() => this.$refs.dropdowninput.focus());
+      console.log('focusing??')
+    }
   },
 };
 </script>

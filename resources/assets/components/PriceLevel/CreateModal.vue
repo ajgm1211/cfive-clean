@@ -23,7 +23,9 @@
             :error="selectable_error" 
             :label="field.label" 
             @selected="setSelected($event,field.name)" 
-            :itemList="field.items" 
+            :itemList="field.items"
+            :show_by="field.show_by"
+            :preselected="model[field.name]"
           />
         </div>        
       </form>
@@ -53,6 +55,12 @@ export default {
         return [];
       },
     },
+    model: {
+      type: Object,
+      default() {
+        return {};
+      },
+    },
       title: {
         type: String,
     },
@@ -64,12 +72,13 @@ export default {
     },
   },
   data: () => ({
-    model: {},
     selectable_error: false,
     dataLoaded: false,
   }),
   mounted() {
     this.setInitialData();
+
+    console.log(this.model)
   },
   methods: {
     postData() {
@@ -91,7 +100,7 @@ export default {
             return false;
           }
         }else if(field.type == 'dropdown'){
-          if (!component.model[field.name]) {
+          if (!component.model[field.name] && field.rules.required) {
             component.selectable_error = true;
             return false;
           }
@@ -109,7 +118,9 @@ export default {
 
       this.fields.forEach(function (field){
         field.id = dataIndex;
-        component.model[field.name] = "";
+        if(!component.model[field.name]){
+          component.model[field.name] = "";
+        }
         dataIndex += 1;
       });
 

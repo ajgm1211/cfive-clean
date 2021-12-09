@@ -72,7 +72,7 @@ export default {
         name: "name",
         rules: {
           required: true,
-        }
+        },
       },
       {
         type: "input",
@@ -80,13 +80,17 @@ export default {
         name: "display_name",
         rules: {
           required: true,
-        }
+        },
       },
       {
         type: "dropdown",
         label: "Price Level Type",
         name: "price_level_type",
         items: [ "FCL","LCL" ],
+        show_by: "",
+        rules: {
+          required: true,
+        },
       },
     ],
   }),
