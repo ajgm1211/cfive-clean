@@ -17,6 +17,9 @@
           />
 
           <SorteableDropdown
+            :class="[
+              showCurrency == false && field.name == 'currency' ? 'hidden' : '',
+            ]"
             v-else-if="field.type == 'dropdown'"
             @reset="selected = ''"
             :error="selectable_error"
@@ -74,6 +77,7 @@ export default {
   data: () => ({
     selectable_error: false,
     dataLoaded: false,
+    showCurrency: true,
   }),
   mounted() {
     this.setInitialData();
@@ -149,10 +153,22 @@ export default {
     },
     setSelected(option, field_name) {
       this.model[field_name] = option;
+      if (
+        this.model.type_20_t == "Percent Markup" &&
+        this.model.type_40_t == "Percent Markup"
+      ) {
+        this.showCurrency = false;
+      } else {
+        this.showCurrency = true;
+      }
     },
     setInitialData() {
       let component = this;
       var dataIndex = 0;
+
+      if (component.model.type_lcl_t == "Percent Markup") {
+        console.log("hello");
+      }
 
       this.fields.forEach(function(field) {
         field.id = dataIndex;
@@ -229,7 +245,7 @@ section {
   column-gap: 20px;
   row-gap: 30px;
   padding: 40px 40px 20px 40px;
-  grid-template-rows:  repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
 }
 
 .controls-container {
@@ -260,5 +276,9 @@ section {
     letter-spacing: 0.05em;
     font-weight: 500;
   }
+}
+
+.hidden {
+  display: none;
 }
 </style>

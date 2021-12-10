@@ -139,6 +139,7 @@
       :dispatch="'editPriceLevel'"
       :model="detail_to_edit"
       @cancel="close"
+      @showCurrency="showCurrency($event)"
     />
   </section>
 </template>

@@ -40,6 +40,7 @@
         v-for="(item, index) in itemList"
         :key="index"
         @click="selectItem(item)"
+        @blur="blur(item)"
       >
         {{ item[show_by] ? item[show_by] : item }}
       </div>
@@ -123,6 +124,9 @@ export default {
     focusInput(){
       this.$nextTick(() => this.$refs.dropdowninput.focus());
       console.log('focusing??')
+    },
+    blur(){
+      console.log('blur')
     }
   },
 };
