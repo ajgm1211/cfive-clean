@@ -19,7 +19,11 @@
         <th scope="col">Created at</th>
         <th scope="col">Updated at</th>
         <th scope="col" style="width:40px">
-          <OptionsButton @option="action($event)" :standar="false" />
+          <OptionsButton
+            :options="['delete']"
+            @option="action($event)"
+            :standar="false"
+          />
         </th>
       </tr>
       <tr v-else-if="dynamic">
@@ -37,6 +41,7 @@
 
         <th scope="col" style="width:40px; position: relative;">
           <OptionsButton
+            :options="['delete']"
             @option="action($event)"
             :standar="false"
             style="right:-84px;"
@@ -135,6 +140,7 @@
         <td>{{ item.currency != null ? item.currency.alphacode : "-" }}</td>
         <td style="position: absolute;">
           <OptionsButton
+            :options="['edit', 'delete']"
             @option="action($event, item, 'modal')"
             style="right:-84px;"
           />
@@ -142,7 +148,11 @@
       </tr>
     </tbody>
     <tbody v-else>
-      <tr v-for="(item, index) in prices" :key="index">
+      <tr
+        v-for="(item, index) in prices"
+        v-show="itemVisible(item)"
+        :key="index"
+      >
         <td scope="row">
           <b-form-checkbox-group>
             <b-form-checkbox
@@ -161,7 +171,10 @@
         <td>{{ item.created_at }}</td>
         <td>{{ item.updated_at }}</td>
         <td style="position:absolute;">
-          <OptionsButton @option="action($event, item.id)" />
+          <OptionsButton
+            :options="['edit', 'duplicate', 'delete']"
+            @option="action($event, item.id)"
+          />
         </td>
       </tr>
     </tbody>
@@ -217,6 +230,7 @@ export default {
         return {};
       },
     },
+    filtered: {},
   },
   components: {
     OptionsButton,
@@ -384,6 +398,25 @@ export default {
       this.$refs.currencyDropdown.resetSelection();
       this.checkIfOnlyPercent();
     },
+    itemVisible(toFilter) {
+      let currentInput = this.filtered.toLowerCase();
+
+      let type = toFilter.type ? toFilter.type.toLowerCase() : "";
+      let name = toFilter.name ? toFilter.name.toLowerCase() : "";
+      let display_name = toFilter.display_name
+        ? toFilter.display_name.toLowerCase()
+        : "";
+      let description = toFilter.description
+        ? toFilter.description.toLowerCase()
+        : "";
+
+      return (
+        type.includes(currentInput) ||
+        name.includes(currentInput) ||
+        display_name.includes(currentInput) ||
+        description.includes(currentInput)
+      );
+    },
   },
   computed: {
     ...mapGetters(["GET_PRICE_LEVEL_DATA", "GET_PRICE_LEVEL_RATES"]),
@@ -396,7 +429,7 @@ export default {
 .table td {
   vertical-align: middle;
 }
-.table{
+.table {
   min-height: 200px;
 }
 </style>

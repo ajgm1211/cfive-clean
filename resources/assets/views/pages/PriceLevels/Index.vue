@@ -14,7 +14,7 @@
       <InputSearch @filter="filtered = $event" style="margin-bottom: 20px;" />
 
       <div class="list-container">
-        <ListPrices :currentPage="currentPage" :prices="GET_PRICE_LEVELS" />
+        <ListPrices :filtered="filtered" :currentPage="currentPage" :prices="GET_PRICE_LEVELS" />
       </div>
 
       <p v-if="GET_PAGINATE_PRICE_LEVELS.total" style="margin-top:20px">
@@ -63,6 +63,7 @@ import axios from "axios";
 export default {
   components: { MainButton, InputSearch, ListPrices, Paginate, CreateModal },
   data: () => ({
+    filtered: "",
     create: false,
     prices: [],
     currentPage: 1,

@@ -166,10 +166,6 @@ export default {
       let component = this;
       var dataIndex = 0;
 
-      if (component.model.type_lcl_t == "Percent Markup") {
-        console.log("hello");
-      }
-
       this.fields.forEach(function(field) {
         field.id = dataIndex;
         if (!component.model[field.name]) {
