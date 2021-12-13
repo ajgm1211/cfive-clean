@@ -6,8 +6,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Traits\UtilTrait;
 use App\Http\Resources\ProvidersResource;
 use App\Provider;
-use App\Carrier;
-
 
 class QuotationInlandResource extends JsonResource
 {
@@ -22,9 +20,8 @@ class QuotationInlandResource extends JsonResource
      */
     public function toArray($request)
     {
-        $provider = $this->providers ?? Carrier::where('name', $this->provider)->first();
+        $provider = $this->providers ?? Provider::where('name', $this->provider)->first();
 
-        // dd($provider);
         return [
             'id' => $this->id,
             'type' => $this->type,
