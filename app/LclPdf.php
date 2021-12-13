@@ -333,8 +333,10 @@ class LclPdf
                 $totalsArrayInput = json_decode($total->totals, true);
                 $portArray['origin'] = $total->origin_port()->first()->display_name;
                 $portArray['destination'] = $total->destination_port()->first()->display_name;
+                $portArray['carrier'] = $total->carrier()->first()->name;
             } else if (is_a($total, 'App\AutomaticInlandTotal')) {
                 $totalsArrayInput = json_decode($total->totals, true);
+                $portArray['carrier'] = 'local';
                 if ($total->type == 'Origin') {
                     $portArray['origin'] = $total->get_port()->first()->display_name;
                     $portArray['destination'] = null;
@@ -344,6 +346,7 @@ class LclPdf
                 }
             } else if (is_a($total, 'App\LocalChargeQuoteLclTotal')) {
                 $totalsArrayInput = array('total' => $total->total);
+                $portArray['carrier'] = 'local';
                 if ($total->get_type()->first()->description == 'origin') {
                     $portArray['origin'] = $total->get_port()->first()->display_name;
                     $portArray['destination'] = null;
@@ -362,7 +365,8 @@ class LclPdf
             }
 
             foreach ($totalsArrayOutput as $key => $route) {
-                if ($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']) {
+                if (($route['POL'] == $portArray['origin'] && $route['POD'] == $portArray['destination'] && $portArray['carrier'] == $route['carrier']) ||
+                     ($route['POD'] == $portArray['destination'] && $route['POL'] == $portArray['origin'] && $portArray['carrier'] ==  'local')) {
                     if (isset($totalsArrayInput['total'])) {
                         $dmCalc = isDecimal($totalsArrayInput['total'], true);
                         if (isset($totalsArrayOutput[$key]['total'])) {
