@@ -4924,7 +4924,7 @@ export default {
 
       if(initialRemarksCountry){
         for(const remarkLang in initialRemarksCountry){
-          finalRemarks +=initialRemarksPort[remarkLang];
+          finalRemarks +=initialRemarksCountry[remarkLang];
         }
       }
 
