@@ -86,4 +86,8 @@ class Rate extends Model implements Auditable
 
         return $query->orwhere($valor, '!=', 0);
     }
+
+
+
+
 }

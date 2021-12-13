@@ -853,8 +853,8 @@ trait SearchTrait
     }
 
     //groups local + global charges by type (Origin, Destination, Freight)
-    public function groupChargesByType($local_charges, $global_charges, $search_data)
-    {
+    public function groupChargesByType($local_charges, $global_charges, $search_data, $company_user)
+    {          
         //Creating arrays for every type
         $origin = [];
         $destination = [];
@@ -878,14 +878,22 @@ trait SearchTrait
         }
 
         //Forming final collection
-        if($search_data['originCharges']){
-            $charges->put('Origin',$origin);
-        }
-        $charges->put('Freight',$freight);
-        if($search_data['destinationCharges']){
-            $charges->put('Destination',$destination);
-        }
+        $charges->put('Origin',$origin);
         
+        $charges->put('Freight',$freight);
+        
+        $charges->put('Destination',$destination);
+        
+        if(!$company_user->options['store_hidden_charges']){
+            if(!$search_data['originCharges']){
+                unset($charges['Origin']);
+            }
+
+            if(!$search_data['destinationCharges']){
+                unset($charges['Destination']);
+            }   
+        }
+
         return $charges;
     }
 
@@ -1401,7 +1409,7 @@ trait SearchTrait
     }
 
     //Retrieves Global Remarks
-    public function searchRemarks($rate, $search_data)
+    public function searchRemarks($rate, $search_data, $apply = null)
     {
         //Retrieving current companyto filter remarks
         $company_user = CompanyUser::where('id', $search_data['company_user'])->first();
@@ -1422,6 +1430,8 @@ trait SearchTrait
             })->orwhereHas('remarksCountries', function ($q) use ($rate_countries_id) {
                 $q->whereIn('country_id', $rate_countries_id);
             });
+        })->when($apply != null, function ($q) use($apply) {
+            return $q->whereIn('apply_to', $apply);
         })->get();
 
         $final_remarks = "";

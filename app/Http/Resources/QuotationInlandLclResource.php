@@ -31,6 +31,7 @@ class QuotationInlandLclResource extends JsonResource
             'profit' => $this->profit,
             'total' => $this->total,
             'currency' => $this->currency->alphacode ?? null,
+            'grouped_with' => $this->inland_local_group->local_charge_quote_lcl_id ?? null,
         ];
     }
 }

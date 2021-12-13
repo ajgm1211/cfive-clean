@@ -153,6 +153,12 @@ class UsersController extends Controller
         return view('users.update', compact('user'));
     }
 
+    public function retrieve()
+    {
+        $user = user::find(\Auth::user()->id);
+        return response()->json(['data' => compact('user')]);
+    }
+
     public function add()
     {
         $delegation= Delegation::where('company_user_id', '=', Auth::user()->company_user_id)->get();
