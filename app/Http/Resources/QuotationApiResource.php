@@ -63,9 +63,7 @@ class QuotationApiResource extends JsonResource
             'ocean_freight' => QuotationOceanFreightResource::collection($this->rates_v2()->SelectFields()->SelectChargeApi($this->type)->CarrierRelation()->get()),
             'origin_charges' => QuotationLocalChargeResource::collection($this->localCharges($this->id, 1, $this->type)),
             'destination_charges' => QuotationLocalChargeResource::collection($this->localCharges($this->id, 2, $this->type)),
-            'inlands' => $this->type == 'FCL' ? 
-            QuotationInlandResource::collection($this->inland()->SelectFields()->get()) : 
-            QuotationInlandLclResource::collection($this->inland_lcl()->SelectFields()->get()),
+            'inlands' => $this->type == 'FCL' ? QuotationInlandResource::collection($this->inland()->SelectFields()->get()) : QuotationInlandLclResource::collection($this->inland_lcl()->SelectFields()->get()),
             'original_origin_charges' => $this->type == 'FCL' ?
                 QuotationChargeResource::collection($this->charge()->where('charges.type_id', 1)->SelectFields()->get()) : QuotationChargeLclResource::collection($this->charge_lcl()->where('charge_lcl_airs.type_id', 1)->SelectFields()->get()),
             'original_destination_charges' => $this->type == 'FCL' ?
