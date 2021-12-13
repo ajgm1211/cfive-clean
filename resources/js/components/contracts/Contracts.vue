@@ -50,6 +50,7 @@
 								:datalists="datalists"
 								:actions="actions.restrictions"
 								:data="currentData['restrictions']"
+								:type="'contracts'"
 							></restrictions>
 						</b-tab>
 

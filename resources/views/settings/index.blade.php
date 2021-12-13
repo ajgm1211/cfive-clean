@@ -198,6 +198,13 @@
                                                         <span></span>
                                                 </label>       
 											</label>
+                                            <br>
+                                            <label  class="m-radio m-radio--check-bold m-radio--state-brand">
+                                                <label for="storehiddencharges">Store hidden Local Charges in Quote</label>
+                                                    <input {{ @$StoreHiddenCharges}} type="checkbox"  checked='true' name="storehiddencharges" value="1" >
+                                                        <span></span>
+                                                </label>       
+											</label>
                                         </div>
                                     </div> 
                                 </div>                  
@@ -424,6 +431,13 @@
                                             <label  class="m-radio m-radio--check-bold m-radio--state-brand">
                                                 <label for="showfreightcurrency">Show Search totals in freight currency</label>
                                                     <input {{ @$ShowFreightCurrency}} type="checkbox" name="showfreightcurrency" value="1" >
+                                                        <span></span>
+                                                </label>       
+											</label>
+                                            <br>
+                                            <label  class="m-radio m-radio--check-bold m-radio--state-brand">
+                                                <label for="storehiddencharges">Store hidden Local Charges in Quote</label>
+                                                    <input {{ @$StoreHiddenCharges}} type="checkbox" name="storehiddencharges" value="1" >
                                                         <span></span>
                                                 </label>       
 											</label>

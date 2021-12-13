@@ -112,10 +112,24 @@
                         <br>
                         <div class="row" style="margin-bottom:30px;">
                             <div class="col-md-3 order-1 order-xl-2 m--align-left">
-                                {!! Form::select('company_user',@$companies,@$company_user_id_selec,['class'=>'m-select2-general form-control','id'=>'company_user','placeholder'=>'Select company'])!!}
+                                {!! Form::
+                                    select('company_user',
+                                            @$companies,
+                                            @$company_user_id_selec,
+                                            ['class'=>'m-select2-general form-control',
+                                             'id'=>'company_user',
+                                             'placeholder'=>'Select company'])
+                                !!}
                             </div>
                             <div class="col-md-3 order-1 order-xl-2 m--align-left">
-                                {!! Form::select('carrier',@$carriers,@$carrier_id_selec,['class'=>'m-select2-general form-control','id'=>'carrier','placeholder'=>'Select company'])!!}
+                                {!! Form::
+                                    select('carrier',
+                                            @$carriers,
+                                            @$carrier_id_selec,
+                                            ['class'=>'m-select2-general form-control',
+                                             'id'=>'carrier',
+                                             'placeholder'=>'Select company'])
+                                !!}
                             </div>
                             <div class="col-md-3 order-1 order-xl-2 m--align-left">
                                 <button id="search" class="btn btn-primary">Search</button>
@@ -290,8 +304,7 @@
             '</tr>'+
         '</table>'; 
     
-    }
-    
+    }    
 
     function loadDatatable(company_id,carrier){
         
@@ -372,7 +385,8 @@
             
       table.clear();  
     }
-     $('#requesttable tbody').on('click', 'td.details-control', function () {
+
+    $('#requesttable tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = table.row( tr );
  
@@ -385,7 +399,8 @@
             // Open this row
             row.child( format(row.data()) ).show();
             tr.addClass('shown');
-        }} );
+        }
+    });
 
     $(document).on('click', '#search', function(){
         var company_id=$('#company_user').val();
@@ -393,7 +408,6 @@
         url: "{{ route('gcadm.index') }}",
         loadDatatable(company_id,carrier);
     });
-
 
     $('#requesttable tbody').on( 'click', 'tr', function () {
         $(this).toggleClass('selected');

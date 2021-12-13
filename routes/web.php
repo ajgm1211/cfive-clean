@@ -59,6 +59,7 @@ Route::middleware(['auth'])->prefix('users')->group(function () {
     Route::resource('users', 'UsersController');
     Route::get('home', 'UsersController@datahtml')->name('users.home');
     Route::get('info', 'UsersController@show')->name('user.info');
+    Route::get('data', 'UsersController@retrieve');
     Route::post('update/{id}', 'UsersController@UpdateUser')->name('user.update');
     Route::get('add', 'UsersController@add')->name('users.add');
     Route::get('msg/{user_id}', 'UsersController@destroymsg')->name('users.msg');
@@ -488,7 +489,9 @@ Route::middleware(['auth'])->prefix('prices')->group(function () {
 
     // V2
     Route::view('/v2', 'pricesV2.index');
+    //CAMBIAR PARA PRICELEVELS
     Route::view('/rates', 'pricesV2.index');
+    //Route::view('/rates/{id}', 'pricesV2.index');
 });
 Route::resource('prices', 'PriceController')->middleware('auth');
 
@@ -1123,7 +1126,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quotes/{quote}/port/{port_id}/automatic_inlands_lcl/search', 'AutomaticInlandLclController@searchInlands');
     Route::post('api/quotes/{quote}/automatic_inlands_lcl/harbors', 'AutomaticInlandLclController@harbors');
     Route::post('api/quotes/{quote}/automatic_inland_lcl/{combo}/delete_full', 'AutomaticInlandLclController@deleteFull');
-    Route::post('/api/quotes/{quote}/automatic_inland_lcl/{port_id}/update_pdf_options', 'AutomaticInlandController@updatePdfOptions');
+    Route::post('/api/quotes/{quote}/automatic_inland_lcl/{port_id}/update_pdf_options', 'AutomaticInlandLclController@updatePdfOptions');
     Route::get('/api/quotes/automatic_inlands/{port_id}/get_harbor_address', 'AutomaticInlandController@getHarborAddresses');
 
     /** Local charges routes */
@@ -1426,4 +1429,16 @@ Route::resource('provinces', 'ProvinceController')->middleware('auth');
 Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
     Route::get('intercom', 'TestController@createIntercom')->name('test.intercom');
     Route::get('contable', 'TestController@contable')->name('teste.intercom')->middleware('check_company:quote');;
+});
+
+
+//NEW PRICE LEVELS VIEWS ROUTES
+/**Route::group(['prefix' => 'pricelevels', 'middleware' => ['auth']], function () {
+    Route::view('/', 'pricesV2.index')->name('pricelevels.index');
+    Route::view('/edit/{price_level}', 'pricesV2.index');
+});**/
+
+Route::middleware(['auth', 'role:administrator'])->prefix('api-credentials')->group(function () {
+    Route::view('/', 'integrations.api-credentials.index')->name('apicredentials.index');
+    Route::view('company-user/{companyUser}', 'integrations.api-credentials.index');
 });

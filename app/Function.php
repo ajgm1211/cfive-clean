@@ -204,3 +204,35 @@ function quitar_caracteres($cadena)
 
     return $newphrase;
 }
+
+function ratesCurrencyQuote($id, $typeCurrency,$exchangeRates)
+{
+
+    $currency = Currency::where('id', '=', $id)->get();
+    $rates=null;
+
+    foreach($exchangeRates as $key=>$exchangeRate){
+        if ($currency[0]['alphacode']==$exchangeRate['alphacode']) {
+            $rates[]=$exchangeRates[$key];
+        }
+    }
+    if ($rates==null) {  
+       $rates=$currency;
+       foreach ($rates as $rate) {
+            if ($typeCurrency == 'USD') {
+                $rateC = $rate->rates;
+            } else {
+                $rateC = $rate->rates_eur;
+            }
+        }
+    }else{
+        foreach ($rates as $rate) {
+            if ($typeCurrency == 'USD') {
+                $rateC = $rate['exchangeUSD'];
+            } else {
+                $rateC = $rate['exchangeEUR'];
+            }
+        }
+    }
+    return $rateC;
+}

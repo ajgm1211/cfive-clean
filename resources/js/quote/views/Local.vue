@@ -584,6 +584,7 @@
                                 <!-- Surcharges -->
                                 <b-td>
                                     <multiselect
+                                        v-if="currentQuoteData.type == 'FCL'"
                                         v-model="localcharge.surcharge"
                                         :options="datalists['surcharges']"
                                         :multiple="false"
@@ -600,6 +601,27 @@
                                                 localcharge.surcharge.id,
                                                 'surcharge_id',
                                                 2
+                                            )
+                                        "
+                                    ></multiselect>
+                                    <multiselect
+                                        v-if="currentQuoteData.type == 'LCL'"
+                                        v-model="localcharge.surcharge"
+                                        :options="datalists['surcharges']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Surcharge"
+                                        class="data-surcharge"
+                                        label="name"
+                                        track-by="name"
+                                        @input="
+                                            onUpdate(
+                                                localcharge.id,
+                                                localcharge.surcharge.id,
+                                                'surcharge_id',
+                                                8
                                             )
                                         "
                                     ></multiselect>
@@ -647,7 +669,7 @@
                                                 localcharge.id,
                                                 localcharge.calculation_type.id,
                                                 'calculation_type_id',
-                                                2
+                                                8
                                             )
                                         "
                                     ></multiselect>
@@ -815,6 +837,7 @@
                                 <!-- Currency -->
                                 <b-td>
                                     <multiselect
+                                        v-if="currentQuoteData.type == 'FCL'"
                                         v-model="localcharge.currency"
                                         :options="datalists['currency']"
                                         :multiple="false"
@@ -831,6 +854,27 @@
                                                 localcharge.currency.id,
                                                 'currency_id',
                                                 2
+                                            )
+                                        "
+                                    ></multiselect>
+                                    <multiselect
+                                        v-if="currentQuoteData.type == 'LCL'"
+                                        v-model="localcharge.currency"
+                                        :options="datalists['currency']"
+                                        :multiple="false"
+                                        :show-labels="false"
+                                        :close-on-select="true"
+                                        :preserve-search="true"
+                                        placeholder="Currency"
+                                        class="data-currency"
+                                        label="alphacode"
+                                        track-by="alphacode"
+                                        @input="
+                                            onUpdate(
+                                                localcharge.id,
+                                                localcharge.currency.id,
+                                                'currency_id',
+                                                8
                                             )
                                         "
                                     ></multiselect>
@@ -975,6 +1019,7 @@
                                         v-model="input.units"
                                         style="width:80px;"
                                         @keypress="isNumber($event)"
+                                        @blur='validateUnits(input.units)'
                                         class="q-input"
                                     ></b-form-input>
                                 </b-td>
@@ -1114,6 +1159,7 @@ export default {
     },
     data() {
         return {
+            ceroUnits: null,
             actions: actions.localcharges,
             currencies: this.datalists.currency,
             openModal: false,
@@ -1422,6 +1468,18 @@ export default {
                     port_id: this.value.id,
                     type_id: this.value.type,
                 };
+
+                data.selectedCharges.forEach(element => {
+                    if(element.units === 0 || element.units === '0'){
+                        this.alert("Units can't be 0", "error");
+                        this.ceroUnits = true;
+                    }else{
+                        this.ceroUnits = null;
+                    }
+                });
+
+                if(this.ceroUnits)return;
+
                 if (this.currentQuoteData.type == "FCL") {
                     actions.localcharges
                         .create(data)
