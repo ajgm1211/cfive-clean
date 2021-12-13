@@ -429,20 +429,9 @@ export default {
         formatted.type_20_t = detail.amount.type_20.markup;
         formatted.type_40 = detail.amount.type_40.amount;
         formatted.type_40_t = detail.amount.type_40.markup;
-
-        if (
-          formatted.type_20_t == "Percent Markup" &&
-          formatted.type_40_t == "Percent Markup"
-        ) {
-          formatted.showModalCurrency = false;
-        }
       } else if (this.selected == "LCL") {
         formatted.type_lcl = detail.amount.type_lcl.amount;
         formatted.type_lcl_t = detail.amount.type_lcl.markup;
-
-        if (formatted.type_lcl_t == "Percent Markup") {
-          formatted.showModalCurrency = false;
-        }
       }
 
       if (formatted.showModalCurrency) {

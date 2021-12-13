@@ -47,7 +47,6 @@
 import MainButton from "../common/MainButton.vue";
 import CustomInput from "../common/CustomInput.vue";
 import SorteableDropdown from "../common/SorteableDropdown.vue";
-import { mapGetters } from "vuex";
 
 export default {
   components: { MainButton, CustomInput, SorteableDropdown },
@@ -81,6 +80,17 @@ export default {
   }),
   mounted() {
     this.setInitialData();
+
+    if (
+      this.model.type_20_t == "Percent Markup" &&
+      this.model.type_40_t == "Percent Markup"
+    ) {
+      this.showCurrency = false;
+    } else if (this.model.type_lcl_t == "Percent Markup") {
+      this.showCurrency = false;
+    } else {
+      this.showCurrency = true;
+    }
   },
   methods: {
     postData() {
@@ -158,6 +168,8 @@ export default {
         this.model.type_40_t == "Percent Markup"
       ) {
         this.showCurrency = false;
+      } else if (this.model.type_lcl_t == "Percent Markup") {
+        this.showCurrency = false;
       } else {
         this.showCurrency = true;
       }
@@ -185,19 +197,6 @@ export default {
       });
 
       return body;
-    },
-  },
-  computed: {
-    ...mapGetters(["GET_DUPLICATED"]),
-    modal() {
-      if (this.GET_DUPLICATED == true) {
-        this.$toast.open({
-          message: "HOLA",
-          type: "error",
-          duration: 5000,
-          dismissible: true,
-        });
-      }
     },
   },
 };
