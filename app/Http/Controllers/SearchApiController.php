@@ -577,14 +577,14 @@ class SearchApiController extends Controller
         $company_user = \Auth::user()->companyUser->id;
         $origin_port = $rate['origin_port'];
         $destiny_port = $rate['destiny_port'];
-        $origin_address = $rate['originAddress']['id'];
-        $destination_address =$rate['destinationAddress']['id'];
+        $origin_address = $rate['originAddress'];
+        $destination_address =$rate['destinationAddress'];
         
         $origInland=$this->getInland($container_type,$start_date,$end_date,$direction,$carrier,$company_user,$search_array['locationOrig'],$origin_port,$origin_address);
         $destInland=$this->getInland($container_type,$start_date,$end_date,$direction,$carrier,$company_user,$search_array['locationDest'],$destiny_port,$destination_address);
 
-        $filterOrig= $this->filterInland($origInland,$search_array['containers'],$current_client,$rate); 
-        $filterDest= $this->filterInland($destInland,$search_array['containers'],$current_client,$rate); 
+        $filterOrig= $this->filterInland($origInland,$search_array['containers'],$current_client,$origin_port,$origin_address,$rate); 
+        $filterDest= $this->filterInland($destInland,$search_array['containers'],$current_client,$destiny_port,$destination_address,$rate); 
 
         $selectOriginInland=$this->selectInland($filterOrig,$rate,$type=1);
         $selectDestinyInland=$this->selectInland($filterDest,$rate,$type=2);
