@@ -1784,6 +1784,8 @@ trait SearchTrait
                 $terms_to_add = $term->import;
             }else if($search_data['direction'] == 2){
                 $terms_to_add = $term->export;
+            }else if($search_data['direction'] == 3){
+                $terms_to_add = $term->import . '<br>' . $term->export;
             }
 
             if($term->language_id == 1){
@@ -1808,13 +1810,13 @@ trait SearchTrait
         if($search_data['requestData']['requested'] != 2){
             $search_data['dateRange']['startDate'] = substr($search_data['dateRange']['startDate'], 0, 10);
             $search_data['dateRange']['endDate'] = substr($search_data['dateRange']['endDate'], 0, 10);       
-        }else{
+        }/**else{
             $start_array = explode('/',$search_data['dateRange']['startDate']);
             $end_array = explode('/',$search_data['dateRange']['endDate']);
 
             $search_data['dateRange']['startDate'] = $start_array[2] . '-' . $start_array[1] . '-' . $start_array[0];
             $search_data['dateRange']['endDate'] = $end_array[2] . '-' . $end_array[1] . '-' . $end_array[0];
-        }
+        }**/
 
         return $search_data['dateRange'];
     }

@@ -8,7 +8,9 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\SearchApiResource;
 use App\Http\Resources\SearchApiLclResource;
+use App\Http\Resources\WhitelabelSearchApiResource;
 use App\Http\Resources\RateResource;
+use App\Http\Resources\WhitelabelRateResource;
 use App\Http\Requests\StoreContractSearch;
 use App\InlandDistance;
 use App\Harbor;
@@ -79,12 +81,14 @@ class SearchApiController extends Controller
         return SearchApiResource::collection($results);
     }
 
+
     //Retrieves all data needed for search processing and displaying
     public function data(Request $request)
     {
         $user = \Auth::user();
         //Querying each model used and mapping only necessary data
         $company_user_id = $user->company_user_id;
+        // $company_user_id = 1;
 
         $company_user = CompanyUser::where('id', $company_user_id)->first();
 
@@ -222,24 +226,24 @@ class SearchApiController extends Controller
         return response()->json(['data' => $data]);
     }
 
+    //Validates search request data
     public function processSearch(Request $request)
     {
         //Setting current company and user
-        $user = \Auth::user();
-        $user_id = $user->id;
-        $company_user = $user->companyUser()->first();
-        $company_user_id = $company_user->id;
-
+         $user = \Auth::user();
+         $user_id = $user->id;
+         $company_user = $user->companyUser()->first();
+         $company_user_id = $company_user->id;
+        
         $search_array = $request->input();
 
-        $search_array['dateRange']['startDate'] = $this->formatSearchDate($search_array['dateRange']['startDate'], 'date');
-        $search_array['dateRange']['endDate'] = $this->formatSearchDate($search_array['dateRange']['endDate'], 'date');
+        $search_array['dateRange'] = $this->formatSearchDate($search_array);
+        $search_array['client_currency'] = $company_user->currency;
 
         $search_ids = $this->getIdsFromArray($search_array);
         $search_ids['company_user'] = $company_user_id;
         $search_ids['user'] = $user_id;
         $search_ids['client_currency'] = $company_user->currency;
-
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
 
@@ -255,7 +259,7 @@ class SearchApiController extends Controller
             $global_charges = $this->searchGlobalCharges($search_ids, $rate);
 
             //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
-            $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids);
+            $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids,$company_user);
 
             //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
             $this->calculateFclCharges($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
@@ -267,7 +271,7 @@ class SearchApiController extends Controller
             $this->addChargesToRate($rate, $charges, $search_ids);
 
             //Getting price levels if requested
-            if ($search_array['pricelevel']) {
+            if ($search_array['pricelevel'] || $search_array['requestData']['requested'] == 2) {
                 $price_level_markups = $this->searchPriceLevels($search_ids);
             } else {
                 $price_level_markups = [];
@@ -283,7 +287,7 @@ class SearchApiController extends Controller
                 }
             }
 
-            $this->calculateTotals($rate, $search_ids);
+            $this->calculateTotals($rate, $search_array);
 
             $remarks = $this->searchRemarks($rate, $search_ids);
 
@@ -308,6 +312,7 @@ class SearchApiController extends Controller
 
             $search_array['terms'] = $terms;
 
+
             $rates[0]->SetAttribute('search', $search_array);
         }
 
@@ -315,8 +320,15 @@ class SearchApiController extends Controller
         $track_array['company_user'] = $company_user;
         $track_array['data'] = $search_array;
 
+        
         /** Tracking search event with Mix Panel*/
         $this->trackEvents("search_fcl", $track_array);
+
+        // Whitelabel 
+
+        if($search_array['requestData']['requested'] == 2){
+            return WhitelabelRateResource::collection($rates);
+        }
 
         return RateResource::collection($rates);
     }
@@ -324,6 +336,8 @@ class SearchApiController extends Controller
     //Stores current search
     public function store(Request $request)
     {
+        // dd($request->input());
+
         //Validating request data from form
         $new_search_data = $request->validate([
             'originPorts' => 'required|array|min:1',
@@ -346,9 +360,13 @@ class SearchApiController extends Controller
             'destinationAddress' => 'sometimes',
         ]);
 
+
+
+
         //Stripping time stamp from date
         $new_search_data['dateRange']['startDate'] = substr($new_search_data['dateRange']['startDate'], 0, 10);
         $new_search_data['dateRange']['endDate'] = substr($new_search_data['dateRange']['endDate'], 0, 10);
+
 
         //Getting address text if in array form
         if (is_array($new_search_data['originAddress'])) {
@@ -435,6 +453,7 @@ class SearchApiController extends Controller
 
         return new SearchApiResource($new_search);
     }
+
 
     public function retrieve(SearchRate $search)
     {
@@ -749,16 +768,12 @@ class SearchApiController extends Controller
 
         //Appending markups and added containers and totals to rate or charge
         if ($is_eloquent_collection) {
-            if($search_data['requestData']['requested'] != 2) {
-                $target->setAttribute('container_markups', $markups_array);
-                $target->setAttribute('totals_markups', $markups_client_currency);
-            }
+            $target->setAttribute('container_markups', $markups_array);
+            $target->setAttribute('totals_markups', $markups_client_currency);
             $target->setAttribute('containers_with_markups', $containers_with_markups);
             $target->setAttribute('totals_with_markups', $totals_with_markups);
         } else {
-            if($search_data['requestData']['requested'] != 2) {
-                $target['container_markups'] = $markups_array;
-            }
+            $target['container_markups'] = $markups_array;
             $target['containers_with_markups'] = $containers_with_markups;
         }
     }
@@ -898,6 +913,15 @@ class SearchApiController extends Controller
         if (isset($rate->totals_with_markups)) {
             $totals_with_markups_freight_currency = $this->convertToCurrency($client_currency, $rate->currency, $rate->totals_with_markups);
             $rate->setAttribute('totals_with_markups_freight_currency', $totals_with_markups_freight_currency);
+        }
+
+        if( $search_data['requestData']['requested'] == 2 ){
+            $single_totals = $rate->$to_update; 
+            foreach($search_data['containers'] as $container){
+                $single_totals['C'.$container['code']] *= $container['qty'];
+            }
+
+            $rate->$to_update = $single_totals;
         }
     }
 

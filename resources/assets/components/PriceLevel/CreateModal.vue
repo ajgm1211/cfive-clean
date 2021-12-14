@@ -6,7 +6,10 @@
         <h3>{{ action + " " + title }}</h3>
       </div>
       <form action="" class="create-form" autocomplete="off">
-        <div v-for="(field, fieldKey) in fields" :key="fieldKey">
+        <div
+          v-for="field, fieldKey in fields"
+          :key="fieldKey"
+        >
           <CustomInput
             v-if="field.type == 'input'"
             :label="field.label"
@@ -158,7 +161,7 @@ export default {
           }
         }
       });
-
+      
       return true;
     },
     setSelected(option, field_name) {
