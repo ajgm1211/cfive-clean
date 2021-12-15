@@ -670,7 +670,7 @@ class ImportationGlobalChargerLclController extends Controller
                         ->first();
                 }
 
-                $destinationAIn = $destinationOb['id'];
+                $destinationAIn = $destinationOb['id'] ?? [];
                 $destinationC = count($destinationA);
                 if ($destinationC <= 1 && count($destinationAIn) == 1) {
                     $destinationA = $destinationOb['name'];
