@@ -294,6 +294,8 @@ export default {
 
     setDatalists(initialData) {
       this.datalists = initialData;
+
+      console.log('initialData', initialData)
     },
 
     setSearchStatus(searchRequest) {

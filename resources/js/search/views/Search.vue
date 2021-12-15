@@ -75,9 +75,12 @@
 
         <!-- ORIGIN PORT -->
         <div class="col-lg-3 mb-2 input-search-form origen-search">
-          <div class="od-input">
+          <div
+            class="od-input"
+            @click="openSelect('origin')"
+          >
             <img src="/images/port.svg" class="img-icon" alt="port" />
-            <div @click="openFinderFrom" style="cursor:pointer">
+            <div style="cursor:pointer">
               <p class="input-places">
                 <span v-for="(data, index) in placeInShowFrom" :key="index">
                   {{ data.location }}
@@ -101,10 +104,7 @@
                 : ""
             }}</span>
           </div>
-          <ul
-            class="places-list"
-            v-if="originPlacesFrom || openOriginPlacesFrom"
-          >
+          <ul class="places-list" v-if="openOriginPlacesFrom === true">
             <div
               class="d-flex"
               style="align-items: center; padding: 0 20px; border-bottom: 1px solid #f1f1f1;"
@@ -112,16 +112,67 @@
               <b-icon icon="search" class="mr-2"></b-icon>
               <b-form-input
                 autocomplete="off"
-                v-if="openFinderFrom"
                 v-model.trim="originPlacesFrom"
                 placeholder="From"
+                @keyup="test('originPlacesFrom')"
                 style="color: #333333;border: none !important;background: transparent !important;height: 20px;"
               ></b-form-input>
             </div>
+
+            <div
+              v-if="!filtered_harbors.length && searching_harbors == false"
+              class="no-results-filter"
+            >
+              We couldn't find any matching result.
+            </div>
+
+            <div v-if="searching_harbors == true">
+              <div
+                class="d-flex align-items-center mx-auto"
+                style="padding: 15px 10px; width: fit-content;"
+                v-for="i in skeletons"
+                :key="i"
+              >
+                <VueSkeletonLoader
+                  type="rect"
+                  :width="40"
+                  :height="40"
+                  animation="fade"
+                  :rounded="true"
+                />
+
+                <div class="d-grid" style="margin: 0 20px">
+                  <VueSkeletonLoader
+                    type="rect"
+                    :width="200"
+                    :height="15"
+                    animation="fade"
+                    :rounded="true"
+                  />
+
+                  <VueSkeletonLoader
+                    style="margin-top:10px"
+                    type="rect"
+                    :width="150"
+                    :height="10"
+                    animation="fade"
+                    :rounded="true"
+                  />
+                </div>
+
+                <VueSkeletonLoader
+                  type="rect"
+                  :width="40"
+                  :height="20"
+                  animation="fade"
+                  :rounded="true"
+                />
+              </div>
+            </div>
+
             <li
-              v-for="(data, key) in optionsPlaces"
+              v-for="(data, key) in filtered_harbors"
               :key="key"
-              v-show="filter(data)"
               style="cursor:pointer"
             >
               <b-form-checkbox
@@ -157,9 +208,9 @@
 
         <!-- DESTINATION PORT -->
         <div class="col-lg-3 mb-2 input-search-form destination-search">
-          <div class="od-input od-input-to" style="backgdround-color: yellow">
+          <div class="od-input od-input-to" @click="openSelect('destiny')">
             <img src="/images/port.svg" class="img-icon" alt="port" />
-            <div @click="openFinderTo" style="cursor: pointer">
+            <div style="cursor: pointer">
               <p class="input-places">
                 <span v-for="(data, index) in placeInShowTo" :key="index">
                   {{ data.location }}
@@ -180,23 +231,84 @@
                 : ""
             }}</span>
           </div>
-          <ul class="places-list" v-if="originPlacesTo || openOriginPlacesTo">
+          <ul
+            class="places-list"
+            style="width:100%"
+            v-show="openOriginPlacesTo === true"
+          >
             <div
               class="d-flex"
               style="align-items: center; padding: 0 20px; border-bottom: 1px solid #f1f1f1;"
             >
-              <b-icon icon="search" class="mr-2"></b-icon>
+              <b-icon
+                icon="search"
+                style="cursor:pointer"
+                class="mr-2"
+              ></b-icon>
               <b-form-input
+                @keyup="test('originPlacesTo')"
                 v-model.trim="originPlacesTo"
                 placeholder="To"
                 style="color: #333333;border: none !important;background: transparent !important;height: 20px;"
               ></b-form-input>
             </div>
+
+            <div
+              v-if="!filtered_harbors.length && searching_harbors == false"
+              class="no-results-filter"
+            >
+              We couldn't find any matching result.
+            </div>
+
+            <div v-if="searching_harbors == true">
+              <div
+                class="d-flex align-items-center mx-auto"
+                style="padding: 15px 10px; width: fit-content;"
+                v-for="i in skeletons"
+                :key="i"
+              >
+                <VueSkeletonLoader
+                  type="rect"
+                  :width="40"
+                  :height="40"
+                  animation="fade"
+                  :rounded="true"
+                />
+
+                <div class="d-grid" style="margin: 0 20px">
+                  <VueSkeletonLoader
+                    type="rect"
+                    :width="200"
+                    :height="15"
+                    animation="fade"
+                    :rounded="true"
+                  />
+
+                  <VueSkeletonLoader
+                    style="margin-top:10px"
+                    type="rect"
+                    :width="150"
+                    :height="10"
+                    animation="fade"
+                    :rounded="true"
+                  />
+                </div>
+
+                <VueSkeletonLoader
+                  type="rect"
+                  :width="40"
+                  :height="20"
+                  animation="fade"
+                  :rounded="true"
+                />
+              </div>
+            </div>
+
             <li
+              v-show="searching_harbors == false"
               style="cursor:pointer"
-              v-for="(data, key) in optionsPlaces"
+              v-for="(data, key) in filtered_harbors"
               :key="key"
-              v-show="filterTo(data)"
             >
               <b-form-checkbox
                 :id="'placeTo-' + key"
@@ -1431,15 +1543,23 @@ import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import "vue2-daterange-picker/dist/vue2-daterange-picker.css";
 import actions from "../../actions";
+import VueSkeletonLoader from "skeleton-loader-vue";
+
 export default {
   components: {
     Search,
     Multiselect,
     DateRangePicker,
     vueDropzone: vue2Dropzone,
+    VueSkeletonLoader,
   },
   data() {
     return {
+      // test new select harbors
+      filtered_harbors: [],
+      searching_harbors: false,
+      skeletons: [1, 2, 3, 4],
+      // end test new select harbors
       fromCity: "",
       fromPort: "",
       toCity: "",
@@ -1457,58 +1577,6 @@ export default {
       nameTagPlaces: "",
       placeInShowTo: [],
       placeInShowFrom: [],
-      optionsPlaces: [
-        {
-          country: "Spain",
-          id: 3780,
-          location: "ORELLANA LA VIEJA",
-          type: "city",
-        },
-        {
-          country: null,
-          display_name: "Barcelona, ESBCN",
-          id: 949,
-          location: "Barcelona, ESBCN",
-          type: "port",
-        },
-        // {
-        //   code: "123_321_1",
-        //   country: "España",
-        //   location: "Canarias",
-        //   type: "port",
-        // },
-        // {
-        //   code: "123_232_2",
-        //   country: "España",
-        //   location: "Cuenca",
-        //   type: "city",
-        // },
-        // {
-        //   code: "123_438_2",
-        //   country: "España",
-        //   location: "Cordoba",
-        //   type: "city",
-        // },
-        // {
-        //   code: "123_986_1",
-        //   country: "España",
-        //   location: "Almeria",
-        //   type: "port",
-        // },
-        // {
-        //   code: "123_129_1",
-        //   country: "España",
-        //   location: "Malaga",
-        //   type: "port",
-        // },
-        // {
-        //   code: "123_457_2",
-        //   country: "España",
-        //   location: "Sevilla",
-        //   type: "city",
-        // },
-      ],
-      // fin datos estaticos search con inlands
       loaded: false,
       additionalVisible: false,
       searching: false,
@@ -1660,42 +1728,54 @@ export default {
     api.getData({}, "/api/search/data", (err, data) => {
       this.setDropdownLists(err, data.data);
       this.getQuery();
-    });
-
-    this.optionsPlaces.sort((a, b) => (a.location > b.location ? 1 : -1));
-
-    window.addEventListener("click", (e) => {
-      if (!this.$el.contains(e.target)) {
-        this.openOriginPlacesFrom = false;
-        this.openOriginPlacesTo = false;
-      }
+      this.filtered_harbors = this.datalists.harbors.filter((val, i) => i < 10);
     });
   },
   methods: {
-    filter(item) {
-      let currentName = item.location.toLowerCase();
-      let currentInput = this.originPlacesFrom.toLowerCase();
-      return currentName.includes(currentInput);
+    openSelect(e) {
+      this.filtered_harbors = this.datalists.harbors.filter((val, i) => i < 10);
+      if (e == "destiny") {
+        this.originPlacesFrom = "";
+        this.openOriginPlacesTo = !this.openOriginPlacesTo;
+        this.openOriginPlacesFrom = false;
+      } else if (e == "origin") {
+        this.originPlacesTo = "";
+        this.openOriginPlacesFrom = !this.openOriginPlacesFrom;
+        this.openOriginPlacesTo = false;
+      }
     },
-    filterTo(item) {
-      let currentName = item.location.toLowerCase();
-      let currentInput = this.originPlacesTo.toLowerCase();
-      return currentName.includes(currentInput);
-    },
-    openFinderFrom() {
-      this.openOriginPlacesFrom = !this.openOriginPlacesFrom;
+    test: _.debounce(function(vmodel) {
+      this.searching_harbors = true;
+      console.log("v-model", vmodel);
+      let currentInput;
+      if (vmodel == "originPlacesFrom") {
+        currentInput = this.originPlacesFrom.toLowerCase();
+      } else {
+        currentInput = this.originPlacesTo.toLowerCase();
+      }
+      console.log("filtered harbors 0", this.filtered_harbors);
+      this.filtered_harbors = [];
 
-      // if (this.inputSearchFrom == false && this.placeInShowFrom.length >= 1) {
-      //   this.inputSearchFrom = true;
-      // }
-    },
-    openFinderTo() {
-      this.openOriginPlacesTo = !this.openOriginPlacesTo;
+      let new_harbors = [];
+      this.datalists.harbors.filter((item, index) => {
+        let freeze = Object.freeze(item);
 
-      //   if (this.inputSearchTo == false && this.placeInShowTo.length >= 0) {
-      //     this.inputSearchTo = true;
-      //   }
-    },
+        let filtered = freeze.location
+          .toLowerCase()
+          .includes(currentInput.toLowerCase());
+
+        if (filtered == true) {
+          new_harbors.push(freeze);
+        }
+      });
+
+      setTimeout(() => {
+        this.searching_harbors = false;
+      }, 800);
+
+      this.filtered_harbors = new_harbors.filter((val, i) => i < 10);
+      console.log("harbors filtered 1", this.filtered_harbors);
+    }, 1000),
     placeCheckedFrom(data) {
       // //this.placeInShow.push({code: data.code, location: data.location, type: data.type});
       let placeType = [];
@@ -1904,7 +1984,7 @@ export default {
     },
 
     getQuery() {
-      console.log('get query', this.searchRequest)
+      console.log("get query", this.searchRequest);
       this.searchRequest.requestData = this.$route.query;
 
       if (Object.keys(this.searchRequest.requestData).length != 0) {
@@ -1927,7 +2007,7 @@ export default {
         .then((response) => {
           this.searchData = response.data.data;
           this.setSearchDisplay(this.searchRequest.requestData.requested);
-          
+
           if (this.searchData.destination_address.length) {
             this.placeInShowTo = this.searchData.destination_address;
           } else {
@@ -1948,7 +2028,6 @@ export default {
     },
 
     getQuoteToDuplicate(id) {
-
       actions.quotes
         .retrieve(id)
         .then((response) => {
@@ -1956,7 +2035,10 @@ export default {
           this.$emit("quoteLoaded", this.quoteData);
           this.setSearchDisplay(this.searchRequest.requestData.requested);
 
-          console.log('get quote to duplicate ', this.searchRequest.requestData.requested)
+          console.log(
+            "get quote to duplicate ",
+            this.searchRequest.requestData.requested
+          );
         })
         .catch((error) => {
           if (error.status === 422) {
@@ -1969,8 +2051,8 @@ export default {
     setSearchDisplay(requestType) {
       let component = this;
 
-      console.log('setSearchDisplay', requestType)
-      console.log('setSearchDisplay', this.searchRequest)
+      console.log("setSearchDisplay", requestType);
+      console.log("setSearchDisplay", this.searchRequest);
 
       component.originPortOptions = component.datalists.harbors;
       component.destinationPortOptions = component.datalists.harbors;
@@ -2038,7 +2120,7 @@ export default {
     },
 
     fillInitialFields(requestType) {
-      console.log('fillInitialFields', requestType)
+      console.log("fillInitialFields", requestType);
       let component = this;
       let origPortNames = [];
       let destPortNames = [];
@@ -2048,7 +2130,7 @@ export default {
         this.searchRequest.carriersApi = this.datalists.carriers_api;
         this.deliveryType = this.deliveryTypeOptions[0];
       } else if (requestType == 0) {
-        console.log('fillInitialFields REQUEST',  component.searchRequest)
+        console.log("fillInitialFields REQUEST", component.searchRequest);
         this.searchRequest.type = this.searchData.type;
         this.$emit("searchTypeChanged", "code");
         this.searchRequest.direction = this.searchData.direction_id;
@@ -2056,7 +2138,7 @@ export default {
         this.searchRequest.deliveryType = this.searchData.delivery_type;
         this.searchRequest.originPorts = [];
         component.searchData.origin_ports.forEach(function(origPort) {
-          console.log('fillInitialFields origPort ?', origPort)
+          console.log("fillInitialFields origPort ?", origPort);
           if (!origPortNames.includes(origPort.name)) {
             origPortNames.push(origPort.name);
             component.searchRequest.originPorts.push(origPort);
@@ -2179,15 +2261,20 @@ export default {
       this.setPriceLevels();
       this.loaded = true;
 
-      console.log('fillInitialFields origin ports', this.searchRequest.originPorts)
-      console.log('fillInitialFields destination ports', this.searchRequest.destinationPorts)
-
+      console.log(
+        "fillInitialFields origin ports",
+        this.searchRequest.originPorts
+      );
+      console.log(
+        "fillInitialFields destination ports",
+        this.searchRequest.destinationPorts
+      );
     },
 
     //Send Search Request to Controller
     searchButtonPressed() {
-      console.log('search button presed')
-      console.log('search button presed', this.searchRequest)
+      console.log("search button presed");
+      console.log("search button presed", this.searchRequest);
       let component = this;
 
       this.setSearchParameters();
@@ -2219,7 +2306,7 @@ export default {
         this.searchRequest.requestData.requested == undefined ||
         this.searchRequest.requestData.requested == 0
       ) {
-        console.log('this.searchRequesT', this.searchRequest)
+        console.log("this.searchRequesT", this.searchRequest);
         component.searchActions
           .create(this.searchRequest)
           .then((response) => {
@@ -2231,11 +2318,9 @@ export default {
               },
             });
             this.getQuery();
-
-
           })
           .catch((error) => {
-            console.log('error', error)
+            console.log("error", error);
             this.errorsExist = true;
             this.searching = false;
             if (error.status === 422) {
@@ -2259,12 +2344,15 @@ export default {
       } else if (this.searchRequest.requestData.requested == 1) {
         this.getQuery();
 
-        console.log('this.searchRequest.requestData.requested IF (this.searchRequest.requestData.requested == 1)', this.searchRequest.requestData.requested) 
+        console.log(
+          "this.searchRequest.requestData.requested IF (this.searchRequest.requestData.requested == 1)",
+          this.searchRequest.requestData.requested
+        );
       }
     },
 
     setSearchParameters() {
-      console.log('setSearchParameters')
+      console.log("setSearchParameters");
       this.searching = true;
       if (this.searchRequest.type == "FCL") {
         this.searchRequest.selectedContainerGroup = this.selectedContainerGroup;
@@ -2731,5 +2819,12 @@ export default {
 
 .ml-10px {
   margin-left: 10px;
+}
+
+.no-results-filter {
+  text-align: center;
+  font-size: 19px;
+  padding: 20px;
+  margin-top: 20%;
 }
 </style>
