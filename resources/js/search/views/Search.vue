@@ -75,10 +75,7 @@
 
         <!-- ORIGIN PORT -->
         <div class="col-lg-3 mb-2 input-search-form origen-search">
-          <div
-            class="od-input"
-            @click="openSelect('origin')"
-          >
+          <div class="od-input" @click="openSelect('origin')">
             <img src="/images/port.svg" class="img-icon" alt="port" />
             <div style="cursor:pointer">
               <p class="input-places">
@@ -114,7 +111,7 @@
                 autocomplete="off"
                 v-model.trim="originPlacesFrom"
                 placeholder="From"
-                @keyup="test('originPlacesFrom')"
+                @keyup="filterHarbors('originPlacesFrom')"
                 style="color: #333333;border: none !important;background: transparent !important;height: 20px;"
               ></b-form-input>
             </div>
@@ -240,13 +237,9 @@
               class="d-flex"
               style="align-items: center; padding: 0 20px; border-bottom: 1px solid #f1f1f1;"
             >
-              <b-icon
-                icon="search"
-                style="cursor:pointer"
-                class="mr-2"
-              ></b-icon>
+              <b-icon icon="search" class="mr-2"></b-icon>
               <b-form-input
-                @keyup="test('originPlacesTo')"
+                @keyup="filterHarbors('originPlacesTo')"
                 v-model.trim="originPlacesTo"
                 placeholder="To"
                 style="color: #333333;border: none !important;background: transparent !important;height: 20px;"
@@ -889,6 +882,7 @@
             v-if="!searching"
             class="btn-search"
             @click="searchButtonPressed"
+            type="button"
           >
             SEARCH
           </button>
@@ -1744,16 +1738,16 @@ export default {
         this.openOriginPlacesTo = false;
       }
     },
-    test: _.debounce(function(vmodel) {
+    filterHarbors: _.debounce(function(vmodel) {
       this.searching_harbors = true;
-      console.log("v-model", vmodel);
+
       let currentInput;
       if (vmodel == "originPlacesFrom") {
         currentInput = this.originPlacesFrom.toLowerCase();
       } else {
         currentInput = this.originPlacesTo.toLowerCase();
       }
-      console.log("filtered harbors 0", this.filtered_harbors);
+
       this.filtered_harbors = [];
 
       let new_harbors = [];
@@ -1774,10 +1768,8 @@ export default {
       }, 800);
 
       this.filtered_harbors = new_harbors.filter((val, i) => i < 10);
-      console.log("harbors filtered 1", this.filtered_harbors);
-    }, 1000),
+    }, 800),
     placeCheckedFrom(data) {
-      // //this.placeInShow.push({code: data.code, location: data.location, type: data.type});
       let placeType = [];
 
       if (this.placeInShowFrom.length >= 1) {
@@ -1787,11 +1779,9 @@ export default {
 
         this.placeInShowFrom.forEach((element) => {
           placeType.push(element.type);
-
-          if (!this.searchRequest.originPorts.includes(element)) {
-            this.searchRequest.originPorts.push(element);
-          }
         });
+
+        this.searchRequest.originPorts = this.placeInShowFrom;
 
         this.fromPort = placeType
           .map((e) => e.toLocaleLowerCase())
@@ -1804,7 +1794,6 @@ export default {
         placeType = [];
         this.showTagPlaceFrom = false;
       }
-
       this.openOriginPlacesFrom = false;
     },
     placeCheckedTo(data) {
@@ -1816,8 +1805,6 @@ export default {
 
         this.placeInShowTo.forEach((element) => {
           placeType.push(element.type);
-
-          this.searchRequest.destinationPorts.push(element);
         });
 
         this.toPort = placeType
@@ -1826,6 +1813,8 @@ export default {
         this.toCity = placeType
           .map((e) => e.toLocaleLowerCase())
           .includes("city");
+
+        this.searchRequest.destinationPorts = this.placeInShowTo;
       }
       if (this.placeInShowTo.length == 0) {
         placeType = [];
@@ -1984,7 +1973,6 @@ export default {
     },
 
     getQuery() {
-      console.log("get query", this.searchRequest);
       this.searchRequest.requestData = this.$route.query;
 
       if (Object.keys(this.searchRequest.requestData).length != 0) {
@@ -2034,11 +2022,6 @@ export default {
           this.quoteData = response.data.data;
           this.$emit("quoteLoaded", this.quoteData);
           this.setSearchDisplay(this.searchRequest.requestData.requested);
-
-          console.log(
-            "get quote to duplicate ",
-            this.searchRequest.requestData.requested
-          );
         })
         .catch((error) => {
           if (error.status === 422) {
@@ -2050,10 +2033,6 @@ export default {
     //set UI elements
     setSearchDisplay(requestType) {
       let component = this;
-
-      console.log("setSearchDisplay", requestType);
-      console.log("setSearchDisplay", this.searchRequest);
-
       component.originPortOptions = component.datalists.harbors;
       component.destinationPortOptions = component.datalists.harbors;
       component.directionOptions = [
@@ -2120,7 +2099,6 @@ export default {
     },
 
     fillInitialFields(requestType) {
-      console.log("fillInitialFields", requestType);
       let component = this;
       let origPortNames = [];
       let destPortNames = [];
@@ -2130,27 +2108,28 @@ export default {
         this.searchRequest.carriersApi = this.datalists.carriers_api;
         this.deliveryType = this.deliveryTypeOptions[0];
       } else if (requestType == 0) {
-        console.log("fillInitialFields REQUEST", component.searchRequest);
         this.searchRequest.type = this.searchData.type;
         this.$emit("searchTypeChanged", "code");
         this.searchRequest.direction = this.searchData.direction_id;
         //this.deliveryType = this.searchData.delivery_type;
         this.searchRequest.deliveryType = this.searchData.delivery_type;
+
         this.searchRequest.originPorts = [];
         component.searchData.origin_ports.forEach(function(origPort) {
-          console.log("fillInitialFields origPort ?", origPort);
-          if (!origPortNames.includes(origPort.name)) {
-            origPortNames.push(origPort.name);
+          if (!origPortNames.includes(origPort.location)) {
+            origPortNames.push(origPort.location);
             component.searchRequest.originPorts.push(origPort);
           }
         });
+
         this.searchRequest.destinationPorts = [];
         component.searchData.destination_ports.forEach(function(destPort) {
-          if (!destPortNames.includes(destPort.name)) {
-            destPortNames.push(destPort.name);
+          if (!destPortNames.includes(destPort.location)) {
+            destPortNames.push(destPort.location);
             component.searchRequest.destinationPorts.push(destPort);
           }
         });
+
         if (this.searchData.type == "FCL") {
           this.selectedContainerGroup = this.searchData.container_group;
           this.searchRequest.selectedContainerGroup = this.searchData.container_group;
@@ -2260,21 +2239,10 @@ export default {
 
       this.setPriceLevels();
       this.loaded = true;
-
-      console.log(
-        "fillInitialFields origin ports",
-        this.searchRequest.originPorts
-      );
-      console.log(
-        "fillInitialFields destination ports",
-        this.searchRequest.destinationPorts
-      );
     },
 
     //Send Search Request to Controller
     searchButtonPressed() {
-      console.log("search button presed");
-      console.log("search button presed", this.searchRequest);
       let component = this;
 
       this.setSearchParameters();
@@ -2306,7 +2274,6 @@ export default {
         this.searchRequest.requestData.requested == undefined ||
         this.searchRequest.requestData.requested == 0
       ) {
-        console.log("this.searchRequesT", this.searchRequest);
         component.searchActions
           .create(this.searchRequest)
           .then((response) => {
@@ -2320,7 +2287,6 @@ export default {
             this.getQuery();
           })
           .catch((error) => {
-            console.log("error", error);
             this.errorsExist = true;
             this.searching = false;
             if (error.status === 422) {
@@ -2343,16 +2309,10 @@ export default {
           });
       } else if (this.searchRequest.requestData.requested == 1) {
         this.getQuery();
-
-        console.log(
-          "this.searchRequest.requestData.requested IF (this.searchRequest.requestData.requested == 1)",
-          this.searchRequest.requestData.requested
-        );
       }
     },
 
     setSearchParameters() {
-      console.log("setSearchParameters");
       this.searching = true;
       if (this.searchRequest.type == "FCL") {
         this.searchRequest.selectedContainerGroup = this.selectedContainerGroup;
@@ -2553,9 +2513,7 @@ export default {
             this.searchRequest.requestData.model_id,
             this.searchRequest
           )
-          .then((response) => {
-            console.log("Quote updated!");
-          })
+          .then((response) => {})
           .catch((error) => {
             this.errorsExist = true;
             if (error.status === 422) {
@@ -2811,20 +2769,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.c-gap-20 {
-  column-gap: 20px;
-}
-
-.ml-10px {
-  margin-left: 10px;
-}
-
-.no-results-filter {
-  text-align: center;
-  font-size: 19px;
-  padding: 20px;
-  margin-top: 20%;
-}
-</style>
