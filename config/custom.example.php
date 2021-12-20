@@ -4,22 +4,25 @@ switch (env('APP_ENV')) {
     case 'local':
         $view  = 'local';
         $appUrl  = 'http://cargofive.local';
-        
+        $apiUrl = 'https://carriersdev.cargofive.com/api/pricing';
     break;
 
     case 'demo':
         $view  = 'demo';
         $appUrl  = '';
+        $apiUrl = 'https://carriersdev.cargofive.com/api/pricing';
     break;
 
     case 'production':
         $view  = 'prd';
-        $appUrl  = 'http://cargofive.com';
+        $appUrl  = 'https://app.cargofive.com';
+        $apiUrl = 'https://carriers.cargofive.com/api/pricing';
     break;
     
     default:
         $view = '';
         $appUrl  = '';
+        $apiUrl = '';
         break;
 }
 
@@ -46,5 +49,17 @@ return [
     */
 
     'app_url' => env('APP_URL', $appUrl),
+
+    
+    /*
+    |--------------------------------------------------------------------------
+    | API URL
+    |--------------------------------------------------------------------------
+    |
+    | This setups the api url gateway so we can get it.
+    |
+    */
+
+    'api_url' => $appUrl,
 
 ];
