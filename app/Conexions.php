@@ -10,6 +10,7 @@ class Conexions
       return [
         'appEnv'=> config('custom.app_env'),
         'appUrl'=> config('custom.app_url'),
+        'apiUrl'=> config('custom.api_url'),
       ];
     }
 }
