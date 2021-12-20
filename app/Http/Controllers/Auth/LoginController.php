@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\MasterController;
 use App\Http\Traits\BrowserTrait;
 use App\User;
 use App\OauthClient;
@@ -15,7 +16,7 @@ use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Client;  
 
-class LoginController extends Controller
+class LoginController extends MasterController
 {
     /*
     |--------------------------------------------------------------------------
@@ -46,6 +47,7 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+        parent::__construct();
     }
 
 
@@ -156,7 +158,7 @@ class LoginController extends Controller
         }
         
         $user_secret = $oauth_client->secret; 
-        $app_url = $_ENV['APP_URL'] . "/oauth/token";
+        $app_url = $this->customEnv['appUrl'] . "/oauth/token";
 
         $client = new \GuzzleHttp\Client([              
             'Accept' => 'application/json',
