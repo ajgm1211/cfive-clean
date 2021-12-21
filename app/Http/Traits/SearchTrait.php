@@ -1358,6 +1358,15 @@ trait SearchTrait
         foreach ($target as $direction => $charge_direction) {
             $rate_charges[$direction] = [];
 
+            foreach($inlands as $key=>$inland ){
+                if ($inland!=null) {
+                    if ($key=='origin_inland' && $direction=='Origin') {
+                        array_push($rate_charges['Origin'], $inland);
+                    }elseif($key=='destiny_inland' && $direction=='Destination'){
+                        array_push($rate_charges['Destination'], $inland);
+                    }
+                }
+            }
             //Looping through charges by type
             foreach ($charge_direction as $charge) {
                 if(!$charge->hide){   
@@ -1410,15 +1419,6 @@ trait SearchTrait
             };
         }
 
-        foreach($inlands as $direction=>$inland ){
-            if ($inland!=null) {
-                if ($direction=='origin_inland') {
-                    array_push($rate_charges['Origin'], $inland);
-                }elseif($direction=='destiny_inland'){
-                    array_push($rate_charges['Destination'], $inland);
-                }
-            }
-        }
         $rate->setAttribute('charges', $rate_charges);
     }
 
@@ -1749,12 +1749,12 @@ trait SearchTrait
 
         foreach($search_array as $locations){
             if ($locations['id']!=null && $port==$locations['harbor'] && $locations['id']==$address['id']  ) {
-                $inlands= Inland::where('validity', '>=', $start_date)->where('expire', '<=', $end_date)
+                $inlands= Inland::where('validity', '<', $end_date)->where('expire', '>', $start_date)
                 ->where('company_user_id',$company_user)->where('gp_container_id',$container_type)
                 ->where('direction_id',$direction)->where('carrier_id',$carrier)->with('inlandkms','inlandLocation','inlandRange','providers')
-                // ->whereHas('inlandports', function ($a) use ($port){
-                //     $a->where('port',$port);
-                // })
+                ->whereHas('inlandports', function ($a) use ($port){
+                    $a->where('port',$port);
+                })
                 ->get();
                
                 foreach($inlands as $inland){
