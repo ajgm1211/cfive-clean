@@ -188,6 +188,7 @@ import MainButton from "../common/MainButton.vue";
 import CustomInput from "../common/CustomInput.vue";
 import { mapGetters } from "vuex";
 import SorteableDropdown from "../common/SorteableDropdown.vue";
+import toastr from "toastr";
 
 export default {
   props: {
@@ -265,20 +266,25 @@ export default {
   },
   methods: {
     async addRate() {
-      await this.$store.dispatch("createRate", {
-        id: this.$route.params.id,
-        body: {
-          amount: this.amount,
-          currency: this.only_percent ? null : this.currency,
-          price_level_apply: this.price_level_apply,
-          direction: this.direction,
-          only_percent: this.only_percent,
-        },
-        page: this.currentPage,
-        currentId: this.$route.params.id,
-      });
-
-      this.clearDisplay();
+      let amount_qty = Number(this.amount.type_lcl.amount);
+      
+      if (amount_qty < 1) {
+        toastr.error("The amount must be greater than 0");
+      } else {
+        await this.$store.dispatch("createRate", {
+          id: this.$route.params.id,
+          body: {
+            amount: this.amount,
+            currency: this.only_percent ? null : this.currency,
+            price_level_apply: this.price_level_apply,
+            direction: this.direction,
+            only_percent: this.only_percent,
+          },
+          page: this.currentPage,
+          currentId: this.$route.params.id,
+        });
+        this.clearDisplay();
+      }
     },
     toggleAll(checked) {
       this.allSelected = checked;

@@ -144,6 +144,8 @@ export default {
           body: dispatchBody,
         });
       }
+
+      this.$emit('cancel')
     },
     validate() {
       let component = this;
