@@ -257,6 +257,7 @@ export default {
     restrictions: [],
     currencies: [],
     only_percent: false,
+    adding_zero: true,
   }),
   mounted() {
     setTimeout(() => {
@@ -266,9 +267,9 @@ export default {
   },
   methods: {
     async addRate() {
-      let amount_qty = Number(this.amount.type_lcl.amount);
+      this.checkQuantities();
       
-      if (amount_qty < 1) {
+      if (this.adding_zero) {
         toastr.error("The amount must be greater than 0");
       } else {
         await this.$store.dispatch("createRate", {
@@ -283,7 +284,7 @@ export default {
           page: this.currentPage,
           currentId: this.$route.params.id,
         });
-        this.clearDisplay();
+        //this.clearDisplay();
       }
     },
     toggleAll(checked) {
@@ -423,6 +424,18 @@ export default {
         description.includes(currentInput)
       );
     },
+    checkQuantities() {
+      var zeroMatch = false;
+      let component = this;
+
+      for (const amountObject in this.amount) {
+        if (component.amount[amountObject].amount == 0) {
+          zeroMatch = true;
+        }
+      }
+
+      this.adding_zero = zeroMatch;
+    }
   },
   computed: {
     ...mapGetters(["GET_PRICE_LEVEL_DATA", "GET_PRICE_LEVEL_RATES"]),
