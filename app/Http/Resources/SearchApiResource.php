@@ -82,29 +82,50 @@ class SearchApiResource extends JsonResource
     public function formatData($data,$identificator){
         $array=[];
         foreach($data as $key=>$info){
-            if ($identificator==1) {
-                $type='port';
-                $location=$info['display_name'];   
-            
-            $array[$key]=[
-                'id'=>$info['id'],
-                'display_name'=>$location,
-                'country'=>null,
-                'location'=>$location,
-                'type'=>$type
-            ];
+            if ($identificator==1) {  
+                if(count($array)==0 ){
+                    $array[]=[
+                        'id'=>$info['id'],
+                        'display_name'=>$info['display_name'],
+                        'country'=>null,
+                        'location'=>$info['display_name'],
+                        'type'=>'port'
+                    ];
+                }else{
+                    foreach($array as $id){
+                        if($id['id']!=$info['id']){
+                            $array[]=[
+                                'id'=>$info['id'],
+                                'display_name'=>$info['display_name'],
+                                'country'=>null,
+                                'location'=>$info['display_name'],
+                                'type'=>'port' 
+                            ];
+                        }
+                    }
+                }
             }else{
-                $type='city';
-                $location=$info['name'];
-                $array[$key]=[
-                    'id'=>$info['id'],
-                    'country'=>null,
-                    'location'=>$location,
-                    'type'=>$type
-                ];
+                if(count($array)==0 ){
+                    $array[]=[
+                        'id'=>$info['id'],
+                        'country'=>null,
+                        'location'=>$info['name'],
+                        'type'=>'city'
+                    ];
+                }else{
+                    foreach($array as $id){
+                        if($id['id']!=$info['id']){
+                            $array[$key]=[
+                                'id'=>$info['id'],
+                                'country'=>null,
+                                'location'=>$info['name'],
+                                'type'=>'city'
+                            ];
+                        }
+                    }
+                }
             }
         }
-
         return $array;
     }
 
