@@ -912,7 +912,9 @@ class QuotationController extends Controller
         $quote_rate_totals = $quote->automatic_rate_totals()->get();
 
         if(isset($quote->company)){
-            $quote->update(['payment_conditions' => $quote->company->payment_conditions]);
+            $clean_payment_conditions = str_replace("&nbsp;", " ", strip_tags($quote->company->payment_conditions));
+
+            $quote->update(['payment_conditions' => $clean_payment_conditions]);
         }
 
         if (count($rates) != 0) {
