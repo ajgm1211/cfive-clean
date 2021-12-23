@@ -56,7 +56,7 @@
           @blur="update('description')"
         ></ckeditor>
 
-        <div v-if="active == 'Only Apply To'">
+        <div v-if="active == 'Only Apply To' && initial_data_loaded">
           <h6>Companies:</h6>
           <multiselect
             v-model="price.company_restrictions"
@@ -74,22 +74,24 @@
             style="cursor:pointer"
           ></multiselect>
           <br />
-          <h6>Groups:</h6>
-          <multiselect
-            v-model="price.group_restrictions"
-            :options="datalists.company_groups"
-            :multiple="true"
-            :close-on-select="true"
-            :clear-on-select="true"
-            :show-labels="false"
-            :searchable="true"
-            track-by="name"
-            label="name"
-            placeholder="Select company groups"
-            @input="update('groups')"
-            class="input-h"
-            style="cursor:pointer"
-          ></multiselect>
+          <div v-if="false">
+            <h6>Groups:</h6>
+            <multiselect
+              v-model="price.group_restrictions"
+              :options="datalists.company_groups"
+              :multiple="true"
+              :close-on-select="true"
+              :clear-on-select="true"
+              :show-labels="false"
+              :searchable="true"
+              track-by="name"
+              label="name"
+              placeholder="Select company groups"
+              @input="update('groups')"
+              class="input-h"
+              style="cursor:pointer"
+            ></multiselect>
+          </div>
         </div>
 
         <div v-if="active == 'Detail'">
@@ -195,6 +197,7 @@ export default {
     modal_fields: [],
     editing: false,
     detail_to_edit: {},
+    initial_data_loaded: false,
   }),
   mounted() {
     this.$store.dispatch("getPriceLevelDetail", {
@@ -228,6 +231,7 @@ export default {
 
       this.setTable();
       this.setModalData();
+      this.initial_data_loaded = true;
     }, 1000);
   },
   methods: {

@@ -24,7 +24,7 @@
               showCurrency == false && field.name == 'currency' ? 'hidden' : '',
             ]"
             v-else-if="field.type == 'dropdown'"
-            @reset="selected = ''"
+            @reset="model[field.name] = ''"
             :error="selectable_error"
             :label="field.label"
             @selected="setSelected($event, field.name)"
@@ -115,6 +115,7 @@ export default {
                 markup: dispatchBody.type_lcl_t,
               },
             },
+            showCurrency: this.showCurrency,
           };
         } else {
           body = {
@@ -131,6 +132,7 @@ export default {
                 markup: dispatchBody.type_40_t,
               },
             },
+            showCurrency: this.showCurrency,
           };
         }
         this.$store.dispatch(this.dispatch, {

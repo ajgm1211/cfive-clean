@@ -69,11 +69,13 @@ class PriceLevelDetailController extends Controller
      */
     public function update(Request $request, PriceLevelDetail $price_level_detail)
     {
+        dd($request->input());
         $data = $request->validate([
             'amount' => 'required',
-            'currency' => 'required',
+            'currency' => 'required_if:showCurrency,true',
             'direction' => 'required',
             'price_level_apply' => 'required',
+            'showCurrency' => 'required',
         ]);
 
         $unique = $this->validateUniquePriceLevelDetail($data, $price_level_detail->price_level, $price_level_detail->id);
