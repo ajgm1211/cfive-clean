@@ -6,7 +6,7 @@ switch (env('APP_ENV')) {
         $appUrl  = 'http://cargofive.local';
         $apiUrl  = 'https://carriersdev.cargofive.com/api/pricing';
         $baseUriDuplicates = 'http://duplicate-gc/DuplicateGCFCL/';
-        //$appView = 'local';
+        $appView = 'local';
     break;
 
     case 'developer':
@@ -14,7 +14,7 @@ switch (env('APP_ENV')) {
         $appUrl  = '';
         $apiUrl  = 'https://carriersdev.cargofive.com/api/pricing';
         $baseUriDuplicates = 'http://duplicateds-globalchargers-dev.eu-central-1.elasticbeanstalk.com/DuplicateGCFCL/';
-        //$appView = 'local';
+        $appView = 'local';
     break;
 
     case 'production':
@@ -22,7 +22,7 @@ switch (env('APP_ENV')) {
         $appUrl  = 'https://app.cargofive.com';
         $apiUrl  = 'https://carriers.cargofive.com/api/pricing';
         $baseUriDuplicates = 'http://prod.duplicatedscg.cargofive.com/DuplicateGCFCL/';
-        //$appView = 'local';
+        $appView = 'local';
     break;
     
     default:
@@ -30,7 +30,7 @@ switch (env('APP_ENV')) {
         $appUrl  = '';
         $apiUrl = '';
         $baseUriDuplicates ='';
-        //$appView = '';
+        $appView = '';
         break;
 }
 
@@ -90,7 +90,7 @@ return [
     |
     */
 
-    //'app_view' => env('APP_VIEW', $appView),
+    'app_view' => env('APP_VIEW', $appView),
 
     
 
