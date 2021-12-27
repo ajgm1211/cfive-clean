@@ -404,7 +404,7 @@ class SearchApiLclController extends Controller
             $target_total_client_currency = $target->total_client_currency;
             $target_total = $target->total;
             //SPECIAL CASE - OCEAN FREIGHT
-        } elseif (isset($target['surcharge']) && $target['surcharge']->name == "Ocean Freight") {
+        } elseif (isset($target['surcharge']) && $target['surcharge']['name'] == "Ocean Freight") {
             //Info from markups array
             $markups_to_add = $markups['freight'];
             $fixed = $markups_to_add['freight_amount'];
@@ -417,7 +417,7 @@ class SearchApiLclController extends Controller
         }
 
         //Checking if markups are fixed rate
-        if ($fixed != 0) {
+        if (isset($fixed) && $fixed != 0) {
             //Converting amount to Charge and Client currency to add directly
             $markups_array = $this->convertToCurrency($markups_currency, $target_currency, array($fixed));
 
@@ -430,7 +430,7 @@ class SearchApiLclController extends Controller
                 $total_with_markups_client_currency = isDecimal($target_total_client_currency,true) + isDecimal($markups_client_currency[0],true);
             }
         //Same loop but for percentile markups
-        } elseif ($percent != 0) {
+        } elseif (isset($percent) && $percent != 0) {
             //Calculating percentage of each container and each total price, storing them directly as final markups array
             $markups_array = $this->calculatePercentage($percent, array($target_total));
 
