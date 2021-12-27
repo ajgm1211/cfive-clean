@@ -486,6 +486,9 @@ class QuotationController extends Controller
                     'total_volume' => 'sometimes|nullable|numeric',
                     'total_weight' => 'sometimes|nullable|numeric',
                     'chargeable_weight' => 'sometimes|nullable',
+                    'custom_incoterm' => 'sometimes|nullable',
+                    'custom_quote_id' => 'sometimes|nullable',
+
                 ]);
             }
             // else if ($request->input('cargo_type_id') != null) {
@@ -547,17 +550,19 @@ class QuotationController extends Controller
             }
         }
 
-        if ($request->input('custom_incoterm') != null) {
-            $quote->update(['custom_incoterm' => $request->input('custom_incoterm')]);
-        } else {
-            $quote->update(['custom_incoterm' => null]);
-        }
+        // if ($request->input('custom_incoterm') != null) {
+        //     $quote->update(['custom_incoterm' => $request->input('custom_incoterm')]);
+        // } 
+        // else {
+        //     $quote->update(['custom_incoterm' => null]);
+        // }
 
-        if ($request->input('custom_quote_id') != null) {
-            $quote->update(['custom_quote_id' => $request->input('custom_quote_id')]);
-        } else {
-            $quote->update(['custom_quote_id' => null]);
-        }
+        //  if ($request->input('custom_quote_id') != null) {
+        //      $quote->update(['custom_quote_id' => $request->input('custom_quote_id')]);
+        //  } 
+        //   else {
+        //       $quote->update(['custom_quote_id' => null]);
+        //     }
 
         if ($request->input('pdf_options') != null) {
 
@@ -907,7 +912,9 @@ class QuotationController extends Controller
         $quote_rate_totals = $quote->automatic_rate_totals()->get();
 
         if(isset($quote->company)){
-            $quote->update(['payment_conditions' => $quote->company->payment_conditions]);
+            $clean_payment_conditions = str_replace("&nbsp;", " ", strip_tags($quote->company->payment_conditions));
+
+            $quote->update(['payment_conditions' => $clean_payment_conditions]);
         }
 
         if (count($rates) != 0) {

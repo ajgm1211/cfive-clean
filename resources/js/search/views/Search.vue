@@ -1577,6 +1577,7 @@ export default {
       isCompleteFive: false,
       contractAdded: false,
       contractAddedFailed: false,
+      creatingContract: false,
     };
   },
   mounted() {
@@ -2104,28 +2105,35 @@ export default {
         //stepFive
       };
       let vcomponent = this;
-      component.searchActions
-        .createContract(data)
-        .then((response) => {
-          vcomponent.$refs.myVueDropzone.dropzone.options.url = `/api/v2/contracts/${response.data.id}/storeMedia`;
-          vcomponent.$refs.myVueDropzone.processQueue();
-          vcomponent.contractAdded = true;
+      
+      if(!this.creatingContract){
 
-          setTimeout(function() {
-            vcomponent.contractAdded = false;
-            vcomponent.$refs["my-modal"].hide();
-            vcomponent.$router.go();
-          }, 3000);
-        })
-        .catch((error) => {
-          if (error.status === 422) {
-            vcomponent.contractAddedFailed = true;
-            this.responseErrors = error.data.errors;
+        vcomponent.creatingContract = true;
+
+        component.searchActions
+          .createContract(data)
+          .then((response) => {
+            vcomponent.$refs.myVueDropzone.dropzone.options.url = `/api/v2/contracts/${response.data.id}/storeMedia`;
+            vcomponent.$refs.myVueDropzone.processQueue();
+            vcomponent.contractAdded = true;
+  
             setTimeout(function() {
-              vcomponent.contractAddedFailed = false;
-            }, 5000);
-          }
-        });
+              vcomponent.contractAdded = false;
+              vcomponent.$refs["my-modal"].hide();
+              vcomponent.creatingContract = false;
+              vcomponent.$router.go();
+            }, 3000);
+          })
+          .catch((error) => {
+            if (error.status === 422) {
+              vcomponent.contractAddedFailed = true;
+              this.responseErrors = error.data.errors;
+              setTimeout(function() {
+                vcomponent.contractAddedFailed = false;
+              }, 5000);
+            }
+          });
+      }
     },
 
     requestSearch() {
