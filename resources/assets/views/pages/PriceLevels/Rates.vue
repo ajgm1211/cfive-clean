@@ -33,7 +33,9 @@
       </div>
     </div>
 
-    <div class="tabscontainer">
+    <div 
+      class="tabscontainer"
+    >
       <div class="tabs">
         <p
           @click="currentTab(tab)"
@@ -56,7 +58,7 @@
           @blur="update('description')"
         ></ckeditor>
 
-        <div v-if="active == 'Only Apply To' && initial_data_loaded">
+        <div v-if="active == 'Only Apply To'">
           <h6>Companies:</h6>
           <multiselect
             v-model="price.company_restrictions"
@@ -197,7 +199,6 @@ export default {
     modal_fields: [],
     editing: false,
     detail_to_edit: {},
-    initial_data_loaded: false,
   }),
   mounted() {
     this.$store.dispatch("getPriceLevelDetail", {
@@ -230,8 +231,6 @@ export default {
       this.rates = this.GET_PRICE_LEVEL_RATES;
 
       this.setTable();
-      this.setModalData();
-      this.initial_data_loaded = true;
     }, 1000);
   },
   methods: {
