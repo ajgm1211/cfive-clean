@@ -57,9 +57,9 @@ class SendExcelFile implements ShouldQueue
 
         $typeRoute = $this->data['data']['typeofroute'];
 
-     
 
-        if ($typeRoute == 'ports') {
+
+        if ($typeRoute == 'port') {
 
             $origin_port = $this->data['data']['origin'];
             $destiny_port = $this->data['data']['destination'];
@@ -67,8 +67,6 @@ class SendExcelFile implements ShouldQueue
 
             $origin_port = $this->getArrayCountryPort($this->data['data']['origin']);
             $destiny_port = $this->getArrayCountryPort($this->data['data']['destination']);
-
-     
 
         }
 
@@ -176,16 +174,28 @@ class SendExcelFile implements ShouldQueue
                     $a++;
                     // Local charges
 
-                    if ($typeRoute == 'ports') {
+                    if ($typeRoute == 'port') {
                         $orig_country = $this->getArrayPortCountry($data->port_origin->id);
                         $dest_country = $this->getArrayPortCountry($data->port_destiny->id);
                     } else {
-                        $orig_country = $this->data['data']['origin'];;
-                        $dest_country = $this->data['data']['destination'];;
+                        $orig_country = $this->data['data']['origin'];
+                        $dest_country = $this->data['data']['destination'];
                     }
 
+                    // Localcharges ALL Call 
+
+                    $port_origin_id = $data->port_origin->id.',1485';
+                    $port_destiny_id = $data->port_destiny->id.',1485';
+                    $orig_country = $orig_country.',250';
+                    $dest_country = $dest_country.',250';
+
+          
+
                     $localCharge = new LocalCharge();
-                    $localCharge = $localCharge->getLocalChargeExcelSync($data->contract_id, $data->port_origin->id, $data->port_destiny->id, $orig_country, $dest_country);
+                    $localCharge = $localCharge->getLocalChargeExcelSync($data->contract_id, $port_origin_id, $port_destiny_id, $orig_country, $dest_country);
+      
+
+
                     if ($localCharge != null) {
 
                         for ($i = 0; $i < count($localCharge); $i++) {
@@ -259,6 +269,7 @@ class SendExcelFile implements ShouldQueue
         }
 
     }
+
 
     public function get_header_inicial($containers)
     {
