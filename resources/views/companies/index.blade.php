@@ -314,8 +314,8 @@
                     companyMessage.style.display = "block";    
                     companyMessage.innerHTML = `Alert: ¡A company with the same name already exists! If it is what you want you can continue. <br><br>`;
                 } else {
-                    //Cuando el valor de similitud es mayor a 0.5 se considera una similitud alta.
-                    if(similarityValue > 0.60){                    
+                    //se muestra las compañías con similitud superior a 0.5. Donde 1 es idéntico y 0 representa ninguna similitud.
+                    if(similarityValue > 0.5){                    
                         similarityList.style.display = "block"; 
                         let p = document.createElement("p");
                         p.style.margin = "1px";    
@@ -340,7 +340,7 @@
         }
         return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
     }
-
+    //medir la distancia de edición 
     function editDistance(s1, s2) {
         s1 = s1.toLowerCase();
         s2 = s2.toLowerCase();
@@ -366,18 +366,6 @@
             costs[s2.length] = lastValue;
         }
         return costs[s2.length];
-    }
-    //Función que solo permite el ingreso de numeros y minúsculas
-    function validateInputBusinessName(e) {
-        let tecla = (document.all) ? e.keyCode : e.which;
-        //Tecla de retroceso para borrar, siempre la permite
-        if (tecla == 8) {
-            return true;
-        }
-        // Patron de entrada, en este caso solo acepta números letras y espacios
-        let patron = /[a-z0-9_ ]/;
-        let tecla_final = String.fromCharCode(tecla);
-        return patron.test(tecla_final);
     }
 
 </script>
