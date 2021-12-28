@@ -7,9 +7,6 @@
          'placeholder' => 'Please enter a business name',
          'class' => 'form-control m-input business_name_input',
          'required' => 'required']) !!}
-    <small id="passwordHelp" class="text-dark">
-        You must use only lowercase letters. The use of special characters is not allowed.
-    </small>   
 </div>
 
 <div style="display:none;" class="text-danger" id="companyMessage">
