@@ -268,7 +268,7 @@ export default {
   methods: {
     async addRate() {
       this.checkQuantities();
-      
+
       if (this.adding_zero) {
         toastr.error("The amount must be greater than 0");
       } else {
@@ -434,8 +434,14 @@ export default {
         }
       }
 
+      if (Object.keys(this.currency).length == 0) {
+        this.selectable_error = true;
+      } else {
+        this.selectable_error = false;
+      }
+
       this.adding_zero = zeroMatch;
-    }
+    },
   },
   computed: {
     ...mapGetters(["GET_PRICE_LEVEL_DATA", "GET_PRICE_LEVEL_RATES"]),
