@@ -3,11 +3,9 @@
 <div class="form-group m-form__group">
     {!! Form::label('business_name', 'Business Name') !!}<span style="color:red">*</span>
     {!! Form::text('business_name', null, 
-        ['pattern' => '[a-z0-9_ ]+', 
-         'autocomplete' => 'off', 
+        ['autocomplete' => 'off', 
          'placeholder' => 'Please enter a business name',
          'class' => 'form-control m-input business_name_input',
-         'onkeypress' => 'return validateInputBusinessName(event)',
          'required' => 'required']) !!}
     <small id="passwordHelp" class="text-dark">
         You must use only lowercase letters. The use of special characters is not allowed.
@@ -16,7 +14,7 @@
 
 <div style="display:none;" class="text-danger" id="companyMessage">
 </div>
-<div style="display:none; padding-bottom:9px; border" id="similarityList">
+<div style="display:none; padding-bottom:9px;" id="similarityList">
 </div>
 <hr>
 <div class="form-group m-form__group">
