@@ -321,8 +321,6 @@
                         p.style.margin = "1px";    
                         p.textContent = `${company.business_name}`;
                         similarityList.appendChild(p);
-                        console.log(valueInputCompany);
-                        console.log(company.business_name)
                     }
                 }               
             });
