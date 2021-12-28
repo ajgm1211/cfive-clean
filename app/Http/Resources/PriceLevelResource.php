@@ -24,6 +24,8 @@ class PriceLevelResource extends JsonResource
             'company_user' => $this->company_user,
             'company_restrictions' => $this->companies,
             'group_restrictions' => $this->company_groups,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }
