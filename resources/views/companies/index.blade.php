@@ -333,10 +333,14 @@
                 }             
             });
 
-            console.log(compSimilares);
-            renderSimilarCompanies(compSimilares, similarityList);
+            renderSimilarCompanies(removeDuplicate(compSimilares), similarityList);
         }
     });
+    //eliminar compañías imilares
+    function removeDuplicate(compSimilares){
+        const dataArr = new Set(compSimilares);
+        return [...dataArr];
+    }
     //render compañías similares
     function renderSimilarCompanies(compSimilares, similarityList){
         similarityList.style.display = "block"; 
