@@ -304,10 +304,16 @@
             similarityList.style.display = "none";            
             similarityList.innerHTML = '';               
             similarityList.innerHTML = `<p style="margin-bottom:4px">Similar companies:</p>`;  
+
+            let compSimilares = [];
             
             companies.forEach(company => {
+
+                let businessName = company.business_name.toLowerCase().trim();
+                let valueInput = valueInputCompany.toLowerCase().trim();
+
                 //calculamos la similitud del valor escrito con cada uno de las compañías
-                let similarityValue = similarity(valueInputCompany.toLowerCase().trim(), company.business_name.toLowerCase().trim());                
+                let similarityValue = similarity(valueInput, businessName);                
                 
                 //Si es 1, existe una compaía igual
                 if(similarityValue === 1){   
@@ -315,17 +321,34 @@
                     companyMessage.innerHTML = `Alert: ¡A company with the same name already exists! If it is what you want you can continue. <br><br>`;
                 } else {
                     //se muestra las compañías con similitud superior a 0.5. Donde 1 es idéntico y 0 representa ninguna similitud.
-                    if(similarityValue > 0.5){                    
-                        similarityList.style.display = "block"; 
-                        let p = document.createElement("p");
-                        p.style.margin = "1px";    
-                        p.textContent = `${company.business_name}`;
-                        similarityList.appendChild(p);
+                    if(similarityValue > 0.6){                         
+                        compSimilares.push(businessName);
                     }
-                }               
+                }    
+                //Validamos q se haya ingresado al menos 4 caracteres y buscamos coincidencias en ls compañías
+                if(valueInput.length >= 4){
+                    if(businessName.indexOf(valueInput) >= 0) {
+                        compSimilares.push(businessName);
+                    }
+                }             
             });
+
+            console.log(compSimilares);
+            renderSimilarCompanies(compSimilares, similarityList);
         }
     });
+    //render compañías similares
+    function renderSimilarCompanies(compSimilares, similarityList){
+        similarityList.style.display = "block"; 
+        
+        compSimilares.forEach(c => {
+            let p = document.createElement("p");
+            p.style.margin = "1px";    
+            p.textContent = `${c}`;
+            similarityList.appendChild(p);
+        });
+        
+    }
     //función que recibe dos valores y devuelve la similitud entre ellos (0 a 1)
     function similarity(s1, s2) {
         var longer = s1;
@@ -367,6 +390,7 @@
         }
         return costs[s2.length];
     }
+
 
 </script>
 @stop
