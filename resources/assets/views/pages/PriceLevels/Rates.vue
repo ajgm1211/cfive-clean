@@ -33,9 +33,7 @@
       </div>
     </div>
 
-    <div 
-      class="tabscontainer"
-    >
+    <div class="tabscontainer">
       <div class="tabs">
         <p
           @click="currentTab(tab)"
@@ -351,8 +349,10 @@ export default {
             type: "input",
             label: "20",
             name: "type_20",
+            input_type: 'number',
             rules: {
               required: true,
+              minValue: 1,
             },
           },
           {
@@ -368,8 +368,10 @@ export default {
             type: "input",
             label: "40",
             name: "type_40",
+            input_type: 'number',
             rules: {
               required: true,
+              minValue: 1,
             },
           },
           {
@@ -388,8 +390,10 @@ export default {
             type: "input",
             label: "Amount",
             name: "type_lcl",
+            input_type: 'number',
             rules: {
               required: true,
+              minValue: 1,
             },
           },
           {

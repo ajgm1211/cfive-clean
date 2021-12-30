@@ -68,7 +68,6 @@ const actions = {
     axios
       .post(`/api/pricelevels/details/${id}/update`, body)
       .then((response) => {
-        console.log("edit rate", response);
         dispatch("listPriceLevelRates", { id: currentId, page: page });
         commit("SET_MODAL_EDIT", false);
       })

@@ -6,10 +6,7 @@
         <h3>{{ action + " " + title }}</h3>
       </div>
       <form action="" class="create-form" autocomplete="off">
-        <div
-          v-for="field, fieldKey in fields"
-          :key="fieldKey"
-        >
+        <div v-for="(field, fieldKey) in fields" :key="fieldKey">
           <CustomInput
             v-if="field.type == 'input'"
             :label="field.label"
@@ -17,6 +14,7 @@
             :ref="field.name"
             v-model="model[field.name]"
             :rules="field.rules"
+            :type="field.input_type ? field.input_type : 'text'"
           />
 
           <SorteableDropdown
@@ -100,9 +98,16 @@ export default {
       if (!this.validate()) return;
 
       let dispatchBody = this.setBody();
-
       if (this.dispatch == "editPriceLevel") {
         let body;
+
+        if (
+          (dispatchBody.type_20_t == "Percent Markup" &&
+            dispatchBody.type_40_t == "Percent Markup") ||
+          dispatchBody.type_lcl_t == "Percent Markup"
+        ) {
+          dispatchBody.currency = null;
+        }
 
         if ("type_lcl" in this.model) {
           body = {
@@ -135,6 +140,7 @@ export default {
             showCurrency: this.showCurrency,
           };
         }
+
         this.$store.dispatch(this.dispatch, {
           body: body,
           id: this.model.id,
@@ -146,17 +152,18 @@ export default {
           body: dispatchBody,
         });
       }
-
-      this.$emit('cancel')
     },
     validate() {
       let component = this;
       let index = 0;
 
+      let bool;
+
       this.fields.forEach(function(field) {
         if (field.type == "input") {
           if (component.$refs[field.name][index].validate()) {
-            return false;
+            bool = false;
+            return;
           }
         } else if (field.type == "dropdown") {
           if (!component.model[field.name] && field.rules.required) {
@@ -165,7 +172,11 @@ export default {
           }
         }
       });
-      
+
+      if (bool === false) {
+        return false;
+      }
+
       return true;
     },
     setSelected(option, field_name) {
