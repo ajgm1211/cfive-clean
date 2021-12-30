@@ -34,6 +34,7 @@ class PriceLevelDetailController extends Controller
     {
         $data = $request->validate([
             'amount' => 'required',
+            'amount.*.amount' => 'required|integer|min:1',
             'currency' => 'required_if:only_percent,false',
             'direction' => 'required',
             'price_level_apply' => 'required',
@@ -71,6 +72,7 @@ class PriceLevelDetailController extends Controller
     {
         $data = $request->validate([
             'amount' => 'required',
+            'amount.*.amount' => 'required|integer|min:1',
             'currency' => 'required_if:showCurrency,true',
             'direction' => 'required',
             'price_level_apply' => 'required',

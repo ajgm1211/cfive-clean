@@ -389,7 +389,7 @@ class SearchApiLclController extends Controller
             $target_total_client_currency = $target->total_client_currency;
             $target_total = $target->total;
             //If markups will be added to a Local or Global Charge, extracts 'charge' variables from markups array
-        } elseif (is_a($target, 'App\LocalChargeLcl') || is_a($target, 'App\GlobalChargeLcl') && isset($markups['surcharges'])) {
+        } elseif ((is_a($target, 'App\LocalChargeLcl') || is_a($target, 'App\GlobalChargeLcl') ) && isset($markups['surcharges'])) {
             //Info from markups array
             $markups_to_add = $markups['surcharges'];
             $markups_currency = $markups_to_add['currency'];
