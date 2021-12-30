@@ -222,7 +222,7 @@ class SearchApiLclController extends Controller
                 }
             }
 
-            $this->calculateTotals($rate,$search_ids['client_currency']);
+            $this->calculateTotals($rate,$search_ids);
 
             //ADDING ATTRIBUTES AT THE END            
             $remarks = $this->searchRemarks($rate,$search_ids);
@@ -468,8 +468,9 @@ class SearchApiLclController extends Controller
         }
     }
 
-    public function calculateTotals($rate,$client_currency)
+    public function calculateTotals($rate,$search_data)
     {
+        $client_currency = $search_data['client_currency'];
         $charge_type_total = [];
 
         if (isset($rate->total_with_markups)){
@@ -525,7 +526,12 @@ class SearchApiLclController extends Controller
                     }
 
                     //Updating rate totals to new added array
-                    $rate->$to_update = $total;
+                    if(($direction == "Origin" && $search_data['originCharges']) || 
+                        ($direction == "Destination" && $search_data['destinationCharges'])
+                        || $direction == "Freight"){
+                            $rate->$to_update = $total;
+                        }
+                    
 
                 }else{
 
