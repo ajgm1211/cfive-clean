@@ -2,37 +2,42 @@
   <section>
     <div class="layer" @click="$emit('cancel')"></div>
     <div v-if="dataLoaded" class="create-modal">
-      <div class="modal-head"><h3>{{ action + ' ' + title }}</h3></div>
+      <div class="modal-head">
+        <h3>{{ action + " " + title }}</h3>
+      </div>
       <form action="" class="create-form" autocomplete="off">
-        <div
-          v-for="field, fieldKey in fields"
-          :key="fieldKey"
-        >
+        <div v-for="(field, fieldKey) in fields" :key="fieldKey">
           <CustomInput
-          v-if="field.type == 'input'"
-          :label="field.label"
-          :name="field.name"
-          :ref="field.name"
-          v-model="model[field.name]"
-          :rules="field.rules"
+            v-if="field.type == 'input'"
+            :label="field.label"
+            :name="field.name"
+            :ref="field.name"
+            v-model="model[field.name]"
+            :rules="field.rules"
+            :type="field.input_type ? field.input_type : 'text'"
           />
 
-          <SorteableDropdown 
-            v-else-if="field.type=='dropdown'"
-            @reset="selected = ''" 
-            :error="selectable_error" 
-            :label="field.label" 
-            @selected="setSelected($event,field.name)" 
-            :itemList="field.items" 
+          <SorteableDropdown
+            :class="[
+              showCurrency == false && field.name == 'currency' ? 'hidden' : '',
+            ]"
+            v-else-if="field.type == 'dropdown'"
+            @reset="model[field.name] = ''"
+            :error="selectable_error"
+            :label="field.label"
+            @selected="setSelected($event, field.name)"
+            :itemList="field.items"
+            :show_by="field.show_by"
+            :preselected="model[field.name]"
           />
-        </div>        
+        </div>
       </form>
       <div class="controls-container">
         <p @click="$emit('cancel')">Cancel</p>
-        <MainButton 
-          @click="postData()" 
-          :text="action + ' ' + title" 
-          :add="true" 
+        <MainButton
+          @click="postData()"
+          :text="action + ' ' + title"
+          :add="true"
         />
       </div>
     </div>
@@ -42,7 +47,7 @@
 <script>
 import MainButton from "../common/MainButton.vue";
 import CustomInput from "../common/CustomInput.vue";
-import SorteableDropdown from '../common/SorteableDropdown.vue';
+import SorteableDropdown from "../common/SorteableDropdown.vue";
 
 export default {
   components: { MainButton, CustomInput, SorteableDropdown },
@@ -53,63 +58,149 @@ export default {
         return [];
       },
     },
-      title: {
-        type: String,
+    model: {
+      type: Object,
+      default() {
+        return {};
+      },
     },
-      action: {
-        type: String,
+    title: {
+      type: String,
     },
-      dispatch: {
-        type: String
+    action: {
+      type: String,
+    },
+    dispatch: {
+      type: String,
     },
   },
   data: () => ({
-    model: {},
     selectable_error: false,
     dataLoaded: false,
+    showCurrency: true,
   }),
   mounted() {
     this.setInitialData();
+
+    if (
+      this.model.type_20_t == "Percent Markup" &&
+      this.model.type_40_t == "Percent Markup"
+    ) {
+      this.showCurrency = false;
+    } else if (this.model.type_lcl_t == "Percent Markup") {
+      this.showCurrency = false;
+    } else {
+      this.showCurrency = true;
+    }
   },
   methods: {
     postData() {
       if (!this.validate()) return;
 
       let dispatchBody = this.setBody();
+      if (this.dispatch == "editPriceLevel") {
+        let body;
 
-      this.$store.dispatch(this.dispatch, {
-        body: dispatchBody,
-      });
+        if (
+          (dispatchBody.type_20_t == "Percent Markup" &&
+            dispatchBody.type_40_t == "Percent Markup") ||
+          dispatchBody.type_lcl_t == "Percent Markup"
+        ) {
+          dispatchBody.currency = null;
+        }
+
+        if ("type_lcl" in this.model) {
+          body = {
+            currency: dispatchBody.currency,
+            direction: dispatchBody.direction,
+            price_level_apply: dispatchBody.price_level_apply,
+            amount: {
+              type_lcl: {
+                amount: dispatchBody.type_lcl,
+                markup: dispatchBody.type_lcl_t,
+              },
+            },
+            showCurrency: this.showCurrency,
+          };
+        } else {
+          body = {
+            currency: dispatchBody.currency,
+            direction: dispatchBody.direction,
+            price_level_apply: dispatchBody.price_level_apply,
+            amount: {
+              type_20: {
+                amount: dispatchBody.type_20,
+                markup: dispatchBody.type_20_t,
+              },
+              type_40: {
+                amount: dispatchBody.type_40,
+                markup: dispatchBody.type_40_t,
+              },
+            },
+            showCurrency: this.showCurrency,
+          };
+        }
+
+        this.$store.dispatch(this.dispatch, {
+          body: body,
+          id: this.model.id,
+          currentId: this.$route.params.id,
+          page: 1,
+        });
+      } else {
+        this.$store.dispatch(this.dispatch, {
+          body: dispatchBody,
+        });
+      }
     },
     validate() {
       let component = this;
       let index = 0;
 
-      this.fields.forEach(function (field){
-        if(field.type == 'input'){
+      let bool;
+
+      this.fields.forEach(function(field) {
+        if (field.type == "input") {
           if (component.$refs[field.name][index].validate()) {
-            return false;
+            bool = false;
+            return;
           }
-        }else if(field.type == 'dropdown'){
-          if (!component.model[field.name]) {
+        } else if (field.type == "dropdown") {
+          if (!component.model[field.name] && field.rules.required) {
             component.selectable_error = true;
             return false;
           }
         }
       });
-      
+
+      if (bool === false) {
+        return false;
+      }
+
       return true;
     },
     setSelected(option, field_name) {
       this.model[field_name] = option;
+      if (
+        this.model.type_20_t == "Percent Markup" &&
+        this.model.type_40_t == "Percent Markup"
+      ) {
+        this.showCurrency = false;
+      } else if (this.model.type_lcl_t == "Percent Markup") {
+        this.showCurrency = false;
+      } else {
+        this.showCurrency = true;
+      }
     },
     setInitialData() {
       let component = this;
       var dataIndex = 0;
 
-      this.fields.forEach(function (field){
+      this.fields.forEach(function(field) {
         field.id = dataIndex;
-        component.model[field.name] = "";
+        if (!component.model[field.name]) {
+          component.model[field.name] = "";
+        }
         dataIndex += 1;
       });
 
@@ -119,8 +210,8 @@ export default {
       var body = {};
       let component = this;
 
-      this.fields.forEach(function (field){
-        body[field.name] = component.model[field.name]; 
+      this.fields.forEach(function(field) {
+        body[field.name] = component.model[field.name];
       });
 
       return body;
@@ -144,7 +235,7 @@ section {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.397);
   z-index: 5000;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
 }
@@ -167,6 +258,7 @@ section {
   column-gap: 20px;
   row-gap: 30px;
   padding: 40px 40px 20px 40px;
+  grid-template-rows: repeat(3, 1fr);
 }
 
 .controls-container {
@@ -197,5 +289,9 @@ section {
     letter-spacing: 0.05em;
     font-weight: 500;
   }
+}
+
+.hidden {
+  display: none;
 }
 </style>

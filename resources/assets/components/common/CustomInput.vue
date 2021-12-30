@@ -39,6 +39,7 @@ import {
   alphaNum,
   numeric,
   email,
+  minValue,
 } from "vuelidate/lib/validators";
 
 export default {
@@ -52,7 +53,7 @@ export default {
       default: "Placeholder",
     },
     type: {
-      default: "text",
+      type: String,
     },
     name: {
       type: String,
@@ -92,7 +93,11 @@ export default {
   },
   methods: {
     handleChange(_value) {
-      this.$emit("input", _value);
+      if (this.type == "number") {
+        this.$emit("input", parseInt(_value));
+      } else {
+        this.$emit("input", _value);
+      }
     },
     validate() {
       this.$v.value.$touch();
@@ -142,6 +147,13 @@ export default {
           };
         }
 
+        if (this.rules.minValue) {
+          validations = {
+            ...validations,
+            minValue: minValue(this.rules.minValue),
+          };
+        }
+
         if (this.rules.numeric) {
           validations = {
             ...validations,
@@ -175,12 +187,16 @@ export default {
       if (this.$v.value.alphaNum === false) {
         return `The input ${this.name} must be alphanumeric`;
       }
+      if (this.$v.value.minValue === false) {
+        return `This input must be grater than ${this.rules.minValue}`;
+      }
       if (this.$v.value.numeric === false) {
         return `The input ${this.name} must be only numeric`;
       }
       if (this.$v.value.email === false) {
         return `The input ${this.name} must be a valid email address`;
       }
+
       return "";
     },
   },

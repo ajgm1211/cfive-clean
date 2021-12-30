@@ -50,4 +50,9 @@ class CompanyUser extends Model implements Auditable
         
         return max($ids);
     }
+
+    public function settingsWhitelabel()
+    {
+        return $this->hasOne('App\SettingsWhitelabel');
+    }
 }

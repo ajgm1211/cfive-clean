@@ -27,13 +27,13 @@ export default {
       type: Boolean,
       default: true,
     },
+    options:{}
   },
   components: {
     DotsMenu,
   },
   data: () => ({
     showOptions: false,
-    options: ["edit", "duplicate", "delete"],
   }),
   created() {
     if (this.standar === false) {

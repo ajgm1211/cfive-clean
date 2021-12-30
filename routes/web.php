@@ -489,9 +489,7 @@ Route::middleware(['auth'])->prefix('prices')->group(function () {
 
     // V2
     Route::view('/v2', 'pricesV2.index');
-    //CAMBIAR PARA PRICELEVELS
-    Route::view('/rates', 'pricesV2.index');
-    //Route::view('/rates/{id}', 'pricesV2.index');
+    Route::view('/rates/{id}', 'pricesV2.index');
 });
 Route::resource('prices', 'PriceController')->middleware('auth');
 
@@ -1433,10 +1431,10 @@ Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
 
 
 //NEW PRICE LEVELS VIEWS ROUTES
-/**Route::group(['prefix' => 'pricelevels', 'middleware' => ['auth']], function () {
+Route::group(['prefix' => 'pricelevels', 'middleware' => ['auth']], function () {
     Route::view('/', 'pricesV2.index')->name('pricelevels.index');
     Route::view('/edit/{price_level}', 'pricesV2.index');
-});**/
+});
 
 Route::middleware(['auth', 'role:administrator'])->prefix('api-credentials')->group(function () {
     Route::view('/', 'integrations.api-credentials.index')->name('apicredentials.index');
