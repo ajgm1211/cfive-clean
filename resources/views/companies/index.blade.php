@@ -318,7 +318,7 @@
                 //Si es 1, existe una compaía igual
                 if(similarityValue === 1){   
                     companyMessage.style.display = "block";    
-                    companyMessage.innerHTML = `Alert: ¡A company with the same name already exists! If it is what you want you can continue. <br><br>`;
+                    companyMessage.innerHTML = `Alert: A company with the same name already exists! If it is what you want you can continue. <br><br>`;
                 } else {
                     //se muestra las compañías con similitud superior a 0.5. Donde 1 es idéntico y 0 representa ninguna similitud.
                     if(similarityValue > 0.6){                         
@@ -344,8 +344,8 @@
     //render compañías similares
     function renderSimilarCompanies(compSimilares, similarityList){
         similarityList.style.display = "block"; 
-        
-        compSimilares.forEach(c => {
+        let comp =  compSimilares.slice(0, 20);
+        comp.forEach(c => {
             let p = document.createElement("p");
             p.style.margin = "1px";    
             p.textContent = `${c}`;
