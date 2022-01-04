@@ -1837,6 +1837,8 @@ trait QuoteV2Trait
     public function convertToCurrencyPDF($fromCurrency,$amounts,$quote)
     {
         $quote->updatePdfOptions('exchangeRates');
+
+        //04/01/2022 Diego Huacanjulca -> Se asignó un valor por defecto
         $exchangeRate = 1;
 
         foreach($quote->pdf_options['exchangeRates'] as $toCurrency){
