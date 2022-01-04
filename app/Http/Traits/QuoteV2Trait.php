@@ -1837,6 +1837,7 @@ trait QuoteV2Trait
     public function convertToCurrencyPDF($fromCurrency,$amounts,$quote)
     {
         $quote->updatePdfOptions('exchangeRates');
+        $exchangeRate = 1;
 
         foreach($quote->pdf_options['exchangeRates'] as $toCurrency){
             if($toCurrency['alphacode'] == $fromCurrency->alphacode){
