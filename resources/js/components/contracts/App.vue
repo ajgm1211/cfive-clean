@@ -145,7 +145,6 @@ export default {
         directions: [],
         currencies: [],
         containers: [],
-                      
       },
 
       /* Table headers */
@@ -248,24 +247,44 @@ export default {
         },
       },
       form_fields_excel: {
-        origin_port: {
-          label: "Origin Port",
+        typeofroute: {
+          label: "Type of route",
+          searchable: true,
+          type: "pre_select",
+          rules: "required",
+          trackby: "name",
+          placeholder: "Select option",
+          options: "route_types",
+          target_type : 'dynamical',
+          initial: {
+            id: "port",
+            name: "Port",
+            vselected: "harbors",
+          },
+          target: "dynamical_ports",
+        },
+        origin: {
+          label: "Origin",
           searchable: true,
           type: "multiselect",
           rules: "required",
           trackby: "display_name",
           placeholder: "Select option",
-          options: "harbors",
+          initial: [],
+          options: "ori_dynamical_ports",
         },
-        destination_port: {
-          label: "Destination Port",
+        destination: {
+          label: "Destination",
           searchable: true,
           type: "multiselect",
           rules: "required",
           trackby: "display_name",
           placeholder: "Select option",
-          options: "harbors",
+          initial: [],
+          options: "des_dynamical_ports",
         },
+
+   
 
         validity: {
           label: "Validity",
@@ -298,14 +317,21 @@ export default {
   },
   created() {
     /* Return the lists data for dropdowns */
+    
     api.getData({}, "/api/v2/contracts/data", (err, data) => {
       this.setDropdownLists(err, data.data);
     });
+
+    
   },
   methods: {
     /* Set the Dropdown lists to use in form */
     setDropdownLists(err, data) {
       this.datalists = data;
+      this.datalists["route_types"] = [
+        { id: "port", name: "Port", vselected: "harbors" },
+        { id: "country", name: "Country", vselected: "countries" },
+      ];
     },
 
     link() {
