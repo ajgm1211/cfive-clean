@@ -32,7 +32,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use HelperAll;
-
+use App\Jobs\ValidateTemplateJob;
 
 class ContractController extends Controller
 {
@@ -550,7 +550,13 @@ class ContractController extends Controller
             ]);
 
             $Ncontract->NotifyNewRequest($admins);
-
+            
+            if (env('APP_VIEW') == 'operaciones') {
+                ValidateTemplateJob::dispatch($Ncontract->id)->onQueue('operaciones');
+            } else {
+                ValidateTemplateJob::dispatch($Ncontract->id);
+            }
+            
             return response()->json([
                 'message' => 'Contract created successfully!',
             ]);
