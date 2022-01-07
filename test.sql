@@ -1,4 +1,4 @@
-CREATE PROCEDURE `cargofive`.`proc_getLocalChargeExcel4`(
+CREATE  PROCEDURE proc_getLocalChargeExcel(
     IN idcontract INT,
     IN port_o varchar(100),
     IN port_d varchar(100),
