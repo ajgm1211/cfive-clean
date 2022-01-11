@@ -10,6 +10,7 @@ use App\Jobs\SendEmailRequestFclJob;
 use App\Jobs\TestJob;
 use App\NewContractRequest;
 use App\User;
+use App\Country;
 use App\Surcharge;
 use Goutte\Client;
 use GuzzleHttp\Cookie\FileCookieJar;
@@ -280,10 +281,11 @@ class TestController extends Controller
 
     public function contable(Request $request)
     {
-        $surchargeOcean = Surcharge::where('options->onlyrate','yes')->first();
-        dd($surchargeOcean);
-      
 
+      
+        $info = Country::find(2);
+        $ports = $info->ports->pluck('id')->toArray();
+        return $ports;
     }
 
 }
