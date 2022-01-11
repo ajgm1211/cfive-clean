@@ -157,8 +157,11 @@ class LocalChargeQuote extends Model implements Auditable
      */
     public function groupingCharges($localcharge)
     {
+        $price_keys = [];
+
         foreach ($this->price as $key => $price) {
             ${'price_' . $key} = 'price->' . $key;
+            array_push($price_keys,$key);
             foreach ($localcharge['price'] as $k => $new_price) {
                 if ($key == $k) {
                     $new_price = floatvalue($new_price);
@@ -169,17 +172,35 @@ class LocalChargeQuote extends Model implements Auditable
             }
         }
 
-        foreach ($this->profit as $keyp => $profit) {
-            ${'profit_' . $keyp} = 'profit->' . $keyp;
-            foreach ($localcharge['markup'] as $kp => $new_profit) {
-                if ($keyp == $kp) {
-                    $new_profit = floatvalue($new_profit);
-                    $profit += $new_profit;
-                    $this->${'profit_' . $keyp} = $profit;
-                    $this->update();
-                }
-            }
+        if(empty($localcharge['markup'])){
+            return;
         }
+
+        $new_profit = [];
+
+        foreach ($price_keys as $price_key) {
+            $profit_key = 'm' . substr($price_key,1);
+            $new_profit[$profit_key] = 0;
+            
+            if(isset($this->profit[$profit_key])){
+                $current_profit = $this->profit[$profit_key];
+            }else{
+                $current_profit = 0;
+            }
+
+            if(isset($localcharge['markup'][$profit_key])){
+                $incoming_profit = $localcharge['markup'][$profit_key];
+            }else{
+                $incoming_profit = 0;
+            }
+
+            $new_profit[$profit_key] = $current_profit + $incoming_profit;
+
+        }
+
+        $this->profit = $new_profit;
+        $this->update();
+
     }
 
     /**
