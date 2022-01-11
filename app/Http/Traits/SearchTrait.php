@@ -53,6 +53,7 @@ trait SearchTrait
         }
 
         $hideD = '';
+        
         $inlands = Inland::whereHas('inland_company_restriction', function ($a) use ($company_inland) {
             $a->where('company_id', '=', $company_inland);
         })->orDoesntHave('inland_company_restriction')->whereHas('inlandports', function ($q) use ($port) {
@@ -62,6 +63,9 @@ trait SearchTrait
         $inlands->where(function ($query) use ($modality_inland) {
             $query->where('type', $modality_inland)->orwhere('type', '3');
         });
+
+        // HECTOR ON 11-01 - ADDING VALIDATION FOR EXPIRE, MODIFYING QUERY
+        $inlands->where('status','publish');
 
         $inlands = $inlands->get();
 
