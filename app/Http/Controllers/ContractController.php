@@ -368,6 +368,8 @@ class ContractController extends Controller
         }
         // $contract->delete();
         $contract->status_erased = $status_erased;
+        $contract->name = $contract->code;
+        $contract->code = null;
         $contract->contract_code = null;
         $contract->update();
 
@@ -507,9 +509,9 @@ class ContractController extends Controller
             $contract = $query->first();
             $contract_lcl = $query_lcl->first();
 
-            /*if ($contract != null || $contract_lcl != null) {
+            if ($contract != null || $contract_lcl != null) {
                 return response()->json(['message' => 'There is already a contract with the code/reference entered'], 400);
-            }*/
+            }
 
             $regex = "/^\d+(?:,\d+)*$/";
             $carriers = str_replace(' ', '', $request->carriers);
