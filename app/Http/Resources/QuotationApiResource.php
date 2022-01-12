@@ -53,6 +53,7 @@ class QuotationApiResource extends JsonResource
             "english_terms_conditions" => stripslashes($this->utf8_ansi($this->terms_english)),
             "portuguese_terms_conditions" => stripslashes($this->utf8_ansi($this->terms_portuguese)),
             "payment_conditions" => $this->payment_conditions,
+            "owner_user_id" => $this->user_id ?? null,
             "owner_id" => $this->company_user->id ?? null,
             "owner" => $this->company_user->name ?? null,
             "pdf_url" => $this->getMedia('document')->first() ? $this->getMedia('document')->first()->getUrl():null,
