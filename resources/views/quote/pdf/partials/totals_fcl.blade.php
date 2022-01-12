@@ -11,7 +11,6 @@
                             <tr >
                                 <th class="unit"><b>{{__('pdf.pol')}}</b></th>
                                 <th class="unit"><b>{{__('pdf.pod')}}</b></th>
-                                <th class="unit" {{@$quote->pdf_options['showCarrier'] ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
                                 @foreach ($equipmentHides as $key=>$hide)
                                     @foreach ($containers as $c)
                                         @if($c->code == $key)
@@ -26,7 +25,6 @@
                                 <tr class="text-left color-table">
                                     <td >{{$total['POL']}}</td>
                                     <td >{{$total['POD']}}</td>
-                                    <td {{@$quote->pdf_options['showCarrier']==1 ? '':'hidden'}}>{{@$total['carrier']}}</td>
                                     @foreach ($equipmentHides as $key=>$hide)
                                         @foreach ($containers as $c)
                                             @if($c->code == $key)
