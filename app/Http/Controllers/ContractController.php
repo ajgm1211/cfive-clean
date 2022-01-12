@@ -368,7 +368,7 @@ class ContractController extends Controller
         }
         // $contract->delete();
         $contract->status_erased = $status_erased;
-        $contract->name = $contract->code;
+        $contract->name = $contract->name.'-'.$contract->code;
         $contract->code = null;
         $contract->contract_code = null;
         $contract->update();
