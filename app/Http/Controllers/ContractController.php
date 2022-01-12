@@ -32,7 +32,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use HelperAll;
-
+use App\Jobs\ValidateTemplateJob;
 
 class ContractController extends Controller
 {
@@ -118,6 +118,28 @@ class ContractController extends Controller
             return $company->only(['id', 'name']);
         });
 
+
+        // Export Data 
+
+        $ori_harbors =   Harbor::get()->map(function ($harbor) {
+            return $harbor->only(['id', 'display_name']);
+        });
+
+        $des_harbors =   Harbor::get()->map(function ($harbor) {
+            return $harbor->only(['id', 'display_name']);
+        });
+
+        $ori_countries = Country::get()->map(function ($country) {
+            $country['display_name'] = $country['name'];
+            return $country->only(['id', 'display_name', 'name']);
+        });
+
+        $des_countries = Country::get()->map(function ($country) {
+            $country['display_name'] = $country['name'];
+            return $country->only(['id', 'display_name', 'name']);
+        });
+
+
         //Roles
         $user = User::find(Auth::user()->id);
         $rol = $user->getRoleNames()->first();
@@ -137,7 +159,11 @@ class ContractController extends Controller
             'destination_types',
             'companies',
             'rol',
-            'users'
+            'users',
+            'ori_harbors',
+            'des_harbors',
+            'ori_countries',
+            'des_countries'
         );
 
         return response()->json(['data' => $data]);
@@ -342,6 +368,8 @@ class ContractController extends Controller
         }
         // $contract->delete();
         $contract->status_erased = $status_erased;
+        $contract->name = $contract->name.'-'.$contract->code;
+        $contract->code = null;
         $contract->contract_code = null;
         $contract->update();
 
@@ -481,9 +509,9 @@ class ContractController extends Controller
             $contract = $query->first();
             $contract_lcl = $query_lcl->first();
 
-            /*if ($contract != null || $contract_lcl != null) {
+            if ($contract != null || $contract_lcl != null) {
                 return response()->json(['message' => 'There is already a contract with the code/reference entered'], 400);
-            }*/
+            }
 
             $regex = "/^\d+(?:,\d+)*$/";
             $carriers = str_replace(' ', '', $request->carriers);
@@ -524,7 +552,13 @@ class ContractController extends Controller
             ]);
 
             $Ncontract->NotifyNewRequest($admins);
-
+            
+            if (env('APP_VIEW') == 'operaciones') {
+                ValidateTemplateJob::dispatch($Ncontract->id)->onQueue('operaciones');
+            } else {
+                ValidateTemplateJob::dispatch($Ncontract->id);
+            }
+            
             return response()->json([
                 'message' => 'Contract created successfully!',
             ]);
