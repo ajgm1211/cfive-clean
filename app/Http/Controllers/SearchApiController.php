@@ -17,6 +17,7 @@ use App\SearchRate;
 use App\SearchPort;
 use App\SearchCarrier;
 use App\ApiProvider;
+use App\ApiCredential;
 use App\CalculationType;
 use App\Carrier;
 use App\Company;
@@ -91,9 +92,31 @@ class SearchApiController extends Controller
             return $carrier->only(['id', 'name', 'image']);
         });
 
-        $carriers_api = ApiProvider::whereIn('id', $company_user->options['api_providers'])->where('status',true)->orderBy('name')->get()->map(function ($provider) {
+        $api_credentials = ApiCredential::where([['model_type','App\\CompanyUser'],['model_id',$company_user_id]])->get()->map(function ($credential){
+            return $credential->only(['api_provider_id','status']);
+        });
+
+        $credential_status = [];
+
+        foreach($api_credentials as $credential) {
+            $credential_status[$credential['api_provider_id']] = $credential['status']; 
+        }
+
+        $carriers_api = ApiProvider::whereIn('id', $company_user->options['api_providers'])->where('status',true)->orderBy('name')->get()->map(function ($provider) use ($credential_status){
             return $provider->only(['id', 'name', 'code', 'image']);
         });
+
+        foreach($carriers_api as $key => $carrier_api){
+            if(isset($credential_status[$carrier_api['id']])){
+                if($credential_status[$carrier_api['id']] == false){
+                    $carriers_api->forget($key);
+                }
+            }
+        }
+
+        $carriers_api = $carriers_api->values();
+
+        $carriers_api->all();
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->with('contact')->get();
 
