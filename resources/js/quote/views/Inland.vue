@@ -953,7 +953,8 @@ export default {
                             newInlandAdd.currency_id = curr;
                         }
                     });
-                    component.datalists.carrier_providers.forEach(function (prov) {
+                    //Solo se está considerando proveedores de tipo "providers". A la fecha no existe una logica correcta para registrar carriers como providers. 
+                    component.datalists.providers.forEach(function (prov) {
                         if (prov.id == search["provider_id"]) {
                             newInlandAdd.provider_id = prov;
                         }

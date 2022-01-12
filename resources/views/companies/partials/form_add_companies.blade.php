@@ -2,8 +2,18 @@
 <hr>
 <div class="form-group m-form__group">
     {!! Form::label('business_name', 'Business Name') !!}<span style="color:red">*</span>
-    {!! Form::text('business_name', null, ['placeholder' => 'Please enter a business name','class' => 'form-control m-input business_name_input','required' => 'required']) !!}
+    {!! Form::text('business_name', null, 
+        ['autocomplete' => 'off', 
+         'placeholder' => 'Please enter a business name',
+         'class' => 'form-control m-input business_name_input',
+         'required' => 'required']) !!}
 </div>
+
+<div style="display:none;" class="text-danger" id="companyMessage">
+</div>
+<div style="display:none; padding-bottom:9px;" id="similarityList">
+</div>
+<hr>
 <div class="form-group m-form__group">
     {!! Form::label('phone', 'Phone') !!}
     {!! Form::text('phone', null, ['placeholder' => 'Please enter phone number','class' => 'form-control m-input phone_input']) !!}

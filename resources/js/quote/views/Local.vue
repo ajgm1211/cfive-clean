@@ -1600,6 +1600,9 @@ export default {
             actions.localcharges
                 .update(id, data, index, type)
                 .then((response) => {
+                    if(type == 2){
+                        this.getLocalCharges();
+                    }
                     this.getTotal();
                 })
                 .catch((data) => {
