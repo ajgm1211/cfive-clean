@@ -47,8 +47,7 @@ class GenerateQuotePdf extends Command
 
             $count = count($quotes);
 
-            \Log::error("Totales: " . $count);
-
+         
             $upload = true;
 
             foreach ($quotes as $quote) {
