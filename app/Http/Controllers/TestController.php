@@ -10,7 +10,14 @@ use App\Jobs\SendEmailRequestFclJob;
 use App\Jobs\TestJob;
 use App\NewContractRequest;
 use App\User;
+
+use App\QuoteV2;
+use App\PdfQuoteStatus;
+use App\FclPdf;
+use App\LclPdf;
+
 use App\Country;
+
 use App\Surcharge;
 use Goutte\Client;
 use GuzzleHttp\Cookie\FileCookieJar;
@@ -282,10 +289,17 @@ class TestController extends Controller
     public function contable(Request $request)
     {
 
-      
-        $info = Country::find(2);
-        $ports = $info->ports->pluck('id')->toArray();
-        return $ports;
+
+        // Funcion para validar proximamente que  se esta ejecutando los job cada cierto tiempo (Temporal)
+        $quotes = QuoteV2::whereHas('pdf_quote_status', function ($query) {
+            $query->where('status', 0);
+        })->get();
+
+        $count = count($quotes);
+
+        echo $count;
+
+
     }
 
 }
