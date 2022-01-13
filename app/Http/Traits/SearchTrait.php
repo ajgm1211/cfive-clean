@@ -53,6 +53,7 @@ trait SearchTrait
         }
 
         $hideD = '';
+        
         $inlands = Inland::whereHas('inland_company_restriction', function ($a) use ($company_inland) {
             $a->where('company_id', '=', $company_inland);
         })->orDoesntHave('inland_company_restriction')->whereHas('inlandports', function ($q) use ($port) {
@@ -62,6 +63,9 @@ trait SearchTrait
         $inlands->where(function ($query) use ($modality_inland) {
             $query->where('type', $modality_inland)->orwhere('type', '3');
         });
+
+        // HECTOR ON 11-01 - ADDING VALIDATION FOR EXPIRE, MODIFYING QUERY
+        $inlands->where('status','publish');
 
         $inlands = $inlands->get();
 
@@ -209,7 +213,20 @@ trait SearchTrait
                         $inlandDetails = Collection::make($inlandDetails);
 
                         //HECTOR ADDED PROVIDER_ID ON 28/04/2021
-                        $arregloInland = ['prov_id' => $inlandsValue->id, 'provider' => 'Inland Haulage', 'providerName' => $inlandsValue->provider, 'port_id' => $ports->ports->id, 'port_name' => $ports->ports->name, 'port_id' => $ports->ports->id, 'validity_start' => $inlandsValue->validity, 'validity_end' => $inlandsValue->expire, 'km' => $distancia, 'monto' => $monto, 'type' => $textType, 'type_currency' => $inlandDetails->first()['currency'], 'idCurrency' => $typeCurrency, 'provider_id' => $inlandsValue->provider_id];
+                        $arregloInland = ['prov_id' => $inlandsValue->id, 
+                                          'provider' => 'Inland Haulage', 
+                                          'providerName' => $inlandsValue->provider, 
+                                          'port_id' => $ports->ports->id, 
+                                          'port_name' => $ports->ports->name, 
+                                          'port_id' => $ports->ports->id, 
+                                          'validity_start' => $inlandsValue->validity, 
+                                          'validity_end' => $inlandsValue->expire, 
+                                          'km' => $distancia, 
+                                          'monto' => $monto, 
+                                          'type' => $textType, 
+                                          'type_currency' => $inlandDetails->first()['currency'], 
+                                          'idCurrency' => $typeCurrency, 
+                                          'provider_id' => $inlandsValue->provider_id];
                         $arregloInland['inlandDetails'] = $inlandDetails->groupBy('typeContent')->map(function ($item) use ($arregloInland) {
                             $minimoD = $item->where('sub_in', '>', 0);
                             $minimoDetails = $minimoD->where('sub_in', $minimoD->min('sub_in'))->first();
