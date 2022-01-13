@@ -45,9 +45,7 @@ class GenerateQuotePdf extends Command
                 $query->where('status', 0);
             })->get();
 
-            $count = count($quotes);
-
-         
+           
             $upload = true;
 
             foreach ($quotes as $quote) {
