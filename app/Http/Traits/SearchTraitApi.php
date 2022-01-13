@@ -231,6 +231,7 @@ trait SearchTraitApi
         //$markup = $this->freightMarkups($markup['freight']['freighPercentage'], $markup['freight']['freighAmmount'], $markup['freight']['freighMarkup'], $amount, $typeCurrency, $containers);
 
         $tot_F = 0;
+        $amount = str_replace(',', '.' , trim($amount));
         //Formato decimal
         $tot_F = number_format($tot_F, 2, '.', '');
         $amount = number_format($amount, 2, '.', '');

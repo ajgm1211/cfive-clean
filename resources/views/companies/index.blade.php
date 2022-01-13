@@ -288,4 +288,113 @@
     });
 
 </script>
+<script>    
+    //parseamos las compañias que son inyectadas desde el controlador
+    const companies = @json($companies);
+
+    //escuchamos el evento input sobre el campo que corresponde al business_name
+    document.querySelector('body').addEventListener('input', function(event) {
+        if (event.target.getAttribute('id') === 'business_name') {
+            
+            let valueInputCompany = event.target.value;
+            let similarityList = document.getElementById('similarityList');
+            let companyMessage = document.getElementById('companyMessage');
+            companyMessage.style.display = "none";            
+            companyMessage.innerHTML = '';
+            similarityList.style.display = "none";            
+            similarityList.innerHTML = '';               
+            similarityList.innerHTML = `<p style="margin-bottom:4px">Similar companies:</p>`;  
+
+            let compSimilares = [];
+            
+            companies.forEach(company => {
+
+                let businessName = company.business_name.toLowerCase().trim();
+                let valueInput = valueInputCompany.toLowerCase().trim();
+
+                //calculamos la similitud del valor escrito con cada uno de las compañías
+                let similarityValue = similarity(valueInput, businessName);                
+                
+                //Si es 1, existe una compaía igual
+                if(similarityValue === 1){   
+                    companyMessage.style.display = "block";    
+                    companyMessage.innerHTML = `Alert: A company with the same name already exists! If it is what you want you can continue. <br><br>`;
+                } else {
+                    //se muestra las compañías con similitud superior a 0.5. Donde 1 es idéntico y 0 representa ninguna similitud.
+                    if(similarityValue > 0.6){                         
+                        compSimilares.push(businessName);
+                    }
+                }    
+                //Validamos q se haya ingresado al menos 4 caracteres y buscamos coincidencias en ls compañías
+                if(valueInput.length >= 4){
+                    if(businessName.indexOf(valueInput) >= 0) {
+                        compSimilares.push(businessName);
+                    }
+                }             
+            });
+
+            renderSimilarCompanies(removeDuplicate(compSimilares), similarityList);
+        }
+    });
+    //eliminar compañías imilares
+    function removeDuplicate(compSimilares){
+        const dataArr = new Set(compSimilares);
+        return [...dataArr];
+    }
+    //render compañías similares
+    function renderSimilarCompanies(compSimilares, similarityList){
+        similarityList.style.display = "block"; 
+        let comp =  compSimilares.slice(0, 20);
+        comp.forEach(c => {
+            let p = document.createElement("p");
+            p.style.margin = "1px";    
+            p.textContent = `${c}`;
+            similarityList.appendChild(p);
+        });
+        
+    }
+    //función que recibe dos valores y devuelve la similitud entre ellos (0 a 1)
+    function similarity(s1, s2) {
+        var longer = s1;
+        var shorter = s2;
+        if (s1.length < s2.length) {
+            longer = s2;
+            shorter = s1;
+        }
+        var longerLength = longer.length;
+        if (longerLength == 0) {
+            return 1.0;
+        }
+        return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+    }
+    //medir la distancia de edición 
+    function editDistance(s1, s2) {
+        s1 = s1.toLowerCase();
+        s2 = s2.toLowerCase();
+
+        var costs = new Array();
+        for (var i = 0; i <= s1.length; i++) {
+            var lastValue = i;
+            for (var j = 0; j <= s2.length; j++) {
+            if (i == 0)
+                costs[j] = j;
+            else {
+                if (j > 0) {
+                var newValue = costs[j - 1];
+                if (s1.charAt(i - 1) != s2.charAt(j - 1))
+                    newValue = Math.min(Math.min(newValue, lastValue),
+                    costs[j]) + 1;
+                costs[j - 1] = lastValue;
+                lastValue = newValue;
+                }
+            }
+            }
+            if (i > 0)
+            costs[s2.length] = lastValue;
+        }
+        return costs[s2.length];
+    }
+
+
+</script>
 @stop
