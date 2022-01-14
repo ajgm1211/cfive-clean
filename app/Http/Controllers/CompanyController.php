@@ -79,15 +79,17 @@ class CompanyController extends Controller
     public function LoadDatatableIndex()
     {
         $company_user_id = \Auth::user()->company_user_id;
+        $options = \Auth::user()->options;
         $user_id = \Auth::user()->id;
-
-        // if (\Auth::user()->hasRole('subuser')) {
-        //     $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
-        //         $query->where('user_id', $user_id);
-        //     })->orwhere('owner', \Auth::user()->id)->with('groupUserCompanies.user')->User()->CompanyUser();
-        // } else {
+        
+        if($options === 'comercial') {
+            //Sub-users Comercial solo pueden acceder a sus propias compañias            
+            $companies = Company::where('company_user_id', $company_user_id)
+                        ->where('owner', $user_id) 
+                        ->with('groupUserCompanies.user')->User()->CompanyUser();            
+        } else {
             $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->with('groupUserCompanies.user')->User()->CompanyUser();
-        // }
+        }
 
         $companies = $companies->get();
 
@@ -147,7 +149,7 @@ class CompanyController extends Controller
 
         return view('companies.add', compact('prices', 'users'));
     }
-
+    
     /**
      * addOwner.
      *
