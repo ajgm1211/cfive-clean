@@ -213,11 +213,11 @@ class UsersController extends Controller
           ],
           'password' => 'sometimes|confirmed',
           'password_confirmation' => 'required_with:password',
-      ]);
+          ]);
 
-    $requestForm = $request->all();
-    $user = User::findOrFail($id);
-    $user->update($requestForm);
+        $requestForm = $request->all();
+        $user = User::findOrFail($id);
+        $user->update($requestForm);
 
         $user->update($requestForm);
 
@@ -369,8 +369,7 @@ class UsersController extends Controller
     }
 
     public function datahtml()
-    {
-
+    {   
         if (Auth::user()->type == 'admin') {
             $data = User::all(); 
         }
