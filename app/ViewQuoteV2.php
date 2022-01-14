@@ -21,6 +21,14 @@ class ViewQuoteV2 extends Model
         return $query->where('company_user_id', '=', $company_id);
     }
 
+    public function scopeFilterByCurrentUser($query)
+    {
+        $company_id = Auth::user()->company_user_id;
+        $user_id = Auth::user()->id;
+        return $query->where('company_user_id', '=', $company_id)
+                    ->where('user_id', '=', $user_id);
+    }
+
     public function rates_v2()
     {
         return $this->hasMany('App\AutomaticRate', 'quote_id', 'id');

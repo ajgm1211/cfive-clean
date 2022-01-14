@@ -25,7 +25,8 @@
                 <option value="data_entry">Data entry</option>
             </select>
         </div>
-        <div class="form-group m-form__group">
+        @include('users.partials.optionsSubUser', array('type'=>'add'))        
+        <div class="hidden form-group m-form__group">
             <select class="form-control" name="delegation_id">
                 <option value="">Choose a delegation</option>
                 @foreach($delegation as $data)
@@ -41,6 +42,7 @@
                 <option value="subuser">Subuser</option>
             </select>
         </div>
+        @include('users.partials.optionsSubUser', array('type'=>'add'))        
         <div class="form-group m-form__group">
             <select class="form-control" name="delegation_id">
                 <option value="">Choose a delegation</option>
@@ -61,6 +63,7 @@
                 <option value="data_entry" {{$user->type=='data_entry' ? 'selected':''}}>Data entry</option>
             </select>
         </div>
+        @include('users.partials.optionsSubUser', array('type'=>'edit'))        
         <div class="form-group m-form__group">
             <select class="form-control" name="delegation_id">
                 @if($userd!= null)
@@ -82,7 +85,7 @@
                 <option value="subuser" {{$user->type=='subuser' ? 'selected':''}}>Subuser</option>
             </select>
         </div>
-        
+        @include('users.partials.optionsSubUser', array('type'=>'edit'))        
         <div class="form-group m-form__group">
             <select class="form-control" name="delegation_id">
                 @if($userd!=null)
@@ -98,7 +101,3 @@
         </div>
     @endif
 @endif
-
-
-
-
