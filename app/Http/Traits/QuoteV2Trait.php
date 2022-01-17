@@ -1545,6 +1545,11 @@ trait QuoteV2Trait
                 $typeCurrency = $company_user->currency->alphacode;
                 $currency_rate = $this->ratesCurrency($inland->currency_id, $typeCurrency);
 
+                if($currency_rate == 0 ){
+
+                    $currency_rate = 1;
+                }
+
                 if (!is_array($inland->rate) && !is_array($inland->markup)) {
                     $array_amounts = json_decode($inland->rate, true);
                     $array_markups = json_decode($inland->markup, true);
@@ -1852,7 +1857,9 @@ trait QuoteV2Trait
                 }
             }
         }
-
+        if($exchangeRate == 0){
+            $exchangeRate = 1;
+        }
         foreach ($amounts as $container => $price) {
             $convertedPrice = $price / $exchangeRate;
             $amounts[$container] = isDecimal($convertedPrice, true);
