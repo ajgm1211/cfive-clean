@@ -105,11 +105,11 @@ class SendExcelFile implements ShouldQueue
             if ($company_setting->future_dates == 1) {
                 $q->where(function ($query) use ($dateSince) {
                     $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code);
+                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code)->where('status_erased', '!=', '1');
             } else {
                 $q->where(function ($query) use ($dateSince, $dateUntil) {
                     $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code);
+                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code)->where('status_erased', '!=', '1');
             }
         })->orderBy('contract_id')->get();
 
@@ -205,7 +205,7 @@ class SendExcelFile implements ShouldQueue
                             foreach ($containers as $cont) {
                                 $name_arreglo = 'array' . $cont->code;
                                 $name_rate = 'rate' . $cont->code;
-                                if (in_array($localCharge[$i]->calculation_type_id, $$name_arreglo)) {
+                                if (in_array($localCharge[$i]->calculation_type_id, $$name_arreglo) && $$name_rate != '0' ) {
                                     $monto = $this->perTeu($localCharge[$i]->ammount, $localCharge[$i]->calculation_type_id, $cont->code);
                                     $currency_rate = $this->ratesCurrency($localCharge[$i]->currency_id, $data->currency->alphacode);
                                     $$name_rate = number_format($$name_rate + ($monto / $currency_rate), 2, '.', '');
