@@ -152,7 +152,8 @@ class QuotationController extends Controller
         });
 
         $providers = Provider::where('company_user_id', $company_user_id)->get()->map(function ($provider) {
-            return $provider->only(['id', 'name']);
+            $provider['model'] = 'App\Provider';
+            return $provider->only(['id', 'name', 'model']);
         });
 
         $cargo_types = CargoType::get()->map(function ($tcargo) {

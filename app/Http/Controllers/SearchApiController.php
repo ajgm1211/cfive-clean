@@ -860,7 +860,7 @@ class SearchApiController extends MasterController
                             $charges_to_add_rate_currency = $charges_to_add_original;
                         } else {
                             $charges_to_add = $charge->containers_client_currency;
-                            $charges_to_add_rate_currency = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers_client_currency);
+                            $charges_to_add_rate_currency = $this->convertToCurrency($client_currency, $rate->currency, $charge->containers_client_currency);
                         }
                     }
 
