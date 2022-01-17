@@ -43,7 +43,7 @@ class UpdateStatusInland extends Command
         try {
             $today = Carbon::now();
             $inlands = Inland::where('expire','<=', $today)->where('status', 'publish')->update(array('status'=>'expired'));
-            $this->info($inlands);
+            $this->info('The number of Inlands affected is: '.$inlands);
         } catch (\Exception $e) {
             $e->getMessage();
         }
