@@ -10,9 +10,8 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use PrvValidation;
 use Yajra\Datatables\Datatables;
-use App\Http\Controllers\MasterController;
 
-class AlertsDuplicatedsGlobalFclController extends MasterController
+class AlertsDuplicatedsGlobalFclController extends Controller
 {
     public function __construct()
     {
