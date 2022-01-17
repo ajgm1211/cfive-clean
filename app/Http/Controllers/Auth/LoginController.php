@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\MasterController;
 use App\Http\Traits\BrowserTrait;
 use App\User;
 use App\OauthClient;
@@ -16,7 +15,7 @@ use GuzzleHttp\Stream\Stream;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Client;  
 
-class LoginController extends MasterController
+class LoginController extends Controller
 {
     /*
     |--------------------------------------------------------------------------

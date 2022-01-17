@@ -50,9 +50,8 @@ use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
-use App\Http\Controllers\MasterController;
 
-class SearchApiController extends MasterController
+class SearchApiController extends Controller
 {
     use SearchTrait, QuoteV2Trait, MixPanelTrait;
 
