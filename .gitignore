@@ -2,6 +2,7 @@
 /public/storage
 /public/hot
 /public/pdf
+/config/custom.php
 /vendor
 /.idea
 /.vscode
