@@ -79,11 +79,11 @@ class CompanyController extends Controller
     public function LoadDatatableIndex()
     {
         $company_user_id = \Auth::user()->company_user_id;
-        $options = \Auth::user()->options;
+        $subtype = \Auth::user()->options['subtype'];
         $user_id = \Auth::user()->id;
         
-        if($options === 'comercial') {
-            //Sub-users Comercial solo pueden acceder a sus propias compañias            
+        if($subtype === 'comercial') {
+            //Subtype comercial solo pueden acceder a sus propias compañias            
             $companies = Company::where('company_user_id', $company_user_id)
                         ->where('owner', $user_id) 
                         ->with('groupUserCompanies.user')->User()->CompanyUser();            
