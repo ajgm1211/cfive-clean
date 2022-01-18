@@ -13,8 +13,12 @@ class AddOptionsToUsers extends Migration
      */
     public function up()
     {
+        $default = json_encode([
+            'subtype' => 'operaciones'
+        ]);
+
         Schema::table('users', function (Blueprint $table) {
-            $table->string('options')->default('operaciones')->after('type');
+            $table->json('options')->after('type');
         });
     }
 
