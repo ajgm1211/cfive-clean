@@ -231,8 +231,8 @@
     <script src="/assets/demo/default/custom/components/datatables/base/html-table.js" type="text/javascript"></script>
     <script>
         const companyId = {{ Auth::user()->company_user_id }};
-
-        if(companyId === '148'){
+        
+        if(companyId == '148'){
             document.querySelector('body').addEventListener('change', function(event){
                 let value = event.target.value;
                 if (value === 'subuser'){
