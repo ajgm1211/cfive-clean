@@ -60,6 +60,7 @@ class SearchApiController extends Controller
     public function __construct(LaravelMixPanel $mixPanel)
     {
         $this->mixPanel = $mixPanel;
+        parent::__construct();
     }
 
     //Shows the Search main view
@@ -188,9 +189,17 @@ class SearchApiController extends Controller
             return $cargo_type->only(['id', 'name']);
         });
         
+        /*
+            implementacion de variable custom para no depender de consultar el enviroment
+        */
+        
+            $api_url = $this->customEnv['apiUrl'];
+
         /**
          * Cuándo no encuentre definida usar helper env()
          */
+
+        /*
         if (!isset($_ENV['APP_ENV'])){
             $environment_name = env('APP_ENV');
         } else {
@@ -204,6 +213,7 @@ class SearchApiController extends Controller
         } else {
             $api_url = "https://carriersdev.cargofive.com/api/pricing";
         } 
+        */
 
         /**$inland_distances = InlandDistance::get()->map(function ($distance){
         return $distance->only(['id','display_name','harbor_id']);
