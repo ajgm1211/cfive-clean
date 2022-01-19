@@ -16,8 +16,12 @@ class User extends Authenticatable implements Auditable
     use HasRoles;
     use \OwenIt\Auditing\Auditable;
 
+    protected $casts = [
+        'options' => 'array'
+    ];
+
     protected $fillable = [
-        'id', 'name', 'lastname', 'password', 'email', 'phone', 'type', 'company_user_id', 'position', 'verified', 'access', 'api_token',
+        'id', 'name', 'lastname', 'password', 'email', 'phone', 'type', 'options', 'company_user_id', 'position', 'verified', 'access', 'api_token',
     ];
 
     protected $hidden = [
