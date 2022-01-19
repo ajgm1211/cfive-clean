@@ -54,8 +54,17 @@ class QuotationController extends Controller
     }
 
     function list(Request $request)
-    {
-        $results = ViewQuoteV2::filterByCurrentCompany()->filter($request);
+    {   
+        $company_user_id = \Auth::user()->company_user_id;
+        $subtype = \Auth::user()->options['subtype'];
+        $user_id = \Auth::user()->id;
+        
+        //Permisos de subtype comercial, solo puede acceder a sus propias cotizaiones
+        if($subtype === 'comercial') {
+            $results = ViewQuoteV2::filterByCurrentUser()->filter($request);
+        } else {
+            $results = ViewQuoteV2::filterByCurrentCompany()->filter($request);
+        }
 
         return QuotationListResource::collection($results);
     }
@@ -453,7 +462,9 @@ class QuotationController extends Controller
     }
 
     public function edit(Request $request, QuoteV2 $quote)
-    {
+    {  
+        $this->authorize('author', $quote); //policy para autorizar acceso.
+        
         $this->validateOldQuote($quote);
 
         return view('quote.edit');
