@@ -232,17 +232,21 @@
     <script>
         const companyId = {{ Auth::user()->company_user_id }};
         
-        if(companyId == '148'){
-            document.querySelector('body').addEventListener('change', function(event){
-                let value = event.target.value;
-                if (value === 'subuser'){
+        document.querySelector('body').addEventListener('change', function(event){
+            let value = event.target.value;
+            if (value === 'subuser'){
+                if(companyId == '148'){
                     document.getElementById("optionsSubUser").style.display='block'; 
                 }
-                if(value === 'admin' || value === 'company' || value === 'data_entry'){
+            }
+            if(value === 'admin' || value === 'company' || value === 'data_entry'){
+                if(companyId == '148'){
                     document.getElementById("optionsSubUser").style.display='none'; 
+                    document.getElementById('optionsSubUser').childNodes[1].value = 'operaciones';
                 }
-            });
-        }        
+            }
+        });
+        
 
         function AbrirModal(action,id){
 
