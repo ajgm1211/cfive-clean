@@ -26,7 +26,7 @@ class ViewQuoteV2 extends Model
         $company_id = Auth::user()->company_user_id;
         $user_id = Auth::user()->id;
         return $query->where('company_user_id', '=', $company_id)
-                    ->where('user_id', '=', $user_id);
+                     ->where('user_id', '=', $user_id);
     }
 
     public function rates_v2()
