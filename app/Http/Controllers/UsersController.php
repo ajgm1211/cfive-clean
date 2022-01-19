@@ -61,11 +61,16 @@ class UsersController extends Controller
             if (\Auth::user()->type == 'company' && $request->type == 'company') {
                 $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
             }
-
-            $user = new User($request->all());
+            
+            $options = [
+                'subtype' => $request->input('subtype')
+            ];
+            
+            $user = new User($request->only('name', 'lastname','email', 'phone', 'type', 'company_user_id'));            
+            $user->options = $options;
             $user->password = $request->password;
             $user->save();
-
+    
             if ($request->type == "subuser") {
                 $user->assignRole('subuser');
             }
@@ -213,11 +218,11 @@ class UsersController extends Controller
           ],
           'password' => 'sometimes|confirmed',
           'password_confirmation' => 'required_with:password',
-      ]);
+          ]);
 
-    $requestForm = $request->all();
-    $user = User::findOrFail($id);
-    $user->update($requestForm);
+        $requestForm = $request->all();
+        $user = User::findOrFail($id);
+        $user->update($requestForm);
 
         $user->update($requestForm);
 
@@ -252,8 +257,10 @@ class UsersController extends Controller
             'password' => 'sometimes|confirmed',
             'password_confirmation' => 'required_with:password',
         ]);
+                
         $requestForm = $request->all();
         $user = User::findOrFail($id);
+
         $id_ud=UserDelegation::where('users_id','=',$id)->first();
 
         if($id_ud == null && $request->delegation_id!=null){
@@ -287,6 +294,10 @@ class UsersController extends Controller
         if ($request->type == "data_entry") {
             $user->assignRole('data_entry');
         }
+
+        $options = $user->options;
+        $options['subtype'] = $request->input('subtype');
+        $user->options = $options;
 
         $user->update($requestForm);
 
@@ -369,8 +380,7 @@ class UsersController extends Controller
     }
 
     public function datahtml()
-    {
-
+    {   
         if (Auth::user()->type == 'admin') {
             $data = User::all(); 
         }

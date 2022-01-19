@@ -40,6 +40,9 @@
         .active-link {
             background-color: #293F66;
         }
+        .hidden{
+            display: none;
+        }
     </style>
 
     @show
