@@ -1681,3 +1681,13 @@ export default {
     },
 };
 </script>
+
+<style lang="scss" scoped>
+.table-responsive {
+  overflow: initial !important;
+}
+
+.local_charge_table {
+  height: fit-content;
+}
+</style>
