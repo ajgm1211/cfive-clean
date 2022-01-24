@@ -366,7 +366,7 @@ class LclPdf
 
             foreach ($totalsArrayOutput as $key => $route) {
                 if (($route['POL'] == $portArray['origin'] && $route['POD'] == $portArray['destination'] && $portArray['carrier'] == $route['carrier']) ||
-                     ($route['POD'] == $portArray['destination'] && $route['POL'] == $portArray['origin'] && $portArray['carrier'] ==  'local')) {
+                     ($route['POD'] == $portArray['destination'] && $portArray['carrier'] ==  'local' || $route['POL'] == $portArray['origin'] && $portArray['carrier'] ==  'local')) {
                     if (isset($totalsArrayInput['total'])) {
                         $dmCalc = isDecimal($totalsArrayInput['total'], true);
                         if (isset($totalsArrayOutput[$key]['total'])) {
