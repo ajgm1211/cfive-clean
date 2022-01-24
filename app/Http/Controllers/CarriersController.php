@@ -90,11 +90,8 @@ class CarriersController extends Controller
 
     public function update(Request $request, $id)
     {
-        // dd($request->all());
-
         $carrier = Carrier::find($id);
-        $file = $request->file('file');
-        $nameImg = $file->getClientOriginalName();
+
         $caracteres = ['*', '/', '.', '?', '"', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '{', '}', '[', ']', '+', '_', '|', '°', '!', '$', '%', '&', '(', ')', '=', '¿', '¡', ';', '>', '<', '^', '`', '¨', '~', ':'];
 
         if ($request->variation != null) {
@@ -107,9 +104,13 @@ class CarriersController extends Controller
             $carrier->varation = $json;
 
         }
-        $carrier->image = $nameImg;
-            
-
+        
+        if(isset($request->file)){
+            $file = $request->file('file');
+            $nameImg = $file->getClientOriginalName();
+            $carrier->image = $nameImg;
+        }
+        
         $carrier->name = $request->name;
         $carrier->update();
 
