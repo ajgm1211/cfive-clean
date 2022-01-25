@@ -498,7 +498,7 @@ class SearchApiController extends Controller
                     $a->where('user_id', '=', $user_id);
                 })->orDoesntHave('contract_user_restriction');
             })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $container_group,$companySearch) {
-                $q->whereHas('contract_company_restriction', function ($b) use ($company_user_id,$companySearch) {
+                $q->whereHas('contract_company_restriction', function ($b) use ($companySearch) {
                     $b->where('company_id', '=', $companySearch);
                 })->orDoesntHave('contract_company_restriction');
             })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $container_group, $company_user) {
