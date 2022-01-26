@@ -489,6 +489,7 @@ class SearchApiController extends Controller
         $carriers = $search_data['carriers'];
         $dateSince = $search_data['dateRange']['startDate'];
         $dateUntil = $search_data['dateRange']['endDate'];
+        $companySearch=$search_data['company'];
 
         //Querying rates database
         if ($company_user_id != null || $company_user_id != 0) {
@@ -496,9 +497,9 @@ class SearchApiController extends Controller
                 $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
                     $a->where('user_id', '=', $user_id);
                 })->orDoesntHave('contract_user_restriction');
-            })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $container_group) {
-                $q->whereHas('contract_company_restriction', function ($b) use ($company_user_id) {
-                    $b->where('company_id', '=', $company_user_id);
+            })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $container_group,$companySearch) {
+                $q->whereHas('contract_company_restriction', function ($b) use ($companySearch) {
+                    $b->where('company_id', '=', $companySearch);
                 })->orDoesntHave('contract_company_restriction');
             })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $container_group, $company_user) {
                 if ($company_user->future_dates == 1) {
