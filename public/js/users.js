@@ -7,10 +7,6 @@ function change(id){
     var txtC = document.getElementById("txtCompany");
     var txtSub = document.getElementById("txtSubuser");
 
-
-
-
-
     if(id == '1'){
 
         divC.style.display = "none"; 
@@ -40,8 +36,6 @@ function change(id){
         txtC.value="";
 
     }
-
-
-
-
 }
+
+

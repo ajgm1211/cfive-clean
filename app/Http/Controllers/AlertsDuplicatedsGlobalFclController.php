@@ -13,6 +13,10 @@ use Yajra\Datatables\Datatables;
 
 class AlertsDuplicatedsGlobalFclController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
     // CARGA LA VISTA LAS COMPAÑIAS CON G.C DUPLICADOS
     public function index(Request $request)
     {
@@ -136,15 +140,17 @@ class AlertsDuplicatedsGlobalFclController extends Controller
     public function searchDuplicateds(Request $request)
     {
         $user_adm_rq = User::where('email', 'admin@example.com')->orWhere('email', 'info@cargofive.com')->first();
-
-        if (env('APP_ENV') == 'local') {
+        
+        $client = new Client(['base_uri' => $this->customEnv['baseUriDuplicates']]);
+        
+        /*if (env('APP_ENV') == 'local') {
             $client = new Client(['base_uri' => 'http://duplicate-gc/DuplicateGCFCL/']);
         } elseif (env('APP_ENV') == 'developer') {
             $client = new Client(['base_uri' => 'http://duplicateds-globalchargers-dev.eu-central-1.elasticbeanstalk.com/DuplicateGCFCL/']);
         } else {
             $client = new Client(['base_uri' => 'http://prod.duplicatedscg.cargofive.com/DuplicateGCFCL/']);
         }
-
+        */
         $response = $client->request('GET', 'DGCFCL-Create', [
             'headers' => [
                 'Authorization' => 'Bearer '.$user_adm_rq->api_token,

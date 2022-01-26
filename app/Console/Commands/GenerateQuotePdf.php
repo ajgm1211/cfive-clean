@@ -45,6 +45,7 @@ class GenerateQuotePdf extends Command
                 $query->where('status', 0);
             })->get();
 
+           
             $upload = true;
 
             foreach ($quotes as $quote) {
@@ -52,17 +53,19 @@ class GenerateQuotePdf extends Command
                     case "FCL":
                         $pdf = new FclPdf($upload);
                         $pdf->generate($quote);
-                        $quote->pdf_quote_status()->update(['status'=>1]);
+                        $quote->pdf_quote_status()->update(['status' => 1]);
+
                         break;
                     case "LCL":
                         $pdf = new LclPdf($upload);
                         $pdf->generate($quote);
-                        $quote->pdf_quote_status()->update(['status'=>1]);
+                        $quote->pdf_quote_status()->update(['status' => 1]);
+
                         break;
                 }
             }
         } catch (\Exception $e) {
-            \Log::error("Error creating API PDF: ".$e->getMessage());
+            \Log::error("Error creating API PDF: " . $e->getMessage() . " The file is: " . $e->getFile() . " In line : " . $e->getLine());
         }
 
         $this->info('Command Generate Quote PDF executed successfully!');

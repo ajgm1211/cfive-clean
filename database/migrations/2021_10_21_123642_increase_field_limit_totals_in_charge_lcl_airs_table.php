@@ -13,7 +13,7 @@ class IncreaseFieldLimitTotalsInChargeLclAirsTable extends Migration
      */
     public function up()
     {
-        \DB::statement('ALTER TABLE charge_lcl_airs CHANGE total DOUBLE(11,2) NULL');
+        \DB::statement('ALTER TABLE charge_lcl_airs MODIFY total DOUBLE(11,2) NULL');
     }
 
     /**

@@ -32,7 +32,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use HelperAll;
-
+use App\Jobs\ValidateTemplateJob;
 
 class ContractController extends Controller
 {
@@ -368,6 +368,8 @@ class ContractController extends Controller
         }
         // $contract->delete();
         $contract->status_erased = $status_erased;
+        $contract->name = $contract->name.'-'.$contract->code;
+        $contract->code = null;
         $contract->contract_code = null;
         $contract->update();
 
@@ -507,9 +509,9 @@ class ContractController extends Controller
             $contract = $query->first();
             $contract_lcl = $query_lcl->first();
 
-            /*if ($contract != null || $contract_lcl != null) {
+            if ($contract != null || $contract_lcl != null) {
                 return response()->json(['message' => 'There is already a contract with the code/reference entered'], 400);
-            }*/
+            }
 
             $regex = "/^\d+(?:,\d+)*$/";
             $carriers = str_replace(' ', '', $request->carriers);
@@ -550,7 +552,13 @@ class ContractController extends Controller
             ]);
 
             $Ncontract->NotifyNewRequest($admins);
-
+            
+            if (env('APP_VIEW') == 'operaciones') {
+                ValidateTemplateJob::dispatch($Ncontract->id)->onQueue('operaciones');
+            } else {
+                ValidateTemplateJob::dispatch($Ncontract->id);
+            }
+            
             return response()->json([
                 'message' => 'Contract created successfully!',
             ]);
