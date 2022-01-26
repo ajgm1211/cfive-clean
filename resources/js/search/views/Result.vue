@@ -612,7 +612,7 @@ export default {
         .then((response) => {
           if (response.data.zip == true) {
             console.log("Downloading!", response.data.url);
-            window.open("/api/search/downloadMContract/" + response.data.url);
+            window.open("/api/search/downloadMContract/" + response.data.url.replace("+", "%2B"));
             /*
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement("a");
@@ -623,7 +623,7 @@ export default {
 */
           } else {
             console.log("Downloading!", response);
-            window.open(response.data.url);
+            window.open(response.data.url.replace("+", "%2B"));
           }
         })
         .catch((error) => {
