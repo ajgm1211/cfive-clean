@@ -30,10 +30,28 @@ class QuotationOceanFreightResource extends JsonResource
             'origin' => $this->origin_port->display_name ?? null,
             'destiny' => $this->destination_port->display_name ?? null,
             'transit_time' => (int) $this->transit_time ?? null,
+            'service' =>  $this->getScheduleType($this->schedule_type) ?? null,
             'via' => $this->via ?? null,
             'carrier' => (new CarrierResource($this->carrier))->companyUser($this->quoteV2->company_user),
             //'carrier' => $this->carrier,
             'charges' => count($this->charge)>0 ? QuotationOceanFreightChargeResource::collection($this->charge):QuotationOceanFreightChargeLclResource::collection($this->charge_lcl_air),
         ];
     }
+
+    public function getScheduleType($value)
+    {
+
+            if ($value == '1') {
+                $val = 'Direct';
+            } elseif ($value == '2') {
+                $val = 'Transfer';
+            } elseif ($value != '') {
+                $val = $value;
+            } else {
+                $val = "";
+            } 
+
+        return $val;
+    }
+
 }

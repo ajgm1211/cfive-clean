@@ -17,6 +17,7 @@ use App\SearchRate;
 use App\SearchPort;
 use App\SearchCarrier;
 use App\ApiProvider;
+use App\ApiCredential;
 use App\CalculationType;
 use App\Carrier;
 use App\Company;
@@ -59,6 +60,7 @@ class SearchApiController extends Controller
     public function __construct(LaravelMixPanel $mixPanel)
     {
         $this->mixPanel = $mixPanel;
+        parent::__construct();
     }
 
     //Shows the Search main view
@@ -91,9 +93,31 @@ class SearchApiController extends Controller
             return $carrier->only(['id', 'name', 'image']);
         });
 
-        $carriers_api = ApiProvider::whereIn('id', $company_user->options['api_providers'])->orderBy('name')->get()->map(function ($provider) {
+        $api_credentials = ApiCredential::where([['model_type','App\\CompanyUser'],['model_id',$company_user_id]])->get()->map(function ($credential){
+            return $credential->only(['api_provider_id','status']);
+        });
+
+        $credential_status = [];
+
+        foreach($api_credentials as $credential) {
+            $credential_status[$credential['api_provider_id']] = $credential['status']; 
+        }
+
+        $carriers_api = ApiProvider::whereIn('id', $company_user->options['api_providers'])->where('status',true)->orderBy('name')->get()->map(function ($provider) use ($credential_status){
             return $provider->only(['id', 'name', 'code', 'image']);
         });
+
+        foreach($carriers_api as $key => $carrier_api){
+            if(isset($credential_status[$carrier_api['id']])){
+                if($credential_status[$carrier_api['id']] == false){
+                    $carriers_api->forget($key);
+                }
+            }
+        }
+
+        $carriers_api = $carriers_api->values();
+
+        $carriers_api->all();
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->with('contact')->get();
 
@@ -165,9 +189,17 @@ class SearchApiController extends Controller
             return $cargo_type->only(['id', 'name']);
         });
         
+        /*
+            implementacion de variable custom para no depender de consultar el enviroment
+        */
+        
+            $api_url = $this->customEnv['apiUrl'];
+
         /**
          * Cuándo no encuentre definida usar helper env()
          */
+
+        /*
         if (!isset($_ENV['APP_ENV'])){
             $environment_name = env('APP_ENV');
         } else {
@@ -181,6 +213,7 @@ class SearchApiController extends Controller
         } else {
             $api_url = "https://carriersdev.cargofive.com/api/pricing";
         } 
+        */
 
         /**$inland_distances = InlandDistance::get()->map(function ($distance){
         return $distance->only(['id','display_name','harbor_id']);
@@ -456,6 +489,7 @@ class SearchApiController extends Controller
         $carriers = $search_data['carriers'];
         $dateSince = $search_data['dateRange']['startDate'];
         $dateUntil = $search_data['dateRange']['endDate'];
+        $companySearch=$search_data['company'];
 
         //Querying rates database
         if ($company_user_id != null || $company_user_id != 0) {
@@ -463,9 +497,9 @@ class SearchApiController extends Controller
                 $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
                     $a->where('user_id', '=', $user_id);
                 })->orDoesntHave('contract_user_restriction');
-            })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $container_group) {
-                $q->whereHas('contract_company_restriction', function ($b) use ($company_user_id) {
-                    $b->where('company_id', '=', $company_user_id);
+            })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $container_group,$companySearch) {
+                $q->whereHas('contract_company_restriction', function ($b) use ($companySearch) {
+                    $b->where('company_id', '=', $companySearch);
                 })->orDoesntHave('contract_company_restriction');
             })->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $container_group, $company_user) {
                 if ($company_user->future_dates == 1) {
@@ -826,7 +860,7 @@ class SearchApiController extends Controller
                             $charges_to_add_rate_currency = $charges_to_add_original;
                         } else {
                             $charges_to_add = $charge->containers_client_currency;
-                            $charges_to_add_rate_currency = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers_client_currency);
+                            $charges_to_add_rate_currency = $this->convertToCurrency($client_currency, $rate->currency, $charge->containers_client_currency);
                         }
                     }
 

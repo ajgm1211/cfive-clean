@@ -48,7 +48,7 @@
                             @foreach ($charge->sum_total as $total)
                                 <td>{!! isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
                             @endforeach
-                        @else
+                        @elseif(isset($amounts))
                             @foreach ($amounts as $total)
                                 <td>{!! isDecimal($total, false, true) !!} {!! @$charge->currency->alphacode !!}</td>
                             @endforeach

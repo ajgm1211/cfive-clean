@@ -874,13 +874,13 @@ $('#allOriginPort').on('click', function() {
         $('#port_orig').attr('disabled', 'true');
         $("#port_orig").select2().val('1485').trigger('change.select2');
 
-
     } else {
 
         // Hacer algo si el checkbox ha sido deseleccionado
         $('.excepcionPortOrig').attr('hidden', 'true');
         $('#port_orig').removeAttr('disabled');
         $("#port_orig").select2().val('').trigger('change.select2');
+        $('#exceptionPortOrig').val('').trigger('change.select2');
     }
 });
 
@@ -896,9 +896,10 @@ $('#allDestinationPort').on('click', function() {
     } else {
         // Hacer algo si el checkbox ha sido deseleccionado
         $('.excepcionPortDest').attr('hidden', 'true');
-
         $('#port_dest').removeAttr('disabled');
         $("#port_dest").select2().val('').trigger('change.select2');
+        $('#exceptionPortDest').val('').trigger('change.select2');
+
     }
 });
 
@@ -912,9 +913,9 @@ $('#allOriginCountry').on('click', function() {
     } else {
         // Hacer algo si el checkbox ha sido deseleccionado
         $('.excepcionCountryOrig').attr('hidden', 'true');
-
         $('#country_orig').removeAttr('disabled');
         $("#country_orig").select2().val('').trigger('change.select2');
+        $('#exceptionCountryOrig').val('').trigger('change.select2');
 
     }
 });
@@ -932,6 +933,7 @@ $('#allDestinationCountry').on('click', function() {
 
         $('#country_dest').removeAttr('disabled');
         $("#country_dest").select2().val('').trigger('change.select2');
+        $('#exceptionCountryDest').val('').trigger('change.select2');
     }
 });
 
@@ -949,6 +951,8 @@ $('#allOriginPortCountry').on('click', function() {
 
         $('#portcountry_orig').removeAttr('disabled');
         $("#portcountry_orig").select2().val('').trigger('change.select2');
+        $('#exceptionPortOrig').val('').trigger('change.select2');
+
 
     }
 });
@@ -966,6 +970,7 @@ $('#allDestinationPortCountry').on('click', function() {
 
         $('#portcountry_dest').removeAttr('disabled');
         $("#portcountry_dest").select2().val('').trigger('change.select2');
+        $('#exceptionCountryDest').val('').trigger('change.select2');
     }
 });
 
@@ -983,6 +988,8 @@ $('#allOriginCountryPort').on('click', function() {
 
         $('#countryport_orig').removeAttr('disabled');
         $("#countryport_orig").select2().val('').trigger('change.select2');
+        $('#exceptionCountryOrig').val('').trigger('change.select2');
+
     }
 });
 $('#allDestinationCountryPort').on('click', function() {
@@ -998,5 +1005,7 @@ $('#allDestinationCountryPort').on('click', function() {
 
         $('#countryport_dest').removeAttr('disabled');
         $("#countryport_dest").select2().val('').trigger('change.select2');
+        $('#exceptionPortDest').val('').trigger('change.select2');
+
     }
 });
