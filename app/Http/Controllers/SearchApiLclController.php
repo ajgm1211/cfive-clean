@@ -223,7 +223,7 @@ class SearchApiLclController extends Controller
                 }
             }
 
-            $this->calculateTotals($rate,$search_ids['client_currency']);
+            $this->calculateTotals($rate,$search_ids);
 
             //ADDING ATTRIBUTES AT THE END            
             $remarks = $this->searchRemarks($rate,$search_ids);
@@ -404,7 +404,7 @@ class SearchApiLclController extends Controller
             $target_total_client_currency = $target->total_client_currency;
             $target_total = $target->total;
             //SPECIAL CASE - OCEAN FREIGHT
-        } elseif (isset($target['surcharge']) && $target['surcharge']->name == "Ocean Freight") {
+        } elseif (isset($target['surcharge']) && $target['surcharge']['name'] == "Ocean Freight") {
             //Info from markups array
             $markups_to_add = $markups['freight'];
             $fixed = $markups_to_add['freight_amount'];
@@ -417,7 +417,7 @@ class SearchApiLclController extends Controller
         }
 
         //Checking if markups are fixed rate
-        if ($fixed != 0) {
+        if (isset($fixed) && $fixed != 0) {
             //Converting amount to Charge and Client currency to add directly
             $markups_array = $this->convertToCurrency($markups_currency, $target_currency, array($fixed));
 
@@ -430,7 +430,7 @@ class SearchApiLclController extends Controller
                 $total_with_markups_client_currency = isDecimal($target_total_client_currency,true) + isDecimal($markups_client_currency[0],true);
             }
         //Same loop but for percentile markups
-        } elseif ($percent != 0) {
+        } elseif (isset($percent) && $percent != 0) {
             //Calculating percentage of each container and each total price, storing them directly as final markups array
             $markups_array = $this->calculatePercentage($percent, array($target_total));
 
@@ -457,9 +457,11 @@ class SearchApiLclController extends Controller
         }
     }
 
-    public function calculateTotals($rate,$client_currency)
+    public function calculateTotals($rate,$search_data)
     {
         $charge_type_total = [];
+        $client_currency = $search_data['client_currency'];
+        $totals_freight_currency = 0;
 
         if (isset($rate->total_with_markups)){
             $to_update = 'total_with_markups';
@@ -486,8 +488,10 @@ class SearchApiLclController extends Controller
                                 $charges_to_add = $this->convertToCurrency($charge->currency, $client_currency, array($charge->total_with_markups))[0];
                                 $charges_to_add_original = $this->convertToCurrency($charge->currency, $rate->currency, array($charge->total_with_markups))[0];
                             }
+                            $charges_to_add_rate_currency = $charges_to_add_original;
                         }else{
                             $charges_to_add = $charge->total_with_markups_client_currency;
+                            $charges_to_add_rate_currency = $this->convertToCurrency($charge->currency, $rate->currency, array($charge->total_with_markups))[0];
                         }
                     }else{
                         if($direction == "Freight"){
@@ -498,13 +502,21 @@ class SearchApiLclController extends Controller
                                 $charges_to_add = $this->convertToCurrency($charge->currency, $client_currency, array($charge->total))[0];
                                 $charges_to_add_original = $this->convertToCurrency($charge->currency,$rate->currency,array($charge->total))[0];
                             }
+                            $charges_to_add_rate_currency = $charges_to_add_original;
                         }else{
                             $charges_to_add = $charge->total_client_currency;
+                            $charges_to_add_rate_currency = $this->convertToCurrency($charge->currency, $rate->currency, array($charge->total))[0];
                         }
                     }
 
                     //Adding charge total to Rate totals
                     $total += isDecimal($charges_to_add, true);
+
+                    if(($direction == "Origin" && $search_data['originCharges']) || 
+                    ($direction == "Destination" && $search_data['destinationCharges'])
+                    || $direction == "Freight"){
+                        $totals_freight_currency += isDecimal($charges_to_add_rate_currency, true);
+                    }
                     
                     //Add prices from charge to totals by type
                     if($direction == "Freight"){
@@ -514,7 +526,11 @@ class SearchApiLclController extends Controller
                     }
 
                     //Updating rate totals to new added array
-                    $rate->$to_update = $total;
+                    if(($direction == "Origin" && $search_data['originCharges']) || 
+                        ($direction == "Destination" && $search_data['destinationCharges'])
+                        || $direction == "Freight"){
+                            $rate->$to_update = $total;
+                    }
 
                 }else{
 
@@ -533,6 +549,8 @@ class SearchApiLclController extends Controller
                         $charge_type_total[$direction] = 0;
                     }
 
+                    $totals_freight_currency += isDecimal($charges_to_add_original, true);
+
                     //Add prices from charge to totals by type
                     $charge_type_total[$direction] += isDecimal($charges_to_add_original,true);
                     
@@ -547,12 +565,17 @@ class SearchApiLclController extends Controller
 
         }
 
-        $total_freight_currency = $rate->charge_totals_by_type['Freight'];
-        $rate->setAttribute('total_freight_currency', $total_freight_currency);
+        if (isset($search_data['showRateCurrency'])) {
+            $rate->setAttribute('total_freight_currency', $totals_freight_currency);
+        } else {
+            $totals_freight_currency = $rate->charge_totals_by_type['Freight'];
+            $rate->setAttribute('total_freight_currency', $totals_freight_currency);
+        }
 
         if(isset($rate->total_with_markups)){
             $total_with_markups_freight_currency = $this->convertToCurrency($client_currency, $rate->currency, array($rate->total_with_markups));
             $rate->setAttribute('total_with_markups_freight_currency', $total_with_markups_freight_currency[0]);
         }
+
     }
 }

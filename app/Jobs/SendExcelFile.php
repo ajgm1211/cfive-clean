@@ -57,9 +57,9 @@ class SendExcelFile implements ShouldQueue
 
         $typeRoute = $this->data['data']['typeofroute'];
 
-     
 
-        if ($typeRoute == 'ports') {
+
+        if ($typeRoute == 'port') {
 
             $origin_port = $this->data['data']['origin'];
             $destiny_port = $this->data['data']['destination'];
@@ -67,8 +67,6 @@ class SendExcelFile implements ShouldQueue
 
             $origin_port = $this->getArrayCountryPort($this->data['data']['origin']);
             $destiny_port = $this->getArrayCountryPort($this->data['data']['destination']);
-
-     
 
         }
 
@@ -107,11 +105,11 @@ class SendExcelFile implements ShouldQueue
             if ($company_setting->future_dates == 1) {
                 $q->where(function ($query) use ($dateSince) {
                     $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code);
+                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code)->where('status_erased', '!=', '1');
             } else {
                 $q->where(function ($query) use ($dateSince, $dateUntil) {
                     $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code);
+                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code)->where('status_erased', '!=', '1');
             }
         })->orderBy('contract_id')->get();
 
@@ -176,16 +174,28 @@ class SendExcelFile implements ShouldQueue
                     $a++;
                     // Local charges
 
-                    if ($typeRoute == 'ports') {
+                    if ($typeRoute == 'port') {
                         $orig_country = $this->getArrayPortCountry($data->port_origin->id);
                         $dest_country = $this->getArrayPortCountry($data->port_destiny->id);
                     } else {
-                        $orig_country = $this->data['data']['origin'];;
-                        $dest_country = $this->data['data']['destination'];;
+                        $orig_country = $this->data['data']['origin'];
+                        $dest_country = $this->data['data']['destination'];
                     }
 
+                    // Localcharges ALL Call 
+
+                    $port_origin_id = $data->port_origin->id.',1485';
+                    $port_destiny_id = $data->port_destiny->id.',1485';
+                    $orig_country = $orig_country.',250';
+                    $dest_country = $dest_country.',250';
+
+          
+
                     $localCharge = new LocalCharge();
-                    $localCharge = $localCharge->getLocalChargeExcelSync($data->contract_id, $data->port_origin->id, $data->port_destiny->id, $orig_country, $dest_country);
+                    $localCharge = $localCharge->getLocalChargeExcelSync($data->contract_id, $port_origin_id, $port_destiny_id, $orig_country, $dest_country);
+      
+
+
                     if ($localCharge != null) {
 
                         for ($i = 0; $i < count($localCharge); $i++) {
@@ -195,7 +205,7 @@ class SendExcelFile implements ShouldQueue
                             foreach ($containers as $cont) {
                                 $name_arreglo = 'array' . $cont->code;
                                 $name_rate = 'rate' . $cont->code;
-                                if (in_array($localCharge[$i]->calculation_type_id, $$name_arreglo)) {
+                                if (in_array($localCharge[$i]->calculation_type_id, $$name_arreglo) && $$name_rate != '0' ) {
                                     $monto = $this->perTeu($localCharge[$i]->ammount, $localCharge[$i]->calculation_type_id, $cont->code);
                                     $currency_rate = $this->ratesCurrency($localCharge[$i]->currency_id, $data->currency->alphacode);
                                     $$name_rate = number_format($$name_rate + ($monto / $currency_rate), 2, '.', '');
@@ -259,6 +269,7 @@ class SendExcelFile implements ShouldQueue
         }
 
     }
+
 
     public function get_header_inicial($containers)
     {

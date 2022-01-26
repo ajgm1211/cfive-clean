@@ -54,8 +54,17 @@ class QuotationController extends Controller
     }
 
     function list(Request $request)
-    {
-        $results = ViewQuoteV2::filterByCurrentCompany()->filter($request);
+    {   
+        $company_user_id = \Auth::user()->company_user_id;
+        $subtype = \Auth::user()->options['subtype'];
+        $user_id = \Auth::user()->id;
+        
+        //Permisos de subtype comercial, solo puede acceder a sus propias cotizaiones
+        if($subtype === 'comercial') {
+            $results = ViewQuoteV2::filterByCurrentUser()->filter($request);
+        } else {
+            $results = ViewQuoteV2::filterByCurrentCompany()->filter($request);
+        }
 
         return QuotationListResource::collection($results);
     }
@@ -152,7 +161,8 @@ class QuotationController extends Controller
         });
 
         $providers = Provider::where('company_user_id', $company_user_id)->get()->map(function ($provider) {
-            return $provider->only(['id', 'name']);
+            $provider['model'] = 'App\Provider';
+            return $provider->only(['id', 'name', 'model']);
         });
 
         $cargo_types = CargoType::get()->map(function ($tcargo) {
@@ -452,7 +462,9 @@ class QuotationController extends Controller
     }
 
     public function edit(Request $request, QuoteV2 $quote)
-    {
+    {  
+        $this->authorize('author', $quote); //policy para autorizar acceso.
+        
         $this->validateOldQuote($quote);
 
         return view('quote.edit');
@@ -912,7 +924,9 @@ class QuotationController extends Controller
         $quote_rate_totals = $quote->automatic_rate_totals()->get();
 
         if(isset($quote->company)){
-            $quote->update(['payment_conditions' => $quote->company->payment_conditions]);
+            $clean_payment_conditions = str_replace("&nbsp;", " ", strip_tags($quote->company->payment_conditions));
+
+            $quote->update(['payment_conditions' => $clean_payment_conditions]);
         }
 
         if (count($rates) != 0) {
