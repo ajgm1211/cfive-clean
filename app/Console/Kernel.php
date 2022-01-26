@@ -2,9 +2,7 @@
 
 namespace App\Console;
 
-use App\Jobs\GeneratePdfToApiJob;
 use App\Jobs\SaveFclRatesByContractJob;
-use App\Jobs\SyncCompaniesJob;
 use App\Jobs\SyncCompaniesVforwarding;
 use App\Jobs\SyncCompaniesVisualtrans;
 use Illuminate\Console\Scheduling\Schedule;
@@ -54,8 +52,8 @@ class Kernel extends ConsoleKernel
             ->cron('*/3 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->command('command:processExpiredContracts')
             ->dailyAt('23:50')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->command('command:UpdateStatusInland')
-            ->dailyAt('23:55')->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->command('command:UpdateStatusInland')->everyMinute()->appendOutputTo(storage_path('logs/commands.log'));
+
         $schedule->command('command:generateQuotePdf')
             ->twiceDaily(5, 13)->appendOutputTo(storage_path('logs/commands.log'));
         //$schedule->exec('php /var/www/html/artisan queue:work --timeout=3600 --tries=7 &')
