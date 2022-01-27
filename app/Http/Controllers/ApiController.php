@@ -545,7 +545,7 @@ class ApiController extends Controller
             $carriers = Carrier::all()->pluck('id')->toArray();
 
         } else {
-            $carriers = Carrier::where('name', $carrierUrl)->orWhere('uncode', $carrierUrl)->pluck('id')->toArray();
+            $carriers = Carrier::where('name', $carrierUrl)->orWhere('uncode', $carrierUrl)->orWhere('id', $carrierUrl)->pluck('id')->toArray();
         }
 
         return $carriers;
@@ -3505,6 +3505,12 @@ $company_cliente = null;
         }
     }
 
+    /**
+     * Get contract's details by parameters.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function getContract(Request $request)
     {
         if(!$request->carrier || !$request->container || !$request->direction || !$request->since || !$request->until){
@@ -3567,7 +3573,6 @@ $company_cliente = null;
                 $$var = $container_calculation->where('container_id', $cont->id)->pluck('calculationtype_id')->toArray();
        
                 $options = json_decode($cont->options);
-                //dd($options);
                 if (@$options->field_rate == 'containers') {
                     $test = json_encode($data->{$options->field_rate});
                     $jsonContainer = json_decode($data->{$options->field_rate});
@@ -3601,13 +3606,11 @@ $company_cliente = null;
                 'valid_from' => $data->contract->validity,
                 'valid_until' => $data->contract->expire,
             );
-            //$arrayFirstPartAmount = array_merge($arrayFirstPartAmount, $montos);
             $arraySecondPartAmount = array(
                 'charge' => 'freight',
                 'currency' => $data->currency->alphacode,
 
             );
-            //$arrayCompleteAmount = array_merge($arrayFirstPartAmount, $arraySecondPartAmount);
             $ocean_freight = array_merge($montos, $arraySecondPartAmount);
             $resultado['contract']['general'] = $arrayFirstPartAmount;
             $resultado['contract']['ocean_freight'] = $ocean_freight;
@@ -3622,14 +3625,12 @@ $company_cliente = null;
                 $resultado['contract']['surcharges'] = array();
                 if ($data1 != null) {
                     for ($i = 0; $i < count($data1); $i++) {
-                        //'country_orig' =>  $data1[$i]->country_orig,
-                        //  'country_dest' =>   $data1[$i]->country_dest,
                         $montosLocal = array();
                         $montosLocal2 = array();
                         $arrayFirstPartLocal = array(
-                            //'Contract' => $data->contract->name,
-                            //'Reference' => $data->contract->id,
                             'charge' => $data1[$i]->surcharge,
+                            'type' => $data1[$i]->changetype,
+                            'calculation_type' => $data1[$i]->calculation_type,
 
                         );
 
@@ -3659,12 +3660,10 @@ $company_cliente = null;
 
                         );
                         $resultado['contract']['surcharges'][] = array_merge($arrayFirstPartLocal, $arraySecondPartLocal);
-                       // $resultado['contract']['surcharge'][] = $arrayCompleteLocal;
-
                     }
                 }
             }
-            // MONTOS ALL IN
+            // ALL IN AMOUNTS
             $arrayFirstPartAmountAllIn = array(
                 'charge' => 'freight - ALL IN',
             );

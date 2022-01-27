@@ -887,16 +887,17 @@ export default {
             let addId = Number;
             let newInlandAdd = {};
             let component = this;
+            component.ids = [];
 
             component.inlandAddRequested = true;
             if (inlandSearch != null) {
                 inlandSearch.forEach(function (search) {
                     var alreadyAdded = false;
-                    component.inlandAdds.forEach(function(add){
+                    /*component.inlandAdds.forEach(function(add){
                         if(search["providerName"] == add["charge"]){
                             alreadyAdded = true;
                         }
-                    });
+                    });*/
 
                     if(!alreadyAdded || component.inlandAdds.length == 0){
                         if (component.ids.length != 0) {
@@ -1176,7 +1177,8 @@ export default {
             let data = {};
             let inlandSearch = {};
             let component = this;
-
+            this.inlandAdds = [];
+            
             data["address"] = component.modalAddress;
             if (component.modalDistance) {
                 data["distance"] = component.modalAddress.distance;

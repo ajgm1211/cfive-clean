@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class IncreaseFieldLimitTotalsInChargeLclAirsTable extends Migration
+class AddOptionsToUsers extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,13 @@ class IncreaseFieldLimitTotalsInChargeLclAirsTable extends Migration
      */
     public function up()
     {
-        \DB::statement('ALTER TABLE charge_lcl_airs MODIFY total DOUBLE(11,2) NULL');
+        $default = json_encode([
+            'subtype' => 'operaciones'
+        ]);
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->json('options')->after('type');
+        });
     }
 
     /**
@@ -23,7 +29,7 @@ class IncreaseFieldLimitTotalsInChargeLclAirsTable extends Migration
      */
     public function down()
     {
-        Schema::table('charge_lcl_airs', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
     }

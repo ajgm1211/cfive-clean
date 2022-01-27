@@ -230,6 +230,23 @@
     @parent
     <script src="/assets/demo/default/custom/components/datatables/base/html-table.js" type="text/javascript"></script>
     <script>
+        const companyId = {{ Auth::user()->company_user_id }};
+        
+        document.querySelector('body').addEventListener('change', function(event){
+            let value = event.target.value;
+            if (value === 'subuser'){
+                if(companyId == '148'){
+                    document.getElementById("optionsSubUser").style.display='block'; 
+                }
+            }
+            if(value === 'admin' || value === 'company' || value === 'data_entry'){
+                if(companyId == '148'){
+                    document.getElementById("optionsSubUser").style.display='none'; 
+                    document.getElementById('optionsSubUser').childNodes[1].value = 'operaciones';
+                }
+            }
+        });
+        
 
         function AbrirModal(action,id){
 
@@ -239,6 +256,7 @@
                 $('.modal-body').load(url,function(){
                     $('#m_modal_5').modal({show:true});
                 });
+
             }if(action == "add"){
                 var url = '{{ route("users.add") }}';
                 $('.modal-body').load(url,function(){
@@ -261,8 +279,8 @@
                 });
 
             }
-
         }
+
     </script>
 
 @stop
