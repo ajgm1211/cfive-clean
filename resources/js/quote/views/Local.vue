@@ -1690,4 +1690,8 @@ export default {
 .local_charge_table {
   height: fit-content;
 }
+
+.table-responsive-sm {
+    overflow: initial !important; 
+}
 </style>
