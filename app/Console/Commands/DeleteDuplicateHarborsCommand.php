@@ -2,29 +2,22 @@
 
 namespace App\Console\Commands;
 
+use App\AutomaticInland;
+use App\AutomaticInlandLclAir;
+use App\AutomaticInlandTotal;
+use App\AutomaticRate;
+use App\AutomaticRateTotal;
 use App\Duplicados;
 use App\GlobalCharCountryPort;
 use App\GlobalCharPort;
 use App\GlobalCharPortCountry;
 use App\GlobalCharPortLcl;
+use App\Harbor;
+use App\InlandPort;
 use App\LocalCharPort;
 use App\Rate;
-use App\Harbor;
 use App\RateLcl;
-use App\InlandPort;
 use App\RemarkHarbor;
-use App\AutomaticRateTotal;
-use App\AutomaticInland;
-use App\AutomaticRate;
-use App\AutomaticInlandTotal;
-use App\AutomaticInlandLclAir;
-
-
-
-
-
-
-
 use App\TransitTime;
 use Illuminate\Console\Command;
 
@@ -82,8 +75,8 @@ class DeleteDuplicateHarborsCommand extends Command
                     GlobalCharPortLcl::where('port_dest', $duplicate)->update(['port_dest' => $original]);
                     GlobalCharPortCountry::where('port_orig', $duplicate)->update(['port_orig' => $original]);
                     GlobalCharCountryPort::where('port_dest', $duplicate)->update(['port_dest' => $original]);
-                    Rate::where('origin_port', $duplicate)->update(['origin_port' => $original]);
-                    Rate::where('destiny_port', $duplicate)->update(['destiny_port' => $original]);
+                    Rate::where('origin_port', $duplicate)->withTrashed()->update(['origin_port' => $original]);
+                    Rate::where('destiny_port', $duplicate)->withTrashed()->update(['destiny_port' => $original]);
                     RateLcl::where('origin_port', $duplicate)->update(['origin_port' => $original]);
                     RateLcl::where('destiny_port', $duplicate)->update(['destiny_port' => $original]);
                     TransitTime::where('origin_id', $duplicate)->update(['origin_id' => $original]);
