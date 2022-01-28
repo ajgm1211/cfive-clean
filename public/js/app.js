@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 470);
+/******/ 	return __webpack_require__(__webpack_require__.s = 472);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -89383,15 +89383,17 @@ var Api = function () {
 /* 467 */,
 /* 468 */,
 /* 469 */,
-/* 470 */
+/* 470 */,
+/* 471 */,
+/* 472 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(471);
-module.exports = __webpack_require__(478);
+__webpack_require__(473);
+module.exports = __webpack_require__(480);
 
 
 /***/ }),
-/* 471 */
+/* 473 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -89418,7 +89420,7 @@ window.Vue = __webpack_require__(74);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', __webpack_require__(472));
+Vue.component('example-component', __webpack_require__(474));
 //Vue.component('ocean-freight', require('./components/contracts/Freight.vue'));
 //Vue.component('restrictions', require('./components/Restrictions.vue'));
 //Vue.component('remarkes', require('./components/Remarkes.vue'));
@@ -89426,7 +89428,7 @@ Vue.component('example-component', __webpack_require__(472));
 
 window.api = new __WEBPACK_IMPORTED_MODULE_1__api_js__["a" /* default */]();
 
-Vue.component('show-component', __webpack_require__(475));
+Vue.component('show-component', __webpack_require__(477));
 
 var appElement = document.getElementById('app');
 
@@ -89437,15 +89439,15 @@ if (appElement) {
 }
 
 /***/ }),
-/* 472 */
+/* 474 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(36)
 /* script */
-var __vue_script__ = __webpack_require__(473)
+var __vue_script__ = __webpack_require__(475)
 /* template */
-var __vue_template__ = __webpack_require__(474)
+var __vue_template__ = __webpack_require__(476)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -89484,7 +89486,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 473 */
+/* 475 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -89513,7 +89515,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 474 */
+/* 476 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -89556,15 +89558,15 @@ if (false) {
 }
 
 /***/ }),
-/* 475 */
+/* 477 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(36)
 /* script */
-var __vue_script__ = __webpack_require__(476)
+var __vue_script__ = __webpack_require__(478)
 /* template */
-var __vue_template__ = __webpack_require__(477)
+var __vue_template__ = __webpack_require__(479)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -89603,7 +89605,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 476 */
+/* 478 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -89684,7 +89686,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 477 */
+/* 479 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -89730,7 +89732,7 @@ if (false) {
 }
 
 /***/ }),
-/* 478 */
+/* 480 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

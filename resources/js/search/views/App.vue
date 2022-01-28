@@ -386,6 +386,7 @@ export default {
 
       //RATES FROM CONTRACTS
       component.ratesForQuote.rates.forEach(function(rate) {
+        
         component.quoteData.local_ports.origin.forEach(function(originPort) {
           if (originPort.id == rate.origin_port) {
             duplicateMatch = true;
