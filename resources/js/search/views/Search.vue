@@ -49,7 +49,7 @@
         <!-- BOTON ADDITIONAL SERVICES -->
         <div class="col-12 col-sm-6 col-lg-9">
           <b-button v-b-toggle.collapse-1 class="btn-aditonal-services"
-            >additional services
+            >additional servicess
             <b-icon icon="caret-down-fill" class="ml-1"></b-icon>
           </b-button>
         </div>
