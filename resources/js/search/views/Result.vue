@@ -645,7 +645,6 @@ export default {
           }
         });
       }
-
       component.$emit("addedToQuote", component.ratesForQuote);
     },
     createQuote() {

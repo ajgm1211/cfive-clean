@@ -631,7 +631,7 @@ class QuotationController extends Controller
     }
 
     public function retrieve(QuoteV2 $quote)
-    {
+    {   
         return new QuotationResource($quote);
     }
 
