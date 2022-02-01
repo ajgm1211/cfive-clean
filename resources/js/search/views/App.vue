@@ -225,7 +225,7 @@ export default {
         return "col-4";
       }
     },
-    createQuote() {
+    createQuote() { 
       let component = this;
       component.creatingQuote = true;
 
@@ -386,6 +386,18 @@ export default {
 
       //RATES FROM CONTRACTS
       component.ratesForQuote.rates.forEach(function(rate) {
+        component.quoteData.local_ports.originCharges.forEach(function(originPort) {
+          if (originPort.id == rate.origin_port) {
+            duplicateMatch = true;
+          }
+        });
+
+        component.quoteData.local_ports.destinationCharges.forEach(function(destinationPort) {
+          if (destinationPort.id == rate.destiny_port) {
+            duplicateMatch = true;
+          }
+        });
+
         component.quoteData.local_ports.origin.forEach(function(originPort) {
           if (originPort.id == rate.origin_port) {
             duplicateMatch = true;
@@ -417,6 +429,20 @@ export default {
 
       //API RESULTS
       component.ratesForQuote.results.forEach(function(result) {
+        component.quoteData.local_ports.originCharges.forEach(function(originPort) {
+          if (originPort.code == result.originPort) {
+            duplicateMatch = true;
+          }
+        });
+
+        component.quoteData.local_ports.destinationCharges.forEach(function(
+          destinationPort
+        ) {
+          if (destinationPort.code == result.destinationPort) {
+            duplicateMatch = true;
+          }
+        });
+
         component.quoteData.local_ports.origin.forEach(function(originPort) {
           if (originPort.code == result.originPort) {
             duplicateMatch = true;
