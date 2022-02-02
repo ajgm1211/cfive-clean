@@ -4737,15 +4737,22 @@ export default {
           totalPerCont
         ) {
           let newTotal = 0;
-          newTotal =
-            totalPerCont.total -
-            responseData.pricingDetails.totalRatePerType.totalRateOrigin[
-              responseData.pricingDetails.totalRatePerContainer.indexOf(
-                totalPerCont
-              )
-            ].total;
+          let totalOrigin = 0;
+          let totalRateOrigin = responseData.pricingDetails.totalRatePerType.totalRateOrigin;
+          let indexOrigin = responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont)
+          let totalRateOriginSelected = totalRateOrigin[indexOrigin]
 
+          //En caso exista un totalCommon debe usarse para evitar diferencias entre monedas diferentes y resultados negativos
+          if(totalRateOriginSelected.totalCommon) {
+            totalOrigin = totalRateOriginSelected.totalCommon;
+          } else {
+            totalOrigin = totalRateOriginSelected.total;
+          }
+          
+          newTotal = totalPerCont.total - totalOrigin;
+          console.log(newTotal);
           newTotal = newTotal.toFixed(2);
+
           responseData.pricingDetails.totalRatePerContainer[
             responseData.pricingDetails.totalRatePerContainer.indexOf(
               totalPerCont
@@ -4762,19 +4769,22 @@ export default {
           delete responseData.pricingDetails.surcharges.destinationSurcharges;
         }
 
-        responseData.pricingDetails.totalRatePerContainer.forEach(function(
-          totalPerCont
-        ) {
+        responseData.pricingDetails.totalRatePerContainer.forEach( function(totalPerCont) {
           let newTotal = 0;
+          let totalDestination = 0;
+          let totalRateDestination = responseData.pricingDetails.totalRatePerType.totalRateDestination;
+          let indexDestination = responseData.pricingDetails.totalRatePerContainer.indexOf(totalPerCont);
+          let totalRateDestinationSelected = totalRateDestination[indexDestination];
 
-          newTotal =
-            totalPerCont.total -
-            responseData.pricingDetails.totalRatePerType.totalRateDestination[
-              responseData.pricingDetails.totalRatePerContainer.indexOf(
-                totalPerCont
-              )
-            ].total;
+          //En caso exista un totalCommon debe usarse para evitar diferencias entre monedas diferentes y resultados negativos
+          if(totalRateDestinationSelected.totalCommon) {
+            totalDestination = totalRateDestinationSelected.totalCommon;
+          } else {
+            totalDestination = totalRateDestinationSelected.total;
+          }
 
+          newTotal = totalPerCont.total - totalDestination;
+    
           newTotal = newTotal.toFixed(2);
           responseData.pricingDetails.totalRatePerContainer[
             responseData.pricingDetails.totalRatePerContainer.indexOf(
@@ -4786,7 +4796,6 @@ export default {
         responseData.pricingDetails.totalRatePerType.totalRateDestination = null;
       }
     },
-
     setApiContainers() {
       let component = this;
       let finalContainers = [];
@@ -4915,7 +4924,7 @@ export default {
 
       if(initialRemarksCountry){
         for(const remarkLang in initialRemarksCountry){
-          finalRemarks +=initialRemarksPort[remarkLang];
+          finalRemarks +=initialRemarksCountry[remarkLang];
         }
       }
 

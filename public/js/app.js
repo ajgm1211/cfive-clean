@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 471);
+/******/ 	return __webpack_require__(__webpack_require__.s = 473);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -85244,7 +85244,7 @@ var resetConfig = function resetConfig() {
  */
 var getEnv = function getEnv(key) {
   var fallback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  var env = typeof process !== 'undefined' && process ? Object({"MIX_APP_URL":"http://cargofive.local","NODE_ENV":"development"}) || {} : {};
+  var env = typeof process !== 'undefined' && process ? Object({"MIX_APP_URL":"http://cargofive.test","MIX_PUSHER_APP_CLUSTER":"us2","MIX_PUSHER_APP_KEY":"1052abebf4043210e7f1","NODE_ENV":"development"}) || {} : {};
 
   if (!key) {
     /* istanbul ignore next */
@@ -89578,15 +89578,17 @@ var Api = function () {
 /* 468 */,
 /* 469 */,
 /* 470 */,
-/* 471 */
+/* 471 */,
+/* 472 */,
+/* 473 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(472);
-module.exports = __webpack_require__(479);
+__webpack_require__(474);
+module.exports = __webpack_require__(481);
 
 
 /***/ }),
-/* 472 */
+/* 474 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -89613,7 +89615,7 @@ window.Vue = __webpack_require__(74);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', __webpack_require__(473));
+Vue.component('example-component', __webpack_require__(475));
 //Vue.component('ocean-freight', require('./components/contracts/Freight.vue'));
 //Vue.component('restrictions', require('./components/Restrictions.vue'));
 //Vue.component('remarkes', require('./components/Remarkes.vue'));
@@ -89621,7 +89623,7 @@ Vue.component('example-component', __webpack_require__(473));
 
 window.api = new __WEBPACK_IMPORTED_MODULE_1__api_js__["a" /* default */]();
 
-Vue.component('show-component', __webpack_require__(476));
+Vue.component('show-component', __webpack_require__(478));
 
 var appElement = document.getElementById('app');
 
@@ -89632,15 +89634,15 @@ if (appElement) {
 }
 
 /***/ }),
-/* 473 */
+/* 475 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(36)
 /* script */
-var __vue_script__ = __webpack_require__(474)
+var __vue_script__ = __webpack_require__(476)
 /* template */
-var __vue_template__ = __webpack_require__(475)
+var __vue_template__ = __webpack_require__(477)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -89679,7 +89681,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 474 */
+/* 476 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -89708,7 +89710,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 475 */
+/* 477 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -89751,15 +89753,15 @@ if (false) {
 }
 
 /***/ }),
-/* 476 */
+/* 478 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(36)
 /* script */
-var __vue_script__ = __webpack_require__(477)
+var __vue_script__ = __webpack_require__(479)
 /* template */
-var __vue_template__ = __webpack_require__(478)
+var __vue_template__ = __webpack_require__(480)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -89798,7 +89800,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 477 */
+/* 479 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -89879,7 +89881,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 478 */
+/* 480 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -89925,7 +89927,7 @@ if (false) {
 }
 
 /***/ }),
-/* 479 */
+/* 481 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

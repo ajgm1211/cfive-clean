@@ -1600,6 +1600,9 @@ export default {
             actions.localcharges
                 .update(id, data, index, type)
                 .then((response) => {
+                    if(type == 2){
+                        this.getLocalCharges();
+                    }
                     this.getTotal();
                 })
                 .catch((data) => {
@@ -1678,3 +1681,17 @@ export default {
     },
 };
 </script>
+
+<style lang="scss" scoped>
+.table-responsive {
+  overflow: initial !important;
+}
+
+.local_charge_table {
+  height: fit-content;
+}
+
+.table-responsive-sm {
+    overflow: initial !important; 
+}
+</style>

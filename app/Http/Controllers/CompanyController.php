@@ -79,15 +79,17 @@ class CompanyController extends Controller
     public function LoadDatatableIndex()
     {
         $company_user_id = \Auth::user()->company_user_id;
+        $subtype = \Auth::user()->options['subtype'];
         $user_id = \Auth::user()->id;
-
-        // if (\Auth::user()->hasRole('subuser')) {
-        //     $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
-        //         $query->where('user_id', $user_id);
-        //     })->orwhere('owner', \Auth::user()->id)->with('groupUserCompanies.user')->User()->CompanyUser();
-        // } else {
+        
+        if($subtype === 'comercial') {
+            //Subtype comercial solo pueden acceder a sus propias compañias            
+            $companies = Company::where('company_user_id', $company_user_id)
+                        ->where('owner', $user_id) 
+                        ->with('groupUserCompanies.user')->User()->CompanyUser();            
+        } else {
             $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->with('groupUserCompanies.user')->User()->CompanyUser();
-        // }
+        }
 
         $companies = $companies->get();
 
@@ -147,7 +149,7 @@ class CompanyController extends Controller
 
         return view('companies.add', compact('prices', 'users'));
     }
-
+    
     /**
      * addOwner.
      *
@@ -413,9 +415,9 @@ class CompanyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StoreCompany $request)
-    {
+    {   
         $data = $this->validateData($request);
-    
+
         //Check if company exists by options field
         if ($request->ajax() && $request->options) {
             $data = json_decode($request->options, true);
@@ -654,7 +656,7 @@ class CompanyController extends Controller
      * @return void
      */
     public function destroy(Request $request, $id)
-    {
+    {   
         try {
 
             $company = Company::findOrFail($id);
@@ -670,8 +672,8 @@ class CompanyController extends Controller
                     'message' => 'Record not found',
                 ], 404);
             }
-
-            return response()->json(['message' => $e]);
+            \Log::info("Error company destroy".$e);
+            return response()->json(['message' => $e]);            
         }
     }
 
@@ -952,7 +954,7 @@ class CompanyController extends Controller
         return \Response::json($formatted_companies);
     }
     public function validateData($request)
-    {
+    {   
         $vdata=[
             'business_name' => 'required',
             'logo' => 'max:1000',
@@ -980,6 +982,7 @@ class CompanyController extends Controller
             }
         }
         $validator = \Validator::make($request->all(), $vdata);
-        return $validator->validate();
+        
+        return $validator->validated();
     }
 }

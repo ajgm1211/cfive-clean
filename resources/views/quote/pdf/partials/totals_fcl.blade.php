@@ -26,7 +26,7 @@
                                 <tr class="text-left color-table">
                                     <td >{{$total['POL']}}</td>
                                     <td >{{$total['POD']}}</td>
-                                    <td {{@$quote->pdf_options['showCarrier']==1 ? '':'hidden'}}>{{@$total['carrier']}}</td>
+                                    <td {{@$quote->pdf_options['showCarrier'] ? '':'hidden'}}>{{$total['carrier']}}</td>
                                     @foreach ($equipmentHides as $key=>$hide)
                                         @foreach ($containers as $c)
                                             @if($c->code == $key)

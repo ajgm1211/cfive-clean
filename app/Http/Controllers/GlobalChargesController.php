@@ -963,19 +963,23 @@ class GlobalChargesController extends Controller
     }
 
     public function indexAdm(Request $request)
-    {
+    {   
         $companies = CompanyUser::pluck('name', 'id');
-        $carriers = Carrier::pluck('name', 'id');
+        $carriers = Carrier::pluck('name', 'id')->prepend('All Carriers', '0');        
         $company_user_id_selec = $request->input('company_user_id_selec');
         $carrier_id_selec = $request->input('carrier_id_selec');
         $reload_DT = $request->input('reload_DT');
+
+        //dd($carriers);
 
         return view('globalchargesAdm.index', compact('companies', 'carriers', 'company_user_id_selec', 'carrier_id_selec', 'reload_DT'));
     }
 
     public function createAdm(Request $request)
-    {
-        $globalcharges = ViewGlobalCharge::select(['id', 'charge', 'charge_type', 'calculation_type', 'origin_port', 'origin_country', 'destination_port', 'destination_country', 'carrier', 'amount', 'currency_code', 'valid_from', 'valid_until', 'company_user', 'portcountry_orig', 'portcountry_dest', 'countryport_orig', 'countryport_dest'])->companyUser($request->company_id)->carrier($request->carrier);
+    {   
+        $globalcharges = ViewGlobalCharge::select(['id', 'charge', 'charge_type', 'calculation_type', 'origin_port', 'origin_country', 'destination_port', 'destination_country', 'carrier', 'amount', 'currency_code', 'valid_from', 'valid_until', 'company_user', 'portcountry_orig', 'portcountry_dest', 'countryport_orig', 'countryport_dest'])
+                        ->companyUser($request->company_id)
+                        ->carrier($request->carrier);
 
         return DataTables::of($globalcharges)
             ->editColumn('surchargelb', function ($globalcharges) {
@@ -1037,29 +1041,26 @@ class GlobalChargesController extends Controller
     }
 
     public function createAdm_proc(Request $request)
-    {
-        /*  $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user'])->companyUser($request->company_id)->carrier($request->carrier);*/
-
+    {   
         $co = 0;
         $ca = 0;
 
         if ($request->company_id) {
             $co = $request->company_id;
         }
-
         if ($request->carrier) {
             $ca = $request->carrier;
         }
-
+        
         $data1 = \DB::select(\DB::raw('call select_globalcharge_adm(' . $co . ',' . $ca . ')'));
+
         $globalcharges = new Collection;
+        
         for ($i = 0; $i < count($data1); $i++) {
+
             $p_exception=GlobalCharPortException::where('globalcharge_id',$data1[$i]->id)->with('portorigin','portdestiny')->get();
             
             $c_exception=GlobalCharCountryException::where('globalcharge_id',$data1[$i]->id)->with('contryorigin','countrydestiny')->get();
-
-     
-
 
             $globalcharges->push([
                 'id' => $data1[$i]->id,

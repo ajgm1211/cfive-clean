@@ -44,7 +44,9 @@ $valorSelect = '';
 <!--end::Form-->
 
 <script src="/js/users.js"></script>
-<script>change({!! $load !!})</script>
+<script>
+    change({!! $load !!});
+</script>
 
 
 

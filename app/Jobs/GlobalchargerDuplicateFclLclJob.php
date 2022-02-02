@@ -7,6 +7,8 @@ use App\GlobalCharCarrierLcl;
 use App\GlobalCharCountry;
 use App\GlobalCharCountryLcl;
 use App\GlobalCharCountryPort;
+use App\GlobalCharCountryException;
+use App\GlobalCharPortException;
 use App\GlobalCharge;
 use App\GlobalChargeLcl;
 use App\GlobalCharPort;
@@ -58,7 +60,11 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                                   'globalcharcountryport.countryOrig',
                                   'globalcharcountryport.portDest',
                                   'globalcharportcountry.portOrig',
-                                  'globalcharportcountry.countryDest'
+                                  'globalcharportcountry.countryDest',
+                                  'globalexceptionport.portOrig',
+                                  'globalexceptionport.portDest',
+                                  'globalexceptioncountry.countryOrig',
+                                  'globalexceptioncountry.countryDest'
                                  );
                 $surchName = $globalOfAr->surcharge->name;
                 $surcharger = Surcharge::where('name', $surchName)->where('company_user_id', $company_user)->first();
@@ -196,6 +202,79 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                             }
                         }
                     }
+
+                    if(count($globalOfAr->globalexceptionport) >= 1) {
+                        $exceptionOriginPorts = $globalOfAr->globalexceptionport->pluck('port_orig');
+                        $exceptionDestinationPorts = $globalOfAr->globalexceptionport->pluck('port_dest');
+
+                        foreach($exceptionOriginPorts as $origPort => $origValue) {
+                            if($origValue) {
+                                $countexcep = GlobalCharPortException::where('port_orig', $origValue)
+                                ->where('globalcharge_id', $global)
+                                ->get();
+    
+                                if (count($countexcep) == 0) {       
+                                    $except = new GlobalCharPortException();
+                                    $except->port_orig = $origValue;
+                                    $except->globalcharge_id = $global;
+                                    $except->save();
+                                }
+                            }
+                        }
+
+                        foreach($exceptionDestinationPorts as $destPort => $destValue) {
+                            if($destValue) {
+                                $countexcep = GlobalCharPortException::where('port_dest', $destValue)
+                                ->where('globalcharge_id', $global)
+                                ->get();
+    
+                                if (count($countexcep) == 0) {       
+                                    $except = new GlobalCharPortException();
+                                    $except->port_dest = $destValue;
+                                    $except->globalcharge_id = $global;
+                                    $except->save();
+                                }
+                            }
+                        }
+                    
+                    }
+
+                    if(count($globalOfAr->globalexceptioncountry) >= 1) {
+                        $exceptionOriginCountries = $globalOfAr->globalexceptioncountry->pluck('country_orig');
+                        $exceptionDestinationCountries = $globalOfAr->globalexceptioncountry->pluck('country_dest');
+
+                        foreach($exceptionOriginCountries as $origCountry => $origValue) {
+                            if($origValue){
+                                $countexcep = GlobalCharCountryException::where('country_orig', $origValue)
+                                ->where('globalcharge_id', $global)
+                                ->get();
+    
+                                if (count($countexcep) == 0) {      
+                                    $except = new GlobalCharCountryException();
+                                    $except->country_orig = $origValue;
+                                    $except->globalcharge_id = $global;
+                                    $except->save();
+                                }
+                            }
+                        }
+
+                        foreach($exceptionDestinationCountries as $destCountry => $destValue) {
+                            if($destValue){
+                                $countexcep = GlobalCharCountryException::where('country_dest', $destValue)
+                                ->where('globalcharge_id', $global)
+                                ->get();
+    
+                                if (count($countexcep) == 0) {      
+                                    $except = new GlobalCharCountryException();
+                                    $except->country_dest = $destValue;
+                                    $except->globalcharge_id = $global;
+                                    $except->save();
+                                }
+                            }
+                        }
+                        
+                    }
+                    
                 }
             }
         } elseif (strnatcasecmp($selector, 'lcl') == 0) {
