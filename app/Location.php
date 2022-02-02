@@ -10,6 +10,6 @@ class Location extends Model
 
     public function province()
     {
-        return $this->belongsTo('App\InlandsProvinces');
+        return $this->belongsTo('App\InlandsProvince');
     }
 }
