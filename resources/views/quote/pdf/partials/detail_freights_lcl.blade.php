@@ -56,9 +56,9 @@
                                                 $total_freight+=@$v->total_freight;
 
                                                 if($v->surcharge_id==38){
-                                                    $profit=$r->markups['per_unit']*$v->units;
+                                                    $markups=$r->markups['per_unit']*$v->units;
 
-                                                    $total_w_profit = $v->surcharge_id != '' ? $v->rate+$profit:$v->rate+$r->total_rate->markups['total'];
+                                                    $total_w_profit = $v->surcharge_id != '' ? $v->rate+$markups:$v->rate+$r->total_rate->markups['total'];
                                                     $price_w_profit = $v->surcharge_id != '' ? $v->price_per_unit+$r->markups['per_unit']:$total_w_profit/$v->units;
                                                 }else{
                                                     $total_w_profit = $v->surcharge_id != '' ? $v->rate:$v->rate+$r->total_rate->markups['total'];
