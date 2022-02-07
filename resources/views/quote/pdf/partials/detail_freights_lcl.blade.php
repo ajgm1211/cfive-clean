@@ -54,8 +54,16 @@
                                         @if($v->type_id==3)
                                             <?php
                                                 $total_freight+=@$v->total_freight;
-                                                $total_w_profit = $v->surcharge_id != '' ? $v->rate:$v->rate+$r->total_rate->markups['total'];
-                                                $price_w_profit = $v->surcharge_id != '' ? $v->price_per_unit:$total_w_profit/$v->units;
+
+                                                if($v->surcharge_id==38){
+                                                    $profit=$r->markups['per_unit']*$v->units;
+
+                                                    $total_w_profit = $v->surcharge_id != '' ? $v->rate+$profit:$v->rate+$r->total_rate->markups['total'];
+                                                    $price_w_profit = $v->surcharge_id != '' ? $v->price_per_unit+$r->markups['per_unit']:$total_w_profit/$v->units;
+                                                }else{
+                                                    $total_w_profit = $v->surcharge_id != '' ? $v->rate:$v->rate+$r->total_rate->markups['total'];
+                                                    $price_w_profit = $v->surcharge_id != '' ? $v->price_per_unit:$total_w_profit/$v->units;
+                                                }
                                             ?>
                                             <tr class="text-center color-table">
                                                 <td>{{$v->surcharge->name ?? 'Ocean Freight'}}</td>
