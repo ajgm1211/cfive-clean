@@ -851,7 +851,7 @@ class QuotationController extends Controller
             }
 
             $rateTotals = AutomaticRateTotal::create([
-                "quote_id" => $quote->id,
+                "quote_id" => $new_quote->id,
                 'automatic_rate_id' => $newRate->id,
                 'origin_port_id' => $newRate->origin_port_id,
                 'destination_port_id' => $newRate->destination_port_id,
