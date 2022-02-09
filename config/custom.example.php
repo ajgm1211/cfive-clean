@@ -9,9 +9,9 @@ switch (env('APP_ENV')) {
         $appView = 'local';
     break;
 
-    case 'developer':
-        $view    = 'developer';
-        $appUrl  = '';
+    case 'develop':
+        $view    = 'develop';
+        $appUrl  = 'https://dev.cargofive.com';
         $apiUrl  = 'https://carriersdev.cargofive.com/api/pricing';
         $baseUriDuplicates = 'http://duplicateds-globalchargers-dev.eu-central-1.elasticbeanstalk.com/DuplicateGCFCL/';
         $appView = 'local';
