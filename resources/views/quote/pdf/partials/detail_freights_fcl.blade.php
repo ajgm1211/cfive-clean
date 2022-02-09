@@ -92,7 +92,7 @@
                                                     @foreach ($containers as $c)
                                                         @if($c->code == $key)
                                                             <?php
-                                                                if($v->surcharge_id==38){
+                                                                if($v->surcharge->name == "Ocean Freight" && $v->surcharge->company_user_id==null){
                                                                     $total = $v->surcharge_id != '' ? $v->${'sum_amount_markup_'.$c->code}:$v->${'sum_amount_markup_'.$c->code}+@$r->total_rate->markups['m'.$c->code];
                                                                     foreach($r['markups'] as $m=>$markups ){
                                                                         $containerM=str_replace("m", "", $m);
