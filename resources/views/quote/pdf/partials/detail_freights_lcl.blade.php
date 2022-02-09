@@ -55,7 +55,7 @@
                                             <?php
                                                 $total_freight+=@$v->total_freight;
 
-                                                if($v->surcharge_id==38){
+                                                if($v->surcharge->name=="Ocean Freight" && $v->surcharge->company_user_id == null){
                                                     $markups=$r->markups['per_unit']*$v->units;
 
                                                     $total_w_profit = $v->surcharge_id != '' ? $v->rate+$markups:$v->rate+$r->total_rate->markups['total'];
