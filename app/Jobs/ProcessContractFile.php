@@ -7,6 +7,7 @@ use App\AccountImportationContractLcl as AccountLcl;
 use App\AccountImportationGlobalcharge as AccountGc;
 use App\AccountImportationGlobalChargerLcl as AccountGcLcl;
 use App\Carrier;
+use App\ContractLcl;
 use App\Jobs\SelectionAutoImportJob;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
@@ -94,6 +95,8 @@ class ProcessContractFile implements ShouldQueue
                 if(!$exists){
                     \Log::info("El Request numero ".$this->id." No se cargo debidamente" );
                 }
+                $contract = ContractLcl::find($Ncontracts->contract_id);
+                $contract->addMedia(storage_path('app/public/Request/Lcl/' .$name))->preservingOriginal()->toMediaCollection('document', 'contracts3');
             }
         } elseif (strnatcasecmp($classification, 'account') == 0) {
             if (strnatcasecmp($this->type, 'fcl') == 0) {
