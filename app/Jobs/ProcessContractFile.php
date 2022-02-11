@@ -95,6 +95,7 @@ class ProcessContractFile implements ShouldQueue
                 if(!$exists){
                     \Log::info("El Request numero ".$this->id." No se cargo debidamente" );
                 }
+                // Este contrato se copia contracts3 en S3, para que se pueda mostar en LCL 
                 $contract = ContractLcl::find($Ncontracts->contract_id);
                 $contract->addMedia(storage_path('app/public/Request/Lcl/' .$name))->preservingOriginal()->toMediaCollection('document', 'contracts3');
             }
