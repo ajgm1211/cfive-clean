@@ -1,0 +1,3 @@
+select * from users where email='sebastian@gencomex.com';
+select * from model_has_roles where model_id=11;
+insert into model_has_roles (role_id,model_type,model_id) values(3,CONCAT('App',CONCAT(char(92),'User')),11);

@@ -1,0 +1,7 @@
+[program:queue-worker]
+command=php /var/www/html/cargofive/artisan queue:work  --timeout=3600 --tries=1
+directory=/var/www/html/cargofive/
+stdout_logfile=/home/forge/app.com/worker.log
+redirect_stderr=true
+autostart=true
+autorestart=true

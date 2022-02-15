@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+class CheckCompanyUserMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next, $key)
+    {
+        $model = $request->{$key};
+        
+        if(isset($model->company_user_id)){
+            if ($model->company_user_id != $request->user()->company_user_id) {
+                if ($request->ajax() || $request->wantsJson()) {
+                    abort(403, 'Unauthorized action.');
+                } else {
+                    return redirect()->route('quotes-v2.search');
+                }
+            }
+        }
+ 
+
+        return $next($request);
+    }
+}
