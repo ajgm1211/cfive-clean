@@ -66,7 +66,7 @@
                                     @foreach($r->charge as $v)
                                         @if($v->type_id==3)
                                             <?php
-                                                $amount = json_decode($v->amount);
+                                                $amount = json_decode($v->amount,true);
                                                 $markup = json_decode($v->markups);
                                                 
                                                 foreach ($containers as $c){
@@ -97,6 +97,7 @@
                                                                     //foreach($r->total_rate['markups'] as $m=>$markups ){
                                                                         //$containerM=str_replace("m", "", $m);
                                                                         //if ($containerM==$c->code) {
+                                                                            dd($amount["c". $c->code] );
                                                                         if(isset($amount["c". $c->code]) && isset($r->total_rate->markups["m" . $c->code])){
                                                                             $total_w_profit = $amount["c". $c->code] + $r->total_rate->markups["m" . $c->code];
                                                                         }elseif(isset($amount["c". $c->code])){
