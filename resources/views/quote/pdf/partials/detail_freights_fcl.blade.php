@@ -93,15 +93,19 @@
                                                         @if($c->code == $key)
                                                             <?php
                                                                 if($v->surcharge->name == "Ocean Freight" && $v->surcharge->company_user_id==null){
-                                                                    $total = $v->surcharge_id != '' ? $v->${'sum_amount_markup_'.$c->code}:$v->${'sum_amount_markup_'.$c->code}+@$r->total_rate->markups['m'.$c->code];
-                                                                    foreach($r['markups'] as $m=>$markups ){
-                                                                        $containerM=str_replace("m", "", $m);
-                                                                        if ($containerM==$c->code) {
-                                                                            $total_w_profit=$total+$markups;
+                                                                    //$total = $v->surcharge_id != '' ? $v->${'sum_amount_markup_'.$c->code}:$v->${'sum_amount_markup_'.$c->code}+@$r->total_rate->markups['m'.$c->code];
+                                                                    //foreach($r->total_rate['markups'] as $m=>$markups ){
+                                                                        //$containerM=str_replace("m", "", $m);
+                                                                        //if ($containerM==$c->code) {
+                                                                        if(isset($amount["c". $c->code]) && isset($r->total_rate->markups["m" . $c->code])){
+                                                                            $total_w_profit = $amount["c". $c->code] + $r->total_rate->markups["m" . $c->code];
                                                                         }
-                                                                    }
+                                                                        //}
+                                                                    //}
                                                                 }else{
-                                                                    $total_w_profit = $v->surcharge_id != '' ? $v->${'sum_amount_markup_'.$c->code}:$v->${'sum_amount_markup_'.$c->code}+@$r->total_rate->markups['m'.$c->code];
+                                                                    if(isset($amount["c". $c->code])){
+                                                                        $total_w_profit = $amount["c". $c->code];
+                                                                    }
                                                                 }
                                                             ?>
                                                             <!--<td {{ $hide }}>{{isDecimal($v->${'total_sum_'.$c->code}, true)}}</td>-->
