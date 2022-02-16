@@ -99,6 +99,8 @@
                                                                         //if ($containerM==$c->code) {
                                                                         if(isset($amount["c". $c->code]) && isset($r->total_rate->markups["m" . $c->code])){
                                                                             $total_w_profit = $amount["c". $c->code] + $r->total_rate->markups["m" . $c->code];
+                                                                        }elseif(isset($amount["c". $c->code])){
+                                                                            $total_w_profit = $amount["c". $c->code];
                                                                         }
                                                                         //}
                                                                     //}
