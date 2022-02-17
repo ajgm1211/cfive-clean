@@ -196,29 +196,29 @@
                     <tr v-for="(freight, index) in rate.buying[0].freight" :key="'FreightBuying'+index">
                       <td>{{freight.surcharge}}</td>
                       <td>{{freight.type}}</td>
-                      <td v-for="(container, i) in freight.amount" :key="'container'+i">{{container.amount}}</td>
+                      <td v-for="(container, i) in freight.amount" :key="'container'+i">{{container.amount}} {{freight.currency.alphacode}}</td>
                     </tr>
                     <tr v-for="(local, index) in rate.buying[0].locales" :key="'localBuying'+index">
                       <td>{{local.surcharge}}</td>
                       <td>Local - {{local.type}}</td>
-                      <td v-for="(container, i) in local.amount" :key="'localContainer'+i">{{container.amount}}</td>
+                      <td v-for="(container, i) in local.amount" :key="'localContainer'+i">{{container.amount}} {{local.currency.alphacode}}</td>
                     </tr>
                     <tr v-for="(inland, index) in rate.buying[0].inlands" :key="'inlandBuying'+index">
                       <td>{{inland.charge}}</td>
                       <td>Inland - {{inland.type}}</td>
-                      <td v-for="(container, i) in inland.rate" :key="'inlandContainer'+i">{{container.amount}}</td>
+                      <td v-for="(container, i) in inland.rate" :key="'inlandContainer'+i">{{container.amount}} {{inland.currency.alphacode}}</td>
                     </tr>                    
                   </template>
                   <template v-if="item.name == 'Selling rates'">
                     <tr>
                       <td>Ocean Freight</td>
                       <td>Freight</td>
-                      <td v-for="(freight, i) in rate.selling[0].total_freight" :key="'totalFreigth'+i">{{freight.amount}}</td>
+                      <td v-for="(freight, i) in rate.selling[0].total_freight" :key="'totalFreigth'+i">{{freight.amount}}  {{rate.currency.alphacode}}</td>
                     </tr>
                     <tr v-for="(local, index) in rate.selling[0].locales" :key="'localSelling'+index">
                       <td>{{local.surcharge}}</td>
                       <td>Local - {{local.type}}</td>
-                      <td v-for="(container, i) in local.amount" :key="'localContainer'+i">{{container.amount}}</td>
+                      <td v-for="(container, i) in local.amount" :key="'localContainer'+i">{{container.amount}} {{local.currency.alphacode}}</td>
                     </tr>
                     <tr v-for="(inland, index) in rate.selling[0].inlands" :key="'inlandSelling'+index">
                       <td>Total</td>
@@ -230,7 +230,7 @@
                     <tr>
                       <td class="total-in-table">Profit</td>
                       <td>Total Profit</td>
-                      <td v-for="(profit, i) in rate.profit[0].profit" :key="'profit'+i" class="total-in-table">{{profit.amount}}</td>
+                      <td v-for="(profit, i) in rate.profit[0].profit" :key="'profit'+i" class="total-in-table">{{profit.amount}} {{rate.currency.alphacode}}</td>
                     </tr>
                     <tr>
                       <td>Profit %</td>
@@ -245,14 +245,14 @@
                     <tr>
                       <th class="total-in-table">Total {{ item.name }}</th>
                       <th></th>
-                      <th v-for="(totalContainers, i) in rate.buying[0].totals" :key="'totalContainers'+i"><p>{{totalContainers.amount}}</p></th>
+                      <th v-for="(totalContainers, i) in rate.buying[0].totals" :key="'totalContainers'+i"><p>{{totalContainers.amount}} {{rate.currency.alphacode}}</p></th>
                     </tr>
                   </template>
                   <template v-if="item.name == 'Selling rates'">
                     <tr>
                       <th class="total-in-table">Total {{ item.name }}</th>
                       <th></th>
-                      <th v-for="(totalContainers, i) in rate.selling[0].totals" :key="'totalContainers'+i"><p>{{totalContainers.amount}}</p></th>
+                      <th v-for="(totalContainers, i) in rate.selling[0].totals" :key="'totalContainers'+i"><p>{{totalContainers.amount}} {{rate.currency.alphacode}}</p></th>
                     </tr>
                   </template>
                 </thead>
