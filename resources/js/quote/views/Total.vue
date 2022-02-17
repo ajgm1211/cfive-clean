@@ -356,15 +356,27 @@ export default {
       
       let originPorts = data.origin_ports;
       let destinyPorts = data.destiny_ports;
-      let response = [];
-      for(let i = 0; i < originPorts.length; i++) {//falta elminar elemento duplciado si hay dos rutas iguales pero con diferente carrier
-        response.push({
-          'origin_id': originPorts[i]['id'], 
-          'destiny_id': destinyPorts[i]['id'], 
-          'route': `${originPorts[i]['display_name']} --> ${destinyPorts[i]['display_name']}`
+      let response = [];      
+      
+      let routeExist = false;
+
+      for(let i = 0; i < originPorts.length; i++) {//falta elminar elemento duplciado si hay dos rutas iguales pero con diferente carrier    
+
+        response.forEach(r => {
+          if (r['key'] == `${originPorts[i]['id']}${destinyPorts[i]['id']}`) { 
+            routeExist = true;
+          }
         });
+        if(!routeExist) {
+          response.push({
+            'key': `${originPorts[i]['id']}${destinyPorts[i]['id']}`,
+            'origin_id': originPorts[i]['id'], 
+            'destiny_id': destinyPorts[i]['id'], 
+            'route': `${originPorts[i]['display_name']} --> ${destinyPorts[i]['display_name']}`
+          });
+        }
       }      
-      this.filteredRoutesOptions = response;
+      this.filteredRoutesOptions = response; 
     },
     addOptionSelectedCarriers() {
       this.filteredCarrierOptions = [];

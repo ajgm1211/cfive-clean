@@ -72,14 +72,14 @@ class CostSheetResource extends JsonResource
                 ]);
 
                 $convertToCurrencyInlandRate = $this->convertToCurrencyQuote(
-                    $local->currency, 
+                    $inland->currency, 
                     $this->currencyToReport, //Definir en que moneda deben expresarse los totales
                     $this->convertToArray($ratesInland), 
                     $this->quote
                 );
 
                 $convertToCurrencyInlandMarkup = $this->convertToCurrencyQuote(
-                    $local->currency, 
+                    $inland->currency, 
                     $this->currencyToReport, //Definir en que moneda deben expresarse los totales
                     $this->convertToArray($markupInland), 
                     $this->quote
@@ -148,7 +148,7 @@ class CostSheetResource extends JsonResource
                 array_push($sellingAmountAll, $this->getAmountPerContainer($convertToCurrencylocalTotal));
 
             }
-        } 
+        }
         
         // agregar atributo carrier_name
         $this->autorate->carrier_name = $this->autorate->carrier->name;
@@ -160,7 +160,7 @@ class CostSheetResource extends JsonResource
 
         foreach ($freightChargesModel as $charge) {
             
-            $freightAmountsCharges = json_decode($charge['amount']);   
+            $freightAmountsCharges = json_decode($charge['amount']);   //dd($freightAmountsCharges);
 
             array_push($freightCharges, [
                 'type' => $charge->type->description, 
@@ -175,7 +175,7 @@ class CostSheetResource extends JsonResource
                 $this->currencyToReport, //Definir en que moneda deben expresarse los totales
                 $this->convertToArray($freightAmountsCharges), 
                 $this->quote
-            );            
+            );         
             array_push($buyingAmountAll, $this->getAmountPerContainer($convertToCurrencyfreightAmountsCharges));              
         }
         
@@ -330,8 +330,10 @@ class CostSheetResource extends JsonResource
 
     public function convertToArray($data) {
         $amount_array = [];
-        foreach($data as $key=>$value){
-            $amount_array[$key] = $value;
+        if(!sizeof($data) == 0) {
+            foreach($data as $key=>$value){
+                $amount_array[$key] = $value;
+            }
         }
         return $amount_array;
     }
