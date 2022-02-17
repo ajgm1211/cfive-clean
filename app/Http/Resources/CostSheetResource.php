@@ -160,7 +160,7 @@ class CostSheetResource extends JsonResource
 
         foreach ($freightChargesModel as $charge) {
             
-            $freightAmountsCharges = json_decode($charge['amount']);   //dd($freightAmountsCharges);
+            $freightAmountsCharges = json_decode($charge['amount']); //dd($freightAmountsCharges);
 
             array_push($freightCharges, [
                 'type' => $charge->type->description, 
@@ -283,9 +283,15 @@ class CostSheetResource extends JsonResource
 
     public function calculatePercentage($arrayA, $arrayB) {        
         $percentage = $arrayA;
-        $cantContainers = sizeof($arrayA);        
+        $cantContainers = sizeof($arrayA);   
+        //dd($arrayA);     
         for ($j = 0; $j < $cantContainers; $j++) {   
-            $dec = $arrayA[$j]['amount'] / $arrayB[$j]['amount'];                
+            if($arrayB[$j]['amount'] == 0) {
+                $dec = 0;                
+            } else {
+                $dec = $arrayA[$j]['amount'] / $arrayB[$j]['amount'];
+            }
+
             $percentage[$j]['amount'] = $this->formatPercentage($dec);
         }
         return $percentage;
