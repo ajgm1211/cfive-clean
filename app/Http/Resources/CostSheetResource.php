@@ -21,6 +21,7 @@ class CostSheetResource extends JsonResource
         $this->quote = $quote;        
         $this->autorate = $autorate;
         $this->arrayContainers = $this->getContainerNames();
+        $this->currencyToReport = $this->autorate->currency; //Obtener moneda en la que se quiere presentar el reporte
     }
 
     public function toArray($request)
@@ -44,7 +45,6 @@ class CostSheetResource extends JsonResource
     
         $originRate = $this->autorate->origin_port_id;
         $destinoRate = $this->autorate->destination_port_id;
-        //$currencyToReport = $this->quote-> ... //Obtener moneda en la que se quiere presentar el reporte
 
         $localesBuying = [];
         $localesSelling = [];
@@ -73,14 +73,14 @@ class CostSheetResource extends JsonResource
 
                 $convertToCurrencyInlandRate = $this->convertToCurrencyQuote(
                     $local->currency, 
-                    $this->autorate->currency, //Definir en que moneda deben expresarse los totales
+                    $this->currencyToReport, //Definir en que moneda deben expresarse los totales
                     $this->convertToArray($ratesInland), 
                     $this->quote
                 );
 
                 $convertToCurrencyInlandMarkup = $this->convertToCurrencyQuote(
                     $local->currency, 
-                    $this->autorate->currency, //Definir en que moneda deben expresarse los totales
+                    $this->currencyToReport, //Definir en que moneda deben expresarse los totales
                     $this->convertToArray($markupInland), 
                     $this->quote
                 );
@@ -129,14 +129,14 @@ class CostSheetResource extends JsonResource
                 
                 $convertToCurrencylocalPrice = $this->convertToCurrencyQuote(
                     $local->currency, 
-                    $this->autorate->currency, //Definir en que moneda deben expresarse los totales
+                    $this->currencyToReport, //Definir en que moneda deben expresarse los totales
                     $this->convertToArray($local['price']), 
                     $this->quote
                 );
 
                 $convertToCurrencylocalTotal = $this->convertToCurrencyQuote(
                     $local->currency, 
-                    $this->autorate->currency, //Definir en que moneda deben expresarse los totales
+                    $this->currencyToReport, //Definir en que moneda deben expresarse los totales
                     $this->convertToArray($local['total']), 
                     $this->quote
                 );
@@ -172,7 +172,7 @@ class CostSheetResource extends JsonResource
             // Acumular para calcular subtotal de compra. Se debe enviar montos por contenedor convertidos al tipo de moneda del rate            
             $convertToCurrencyfreightAmountsCharges = $this->convertToCurrencyQuote(
                 $charge->currency , 
-                $this->autorate->currency, //Definir en que moneda deben expresarse los totales
+                $this->currencyToReport, //Definir en que moneda deben expresarse los totales
                 $this->convertToArray($freightAmountsCharges), 
                 $this->quote
             );            
@@ -184,7 +184,7 @@ class CostSheetResource extends JsonResource
 
         $convertToCurrencyfreightAmountSelling = $this->convertToCurrencyQuote(
             $this->autorate->currency, 
-            $this->autorate->currency, //Definir en que moneda deben expresarse los totales
+            $this->currencyToReport, //Definir en que moneda deben expresarse los totales
             $this->convertToArray($freightAmountSelling), 
             $this->quote
         );
@@ -222,7 +222,7 @@ class CostSheetResource extends JsonResource
 
         array_push($dataRate, [
             'automatic_rate_id' => $this->autorate->id,
-            'currency' => ['currency_id' => $this->autorate->currency_id, 'alphacode' => $this->autorate->currency->alphacode],
+            'currency' => ['currency_id' => $this->currencyToReport->id, 'alphacode' => $this->currencyToReport->alphacode],
             'POL' => ['id' => $this->autorate->origin_port_id, 'name' => $this->autorate->origin_port->name],  
             'POD' => ['id' => $this->autorate->destination_port_id, 'name' => $this->autorate->destination_port->name],
             'carrier' => ['id' => $this->autorate->carrier_id, 'name' => $this->autorate->carrier->name],
