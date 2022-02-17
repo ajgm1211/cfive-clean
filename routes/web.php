@@ -556,7 +556,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::get('/',function () {
         return redirect()->route('quote.index');
      })->name('quotes-v2.index');
-    Route::get('/show/{quote}',function () {
+    Route::get('/show/{id}',function () {
         return redirect()->route('quote.index');
      })->name('quotes-v2.show');
     Route::get('/show2/{id}', function () {
