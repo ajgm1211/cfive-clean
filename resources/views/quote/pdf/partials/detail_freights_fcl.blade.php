@@ -66,6 +66,7 @@ $total_freight = json_decode($r->total);
                                     @foreach($r->charge as $v)
                                         @if($v->type_id==3)
                                             <?php
+<<<<<<< HEAD
 $amount = json_decode($v->amount, true);
 $markup = json_decode($v->markups);
 
@@ -79,6 +80,21 @@ foreach ($containers as $c) {
     ${'sum_freight_' . $c->code} += $v->${'total_sum_' . $c->code};
 }
 ?>
+=======
+                                                $amount = json_decode($v->amount, true);
+                                                $markup = json_decode($v->markups);
+                                                
+                                                foreach ($containers as $c){
+                                                    ${'total_freight_'.$c->code} = 0;
+                                                    ${'total_sum_'.$c->code} = 'total_sum_'.$c->code;
+                                                    ${'sum_amount_markup_'.$c->code} = 'sum_amount_markup_'.$c->code;
+                                                }
+                                            
+                                                foreach ($containers as $c){
+                                                    ${'sum_freight_'.$c->code}+=$v->${'total_sum_'.$c->code};
+                                                }
+                                            ?>
+>>>>>>> 40a0ff58b96a09650fa21001726800c3b55f8098
 
                                             <tr class="text-left color-table">
 
@@ -92,6 +108,7 @@ foreach ($containers as $c) {
                                                     @foreach ($containers as $c)
                                                         @if($c->code == $key)
                                                             <?php
+<<<<<<< HEAD
 if ($v->surcharge->name == "Ocean Freight" && $v->surcharge->company_user_id == null) {
     //$total = $v->surcharge_id != '' ? $v->${'sum_amount_markup_'.$c->code}:$v->${'sum_amount_markup_'.$c->code}+@$r->total_rate->markups['m'.$c->code];
     //foreach($r->total_rate['markups'] as $m=>$markups ){
@@ -110,6 +127,26 @@ if ($v->surcharge->name == "Ocean Freight" && $v->surcharge->company_user_id == 
     }
 }
 ?>
+=======
+                                                                if($v->surcharge->name == "Ocean Freight" && $v->surcharge->company_user_id==null){
+                                                                    //$total = $v->surcharge_id != '' ? $v->${'sum_amount_markup_'.$c->code}:$v->${'sum_amount_markup_'.$c->code}+@$r->total_rate->markups['m'.$c->code];
+                                                                    //foreach($r->total_rate['markups'] as $m=>$markups ){
+                                                                        //$containerM=str_replace("m", "", $m);
+                                                                        //if ($containerM==$c->code) {
+                                                                        if(isset($amount["c". $c->code]) && isset($r->total_rate->markups["m" . $c->code])){
+                                                                            $total_w_profit = $amount["c". $c->code] + $r->total_rate->markups["m" . $c->code];
+                                                                        }elseif(isset($amount["c". $c->code])){
+                                                                            $total_w_profit = $amount["c". $c->code];
+                                                                        }
+                                                                        //}
+                                                                    //}
+                                                                }else{
+                                                                    if(isset($amount["c". $c->code])){
+                                                                        $total_w_profit = $amount["c". $c->code];
+                                                                    }
+                                                                }
+                                                            ?>
+>>>>>>> 40a0ff58b96a09650fa21001726800c3b55f8098
                                                             <!--<td {{ $hide }}>{{isDecimal($v->${'total_sum_'.$c->code}, true)}}</td>-->
                                                             <td {{ $hide }}>{{ @$total_w_profit == null ? 0 : isDecimal( @$total_w_profit, false, true) . ' ' .$v->currency->alphacode}}</td>
 
