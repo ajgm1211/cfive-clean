@@ -170,94 +170,182 @@
               </div>
             </div>
           </menu>
-
+          
           <div class="mx-5">
-            <h4 v-for="(rate, i) in dataFeatCostSheet.rates" :key="'rateHeader'+i">
-              <strong>{{rate.carrier.name}}</strong>
-              | {{rate.POL.name}} - {{rate.POD.name}}
-            </h4> 
-            <div
-              :class="item.show ? 'opened' : ''"
-              class="cost-card"
-              v-for="(item, i) in checks"
-              :key="'item'+i"
-            >
-              <table>
-                <thead>
-                  <tr>
-                    <th>{{ item.name }}</th>
-                    <th></th>
-                    <th v-for="(container, i) in dataFeatCostSheet.containers_head" :key="'containerName'+i">{{container.name}}</th>
-                  </tr>
-                </thead>
-
-                <tbody v-for="(rate, i) in dataFeatCostSheet.rates" :key="'rateBody'+i">
-                  <template v-if="item.name == 'Buying rates'">
-                    <tr v-for="(freight, index) in rate.buying[0].freight" :key="'FreightBuying'+index">
-                      <td>{{freight.surcharge}}</td>
-                      <td>{{freight.type}}</td>
-                      <td v-for="(container, i) in freight.amount" :key="'container'+i">{{container.amount}} {{freight.currency.alphacode}}</td>
-                    </tr>
-                    <tr v-for="(local, index) in rate.buying[0].locales" :key="'localBuying'+index">
-                      <td>{{local.surcharge}}</td>
-                      <td>Local - {{local.type}}</td>
-                      <td v-for="(container, i) in local.amount" :key="'localContainer'+i">{{container.amount}} {{local.currency.alphacode}}</td>
-                    </tr>
-                    <tr v-for="(inland, index) in rate.buying[0].inlands" :key="'inlandBuying'+index">
-                      <td>{{inland.charge}}</td>
-                      <td>Inland - {{inland.type}}</td>
-                      <td v-for="(container, i) in inland.rate" :key="'inlandContainer'+i">{{container.amount}} {{inland.currency.alphacode}}</td>
-                    </tr>                    
-                  </template>
-                  <template v-if="item.name == 'Selling rates'">
+            <template v-if="dataFeatCostSheet.type == 'LCL'">
+              <h4 v-for="(rate, i) in dataFeatCostSheet.rates" :key="'rateHeader'+i">
+                <strong>{{rate.carrier.name}}</strong>
+                | {{rate.POL.name}} - {{rate.POD.name}}
+              </h4> 
+              <div
+                :class="item.show ? 'opened' : ''"
+                class="cost-card"
+                v-for="(item, i) in checks"
+                :key="'item'+i"
+              >
+                <table>
+                  <thead>
                     <tr>
-                      <td>Ocean Freight</td>
-                      <td>Freight</td>
-                      <td v-for="(freight, i) in rate.selling[0].total_freight" :key="'totalFreigth'+i">{{freight.amount}}  {{rate.currency.alphacode}}</td>
-                    </tr>
-                    <tr v-for="(local, index) in rate.selling[0].locales" :key="'localSelling'+index">
-                      <td>{{local.surcharge}}</td>
-                      <td>Local - {{local.type}}</td>
-                      <td v-for="(container, i) in local.amount" :key="'localContainer'+i">{{container.amount}} {{local.currency.alphacode}}</td>
-                    </tr>
-                    <tr v-for="(inland, index) in rate.selling[0].inlands" :key="'inlandSelling'+index">
-                      <td>Total</td>
-                      <td>Inland</td>
-                      <td v-for="(container, i) in inland.totals" :key="'inlandContainer'+i">{{container.amount}}</td>
-                    </tr>
-                  </template>
-                  <template v-if="item.name == 'Total Profits'">
-                    <tr>
-                      <td class="total-in-table">Profit</td>
-                      <td>Total Profit</td>
-                      <td v-for="(profit, i) in rate.profit[0].profit" :key="'profit'+i" class="total-in-table">{{profit.amount}} {{rate.currency.alphacode}}</td>
-                    </tr>
-                    <tr>
-                      <td>Profit %</td>
-                      <td>% profit</td>
-                      <td v-for="(profitPercentage, i) in rate.profit[0].profit_percentage" :key="'profitPercentage'+i" class="total-in-table">{{profitPercentage.amount}}</td>
-                    </tr>
-                  </template>
-                </tbody>
-
-                <thead v-for="(rate, i) in dataFeatCostSheet.rates" :key="'rateTotal'+i">
-                  <template v-if="item.name == 'Buying rates'">
-                    <tr>
-                      <th class="total-in-table">Total {{ item.name }}</th>
+                      <th>{{ item.name }}</th>
                       <th></th>
-                      <th v-for="(totalContainers, i) in rate.buying[0].totals" :key="'totalContainers'+i"><p>{{totalContainers.amount}} {{rate.currency.alphacode}}</p></th>
+                      <th>{{dataFeatCostSheet.containers_head.name}}</th>
                     </tr>
-                  </template>
-                  <template v-if="item.name == 'Selling rates'">
+                  </thead>
+                  <tbody v-for="(rate, i) in dataFeatCostSheet.rates" :key="'rateBody'+i">
+                    <template v-if="item.name == 'Buying rates'">
+                      <tr v-for="(freight, index) in rate.buying[0].freight" :key="'FreightBuying'+index">
+                        <td>{{freight.surcharge}}</td>
+                        <td>{{freight.type}}</td>
+                        <td>{{freight.amount}} {{freight.currency.alphacode}}</td>
+                      </tr>
+                      <tr v-for="(local, index) in rate.buying[0].locales" :key="'localBuying'+index">
+                        <td>{{local.surcharge}}</td>
+                        <td>Local - {{local.type}}</td>
+                        <td>{{local.amount}} {{local.currency.alphacode}}</td>
+                      </tr>
+                      <tr v-for="(inland, index) in rate.buying[0].inlands" :key="'inlandBuying'+index">
+                        <td>{{inland.charge}}</td>
+                        <td>Inland - {{inland.type}}</td>
+                        <td>{{inland.rate}} {{inland.currency.alphacode}}</td>
+                      </tr>                    
+                    </template>
+                    <template v-if="item.name == 'Selling rates'">
+                      <tr>
+                        <td>Ocean Freight</td>
+                        <td>Freight</td>
+                        <td>{{rate.selling[0].total_freight}}  {{rate.currency.alphacode}}</td>
+                      </tr>
+                      <tr v-for="(local, index) in rate.selling[0].locales" :key="'localSelling'+index">
+                        <td>{{local.surcharge}}</td>
+                        <td>Local - {{local.type}}</td>
+                        <td>{{local.amount}} {{local.currency.alphacode}}</td>
+                      </tr>
+                      <tr>
+                        <td>Total </td>
+                        <td>Inland</td>
+                        <td>{{rate.selling[0].inlands}}  {{rate.currency.alphacode}}</td>
+                      </tr>
+                    </template>
+                    <template v-if="item.name == 'Total Profits'">
+                      <tr>
+                        <td class="total-in-table">Profit</td>
+                        <td>Total Profit</td>
+                        <td>{{rate.profit[0].profit}} {{rate.currency.alphacode}}</td>
+                      </tr>
+                      <tr>
+                        <td>Profit %</td>
+                        <td>% profit</td>
+                        <td>{{rate.profit[0].profit_percentage}}</td>
+                      </tr>
+                    </template>
+                  </tbody>
+                  <thead v-for="(rate, i) in dataFeatCostSheet.rates" :key="'rateTotal'+i">
+                    <template v-if="item.name == 'Buying rates'">
+                      <tr>
+                        <th class="total-in-table">Total {{ item.name }}</th>
+                        <th></th>
+                        <th><p>{{rate.buying[0].totals}} {{rate.currency.alphacode}}</p></th>
+                      </tr>
+                    </template>
+                    <template v-if="item.name == 'Selling rates'">
+                      <tr>
+                        <th class="total-in-table">Total {{ item.name }}</th>
+                        <th></th>
+                        <th><p>{{rate.selling[0].totals}} {{rate.currency.alphacode}}</p></th>
+                      </tr>
+                    </template>
+                  </thead>
+                </table>
+              </div>
+            </template>
+            <template v-if="dataFeatCostSheet.type == 'FCL'">
+              <h4 v-for="(rate, i) in dataFeatCostSheet.rates" :key="'rateHeader'+i">
+                <strong>{{rate.carrier.name}}</strong>
+                | {{rate.POL.name}} - {{rate.POD.name}}
+              </h4> 
+              <div
+                :class="item.show ? 'opened' : ''"
+                class="cost-card"
+                v-for="(item, i) in checks"
+                :key="'item'+i"
+              >
+                <table>
+                  <thead>
                     <tr>
-                      <th class="total-in-table">Total {{ item.name }}</th>
+                      <th>{{ item.name }}</th>
                       <th></th>
-                      <th v-for="(totalContainers, i) in rate.selling[0].totals" :key="'totalContainers'+i"><p>{{totalContainers.amount}} {{rate.currency.alphacode}}</p></th>
+                      <th v-for="(container, i) in dataFeatCostSheet.containers_head" :key="'containerName'+i">{{container.name}}</th>
                     </tr>
-                  </template>
-                </thead>
-              </table>
-            </div>
+                  </thead>
+
+                  <tbody v-for="(rate, i) in dataFeatCostSheet.rates" :key="'rateBody'+i">
+                    <template v-if="item.name == 'Buying rates'">
+                      <tr v-for="(freight, index) in rate.buying[0].freight" :key="'FreightBuying'+index">
+                        <td>{{freight.surcharge}}</td>
+                        <td>{{freight.type}}</td>
+                        <td v-for="(container, i) in freight.amount" :key="'container'+i">{{container.amount}} {{freight.currency.alphacode}}</td>
+                      </tr>
+                      <tr v-for="(local, index) in rate.buying[0].locales" :key="'localBuying'+index">
+                        <td>{{local.surcharge}}</td>
+                        <td>Local - {{local.type}}</td>
+                        <td v-for="(container, i) in local.amount" :key="'localContainer'+i">{{container.amount}} {{local.currency.alphacode}}</td>
+                      </tr>
+                      <tr v-for="(inland, index) in rate.buying[0].inlands" :key="'inlandBuying'+index">
+                        <td>{{inland.charge}}</td>
+                        <td>Inland - {{inland.type}}</td>
+                        <td v-for="(container, i) in inland.rate" :key="'inlandContainer'+i">{{container.amount}} {{inland.currency.alphacode}}</td>
+                      </tr>                    
+                    </template>
+                    <template v-if="item.name == 'Selling rates'">
+                      <tr>
+                        <td>Ocean Freight</td>
+                        <td>Freight</td>
+                        <td v-for="(freight, i) in rate.selling[0].total_freight" :key="'totalFreigth'+i">{{freight.amount}}  {{rate.currency.alphacode}}</td>
+                      </tr>
+                      <tr v-for="(local, index) in rate.selling[0].locales" :key="'localSelling'+index">
+                        <td>{{local.surcharge}}</td>
+                        <td>Local - {{local.type}}</td>
+                        <td v-for="(container, i) in local.amount" :key="'localContainer'+i">{{container.amount}} {{local.currency.alphacode}}</td>
+                      </tr>
+                      <tr>
+                        <td>Total</td>
+                        <td>Inland</td>
+                        <td v-for="(inland, i) in rate.selling[0].inlands" :key="'inlandContainer'+i">{{inland.amount}} {{rate.currency.alphacode}}</td>
+                      </tr>
+                    </template>
+                    <template v-if="item.name == 'Total Profits'">
+                      <tr>
+                        <td class="total-in-table">Profit</td>
+                        <td>Total Profit</td>
+                        <td v-for="(profit, i) in rate.profit[0].profit" :key="'profit'+i" class="total-in-table">{{profit.amount}} {{rate.currency.alphacode}}</td>
+                      </tr>
+                      <tr>
+                        <td>Profit %</td>
+                        <td>% profit</td>
+                        <td v-for="(profitPercentage, i) in rate.profit[0].profit_percentage" :key="'profitPercentage'+i" class="total-in-table">{{profitPercentage.amount}}</td>
+                      </tr>
+                    </template>
+                  </tbody>
+
+                  <thead v-for="(rate, i) in dataFeatCostSheet.rates" :key="'rateTotal'+i">
+                    <template v-if="item.name == 'Buying rates'">
+                      <tr>
+                        <th class="total-in-table">Total {{ item.name }}</th>
+                        <th></th>
+                        <th v-for="(totalContainers, i) in rate.buying[0].totals" :key="'totalContainers'+i"><p>{{totalContainers.amount}} {{rate.currency.alphacode}}</p></th>
+                      </tr>
+                    </template>
+                    <template v-if="item.name == 'Selling rates'">
+                      <tr>
+                        <th class="total-in-table">Total {{ item.name }}</th>
+                        <th></th>
+                        <th v-for="(totalContainers, i) in rate.selling[0].totals" :key="'totalContainers'+i"><p>{{totalContainers.amount}} {{rate.currency.alphacode}}</p></th>
+                      </tr>
+                    </template>
+                  </thead>
+                </table>
+              </div>
+            </template>
           </div>
         </section>
       </div>
@@ -353,15 +441,14 @@ export default {
       this.loaded = true;
     },
     getFilteredRoutesOptions(data) {
-      
+      console.log(data);
       let originPorts = data.origin_ports;
       let destinyPorts = data.destiny_ports;
       let response = [];      
       
       let routeExist = false;
 
-      for(let i = 0; i < originPorts.length; i++) {//falta elminar elemento duplciado si hay dos rutas iguales pero con diferente carrier    
-
+      for(let i = 0; i < originPorts.length; i++) { 
         response.forEach(r => {
           if (r['key'] == `${originPorts[i]['id']}${destinyPorts[i]['id']}`) { 
             routeExist = true;
@@ -375,7 +462,7 @@ export default {
             'route': `${originPorts[i]['display_name']} --> ${destinyPorts[i]['display_name']}`
           });
         }
-      }      
+      }
       this.filteredRoutesOptions = response; 
     },
     addOptionSelectedCarriers() {

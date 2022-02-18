@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\LocalChargeQuote;
+use App\LocalChargeQuoteLcl;
 use App\Charge;
 use App\Http\Traits\QuoteV2Trait;
 
@@ -20,8 +21,9 @@ class CostSheetResource extends JsonResource
     {   
         $this->quote = $quote;        
         $this->autorate = $autorate;
-        $this->arrayContainers = $this->getContainerNames();
-        $this->currencyToReport = $this->autorate->currency; //Obtener moneda en la que se quiere presentar el reporte
+        $this->header_fields = $this->getHeaderFields();
+        $this->type = $this->quote->type;
+        $this->currencyToReport = $this->autorate->currency; 
     }
 
     public function toArray($request)
@@ -32,12 +34,9 @@ class CostSheetResource extends JsonResource
         $buyingAmountAll = [];
         $sellingAmountAll = [];
 
-        $dataFeatCostSheet['containers_head'] = $this->arrayContainers;    
+        $dataFeatCostSheet['containers_head'] = $this->header_fields;    
         
         $dataRate = [];        
-
-        // Obtenemos los local charges asociados a la cotización
-        $local_charge_quotes_model = $this->getLocalChargesModel();
         
         $ratesBuying = [];    
         $ratesSelling = [];    
@@ -54,165 +53,192 @@ class CostSheetResource extends JsonResource
 
         // Obtener inlands
         $inlands = $this->getInlandsModel();
-
+        
         $totalInland = [];
-
+        
         foreach ($inlands as $inland) {
-
+            
             if ($inland->port_id == $originRate || $inland->port_id == $destinoRate) {
-
-                $ratesInland = json_decode($inland['rate']);    
-                $markupInland = json_decode($inland['markup']);
                 
                 array_push($inlandsBuying, [
                     'type' => $inland->type,
                     'charge' => $inland->charge,
                     'currency' => ['currency_id' => $inland->currency_id, 'alphacode' => $inland->currency->alphacode], 
-                    'rate' => $this->getAmountPerContainer($ratesInland)
-                ]);
-
+                    'rate' => $this->getInlandRate($inland)
+                ]);        
+                
                 $convertToCurrencyInlandRate = $this->convertToCurrencyQuote(
                     $inland->currency, 
-                    $this->currencyToReport, //Definir en que moneda deben expresarse los totales
-                    $this->convertToArray($ratesInland), 
+                    $this->currencyToReport,
+                    $this->getInlandRateArray($inland),
                     $this->quote
                 );
-
                 $convertToCurrencyInlandMarkup = $this->convertToCurrencyQuote(
                     $inland->currency, 
-                    $this->currencyToReport, //Definir en que moneda deben expresarse los totales
-                    $this->convertToArray($markupInland), 
+                    $this->currencyToReport,
+                    $this->getInlandMarkupArray($inland), 
                     $this->quote
                 );
 
                 // acumular para calcular subtotal de compra
-                array_push($buyingAmountAll, $this->getAmountPerContainer($convertToCurrencyInlandRate));
-
-                // Valor original(rate) + profit(markup) de todos los inland asociados a los puertos del flete 
-                foreach ($convertToCurrencyInlandRate as $keyRate => $valRate) {                          
-                    foreach ($convertToCurrencyInlandMarkup as $keyMarkup => $valMarkup) { 
-                        if ($keyRate === str_replace("m", "c", $keyMarkup)) { 
-                            if (!isset($totalInland[$keyRate])) { 
-                                $totalInland[$keyRate] = 0;
+                if ($this->quote->type == 'FCL') {
+                    array_push($buyingAmountAll, $this->getAmountPerContainer($convertToCurrencyInlandRate));
+                    
+                    // Valor original(rate) + profit(markup) de todos los inland asociados a los puertos del flete 
+                    foreach ($convertToCurrencyInlandRate as $keyRate => $valRate) {                          
+                        foreach ($convertToCurrencyInlandMarkup as $keyMarkup => $valMarkup) { 
+                            if ($keyRate === str_replace("m", "c", $keyMarkup)) { 
+                                if (!isset($totalInland[$keyRate])) { 
+                                    $totalInland[$keyRate] = 0;
+                                }
+                                $totalInland[$keyRate] = $totalInland[$keyRate] + $valMarkup + $valRate;
                             }
-                            $totalInland[$keyRate] = $totalInland[$keyRate] + $valMarkup + $valRate;
-                        }
-                    }                        
-                }                    
+                        }                        
+                    }                    
+                }
+                if ($this->quote->type == 'LCL') {
+                    array_push($buyingAmountAll, $convertToCurrencyInlandRate['amount']);
+                    //Se suma los valores de todos los inland (total + markup) para venta
+                    $totalInland = $totalInland + $convertToCurrencyInlandRate + $convertToCurrencyInlandMarkup;
+                }
             } 
         }
-
+        
         if (sizeof($totalInland) > 0) {
-            array_push($inlandsSelling, [
-                'totals' => $this->getAmountPerContainer($totalInland)
-            ]);
             // acumular para calcular subtotal de venta
-            array_push($sellingAmountAll, $this->getAmountPerContainer($totalInland));
-        }        
+            array_push($inlandsSelling, [
+                'totals' => $this->getAmountInlandsTotal($totalInland) 
+            ]);
+            if ($this->quote->type == 'FCL') {
+                array_push($sellingAmountAll, $this->getAmountPerContainer($totalInland));
+            }
+            if ($this->quote->type == 'LCL') {
+                array_push($sellingAmountAll, $totalInland['amount']);   
+            }
+        }      
+        
+        // Obtenemos los local charges asociados a la cotización
+        $local_charge_quotes_model = $this->getLocalChargesModel();
 
         // Obtener charges de origen y su destino
         foreach ($local_charge_quotes_model as $local) {
             if ($local->port_id == $originRate || $local->port_id == $destinoRate) {
+                
                 array_push($localesBuying, [
                     'type' => $local->type->description,
                     'surcharge' => $local->charge,
                     'currency' => ['currency_id' => $local->currency_id, 'alphacode' => $local->currency->alphacode],
-                    'amount' => $this->getAmountPerContainer($local['price'])
+                    'amount' => $this->getLocalPrice($local)
                 ]);
-
+                
                 array_push($localesSelling, [
                     'type' => $local->type->description,
                     'surcharge' => $local->charge,
                     'currency' => ['currency_id' => $local->currency_id, 'alphacode' => $local->currency->alphacode],
-                    'amount' => $this->getAmountPerContainer($local['total'])
+                    'amount' => $this->getLocalPrice($local)
                 ]);
-                
+
                 $convertToCurrencylocalPrice = $this->convertToCurrencyQuote(
                     $local->currency, 
-                    $this->currencyToReport, //Definir en que moneda deben expresarse los totales
-                    $this->convertToArray($local['price']), 
+                    $this->currencyToReport,
+                    $this->getLocalPriceArray($local),
                     $this->quote
                 );
 
                 $convertToCurrencylocalTotal = $this->convertToCurrencyQuote(
                     $local->currency, 
-                    $this->currencyToReport, //Definir en que moneda deben expresarse los totales
-                    $this->convertToArray($local['total']), 
+                    $this->currencyToReport,
+                    $this->getLocalPriceArray($local),
                     $this->quote
                 );
+                
+                if ($this->quote->type == 'FCL') {
+                    // acumular para calcular subtotal de compra
+                    array_push($buyingAmountAll, $this->getAmountPerContainer($convertToCurrencylocalPrice));
+    
+                    // acumular para calcular subtotal de venta
+                    array_push($sellingAmountAll, $this->getAmountPerContainer($convertToCurrencylocalTotal));
+                }
 
-                // acumular para calcular subtotal de compra
-                array_push($buyingAmountAll, $this->getAmountPerContainer($convertToCurrencylocalPrice));
-
-                // acumular para calcular subtotal de venta
-                array_push($sellingAmountAll, $this->getAmountPerContainer($convertToCurrencylocalTotal));
+                if ($this->quote->type == 'LCL') {
+                    // acumular para calcular subtotal de compra
+                    array_push($buyingAmountAll, $convertToCurrencylocalPrice['amount']);
+    
+                    // acumular para calcular subtotal de venta
+                    array_push($sellingAmountAll, $convertToCurrencylocalTotal['amount']);
+                } 
 
             }
         }
-        
+
         // agregar atributo carrier_name
         $this->autorate->carrier_name = $this->autorate->carrier->name;
 
         // Obtener valor y recargos de los fletes
-        $freightChargesModel = $this->getChargesModel();
+        $freightChargesModel = $this->getChargesFreightModel();
 
         $freightCharges = [];
 
-        foreach ($freightChargesModel as $charge) {
+        foreach ($freightChargesModel as $charge) { //revisando
             
-            $freightAmountsCharges = json_decode($charge['amount']); //dd($freightAmountsCharges);
+            $freightAmountsCharges = json_decode($charge['amount']);
 
             array_push($freightCharges, [
                 'type' => $charge->type->description, 
                 'surcharge' => $charge->surcharge->name, 
                 'currency' => ['currency_id' => $charge->currency_id, 'alphacode' => $charge->currency->alphacode],
-                'amount' => $this->getAmountPerContainer($freightAmountsCharges) // Se envía montos por contenedores en su moneda original
-            ]);              
-            
+                'amount' => $this->getFreightChargePrice($charge)
+            ]); 
+
             // Acumular para calcular subtotal de compra. Se debe enviar montos por contenedor convertidos al tipo de moneda del rate            
             $convertToCurrencyfreightAmountsCharges = $this->convertToCurrencyQuote(
                 $charge->currency , 
-                $this->currencyToReport, //Definir en que moneda deben expresarse los totales
-                $this->convertToArray($freightAmountsCharges), 
+                $this->currencyToReport,
+                $this->getFreightChargePriceArray($charge),
                 $this->quote
-            );         
-            array_push($buyingAmountAll, $this->getAmountPerContainer($convertToCurrencyfreightAmountsCharges));              
+            );   
+            if ($this->quote->type == 'FCL') {
+                array_push($buyingAmountAll, $this->getAmountPerContainer($convertToCurrencyfreightAmountsCharges));              
+            }
+            if ($this->quote->type == 'LCL') {
+                array_push($buyingAmountAll, $convertToCurrencyfreightAmountsCharges['amount']);              
+            }
         }
         
-        // Obtener totales por flete (venta)
-        $freightAmountSelling = json_decode($this->autorate->total);
-
-        $convertToCurrencyfreightAmountSelling = $this->convertToCurrencyQuote(
-            $this->autorate->currency, 
-            $this->currencyToReport, //Definir en que moneda deben expresarse los totales
-            $this->convertToArray($freightAmountSelling), 
-            $this->quote
-        );
-        // acumular para calcular subtotal de venta
-        array_push($sellingAmountAll, $this->getAmountPerContainer($freightAmountSelling));
-
         array_push($ratesBuying, [
             'freight' => $freightCharges,
             'locales' => $localesBuying,
             'inlands' => $inlandsBuying,
-            'totals' => $this->sumaAmountPerContainer($buyingAmountAll)
+            'totals' => $this->getSumaAmountTotals($buyingAmountAll)
         ]);
 
-        array_push($ratesSelling, [
-            'total_freight' => $this->getAmountPerContainer($freightAmountSelling),
-            'locales' => $localesSelling,
-            'inlands' => $inlandsSelling,
-            'totals' => $this->sumaAmountPerContainer($sellingAmountAll)
-        ]);
-
-        $arrayProfit = $this->diffAmountPerContainer(
-            $this->sumaAmountPerContainer($sellingAmountAll), 
-            $this->sumaAmountPerContainer($buyingAmountAll)
+        $convertToCurrencyfreightAmountSelling = $this->convertToCurrencyQuote(
+            $this->autorate->currency, 
+            $this->currencyToReport,
+            $this->getFreightChargeTotalArray(),
+            $this->quote
         );
 
+        // acumular para calcular subtotal de venta
+        if ($this->quote->type == 'FCL') {
+            array_push($sellingAmountAll, $this->getAmountPerContainer($convertToCurrencyfreightAmountSelling));
+        }
+        if ($this->quote->type == 'LCL') {
+            array_push($sellingAmountAll, $convertToCurrencyfreightAmountSelling['amount']);
+        }
+        
+        array_push($ratesSelling, [
+            'total_freight' => $this->getFreightChargeTotal(),
+            'locales' => $localesSelling,
+            'inlands' => $this->getInlandsTotal($inlandsSelling),
+            'totals' => $this->getSumaAmountTotals($sellingAmountAll)
+        ]);
+
+        $arrayProfit = $this->calculateProfit($sellingAmountAll, $buyingAmountAll);
+        
         $arrayPercentageProfit = $this->calculatePercentage(
             $arrayProfit, 
-            $this->sumaAmountPerContainer($sellingAmountAll)
+            $this->getSumaAmountTotals($sellingAmountAll)
         );
 
         array_push($profit, [
@@ -230,33 +256,49 @@ class CostSheetResource extends JsonResource
             'selling' => $ratesSelling,
             'profit' => $profit
         ]);
-
-        $dataFeatCostSheet['rates'] =  $dataRate;
         
+        $dataFeatCostSheet['rates'] = $dataRate; 
+        $dataFeatCostSheet['type'] = $this->type;
+        
+        //dd($dataFeatCostSheet);
         return $dataFeatCostSheet;
     }
 
-    public function getContainerNames() {
-        $equipments = $this->quote->getContainersFromEquipment($this->quote->equipment);
-        $arrayContainers = [];
-        foreach ($equipments as $equipment) {
-            array_push($arrayContainers, ['name' => $equipment->name]);
+    public function getHeaderFields() {
+        $headerFields = [];        
+
+        if ($this->quote->type == 'LCL') {
+            $headerFields = ['name' => 'Price'];
+        } else {
+            $equipments = $this->quote->getContainersFromEquipment($this->quote->equipment);
+            
+            foreach ($equipments as $equipment) {
+                array_push($headerFields, ['name' => $equipment->name]);
+            }
         }
-        return $arrayContainers;
+        return $headerFields; 
     }
 
     public function getAmountPerContainer($array) {
-        $amountPerContainer = [];    
-        foreach ($this->arrayContainers as $container){ 
+        $amountPerContainer = [];
+        foreach ($this->header_fields as $container){ 
             $amount = "0.00";
-            if($array){                
-                foreach ($array as $clave => $val) {                     
-                    if('c'.str_replace(' ', '', $container['name']) == $clave) {
-                        $amount = $val;
-                    }                     
-                }       
-            }                    
-            array_push($amountPerContainer, ['name' => $container['name'], 'amount' => round((float)$amount, 2)]);              
+            if($array){      
+                if ($this->quote->type == 'LCL') {
+                    $amount = $array['amount'];
+                } else {
+                    foreach ($array as $clave => $val) {                     
+                        if('c'.str_replace(' ', '', $container['name']) == $clave) {
+                            $amount = $val;
+                        }                     
+                    }       
+                }
+            }                  
+            if ($this->quote->type == 'LCL') {
+                array_push($amountPerContainer, ['name' => $container, 'amount' => round((float)$amount, 2)]);              
+            } else {
+                array_push($amountPerContainer, ['name' => $container['name'], 'amount' => round((float)$amount, 2)]);              
+            }
         }
         return $amountPerContainer; 
     }
@@ -281,20 +323,28 @@ class CostSheetResource extends JsonResource
         return $diff;
     }
 
-    public function calculatePercentage($arrayA, $arrayB) {        
-        $percentage = $arrayA;
-        $cantContainers = sizeof($arrayA);   
-        //dd($arrayA);     
-        for ($j = 0; $j < $cantContainers; $j++) {   
-            if($arrayB[$j]['amount'] == 0) {
-                $dec = 0;                
-            } else {
-                $dec = $arrayA[$j]['amount'] / $arrayB[$j]['amount'];
-            }
+    public function calculatePercentage($a, $b) {    
+        if ($this->quote->type == 'FCL') {
+            $percentage = $a;
+            $cantContainers = sizeof($a);  
+            for ($j = 0; $j < $cantContainers; $j++) {   
+                if($b[$j]['amount'] == 0) {
+                    $dec = 0;                
+                } else {
+                    $dec = $a[$j]['amount'] / $b[$j]['amount'];
+                }
 
-            $percentage[$j]['amount'] = $this->formatPercentage($dec);
+                $percentage[$j]['amount'] = $this->formatPercentage($dec);
+            }
+            return $percentage;
         }
-        return $percentage;
+        if ($this->quote->type == 'LCL') {
+            if($b == 0) {
+                return 0;
+            } else {
+                return $this->formatPercentage($a/$b);
+            }
+        }
     }
 
     public function formatPercentage($num) {
@@ -328,10 +378,15 @@ class CostSheetResource extends JsonResource
         return $inlands;
     }
 
-    public function getChargesModel() {
-        return Charge::where('type_id',3)
-                ->filterByAutorate($this->autorate->id)
-                ->get();        
+    public function getChargesFreightModel() {
+        if ($this->quote->type == 'FCL') {
+            return Charge::where('type_id',3)
+                    ->filterByAutorate($this->autorate->id)
+                    ->get();        
+        }
+        if ($this->quote->type == 'LCL') {
+            return $this->autorate->charge_lcl_air->where('type_id',3);
+        }
     }
 
     public function convertToArray($data) {
@@ -342,5 +397,133 @@ class CostSheetResource extends JsonResource
             }
         }
         return $amount_array;
+    }
+
+    public function getLocalPrice($local) {
+        if ($this->quote->type == 'FCL') {
+            return $this->getAmountPerContainer($local['price']);
+        }
+        if ($this->quote->type == 'LCL') {
+            return $local->total;
+        }        
+    }
+
+    public function getLocalPriceArray($local) {
+        if ($this->quote->type == 'FCL') {
+            return $this->convertToArray($local['price']);
+        }
+        if ($this->quote->type == 'LCL') {
+            return ['amount' => $local->total];
+        } 
+        
+    }
+
+    public function getFreightChargePriceArray($charge) { 
+        if ($this->quote->type == 'FCL') {
+            return $this->convertToArray(json_decode($charge['amount']));
+        }
+        if ($this->quote->type == 'LCL') {
+            return ['amount' => $charge->total];
+        }         
+    }
+
+    public function getFreightChargePrice($charge) { 
+        if ($this->quote->type == 'FCL') {
+            return $this->getAmountPerContainer(json_decode($charge['amount']));
+        }
+        if ($this->quote->type == 'LCL') {
+            return $charge->total;
+        }
+    }
+
+    public function getFreightChargeTotal() {
+        if ($this->quote->type == 'FCL') {
+            return $this->getAmountPerContainer(json_decode($this->autorate->total));
+        }
+        if ($this->quote->type == 'LCL') {
+            $totalArray = json_decode($this->autorate->total);
+            return $totalArray->total;         
+        }
+    }
+
+    public function getFreightChargeTotalArray() {
+        if ($this->quote->type == 'FCL') {
+            return $this->convertToArray(json_decode($this->autorate->total));
+        }
+        if ($this->quote->type == 'LCL') {
+            $total = json_decode($this->autorate->total);
+            return ['amount' => $total->total]; 
+        }
+    }
+
+    public function getSumaAmountTotals($data) {
+        if ($this->quote->type == 'FCL') {
+            return $this->sumaAmountPerContainer($data);
+        }
+        if ($this->quote->type == 'LCL') {
+            return array_sum($data);
+        }        
+    }
+    
+    public function calculateProfit($selling, $buying) {
+        if ($this->quote->type == 'FCL') {
+            return $this->diffAmountPerContainer(
+                $this->sumaAmountPerContainer($selling), 
+                $this->sumaAmountPerContainer($buying)
+            );
+        }
+        if ($this->quote->type == 'LCL') {
+            return  round((float)array_sum($selling) - (float)array_sum($buying), 2);
+        }
+    }
+
+    public function getInlandRate($inland) { 
+        if ($this->quote->type == 'FCL') {
+            return $this->getAmountPerContainer(json_decode($inland['rate']));
+        }
+        if ($this->quote->type == 'LCL') {
+            return $inland->total; 
+        }
+    }
+
+    public function getInlandRateArray($inland) { 
+        if ($this->quote->type == 'FCL') {
+            return $this->convertToArray(json_decode($inland['rate']));
+        }
+        if ($this->quote->type == 'LCL') {
+            return ['amount' => $inland->total];
+        }         
+    }
+
+    public function getInlandMarkupArray($inland) { 
+        if ($this->quote->type == 'FCL') {
+            return $this->convertToArray(json_decode($inland['markup']));
+        }
+        if ($this->quote->type == 'LCL') {
+            return ['amount' => $inland->markup];
+        }         
+    }
+
+    public function getAmountInlandsTotal($data) {
+        if ($this->quote->type == 'FCL') {
+            return $this->getAmountPerContainer($data);
+        }
+        if ($this->quote->type == 'LCL') {
+            return $data['amount'];
+        }
+    }
+
+    public function getInlandsTotal($data) { 
+        if ($this->quote->type == 'FCL') {
+            return $this->getAmountPerContainer($data);
+        }
+        if ($this->quote->type == 'LCL') {
+            if(!sizeof($data) == 0) {
+                return $data[0]['totals'];
+            } else {
+                return 0;
+            }
+            
+        }
     }
 }

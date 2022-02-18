@@ -32,6 +32,11 @@ class LocalChargeQuoteLcl extends Model implements Auditable
         return $this->belongsTo('App\Currency');
     }
 
+    public function type()
+    {
+        return $this->belongsTo('App\TypeDestiny', 'type_id');
+    }
+
     public function port()
     {
         return $this->belongsTo('App\Harbor', 'port_id');
