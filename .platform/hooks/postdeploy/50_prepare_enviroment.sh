@@ -1,4 +1,4 @@
 #!/bin/bash
-    cd /var/www/html
-    sudo cp config/custom.example.php config/custom.php
-    sudo chmod 755 config/custom.php
+    cd /var/app/current
+    sudo cp /var/app/current/config/custom.example.php /var/app/current/config/custom.php
+    sudo chmod 755 /var/app/current/config/custom.php
