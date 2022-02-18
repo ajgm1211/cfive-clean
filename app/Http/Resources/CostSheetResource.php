@@ -54,7 +54,12 @@ class CostSheetResource extends JsonResource
         // Obtener inlands
         $inlands = $this->getInlandsModel();
         
-        $totalInland = [];
+        if ($this->quote->type == 'FCL') {
+            $totalInland = [];
+        }
+        if ($this->quote->type == 'LCL') {
+            $totalInland = ['amount' => 0];
+        }
         
         foreach ($inlands as $inland) {
             
@@ -91,7 +96,7 @@ class CostSheetResource extends JsonResource
                                 if (!isset($totalInland[$keyRate])) { 
                                     $totalInland[$keyRate] = 0;
                                 }
-                                $totalInland[$keyRate] = $totalInland[$keyRate] + $valMarkup + $valRate;
+                                $totalInland[$keyRate] = $totalInland[$keyRate] + $valMarkup + $valRate; 
                             }
                         }                        
                     }                    
@@ -99,16 +104,16 @@ class CostSheetResource extends JsonResource
                 if ($this->quote->type == 'LCL') {
                     array_push($buyingAmountAll, $convertToCurrencyInlandRate['amount']);
                     //Se suma los valores de todos los inland (total + markup) para venta
-                    $totalInland = $totalInland + $convertToCurrencyInlandRate + $convertToCurrencyInlandMarkup;
+                    //dd($convertToCurrencyInlandRate['amount']);
+                    $totalInland['amount'] = $totalInland['amount'] + $convertToCurrencyInlandRate['amount'] + $convertToCurrencyInlandMarkup['amount'];
+                    //array_push($totalInland, $convertToCurrencyInlandRate['amount'] + $convertToCurrencyInlandMarkup['amount']);
                 }
             } 
         }
-        
+        //dd($totalInland);
         if (sizeof($totalInland) > 0) {
             // acumular para calcular subtotal de venta
-            array_push($inlandsSelling, [
-                'totals' => $this->getAmountInlandsTotal($totalInland) 
-            ]);
+            array_push($inlandsSelling, $this->getAmountInlandsTotal($totalInland));
             if ($this->quote->type == 'FCL') {
                 array_push($sellingAmountAll, $this->getAmountPerContainer($totalInland));
             }
@@ -135,7 +140,7 @@ class CostSheetResource extends JsonResource
                     'type' => $local->type->description,
                     'surcharge' => $local->charge,
                     'currency' => ['currency_id' => $local->currency_id, 'alphacode' => $local->currency->alphacode],
-                    'amount' => $this->getLocalPrice($local)
+                    'amount' => $this->getLocalTotal($local)
                 ]);
 
                 $convertToCurrencylocalPrice = $this->convertToCurrencyQuote(
@@ -148,7 +153,7 @@ class CostSheetResource extends JsonResource
                 $convertToCurrencylocalTotal = $this->convertToCurrencyQuote(
                     $local->currency, 
                     $this->currencyToReport,
-                    $this->getLocalPriceArray($local),
+                    $this->getLocalTotalArray($local),
                     $this->quote
                 );
                 
@@ -280,6 +285,7 @@ class CostSheetResource extends JsonResource
     }
 
     public function getAmountPerContainer($array) {
+        
         $amountPerContainer = [];
         foreach ($this->header_fields as $container){ 
             $amount = "0.00";
@@ -293,10 +299,10 @@ class CostSheetResource extends JsonResource
                         }                     
                     }       
                 }
-            }                  
+            }                
             if ($this->quote->type == 'LCL') {
                 array_push($amountPerContainer, ['name' => $container, 'amount' => round((float)$amount, 2)]);              
-            } else {
+            } else { 
                 array_push($amountPerContainer, ['name' => $container['name'], 'amount' => round((float)$amount, 2)]);              
             }
         }
@@ -305,8 +311,8 @@ class CostSheetResource extends JsonResource
 
     public function sumaAmountPerContainer($array) {
         $total = $array[0];
-        $cantContainers = sizeof($total);
-        for ($i = 1; $i < sizeof($array); $i++) {
+        $cantContainers = count($total);
+        for ($i = 1; $i < count($array); $i++) {
             for ($j = 0; $j < $cantContainers; $j++) {   
                 $total[$j]['amount'] = round($total[$j]['amount'] + $array[$i][$j]['amount'], 2);                
             }   
@@ -316,7 +322,7 @@ class CostSheetResource extends JsonResource
 
     public function diffAmountPerContainer($arrayA, $arrayB) {
         $diff = $arrayA;
-        $cantContainers = sizeof($arrayA);        
+        $cantContainers = count($arrayA);        
         for ($j = 0; $j < $cantContainers; $j++) {   
             $diff[$j]['amount'] = round($arrayA[$j]['amount'] - $arrayB[$j]['amount'], 2);                
         }
@@ -326,7 +332,7 @@ class CostSheetResource extends JsonResource
     public function calculatePercentage($a, $b) {    
         if ($this->quote->type == 'FCL') {
             $percentage = $a;
-            $cantContainers = sizeof($a);  
+            $cantContainers = count($a);  
             for ($j = 0; $j < $cantContainers; $j++) {   
                 if($b[$j]['amount'] == 0) {
                     $dec = 0;                
@@ -360,10 +366,12 @@ class CostSheetResource extends JsonResource
                 ->get();
                 break;
             case 'LCL':
-                $locales = LocalChargeQuoteLcl::where([
-                    'quote_id' => $this->quote->id
-                ])
-                ->get();
+                $locales = $this->quote->charge_lcl
+                ->where('type_id', '!=', '3');
+                // $locales = LocalChargeQuoteLcl::where([
+                //     'quote_id' => $this->quote->id
+                // ])
+                // ->get();
                 break;
         }
         return $locales;
@@ -391,9 +399,11 @@ class CostSheetResource extends JsonResource
 
     public function convertToArray($data) {
         $amount_array = [];
-        if(!sizeof($data) == 0) {
-            foreach($data as $key=>$value){
-                $amount_array[$key] = $value;
+        if (isset($data)) { 
+            if(!sizeof($data) == 0) {
+                foreach($data as $key=>$value){
+                    $amount_array[$key] = $value;
+                }
             }
         }
         return $amount_array;
@@ -404,7 +414,7 @@ class CostSheetResource extends JsonResource
             return $this->getAmountPerContainer($local['price']);
         }
         if ($this->quote->type == 'LCL') {
-            return $local->total;
+            return $local->total; //cambiar
         }        
     }
 
@@ -413,11 +423,28 @@ class CostSheetResource extends JsonResource
             return $this->convertToArray($local['price']);
         }
         if ($this->quote->type == 'LCL') {
-            return ['amount' => $local->total];
-        } 
-        
+            return ['amount' => $local->total]; //cambiar
+        }  
     }
 
+    public function getLocalTotal($local) {
+        if ($this->quote->type == 'FCL') {
+            return $this->getAmountPerContainer($local['total']);
+        }
+        if ($this->quote->type == 'LCL') {
+            return $local->total;
+        }        
+    }
+
+    public function getLocalTotalArray($local) {
+        if ($this->quote->type == 'FCL') {
+            return $this->convertToArray($local['total']);
+        }
+        if ($this->quote->type == 'LCL') {
+            return ['amount' => $local->total];
+        } 
+    }   
+    
     public function getFreightChargePriceArray($charge) { 
         if ($this->quote->type == 'FCL') {
             return $this->convertToArray(json_decode($charge['amount']));
@@ -514,12 +541,16 @@ class CostSheetResource extends JsonResource
     }
 
     public function getInlandsTotal($data) { 
-        if ($this->quote->type == 'FCL') {
-            return $this->getAmountPerContainer($data);
+        if ($this->quote->type == 'FCL') { //dd($data[0]);
+            return $data; 
         }
         if ($this->quote->type == 'LCL') {
-            if(!sizeof($data) == 0) {
-                return $data[0]['totals'];
+            if (isset($data)) { 
+                if (!sizeof($data) == 0) {
+                    return $data[0];
+                } else {
+                    return 0;
+                }
             } else {
                 return 0;
             }
