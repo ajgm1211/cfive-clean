@@ -1,7 +1,6 @@
 #!/bin/bash
-    cd /var/www/html
-    sudo cp config/custom.example.php config/custom.php
-    sudo chmod 755 custom.php
+    sudo cp /var/www/html/config/custom.example.php /var/www/html/config/custom.php
+    sudo chmod 755 /var/www/html/custom.php
     curl -Sl https://rpm.nodesource.com/setup_14.x  | sudo bash -
     sudo yum -y install nodejs
     npm install 
