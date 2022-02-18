@@ -160,7 +160,7 @@
                     :allow-empty="false"
                     @input="setCostSheet"
                     label="carrier_name"
-                    track-by="carrier_name"
+                    track-by="rate_id"
                     placeholder="Seleccione ruta"
                     style="min-width: 200px"
                     class="change-currency-totals"
@@ -441,7 +441,6 @@ export default {
       this.loaded = true;
     },
     getFilteredRoutesOptions(data) {
-      console.log(data);
       let originPorts = data.origin_ports;
       let destinyPorts = data.destiny_ports;
       let response = [];      
@@ -467,6 +466,7 @@ export default {
     },
     addOptionSelectedCarriers() {
       this.filteredCarrierOptions = [];
+      
       let origin_id = this.filteredRouteSelected['origin_id'];
       let destiny_id = this.filteredRouteSelected['destiny_id'];
       let rates = this.currentQuoteData['rates'];
