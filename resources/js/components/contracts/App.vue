@@ -5,7 +5,7 @@
         <b-card>
           <div class="row">
             <div class="col-6">
-              <b-card-title>FCL Contracts</b-card-title>
+              <b-card-title>FCL - Contracts</b-card-title>
             </div>
             <div class="col-6">
               <div class="float-right">
