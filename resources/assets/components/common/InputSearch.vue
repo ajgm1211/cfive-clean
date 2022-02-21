@@ -12,7 +12,7 @@
         type="search"
         name=""
         id=""
-        v-model="search"
+        v-model.trim="search"
         placeholder="Search..."
       />
     </form>

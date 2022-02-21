@@ -4,7 +4,7 @@
       v-if="showLabel == true"
       :for="name"
       class="d-block labelv2"
-      :class="$v.value.$error ? 'error-msj' : ''"
+      :class="$v.value.$error || custom_error == true ? 'error-msj' : ''"
     >
       {{ label }}
     </label>
@@ -13,7 +13,7 @@
       class="input-v2"
       autocomplete="off"
       :class="[
-        $v.value.$error ? 'input-err' : '',
+        $v.value.$error || custom_error == true ? 'input-err' : '', 
         mixed === true ? 'mixedborder' : '',
       ]"
       :placeholder="placeholder"
@@ -24,7 +24,7 @@
       @input="handleChange($event.target.value)"
       @blur="$emit('blur')"
     />
-    <div v-if="$v.value.$error" class="error-msj-container">
+    <div v-if="$v.value.$error || custom_error == true" class="error-msj-container">
       <span class="error-msj" v-text="messageError" />
     </div>
   </div>
@@ -39,6 +39,7 @@ import {
   alphaNum,
   numeric,
   email,
+  minValue,
 } from "vuelidate/lib/validators";
 
 export default {
@@ -52,7 +53,7 @@ export default {
       default: "Placeholder",
     },
     type: {
-      default: "text",
+      type: String,
     },
     name: {
       type: String,
@@ -81,6 +82,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    custom_error: {
+      type: Boolean,
+      default: false,
+    },
   },
   data: () => ({
     error: true,
@@ -92,7 +97,11 @@ export default {
   },
   methods: {
     handleChange(_value) {
-      this.$emit("input", _value);
+      if (this.type == "number") {
+        this.$emit("input", parseInt(_value));
+      } else {
+        this.$emit("input", _value);
+      }
     },
     validate() {
       this.$v.value.$touch();
@@ -142,6 +151,13 @@ export default {
           };
         }
 
+        if (this.rules.minValue) {
+          validations = {
+            ...validations,
+            minValue: minValue(this.rules.minValue),
+          };
+        }
+
         if (this.rules.numeric) {
           validations = {
             ...validations,
@@ -175,12 +191,16 @@ export default {
       if (this.$v.value.alphaNum === false) {
         return `The input ${this.name} must be alphanumeric`;
       }
+      if (this.$v.value.minValue === false) {
+        return `This input must be grater than ${this.rules.minValue}`;
+      }
       if (this.$v.value.numeric === false) {
         return `The input ${this.name} must be only numeric`;
       }
       if (this.$v.value.email === false) {
         return `The input ${this.name} must be a valid email address`;
       }
+
       return "";
     },
   },

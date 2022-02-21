@@ -1,5 +1,5 @@
 <template>
-  <div @blur="$emit('blur')" class="dropdown">
+  <div @blur="$emit('blur')" class="dropdown" v-if="returnItems.length">
     <label
       :class="error === true && !selectedItem ? 'error-msj' : ''"
       v-if="label"
@@ -16,26 +16,33 @@
       class="dropdown-input"
       type="text"
       :placeholder="placeholder"
-      @click="open = !open"
+      @click="selectedItem == '' && open ? (open = !open) : (open = !open)"
       :class="error === true && !selectedItem ? 'error-border' : ''"
     />
-    <div v-else @click="resetSelection()" class="dropdown-selected">
-      {{ selectedItem.alphacode ? selectedItem.alphacode : selectedItem }}
+    <div
+      v-else
+      class="dropdown-selected"
+      @click="open = !open"
+      @keydown.delete="selectedItem = ''"
+      tabindex="0"
+    >
+      {{ selectedItem[show_by] ? selectedItem[show_by] : selectedItem }}
     </div>
 
     <div v-if="error === true && !selectedItem" class="error-msj-container">
       <span class="error-msj">This is required</span>
     </div>
 
-    <div v-if="open" class="dropdown-list">
+    <div v-if="open == true" class="dropdown-list">
       <div
         v-show="itemVisible(item)"
         class="dropdown-item"
-        v-for="(item, index) in itemList"
+        v-for="(item, index) in returnItems"
         :key="index"
         @click="selectItem(item)"
+        @blur="blur(item)"
       >
-        {{ item.alphacode ? item.alphacode : item }}
+        {{ item[show_by] ? item[show_by] : item }}
       </div>
     </div>
   </div>
@@ -47,6 +54,7 @@ export default {
     open: false,
     inputValue: "",
     selectedItem: "",
+    loading: true,
   }),
   props: {
     itemList: {
@@ -63,9 +71,27 @@ export default {
       type: String,
       default: "Select an option",
     },
+    show_by: {
+      type: String,
+      default: "alphacode",
+    },
+    preselected: {
+      type: [Object, String, Boolean],
+      default() {
+        return false;
+      },
+    },
   },
   mounted() {
-    // console.log(this.itemList);
+    if (this.preselected) {
+      this.selectedItem = this.preselected;
+    }
+
+    window.addEventListener("click", (e) => {
+      if (!this.$el.contains(e.target)) {
+        this.open = false;
+      }
+    });
     window.addEventListener("click", (e) => {
       if (!this.$el.contains(e.target)) {
         this.open = false;
@@ -74,8 +100,8 @@ export default {
   },
   methods: {
     itemVisible(item) {
-      if (item.alphacode) {
-        let currentName = item.alphacode.toLowerCase();
+      if (item[this.show_by]) {
+        let currentName = item[this.show_by].toLowerCase();
         let currentInput = this.inputValue.toLowerCase();
         return currentName.includes(currentInput);
       } else {
@@ -94,6 +120,11 @@ export default {
       this.selectedItem = "";
       // this.$nextTick(() => this.$refs.dropdowninput.focus());
       this.$emit("reset");
+    },
+  },
+  computed: {
+    returnItems() {
+      return this.itemList;
     },
   },
 };
@@ -140,6 +171,7 @@ export default {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
+  z-index: 1000;
 }
 .dropdown-item {
   display: flex;
@@ -156,7 +188,7 @@ export default {
   margin: auto 12px auto 0px;
 }
 
-.error-border{
-  border: 1px solid #ff4c61 !important
+.error-border {
+  border: 1px solid #ff4c61 !important;
 }
 </style>

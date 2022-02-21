@@ -53,6 +53,9 @@
           v-model="price.description"
           v-if="active == 'Description'"
           type="classic"
+          :config="{
+            toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'undo', 'redo'],
+          }"
           @blur="update('description')"
         ></ckeditor>
 
@@ -73,23 +76,25 @@
             class="input-h"
             style="cursor:pointer"
           ></multiselect>
-          <br>
-          <h6>Groups:</h6>
-          <multiselect
-            v-model="price.group_restrictions"
-            :options="datalists.company_groups"
-            :multiple="true"
-            :close-on-select="true"
-            :clear-on-select="true"
-            :show-labels="false"
-            :searchable="true"
-            track-by="name"
-            label="name"
-            placeholder="Select company groups"
-            @input="update('groups')"
-            class="input-h"
-            style="cursor:pointer"
-          ></multiselect>
+          <br />
+          <div v-if="false">
+            <h6>Groups:</h6>
+            <multiselect
+              v-model="price.group_restrictions"
+              :options="datalists.company_groups"
+              :multiple="true"
+              :close-on-select="true"
+              :clear-on-select="true"
+              :show-labels="false"
+              :searchable="true"
+              track-by="name"
+              label="name"
+              placeholder="Select company groups"
+              @input="update('groups')"
+              class="input-h"
+              style="cursor:pointer"
+            ></multiselect>
+          </div>
         </div>
 
         <div v-if="active == 'Detail'">
@@ -97,20 +102,24 @@
 
           <ListPrices
             v-if="tableSet"
-            :currentPage="currentPage" 
-            :rates="GET_PRICE_LEVEL_RATES" 
-            :filters="false" 
-            :thead="thead" 
+            :currentPage="currentPage"
+            :rates="GET_PRICE_LEVEL_RATES"
+            :filters="false"
+            :thead="thead"
             :amount="amount"
-            :dynamic="true" />
+            :dynamic="true"
+            @editModal="setModalData"
+          />
 
-          <p style="margin-top:20px">
+          <p style="margin-top:20px" v-if=" GET_PAGINATE_RATES">
             Total Results: {{ GET_PAGINATE_RATES.meta.total }}
           </p>
 
           <Paginate
+           v-if=" GET_PAGINATE_RATES"
             @prevPage="prevPage"
             @nextPage="nextPage"
+            @input="handlePageSelected($event)"
             :page-count="GET_PAGINATE_RATES.meta.last_page"
             :prev-text="'Prev'"
             :next-text="'Next'"
@@ -127,12 +136,23 @@
         </div>
       </div>
     </div>
+
+    <CreateModal
+      v-if="GET_MODAL_EDIT"
+      :fields="modal_fields"
+      :title="'Price Level'"
+      :action="'Edit'"
+      :dispatch="'editPriceLevel'"
+      :model="detail_to_edit"
+      @cancel="close"
+      @showCurrency="showCurrency($event)"
+    />
   </section>
 </template>
 
 <script>
 import CustomInput from "../../../components/common/CustomInput.vue";
-import Selectable from "../../../components/common/Selectable.vue";
+// import Selectable from "../../../components/common/Selectable.vue";
 import LeftArrow from "../../../components/Icons/LeftArrow.vue";
 import actions from "../../../../../resources/js/actions";
 import ListPrices from "../../../components/PriceLevel/ListPrices.vue";
@@ -142,11 +162,12 @@ import Paginate from "../../../../js/components/paginate.vue";
 import MainButton from "../../../components/common/MainButton.vue";
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.min.css";
+import CreateModal from "../../../components/PriceLevel/CreateModal.vue";
 import { mapGetters } from "vuex";
 export default {
   components: {
     CustomInput,
-    Selectable,
+    // Selectable,
     LeftArrow,
     ListPrices,
     InputSearch,
@@ -154,34 +175,34 @@ export default {
     MainButton,
     SorteableDropdown,
     Multiselect,
+    CreateModal,
   },
   data: () => ({
     actions: actions,
     datalists: null,
-    currentData: {
-      
-    },
+    currentData: {},
     active: "Detail",
     tabs: ["Detail", "Only Apply To", "Description"],
     price: {
       name: "",
       display_name: "",
       description: "",
-      company_restrictions:[],
-      group_restrictions:[],
+      company_restrictions: [],
+      group_restrictions: [],
     },
     selected: "",
     value: "",
-    selectable_error: false,
+    // selectable_error: false,
     thead: [],
     amount: {},
     tableSet: false,
     rates: [],
     currentPage: 1,
+    modal_fields: [],
+    editing: false,
+    detail_to_edit: {},
   }),
   mounted() {
-    this.$store.dispatch("getInitialData");
-
     this.$store.dispatch("getPriceLevelDetail", {
       id: this.$route.params.id,
       body: {
@@ -215,25 +236,31 @@ export default {
     }, 1000);
   },
   methods: {
-    update(key=null) {
-      if(key == 'main'){
+    handlePageSelected(page) {
+      this.$store.dispatch("listPriceLevelRates", {
+        id: this.$route.params.id,
+        page: page,
+      });
+    },
+    update(key = null) {
+      if (key == "main") {
         var updateBody = {
           name: this.price.name,
           display_name: this.price.display_name,
           price_level_type: this.selected,
-        }
-      }else if(key == 'description'){
+        };
+      } else if (key == "description") {
         var updateBody = {
           description: this.price.description,
-        }
-      }else if(key == 'companies'){
+        };
+      } else if (key == "companies") {
         var updateBody = {
           companies: this.price.company_restrictions,
-        }
-      }else if(key == 'groups'){
+        };
+      } else if (key == "groups") {
         var updateBody = {
           groups: this.price.group_restrictions,
-        }
+        };
       }
 
       this.$store.dispatch("updatePriceLevel", {
@@ -268,7 +295,7 @@ export default {
       }
     },
     setTable() {
-      if(this.selected == "FCL"){
+      if (this.selected == "FCL") {
         this.thead = ["Direction", "Apply to", "20", "40", "Currency"];
 
         this.amount = {
@@ -281,7 +308,7 @@ export default {
             markup: "Fixed Markup",
           },
         };
-      }else if(this.selected == "LCL"){
+      } else if (this.selected == "LCL") {
         this.thead = ["Direction", "Apply to", "Amount", "Currency"];
 
         this.amount = {
@@ -293,7 +320,139 @@ export default {
       }
 
       this.tableSet = true;
-      
+    },
+    setModalData(detail) {
+      let formattedDetail = this.formatDetail(detail);
+
+      this.modal_fields = [
+        {
+          type: "dropdown",
+          label: "Direction",
+          name: "direction",
+          items: this.datalists.directions,
+          rules: {
+            required: true,
+          },
+          show_by: "name",
+        },
+        {
+          type: "dropdown",
+          label: "Apply to",
+          name: "price_level_apply",
+          items: this.datalists.applies,
+          rules: {
+            required: true,
+          },
+          show_by: "name",
+        },
+      ];
+
+      if (this.selected == "FCL") {
+        this.modal_fields.push(
+          {
+            type: "input",
+            label: "20",
+            name: "type_20",
+            input_type: 'number',
+            rules: {
+              required: true,
+              minValue: 1,
+            },
+          },
+          {
+            type: "dropdown",
+            label: "Type",
+            name: "type_20_t",
+            items: ["Fixed Markup", "Percent Markup"],
+            rules: {
+              required: true,
+            },
+          },
+          {
+            type: "input",
+            label: "40",
+            name: "type_40",
+            input_type: 'number',
+            rules: {
+              required: true,
+              minValue: 1,
+            },
+          },
+          {
+            type: "dropdown",
+            label: "Type",
+            name: "type_40_t",
+            items: ["Fixed Markup", "Percent Markup"],
+            rules: {
+              required: true,
+            },
+          }
+        );
+      } else if (this.selected == "LCL") {
+        this.modal_fields.push(
+          {
+            type: "input",
+            label: "Amount",
+            name: "type_lcl",
+            input_type: 'number',
+            rules: {
+              required: true,
+              minValue: 1,
+            },
+          },
+          {
+            type: "dropdown",
+            label: "Type",
+            name: "type_lcl_t",
+            items: ["Fixed Markup", "Percent Markup"],
+            rules: {
+              required: true,
+            },
+          }
+        );
+      }
+
+      if (formattedDetail.showModalCurrency) {
+        this.modal_fields.push({
+          type: "dropdown",
+          label: "Currency",
+          name: "currency",
+          items: this.datalists.currency,
+          rules: {
+            required: true,
+          },
+        });
+      }
+
+      this.detail_to_edit = formattedDetail;
+      this.editing = true;
+    },
+    formatDetail(detail) {
+      var formatted = {};
+
+      formatted.id = detail.id;
+      formatted.direction = detail.direction;
+      formatted.price_level_apply = detail.price_level_apply;
+      formatted.showModalCurrency = true;
+
+      if (this.selected == "FCL") {
+        formatted.type_20 = detail.amount.type_20.amount;
+        formatted.type_20_t = detail.amount.type_20.markup;
+        formatted.type_40 = detail.amount.type_40.amount;
+        formatted.type_40_t = detail.amount.type_40.markup;
+      } else if (this.selected == "LCL") {
+        formatted.type_lcl = detail.amount.type_lcl.amount;
+        formatted.type_lcl_t = detail.amount.type_lcl.markup;
+      }
+
+      if (formatted.showModalCurrency) {
+        formatted.currency = detail.currency;
+      }
+
+      return formatted;
+    },
+    close() {
+      this.$store.commit("SET_MODAL_EDIT", false);
     },
   },
   computed: {
@@ -302,6 +461,7 @@ export default {
       "GET_PRICE_LEVEL_RATES",
       "GET_PRICE_LEVEL_DATA",
       "GET_PAGINATE_RATES",
+      "GET_MODAL_EDIT",
     ]),
   },
 };
