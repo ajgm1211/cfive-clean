@@ -8,7 +8,7 @@ use App\ContainerCalculation;
 use App\CompanyUser;
 use App\Currency;
 use App\Inland;
-use App\Price;
+use App\PriceLevel;
 use App\Harbor;
 use App\Country;
 use App\TransitTime;
@@ -756,110 +756,42 @@ trait SearchTrait
         return $ids_array;
     }
 
-    //Getting markups from price Levels
-    public function getMarkupsFromPriceLevels($price_level_id, $client_currency, $direction, $type)
+    public function getMarkupsFromPriceLevels($search_data)
     {
+        $price_level_id = $search_data['pricelevel'];
+        $direction = $search_data['direction'];
         //Querying for price levels and markups associated (freight,local charges and inlands)
-            //First company-specific price levels
-        $price_level = Price::whereHas('company_price', function ($q) use ($price_level_id) {
-            $q->where('price_id', '=', $price_level_id);
-        })->with('freight_markup', 'local_markup', 'inland_markup')->get();
-            //if none, simply any price level
-        if($price_level->isEmpty()){
-            $price_level = Price::where('id',$price_level_id)->with('freight_markup', 'local_markup', 'inland_markup')->get();
-        }   
+        if($search_data['requestData']['requested'] != 2){
+            $price_level = PriceLevel::where('id', $price_level_id)->with('price_level_details')->first();
+        }else{
+            $price_level = PriceLevel::where('options->whitelabel','=', true)->with('price_level_details')->first();
+        }
+        
+        $markup_array = [];
 
-        //Looping through each price level to extract markups
-        foreach ($price_level as $price) {
-            // Filtering freight markups by search type
-            if($type == 'FCL'){
-                $freight_markup = $price->freight_markup->where('price_type_id', '=', 1);
-            }elseif($type == 'LCL'){
-                $freight_markup = $price->freight_markup->where('price_type_id', '=', 2);
-            }
-
-            //Percent markup
-            $freight_percentage = $this->cleanJsonData($freight_markup->pluck('percent_markup'));
-            //Fixed markup
-            $freight_amount = $this->cleanJsonData($freight_markup->pluck('fixed_markup'));
-            //Markup currency
-            $freight_currency = $this->cleanJsonData($freight_markup->pluck('currency'));
-            //Querying currency model
-            $freight_currency = Currency::find($freight_currency);
-            //Formatting to client decimal settings
-            $freight_amount = isDecimal($freight_amount, true);
-
-            // Filtering Local Charges markups by search type
-            if($type == 'FCL'){
-                $local_charge_markup = $price->local_markup->where('price_type_id', '=', 1);
-            }elseif($type == 'LCL'){
-                $local_charge_markup = $price->local_markup->where('price_type_id', '=', 2);
-            }
-            //Selecting search direction (import or export)
-            if ($direction == 2) {
-                //Percent markup
-                $local_charge_percentage = intval($this->cleanJsonData($local_charge_markup->pluck('percent_markup_export')));
-                //Fixed markup
-                $local_charge_amount = intval($this->cleanJsonData($local_charge_markup->pluck('fixed_markup_export')));
-                //Markup currency
-                $local_charge_currency = $this->cleanJsonData($local_charge_markup->pluck('currency_export'));
-                //Querying currency model
-                $local_charge_currency = Currency::find($local_charge_currency);
-                //Formatting to client decimal settings
-                $local_charge_amount = isDecimal($local_charge_amount, true);
-            } elseif($direction == 1) {
-                //Percent markup
-                $local_charge_percentage = intval($this->cleanJsonData($local_charge_markup->pluck('percent_markup_import')));
-                //Fixed markup
-                $local_charge_amount = intval($this->cleanJsonData($local_charge_markup->pluck('fixed_markup_import')));
-                //Markup currency
-                $local_charge_currency = $this->cleanJsonData($local_charge_markup->pluck('currency_import'));
-                //Querying currency model
-                $local_charge_currency = Currency::find($local_charge_currency);
-                //Formatting to client decimal settings
-                $local_charge_amount = isDecimal($local_charge_amount, true);
-            }
-
-            // Filtering Inland markups by search type
-            if($type == 'FCL'){
-                $inland_markup = $price->inland_markup->where('price_type_id', '=', 1);
-            }elseif($type == 'LCL'){
-                $inland_markup = $price->inland_markup->where('price_type_id', '=', 2);
-            }
-
-            if ($direction == 2) {
-                //Percent markup
-                $inland_percentage = intval($this->cleanJsonData($inland_markup->pluck('percent_markup_export')));
-                //Fixed markup
-                $inland_amount = intval($this->cleanJsonData($inland_markup->pluck('fixed_markup_export')));
-                //Markup currency
-                $inland_currency = $this->cleanJsonData($inland_markup->pluck('currency_export'));
-                //Querying currency model
-                $inland_currency = Currency::find($inland_currency);
-                //Formatting to client decimal settings
-                $inland_markup = isDecimal($inland_amount[0], true);
-            } elseif($direction == 1) {
-                //Percent markup
-                $inland_percentage = intval($this->cleanJsonData($inland_markup->pluck('percent_markup_import')));
-                //Fixed markup
-                $inland_amount = intval($this->cleanJsonData($inland_markup->pluck('fixed_markup_import')));
-                //Markup currency
-                $inland_currency = $this->cleanJsonData($inland_markup->pluck('currency_import'));
-                //Querying currency model
-                $inland_currency = Currency::find($inland_currency);
-                //Formatting to client decimal settings
-                $inland_amount = isDecimal($inland_amount, true);
+        if($price_level != null){
+            $details = $price_level->price_level_details;
+    
+            foreach($details as $detail){
+                //FILTERING FOR DIRECTION: from search or BOTH (3)
+                if(in_array($detail->direction_id,[$direction,3])){
+                    //FOR FREIGHT
+                    if($detail->price_level_apply_id == 1){
+                        $markup_array['freight'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
+                    //FOR SURCHARGE
+                    }elseif($detail->price_level_apply_id == 2){
+                        $markup_array['surcharges'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
+                    //FOR INLAND
+                    }elseif($detail->price_level_apply_id == 3){
+                        $markup_array['inlands'] = array('amount' => $detail->amount, 'currency' => $detail->currency);
+                    }
+                }
             }
         }
-        $markup_array['freight'] = array('freight_amount' => $freight_amount, 'freight_percentage' => $freight_percentage, 'freight_currency' => $freight_currency);
 
-        $markup_array['local_charges'] = array('local_charge_amount' => $local_charge_amount, 'local_charge_percentage' => $local_charge_percentage, 'local_charge_currency' => $local_charge_currency);
+        $markup_collection = new Collection($markup_array);
 
-        $markup_array['inland'] = array('inland_amount' => $inland_amount, 'inland_percentage' => $inland_percentage, 'inland_currency' => $inland_currency);
-
-        $collectionMarkup = new Collection($markup_array);
-
-        return $collectionMarkup;
+        return $markup_collection;
     }
 
     //Cleans old JSON data which is formatted with string type [] and \
@@ -1869,6 +1801,8 @@ trait SearchTrait
                 $terms_to_add = $term->import;
             }else if($search_data['direction'] == 2){
                 $terms_to_add = $term->export;
+            }else if($search_data['direction'] == 3){
+                $terms_to_add = $term->import . '<br>' . $term->export;
             }
 
             if($term->language_id == 1){
@@ -1888,14 +1822,19 @@ trait SearchTrait
     //Clears date in 2021-07-13T01:00:00 format. Options can be:
         // time -> returns only time, no date
         // date -> returns only date, no time
-    public function formatSearchDate($date, $option)
+    public function formatSearchDate($search_data)
     {
-        if($option == 'time'){
-            $date = substr($date, 11, 8);
-        }else if($option == 'date'){
-            $date = substr($date, 0, 10);
-        }
+        if($search_data['requestData']['requested'] != 2){
+            $search_data['dateRange']['startDate'] = substr($search_data['dateRange']['startDate'], 0, 10);
+            $search_data['dateRange']['endDate'] = substr($search_data['dateRange']['endDate'], 0, 10);       
+        }/**else{
+            $start_array = explode('/',$search_data['dateRange']['startDate']);
+            $end_array = explode('/',$search_data['dateRange']['endDate']);
 
-        return $date;
+            $search_data['dateRange']['startDate'] = $start_array[2] . '-' . $start_array[1] . '-' . $start_array[0];
+            $search_data['dateRange']['endDate'] = $end_array[2] . '-' . $end_array[1] . '-' . $end_array[0];
+        }**/
+
+        return $search_data['dateRange'];
     }
 }

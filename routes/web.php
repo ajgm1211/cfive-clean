@@ -489,9 +489,7 @@ Route::middleware(['auth'])->prefix('prices')->group(function () {
 
     // V2
     Route::view('/v2', 'pricesV2.index');
-    //CAMBIAR PARA PRICELEVELS
-    Route::view('/rates', 'pricesV2.index');
-    //Route::view('/rates/{id}', 'pricesV2.index');
+    Route::view('/rates/{id}', 'pricesV2.index');
 });
 Route::resource('prices', 'PriceController')->middleware('auth');
 
@@ -553,15 +551,11 @@ Route::resource('quotes', 'QuoteController')->middleware('auth');
 
 //Quotes V2
 Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
-    Route::get('/',function () {
-        return redirect()->route('quote.index');
-     })->name('quotes-v2.index');
-    Route::get('/show/{id}',function () {
-        return redirect()->route('quote.index');
-     })->name('quotes-v2.show');
+    Route::get('/', 'QuoteV2Controller@index')->name('quotes-v2.index');
+    Route::get('/show/{id}', 'QuoteV2Controller@show')->name('quotes-v2.show');
     Route::get('/show2/{id}', function () {
-        return redirect()->route('quote.index');
-    }); 
+        return view('quotesv2.show2');
+    });
     Route::get('delete/{id}', 'QuoteV2Controller@destroy')->name('quotes-v2.destroy');
     Route::post('/update/{id}', 'QuoteV2Controller@update')->name('quotes-v2.update');
     Route::post('/charges/update', 'QuoteV2Controller@updateQuoteCharges')->name('quotes-v2.update.charges');
@@ -1437,10 +1431,10 @@ Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
 
 
 //NEW PRICE LEVELS VIEWS ROUTES
-/**Route::group(['prefix' => 'pricelevels', 'middleware' => ['auth']], function () {
+Route::group(['prefix' => 'pricelevels', 'middleware' => ['auth']], function () {
     Route::view('/', 'pricesV2.index')->name('pricelevels.index');
     Route::view('/edit/{price_level}', 'pricesV2.index');
-});**/
+});
 
 Route::middleware(['auth', 'role:administrator'])->prefix('api-credentials')->group(function () {
     Route::view('/', 'integrations.api-credentials.index')->name('apicredentials.index');

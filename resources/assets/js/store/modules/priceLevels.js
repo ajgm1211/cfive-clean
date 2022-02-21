@@ -11,7 +11,7 @@ const actions = {
   getPriceLevels({ commit }, {page}) {
     axios.get(`/api/pricelevels/list?page=${page}`).then((response) => {
       commit("SET_PRICE_LEVELS", response.data.data);
-      commit("SET_PAGINATE_PRICE_LEVELS", response.data);
+      commit("SET_PAGINATE_PRICE_LEVELS", response.data.meta);
     });
   },
   

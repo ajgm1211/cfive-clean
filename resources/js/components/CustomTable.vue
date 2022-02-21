@@ -42,9 +42,6 @@ export default {
     search_pricelevel: {
       required: true,
     },
-    total_markups: {
-      required: true,
-    },
     currency: {
       required: true,
     },
@@ -91,14 +88,13 @@ export default {
         object.Units = charge.units;
 
         // MARKUP VALUE
-        if (charge.total_markups != undefined) {
-          object.Markups = '+' +
+        if (this.search_pricelevel == null || charge.total_markups == undefined) {
+          object.Markups = "+ 0";
+        }else if (charge.total_markups != undefined) {
+          object.Markups = "+" +
             charge.joint_as == "client_currency"
               ? charge.total_markups_client_currency
               : charge.total_markups;
-        }
-        if (this.search_pricelevel != null && this.total_markups == null) {
-          object.Markups = "+ 0";
         }
 
         let alphacode2;
