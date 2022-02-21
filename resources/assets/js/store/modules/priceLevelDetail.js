@@ -19,7 +19,7 @@ const actions = {
 
   listPriceLevelRates({ commit }, { id, page }) {
     axios
-      .get(`api/pricelevels/details/${id}/list?page=${page}`)
+      .get(`/api/pricelevels/details/${id}/list?page=${page}`)
       .then((response) => {
         commit("SET_PRICE_LEVEL_RATES", response.data.data);
         commit("SET_PAGINATE_RATES", response.data);
@@ -27,14 +27,14 @@ const actions = {
   },
 
   getPriceLevelData({ commit }) {
-    axios.get(`api/pricelevels/data`).then((response) => {
+    axios.get(`/api/pricelevels/data`).then((response) => {
       commit("SET_PRICE_LEVEL_DATA", response.data.data);
     });
   },
 
   createRate({ dispatch }, { id, body, page, currentId }) {
     axios
-      .post(`api/pricelevels/details/${id}/store`, body)
+      .post(`/api/pricelevels/details/${id}/store`, body)
       .then((response) => {
         dispatch("listPriceLevelRates", { id: currentId, page: page });
       })
