@@ -282,4 +282,9 @@ class ContractLcl extends Model implements HasMedia, Auditable
         $this->contract_code = $code;
         $this->save();
     }
+
+    // Relationship for run files
+    public function newcontractrequest(){
+        return $this->hasOne('App\NewContractRequestLcl','contract_id','id');
+    }
 }
