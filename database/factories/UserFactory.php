@@ -27,5 +27,7 @@ $factory->define(App\User::class, function (Faker $faker) {
         'state' => 0,
         'company_user_id' => 1,
         'remember_token' => str_random(10),
+        'whitelabel' => true,
+
     ];
 });
