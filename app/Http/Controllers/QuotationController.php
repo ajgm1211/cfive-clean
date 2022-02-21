@@ -216,6 +216,10 @@ class QuotationController extends Controller
         $company_user = $user->worksAt();
         $company_code = strtoupper(substr($company_user->name, 0, 2));
         $higherq_id = $company_user->getHigherId($company_code);
+        // En caso de que se vuelva a repetir el quote_id
+        if($higherq_id == $higherq_id){
+            $newq_id = $company_code . '-' . strval($higherq_id + 1);
+        }
         $newq_id = $company_code . '-' . strval($higherq_id + 1);
 
         $data = $request->input();
