@@ -164,17 +164,21 @@
                             valid-feedback="key+' is done!'"
                         >
                             <date-range-picker
+                                ref="picker"
                                 :opens="'center'"
                                 :parentId="item.parentId"
-                                :locale-data="{ firstDay: 1, format: 'yyyy/mm/dd' }"
+                                :locale-data="{ firstDay: 0, format: 'yyyy/mm/dd' }"
                                 :singleDatePicker="false"
                                 :autoApply="true"
                                 :timePicker="false"
-                                v-model="vdata[key]"
+                                v-model='vdata[key]'
                                 :linkedCalendars="true"
                                 @update="cleanInputSubmit(key)"
                                 class="input-h"
-                            ></date-range-picker>
+                            >
+                              <div slot="input" slot-scope="picker">{{ vdata[key].startDate| date }} - {{ 
+                                vdata[key].endDate | date }}</div>
+                            </date-range-picker>
                             <span
                                 :id="'id_f_inline_'+key"
                                 class="invalid-feedback"
@@ -365,6 +369,7 @@ export default {
             let data = {};
             let component = this;
             let fields_keys = Object.keys(this.fields);
+            // let date = Date.prototype.toJSON = function () { return moment(this).format(); }
 
             data["keys"] = fields_keys;
             fields_keys.forEach(function (key) {
@@ -539,5 +544,10 @@ export default {
             deep: true,
         },
     },
+    filters: {
+    date(val) {
+    return val ? moment(val).format("YYYY/MM/DD") : "";
+    }
+}
 };
 </script>

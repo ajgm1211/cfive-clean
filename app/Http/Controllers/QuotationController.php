@@ -216,7 +216,7 @@ class QuotationController extends Controller
         $company_user = $user->worksAt();
         $company_code = strtoupper(substr($company_user->name, 0, 2));
         $higherq_id = $company_user->getHigherId($company_code);
-        $newq_id = $company_code . '-' . strval($higherq_id + 1);
+        $newq_id = $company_code . '-' . strval($higherq_id + 1);        
 
         $data = $request->input();
 
@@ -250,7 +250,11 @@ class QuotationController extends Controller
                 $remarks .= $result['remarks'];
             }
         }
-        
+        // Validacion para el quote_id no sean iguales
+        $validation_same_quote = QuoteV2::where('quote_id',$newq_id)->first();
+        if(!empty($validation_same_quote)){
+            $newq_id = $company_code . '-' . strval($higherq_id + 2);        
+        }
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
             'type' => $search_data_ids['type'],
@@ -278,6 +282,10 @@ class QuotationController extends Controller
             'chargeable_weight' => $search_data['chargeableWeight'],
         ]);
 
+        // En caso de que se vuelva a repetir el quote_id
+        // if($newq_id === $quote->quote_id){
+        //     return redirect()->route('searchV2.index');
+        // }
         $quote = $quote->fresh();
 
         if ($quote->language_id == 1) {
