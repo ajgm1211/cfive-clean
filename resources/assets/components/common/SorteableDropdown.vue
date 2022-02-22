@@ -23,7 +23,7 @@
       v-else
       class="dropdown-selected"
       @click="open = !open"
-      @keydown.delete="selectedItem = ''"
+      @keydown.delete="resetSelection()"
       tabindex="0"
     >
       {{ selectedItem[show_by] ? selectedItem[show_by] : selectedItem }}
@@ -92,11 +92,6 @@ export default {
         this.open = false;
       }
     });
-    window.addEventListener("click", (e) => {
-      if (!this.$el.contains(e.target)) {
-        this.open = false;
-      }
-    });
   },
   methods: {
     itemVisible(item) {
@@ -118,7 +113,7 @@ export default {
     },
     resetSelection() {
       this.selectedItem = "";
-      // this.$nextTick(() => this.$refs.dropdowninput.focus());
+      this.$nextTick(() => this.$refs.dropdowninput.focus());
       this.$emit("reset");
     },
   },
