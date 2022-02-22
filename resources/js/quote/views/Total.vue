@@ -220,8 +220,8 @@
                         <td>Local - {{local.type}}</td>
                         <td>{{local.amount}} {{local.currency.alphacode}}</td>
                       </tr>
-                      <tr>
-                        <td>Total </td>
+                      <tr v-if="rate.selling[0].inlands !== 0">
+                        <td>Inlands</td>
                         <td>Total Inlands</td>
                         <td>{{rate.selling[0].inlands}}  {{rate.currency.alphacode}}</td>
                       </tr>
@@ -308,7 +308,7 @@
                         <td v-for="(container, i) in local.amount" :key="'localContainer'+i">{{container.amount}} {{local.currency.alphacode}}</td>
                       </tr>
                       <tr v-if="rate.selling[0].inlands[0]">
-                        <td>Total</td>
+                        <td>Inlands</td>
                         <td>Total Inlands</td>
                         <td v-for="(inland, i) in rate.selling[0].inlands[0]" :key="'inlandContainer'+i">{{inland.amount}} {{rate.currency.alphacode}}</td>
                       </tr>
