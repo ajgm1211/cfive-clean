@@ -3,9 +3,10 @@
 //app/Helpers/Envato/User.php
 
 namespace App\Helpers;
-
 use App\Currency;
+use App\Container;
 use App\GroupContainer;
+use App\CalculationType;
 
 class HelperAll
 {
@@ -191,5 +192,38 @@ class HelperAll
         );
     
         return $fileName;
+    }
+    
+    public static function calculationByContainers($gp_container_id){
+        $column_calculatioT_bol_rq = true;
+        $contenedores_calcult_rq = [];
+        $containers = Container::where('gp_container_id',$gp_container_id)->get()->pluck('code');
+        $cont_clt_all =  CalculationType::where('gp_pcontainer', true)
+            ->where('group_container_id',$gp_container_id)->orWhere('group_container_id',null)
+            ->with(['behaviour_per_container','containersCalculation.container'])
+            ->get();
+        foreach($cont_clt_all as $cont_clt){
+            if($cont_clt->behaviour_per_container){
+                $code = $cont_clt->containersCalculation->pluck('container')->where('gp_container_id',$gp_container_id)->pluck('code')->first();
+                $behaviour = $cont_clt->behaviour_per_container->name;
+                if($code != null){
+                    if(array_key_exists($behaviour,$contenedores_calcult_rq)){
+                        $contenedores_calcult_rq[$behaviour][$code] = $cont_clt->id;
+                    } else {
+                        $contenedores_calcult_rq[$behaviour]=[$code => $cont_clt->id];
+                    }
+                }
+            }
+        }
+        foreach($containers as $container){
+            $column_calculatioT_bol_rq = (count($contenedores_calcult_rq) == 0)?false:true;
+            foreach($contenedores_calcult_rq as $key => $val){
+                if(!array_key_exists($container,$val)){
+                    $column_calculatioT_bol_rq = false;
+                }
+            }
+        }
+
+        return [$column_calculatioT_bol_rq,$contenedores_calcult_rq]; 
     }
 }

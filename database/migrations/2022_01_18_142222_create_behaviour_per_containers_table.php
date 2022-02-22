@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class IncreaseFieldLimitTotalsInChargeLclAirsTable extends Migration
+class CreateBehaviourPerContainersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,12 @@ class IncreaseFieldLimitTotalsInChargeLclAirsTable extends Migration
      */
     public function up()
     {
-        \DB::statement('ALTER TABLE charge_lcl_airs CHANGE total DOUBLE(11,2) NULL');
+        Schema::create('behaviour_per_containers', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('code');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -23,8 +28,6 @@ class IncreaseFieldLimitTotalsInChargeLclAirsTable extends Migration
      */
     public function down()
     {
-        Schema::table('charge_lcl_airs', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('behaviour_per_containers');
     }
 }
