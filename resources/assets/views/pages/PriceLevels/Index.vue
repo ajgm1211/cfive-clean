@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="price-container">
+    <div class="price-container" v-if="!loading">
       <div class="head">
         <h2>Price levels</h2>
 
@@ -65,6 +65,7 @@ export default {
   data: () => ({
     filtered: "",
     create: false,
+    loading: true,
     prices: [],
     currentPage: 1,
     modal_fields: [
@@ -98,8 +99,10 @@ export default {
       },
     ],
   }),
-  mounted() {
-    this.$store.dispatch("getPriceLevels", { page: this.currentPage });
+  async mounted() {
+    await this.$store.dispatch("getPriceLevels", { page: this.currentPage });
+
+    this.loading = false;
   },
   methods: {
     prevPage() {
