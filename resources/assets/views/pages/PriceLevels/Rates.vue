@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <div class="tabscontainer">
+    <div class="tabscontainer" v-if="!loading">
       <div class="tabs">
         <p
           @click="currentTab(tab)"
@@ -183,6 +183,7 @@ export default {
     currentData: {},
     active: "Detail",
     tabs: ["Detail", "Only Apply To", "Description"],
+    loading: true,
     price: {
       name: "",
       display_name: "",
@@ -202,8 +203,8 @@ export default {
     editing: false,
     detail_to_edit: {},
   }),
-  mounted() {
-    this.$store.dispatch("getPriceLevelDetail", {
+  async mounted() {
+    await this.$store.dispatch("getPriceLevelDetail", {
       id: this.$route.params.id,
       body: {
         name: this.price.name,
@@ -214,26 +215,25 @@ export default {
       },
     });
 
-    this.$store.dispatch("listPriceLevelRates", {
+    await this.$store.dispatch("listPriceLevelRates", {
       id: this.$route.params.id,
       page: this.currentPage,
     });
 
-    this.$store.dispatch("getPriceLevelData");
+    await this.$store.dispatch("getPriceLevelData");
 
-    setTimeout(() => {
-      this.datalists = this.GET_PRICE_LEVEL_DATA;
-      this.price.name = this.GET_CURRENT_PRICE_LEVEL.name;
-      this.price.display_name = this.GET_CURRENT_PRICE_LEVEL.display_name;
-      this.price.description = this.GET_CURRENT_PRICE_LEVEL.description;
-      this.selected = this.GET_CURRENT_PRICE_LEVEL.type;
-      this.price.company_restrictions = this.GET_CURRENT_PRICE_LEVEL.company_restrictions;
-      this.price.group_restrictions = this.GET_CURRENT_PRICE_LEVEL.group_restrictions;
+    this.datalists = this.GET_PRICE_LEVEL_DATA;
+    this.price.name = this.GET_CURRENT_PRICE_LEVEL.name;
+    this.price.display_name = this.GET_CURRENT_PRICE_LEVEL.display_name;
+    this.price.description = this.GET_CURRENT_PRICE_LEVEL.description;
+    this.selected = this.GET_CURRENT_PRICE_LEVEL.type;
+    this.price.company_restrictions = this.GET_CURRENT_PRICE_LEVEL.company_restrictions;
+    this.price.group_restrictions = this.GET_CURRENT_PRICE_LEVEL.group_restrictions;
 
-      this.rates = this.GET_PRICE_LEVEL_RATES;
+    this.rates = this.GET_PRICE_LEVEL_RATES;
 
-      this.setTable();
-    }, 1000);
+    this.setTable();
+    this.loading = false;
   },
   methods: {
     handlePageSelected(page) {

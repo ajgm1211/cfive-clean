@@ -9,14 +9,14 @@ const state = {
 
 const actions = {
   getPriceLevels({ commit }, {page}) {
-    axios.get(`/api/pricelevels/list?page=${page}`).then((response) => {
+    return axios.get(`/api/pricelevels/list?page=${page}`).then((response) => {
       commit("SET_PRICE_LEVELS", response.data.data);
       commit("SET_PAGINATE_PRICE_LEVELS", response.data.meta);
     });
   },
   
   createPriceLevel({ commit }, { body }) {
-    axios.post(`/api/pricelevels/store`, body).then((response) => {
+    return axios.post(`/api/pricelevels/store`, body).then((response) => {
       router.push({
         name: "price-rates",
         params: { id: response.data.data.id },
@@ -25,24 +25,24 @@ const actions = {
   },
 
   updatePriceLevel({ commit }, { id, body }) {
-    axios.post(`api/pricelevels/${id}/update`, body).then((response) => {
+    return axios.post(`api/pricelevels/${id}/update`, body).then((response) => {
     });
   },
 
   duplicatePriceLevel({ dispatch }, { id, page }) {
-    axios.post(`/api/pricelevels/${id}/duplicate`).then((response) => {
+    return axios.post(`/api/pricelevels/${id}/duplicate`).then((response) => {
       dispatch("getPriceLevels", {page: page});
     });
   },
 
   deletePriceLevel({ dispatch }, { id, page }) {
-    axios.put(`/api/pricelevels/${id}/delete`).then((response) => {
+    return axios.put(`/api/pricelevels/${id}/delete`).then((response) => {
       dispatch("getPriceLevels", {page: page});
     });
   },
 
   deleteSelectedPriceLevel({ dispatch }, { body, page }) {
-    axios.put(`/api/pricelevels/deleteAll`, body).then((response) => {
+    return axios.put(`/api/pricelevels/deleteAll`, body).then((response) => {
       dispatch("getPriceLevels", {page: page});
     });
   },
