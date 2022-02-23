@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 
 class addedProvincesToNewTable extends Command
 {
+    //hola
     /**
      * The name and signature of the console command.
      *
