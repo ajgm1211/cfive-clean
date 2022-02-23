@@ -81,7 +81,7 @@ class PriceLevelController  extends Controller
 
     public function list(Request $request)
     {
-        $results = PriceLevel::filterByCurrentCompany()->orderBy('id', 'asc')->filter($request);
+        $results = PriceLevel::filterByCurrentCompany()->orderBy('id', 'desc')->filter($request);
 
         //return $results;
         return PriceLevelResource::collection($results);
