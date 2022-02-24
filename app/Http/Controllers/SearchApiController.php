@@ -271,30 +271,33 @@ class SearchApiController extends Controller
             'pricelevel' => 'sometimes',
             'originCharges' => 'sometimes',
             'destinationCharges' => 'sometimes',
+            'imoCharges' => 'sometimes',
+            'overweightCharges' => 'sometimes',
             'originAddress' => 'sometimes',
             'destinationAddress' => 'sometimes',
         ]);
 
+        
         //Stripping time stamp from date
         $new_search_data['dateRange']['startDate'] = substr($new_search_data['dateRange']['startDate'], 0, 10);
         $new_search_data['dateRange']['endDate'] = substr($new_search_data['dateRange']['endDate'], 0, 10);
-
+        
         //Getting address text if in array form
         if (is_array($new_search_data['originAddress'])) {
             $new_search_data['originAddress'] = $new_search_data['originAddress']['display_name'];
         } else if (is_array($new_search_data['destinationAddress'])) {
             $new_search_data['destinationAddress'] = $new_search_data['destinationAddress']['display_name'];
         }
-
+        
         //Setting current company and user
         $user = \Auth::user();
         $user_id = $user->id;
         $company_user_id = $user->company_user_id;
-
+        
         //Including company and user in search data array
         $new_search_data['user'] = $user_id;
         $new_search_data['company_user'] = $company_user_id;
-
+        
         //SEARCH TRAIT - Getting new array that contains only ids, for queries
         $new_search_data_ids = $this->getIdsFromArray($new_search_data);
         //Formatting date
@@ -323,6 +326,8 @@ class SearchApiController extends Controller
             'price_level_id' => $new_search_data_ids['pricelevel'],
             'origin_charges' => $new_search_data_ids['originCharges'],
             'destination_charges' => $new_search_data_ids['destinationCharges'],
+            'imo_charges' => $new_search_data_ids['imoCharges'],
+            'overweight_charges' => $new_search_data_ids['overweightCharges'],
             //'origin_address' => $new_search_data_ids['originAddress'],
             //'destination_address' => $new_search_data_ids['destinationAddress']
         ]);
@@ -587,7 +592,7 @@ class SearchApiController extends Controller
         //Checking if contract comes from API
         if ($rate->contract->status != 'api') {
             //Querying NON API contract local charges
-            $local_charge = LocalCharge::where('contract_id', '=', $rate->contract_id)->whereHas('localcharcarriers', function ($q) use ($carriers) {
+            $local_charge_query = LocalCharge::where('contract_id', '=', $rate->contract_id)->whereHas('localcharcarriers', function ($q) use ($carriers) {
                 $q->whereIn('carrier_id', $carriers);
             })->whereHas('calculationtype', function ($q) use ($container_ids) {
                 $q->whereHas('containersCalculation', function ($b) use ($container_ids) {
@@ -599,10 +604,10 @@ class SearchApiController extends Controller
                 })->orwhereHas('localcharcountries', function ($q) use ($origin_countries, $destination_countries) {
                     $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
                 });
-            })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm', 'calculationtype')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
+            });
         } else {
             //Querying API contract local charges
-            $local_charge = LocalChargeApi::where('contract_id', '=', $rate->contract_id)->whereHas('localcharcarriers', function ($q) use ($carriers) {
+            $local_charge_query = LocalChargeApi::where('contract_id', '=', $rate->contract_id)->whereHas('localcharcarriers', function ($q) use ($carriers) {
                 $q->whereIn('carrier_id', $carriers);
             })->where(function ($query) use ($origin_ports, $destination_ports, $origin_countries, $destination_countries) {
                 $query->whereHas('localcharports', function ($q) use ($origin_ports, $destination_ports) {
@@ -610,13 +615,28 @@ class SearchApiController extends Controller
                 })->orwhereHas('localcharcountries', function ($q) use ($origin_countries, $destination_countries) {
                     $q->whereIn('country_orig', $origin_countries)->whereIn('country_dest', $destination_countries);
                 });
-            })->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm', 'calculationtype')->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
+            });
         }
 
-        //Looping through Local Charges found, including in final collection if not there
-        foreach ($local_charge as $charge) {
-            $local_charges->push($charge);
+        if(!$search_ids['imoCharges']) {
+            $local_charge_query = $local_charge_query->whereHas('calculationtype', function ($query) {
+                $query->where('code','NOT LIKE','%IMO%');
+            });
         }
+
+        if(!$search_ids['overweightCharges']) {
+            $local_charge_query = $local_charge_query->whereHas('calculationtype', function ($query) {
+                $query->where('code','NOT LIKE','%OW%');
+            });
+        }
+
+        $local_charges = $local_charge_query->with('localcharports.portOrig', 'localcharcarriers.carrier', 'currency', 'surcharge.saleterm', 'calculationtype'
+            )->orderBy('typedestiny_id', 'calculationtype_id', 'surchage_id')->get();
+
+        //Looping through Local Charges found, including in final collection if not there
+        /**foreach ($local_charge as $charge) {
+            $local_charges->push($charge);
+        }**/
 
         return $local_charges;
     }
@@ -642,7 +662,7 @@ class SearchApiController extends Controller
 
         if ($contractStatus != 'api') {
 
-            $global_charges_found = GlobalCharge::where([['validity', '<=', $validity_start], ['expire', '>=', $validity_end]])->whereHas('globalcharcarrier', function ($q) use ($carriers) {
+            $global_charges_query = GlobalCharge::where([['validity', '<=', $validity_start], ['expire', '>=', $validity_end]])->whereHas('globalcharcarrier', function ($q) use ($carriers) {
                 $q->whereIn('carrier_id', $carriers);
             })->whereHas('calculationtype', function ($q) use ($container_ids) {
                 $q->whereHas('containersCalculation', function ($b) use ($container_ids) {
@@ -662,15 +682,29 @@ class SearchApiController extends Controller
                 $q->whereIn('country_orig', $origin_countries)->orwhereIn('country_dest', $destination_countries);;
             })->whereDoesntHave('globalexceptionport', function ($q) use ($origin_ports, $destination_ports) {
                 $q->whereIn('port_orig', $origin_ports)->orwhereIn('port_dest', $destination_ports);;
-            })->where('company_user_id', '=', $company_user_id)->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm', 'calculationtype')->get();
+            })->where('company_user_id', '=', $company_user_id);
+
+            if(!$search_ids['imoCharges']) {
+                $global_charges_query = $global_charges_query->whereHas('calculationtype', function ($query) {
+                    $query->where('code','NOT LIKE','%IMO%');
+                });
+            }
+
+            if(!$search_ids['overweightCharges']) {
+                $global_charges_query = $global_charges_query->whereHas('calculationtype', function ($query) {
+                    $query->where('code','NOT LIKE','%OW%');
+                });
+            }
+
+            $global_charges_found = $global_charges_query->with('globalcharcarrier.carrier', 'currency', 'surcharge.saleterm', 'calculationtype')->get();
         }
 
         //Looping through Global Charges found, including in final collection if not there
-        foreach ($global_charges_found as $charge) {
+        /**foreach ($global_charges_found as $charge) {
             $global_charges->push($charge);
-        }
+        }**/
 
-        return $global_charges;
+        return $global_charges_found;
     }
 
     //Retrieves and cleans markups from price levels

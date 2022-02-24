@@ -462,6 +462,7 @@
           >
             &nbsp;&nbsp;<b>Include origin charges</b>
           </b-form-checkbox>
+
           <b-form-checkbox
             id="destinationCharges"
             v-model="searchRequest.destinationCharges"
@@ -470,6 +471,26 @@
             @input="updateQuoteSearchOptions"
           >
             &nbsp;&nbsp;<b>Include destination charges</b>
+          </b-form-checkbox>
+
+          <b-form-checkbox
+            id="imoCharges"
+            v-model="searchRequest.imoCharges"
+            name="imoCharges"
+            class="mr-5 as-checkbox"
+            @input="updateQuoteSearchOptions"
+          >
+            &nbsp;&nbsp;<b>Include IMO charges</b>
+          </b-form-checkbox>
+          
+          <b-form-checkbox
+            id="overweightCharges"
+            v-model="searchRequest.overweightCharges"
+            name="overweightCharges"
+            class="as-checkbox"
+            @input="updateQuoteSearchOptions"
+          >
+            &nbsp;&nbsp;<b>Include overweight charges</b>
           </b-form-checkbox>
         </div>
         <!-- FIN INCLUDE CHECKBOX -->
@@ -1436,6 +1457,8 @@ export default {
         type: "FCL",
         destinationCharges: false,
         originCharges: false,
+        imoCharges: false,
+        overweightCharges: false,
         showRateCurrency: false,
         deliveryType: {},
         selectedContainerGroup: {},
@@ -1915,6 +1938,10 @@ export default {
           this.searchData.origin_charges == 0 ? false : true;
         this.searchRequest.destinationCharges =
           this.searchData.destination_charges == 0 ? false : true;
+        this.searchRequest.imoCharges =
+          this.searchData.imo_charges == 0 ? false : true;
+        this.searchRequest.overweightCharges =
+          this.searchData.overweight_charges == 0 ? false : true;        
         this.searchRequest.showRateCurrency =
           this.datalists.company_user.options.totals_in_freight_currency == 1
             ? true
@@ -1927,8 +1954,10 @@ export default {
           this.searchRequest.contact = this.quoteData.search_options.contact;
           this.searchRequest.pricelevel = this.quoteData.search_options.price_level;
           this.searchRequest.originCharges = this.quoteData.search_options.origin_charges;
-          this.searchRequest.showRateCurrency = this.quoteData.search_options.show_rate_currency;
           this.searchRequest.destinationCharges = this.quoteData.search_options.destination_charges;
+          this.searchRequest.imoCharges = this.quoteData.search_options.imo_charges;
+          this.searchRequest.overweightCharges = this.quoteData.search_options.overweight_charges;
+          this.searchRequest.showRateCurrency = this.quoteData.search_options.show_rate_currency;
           this.searchRequest.originPorts = this.quoteData.search_options.origin_ports;
           this.searchRequest.destinationPorts = this.quoteData.search_options.destination_ports;
           this.searchRequest.dateRange.startDate =
