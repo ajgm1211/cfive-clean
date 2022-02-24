@@ -483,15 +483,18 @@ Route::resource('companies', 'CompanyController')->middleware('auth');
 
 //Prices
 Route::middleware(['auth'])->prefix('prices')->group(function () {
-    Route::get('add', 'PriceController@add')->name('prices.add');
-    Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
-    Route::get('destroy/{price_id}', 'PriceController@destroy')->name('prices.destroy');
+    Route::get('/', function () {
+        return redirect('pricelevels');
+    });
+    //Route::get('add', 'PriceController@add')->name('prices.add');
+    //Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
+    ///Route::get('destroy/{price_id}', 'PriceController@destroy')->name('prices.destroy');
 
     // V2
-    Route::view('/v2', 'pricesV2.index');
-    Route::view('/rates/{id}', 'pricesV2.index');
+    //Route::view('/v2', 'pricesV2.index');
+    //Route::view('/rates/{id}', 'pricesV2.index');
 });
-Route::resource('prices', 'PriceController')->middleware('auth');
+//Route::resource('prices', 'PriceController')->middleware('auth');
 
 //Contacts
 Route::middleware(['auth'])->prefix('contacts')->group(function () {
