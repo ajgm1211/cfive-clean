@@ -1,5 +1,5 @@
 <template>
-  <body style="background-color: #f5f5f5;">
+  <body style="background-color: #f5f5f5;" id="main">
     <router-view v-if="tokenReady"></router-view>
   </body>
 </template>

@@ -1818,7 +1818,7 @@ trait QuoteV2Trait
             $formattedTotal[$newCode] = $price;
         }
 
-        $this->formatMarkupsForQuote($markups);
+        $formattedMarkups = $this->formatMarkupsForQuote($markups);
 
         $charge['amount'] = $formattedAmount;
         $charge['markups'] = $formattedMarkups;

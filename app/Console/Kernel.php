@@ -52,7 +52,7 @@ class Kernel extends ConsoleKernel
           //  ->cron('*/3 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->command('command:processExpiredContracts')
             ->dailyAt('23:50')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->command('command:UpdateStatusInland')->everyMinute()->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->command('command:UpdateStatusInland')->dailyAt('23:50')->appendOutputTo(storage_path('logs/commands.log'));
         
         $schedule->command('command:generateQuotePdf')
             ->twiceDaily(5, 13)->appendOutputTo(storage_path('logs/commands.log'));

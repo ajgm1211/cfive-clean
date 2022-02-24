@@ -141,7 +141,7 @@ class QuotationResource extends JsonResource
     }
 
     public function setLocalPorts()
-    {   
+    {
         if($this->type == "FCL"){
             $locals = $this->local_charges()->get();
         }elseif($this->type == "LCL"){
@@ -150,7 +150,7 @@ class QuotationResource extends JsonResource
             $locals = [];
         }
 
-        $ports = ['origin' => [], 'destination' => [], 'originCharges' => [], 'destinationCharges' => [] ];
+        $ports = ['origin' => [], 'destination' => []];
 
         foreach($locals as $local){
             if($local->type_id == 1){
@@ -162,21 +162,6 @@ class QuotationResource extends JsonResource
                     array_push($ports['destination'], $local->port()->first());
                 }
             }
-        }
-
-        $charges = $this->charge()->get();
-        foreach($charges as $charge) {
-            if($charge->type_id == 1) {
-                if(!in_array($charge->automatic_rate()->first()->origin_port()->first(), $ports['originCharges'])){
-                    array_push($ports['originCharges'], $charge->automatic_rate()->first()->origin_port()->first());
-                }
-            }
-            if($charge->type_id == 2) {
-                if(!in_array($charge->automatic_rate()->first()->destination_port()->first(), $ports['destinationCharges'])){
-                    array_push($ports['destinationCharges'], $charge->automatic_rate()->first()->destination_port()->first());
-                }
-            }
-            
         }
 
         return $ports;

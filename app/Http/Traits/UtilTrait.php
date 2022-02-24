@@ -4,6 +4,7 @@ namespace App\Http\Traits;
 
 use App\Container;
 use App\Currency;
+use App\PriceLevelDetail;
 use Illuminate\Support\Collection as Collection;
 
 trait UtilTrait
@@ -208,5 +209,29 @@ trait UtilTrait
         $merge = array_merge($price, $new_array);
         $floats = $this->arrayMapToFloat($merge);
         return $floats;
+    }
+
+    public function validateUniquePriceLevelDetail($validate_data, $price_level, $exclude_detail_id = null)
+    {
+        $details_to_compare = PriceLevelDetail::where([['price_level_id',$price_level->id],['id','!=',$exclude_detail_id]])->get();
+
+        if(count($details_to_compare) == 0){
+            $is_unique = true;
+        }else{
+            foreach($details_to_compare as $detail){
+                if(($detail->direction_id == $validate_data['direction']['id'] || 
+                    $validate_data['direction']['id'] == 3 || 
+                    $detail->direction_id == 3) && 
+                $detail->price_level_apply_id == $validate_data['price_level_apply']['id']){
+                    $is_unique = false;
+
+                    return $is_unique;
+                }else{
+                    $is_unique = true;
+                }
+            }
+        }
+
+        return $is_unique;
     }
 }
