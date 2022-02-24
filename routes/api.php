@@ -103,11 +103,39 @@ Route::group(['prefix' => 'requestLCL', 'middleware' => 'auth:api'], function ()
     Route::post('sendEmail', 'NewContractRequestLclController@sendEmailRequest');
 });
 
-Route::middleware('auth:api')->get('pdf/{id}',['as' => 'pdf.api', 'uses' => 'ApiController@pdfApi']);
+$router->get('pdf/{id}',['as' => 'pdf.api', 'uses' => 'ApiController@pdfApi']);
+
+// WHITELABEL ROUTES
+
+Route::group(['prefix' => 'whitelabel'], function () {
+
+    Route::group(['middleware' => 'auth:api'], function () {
+
+        /**Route::get('/users', [App\Http\Controllers\Whitelabel\UsersController::class, 'index']);
+        Route::get('/users/{id}', [App\Http\Controllers\Whitelabel\UsersController::class, 'show']);
+        Route::post('/users/save', [App\Http\Controllers\Whitelabel\UsersController::class, 'store']);
+        Route::put('/users/{id}', [App\Http\Controllers\Whitelabel\UsersController::class, 'update']);
+        Route::delete('/users/{id}', [App\Http\Controllers\Whitelabel\UsersController::class, 'destroy']);
+
+        Route::get('/contacts', [App\Http\Controllers\Whitelabel\ContactsController::class, 'index']);
+        Route::get('/contacts/{id}', [App\Http\Controllers\Whitelabel\ContactsController::class, 'show']);
+        Route::post('/contacts/save', [App\Http\Controllers\Whitelabel\ContactsController::class, 'store']);
+        Route::put('/contacts/{id}', [App\Http\Controllers\Whitelabel\ContactsController::class, 'update']);
+        Route::delete('/contacts/{id}', [App\Http\Controllers\Whitelabel\ContactsController::class, 'destroy']);
+
+        Route::get('/search', 'SearchApiController@index');
+        Route::get('/search/{search}', 'SearchApiController@retrieve');
+        Route::get('/search/list', 'SearchApiController@list');
+        Route::post('/search/store', 'SearchApiController@store');**/
+
+        Route::post('/settings/save', [App\Http\Controllers\Whitelabel\SettingsController::class, 'store']);
+        Route::post('/search/process', 'SearchApiController@processSearch');
+    });
+});
 
 // NEW PRICE LEVELS ROUTES
 
-/**Route::group(['prefix'=>'pricelevels','middleware' => 'auth:api'], function () {
+Route::group(['prefix'=>'pricelevels','middleware' => 'auth:api'], function () {
     Route::get('data', 'PriceLevelController@data');
     Route::get('list', 'PriceLevelController@list');
     Route::post('store', 'PriceLevelController@store');
@@ -134,7 +162,7 @@ Route::group(['prefix'=>'pricelevels/groups','middleware' => 'auth:api'], functi
     Route::post('{company_group}/duplicate', 'CompanyGroupController@duplicate');
     Route::delete('{company_group}/delete', 'CompanyGroupController@destroy');
     Route::delete('deleteAll', 'CompanyGroupController@destroyAll');
-});**/
+});
 
 // API INTEGRATIONS
 Route::group(['prefix'=>'apiCredentials','middleware' => 'auth:api'], function () {

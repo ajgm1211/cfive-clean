@@ -1820,7 +1820,11 @@ export default {
         });
       }
       component.contactOptions = component.datalists.contacts;
-      component.priceLevelOptions = component.datalists.price_levels;
+      if(component.searchRequest.type == "FCL"){
+        component.priceLevelOptions = component.datalists.price_levels_fcl;
+      }else if(component.searchRequest.type == "LCL"){
+        component.priceLevelOptions = component.datalists.price_levels_lcl;
+      }
       component.deliveryTypeOptions = component.datalists.delivery_types.filter(
         function byGroup(dtype) {
           return !dtype.name.includes("Door");
@@ -2195,46 +2199,34 @@ export default {
     setPriceLevels() {
       let component = this;
       let dlist = this.datalists;
-      let prices = [];
+      let pricelevels = this.searchRequest.type == "FCL" ? dlist.price_levels_fcl : dlist.price_levels_lcl;
 
       component.priceLevelOptions = [];
 
-      if (component.searchRequest.company != null) {
-        dlist.company_prices.forEach(function(comprice) {
-          prices.push(comprice.price_id);
-          if (component.searchRequest.company.id == comprice.company_id) {
-            dlist.price_levels.forEach(function(price) {
-              if (
-                price.id == comprice.price_id &&
-                !component.priceLevelOptions.includes(price)
-              ) {
-                component.priceLevelOptions.push(price);
-              }
-            });
-          }
-        });
+      pricelevels.forEach(function (priceLevel){
+        if(priceLevel.price_level_groups.length == 0){
+          component.priceLevelOptions.push(priceLevel);
+        }
 
-        dlist.price_levels.forEach(function(price) {
-          if (
-            !prices.includes(price.id) &&
-            !component.priceLevelOptions.includes(price)
-          ) {
-            component.priceLevelOptions.push(price);
-          }
-        });
-      } else {
-        let prices = [];
-
-        dlist.company_prices.forEach(function(comprice) {
-          prices.push(comprice.price_id);
-        });
-
-        dlist.price_levels.forEach(function(price) {
-          if (!prices.includes(price.id)) {
-            component.priceLevelOptions.push(price);
-          }
-        });
-      }
+        if (component.searchRequest.company != null) {
+          priceLevel.price_level_groups.forEach(function (group){
+            if(group.group_type == "App\\Company" && group.group_id == component.searchRequest.company.id){
+              component.priceLevelOptions.push(priceLevel);
+            }else if(group.group_type == "App\\CompanyGroup"){
+              dlist.company_groups.forEach(function (company_group){
+                if(company_group.id == group.group_id){
+                  company_group.companies.forEach(function (company){
+                    if(company.id == component.searchRequest.company.id){
+                      component.priceLevelOptions.push(priceLevel);
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
+      
     },
 
     updateQuoteSearchOptions() {
@@ -2336,6 +2328,8 @@ export default {
           this.addPackagingBar.cargoType = this.datalists.cargo_types[0];
         }
       }
+      this.searchRequest.pricelevel = "";
+      this.setPriceLevels();
       this.$emit("searchTypeChanged", "dd");
     },
 

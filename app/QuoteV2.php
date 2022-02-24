@@ -91,7 +91,7 @@ class QuoteV2 extends Model implements HasMedia, Auditable
 
     public function price()
     {
-        return $this->hasOne('App\Price', 'id', 'price_id');
+        return $this->hasOne('App\PriceLevel', 'id', 'price_id');
     }
 
     public function payment()
