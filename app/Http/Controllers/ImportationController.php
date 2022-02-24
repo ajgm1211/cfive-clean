@@ -770,6 +770,7 @@ class ImportationController extends Controller
             $valuesSelecteds->put('select_portCountryRegion', $PortCountryRegionBol);
         }
 
+        $columnsSelected->push('LIMITS');
         $mediaItem = $account->getFirstMedia('document');
         $excel = Storage::disk('FclAccount')->get($mediaItem->id . '/' . $mediaItem->file_name);
         Storage::disk('FclImport')->put($mediaItem->file_name, $excel);
@@ -809,20 +810,6 @@ class ImportationController extends Controller
         // LOAD CALCULATIONS FOR COLUMN ------------------------
         $column_calculatioT_bol_rq = true;
         [$column_calculatioT_bol_rq,$contenedores_to_cal_rq] = HelperAll::calculationByContainers($valuesSelecteds['group_container_id']);
-        //$contenedores_to_cal_rq = Container::where('gp_container_id', $valuesSelecteds['group_container_id'])->get()->pluck('code');
-        //        foreach ($contenedores_to_cal_rq as $row_cont_calcult_rq) {
-        //            $contenedores_calcult_rq = null;
-        //            //$contenedores_calcult =  ContainerCalculation::where('container_id',10)
-        //            $contenedores_calcult_rq = ContainerCalculation::where('container_id', $row_cont_calcult_rq->id)
-        //                ->where('group_container_id',$valuesSelecteds['group_container_id'])
-        //                ->whereHas('calculationtype', function ($query) {
-        //                    $query->where('gp_pcontainer', true);
-        //                })->get();
-        //            //dd($contenedores_to_cal,$row_cont_calcult->code,$contenedores_calcult);
-        //            if (count($contenedores_calcult_rq) > 1 || count($contenedores_calcult_rq) == 0) {
-        //                $column_calculatioT_bol_rq = false;
-        //            }
-        //        }
 
         if ($column_calculatioT_bol_rq) {
             // despacha el job
@@ -877,23 +864,7 @@ class ImportationController extends Controller
 
         // LOAD CALCULATIONS FOR COLUMN ------------------------
         $conatiner_calculation_id = [];
-        //        $contenedores_to_cal = Container::where('gp_container_id', $groupContainer_id)->get();
-        //        foreach ($contenedores_to_cal as $row_cont_calcult) {
-        //            $contenedores_calcult = null;
-        //            //$contenedores_calcult =  ContainerCalculation::where('container_id',10)
-        //            $contenedores_calcult = ContainerCalculation::where('container_id', $row_cont_calcult->id)
-        //                ->whereHas('calculationtype', function ($query) {
-        //                    $query->where('gp_pcontainer', true);
-        //                })->get();
-        //            //dd($contenedores_to_cal,$row_cont_calcult->code,$contenedores_calcult);
-        //            if (count($contenedores_calcult) == 1) {
-        //                foreach ($contenedores_calcult as $contenedor_calcult) {
-        //                    $conatiner_calculation_id[$row_cont_calcult->code] = $contenedor_calcult->calculationtype_id;
-        //                }
-        //            } elseif (count($contenedores_calcult) > 1 || count($contenedores_calcult) == 0) {
-        //                $column_calculatioT_bol = false;
-        //            }
-        //        }
+
         $behaviourContainers = BehaviourPerContainer::pluck('name')->all();
         [$column_calculatioT_bol,$conatiner_calculation_id] = HelperAll::calculationByContainers($valuesSelecteds['group_container_id']);
         //dd($conatiner_calculation_id);
@@ -945,6 +916,7 @@ class ImportationController extends Controller
             $chargeExc = @$final_columns['CHARGE']; // lectura de excel
             $calculationtypeExc = @$final_columns['CALCULATION TYPE']; // lectura de excel
             $chargeExc = @$final_columns['CHARGE']; // lectura de excel
+            $limitsExc = @$final_columns['LIMITS']; // lectura de excel // para los limites de OW
 
             $company_user_id = $valuesSelecteds['company_user_id'];
             $statusPortCountry = $valuesSelecteds['select_portCountryRegion'];
@@ -1270,18 +1242,6 @@ class ImportationController extends Controller
 
                             //------------------ CALCULATION TYPE -----------------------------------------------------
                             $calculationtype = null;
-                            //                            if (strnatcasecmp($calculation_type_exc, 'PER_CONTAINER') == 0 ||
-                            //                                strnatcasecmp($calculation_type_exc, 'PER_TEU') == 0 || strnatcasecmp($calculation_type_exc, 'PER_BL') == 0
-                            //                                || strnatcasecmp($calculation_type_exc, 'PER_TON') == 0) {
-                            //                                $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)
-                            //                                    ->whereHas('containersCalculation.container', function ($query) use ($groupContainer_id) {
-                            //                                        $query->whereHas('groupContainer', function ($queryTw) use ($groupContainer_id) {
-                            //                                            $queryTw->where('gp_container_id', $groupContainer_id);
-                            //                                        });
-                            //                                    })->get();
-                            //                            } else {
-                            //                                $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)->get();
-                            //                            }
 
                             $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)
                                 ->where('group_container_id', '=', $groupContainer_id)
