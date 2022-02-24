@@ -273,6 +273,7 @@ export default {
       datalists: {},
       refresh: true,
       downloading: false,
+      creatingData: false,
     };
   },
   created() {
@@ -440,51 +441,39 @@ export default {
               send the data to store the item */
     onSubmit() {
       if (this.validateForm()) {
-        let data = this.prepareData();
 
-        if (this.massivechangeHarborDest) {
-          this.actions
-            .massiveChangeHarborDest(data, this.$route)
-            .then((response) => {
-              this.$emit("success", true);
-              this.vdata = {};
-            })
-            .catch((data) => {});
-        } else if (this.massivechangeHarborOrig) {
-          this.actions
-            .massiveChangeHarborOrig(data, this.$route)
-            .then((response) => {
-              this.$emit("success", true);
-              this.vdata = {};
-            })
-            .catch((data) => {});
-        } else if (this.massivechange) {
-          this.actions
-            .massiveChange(data, this.$route)
-            .then((response) => {
-              this.$emit("success", true);
-              this.vdata = {};
-            })
-            .catch((data) => {});
-        } else if (this.update) {
-          this.actions
-            .update(this.vdata.id, data, this.$route)
-            .then((response) => {
-              this.$emit("success", response.data.data.id);
-              this.vdata = {};
-            })
-            .catch((error, errors) => {
-              let errors_key = Object.keys(error.data.errors);
+        if (!this.creatingData) {
+        this.creatingData = true;
 
-              errors_key.forEach(function (key) {
-                $(`#id_f_${key}`).css({ display: "block" });
-                $(`#id_f_${key}`).html(error.data.errors[key]);
-              });
-            });
-        } else {
-          if (!this.multi) {
+          let data = this.prepareData();
+
+          if (this.massivechangeHarborDest) {
             this.actions
-              .create(data, this.$route)
+              .massiveChangeHarborDest(data, this.$route)
+              .then((response) => {
+                this.$emit("success", true);
+                this.vdata = {};
+              })
+              .catch((data) => {});
+          } else if (this.massivechangeHarborOrig) {
+            this.actions
+              .massiveChangeHarborOrig(data, this.$route)
+              .then((response) => {
+                this.$emit("success", true);
+                this.vdata = {};
+              })
+              .catch((data) => {});
+          } else if (this.massivechange) {
+            this.actions
+              .massiveChange(data, this.$route)
+              .then((response) => {
+                this.$emit("success", true);
+                this.vdata = {};
+              })
+              .catch((data) => {});
+          } else if (this.update) {
+            this.actions
+              .update(this.vdata.id, data, this.$route)
               .then((response) => {
                 this.$emit("success", response.data.data.id);
                 this.vdata = {};
@@ -498,20 +487,37 @@ export default {
                 });
               });
           } else {
-            this.actions
-              .create(this.multiId, data, this.$route)
-              .then((response) => {
-                this.$emit("success", response.data.data.id);
-                this.vdata = {};
-              })
-              .catch((error, errors) => {
-                let errors_key = Object.keys(error.data.errors);
+            if (!this.multi) {
+              this.actions
+                .create(data, this.$route)
+                .then((response) => {
+                  this.$emit("success", response.data.data.id);
+                  this.vdata = {};
+                })
+                .catch((error, errors) => {
+                  let errors_key = Object.keys(error.data.errors);
 
-                errors_key.forEach(function (key) {
-                  $(`#id_f_${key}`).css({ display: "block" });
-                  $(`#id_f_${key}`).html(error.data.errors[key]);
+                  errors_key.forEach(function (key) {
+                    $(`#id_f_${key}`).css({ display: "block" });
+                    $(`#id_f_${key}`).html(error.data.errors[key]);
+                  });
                 });
-              });
+            } else {
+              this.actions
+                .create(this.multiId, data, this.$route)
+                .then((response) => {
+                  this.$emit("success", response.data.data.id);
+                  this.vdata = {};
+                })
+                .catch((error, errors) => {
+                  let errors_key = Object.keys(error.data.errors);
+
+                  errors_key.forEach(function (key) {
+                    $(`#id_f_${key}`).css({ display: "block" });
+                    $(`#id_f_${key}`).html(error.data.errors[key]);
+                  });
+                });
+            }
           }
         }
       }
