@@ -969,7 +969,7 @@ class CompanyController extends Controller
             'options' => 'json',
         ];
 
-        //Validating request
+        //Validating array into request
         if(isset($request['key_name']) && isset($request['key_name'])){
             foreach($request['key_name'] as $a => $name){
                 if ($a>=1 && $name==null ) {
