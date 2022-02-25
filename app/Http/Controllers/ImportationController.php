@@ -1120,6 +1120,16 @@ class ImportationController extends Controller
                         $descount++;
                     }
 
+                    //--- LIMITS OW -----------------------------------------------------
+                    $limits_val = [];
+                    if(!empty($row[$destinyExc])){
+                        $limits_val = array_map('trim',explode('-', $row[$row[$destinyExc]]));
+                        $limits_val = (count($limits_val) > 1)? $limits_val:array_push($limits_val,null);
+                    } else {
+                        $limits_val = [null,null];
+                    }
+
+
                     //--- INICION DE ERECORRIDO POR | ---------------------------------
                     foreach ($originMultps as $originMult) {
                         foreach ($destinyMultps as $destinyMult) {
