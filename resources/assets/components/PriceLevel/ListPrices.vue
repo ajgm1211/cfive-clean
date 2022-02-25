@@ -19,7 +19,11 @@
         <th scope="col">Created at</th>
         <th scope="col">Updated at</th>
         <th scope="col" style="width:40px">
-          <OptionsButton @option="action($event)" :standar="false" />
+          <OptionsButton
+            :options="['delete']"
+            @option="action($event)"
+            :standar="false"
+          />
         </th>
       </tr>
       <tr v-else-if="dynamic">
@@ -37,6 +41,7 @@
 
         <th scope="col" style="width:40px; position: relative;">
           <OptionsButton
+            :options="['delete']"
             @option="action($event)"
             :standar="false"
             style="right:-84px;"
@@ -66,10 +71,7 @@
           />
         </th>
 
-        <th
-          v-for="(amountObject, amountKey) in amount"
-          :key="amountKey"
-        >
+        <th v-for="(amountObject, amountKey) in amount" :key="amountKey">
           <div class="d-flex" style="width: 100px">
             <CustomInput
               v-model="amountObject.amount"
@@ -86,7 +88,7 @@
               font_color="white"
               :icon="false"
               :mixed="true"
-              @selected="setMarkup(amountObject,$event)"
+              @selected="setMarkup(amountObject, $event)"
             />
           </div>
         </th>
@@ -101,7 +103,7 @@
             ref="currencyDropdown"
           />
         </th>
-        <th style="position: relative;">
+        <th>
           <MainButton
             @click="addRate()"
             :save="true"
@@ -126,8 +128,8 @@
         <td>{{ item.direction.name }}</td>
         <td>{{ item.price_level_apply.name }}</td>
         <td
-          v-for="(itemAmount,itemAmountKey) in item.amount"
-          :key="itemAmountKey"  
+          v-for="(itemAmount, itemAmountKey) in item.amount"
+          :key="itemAmountKey"
         >
           {{
             itemAmount.markup == "Percent Markup"
@@ -135,14 +137,22 @@
               : itemAmount.amount + " $"
           }}
         </td>
-        <td>{{ item.currency != null ? item.currency.alphacode : '-' }}</td>
-        <td style="position: relative;">
-          <OptionsButton @option="action($event, item)" style="right:-84px;" />
+        <td>{{ item.currency != null ? item.currency.alphacode : "-" }}</td>
+        <td style="position: absolute;">
+          <OptionsButton
+            :options="['edit', 'delete']"
+            @option="action($event, item, 'modal')"
+            style="right:-84px;"
+          />
         </td>
       </tr>
     </tbody>
     <tbody v-else>
-      <tr v-for="(item, index) in prices" :key="index">
+      <tr
+        v-for="(item, index) in prices"
+        v-show="itemVisible(item)"
+        :key="index"
+      >
         <td scope="row">
           <b-form-checkbox-group>
             <b-form-checkbox
@@ -158,9 +168,14 @@
         <td>{{ item.name }}</td>
         <td>{{ item.display_name }}</td>
         <td v-html="item.description"></td>
-        <td>{{ item.created_at }}</td>
-        <td>{{ item.updated_at }}</td>
-        <td scope="col"><OptionsButton @option="action($event, item.id)" /></td>
+        <td>{{ item.created_at.date.slice(0,16) }}</td>
+        <td>{{ item.updated_at.date.slice(0,16) }}</td>
+        <td style="position:absolute;">
+          <OptionsButton
+            :options="['edit', 'duplicate', 'delete']"
+            @option="action($event, item.id)"
+          />
+        </td>
       </tr>
     </tbody>
   </b-table-simple>
@@ -173,6 +188,7 @@ import MainButton from "../common/MainButton.vue";
 import CustomInput from "../common/CustomInput.vue";
 import { mapGetters } from "vuex";
 import SorteableDropdown from "../common/SorteableDropdown.vue";
+import toastr from "toastr";
 
 export default {
   props: {
@@ -215,6 +231,7 @@ export default {
         return {};
       },
     },
+    filtered: {},
   },
   components: {
     OptionsButton,
@@ -240,6 +257,7 @@ export default {
     restrictions: [],
     currencies: [],
     only_percent: false,
+    adding_zero: true,
   }),
   mounted() {
     setTimeout(() => {
@@ -249,20 +267,25 @@ export default {
   },
   methods: {
     async addRate() {
-      await this.$store.dispatch("createRate", {
-        id: this.$route.params.id,
-        body: {
-          amount: this.amount,
-          currency: this.only_percent ? null : this.currency,
-          price_level_apply: this.price_level_apply,
-          direction: this.direction,
-          only_percent: this.only_percent,
-        },
-        page: this.currentPage,
-        currentId: this.$route.params.id,
-      });
+      this.checkQuantities();
 
-      this.clearDisplay();
+      if (this.adding_zero) {
+        toastr.error("The amount must be greater than 0");
+      } else {
+        await this.$store.dispatch("createRate", {
+          id: this.$route.params.id,
+          body: {
+            amount: this.amount,
+            currency: this.only_percent ? null : this.currency,
+            price_level_apply: this.price_level_apply,
+            direction: this.direction,
+            only_percent: this.only_percent,
+          },
+          page: this.currentPage,
+          currentId: this.$route.params.id,
+        });
+        //this.clearDisplay();
+      }
     },
     toggleAll(checked) {
       this.allSelected = checked;
@@ -285,12 +308,17 @@ export default {
         this.selectedRate = [];
       }
     },
-    action(option, id) {
+    action(option, id, target = "view") {
       if (option == "edit") {
-        this.$router.push({
-          name: "price-rates",
-          params: { id: id },
-        });
+        if (target == "view") {
+          this.$router.push({
+            name: "price-rates",
+            params: { id: id },
+          });
+        } else if (target == "modal") {
+          this.$store.commit("SET_MODAL_EDIT", true);
+          this.$emit("editModal", id);
+        }
       }
       if (option == "duplicate") {
         if (this.dynamic === true) {
@@ -349,7 +377,7 @@ export default {
     setCurrency(option) {
       this.currency = option;
     },
-    setMarkup(object,option) {
+    setMarkup(object, option) {
       object.markup = option;
 
       this.checkIfOnlyPercent();
@@ -358,24 +386,61 @@ export default {
       var fixedMatch = false;
       let component = this;
 
-      for(const amountObject in this.amount){
-        if(component.amount[amountObject].markup == "Fixed Markup"){
+      for (const amountObject in this.amount) {
+        if (component.amount[amountObject].markup == "Fixed Markup") {
           fixedMatch = true;
         }
       }
 
       this.only_percent = !fixedMatch;
     },
-    clearDisplay(){
+    clearDisplay() {
       let component = this;
 
-      for(const amountObject in this.amount){
+      for (const amountObject in this.amount) {
         component.amount[amountObject].markup = "Fixed Markup";
-        component.amount[amountObject].amount = 0;    
+        component.amount[amountObject].amount = 0;
       }
 
       this.$refs.currencyDropdown.resetSelection();
       this.checkIfOnlyPercent();
+    },
+    itemVisible(toFilter) {
+      let currentInput = this.filtered.toLowerCase();
+
+      let type = toFilter.type ? toFilter.type.toLowerCase() : "";
+      let name = toFilter.name ? toFilter.name.toLowerCase() : "";
+      let display_name = toFilter.display_name
+        ? toFilter.display_name.toLowerCase()
+        : "";
+      let description = toFilter.description
+        ? toFilter.description.toLowerCase()
+        : "";
+
+      return (
+        type.includes(currentInput) ||
+        name.includes(currentInput) ||
+        display_name.includes(currentInput) ||
+        description.includes(currentInput)
+      );
+    },
+    checkQuantities() {
+      var zeroMatch = false;
+      let component = this;
+
+      for (const amountObject in this.amount) {
+        if (component.amount[amountObject].amount == 0) {
+          zeroMatch = true;
+        }
+      }
+
+      if (Object.keys(this.currency).length == 0) {
+        this.selectable_error = true;
+      } else {
+        this.selectable_error = false;
+      }
+
+      this.adding_zero = zeroMatch;
     },
   },
   computed: {
@@ -388,5 +453,8 @@ export default {
 .table th,
 .table td {
   vertical-align: middle;
+}
+.table {
+  min-height: 200px;
 }
 </style>

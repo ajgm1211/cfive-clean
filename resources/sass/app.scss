@@ -18,6 +18,10 @@ body {
     display: block;
 }
 
+.toast-error{
+    background-color:red!important;
+    z-index: 10000;
+}
 
 /* Font sizes
 ------------------------------------------------------------------ */

@@ -483,17 +483,18 @@ Route::resource('companies', 'CompanyController')->middleware('auth');
 
 //Prices
 Route::middleware(['auth'])->prefix('prices')->group(function () {
-    Route::get('add', 'PriceController@add')->name('prices.add');
-    Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
-    Route::get('destroy/{price_id}', 'PriceController@destroy')->name('prices.destroy');
+    Route::get('/', function () {
+        return redirect('pricelevels');
+    });
+    //Route::get('add', 'PriceController@add')->name('prices.add');
+    //Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
+    ///Route::get('destroy/{price_id}', 'PriceController@destroy')->name('prices.destroy');
 
     // V2
-    Route::view('/v2', 'pricesV2.index');
-    //CAMBIAR PARA PRICELEVELS
-    Route::view('/rates', 'pricesV2.index');
+    //Route::view('/v2', 'pricesV2.index');
     //Route::view('/rates/{id}', 'pricesV2.index');
 });
-Route::resource('prices', 'PriceController')->middleware('auth');
+//Route::resource('prices', 'PriceController')->middleware('auth');
 
 //Contacts
 Route::middleware(['auth'])->prefix('contacts')->group(function () {
@@ -1433,10 +1434,10 @@ Route::group(['prefix' => 'test', 'middleware' => ['auth']], function () {
 
 
 //NEW PRICE LEVELS VIEWS ROUTES
-/**Route::group(['prefix' => 'pricelevels', 'middleware' => ['auth']], function () {
+Route::group(['prefix' => 'pricelevels', 'middleware' => ['auth']], function () {
     Route::view('/', 'pricesV2.index')->name('pricelevels.index');
     Route::view('/edit/{price_level}', 'pricesV2.index');
-});**/
+});
 
 Route::middleware(['auth', 'role:administrator'])->prefix('api-credentials')->group(function () {
     Route::view('/', 'integrations.api-credentials.index')->name('apicredentials.index');

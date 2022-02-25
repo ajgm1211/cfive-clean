@@ -11,6 +11,8 @@ import "../../../resources/sass/custom_app.scss";
 import "../../../resources/js/bootstrap";
 import store from "../js/store/index";
 import vSelect from 'vue-select'
+import VueToast from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
 import 'vue-select/dist/vue-select.css';
 
 
@@ -62,6 +64,9 @@ Vue.use(Vuelidate);
 Vue.use(VueCkeditor.plugin, options);
 Vue.use(BootstrapVue);
 Vue.component('v-select', vSelect)
+Vue.use(VueToast, {
+  position: 'top-right'
+});
 
 
 window.api = new Api();
@@ -74,5 +79,6 @@ const app = new Vue({
   store,
   render: (h) => h(Main),
 });
+
 
 export default router;
