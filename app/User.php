@@ -21,7 +21,7 @@ class User extends Authenticatable implements Auditable
     ];
 
     protected $fillable = [
-        'id', 'name', 'lastname', 'password', 'email', 'phone', 'type', 'options', 'company_user_id', 'position', 'verified', 'access', 'api_token',
+        'id', 'name', 'lastname', 'password', 'email', 'phone', 'type', 'options', 'company_user_id', 'position', 'verified', 'access', 'api_token', 'whitelabel',
     ];
 
     protected $hidden = [
@@ -122,5 +122,10 @@ class User extends Authenticatable implements Auditable
         $delegation->delegations_id=$delegation_id;
         $delegation->save();
         
+     }
+
+     public function settingsWhitelabel()
+     {
+         return $this->hasOne('App\SettingsWhitelabel');
      }
 }

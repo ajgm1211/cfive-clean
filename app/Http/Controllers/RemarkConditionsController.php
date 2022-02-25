@@ -57,15 +57,15 @@ class RemarkConditionsController extends Controller
         $carriers = $request->carriers;
         $countries = $request->countries;
 
-        if (count((array)$ports) >= 1) {
+        if (count((array) $ports) >= 1) {
             $this->storeRelationships($ports, $remark->id, 'port');
         }
 
-        if (count((array)$carriers) >= 1) {
+        if (count((array) $carriers) >= 1) {
             $this->storeRelationships($carriers, $remark->id, 'carrier');
         }
 
-        if (count((array)$countries) >= 1) {
+        if (count((array) $countries) >= 1) {
             $this->storeRelationships($countries, $remark->id, 'country');
         }
 
@@ -143,17 +143,17 @@ class RemarkConditionsController extends Controller
         $carriers = $request->carriers;
         $countries = $request->countries;
 
-        if (count((array)$ports) >= 1) {
+        if (count((array) $ports) >= 1) {
             RemarkHarbor::where('remark_condition_id', $id)->delete();
             $this->storeRelationships($ports, $id, 'port');
         }
 
-        if (count((array)$carriers) >= 1) {
+        if (count((array) $carriers) >= 1) {
             RemarkCarrier::where('remark_condition_id', $id)->delete();
             $this->storeRelationships($carriers, $id, 'carrier');
         }
 
-        if (count((array)$countries) >= 1) {
+        if (count((array) $countries) >= 1) {
             RemarkCountry::where('remark_condition_id', $id)->delete();
             $this->storeRelationships($countries, $id, 'country');
         }
@@ -189,7 +189,7 @@ class RemarkConditionsController extends Controller
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'Record '.$remark->name.' has been deleted!');
+        $request->session()->flash('message.content', 'Record ' . $remark->name . ' has been deleted!');
 
         return redirect()->route('remarks.list');
     }
@@ -214,7 +214,7 @@ class RemarkConditionsController extends Controller
                 foreach ($values as $value) {
                     RemarkCarrier::create([
                         'carrier_id' => $value,
-                        'remark_condition_id'  => $id,
+                        'remark_condition_id' => $id,
                     ]);
                 }
                 break;
@@ -222,7 +222,7 @@ class RemarkConditionsController extends Controller
                 foreach ($values as $value) {
                     RemarkHarbor::create([
                         'port_id' => $value,
-                        'remark_condition_id'  => $id,
+                        'remark_condition_id' => $id,
                     ]);
                 }
                 break;
@@ -230,46 +230,46 @@ class RemarkConditionsController extends Controller
                 foreach ($values as $value) {
                     RemarkCountry::create([
                         'country_id' => $value,
-                        'remark_condition_id'  => $id,
+                        'remark_condition_id' => $id,
                     ]);
                 }
                 break;
         }
     }
 
-    public function duplicate(request $request,$id)
+    public function duplicate(request $request, $id)
     {
-        
-        $remarkCopy = RemarkCondition::find($id)->replicate();
-        $remarkCopy -> name .= ' copy';
-        $remarkCopy ->save();
 
-        $RemarkCarrier=RemarkCarrier::where('remark_condition_id', $id)->get();
-        foreach($RemarkCarrier as $carrier){
+        $remarkCopy = RemarkCondition::find($id)->replicate();
+        $remarkCopy->name .= ' copy';
+        $remarkCopy->save();
+
+        $RemarkCarrier = RemarkCarrier::where('remark_condition_id', $id)->get();
+        foreach ($RemarkCarrier as $carrier) {
             RemarkCarrier::create([
                 'carrier_id' => $carrier->carrier_id,
-                'remark_condition_id'  => $remarkCopy->id,
+                'remark_condition_id' => $remarkCopy->id,
             ]);
         }
 
-        $RemarkHarbor=RemarkHarbor::where('remark_condition_id','=', $id)->get();
-        foreach($RemarkHarbor as $harbor){
+        $RemarkHarbor = RemarkHarbor::where('remark_condition_id', '=', $id)->get();
+        foreach ($RemarkHarbor as $harbor) {
             RemarkHarbor::create([
                 'port_id' => $harbor->port_id,
-                'remark_condition_id'  => $remarkCopy->id,
+                'remark_condition_id' => $remarkCopy->id,
             ]);
         }
 
-        $RemarkCountry=RemarkCountry::where('remark_condition_id','=', $id)->get();
-        if(isset($RemarkCountry)){
-            foreach($RemarkCountry as $country){
+        $RemarkCountry = RemarkCountry::where('remark_condition_id', '=', $id)->get();
+        if (isset($RemarkCountry)) {
+            foreach ($RemarkCountry as $country) {
                 RemarkCountry::create([
                     'country_id' => $country,
-                    'remark_condition_id'  => $remarkCopy->id,
+                    'remark_condition_id' => $remarkCopy->id,
                 ]);
             }
-        }     
-               
+        }
+
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'Duplicate completed successfully');

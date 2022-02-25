@@ -145,17 +145,25 @@ class LoginController extends Controller
     {
         $oauth_client = OauthClient::where('user_id',$user->id)->first();
         
-        if($oauth_client != null){
-            $username = $loginData['email'];
-            $password = $loginData['password'];
-            $user_id = $user->id;
-        }else{
-            $oauth_client = OauthClient::where('user_id',1)->first();
-            $username = 'info@cargofive.com';
-            $password = 'gencomex18';
-            $user_id = 1;
+        if($oauth_client == null){
+            $token = new OauthClient();
+
+            $token->name = 'Password Grant Token ' . str_random(5);
+            $token->company_user_id = $user->company_user_id;
+            $token->secret = str_random(40);
+            $token->redirect = 'http://localhost';
+            $token->personal_access_client = 0;
+            $token->password_client = 1;
+            $token->revoked = 0;
+
+            $token->save();
+
+            $oauth_client = $token;
         }
-        
+
+        $username = $loginData['email'];
+        $password = $loginData['password'];
+        $user_id = $user->id;
         $user_secret = $oauth_client->secret; 
         $app_url = $this->customEnv['appUrl'] . "/oauth/token";
 
@@ -173,7 +181,7 @@ class LoginController extends Controller
                         'username' =>  $username,
                         'password' => $password,
                         'client_secret'=> $user_secret ,
-                        'client_id' => $user_id,
+                        'client_id' => $oauth_client->id,
                     ]
                 ]
             );

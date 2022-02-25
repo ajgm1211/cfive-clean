@@ -66,7 +66,7 @@
                                     @foreach($r->charge as $v)
                                         @if($v->type_id==3)
                                             <?php
-                                                $amount = json_decode($v->amount, true);
+                                                $amount = json_decode($v->amount);
                                                 $markup = json_decode($v->markups);
                                                 
                                                 foreach ($containers as $c){
@@ -81,7 +81,7 @@
                                             ?>
 
                                             <tr class="text-left color-table">
-                                            
+
                                                 <td>{{$v->surcharge_id!='' ? $v->surcharge->name:__('pdf.ocean_freight')}}</td>
 
                                                 <td>{{$v->surcharge_id!='' ? @$v->calculation_type->name:__('pdf.per_container')}}</td>
@@ -92,23 +92,7 @@
                                                     @foreach ($containers as $c)
                                                         @if($c->code == $key)
                                                             <?php
-                                                                if($v->surcharge->name == "Ocean Freight" && $v->surcharge->company_user_id==null){
-                                                                    //$total = $v->surcharge_id != '' ? $v->${'sum_amount_markup_'.$c->code}:$v->${'sum_amount_markup_'.$c->code}+@$r->total_rate->markups['m'.$c->code];
-                                                                    //foreach($r->total_rate['markups'] as $m=>$markups ){
-                                                                        //$containerM=str_replace("m", "", $m);
-                                                                        //if ($containerM==$c->code) {
-                                                                        if(isset($amount["c". $c->code]) && isset($r->total_rate->markups["m" . $c->code])){
-                                                                            $total_w_profit = $amount["c". $c->code] + $r->total_rate->markups["m" . $c->code];
-                                                                        }elseif(isset($amount["c". $c->code])){
-                                                                            $total_w_profit = $amount["c". $c->code];
-                                                                        }
-                                                                        //}
-                                                                    //}
-                                                                }else{
-                                                                    if(isset($amount["c". $c->code])){
-                                                                        $total_w_profit = $amount["c". $c->code];
-                                                                    }
-                                                                }
+                                                                $total_w_profit = $v->surcharge_id != '' ? $v->${'sum_amount_markup_'.$c->code}:$v->${'sum_amount_markup_'.$c->code}+@$r->total_rate->markups['m'.$c->code];
                                                             ?>
                                                             <!--<td {{ $hide }}>{{isDecimal($v->${'total_sum_'.$c->code}, true)}}</td>-->
                                                             <td {{ $hide }}>{{ @$total_w_profit == null ? 0 : isDecimal( @$total_w_profit, false, true) . ' ' .$v->currency->alphacode}}</td>

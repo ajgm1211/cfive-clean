@@ -146,7 +146,6 @@
         :data="charge"
         :total_by_type="rate.charge_totals_by_type"
         :search_pricelevel="rate.search.pricelevel"
-        :total_markups="rate.total_markups"
         :currency="rate.currency"
         :searchData="searchData"
       />

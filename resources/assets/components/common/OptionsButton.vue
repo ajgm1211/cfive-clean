@@ -27,18 +27,18 @@ export default {
       type: Boolean,
       default: true,
     },
+    options:{}
   },
   components: {
     DotsMenu,
   },
   data: () => ({
     showOptions: false,
-    options: ["edit", "duplicate", "delete"],
   }),
   created() {
-    if (this.standar === false) {
-      this.options = this.options.filter((e) => e !== "edit" &&   e !==  "duplicate");
-    }
+    // if (this.standar === false) {
+    //   this.options = this.options.filter((e) => e !== "edit" &&   e !==  "duplicate");
+    // }
     window.addEventListener("click", (e) => {
       if (!this.$el.contains(e.target)) {
         this.showOptions = false;
@@ -47,7 +47,6 @@ export default {
   },
   methods:{
     select(option){
-     
       if(this.standar === false) {
         this.$emit('option', 'deleteSelected')
       }else{

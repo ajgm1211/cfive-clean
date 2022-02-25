@@ -412,7 +412,7 @@
                             @endif
                             @role('administrator|company|subuser')
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                <a href="{{ route('prices.index') }}" class="m-menu__link ">
+                                <a href="{{ route('pricelevels.index') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-sellsy"></i>
                                     <span class="m-menu__link-text">
                                         Price levels
