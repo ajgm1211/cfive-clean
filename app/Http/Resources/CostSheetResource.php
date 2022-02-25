@@ -477,7 +477,7 @@ class CostSheetResource extends JsonResource
         }
         if ($this->quote->type == 'LCL') {
             $totalArray = json_decode($this->autorate->total,true);
-            return $totalArray->total;         
+            return $totalArray['total'];         
         }
     }
 
@@ -487,7 +487,7 @@ class CostSheetResource extends JsonResource
         }
         if ($this->quote->type == 'LCL') {
             $total = json_decode($this->autorate->total,true);
-            return ['amount' => $total->total]; 
+            return ['amount' => $total['total']]; 
         }
     }
 

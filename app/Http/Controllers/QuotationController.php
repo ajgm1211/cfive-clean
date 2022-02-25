@@ -213,7 +213,7 @@ class QuotationController extends Controller
     }
 
     public function store(Request $request)
-    {
+    {   dd($request);
         $user = \Auth::user('web');
         $company_user = $user->worksAt();
         $company_code = strtoupper(substr($company_user->name, 0, 2));
