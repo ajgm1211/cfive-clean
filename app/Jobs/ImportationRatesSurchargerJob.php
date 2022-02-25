@@ -31,6 +31,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use App\BehaviourPerContainer;
 use PrvCarrier;
 use PrvHarbor;
 
@@ -67,24 +68,26 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         $caracteres = ['*', '/', '.', '?', '"', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '{', '}', '[', ']', '+', '_', '|', '°', '!', '$', '%', '&', '(', ')', '=', '¿', '¡', ';', '>', '<', '^', '`', '¨', '~', ':', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 
         // LOAD CALCULATIONS FOR COLUMN ------------------------
-        $contenedores_to_cal = Container::where('gp_container_id', $groupContainer_id)->get();
         $conatiner_calculation_id = [];
-        foreach ($contenedores_to_cal as $row_cont_calcult) {
-            $contenedores_calcult = null;
-            //$contenedores_calcult =  ContainerCalculation::where('container_id',10)
-            $contenedores_calcult = ContainerCalculation::where('container_id', $row_cont_calcult->id)
-                ->whereHas('calculationtype', function ($query) {
-                    $query->where('gp_pcontainer', true);
-                })->get();
-            //dd($contenedores_to_cal,$row_cont_calcult->code,$contenedores_calcult);
-            if (count($contenedores_calcult) == 1) {
-                foreach ($contenedores_calcult as $contenedor_calcult) {
-                    $conatiner_calculation_id[$row_cont_calcult->code] = $contenedor_calcult->calculationtype_id;
-                }
-            } elseif (count($contenedores_calcult) > 1 || count($contenedores_calcult) == 0) {
-                $column_calculatioT_bol = false;
-            }
-        }
+        //        $contenedores_to_cal = Container::where('gp_container_id', $groupContainer_id)->get();
+        //        foreach ($contenedores_to_cal as $row_cont_calcult) {
+        //            $contenedores_calcult = null;
+        //            //$contenedores_calcult =  ContainerCalculation::where('container_id',10)
+        //            $contenedores_calcult = ContainerCalculation::where('container_id', $row_cont_calcult->id)
+        //                ->whereHas('calculationtype', function ($query) {
+        //                    $query->where('gp_pcontainer', true);
+        //                })->get();
+        //            //dd($contenedores_to_cal,$row_cont_calcult->code,$contenedores_calcult);
+        //            if (count($contenedores_calcult) == 1) {
+        //                foreach ($contenedores_calcult as $contenedor_calcult) {
+        //                    $conatiner_calculation_id[$row_cont_calcult->code] = $contenedor_calcult->calculationtype_id;
+        //                }
+        //            } elseif (count($contenedores_calcult) > 1 || count($contenedores_calcult) == 0) {
+        //                $column_calculatioT_bol = false;
+        //            }
+        //        }
+        $behaviourContainers = BehaviourPerContainer::pluck('name')->all();
+        [$column_calculatioT_bol,$conatiner_calculation_id] = HelperAll::calculationByContainers($valuesSelecteds['group_container_id']);
         //dd($conatiner_calculation_id);
 
         // --------------- AL FINALIZAR  CARGAR LA EXATRACCION DESDE S3 -----------------
@@ -459,16 +462,23 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                             //------------------ CALCULATION TYPE -----------------------------------------------------
                             $calculationtype = null;
-                            if (strnatcasecmp($calculation_type_exc, 'PER_CONTAINER') == 0 ||
-                                strnatcasecmp($calculation_type_exc, 'PER_TEU') == 0 || strnatcasecmp($calculation_type_exc, 'PER_BL') == 0
-                               || strnatcasecmp($calculation_type_exc, 'PER_TON') == 0) {
-                                $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)
-                                    ->whereHas('containersCalculation.container', function ($query) use ($groupContainer_id) {
-                                        $query->whereHas('groupContainer', function ($queryTw) use ($groupContainer_id) {
-                                            $queryTw->where('gp_container_id', $groupContainer_id);
-                                        });
-                                    })->get();
-                            } else {
+                            //                            if (strnatcasecmp($calculation_type_exc, 'PER_CONTAINER') == 0 ||
+                            //                                strnatcasecmp($calculation_type_exc, 'PER_TEU') == 0 || strnatcasecmp($calculation_type_exc, 'PER_BL') == 0
+                            //                                || strnatcasecmp($calculation_type_exc, 'PER_TON') == 0) {
+                            //                                $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)
+                            //                                    ->whereHas('containersCalculation.container', function ($query) use ($groupContainer_id) {
+                            //                                        $query->whereHas('groupContainer', function ($queryTw) use ($groupContainer_id) {
+                            //                                            $queryTw->where('gp_container_id', $groupContainer_id);
+                            //                                        });
+                            //                                    })->get();
+                            //                            } else {
+                            //                                $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)->get();
+                            //                            }
+
+                            $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)
+                                ->where('group_container_id', '=', $groupContainer_id)
+                                ->get();
+                            if($calculationtype->isEmpty()){
                                 $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)->get();
                             }
 
@@ -476,7 +486,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 $calculationtypeExiBol = true;
                                 $calculationtypeVal = $calculationtype[0]['id'];
                             } elseif (count($calculationtype) > 1) {
-                                $calculationtypeVal = $calculation_type_exc . 'F.R + ' . count($calculationtype) . ' fila ' . $countRow . '_E_E';
+                                $calculationtypeVal = $calculation_type_exc . ' F.R + ' . count($calculationtype) . ' fila ' . $countRow . '_E_E';
                             } else {
                                 $calculationtypeVal = $calculation_type_exc . ' fila ' . $countRow . '_E_E';
                             }
@@ -528,7 +538,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             if (count(array_unique($currency_uniq)) > 1) {
                                 $variant_currency = false;
                             } elseif (count(array_unique($currency_uniq)) == 1
-                                && $currency_uniq[0] == 0) {
+                                      && $currency_uniq[0] == 0) {
                                 $variant_currency = false;
                             }
                             //dd($currency_bol,$currency_uniq,array_unique($currency_uniq),$variant_currency);
@@ -669,8 +679,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                     } else { //si es country verificamos si exite uno creado con country
                                         $typeplace = 'localcharcountries';
                                     }
-
-                                    if (strnatcasecmp($calculation_type_exc, 'PER_CONTAINER') == 0) {
+                                    // Es PER_CONTAINER - PER_CONTAINER_IMO ....
+                                    if (in_array($calculation_type_exc,$behaviourContainers)) {
 
                                         // ESTOS ARREGLOS SON DE EJEMPLO PARA IGUALDAD DE VALORES EN PER_CONTAINER / Solo condicional -------
                                         //$columna_cont['20DV'][0]    = 1200;
@@ -773,7 +783,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             foreach ($columna_cont as $key => $conta_row) { // Cargamos cada columna para despues insertarlas en la BD
                                                 $rows_calculations[$key] = [
                                                     //'type'            => $key,
-                                                    'calculationtype' => $conatiner_calculation_id[$key],
+                                                    'calculationtype' => $conatiner_calculation_id[$calculation_type_exc][$key],
                                                     'ammount' => $conta_row[0],
                                                     'currency' => $conta_row[1],
                                                 ];
@@ -992,9 +1002,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     if ($conta_row[4] == false) {
                                                         $rspVal = null;
                                                         $rspVal = HelperAll::currencyJoin($statusCurrency,
-                                                            $currency_bol[$key],
-                                                            $conta_row[0],
-                                                            $conta_row[1]);
+                                                                                          $currency_bol[$key],
+                                                                                          $conta_row[0],
+                                                                                          $conta_row[1]);
                                                         $container_json['C' . $key] = '' . $rspVal;
                                                     }
                                                     if ($conta_row[3] != true) {
@@ -1012,36 +1022,36 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     if ($conta_row[4] == false) { // columna contenedores
                                                         $rspVal = null;
                                                         $rspVal = HelperAll::currencyJoin($statusCurrency,
-                                                            $currency_bol[$key],
-                                                            $conta_row[0],
-                                                            $conta_row[1]);
+                                                                                          $currency_bol[$key],
+                                                                                          $conta_row[0],
+                                                                                          $conta_row[1]);
                                                         $container_json['C' . $key] = '' . $rspVal;
                                                     } else { // por columna específica
                                                         if (strnatcasecmp($columns_rt_ident[$key], 'twuenty') == 0) {
                                                             $twuenty_val = HelperAll::currencyJoin($statusCurrency,
-                                                                $currency_bol[$key],
-                                                                $conta_row[0],
-                                                                $conta_row[1]);
+                                                                                                   $currency_bol[$key],
+                                                                                                   $conta_row[0],
+                                                                                                   $conta_row[1]);
                                                         } elseif (strnatcasecmp($columns_rt_ident[$key], 'forty') == 0) {
                                                             $forty_val = HelperAll::currencyJoin($statusCurrency,
-                                                                $currency_bol[$key],
-                                                                $conta_row[0],
-                                                                $conta_row[1]);
+                                                                                                 $currency_bol[$key],
+                                                                                                 $conta_row[0],
+                                                                                                 $conta_row[1]);
                                                         } elseif (strnatcasecmp($columns_rt_ident[$key], 'fortyhc') == 0) {
                                                             $fortyhc_val = HelperAll::currencyJoin($statusCurrency,
-                                                                $currency_bol[$key],
-                                                                $conta_row[0],
-                                                                $conta_row[1]);
+                                                                                                   $currency_bol[$key],
+                                                                                                   $conta_row[0],
+                                                                                                   $conta_row[1]);
                                                         } elseif (strnatcasecmp($columns_rt_ident[$key], 'fortynor') == 0) {
                                                             $fortynor_val = HelperAll::currencyJoin($statusCurrency,
-                                                                $currency_bol[$key],
-                                                                $conta_row[0],
-                                                                $conta_row[1]);
+                                                                                                    $currency_bol[$key],
+                                                                                                    $conta_row[0],
+                                                                                                    $conta_row[1]);
                                                         } elseif (strnatcasecmp($columns_rt_ident[$key], 'fortyfive') == 0) {
                                                             $fortyfive_val = HelperAll::currencyJoin($statusCurrency,
-                                                                $currency_bol[$key],
-                                                                $conta_row[0],
-                                                                $conta_row[1]);
+                                                                                                     $currency_bol[$key],
+                                                                                                     $conta_row[0],
+                                                                                                     $conta_row[1]);
                                                         }
                                                     }
                                                     if ($conta_row[3] != true) {
@@ -1064,7 +1074,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 ->where('containers', $container_json)
                                                 ->where('currency_id', $currency_val)
                                                 ->get();
-                                            
+
                                             if (count($exists) == 0) {
                                                 $respFR = FailRate::create([
                                                     'origin_port' => $originVal,
@@ -1088,7 +1098,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             $differentiatorVal = 1;
                                         }
                                         if ($calculationtypeExiBol) {
-                                            if (strnatcasecmp($calculation_type_exc, 'PER_CONTAINER') == 0) {
+                                            // Es PER_CONTAINER PER_CONATINER_IMO .....
+                                            if (in_array($calculation_type_exc,$behaviourContainers)) {
                                                 $equals_values = [];
                                                 $key = null;
                                                 foreach ($columna_cont as $key => $conta_row) {
@@ -1120,9 +1131,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     }
 
                                                     $ammount = HelperAll::currencyJoin($statusCurrency,
-                                                        $currency_bol_f,
-                                                        $ammount,
-                                                        $currency_val);
+                                                                                       $currency_bol_f,
+                                                                                       $ammount,
+                                                                                       $currency_val);
                                                     if ($currency_bol_f) {
                                                         $currencyObj = Currency::find($currency_val);
                                                         $currency_val = $currencyObj->alphacode;
@@ -1160,7 +1171,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     $key = null;
                                                     $rows_calculations = [];
                                                     foreach ($columna_cont as $key => $conta_row) { // Cargamos cada columna para despues insertarlas en la BD
-                                                        $calculationtypeVal = CalculationType::find($conatiner_calculation_id[$key]);
+                                                        $calculationtypeVal = CalculationType::find($conatiner_calculation_id[$calculation_type_exc][$key]);
                                                         $calculationtypeVal = $calculationtypeVal->name;
                                                         if ($currency_bol[$key]) {
                                                             $currency_val = Currency::find($conta_row[1]);
@@ -1170,9 +1181,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         }
                                                         $ammount = null;
                                                         $ammount = HelperAll::currencyJoin($statusCurrency,
-                                                            $currency_bol[$key],
-                                                            $conta_row[0],
-                                                            $conta_row[1]);
+                                                                                           $currency_bol[$key],
+                                                                                           $conta_row[0],
+                                                                                           $conta_row[1]);
                                                         $ammoun_zero = false;
                                                         if ($conta_row[0] == 0.0 || $conta_row[0] == 0) {
                                                             $ammoun_zero = true;
@@ -1241,9 +1252,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 }
 
                                                 $ammount = HelperAll::currencyJoin($statusCurrency,
-                                                    $currency_bol_f,
-                                                    $ammount,
-                                                    $currency_val);
+                                                                                   $currency_bol_f,
+                                                                                   $ammount,
+                                                                                   $currency_val);
                                                 if ($currency_bol_f) {
                                                     $currencyObj = Currency::find($currency_val);
                                                     $currency_val = $currencyObj->alphacode;
@@ -1291,9 +1302,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 }
                                                 $ammount = null;
                                                 $ammount = HelperAll::currencyJoin($statusCurrency,
-                                                    $currency_bol[$key],
-                                                    $conta_row[0],
-                                                    $conta_row[1]);
+                                                                                   $currency_bol[$key],
+                                                                                   $conta_row[0],
+                                                                                   $conta_row[1]);
                                                 $ammoun_zero = false;
                                                 if ($conta_row[0] == 0.0 || $conta_row[0] == 0) {
                                                     $ammoun_zero = true;
