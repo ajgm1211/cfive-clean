@@ -124,7 +124,7 @@ class CostSheetResource extends JsonResource
 
         foreach ($freightChargesModel as $charge) { 
             
-            $freightAmountsCharges = json_decode($charge['amount']);
+            $freightAmountsCharges = json_decode($charge['amount'],true);
 
             array_push($this->freightCharges, [
                 'type' => $charge->type->description, 
@@ -419,7 +419,7 @@ class CostSheetResource extends JsonResource
 
     public function getCharge($charge) {
         if ($this->quote->type == 'FCL') {
-            return $this->getAmountPerContainer(json_decode($charge['amount']));
+            return $this->getAmountPerContainer(json_decode($charge['amount'],true));
         }
         if ($this->quote->type == 'LCL') {
             return $charge->units * $charge->price_per_unit;
@@ -428,7 +428,7 @@ class CostSheetResource extends JsonResource
 
     public function getChargeArray($charge) {
         if ($this->quote->type == 'FCL') {
-            return $this->convertToArray(json_decode($charge['amount']));
+            return $this->convertToArray(json_decode($charge['amount'],true));
         }
         if ($this->quote->type == 'LCL') {
             return ['amount' => $charge->units * $charge->price_per_unit];
@@ -455,7 +455,7 @@ class CostSheetResource extends JsonResource
     
     public function getFreightChargePriceArray($charge) { 
         if ($this->quote->type == 'FCL') {
-            return $this->convertToArray(json_decode($charge['amount']));
+            return $this->convertToArray(json_decode($charge['amount'],true));
         }
         if ($this->quote->type == 'LCL') {
             return ['amount' => $charge->total];
@@ -464,7 +464,7 @@ class CostSheetResource extends JsonResource
 
     public function getFreightChargePrice($charge) { 
         if ($this->quote->type == 'FCL') {
-            return $this->getAmountPerContainer(json_decode($charge['amount']));
+            return $this->getAmountPerContainer(json_decode($charge['amount'],true));
         }
         if ($this->quote->type == 'LCL') {
             return $charge->total;
@@ -473,20 +473,20 @@ class CostSheetResource extends JsonResource
 
     public function getFreightChargeTotal() {
         if ($this->quote->type == 'FCL') {
-            return $this->getAmountPerContainer(json_decode($this->autorate->total));
+            return $this->getAmountPerContainer(json_decode($this->autorate->total,true));
         }
         if ($this->quote->type == 'LCL') {
-            $totalArray = json_decode($this->autorate->total);
+            $totalArray = json_decode($this->autorate->total,true);
             return $totalArray->total;         
         }
     }
 
     public function getFreightChargeTotalArray() {
         if ($this->quote->type == 'FCL') {
-            return $this->convertToArray(json_decode($this->autorate->total));
+            return $this->convertToArray(json_decode($this->autorate->total,true));
         }
         if ($this->quote->type == 'LCL') {
-            $total = json_decode($this->autorate->total);
+            $total = json_decode($this->autorate->total,true);
             return ['amount' => $total->total]; 
         }
     }
@@ -514,7 +514,7 @@ class CostSheetResource extends JsonResource
 
     public function getInlandRate($inland) { 
         if ($this->quote->type == 'FCL') {
-            return $this->getAmountPerContainer(json_decode($inland['rate']));
+            return $this->getAmountPerContainer(json_decode($inland['rate'],true));
         }
         if ($this->quote->type == 'LCL') {
             return $inland->total; 
@@ -523,7 +523,7 @@ class CostSheetResource extends JsonResource
 
     public function getInlandRateArray($inland) { 
         if ($this->quote->type == 'FCL') {
-            return $this->convertToArray(json_decode($inland['rate']));
+            return $this->convertToArray(json_decode($inland['rate'],true));
         }
         if ($this->quote->type == 'LCL') {
             return ['amount' => $inland->total];
@@ -532,7 +532,7 @@ class CostSheetResource extends JsonResource
 
     public function getInlandMarkupArray($inland) { 
         if ($this->quote->type == 'FCL') {
-            return $this->convertToArray(json_decode($inland['markup']));
+            return $this->convertToArray(json_decode($inland['markup'],true));
         }
         if ($this->quote->type == 'LCL') {
             return ['amount' => $inland->markup];
