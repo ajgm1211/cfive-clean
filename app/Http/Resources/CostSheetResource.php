@@ -61,7 +61,7 @@ class CostSheetResource extends JsonResource
 
         // Obtener inlands
         $inlands = $this->getInlandsModel();        
-        $this->buildInlandsData($inlands);      
+        $this->buildInlandsData($inlands);  
         
         // Obtenemos los charges
         $charges_model = $this->getChargesModel();
@@ -69,7 +69,7 @@ class CostSheetResource extends JsonResource
 
         // Obtenemos los local charges
         $local_charges_model = $this->getLocalChargesModel();
-        $this->buildLocalChargesData($local_charges_model);   
+        $this->buildLocalChargesData($local_charges_model);  
 
         // Obtener freight charges
         $freightChargesModel = $this->getChargesFreightModel();
@@ -229,7 +229,6 @@ class CostSheetResource extends JsonResource
             }
         }
         foreach ($inlands as $inland) {
-            
             if ($inland->port_id == $this->autorate->origin_port_id || $inland->port_id == $this->autorate->destination_port_id) {
                 
                 array_push($this->inlandsBuying, [
