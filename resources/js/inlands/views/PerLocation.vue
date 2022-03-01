@@ -27,7 +27,7 @@
       ></DynamicalDataTable>
     </b-card>
 
-      <b-modal id="editLocation" size="lg" cancel-title="Cancel" hide-header-close title="Update Range" hide-footer>
+    <b-modal id="editLocation" size="lg" cancel-title="Cancel" hide-header-close title="Update Location" hide-footer>
       <FormView 
           :data="currentData" 
           :fields="input_fields"
@@ -84,6 +84,7 @@ export default {
           trackby: "display_name",
           placeholder: "Select option",
           options: "harbors",
+          condition: "inland",
         },
         location: {
           label: "Address",
@@ -91,7 +92,7 @@ export default {
           rules: "required",
           trackby: "name",
           placeholder: "Select an Address",
-          options: "location",
+          options: "location_filter",
         },
         service: {
           label: "Service",

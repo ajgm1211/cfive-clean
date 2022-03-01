@@ -232,6 +232,7 @@
                                 :placeholder="item.placeholder"
                                 :class="view"
                                 @select="cleanInput(key)"
+                                @input="unlockfilter(item)"
                             >
                             </multiselect>
                             <!-- :class="item.class" -->
@@ -1791,6 +1792,19 @@ export default {
                 evt.preventDefault();
             } else {
                 return true;
+            }
+        },
+        unlockfilter(item) {
+            let component = this;
+
+            if('condition' in item==true && item.condition=="inland" ){
+                component.datalists.location_filter=[];
+
+                component.datalists.location.forEach(function(harbor) {
+                    if (harbor.harbors.id == component.fdata.port.id) {
+                        component.datalists.location_filter.push(harbor.location);
+                    }
+                });
             }
         },
     },

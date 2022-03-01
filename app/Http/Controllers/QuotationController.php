@@ -333,7 +333,7 @@ class QuotationController extends Controller
 
                             $inlandAddress=InlandAddress::create([
                                 'quote_id'=>$quote->id,
-                                'port_id'=>$direction=='Destination' ? $newRate->destination_port_id : $newRate->origin_port_idd,
+                                'port_id'=>$direction=='Destination' ? $newRate->destination_port_id : $newRate->origin_port_id,
                                 'address'=>$charge['location'],
                                 'type'=>$direction=='Destination' ? 'Destination' : 'Origin',
                             ]);

@@ -72,16 +72,15 @@ class InlandController extends Controller
             return $carrier->only(['id', 'name']);
         });
 
-        $locationsHarbors = HarborsLocationSearch::get()->map(function ($harbor){
-            return $harbor->only(['location_id']);
+        $location = HarborsLocationSearch::get()->map(function ($harbor){
+            return $harbor->only(['location','harbors']);
         });
-
-        $location = Location::whereIn('id',$locationsHarbors)->get();
 
         $inlnadService = InlandService::get()->map(function ($inlnadService) {
             return $inlnadService->only(['id', 'name']);
         });
 
+        $location_filter=[];
 
         $data = [
             'equipments' => $equipments,
@@ -95,6 +94,7 @@ class InlandController extends Controller
             'carriers' => $carriers,
             'location' => $location,
             'inland_service' => $inlnadService,
+            'location_filter' => $location_filter
         ];
 
         return response()->json(['data' => $data]);
