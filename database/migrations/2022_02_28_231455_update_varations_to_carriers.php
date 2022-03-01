@@ -16,14 +16,15 @@ class UpdateVarationsToCarriers extends Migration
     public function up()
     {
         $newCode = 'seau'; // new code Sealand Americas 
+        $carrierSealand = Carrier::where('name', 'Sealand')->first();
 
-        $varationArray = json_decode(Carrier::find(24)->varation, true);
+        $varationArray = json_decode($carrierSealand->varation, true);
 
         $type = $varationArray['type'];
         array_push($type, $newCode);
         $varationArray['type'] = $type;
 
-        Carrier::find(24)->update(['varation' => json_encode($varationArray)]);
+        $carrierSealand->update(['varation' => json_encode($varationArray)]);
     }
 
     /**
