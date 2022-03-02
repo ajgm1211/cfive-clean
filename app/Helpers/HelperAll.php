@@ -206,11 +206,14 @@ class HelperAll
             if($cont_clt->behaviour_per_container){
                 $code = $cont_clt->containersCalculation->pluck('container')->where('gp_container_id',$gp_container_id)->pluck('code')->first();
                 $behaviour = $cont_clt->behaviour_per_container->name;
+                $options = $cont_clt->behaviour_per_container->options;
+                $options = (!empty($options))?json_decode($options,true):["limits" => false];
+                //dd(json_decode($cont_clt->behaviour_per_container->options,true)+['value'=>1]);
                 if($code != null){
                     if(array_key_exists($behaviour,$contenedores_calcult_rq)){
-                        $contenedores_calcult_rq[$behaviour][$code] = $cont_clt->id;
+                        $contenedores_calcult_rq[$behaviour][$code] = ['value' => $cont_clt->id]+$options;
                     } else {
-                        $contenedores_calcult_rq[$behaviour]=[$code => $cont_clt->id];
+                        $contenedores_calcult_rq[$behaviour]=[$code => ['value' => $cont_clt->id]+$options];
                     }
                 }
             }

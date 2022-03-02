@@ -37,6 +37,7 @@ use App\MasterSurcharge;
 use App\MyClass\Excell\MyReadFilter;
 use App\NewContractRequest;
 use App\BehaviourPerContainer;
+use App\Helpers\HelperAll as HelpersHelperAll;
 use App\NewContractRequest as RequestFcl;
 use App\Notifications\N_general;
 use App\Rate;
@@ -1355,7 +1356,7 @@ class ImportationController extends Controller
                                 'statusCurrency' => $statusCurrency, // 3. val. por SELECT,1. columna de  currency, 2. currency mas valor juntos
                                 'conatiner_calculation_id' => $conatiner_calculation_id, // asocia los calculations con las columnas. relacion columna => calculation_id
                                 'column_calculatioT_bol' => $column_calculatioT_bol, // False si falla la asociacion, true si esta asociado correctamente
-
+                                'limits_val' => $limits_val, // Array que Indica los Limite para OW
                             ];
                             if (strnatcasecmp($chargeExc_val, $chargeVal) == 0 && $typedestinyExitBol == false) {
                                 $typedestinyExitBol = true;
@@ -4849,8 +4850,8 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation()
     {
-        $endpoint_obj = EndpointTable::where("name","barracuaep-generate-mask")->first();
+        $behaviourContainers = HelperAll::calculationByContainers(1);
         //$behaviourContainers = BehaviourPerContainer::pluck('name')->all();
-        dd(!empty($endpoint_obj));
+        dd($behaviourContainers);
     }
 }
