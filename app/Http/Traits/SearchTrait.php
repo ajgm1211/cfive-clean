@@ -1363,25 +1363,33 @@ trait SearchTrait
         //Retrieving current companyto filter remarks
         $company_user = CompanyUser::where('id', $search_data['company_user'])->first();
 
-        $origin_country = $rate->port_origin->country()->first();
-        $destination_country = $rate->port_destiny->country()->first();
-        $rate_countries_id = [ $origin_country->id, $destination_country->id, 250];
+        $origin_country = $rate->port_origin->country()->first(); // origin country del rate
+        $destination_country = $rate->port_destiny->country()->first(); // destination country del rate
+        $rate_countries_id = [ $origin_country->id, $destination_country->id, 250]; //id 250 belongs to all countries
 
-        $rate_ports_id = [$rate->origin_port, $rate->destiny_port , 1485];
+        $rate_ports_id = [$rate->origin_port, $rate->destiny_port , 1485]; //id 1485 belongs to all ports
 
-        $rate_carriers_id = [$rate->carrier_id, 26];
+        $rate_carriers_id = [$rate->carrier_id, 26]; //id 26 belongs to all carriers
+
+        $levels = ['web', 'both']; // Para resultados que no son api solo aplican los remarks con level web y both que es para todos
         
-        $remarks = RemarkCondition::where('company_user_id', $company_user->id)->whereHas('remarksCarriers', function ($q) use ($rate_carriers_id) {
-            $q->whereIn('carrier_id', $rate_carriers_id);
-        })->where(function ($query) use ($rate_countries_id, $rate_ports_id) {
-            $query->orwhereHas('remarksHarbors', function ($q) use ($rate_ports_id) {
-                $q->whereIn('port_id', $rate_ports_id);
-            })->orwhereHas('remarksCountries', function ($q) use ($rate_countries_id) {
-                $q->whereIn('country_id', $rate_countries_id);
-            });
-        })->when($apply != null, function ($q) use($apply) {
-            return $q->whereIn('apply_to', $apply);
-        })->get();
+        $remarks = RemarkCondition::where('company_user_id', $company_user->id)
+            ->whereIn('level', $levels)
+            ->whereHas('remarksCarriers', function ($q) use ($rate_carriers_id) {
+                $q->whereIn('carrier_id', $rate_carriers_id);
+            })
+            ->where(function ($query) use ($rate_countries_id, $rate_ports_id) {
+                $query->orwhereHas('remarksHarbors', function ($q) use ($rate_ports_id) {
+                    $q->whereIn('port_id', $rate_ports_id);
+                })
+                ->orwhereHas('remarksCountries', function ($q) use ($rate_countries_id) {
+                    $q->whereIn('country_id', $rate_countries_id);
+                });
+            })
+            ->when($apply != null, function ($q) use($apply) {
+                return $q->whereIn('apply_to', $apply);
+            })
+            ->get();
 
         $final_remarks = "";
         $included_contracts = [];
