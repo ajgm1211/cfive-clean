@@ -934,8 +934,8 @@ class CompanyController extends Controller
     /**
      * searchCompanies.
      *
-     * @param  mixed $request
-     * @return void
+     * @param mixed $request
+     * @return json
      */
     public function searchCompanies(Request $request)
     {
@@ -953,6 +953,14 @@ class CompanyController extends Controller
 
         return \Response::json($formatted_companies);
     }
+
+    /**
+     * validateData
+     * 
+     * @param mixed $request
+     * 
+     * @return [type]
+     */
     public function validateData($request)
     {   
         $vdata=[
@@ -961,26 +969,30 @@ class CompanyController extends Controller
             'options' => 'json',
         ];
 
-        foreach($request['key_name'] as $a => $name){
-            if ($a>=1 && $name==null ) {
-                $vdata=[
-                    'business_name' => 'required',
-                    'logo' => 'max:1000',
-                    'options' => 'json',
-                    'key_name '=>'required'
-                ];
-            }
-        }
-        foreach($request['key_value'] as $b => $value){
-                if($b>=1 && $value==null){
+        //Validating array into request
+        if(isset($request['key_name']) && isset($request['key_name'])){
+            foreach($request['key_name'] as $a => $name){
+                if ($a>=1 && $name==null ) {
                     $vdata=[
                         'business_name' => 'required',
                         'logo' => 'max:1000',
                         'options' => 'json',
-                        'key_value ' =>'required'
+                        'key_name '=>'required'
                     ];
+                }
+            }
+            foreach($request['key_value'] as $b => $value){
+                    if($b>=1 && $value==null){
+                        $vdata=[
+                            'business_name' => 'required',
+                            'logo' => 'max:1000',
+                            'options' => 'json',
+                            'key_value ' =>'required'
+                        ];
+                }
             }
         }
+
         $validator = \Validator::make($request->all(), $vdata);
         
         return $validator->validated();
