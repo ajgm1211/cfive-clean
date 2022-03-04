@@ -10,6 +10,7 @@ use App\Company;
 use App\CompanyUser;
 use App\Contact;
 use App\OverweightRange;
+use App\FailOverweightRange;
 use App\Container;
 use App\EndpointTable;
 use App\ContainerCalculation;
@@ -1146,13 +1147,13 @@ class ImportationController extends Controller
                         $descount++;
                     }
 
-                    
+
                     //------------------ CALCULATION TYPE -----------------------------------------------------
                     $calculationtype = null;
                     $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)
-                    ->where('group_container_id', '=', $groupContainer_id)
+                        ->where('group_container_id', '=', $groupContainer_id)
                         ->get();
-                        if ($calculationtype->isEmpty()) {
+                    if ($calculationtype->isEmpty()) {
                         $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)->get();
                     }
 
@@ -1167,7 +1168,7 @@ class ImportationController extends Controller
                     } else {
                         $calculationtypeVal = $calculation_type_exc . ' fila ' . $countRow . '_E_E';
                     }
-                    
+
                     //--- LIMITS OW -----------------------------------------------------
                     $limits_val = [];
                     $limitsExiBol = true;
@@ -1175,11 +1176,11 @@ class ImportationController extends Controller
                         $limits_val = array_map('trim', explode('-', $row[$row[$destinyExc]]));
                         $limits_val = (count($limits_val) > 1) ? $limits_val : array_push($limits_val, null);
                     } else {
-                        $limitsExiBol = ($ct_options['limits_ow'])?false:true;
+                        $limitsExiBol = ($ct_options['limits_ow']) ? false : true;
                         $limits_val = ['_E_E', '_E_E'];
                     }
                     //--------------- Type Destiny ------------------------------------------------------------
-                    
+
                     if ($statusTypeDestiny) {
                         $typedestinyExitBol = true;
                         $typedestinyVal = $valuesSelecteds['typeDestinyVal'];
@@ -1543,14 +1544,22 @@ class ImportationController extends Controller
 
                                                 // ---------------------- Limits OW ------------------------------------------
 
-                                                if($ct_options['limits_ow'] == true){
-                                                    OverweightRange::create([
-                                                        'lower_limit' => $limits_val[0],
-                                                        'upper_limit' => $limits_val[1],
-                                                        'amount' => $ammount,
-                                                        'model_id' => $surchargeObj->id,
-                                                        'model_type' => 'App\LocalCharge',
-                                                    ]);
+                                                if ($ct_options['limits_ow'] == true) {
+                                                    $owrange = OverweightRange::where('lower_limit', $limits_val[0])
+                                                        ->where('upper_limit', $limits_val[1])
+                                                        ->where('amount', $ammount)
+                                                        ->where('model_id', $surchargeObj->id)
+                                                        ->where('model_type', 'App\\LocalCharge')->get();
+
+                                                    if (count((array)$owrange) == 0) {
+                                                        OverweightRange::create([
+                                                            'lower_limit' => $limits_val[0],
+                                                            'upper_limit' => $limits_val[1],
+                                                            'amount' => $ammount,
+                                                            'model_id' => $surchargeObj->id,
+                                                            'model_type' => 'App\\LocalCharge',
+                                                        ]);
+                                                    }
                                                 }
                                                 //----------------------- CARRIERS -------------------------------------------
                                                 $existsCar = [];
@@ -1635,14 +1644,21 @@ class ImportationController extends Controller
 
                                                     // ---------------------- Limits OW ------------------------------------------
 
-                                                    if($row_calculation['limits_ow'] == true){
-                                                        OverweightRange::create([
-                                                            'lower_limit' => $limits_val[0],
-                                                            'upper_limit' => $limits_val[1],
-                                                            'amount' => $row_calculation['ammount'],
-                                                            'model_id' => $surchargeObj->id,
-                                                            'model_type' => 'App\LocalCharge',
-                                                        ]);
+                                                    if ($row_calculation['limits_ow'] == true) {
+                                                        $owrange = OverweightRange::where('lower_limit', $limits_val[0])
+                                                            ->where('upper_limit', $limits_val[1])
+                                                            ->where('amount', $row_calculation['ammount'])
+                                                            ->where('model_id', $surchargeObj->id)
+                                                            ->where('model_type', 'App\\LocalCharge')->get();
+                                                        if (count((array)$owrange) == 0) {
+                                                            OverweightRange::create([
+                                                                'lower_limit' => $limits_val[0],
+                                                                'upper_limit' => $limits_val[1],
+                                                                'amount' => $row_calculation['ammount'],
+                                                                'model_id' => $surchargeObj->id,
+                                                                'model_type' => 'App\\LocalCharge',
+                                                            ]);
+                                                        }
                                                     }
 
                                                     //----------------------- CARRIERS -------------------------------------------
@@ -1726,14 +1742,21 @@ class ImportationController extends Controller
 
                                         // ---------------------- Limits OW ------------------------------------------
 
-                                        if($ct_options['limits_ow'] == true){
-                                            OverweightRange::create([
-                                                'lower_limit' => $limits_val[0],
-                                                'upper_limit' => $limits_val[1],
-                                                'amount' => $ammount,
-                                                'model_id' => $surchargeObj->id,
-                                                'model_type' => 'App\LocalCharge',
-                                            ]);
+                                        if ($ct_options['limits_ow'] == true) {
+                                            $owrange = OverweightRange::where('lower_limit', $limits_val[0])
+                                                ->where('upper_limit', $limits_val[1])
+                                                ->where('amount', $ammount)
+                                                ->where('model_id', $surchargeObj->id)
+                                                ->where('model_type', 'App\\LocalCharge')->get();
+                                            if (count((array)$owrange) == 0) {
+                                                OverweightRange::create([
+                                                    'lower_limit' => $limits_val[0],
+                                                    'upper_limit' => $limits_val[1],
+                                                    'amount' => $ammount,
+                                                    'model_id' => $surchargeObj->id,
+                                                    'model_type' => 'App\\LocalCharge',
+                                                ]);
+                                            }
                                         }
 
                                         //----------------------- CARRIERS -------------------------------------------
@@ -1997,8 +2020,8 @@ class ImportationController extends Controller
                                                     }
 
                                                     //dd($ammount,$currency_val);
-                                                    $exists = [];
-                                                    $exists = FailSurCharge::where('surcharge_id', $surchargeVal)
+                                                    $failSurcharge = [];
+                                                    $failSurcharge = FailSurCharge::where('surcharge_id', $surchargeVal)
                                                         ->where('port_orig', $originVal)
                                                         ->where('port_dest', $destinyVal)
                                                         ->where('typedestiny_id', $typedestinyVal)
@@ -2010,8 +2033,8 @@ class ImportationController extends Controller
                                                         ->where('differentiator', $differentiatorVal)
                                                         ->get();
 
-                                                    if (count($exists) == 0) {
-                                                        FailSurCharge::create([
+                                                    if (count($failSurcharge) == 0) {
+                                                        $failSurcharge = FailSurCharge::create([
                                                             'surcharge_id' => $surchargeVal,
                                                             'port_orig' => $originVal,
                                                             'port_dest' => $destinyVal,
@@ -2022,6 +2045,20 @@ class ImportationController extends Controller
                                                             'currency_id' => $currency_val, //////
                                                             'carrier_id' => $carrierVal,
                                                             'differentiator' => $differentiatorVal,
+                                                        ]);
+                                                    }
+
+                                                    $failowRange = FailOverweightRange::where('lower_limit', $limits_val[0])
+                                                        ->where('upper_limit', $limits_val[1])
+                                                        ->where('model_id', $failSurcharge->id)
+                                                        ->where('model_type', 'App\\FailSurCharge')
+                                                        ->get();
+                                                    if (count(array($failowRange)) == 0) {
+                                                        FailOverweightRange::create([
+                                                            'lower_limit' => $limits_val[0],
+                                                            'upper_limit' => $limits_val[1],
+                                                            'model_id' => $failSurcharge->id,
+                                                            'model_type' => 'App\\FailSurCharge',
                                                         ]);
                                                     }
                                                 } elseif (count(array_unique($equals_values)) > 1) { //Valores distintos
@@ -2057,8 +2094,8 @@ class ImportationController extends Controller
                                                     //dd($rows_calculations);
                                                     foreach ($rows_calculations as $key => $row_calculation) {
                                                         if ($row_calculation['ammount_zero'] != true) {
-                                                            $exists = [];
-                                                            $exists = FailSurCharge::where('surcharge_id', $surchargeVal)
+                                                            $failSurcharge = [];
+                                                            $failSurcharge = FailSurCharge::where('surcharge_id', $surchargeVal)
                                                                 ->where('port_orig', $originVal)
                                                                 ->where('port_dest', $destinyVal)
                                                                 ->where('typedestiny_id', $typedestinyVal)
@@ -2069,8 +2106,8 @@ class ImportationController extends Controller
                                                                 ->where('carrier_id', $carrierVal)
                                                                 ->where('differentiator', $differentiatorVal)
                                                                 ->get();
-                                                            if (count($exists) == 0) {
-                                                                FailSurCharge::create([
+                                                            if (count($failSurcharge) == 0) {
+                                                                $failSurcharge = FailSurCharge::create([
                                                                     'surcharge_id' => $surchargeVal,
                                                                     'port_orig' => $originVal,
                                                                     'port_dest' => $destinyVal,
@@ -2081,6 +2118,19 @@ class ImportationController extends Controller
                                                                     'currency_id' => $row_calculation['currency'], //////
                                                                     'carrier_id' => $carrierVal,
                                                                     'differentiator' => $differentiatorVal,
+                                                                ]);
+                                                            }
+                                                            $failowRange = FailOverweightRange::where('lower_limit', $limits_val[0])
+                                                                ->where('upper_limit', $limits_val[1])
+                                                                ->where('model_id', $failSurcharge->id)
+                                                                ->where('model_type', 'App\\FailSurCharge')
+                                                                ->get();
+                                                            if (count(array($failowRange)) == 0) {
+                                                                FailOverweightRange::create([
+                                                                    'lower_limit' => $limits_val[0],
+                                                                    'upper_limit' => $limits_val[1],
+                                                                    'model_id' => $failSurcharge->id,
+                                                                    'model_type' => 'App\\FailSurCharge',
                                                                 ]);
                                                             }
                                                         }
@@ -2121,8 +2171,8 @@ class ImportationController extends Controller
                                                     $currency_val = $currencyObj->alphacode;
                                                 }
                                                 //dd('registro pr ship',$variant_currency,$columna_cont,$currency_val,$ammount);
-                                                $exists = [];
-                                                $exists = FailSurCharge::where('surcharge_id', $surchargeVal)
+                                                $failSurcharge = [];
+                                                $failSurcharge = FailSurCharge::where('surcharge_id', $surchargeVal)
                                                     ->where('port_orig', $originVal)
                                                     ->where('port_dest', $destinyVal)
                                                     ->where('typedestiny_id', $typedestinyVal)
@@ -2133,8 +2183,8 @@ class ImportationController extends Controller
                                                     ->where('carrier_id', $carrierVal)
                                                     ->where('differentiator', $differentiatorVal)
                                                     ->get();
-                                                if (count($exists) == 0) {
-                                                    FailSurCharge::create([
+                                                if (count($failSurcharge) == 0) {
+                                                    $failSurcharge = FailSurCharge::create([
                                                         'surcharge_id' => $surchargeVal,
                                                         'port_orig' => $originVal,
                                                         'port_dest' => $destinyVal,
@@ -2145,6 +2195,19 @@ class ImportationController extends Controller
                                                         'currency_id' => $currency_val, //////
                                                         'carrier_id' => $carrierVal,
                                                         'differentiator' => $differentiatorVal,
+                                                    ]);
+                                                }
+                                                $failowRange = FailOverweightRange::where('lower_limit', $limits_val[0])
+                                                    ->where('upper_limit', $limits_val[1])
+                                                    ->where('model_id', $failSurcharge->id)
+                                                    ->where('model_type', 'App\\FailSurCharge')
+                                                    ->get();
+                                                if (count(array($failowRange)) == 0) {
+                                                    FailOverweightRange::create([
+                                                        'lower_limit' => $limits_val[0],
+                                                        'upper_limit' => $limits_val[1],
+                                                        'model_id' => $failSurcharge->id,
+                                                        'model_type' => 'App\\FailSurCharge',
                                                     ]);
                                                 }
                                             }
@@ -2182,8 +2245,8 @@ class ImportationController extends Controller
                                             //dd('llega aqui Cals',$rows_calculations);
                                             foreach ($rows_calculations as $key => $row_calculation) {
                                                 if ($row_calculation['ammount_zero'] != true) {
-                                                    $exists = [];
-                                                    $exists = FailSurCharge::where('surcharge_id', $surchargeVal)
+                                                    $failSurcharge = [];
+                                                    $failSurcharge = FailSurCharge::where('surcharge_id', $surchargeVal)
                                                         ->where('port_orig', $originVal)
                                                         ->where('port_dest', $destinyVal)
                                                         ->where('typedestiny_id', $typedestinyVal)
@@ -2194,8 +2257,8 @@ class ImportationController extends Controller
                                                         ->where('carrier_id', $carrierVal)
                                                         ->where('differentiator', $differentiatorVal)
                                                         ->get();
-                                                    if (count($exists) == 0) {
-                                                        FailSurCharge::create([
+                                                    if (count($failSurcharge) == 0) {
+                                                        $failSurcharge = FailSurCharge::create([
                                                             'surcharge_id' => $surchargeVal,
                                                             'port_orig' => $originVal,
                                                             'port_dest' => $destinyVal,
@@ -2206,6 +2269,19 @@ class ImportationController extends Controller
                                                             'currency_id' => $row_calculation['currency'], //////
                                                             'carrier_id' => $carrierVal,
                                                             'differentiator' => $differentiatorVal,
+                                                        ]);
+                                                    }
+                                                    $failowRange = FailOverweightRange::where('lower_limit', $limits_val[0])
+                                                        ->where('upper_limit', $limits_val[1])
+                                                        ->where('model_id', $failSurcharge->id)
+                                                        ->where('model_type', 'App\\FailSurCharge')
+                                                        ->get();
+                                                    if (count(array($failowRange)) == 0) {
+                                                        FailOverweightRange::create([
+                                                            'lower_limit' => $limits_val[0],
+                                                            'upper_limit' => $limits_val[1],
+                                                            'model_id' => $failSurcharge->id,
+                                                            'model_type' => 'App\\FailSurCharge',
                                                         ]);
                                                     }
                                                 }
@@ -4946,8 +5022,17 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation()
     {
-        $behaviourContainers = HelperAll::calculationByContainers(1);
+        //$behaviourContainers = HelperAll::calculationByContainers(1);
         //$behaviourContainers = BehaviourPerContainer::pluck('name')->all();
-        dd($behaviourContainers);
+        $lc = LocalCharge::find(9165219);
+        $ow = OverweightRange::create([
+            'lower_limit' => 1,
+            'upper_limit' => 2,
+            'amount' => 123,
+            'model_id' => 9165219,
+            'model_type' => 'App\\LocalCharge'
+        ]);
+        //$ow->save();
+        dd($lc, $ow);
     }
 }
