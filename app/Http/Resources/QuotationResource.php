@@ -131,9 +131,9 @@ class QuotationResource extends JsonResource
 
         foreach($addresses as $address){
             if($address->type = 'Origin'){
-                array_push($ports['origin'], $address->port()->first();
+                array_push($ports['origin'], $address->port()->first());
             }else if($address->type = 'Destination'){
-                array_push($ports['destination'], $address->port()->first();
+                array_push($ports['destination'], $address->port()->first());
             }
         }
 
