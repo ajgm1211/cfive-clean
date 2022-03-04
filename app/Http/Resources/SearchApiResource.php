@@ -76,6 +76,7 @@ class SearchApiResource extends JsonResource
             'destination_charges' => $this->destination_charges,
             'origin_address' => isset($origin_address) ? $origin_address : null,
             'destination_address' => isset($destination_address) ? $destination_address : null,
+            'options' => $this->options,
             'show_rate_currency' => $this->show_rate_currency,
         ];
     }

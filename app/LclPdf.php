@@ -101,14 +101,15 @@ class LclPdf
                 $inlands = $this->InlandTotals($quote->id, $type, $value[0]['port_id']);
 
                 foreach ($inlands as $inland) {
-                    if ($inland->pdf_options['grouped']) {
+                    if (isset($inland->inland_totals->pdf_options) && $inland->inland_totals->pdf_options['grouped']) {
                         foreach ($value as $charge) {
-                            if ($inland->pdf_options['groupId'] == $charge->id) {
+                            if ($inland->inland_totals->pdf_options['groupId'] == $charge->id) {
                                 $inland_total = json_decode($inland->totals, true);
                                 $inland_total = isset($inland->sum_total) ? $inland->sum_total:$inland_total;
-                                $inland_total = $this->convertToCurrency($inland->currency, $charge->currency, $inland_total);
-                                $grouped_total = intval($charge->total) + intval($inland_total['lcl_totals']);
+                                $inland_total = $this->convertToCurrency($inland->currency, $charge->currency, array($inland_total))[0];
+                                $grouped_total = intval($charge->total) + intval($inland_total);
                                 $charge->total = $grouped_total;
+                                $charge->price = $grouped_total / $charge->units;
                             }
                         }
                     } else {
@@ -366,7 +367,7 @@ class LclPdf
 
             foreach ($totalsArrayOutput as $key => $route) {
                 if (($route['POL'] == $portArray['origin'] && $route['POD'] == $portArray['destination'] && $portArray['carrier'] == $route['carrier']) ||
-                     ( $portArray['carrier'] ==  'local' && $route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination'])) {
+                     ( $portArray['carrier'] ==  'local' && ($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']))) {
                     if (isset($totalsArrayInput['total'])) {
                         $dmCalc = isDecimal($totalsArrayInput['total'], true);
                         if (isset($totalsArrayOutput[$key]['total'])) {

@@ -218,7 +218,7 @@ class QuotationController extends Controller
         $company_user = $user->worksAt();
         $company_code = strtoupper(substr($company_user->name, 0, 2));
         $higherq_id = $company_user->getHigherId($company_code);
-        $newq_id = $company_code . '-' . strval($higherq_id + 1);
+        $newq_id = $company_code . '-' . strval($higherq_id + 1);        
 
         $data = $request->input();
 
@@ -252,7 +252,11 @@ class QuotationController extends Controller
                 $remarks .= $result['remarks'];
             }
         }
-        
+        // Validacion para el quote_id no sean iguales
+        $validation_same_quote = QuoteV2::where('quote_id',$newq_id)->first();
+        if(!empty($validation_same_quote)){
+            $newq_id = $company_code . '-' . strval($higherq_id + 2);        
+        }
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
             'type' => $search_data_ids['type'],
@@ -280,6 +284,10 @@ class QuotationController extends Controller
             'chargeable_weight' => $search_data['chargeableWeight'],
         ]);
 
+        // En caso de que se vuelva a repetir el quote_id
+        // if($newq_id === $quote->quote_id){
+        //     return redirect()->route('searchV2.index');
+        // }
         $quote = $quote->fresh();
 
         if ($quote->language_id == 1) {
@@ -689,7 +697,7 @@ class QuotationController extends Controller
     }
 
     public function retrieve(QuoteV2 $quote)
-    {
+    {   
         return new QuotationResource($quote);
     }
 
@@ -707,9 +715,11 @@ class QuotationController extends Controller
     }
 
     public function specialduplicate(Request $request)
-    {
+    {   
         $data = $request->input();
-        $rate_data = $data['rates'];
+
+        //Nuevos fletes seleccionados
+        $rate_data = $data['rates']; 
         $result_data = $data['results'];
 
         if (count($rate_data) != 0) {
@@ -748,10 +758,19 @@ class QuotationController extends Controller
             ]);
         }
 
+        //Buscar AutomaticRates viejos
         $old_rates = $new_quote->rates_v2()->get();
+        
+        $oldChargesOriginAndDestinyType = [];
 
-        foreach ($old_rates as $old_rate) {
-            $old_rate->delete();
+        //Obtener recargos de tipo origin y destino de los fletes originales (los que se muestran en el modal)
+        foreach ($old_rates as $rate) {
+            $charges = $rate->charge()->get();
+            foreach ($charges as $charge) {
+                if($charge->type_id !== 3) {
+                    array_push($oldChargesOriginAndDestinyType, $charge);    
+                }                
+            }            
         }
 
         //Setting Automatic Rates
@@ -773,6 +792,22 @@ class QuotationController extends Controller
                 'carrier_id' => $rate['carrier_id'],
             ]);
 
+            //Asignar automatic_rate_id en caso el origin o destino sean iguales
+            foreach ($oldChargesOriginAndDestinyType as $oldCharge) {
+                $automaticRateToOldCharge = $oldCharge->automatic_rate()->first();                                
+                if($oldCharge->type_id == 1 && $automaticRateToOldCharge->origin_port_id == $newRate->origin_port_id) {
+                    $oldCharge->automatic_rate_id  = $newRate->id;
+                }
+                if($oldCharge->type_id == 2 && $automaticRateToOldCharge->destination_port_id == $newRate->destination_port_id) {
+                    $oldCharge->automatic_rate_id  = $newRate->id;
+                }
+            }
+
+            //Guardar en la bd los 
+            foreach($oldChargesOriginAndDestinyType as $charges) {
+                $charges->save();
+            }
+
             foreach ($rate['charges'] as $charge_direction) {
                 foreach ($charge_direction as $charge) {
 
@@ -780,16 +815,18 @@ class QuotationController extends Controller
                     $charge = $this->formatFclChargeForQuote($charge);
                     $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
 
-                    $freight = Charge::create([
-                        'automatic_rate_id' => $newRate->id,
-                        'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : $ocean_surcharge->id,
-                        'type_id' => $charge['typedestiny_id'],
-                        'calculation_type_id' => $charge['calculationtype']['id'],
-                        'currency_id' => $currency_id,
-                        'amount' => json_encode($charge['amount']),
-                        'markups' => json_encode($charge['markups']),
-                        'total' => json_encode($charge['total']),
-                    ]);
+                    if($charge['typedestiny_id'] == 3){ //Crear solo charges con tipo Freight
+                        $freight = Charge::create([
+                            'automatic_rate_id' => $newRate->id,
+                            'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : $ocean_surcharge->id,
+                            'type_id' => $charge['typedestiny_id'],
+                            'calculation_type_id' => $charge['calculationtype']['id'],
+                            'currency_id' => $currency_id,
+                            'amount' => json_encode($charge['amount']),
+                            'markups' => json_encode($charge['markups']),
+                            'total' => json_encode($charge['total']),
+                        ]);
+                    }
                 }
             }
 
@@ -836,24 +873,40 @@ class QuotationController extends Controller
                 'destination_port_id' => $result['destiny_port'],
                 'carrier_id' => $result['carrier_id'],
             ]);
+            //Asignar automatic_rate_id en caso el origin o destino sean iguales
+            foreach ($oldChargesOriginAndDestinyType as $oldCharge) {
+                $automaticRateToOldCharge = $oldCharge->automatic_rate()->first();                                
+                if($oldCharge->type_id == 1 && $automaticRateToOldCharge->origin_port_id == $newRate->origin_port_id) {
+                    $oldCharge->automatic_rate_id  = $newRate->id;
+                }
+                if($oldCharge->type_id == 2 && $automaticRateToOldCharge->destination_port_id == $newRate->destination_port_id) {
+                    $oldCharge->automatic_rate_id  = $newRate->id;
+                }
+            }
+            
+            //Guardar en la bd los 
+            foreach($oldChargesOriginAndDestinyType as $charges) {
+                $charges->save();
+            }
 
             foreach ($result['pricingDetails']['surcharges'] as $charge_direction) {
                 foreach ($charge_direction as $charge) {
-
-                    $freight = Charge::create([
-                        'automatic_rate_id' => $newRate->id,
-                        'surcharge_id' => $charge['surcharge_id'],
-                        'type_id' => $charge['type_id'],
-                        'calculation_type_id' => $charge['calculationtype_id'],
-                        'currency_id' => $charge['currency_id'],
-                        'amount' => json_encode($charge['amount']),
-                        'total' => json_encode($charge['amount']),
-                    ]);
+                    if($charge['type_id'] == 3){ //Crear solo charges con tipo Freight
+                        $freight = Charge::create([
+                            'automatic_rate_id' => $newRate->id,
+                            'surcharge_id' => $charge['surcharge_id'],
+                            'type_id' => $charge['type_id'],
+                            'calculation_type_id' => $charge['calculationtype_id'],
+                            'currency_id' => $charge['currency_id'],
+                            'amount' => json_encode($charge['amount']),
+                            'total' => json_encode($charge['amount']),
+                        ]);
+                    }
                 }
             }
 
             $rateTotals = AutomaticRateTotal::create([
-                "quote_id" => $quote->id,
+                "quote_id" => $new_quote->id,
                 'automatic_rate_id' => $newRate->id,
                 'origin_port_id' => $newRate->origin_port_id,
                 'destination_port_id' => $newRate->destination_port_id,
@@ -862,6 +915,11 @@ class QuotationController extends Controller
             ]);
 
             $rateTotals->totalize($result['currency_id']);
+        }
+
+        //Eliminar AutomaticRates viejos (tener en cuenta que por relación en cascada esto borra tambien los charges)
+        foreach ($old_rates as $old_rate) {
+            $old_rate->delete();
         }
 
         //Deleting Inlands without ports in rates
