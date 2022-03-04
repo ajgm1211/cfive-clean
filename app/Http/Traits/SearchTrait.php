@@ -46,8 +46,10 @@ trait SearchTrait
 
         if ($type == 'destino') {
             $textType = 'Destination';
+            $addressId=$inlandParams['destination_address']['location_id'];
         } elseif ($type == 'origen') {
             $textType = 'Origin';
+            $addressId=$inlandParams['origin_address']['location_id']; 
         }
 
         if ($type == 'destino') {
@@ -62,17 +64,17 @@ trait SearchTrait
             $a->where('company_id', '=', $company_inland);
         })->orDoesntHave('inland_company_restriction')->whereHas('inlandports', function ($q) use ($port) {
             $q->whereIn('port', $port);
-        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', $groupContainer)->with('inlandRange', 'inlandports.ports', 'inlandkms.currency');
+        })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', $groupContainer)->with('inlandRange', 'inlandports.ports', 'inlandkms.currency','inlandLocation');
 
         $inlands->where(function ($query) use ($modality_inland) {
-            $query->where('type', $modality_inland)->orwhere('type', '3');
+            $query->where('type', $modality_inland)->orwhere('type', '2')->orwhere('type', '3');
         });
 
         // HECTOR ON 11-01 - ADDING VALIDATION FOR EXPIRE, MODIFYING QUERY
         $inlands->where('status','publish');
-
+        
         $inlands = $inlands->get();
-
+    
         $dataDest = array();
 
         // se agregan los aditional km
@@ -155,13 +157,51 @@ trait SearchTrait
                                     $markupI20 = $this->inlandMarkup($markup['inland']['inlandPercentage'], $markup['inland']['inlandAmmount'], $markup['inland']['inlandMarkup'], $sub_20, $typeCurrency, $markup['inland']['inlandMarkup']);
 
                                     // FIN CALCULO MARKUPS
-                                    $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'amount' => $amount_inland, 'currency' => $range->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
+                                    $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'amount' => $amount_inland, 'currency' => $typeCurrency, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
+                                    // $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'amount' => $amount_inland, 'currency' => $range->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
                                     $arrayInland20 = array_merge($markupI20, $arrayInland20);
                                     $inlandDetails[] = $arrayInland20;
                                 }
-                            }
+                            }  
                         }
                     }
+                    //PER LOCATION
+                        if(count($inlandsValue->inlandLocation)>0){
+                            foreach ($inlandsValue->inlandLocation as $location) {
+                               if($port[0]==$location['harbor_id'] && $addressId==$location['location_id'] ){
+                                    $rateI = $this->ratesCurrency($location->currency->id, $typeCurrency);
+                                    $jsonContainer = json_encode($location->json_containers, JSON_FORCE_OBJECT);
+                                    $json = json_decode($jsonContainer);
+
+                                    foreach ($contain as $cont) {
+                                        $km = 'km' . $cont->code;
+                                        if (in_array($cont->id, $equipment)) {
+                                            if (isset($json->{'C' . $cont->code})) {
+                                                $rateMount = $json->{'C' . $cont->code};
+                                                $sub_20 = number_format($rateMount/$rateI, 2, '.', '');
+                                                $amount_inland = number_format($rateMount, 2, '.', '');
+                                                $price_per_unit = number_format($rateMount , 2, '.', '');
+                                            }else {
+                                                $rateMount = 0;
+                                                $amount_inland = 0;
+                                                $price_per_unit = 0;
+                                                $sub_20 = 0;
+                                            }
+                                            $monto += number_format($sub_20, 2, '.', '');
+                                            $$km = false;
+                                            // CALCULO MARKUPS
+                                            $markupI20 = $this->inlandMarkup($markup['inland']['inlandPercentage'], $markup['inland']['inlandAmmount'], $markup['inland']['inlandMarkup'], $sub_20, $typeCurrency, $markup['inland']['inlandMarkup']);
+
+                                            // FIN CALCULO MARKUPS
+                                            $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'amount' => $amount_inland, 'currency' =>$typeCurrency, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
+                                            // $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'amount' => $amount_inland, 'currency' => $location->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
+                                            $arrayInland20 = array_merge($markupI20, $arrayInland20);
+                                            $inlandDetails[] = $arrayInland20;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     // KILOMETROS ADICIONALES
 
                     if (isset($inlandsValue->inlandkms)) {
@@ -201,12 +241,12 @@ trait SearchTrait
 
                                     // FIN CALCULO MARKUPS
                                     $sub_20 = number_format($sub_20, 2, '.', '');
-                                    $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'des_in' => $texto20, 'amount' => $amount_inland, 'currency' => $inlandk->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
+                                    $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'des_in' => $texto20, 'amount' => $amount_inland, 'currency' => $typeCurrency, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
+                                    // $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'des_in' => $texto20, 'amount' => $amount_inland, 'currency' => $inlandk->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
                                     $arrayInland20 = array_merge($markupI20, $arrayInland20);
 
                                     $inlandDetails[] = $arrayInland20;
                                 }
-                                // }
                             }
                         }
                     }
@@ -1829,7 +1869,7 @@ trait SearchTrait
                         $l['type']='location';
                         $l['distance']=$result['distance'];
                     }else{
-                        if($l['value']<$result){
+                        if($l['value']<$result['sum']){
                             $l=$inland['location'][$a];                            
                             $l['value']=$result['sum'];
                             $l['containers']=$result['containers'];
@@ -1858,7 +1898,7 @@ trait SearchTrait
                         $r['type']='ranges';
                         $r['distance']=$result['distance'];
                     }else{
-                        if($r['value']<$result){
+                        if($r['value']<$result['sum']){
                             $r=$inland['range'][$b];
                             $r['value']=$result['sum'];
                             $r['containers']=$result['containers'];
@@ -1880,7 +1920,6 @@ trait SearchTrait
                     $result=$this->selectContainerInland($km,$containers,$current_client,$port,$address,$type='km');
                     if($k==null){
                         $k=$inland['km'][$c];
-                        $k['value']=$result;
                         $k['value']=$result['sum'];
                         $k['containers']=$result['containers'];
                         $k['containers_client_currency']=$result['containers_client_currency'];
@@ -1888,7 +1927,7 @@ trait SearchTrait
                         $k['type']='km';
                         $k['distance']=$result['distance'];
                     }else{
-                        if($k['value']<$result){
+                        if($k['value']<$result['sum']){
                             $k=$inland['km'][$c];
                             $k['value']=$result['sum'];
                             $k['containers']=$result['containers'];

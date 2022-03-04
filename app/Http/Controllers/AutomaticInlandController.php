@@ -14,6 +14,7 @@ use App\Harbor;
 use App\AutomaticRate;
 use App\AutomaticInland;
 use App\AutomaticInlandTotal;
+use App\DistanceKmLocation;
 use App\InlandDistance;
 use App\Http\Traits\SearchTrait;
 use App\InlandLocalChargeGroup;
@@ -260,7 +261,9 @@ class AutomaticInlandController extends Controller
             'destiny_port' => [$port_id],
             'origin_port' => [$port_id], 
             'company_user_id' => $quote->company_user_id,
-            'typeCurrency' => $user_currency->id
+            'currency_id' => $user_currency->id,
+            'typeCurrency' => $user_currency->alphacode
+
         ];
         
         if($type=='Origin'){
@@ -365,11 +368,23 @@ class AutomaticInlandController extends Controller
 
     public function getHarborAddresses($port_id)
     {
-        $distances = InlandDistance::where('harbor_id', $port_id)->get()->map(function ($distance) {
-            return $distance->only(['id', 'display_name', 'harbor_id', 'distance']);
-        });
+        $format=[];
 
-        return response()->json(['data' => $distances]);
+        $distances = DistanceKmLocation::where('harbors_id', $port_id)->get()->map(function ($distance) {
+            return $distance->only(['id','distance', 'location', 'harbors_id']);
+        });
+        foreach($distances as $key=>$distance){
+
+            $format[$key]=[
+                'id'=>$distance['id'],
+                'display_name'=>$distance['location']['name'],
+                'harbor_id'  =>$distance['harbors_id'],
+                'distance'=>$distance['distance'],
+                'location_id'=>$distance['location']['id']
+            ];
+        }
+
+        return response()->json(['data' => $format]);
     }
 
     public function retrieveTotals(QuoteV2 $quote, $combo)

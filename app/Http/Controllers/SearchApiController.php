@@ -789,8 +789,17 @@ class SearchApiController extends Controller
             //Price arrays from charge
             $target_totals = $target->containers_client_currency;
             $target_containers = $target->containers;
-            //SPECIAL CASE - OCEAN FREIGHT
-        } elseif (isset($target['surcharge']) && $target['surcharge']['name'] == "Ocean Freight") {
+        }elseif (is_a($target,"App\InlandRange") || is_a($target,"App\InlandPerLocation") || is_a($target,"App\InlandKm") && isset($markups['inlands'])) {
+            //Info from markups array
+            $markups_to_add = $markups['inlands'];
+            $markups_currency = $markups_to_add['currency'];
+            $target_currency = $target->currency;
+            $is_eloquent_collection = true;
+            //Price arrays from charge
+            $target_containers = $target->containers;
+            $target_totals = $target->containers_client_currency;
+        //SPECIAL CASE - OCEAN FREIGHT
+        }elseif (isset($target['surcharge']) && $target['surcharge']['name'] == "Ocean Freight") {
             //Info from markups array
             $markups_to_add = $markups['freight'];
             $fixed = $markups_to_add['freight_amount'];
