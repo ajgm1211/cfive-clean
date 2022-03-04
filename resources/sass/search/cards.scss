@@ -245,7 +245,8 @@ BANDA DE CARDS CMA Y MAERSK
 .banda-top.sealand span,
 .banda-top.seau span,
 .banda-top.evergreen span,
-.banda-top.hapag span {
+.banda-top.hapag span,
+.banda-top.one span  {
     text-transform: uppercase;
     position: relative;
     left: -7px;
@@ -359,6 +360,19 @@ BANDA DE CARDS CMA Y MAERSK
     }
 }
 
+.banda-top.one {
+    border-bottom: 26px solid #BD0E72;
+    &::after {
+        border-top: 10px solid #7a0949;
+    }
+    &::before {
+        border-top: 11px solid #7a0949;
+    }
+    span {
+        top: 2px;
+        font-size: 9px;
+    }
+}
 
 
 /* CMA AND maersk */
