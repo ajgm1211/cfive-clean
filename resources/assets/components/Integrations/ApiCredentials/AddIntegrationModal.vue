@@ -28,8 +28,8 @@
           :name="item"
           :ref="item"
           :placeholder="item"
-          :value="item === 'auth_uri' ? auth_uri : item === 'api_key' ? api_key : ''"
-          :disabled="item === 'auth_uri' ? true : item === 'api_key' ? true : false"
+          :value="credential_values[item]"
+          :disabled="providers_tokens.includes(item)"
           @input="updateCredentialValues(item, $event)"
           :rules="{
             required: true,
@@ -59,8 +59,7 @@ export default {
     selectable_error: false,
     credential_keys: [],
     credential_values: {},
-    auth_uri: "https://login.api.hlag.cloud",
-    api_key: "V4_snHlkS9CxC7JeIfGm8w"
+    providers_tokens: ['auth_uri', 'api_key']
   }),
   mounted() {    
     this.$store.dispatch("getAvailableApiProviders", {
@@ -79,20 +78,14 @@ export default {
         return {
           id: provider.id,
           alphacode: provider.name,
-          credential_keys: provider.credential_keys     
+          credential_keys: provider.credential_keys,
+          credentials: provider.credentials
         };
       });
     }
   },
   methods: {
     postData() {
-      // Asignamos un valor constante cuando se registra "api_key" o "auth_uri"
-      if( this.credential_values.hasOwnProperty("api_key") ) {
-        this.credential_values["api_key"] = this.api_key;
-      }
-      if( this.credential_values.hasOwnProperty("auth_uri") ) {
-        this.credential_values["auth_uri"] = this.auth_uri;
-      }
       this.$store.dispatch("createApiCredentials", {
         body: {
           model_id: this.GET_COMPANY_USER.id,
@@ -109,13 +102,21 @@ export default {
     updateCredentialValues(prop, value) {
       Vue.set(this.credential_values, prop, value);
     },
-    setSelected(option) {
+    setSelected(option) { 
+
+      let credentials = JSON.parse(option['credentials']);
+
       this.selected = option;
       this.credential_values = {};
-      this.credential_keys = JSON.parse(option.credential_keys); 
+      this.credential_keys = JSON.parse(option.credential_keys);
+
       for(let i=0; i<this.credential_keys.length; i++){
         let item = this.credential_keys[i];
-        this.credential_values[item] = "";
+        if(this.providers_tokens.includes(item)) {
+          this.credential_values[item] = credentials[item];
+        } else {
+          this.credential_values[item] = "";
+        }        
       } 
     },
   },
