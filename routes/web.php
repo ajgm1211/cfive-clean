@@ -553,9 +553,9 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
 Route::resource('quotes', 'QuoteController')->middleware(['auth','old_version']);
 
 //Quotes V2
-Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
-    Route::get('/', 'QuoteV2Controller@index')->name('quotes-v2.index')->middleware('old_version');
-    Route::get('/show/{id}', 'QuoteV2Controller@show')->name('quotes-v2.show')->middleware('old_version');
+Route::middleware(['auth', 'old_version'])->prefix('v2/quotes')->group(function () {
+    Route::get('/', 'QuoteV2Controller@index')->name('quotes-v2.index');
+    Route::get('/show/{id}', 'QuoteV2Controller@show')->name('quotes-v2.show');
     Route::get('delete/{id}', 'QuoteV2Controller@destroy')->name('quotes-v2.destroy');
     Route::post('/update/{id}', 'QuoteV2Controller@update')->name('quotes-v2.update');
     Route::post('/charges/update', 'QuoteV2Controller@updateQuoteCharges')->name('quotes-v2.update.charges');
