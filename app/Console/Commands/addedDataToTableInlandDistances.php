@@ -8,14 +8,14 @@ use App\InlandProvince;
 use App\Location;
 use Illuminate\Console\Command;
 
-class addedDataToTableInlandDistance extends Command
+class addedDataToTableInlandDistances extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'command:addedDataToTableInlandDistance';
+    protected $signature = 'command:addedDataToTableInlandDistances';
 
     /**
      * The console command description.
@@ -49,6 +49,7 @@ class addedDataToTableInlandDistance extends Command
 
             foreach($locationOld as $location){
                 $newLocation=Location::where('name',$location['address'])->first();
+                \Log::info($newLocation);
                 DistanceKmLocation::updateOrCreate(
                 ['distance'=> $location['distance'],'location_id'=>$newLocation->id,'harbors_id'=>$location['harbor_id']],
                 [
