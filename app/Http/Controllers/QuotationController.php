@@ -45,7 +45,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Traits\MixPanelTrait;
 use App\ViewQuoteV2;
 use App\LocalChargeQuote;
-use App\InlandAddress;
 use App\AutomaticInland;
 
 class QuotationController extends Controller

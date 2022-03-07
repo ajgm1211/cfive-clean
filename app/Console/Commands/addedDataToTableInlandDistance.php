@@ -42,6 +42,7 @@ class addedDataToTableInlandDistance extends Command
     public function handle()
     {
         try {
+            
             $locationOld=InlandDistance::get()->map(function ($locations){
                 return $locations->only(['address','distance','harbor_id','province']);
             });
