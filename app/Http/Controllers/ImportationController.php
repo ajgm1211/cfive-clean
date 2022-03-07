@@ -5032,17 +5032,22 @@ class ImportationController extends Controller
     }
 
     // Solo Para Testear ----------------------------------------------------------------
-    public function testExcelImportation()
+    public function testExcelImportation(Request $request)
     {
         //$behaviourContainers = HelperAll::calculationByContainers(1);
         //$behaviourContainers = BehaviourPerContainer::pluck('name')->all();
-        $lc = LocalCharge::find(9165219);
+        /*$lc = LocalCharge::find(9165219);
         $owrange = OverweightRange::where('lower_limit', 10)
         ->where('upper_limit', 20)
         ->where('amount', 20)
         ->where('model_id', 11133)
         ->where('model_type', 'App\\LocalCharge')->get();
         //$ow->save();
-        dd($lc, $owrange->isEmpty());
+        dd($lc, $owrange->isEmpty());*/
+        $options = [];
+        foreach(['group','isteu','limits_ow'] as $field){
+            $options[$field] = !empty($request->get($field));
+        }
+        dd(!empty($request->get('limits_ow')),$options);
     }
 }

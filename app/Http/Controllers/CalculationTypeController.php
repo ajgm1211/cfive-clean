@@ -49,8 +49,10 @@ class CalculationTypeController extends Controller
         $calculation->display_name = strtoupper($request->name);
         $calculation->code = strtoupper($request->code);
         $calculation->group_container_id = $request->equipment;
-        $group = $request->group ? true : false;
-        $isteu = $request->isteu ? true : false;
+        $options = [];
+        foreach(['group','isteu','limits_ow'] as $field){
+            $options[$field] = !empty($request->get($field));
+        }
         $calculation->gp_pcontainer = $request->gp_pcontainer ? true : false;
         if (!$request->name_prin_ch) {
             $name_prin_inp = $request->name_prin_inp;
@@ -58,11 +60,9 @@ class CalculationTypeController extends Controller
             $name_prin_inp = 'N\A';
             $calculation->behaviour_pc_id = $request->behaviourpcs;
         }
-        $options = ['group' => $group, 'isteu' => $isteu, 'name' => $name_prin_inp];
+        $options['name'] = $name_prin_inp;
         $calculation->options = json_encode($options);
-
         $calculation->save();
-
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'Success. Calculation type created.');
 
@@ -84,6 +84,9 @@ class CalculationTypeController extends Controller
             $options = json_encode(['group' => false, 'isteu' => false, 'name' => 'N\A']);
             $options = json_decode($options);
         }
+        if(!array_key_exists('limits_ow',$options)){
+            $options->limits_ow = false;
+        }
 
         return view('calculationTypes.Body-Modals.edit', compact('calculation', 'options','equipments','behaviourpcs'));
     }
@@ -92,8 +95,6 @@ class CalculationTypeController extends Controller
     {
         //dd($request->all());
         $calculation = CalculationType::find($id);
-        $group = $request->group ? true : false;
-        $isteu = $request->isteu ? true : false;
         $calculation->name = $request->name;
         $calculation->group_container_id = $request->equipment;
         $calculation->display_name = strtoupper($request->name);
@@ -105,7 +106,11 @@ class CalculationTypeController extends Controller
             $calculation->behaviour_pc_id = $request->behaviourpcs;
         }
         $calculation->gp_pcontainer = $request->gp_pcontainer ? true : false;
-        $options = ['group' => $group, 'isteu' => $isteu, 'name' => $name_prin_inp];
+        $options = [];
+        foreach(['group','isteu','limits_ow'] as $field){
+            $options[$field] = !empty($request->get($field));
+        }
+        $options['name'] = $name_prin_inp;
         $calculation->options = json_encode($options);
         $calculation->update();
 

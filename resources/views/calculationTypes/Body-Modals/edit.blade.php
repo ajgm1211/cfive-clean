@@ -84,6 +84,16 @@
                 </label>
             </div>
         </div>
+        <div class="col-md-4">
+            <label class=""><br></label>    
+            <div class="" id="only_div">
+                <label class="m-checkbox m-checkbox--state-primary">
+                    {!! Form::checkbox('limits_ow',true,$options->limits_ow,['class'=>'form-control','title'=>'Limits OW','id'=>'limits_ow_id'])!!}
+                    Limits OW
+                    <span title="Enable OW limit loading"></span>
+                </label>
+            </div>
+        </div>
     </div>
 </div>
 <div class="modal-footer">
