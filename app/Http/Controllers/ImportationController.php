@@ -1174,7 +1174,9 @@ class ImportationController extends Controller
                     $limitsExiBol = true;
                     if (!empty($row[$limitsExc])) {
                         $limits_val = array_map('trim', explode('-', $row[$limitsExc]));
-                        $limits_val = (count($limits_val) > 1) ? $limits_val : $limits_val[1] = null;
+                        if(count($limits_val) == 1){
+                            array_push($limits_val,null);
+                        }
                     } else {
                         $limitsExiBol = ($ct_options['limits_ow']) ? false : true;
                         $limits_val = ['_E_E', '_E_E'];
