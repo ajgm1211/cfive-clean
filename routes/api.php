@@ -175,3 +175,26 @@ Route::group(['prefix'=>'apiCredentials','middleware' => 'auth:api'], function (
     Route::post('status/{apiCredential}', 'ApiCredentialsController@updateStatus');
     Route::post('companyUser/{companyUser}/deleteApiProvider', 'ApiCredentialsController@deleteApiProviderOfCompanyUser');
 });
+
+Route::group(['prefix'=>'companies','middleware' => 'auth:api'], function () {
+    Route::get('data', 'CompanyV2Controller@data');
+    Route::get('list', 'CompanyV2Controller@list');
+    Route::post('store', 'CompanyV2Controller@store');
+    Route::post('{company}/update', 'CompanyV2Controller@update');
+    Route::post('{company}/duplicate', 'CompanyV2Controller@duplicate');
+    Route::put('{company}/delete', 'CompanyV2Controller@destroy');
+    Route::put('deleteAll', 'CompanyV2Controller@destroyAll');
+    Route::get('retrieve/{company}', 'CompanyV2Controller@retrieve');
+    Route::get('template', 'CompanyV2Controller@downloadTemplatefile');
+});
+
+Route::group(['prefix'=>'contacts','middleware' => 'auth:api'], function () {
+    Route::get('data', 'ContactV2Controller@data');
+    Route::get('list', 'ContactV2Controller@list');
+    Route::post('store', 'ContactV2Controller@store');
+    Route::post('{company}/update', 'ContactV2Controller@update');
+    Route::post('{company}/duplicate', 'ContactV2Controller@duplicate');
+    Route::put('{company}/delete', 'ContactV2Controller@destroy');
+    Route::put('deleteAll', 'ContactV2Controller@destroyAll');
+    Route::get('retrieve/{company}', 'ContactV2Controller@retrieve');
+});

@@ -10,7 +10,7 @@ use App\Http\Resources\InlandPerLocationResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class inlandPerLocationController extends Controller
+class InlandPerLocationController extends Controller
 {
     public function index(Request $request)
     {
