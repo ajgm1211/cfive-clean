@@ -1449,11 +1449,18 @@ export default {
                         this.$refs.observer.setErrors(data.data.errors);
                     });
             }
+
             this.charges = this.charges.filter(function (item) {
                 return id != item.id;
             });
+
             this.localcharges = this.localcharges.filter(function (item) {
                 return id != item.id;
+            });
+
+            //Delete charge to selected charges array
+            this.selectedCharges = this.selectedCharges.filter(function (item) {
+                return id != item.id; 
             });
         },
         onSubmit() {
