@@ -911,16 +911,8 @@ class SearchApiController extends Controller
 
             //Looping through charges by type
             foreach ($charge_direction as $charge) {
-                // if (is_a($charge,"App\LocalCharge") || is_a($charge,"App\GlobalCharge") || is_a($charge,"App\InlandRange") || is_a($charge,"App\InlandPerLocation") || is_a($charge,"App\InlandKm")) {
-
-                //     if(is_a($charge,"App\InlandRange") || is_a($charge,"App\InlandPerLocation") || is_a($charge,"App\InlandKm")){
-                //         $containers=$charge['containers'];
-                //     }else{
-                //         $containers=$charge->totals_with_markups;
-                //     }
-                // }
                 
-                if (is_a($charge, "App\LocalCharge") || is_a($charge, "App\GlobalCharge")) {
+                if (is_a($charge, "App\LocalCharge") || is_a($charge, "App\GlobalCharge")|| is_a($charge,"App\InlandRange") || is_a($charge,"App\InlandPerLocation") || is_a($charge,"App\InlandKm") ) {
 
                     if (isset($charge->totals_with_markups)) {
                         if ($direction == "Freight") {
@@ -933,8 +925,8 @@ class SearchApiController extends Controller
                             }
                             $charges_to_add_rate_currency = $charges_to_add_original;
                         }else{
-                            $charges_to_add = $containers;
-                            $charges_to_add_rate_currency = $this->convertToCurrency($charge->currency, $rate->currency,  $containers);
+                            $charges_to_add = $charge->totals_with_markups;
+                            $charges_to_add_rate_currency = $this->convertToCurrency($charge->currency, $rate->currency, $charge->totals_with_markups);
                         }
                     } else {
                         if ($direction == "Freight") {
@@ -977,7 +969,7 @@ class SearchApiController extends Controller
                             $charge_type_totals[$direction][$code] += isDecimal($charges_to_add[$code], true);
                         }
                     }
-
+                   
                     //Updating rate totals to new added array
                     if(($direction == "Origin" && $search_data['originCharges']) || 
                         ($direction == "Destination" && $search_data['destinationCharges'])
@@ -1042,7 +1034,7 @@ class SearchApiController extends Controller
 
             $rate->setAttribute('quantity_totals', $single_totals);
             $rate->setAttribute('global_total', $global_total);
-        }
+        }       
     }
 
     public function storeContractNewSearch(StoreContractSearch $request)

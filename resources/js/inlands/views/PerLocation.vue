@@ -117,8 +117,9 @@ export default {
   methods: {
     /* Single Actions */
     onEdit(data) {
-      this.currentData = data;
       this.$bvModal.show("editLocation");
+      this.unlockfilter(data,this.datalists);
+      this.currentData = data;
     },
 
     /* Single Actions */
@@ -138,10 +139,23 @@ export default {
       setTimeout(function () {
         component.loaded = true;
       }, 100);
+      component.datalists.location_filter=[];
     },
 
     link() {
       window.location = "/RequestFcl/NewRqFcl";
+    },
+
+    unlockfilter(data,datalists ) {
+      let component = this;
+
+       datalists.location_filter=[];
+
+        datalists.location.forEach(function(harbor) {
+            if (harbor.harbors.id == data.port.id) {
+                component.datalists.location_filter.push(harbor.location);
+            }
+        });
     },
   },
 };

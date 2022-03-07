@@ -85244,7 +85244,7 @@ var resetConfig = function resetConfig() {
  */
 var getEnv = function getEnv(key) {
   var fallback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  var env = typeof process !== 'undefined' && process ? Object({"MIX_APP_URL":"http://cargofive.local","MIX_PUSHER_APP_CLUSTER":"us2","MIX_PUSHER_APP_KEY":"1052abebf4043210e7f1","NODE_ENV":"development"}) || {} : {};
+  var env = typeof process !== 'undefined' && process ? Object({"MIX_APP_URL":"https://app.cargofive.com","MIX_PUSHER_APP_CLUSTER":"us2","MIX_PUSHER_APP_KEY":"1052abebf4043210e7f1","NODE_ENV":"development"}) || {} : {};
 
   if (!key) {
     /* istanbul ignore next */
