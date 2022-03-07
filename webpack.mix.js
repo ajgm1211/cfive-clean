@@ -29,4 +29,5 @@ mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/providers/index.js', 'public/js/providers')
     .js('resources/js/search/index.js', 'public/js/search')
     .js('resources/assets/js/main.js', 'public/js/main')
+    .js('frontend/main.js', 'public/front/js')
     .sass('resources/sass/app.scss', 'public/css');
