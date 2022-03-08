@@ -47,5 +47,6 @@ class DatabaseSeeder extends Seeder
         $this->call(InlandServicesTableSeeder::class);
         $this->call(HarborsLocationSearchTableSeeder::class);
         $this->call(DistancesKmLocationTableSeeder::class);
+        $this->call(InlandProvincesTableSeeder::class);
     }
 }

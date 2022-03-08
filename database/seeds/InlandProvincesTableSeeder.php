@@ -20,722 +20,686 @@ class InlandProvincesTableSeeder extends Seeder
             0 => 
             array (
                 'id' => 1,
-                'name' => 'Distrito Capital',
+                'name' => 'ALAVA',
                 'region' => '',
-                'country_id' => 234,
-                'created_at' => '2021-06-01 19:31:01',
-                'updated_at' => NULL,
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             1 => 
             array (
                 'id' => 2,
-                'name' => 'carabobo',
+                'name' => 'ALBACETE',
                 'region' => '',
-                'country_id' => 234,
-                'created_at' => '2021-06-01 19:32:32',
-                'updated_at' => NULL,
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             2 => 
             array (
                 'id' => 3,
-                'name' => 'zulia',
+                'name' => 'ALEMANIA',
                 'region' => '',
-                'country_id' => 234,
-                'created_at' => '2021-06-01 19:32:32',
-                'updated_at' => NULL,
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             3 => 
             array (
                 'id' => 4,
-                'name' => 'CARTAGENA',
+                'name' => 'ALICANTE',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-06-01 19:33:23',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             4 => 
             array (
                 'id' => 5,
-                'name' => 'ALAVA',
+                'name' => 'ALMERIA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             5 => 
             array (
                 'id' => 6,
-                'name' => 'ALBACETE',
+                'name' => 'ANDORRA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             6 => 
             array (
                 'id' => 7,
-                'name' => 'ALICANTE',
+                'name' => 'ASTURIAS',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             7 => 
             array (
                 'id' => 8,
-                'name' => 'ALMERIA',
+                'name' => 'AVILA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             8 => 
             array (
                 'id' => 9,
-                'name' => 'ASTURIAS',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
-            ),
-            9 => 
-            array (
-                'id' => 11,
-                'name' => 'AVILA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
-            ),
-            10 => 
-            array (
-                'id' => 12,
                 'name' => 'BADAJOZ',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            9 => 
+            array (
+                'id' => 10,
+                'name' => 'BADALONA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            10 => 
+            array (
+                'id' => 11,
+                'name' => 'BALEARES',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             11 => 
             array (
-                'id' => 13,
+                'id' => 12,
                 'name' => 'BARCELONA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             12 => 
             array (
-                'id' => 14,
-                'name' => 'BURGOS',
+                'id' => 13,
+                'name' => 'BELGICA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             13 => 
             array (
-                'id' => 15,
-                'name' => 'CADIZ',
+                'id' => 14,
+                'name' => 'BILBAO',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             14 => 
             array (
-                'id' => 16,
-                'name' => 'CORDOBA',
+                'id' => 15,
+                'name' => 'BURGOS',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             15 => 
             array (
-                'id' => 17,
-                'name' => 'GRANADA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            16 => 
-            array (
-                'id' => 18,
-                'name' => 'HUELVA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            17 => 
-            array (
-                'id' => 19,
-                'name' => 'JAEN',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            18 => 
-            array (
-                'id' => 20,
-                'name' => 'MALAGA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            19 => 
-            array (
-                'id' => 21,
-                'name' => 'SEVILLA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            20 => 
-            array (
-                'id' => 22,
-                'name' => 'GERONA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            21 => 
-            array (
-                'id' => 23,
-                'name' => 'HUESCA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            22 => 
-            array (
-                'id' => 24,
-                'name' => 'LERIDA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            23 => 
-            array (
-                'id' => 25,
-                'name' => 'TARRAGONA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            24 => 
-            array (
-                'id' => 26,
-                'name' => 'TERUEL',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            25 => 
-            array (
-                'id' => 27,
-                'name' => 'CANTABRIA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
-            ),
-            26 => 
-            array (
-                'id' => 28,
-                'name' => 'GUIPUZCOA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            27 => 
-            array (
-                'id' => 29,
-                'name' => 'LA RIOJA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            28 => 
-            array (
-                'id' => 30,
-                'name' => 'LEON',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            29 => 
-            array (
-                'id' => 31,
-                'name' => 'NAVARRA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            30 => 
-            array (
-                'id' => 32,
-                'name' => 'PALENCIA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            31 => 
-            array (
-                'id' => 33,
-                'name' => 'SORIA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            32 => 
-            array (
-                'id' => 34,
-                'name' => 'VIZCAYA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            33 => 
-            array (
-                'id' => 35,
-                'name' => 'ZAMORA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            34 => 
-            array (
-                'id' => 36,
+                'id' => 16,
                 'name' => 'CACERES',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            35 => 
+            16 => 
             array (
-                'id' => 37,
+                'id' => 17,
+                'name' => 'CADIZ',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            17 => 
+            array (
+                'id' => 18,
+                'name' => 'CANTABRIA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            18 => 
+            array (
+                'id' => 19,
                 'name' => 'CASTELLON',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            36 => 
+            19 => 
             array (
-                'id' => 38,
+                'id' => 20,
                 'name' => 'CIUDAD REAL',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:54:45',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            37 => 
+            20 => 
             array (
-                'id' => 39,
+                'id' => 21,
+                'name' => 'CORDOBA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            21 => 
+            array (
+                'id' => 22,
+                'name' => 'CORUÑA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            22 => 
+            array (
+                'id' => 23,
                 'name' => 'CUENCA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            38 => 
+            23 => 
             array (
-                'id' => 40,
+                'id' => 24,
+                'name' => 'ELCHE',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            24 => 
+            array (
+                'id' => 25,
+                'name' => 'FRANCIA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            25 => 
+            array (
+                'id' => 26,
+                'name' => 'GERONA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            26 => 
+            array (
+                'id' => 27,
+                'name' => 'GRANADA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            27 => 
+            array (
+                'id' => 28,
                 'name' => 'GUADALAJARA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            39 => 
+            28 => 
             array (
-                'id' => 41,
-                'name' => 'La Coruña',
+                'id' => 29,
+                'name' => 'GUIPUZCOA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => NULL,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            40 => 
+            29 => 
             array (
-                'id' => 42,
+                'id' => 30,
+                'name' => 'HUELVA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            30 => 
+            array (
+                'id' => 31,
+                'name' => 'HUESCA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            31 => 
+            array (
+                'id' => 32,
+                'name' => 'INGLATERRA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            32 => 
+            array (
+                'id' => 33,
+                'name' => 'ITALIA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            33 => 
+            array (
+                'id' => 34,
+                'name' => 'JAEN',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            34 => 
+            array (
+                'id' => 35,
+                'name' => 'LA RIOJA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            35 => 
+            array (
+                'id' => 36,
+                'name' => 'LEON',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            36 => 
+            array (
+                'id' => 37,
+                'name' => 'LERIDA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            37 => 
+            array (
+                'id' => 38,
+                'name' => 'LOGROÑO',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            38 => 
+            array (
+                'id' => 39,
                 'name' => 'LUGO',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            41 => 
+            39 => 
             array (
-                'id' => 43,
+                'id' => 40,
                 'name' => 'MADRID',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            40 => 
+            array (
+                'id' => 41,
+                'name' => 'MALAGA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            41 => 
+            array (
+                'id' => 42,
+                'name' => 'MALLORCA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             42 => 
             array (
-                'id' => 44,
+                'id' => 43,
                 'name' => 'MURCIA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             43 => 
+            array (
+                'id' => 44,
+                'name' => 'NAVARRA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            44 => 
             array (
                 'id' => 45,
                 'name' => 'ORENSE',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            44 => 
-            array (
-                'id' => 46,
-                'name' => 'PONTEVEDRA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
             45 => 
             array (
-                'id' => 47,
-                'name' => 'SALAMANCA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            46 => 
-            array (
-                'id' => 48,
-                'name' => 'SEGOVIA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            47 => 
-            array (
-                'id' => 49,
-                'name' => 'TOLEDO',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            48 => 
-            array (
-                'id' => 50,
-                'name' => 'VALLADOLID',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            49 => 
-            array (
-                'id' => 51,
-                'name' => 'ZARAGOZA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            50 => 
-            array (
-                'id' => 52,
-                'name' => 'VALENCIA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2021-08-03 00:00:00',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            51 => 
-            array (
-                'id' => 53,
-                'name' => 'ALEMANIA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2022-01-23 15:41:15',
-                'updated_at' => '2022-01-23 15:54:45',
-            ),
-            52 => 
-            array (
-                'id' => 54,
-                'name' => 'ANDORRA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2022-01-23 15:41:15',
-                'updated_at' => '2022-01-23 15:54:45',
-            ),
-            53 => 
-            array (
-                'id' => 55,
-                'name' => 'BADALONA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2022-01-23 15:41:15',
-                'updated_at' => '2022-01-23 15:54:45',
-            ),
-            54 => 
-            array (
-                'id' => 56,
-                'name' => 'BALEARES',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2022-01-23 15:41:15',
-                'updated_at' => '2022-01-23 15:54:45',
-            ),
-            55 => 
-            array (
-                'id' => 57,
-                'name' => 'BELGICA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2022-01-23 15:41:15',
-                'updated_at' => '2022-01-23 15:54:45',
-            ),
-            56 => 
-            array (
-                'id' => 58,
-                'name' => 'BILBAO',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2022-01-23 15:41:15',
-                'updated_at' => '2022-01-23 15:54:45',
-            ),
-            57 => 
-            array (
-                'id' => 59,
-                'name' => 'CORUÑA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            58 => 
-            array (
-                'id' => 60,
-                'name' => 'ELCHE',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            59 => 
-            array (
-                'id' => 61,
-                'name' => 'FRANCIA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            60 => 
-            array (
-                'id' => 62,
-                'name' => 'INGLATERRA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            61 => 
-            array (
-                'id' => 63,
-                'name' => 'ITALIA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            62 => 
-            array (
-                'id' => 64,
-                'name' => 'LOGROÑO',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            63 => 
-            array (
-                'id' => 65,
-                'name' => 'MALLORCA',
-                'region' => '',
-                'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
-            ),
-            64 => 
-            array (
-                'id' => 66,
+                'id' => 46,
                 'name' => 'OVIEDO',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            65 => 
+            46 => 
             array (
-                'id' => 67,
+                'id' => 47,
+                'name' => 'PALENCIA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            47 => 
+            array (
+                'id' => 48,
                 'name' => 'PAMPLONA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            66 => 
+            48 => 
             array (
-                'id' => 68,
+                'id' => 49,
+                'name' => 'PONTEVEDRA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            49 => 
+            array (
+                'id' => 50,
                 'name' => 'PORTUGAL',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            67 => 
+            50 => 
             array (
-                'id' => 69,
+                'id' => 51,
                 'name' => 'RIOJA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            68 => 
+            51 => 
             array (
-                'id' => 70,
+                'id' => 52,
+                'name' => 'SALAMANCA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            52 => 
+            array (
+                'id' => 53,
                 'name' => 'SAN SEBASTIAN',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            69 => 
+            53 => 
             array (
-                'id' => 71,
+                'id' => 54,
+                'name' => 'SEGOVIA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            54 => 
+            array (
+                'id' => 55,
+                'name' => 'SEVILLA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            55 => 
+            array (
+                'id' => 56,
+                'name' => 'SORIA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            56 => 
+            array (
+                'id' => 57,
                 'name' => 'SUIZA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            70 => 
+            57 => 
             array (
-                'id' => 72,
+                'id' => 58,
+                'name' => 'TARRAGONA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            58 => 
+            array (
+                'id' => 59,
+                'name' => 'TERUEL',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            59 => 
+            array (
+                'id' => 60,
+                'name' => 'TOLEDO',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            60 => 
+            array (
+                'id' => 61,
+                'name' => 'VALENCIA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            61 => 
+            array (
+                'id' => 62,
+                'name' => 'VALLADOLID',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            62 => 
+            array (
+                'id' => 63,
                 'name' => 'VIGO',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            71 => 
+            63 => 
             array (
-                'id' => 73,
+                'id' => 64,
                 'name' => 'VITORIA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            72 => 
+            64 => 
             array (
-                'id' => 74,
+                'id' => 65,
+                'name' => 'VIZCAYA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            65 => 
+            array (
+                'id' => 66,
+                'name' => 'ZAMORA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            66 => 
+            array (
+                'id' => 67,
+                'name' => 'ZARAGOZA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            67 => 
+            array (
+                'id' => 68,
                 'name' => 'SANTANDER',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            73 => 
+            68 => 
             array (
-                'id' => 75,
+                'id' => 69,
                 'name' => 'SAGRA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            74 => 
+            69 => 
             array (
-                'id' => 76,
+                'id' => 70,
                 'name' => 'SAGUNTO',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            75 => 
+            70 => 
             array (
-                'id' => 77,
+                'id' => 71,
                 'name' => 'PARRA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            76 => 
+            71 => 
             array (
-                'id' => 78,
+                'id' => 72,
                 'name' => 'PERPIGNAN',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            77 => 
+            72 => 
             array (
-                'id' => 79,
+                'id' => 73,
+                'name' => 'CARTAGENA',
+                'region' => '',
+                'country_id' => 66,
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
+            ),
+            73 => 
+            array (
+                'id' => 74,
                 'name' => 'HOLANDA',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            78 => 
+            74 => 
             array (
-                'id' => 80,
+                'id' => 75,
                 'name' => 'DONOSTI',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
-            79 => 
+            75 => 
             array (
-                'id' => 81,
+                'id' => 76,
                 'name' => 'GIJON',
                 'region' => '',
                 'country_id' => 66,
-                'created_at' => '2022-01-23 15:46:28',
-                'updated_at' => '2022-01-23 15:46:28',
+                'created_at' => '2022-03-08 16:11:08',
+                'updated_at' => '2022-03-08 16:11:08',
             ),
         ));
         
