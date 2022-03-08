@@ -13,7 +13,7 @@ class RemaneColumnInInlandPerLocationTable extends Migration
      */
     public function up()
     {
-        Schema::table('inland_per_location', function (Blueprint $table) {
+        Schema::table('inland_per_locations', function (Blueprint $table) {
             $table->renameColumn('json_container', 'json_containers');
         });
     }
@@ -25,7 +25,7 @@ class RemaneColumnInInlandPerLocationTable extends Migration
      */
     public function down()
     {
-        Schema::table('inland_per_location', function (Blueprint $table) {
+        Schema::table('inland_per_locations', function (Blueprint $table) {
             //
         });
     }
