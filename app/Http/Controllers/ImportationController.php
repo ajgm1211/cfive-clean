@@ -2095,6 +2095,7 @@ class ImportationController extends Controller
                                                             'ammount' => $ammount,
                                                             'ammount_zero' => $ammoun_zero,
                                                             'currency' => $currency_val,
+                                                            'limits_ow' => $conatiner_calculation_id[$calculation_type_exc][$key]['limits_ow'],
                                                         ];
                                                     }
                                                     //dd($rows_calculations);
@@ -4067,7 +4068,7 @@ class ImportationController extends Controller
             }
         } else {
             if ($selector == 1) {
-                $objharbor = new Harbor();
+                /*$objharbor = new Harbor();
                 $objcurrency = new Currency();
                 $objcarrier = new Carrier();
                 $objsurcharge = new Surcharge();
@@ -4078,7 +4079,7 @@ class ImportationController extends Controller
                 $carrierSelect = $objcarrier->all()->pluck('name', 'id');
                 $harbor = $objharbor->all()->pluck('display_name', 'id');
                 $currency = $objcurrency->all()->pluck('alphacode', 'id');
-                $calculationtypeselect = $objCalculationType->all()->pluck('name', 'id');
+                $calculationtypeselect = $objCalculationType->all()->pluck('name', 'id');*/
 
                 $failsurchargeS = DB::select('call  proc_fails_surchargers_fcl(' . $id . ')');
                 //$failsurchargeS = FailSurCharge::where('contract_id','=',$id)->get();
@@ -4100,7 +4101,15 @@ class ImportationController extends Controller
                     $currencyA = explode('_', $failsurcharge->currency_id);
                     $carrierA = explode('_', $failsurcharge->carrier_id);
                     $typedestinyA = explode('_', $failsurcharge->typedestiny_id);
+                    $lower_limitA = explode('_', $failsurcharge->lower_limit);
+                    $upper_limitA = explode('_', $failsurcharge->upper_limit);
 
+                    // -------------- AMMOUNT ------------------------------------------------------------
+                    
+                    $lower_limit = (count($lower_limitA) <= 1)?$failsurcharge->lower_limit:$lower_limitA[0] . ' (error)';
+                    $upper_limit = (count($upper_limitA) <= 1)?$failsurcharge->upper_limit:$upper_limitA[0] . ' (error)';
+                    $lower_limit = (empty($lower_limit))?'-----':$lower_limit;
+                    $upper_limit = (empty($upper_limit))?'-----':$upper_limit;
                     // -------------- ORIGIN -------------------------------------------------------------
                     if ($failsurcharge->differentiator == 1) {
                         $originOb = PrvHarbor::get_harbor($originA[0]);
@@ -4214,6 +4223,8 @@ class ImportationController extends Controller
                         'ammount' => $ammountA,
                         'calculationtypelb' => $calculationtypeA,
                         'currencylb' => $currencyA,
+                        'lower_limit' => $lower_limit,
+                        'upper_limit' => $upper_limit,
                         'classsurcharge' => $classsurcharger,
                         'classorigin' => $classdorigin,
                         'classdestiny' => $classddestination,
