@@ -5399,6 +5399,13 @@ export default {
       let fullResponseLength = 0;
       var params = [];
       let reqCounter = 0;
+      let today = new Date()
+
+      today = today.toISOString().slice(0,10);
+
+      if(apiDate < today){
+        apiDate = today;
+      }
 
       component.$emit("apiSearchStarted", "apiSearchStart");
 
