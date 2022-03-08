@@ -5399,7 +5399,7 @@ export default {
       let fullResponseLength = 0;
       var params = [];
       let reqCounter = 0;
-      let today = new Date()
+      let today = new Date();
 
       today = today.toISOString().slice(0,10);
 
