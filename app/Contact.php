@@ -54,6 +54,11 @@ class Contact extends Model implements Auditable
         });
     }
 
+    public function scopeFilterByCurrentEditingCompany($query, $company)
+    {
+        return $query->where('company_id', $company);
+    }
+
     public function scopeFilter(Builder $builder, Request $request)
     {
         return (new ContactFilter($request, $builder))->filter();

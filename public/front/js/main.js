@@ -76383,9 +76383,6 @@ module.exports = Component.exports
     },
     deleteAll: function deleteAll(ids) {
         return api.call('put', '/api/contacts/deleteAll', { ids: ids });
-    },
-    contacts: function contacts() {
-        return api.call('get', '/api/contacts/contacts');
     }
 });
 
@@ -83045,7 +83042,7 @@ exports.push([module.i, "", ""]);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(386);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_modules_contact_actions__ = __webpack_require__(511);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actionContact__ = __webpack_require__(827);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton__ = __webpack_require__(439);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_common_MainButton__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_common_DataTable__ = __webpack_require__(503);
@@ -83079,9 +83076,11 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   components: { DataTable: __WEBPACK_IMPORTED_MODULE_3__components_common_DataTable___default.a, MainButton: __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton___default.a },
   data: function data() {
     return {
-      actions: __WEBPACK_IMPORTED_MODULE_1__store_modules_contact_actions__["a" /* default */],
+      actions: __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actionContact__["a" /* default */],
       totalResults: true,
-      fields: [{ key: "id", label: "ID", filterIsOpen: true }, { key: "first_name", label: "First Name", filterIsOpen: false }, { key: "last_name", label: "Last Name", filterIsOpen: false }, { key: "email", label: "Email", filterIsOpen: false }, { key: "phone", label: "Phone", filterIsOpen: false }, { key: "position", label: "Position", filterIsOpen: false }, { key: "created_at", label: "Created at", filterIsOpen: false }],
+      fields: [{ key: "id", label: "ID", filterIsOpen: true }, { key: "first_name", label: "First Name", filterIsOpen: false }, { key: "last_name", label: "Last Name", filterIsOpen: false }, { key: "email", label: "Email", filterIsOpen: false }, { key: "phone", label: "Phone", filterIsOpen: false }, { key: "position", label: "Position", filterIsOpen: false }, { key: "company", formatter: function formatter(value) {
+          return value.business_name;
+        }, label: "Company", filterIsOpen: false }, { key: "created_at", label: "Created at", filterIsOpen: false }],
       classTable: "table table-striped table-responsive"
     };
   },
@@ -83379,7 +83378,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         api.call('get', '/api/companies/failed/list', { params: params }).then(function (response) {
             callback(null, response.data);
         }).catch(function (error) {
-            console.log(error.response);
             callback(error, error.response.data);
         });
     }
@@ -83983,6 +83981,24 @@ var Api = function () {
 }();
 
 /* harmony default export */ __webpack_exports__["a"] = (Api);
+
+/***/ }),
+/* 824 */,
+/* 825 */,
+/* 826 */,
+/* 827 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+    list: function list(params, callback) {
+        api.call('get', 'contacts', { params: params }).then(function (response) {
+            callback(null, response.data);
+        }).catch(function (error) {
+            callback(error, error.response.data);
+        });
+    }
+});
 
 /***/ })
 /******/ ]);

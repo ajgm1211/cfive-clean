@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Excel;
 use App\Company;
+use App\Contact;
 use App\FailCompany;
 use App\CompanyPrice;
 use App\GroupUserCompany;
@@ -13,8 +14,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use App\Http\Resources\CompanyResource;
+use App\Http\Resources\ContactResource;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\FailCompanyResource;
+
 
 class CompanyV2Controller extends Controller
 {
@@ -245,9 +248,15 @@ class CompanyV2Controller extends Controller
         return view('companies.v2.failed');
     }
     
-    public function failedData(Request $request){
+    public function failedList(Request $request){
         $failedCompanies = FailCompany::filterByCurrentUser()->orderBy('id', 'asc')->filter($request);
 
         return FailCompanyResource::collection($failedCompanies);
+    }
+
+    public function contactByCompanyList(Request $request, $company){
+
+        $contactsByCompany = Contact::filterByCurrentEditingCompany($company)->orderBy('id', 'asc')->filter($request);
+        return  ContactResource::collection($contactsByCompany);
     }
 }

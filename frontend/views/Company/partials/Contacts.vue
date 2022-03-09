@@ -14,7 +14,7 @@
 
 <script>  
 
-import actions from '../../../store/modules/contact/actions'
+import actions from '../../../store/modules/company/actionContact'
 import MainButton from "../../../components/common/MainButton"
 import DataTable from '../../../components/common/DataTable'
 //import toastr from "toastr"
@@ -32,6 +32,7 @@ export default {
         { key: "email", label: "Email", filterIsOpen:false },
         { key: "phone", label: "Phone", filterIsOpen:false },
         { key: "position", label: "Position", filterIsOpen:false },
+        { key: "company", formatter: (value) => {return value.business_name}, label: "Company", filterIsOpen:false },
         { key: "created_at", label: "Created at", filterIsOpen:false },
       ],
       classTable:"table table-striped table-responsive"

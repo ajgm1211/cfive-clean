@@ -19,8 +19,5 @@ export default {
     },
     deleteAll(ids) {
         return api.call('put', `/api/contacts/deleteAll`, { ids: ids });
-    },
-    contacts(){
-        return api.call('get', `/api/contacts/contacts`);
     }
 }
