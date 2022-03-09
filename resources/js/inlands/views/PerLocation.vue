@@ -152,7 +152,7 @@ export default {
        datalists.location_filter=[];
 
         datalists.location.forEach(function(harbor) {
-            if (harbor.harbors.id == data.port.id) {
+            if (harbor.harbors_id == data.port.id) {
                 component.datalists.location_filter.push(harbor.location);
             }
         });

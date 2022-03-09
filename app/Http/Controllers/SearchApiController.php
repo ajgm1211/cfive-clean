@@ -628,7 +628,7 @@ class SearchApiController extends Controller
         $container_type = $search_array['selectedContainerGroup']['id'];
         $start_date = $search_array['dateRange']['startDate'];
         $end_date  = $search_array['dateRange']['endDate'];
-        $direction = $search_array['direction'];
+        $direction =[ '0'=>$search_array['direction'],'1'=>'3'];
         $carrier = $rate['carrier_id'];
         $company_user = \Auth::user()->companyUser->id;
         $origin_port = $rate['origin_port'];

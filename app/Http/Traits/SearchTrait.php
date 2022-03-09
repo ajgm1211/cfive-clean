@@ -1748,7 +1748,7 @@ trait SearchTrait
             if ($locations['id']!=null && $port==$locations['harbor'] && $locations['id']==$address['id']  ) {
                 $inlands= Inland::where('validity', '<', $end_date)->where('expire', '>', $start_date)
                 ->where('company_user_id',$company_user)->where('gp_container_id',$container_type)
-                ->where('direction_id',$direction)->where('carrier_id',$carrier)->with('inlandkms','inlandLocation','inlandRange','providers')
+                ->wherein('direction_id',$direction)->where('carrier_id',$carrier)->with('inlandkms','inlandLocation','inlandRange','providers')
                 ->whereHas('inlandports', function ($a) use ($port){
                     $a->where('port',$port);
                 })

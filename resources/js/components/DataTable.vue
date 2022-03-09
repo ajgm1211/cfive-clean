@@ -1801,7 +1801,7 @@ export default {
                 component.datalists.location_filter=[];
 
                 component.datalists.location.forEach(function(harbor) {
-                    if (harbor.harbors.id == component.fdata.port.id) {
+                    if (harbor.harbors_id == component.fdata.port.id) {
                         component.datalists.location_filter.push(harbor.location);
                     }
                 });

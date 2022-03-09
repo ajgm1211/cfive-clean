@@ -574,7 +574,7 @@ export default {
 
                 component.datalists.location.forEach(function(harbor) {
                   
-                    if (harbor.harbors.id == component.vdata.port.id) {
+                    if (harbor.harbors_id == component.vdata.port.id) {
                         component.datalists.location_filter.push(harbor.location);
                     }
                 });

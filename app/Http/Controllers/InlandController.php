@@ -73,7 +73,7 @@ class InlandController extends Controller
         });
 
         $location = HarborsLocationSearch::get()->map(function ($harbor){
-            return $harbor->only(['location','harbors']);
+            return $harbor->only(['location','harbors_id']);
         });
 
         $inlnadService = InlandService::get()->map(function ($inlnadService) {
