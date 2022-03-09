@@ -76991,9 +76991,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       totalResults: true,
       create: false,
       isMassiveCreation: false,
-      fields: [{ key: "id", label: "ID", filterIsOpen: true }, { key: "business_name", label: "Business Name", filterIsOpen: false }, { key: "phone", label: "Phone", filterIsOpen: false }, { key: "email", label: "Email", filterIsOpen: false }, { key: "address", label: "Address", filterIsOpen: false }, { key: "tax_number", label: "Tax Number", filterIsOpen: false }, { key: "created_at", formatter: function formatter(value) {
-          return value.date;
-        }, label: "Created at", filterIsOpen: false }],
+      fields: [{ key: "id", label: "ID", filterIsOpen: true }, { key: "business_name", label: "Business Name", filterIsOpen: false }, { key: "phone", label: "Phone", filterIsOpen: false }, { key: "email", label: "Email", filterIsOpen: false }, { key: "address", label: "Address", filterIsOpen: false }, { key: "tax_number", label: "Tax Number", filterIsOpen: false }, { key: "created_at", label: "Created at", filterIsOpen: false }],
       classTable: "table table-striped table-responsive",
       modal_fields: [{
         type: "input",
@@ -82774,7 +82772,7 @@ var render = function() {
           staticClass: "back-btn",
           on: {
             click: function($event) {
-              return _vm.$router.back()
+              return _vm.$router.push("/companies/v2")
             }
           }
         },

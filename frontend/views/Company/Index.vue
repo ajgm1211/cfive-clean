@@ -66,7 +66,7 @@ export default {
         { key: "email", label: "Email", filterIsOpen:false },
         { key: "address", label: "Address", filterIsOpen:false },
         { key: "tax_number", label: "Tax Number", filterIsOpen:false },
-        { key: "created_at", formatter: (value) => { return value.date; }, label: "Created at", filterIsOpen:false },
+        { key: "created_at", label: "Created at", filterIsOpen:false },
       ],
       classTable:"table table-striped table-responsive",
       modal_fields: [

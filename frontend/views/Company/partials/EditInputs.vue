@@ -1,7 +1,7 @@
 
 <template>
     <div class="col-12">
-        <div class="back-btn" @click="$router.back()">
+        <div class="back-btn" @click="$router.push('/companies/v2');">
             <LeftArrow /> <span>back</span>
         </div>
         <b-row>
