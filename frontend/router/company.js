@@ -1,6 +1,7 @@
 import CompanyIndex from '../views/Company/Index';
 import CompanyEdit from '../views/Company/Edit';
 import CompanyCreate from '../views/Company/Create';
+import CompanyFailed from '../views/Company/Failed';
 export default [{
     path: '/companies',
     meta: { title: 'Companies' },
@@ -26,6 +27,14 @@ export default [{
                 title: 'Edit Company'
             },
             component:CompanyEdit
+        },
+        {
+            path: 'v2/failed',
+            name: 'CompanyFailed',
+            meta: {
+                title: 'Failed Company'
+            },
+            component:CompanyFailed
         }
     ]
 }]

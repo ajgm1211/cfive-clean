@@ -13,7 +13,7 @@
           <b-dropdown id="dropdown-left" text="Importacion">
             <b-dropdown-item href="#" @click="createMasive(true)">Upload Companies</b-dropdown-item>
             <b-dropdown-item href="#">Donwload File</b-dropdown-item>
-            <b-dropdown-item href="#">Failed compañias</b-dropdown-item>
+            <b-dropdown-item href="/companies/v2/failed">Failed compañias</b-dropdown-item>
             <b-dropdown-item href="#">Transfer to WL</b-dropdown-item>
             <b-dropdown-item href="/companies/v2/template">Download template</b-dropdown-item>
           </b-dropdown>
@@ -37,6 +37,7 @@
           :title="'Companies'"
           :action="'Add'"
           @cancel="create = false"
+          :fields="modal_fields"
         />
         
         
@@ -67,7 +68,54 @@ export default {
         { key: "tax_number", label: "Tax Number", filterIsOpen:false },
         { key: "created_at", formatter: (value) => { return value.date; }, label: "Created at", filterIsOpen:false },
       ],
-      classTable:"table table-striped table-responsive"
+      classTable:"table table-striped table-responsive",
+      modal_fields: [
+        {
+          type: "input",
+          label: "Business Name",
+          name: "business_name",
+          error:false,
+          rules: {
+            required: true,
+          },
+        },
+        {
+          type: "input",
+          label: "Phone",
+          name: "phone",
+          error:false,
+          rules: {
+            required: true,
+          },
+        },
+        {
+          type: "input",
+          label: "Email",
+          name: "email",
+          error:false,
+          rules: {
+            required: true,
+          },
+        },
+        {
+          type: "input",
+          label: "Address",
+          name: "address",
+          error:false,
+          rules: {
+            required: true,
+          },
+        },
+        {
+          type: "input",
+          label: "Tax Number",
+          name: "tax_number",
+          error:false,
+          rules: {
+            required: true,
+          },
+        }
+      ]
     }
   },
   computed:{

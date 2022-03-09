@@ -1812,5 +1812,12 @@ export default {
             },
         },
     },
+    mounted() {
+        this.$root.$on('submitData', () => {
+            // your code goes here
+            this.refreshData()
+        }
+    )
+}
 };
 </script>

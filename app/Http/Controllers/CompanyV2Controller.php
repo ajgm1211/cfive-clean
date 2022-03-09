@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Excel;
 use App\Company;
+use App\FailCompany;
 use App\CompanyPrice;
 use App\GroupUserCompany;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use App\Http\Resources\CompanyResource;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\FailCompanyResource;
 
 class CompanyV2Controller extends Controller
 {
@@ -237,5 +239,15 @@ class CompanyV2Controller extends Controller
 
     public function downloadTemplatefile(){
         return Storage::disk('DownLoadFile')->download('company_template.xlsx');
+    }
+    
+    public function failed(){
+        return view('companies.v2.failed');
+    }
+    
+    public function failedData(Request $request){
+        $failedCompanies = FailCompany::filterByCurrentUser()->orderBy('id', 'asc')->filter($request);
+
+        return FailCompanyResource::collection($failedCompanies);
     }
 }

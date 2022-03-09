@@ -1,7 +1,6 @@
-import axios from 'axios';
 export default {
     list(params, callback) {
-
+        
         api.call('get', `/api/companies/list`, { params })
             .then(response => {
                 callback(null, response.data);
@@ -26,13 +25,6 @@ export default {
     },
     create(company){
         return api.call('post', `/api/companies/store`, {company});
-    },
-    downloadTemplate(){
-        axios({
-            url: '/api/companies/template', // File URL Goes Here
-            method: 'GET',
-            responseType: 'blob',
-        });
     }
     
 }

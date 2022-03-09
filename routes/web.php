@@ -37,6 +37,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     route::get('v2', 'CompanyV2Controller@index');
     route::get('v2/{id}/edit', 'CompanyV2Controller@edit');
     route::get('v2/template', 'CompanyV2Controller@downloadTemplatefile');
+    route::get('v2/failed', 'CompanyV2Controller@failed');
 });
 
 Route::middleware(['auth'])->prefix('contacts')->group(function () {

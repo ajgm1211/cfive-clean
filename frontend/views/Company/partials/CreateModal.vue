@@ -6,67 +6,49 @@
         <h3>{{ action + " " + title }}</h3>
       </div>
       <div v-if="!create" class="modal-content-create">
-        <b-form @submit.prevent="createCompany">
-          <b-container>
-            <b-row>
-                  <b-col cols="12" md="12" class="mb-2">
-                    <CustomInput
-                          label="Business Name"
-                          name="business_name"
-                          ref="business_name"
-                          v-model="company.business_name"
-                    />
-                  </b-col>
-                  <b-col cols="12" md="12" class="mb-2">
-                    <CustomInput
-                          label="Phone"
-                          name="phone"
-                          ref="phone"
-                          v-model="company.phone"
-                    />
-                  </b-col>
-                  <b-col cols="12" md="12" class="mb-2">
-                    <CustomInput
-                          label="Email"
-                          name="email"
-                          ref="email"
-                          v-model="company.email"
-                    />
-                  </b-col>
-                  <!--b-col cols="12" md="12" class="mb-2">
-                    <CustomInput
-                          label="Pdf Language"
-                          name="pdf_language"
-                          ref="pdf_language"
-                          v-model="company.pdf_language"
-                    />
-                  </!--b-col-->
-                  <b-col cols="12" md="12" class="mb-2">
-                    <CustomInput
-                          label="Address"
-                          name="address"
-                          ref="address"
-                          v-model="company.address"
-                    />
-                  </b-col>
-                  
-            </b-row>
-            <b-row class="modal-footer-create">
-                  <b-col cols="12" md="12">
-                      <div class="modal-footer-create-container">
-                        <div class="modal-footer-content-wl">
-                          <input type="checkbox" id="checkbox" v-model="company.whitelabel">
-                          <label for="checkbox">Add to whitelabel?</label>
-                        </div>
-                        <div class="modal-footer-create-container-btns">
-                          <p @click="$emit('cancel')">Cancel</p>
-                          <b-button type="submit" class="btn-form" variant="primary">Add Company</b-button>
-                        </div>
-                      </div>
-                  </b-col>
-              </b-row>
-          </b-container>
-        </b-form>
+        <form on="" class="create-form" autocomplete="off">
+          <div v-for="(field, fieldKey) in fields" :key="fieldKey">
+            <CustomInput
+              v-if="field.type == 'input'"
+              :custom_error="field.error"
+              :label="field.label"
+              :name="field.name"
+              :ref="field.name"
+              v-model="model[field.name]"
+              :placeholder="field.placeholder"
+              :rules="field.rules"
+              :type="field.input_type ? field.input_type : 'text'"
+            />
+
+            <SorteableDropdown
+              :class="[
+                showCurrency == false && field.name == 'currency' ? 'hidden' : '',
+              ]"
+              v-else-if="field.type == 'dropdown'"
+              @reset="model[field.name] = ''"
+              :error="selectable_error"
+              :label="field.label"
+              @selected="setSelected($event, field.name)"
+              :itemList="field.items"
+              :show_by="field.show_by"
+              :preselected="model[field.name]"
+            />
+          </div>
+        </form>
+        <div class="modal-footer-create-container">
+          <div class="modal-footer-content-wl">
+            <input type="checkbox" id="checkbox" v-model="model.whitelabel">
+            <label for="checkbox">Add to whitelabel</label>
+          </div>
+          <div class="modal-footer-create-container-btns">
+            <p @click="$emit('cancel')">Cancel</p>
+            <MainButton
+              @click="createCompany()"
+              :text="action + ' ' + title"
+              :add="true"
+            />
+          </div>
+        </div>
       </div>
       <div v-else class="modal-content-create">
         <b-form @submit.prevent="onSubmitValidate">
@@ -96,7 +78,7 @@
                       <div class="modal-footer-create-container">
                         <div class="modal-footer-content-wl">
                           <input type="checkbox" id="checkbox" v-model="whitelabel">
-                          <label for="checkbox">Add to whitelabel?</label>
+                          <label for="checkbox">Add to whitelabel</label>
                         </div>
                         <div class="modal-footer-create-container-btns">
                           <p @click="$emit('cancel')">Cancel</p>
@@ -116,10 +98,11 @@
 
 import actions from '../../../store/modules/company/actions'
 import CustomInput from "../../../components/common/CustomInput"
+import MainButton from "../../../components/common/MainButton"
 import toastr from "toastr"
 
 export default {
-  components: {CustomInput},
+  components: {CustomInput, MainButton},
   props: {
     title: {
       type: String,
@@ -132,6 +115,18 @@ export default {
       default() {
         return false;
       }
+    },
+    fields:{
+      type:Array,
+      default(){
+        return [];
+      }
+    },
+    model: {
+      type: Object,
+      default() {
+        return {};
+      },
     }
   },
   data() {
@@ -147,23 +142,17 @@ export default {
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     "application/vnd.ms-excel"
       ],
-      company:{
-        business_name:null,
-        phone:null,
-        email:null,
-        pdf_language:1,
-        address:null,
-        whitelabel:false
-      },
       whiteLabel:false
     }
   },
   methods: {
     async createCompany(){
       try {
-        const {newCompany} = await this.actions.create(this.company)  
+        const {newCompany} = await this.actions.create(this.model)  
         //this.company  = newCompany
         toastr.success("successful create")
+        this.$root.$emit('submitData')
+        this.$emit('cancel')
       } catch (error) {
         toastr.error("unsuccessful create.")
       }

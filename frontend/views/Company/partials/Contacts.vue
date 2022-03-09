@@ -32,7 +32,7 @@ export default {
         { key: "email", label: "Email", filterIsOpen:false },
         { key: "phone", label: "Phone", filterIsOpen:false },
         { key: "position", label: "Position", filterIsOpen:false },
-        { key: "created_at", formatter: (value) => { return value.date; }, label: "Created at", filterIsOpen:false },
+        { key: "created_at", label: "Created at", filterIsOpen:false },
       ],
       classTable:"table table-striped table-responsive"
     }
