@@ -48,7 +48,7 @@ class UpdateStatusInland extends Command
 
 
             
-            \Log::error('The number of Inlands affected is: '.$inlands );
+            \Log::info('The number of Inlands affected is: '.$inlands );
         } catch (\Exception $e) {
 
             $e->getMessage();
