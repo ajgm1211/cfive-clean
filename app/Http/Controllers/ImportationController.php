@@ -1174,8 +1174,8 @@ class ImportationController extends Controller
                     $limitsExiBol = true;
                     if (!empty($row[$limitsExc])) {
                         $limits_val = array_map('trim', explode('-', $row[$limitsExc]));
-                        if(count($limits_val) == 1){
-                            array_push($limits_val,null);
+                        if (count($limits_val) == 1) {
+                            array_push($limits_val, null);
                         }
                     } else {
                         $limitsExiBol = ($ct_options['limits_ow']) ? false : true;
@@ -3585,9 +3585,9 @@ class ImportationController extends Controller
         $calculationtypeselect = $objCalculationType->all()->pluck('name', 'id');
 
         $failsurcharge = FailSurCharge::find($id);
-        $failsurcharge->load('contract');
+        $failsurcharge->load('contract', 'fail_overweight_ranges');
         $surchargeSelect = $objsurcharge->where('company_user_id', '=', $failsurcharge->contract->company_user_id)->pluck('name', 'id');
-        //dd($failsurcharge->contract->company_user_id);
+        $is_ow_limits = $failsurcharge->fail_overweight_ranges->isEmpty();
         $differentiator = $failsurcharge->differentiator;
 
         $classdorigin = 'color:green';
@@ -3598,6 +3598,8 @@ class ImportationController extends Controller
         $classcalculationtype = 'color:green';
         $classammount = 'color:green';
         $classcurrency = 'color:green';
+        $classupperlimit = 'color:green';
+        $classlowerlimit = 'color:green';
         $surchargeA = explode('_', $failsurcharge['surcharge_id']);
         $originA = explode('_', $failsurcharge['port_orig']);
         $destinationA = explode('_', $failsurcharge['port_dest']);
@@ -3606,7 +3608,28 @@ class ImportationController extends Controller
         $currencyA = explode('_', $failsurcharge['currency_id']);
         $carrierA = explode('_', $failsurcharge['carrier_id']);
         $typedestinyA = explode('_', $failsurcharge['typedestiny_id']);
+        //dd($failsurcharge->fail_overweight_ranges);
+        if (!$is_ow_limits) {
+            $lower_limitA = explode('_', $failsurcharge->fail_overweight_ranges->first()->lower_limit);
+            $upper_limitA = explode('_', $failsurcharge->fail_overweight_ranges->first()->upper_limit);
+        } else {
+            $lower_limitA = [0];
+            $upper_limitA = [0];
+        }
 
+        if(count($lower_limitA) > 1){
+            $lower_limitA = $lower_limitA[0].' (error)';
+            $classlowerlimit = 'color:red';
+        } else {
+            $lower_limitA = $lower_limitA[0];
+        }
+
+        if(count($upper_limitA) > 1){
+            $upper_limitA = $upper_limitA[0].' (error)';
+            $classupperlimit = 'color:red';
+        } else {
+            $upper_limitA = $upper_limitA[0];
+        }
         // -------------- ORIGIN -------------------------------------------------------------
 
         if ($failsurcharge->differentiator == 1) {
@@ -3721,6 +3744,11 @@ class ImportationController extends Controller
             'ammount' => $ammountA,
             'calculationtype' => $calculationtypeAIn,
             'currency' => $currencyAIn,
+            'lower_limit' => $lower_limitA,
+            'upper_limit' => $upper_limitA,
+            'is_ow_limits' => $is_ow_limits,
+            'classlowerlimit' => $classlowerlimit,
+            'classupperlimit' => $classupperlimit,
             'classsurcharge' => $classsurcharger,
             'classorigin' => $classdorigin,
             'classdestiny' => $classddestination,
@@ -4105,11 +4133,11 @@ class ImportationController extends Controller
                     $upper_limitA = explode('_', $failsurcharge->upper_limit);
 
                     // -------------- AMMOUNT ------------------------------------------------------------
-                    
-                    $lower_limit = (count($lower_limitA) <= 1)?$failsurcharge->lower_limit:$lower_limitA[0] . ' (error)';
-                    $upper_limit = (count($upper_limitA) <= 1)?$failsurcharge->upper_limit:$upper_limitA[0] . ' (error)';
-                    $lower_limit = (empty($lower_limit))?'-----':$lower_limit;
-                    $upper_limit = (empty($upper_limit))?'-----':$upper_limit;
+
+                    $lower_limit = (count($lower_limitA) <= 1) ? $failsurcharge->lower_limit : $lower_limitA[0] . ' (error)';
+                    $upper_limit = (count($upper_limitA) <= 1) ? $failsurcharge->upper_limit : $upper_limitA[0] . ' (error)';
+                    $lower_limit = (empty($lower_limit)) ? '-----' : $lower_limit;
+                    $upper_limit = (empty($upper_limit)) ? '-----' : $upper_limit;
                     // -------------- ORIGIN -------------------------------------------------------------
                     if ($failsurcharge->differentiator == 1) {
                         $originOb = PrvHarbor::get_harbor($originA[0]);
@@ -5056,9 +5084,9 @@ class ImportationController extends Controller
         //$ow->save();
         dd($lc, $owrange->isEmpty());*/
         $options = [];
-        foreach(['group','isteu','limits_ow'] as $field){
+        foreach (['group', 'isteu', 'limits_ow'] as $field) {
             $options[$field] = !empty($request->get($field));
         }
-        dd(!empty($request->get('limits_ow')),$options);
+        dd(!empty($request->get('limits_ow')), $options);
     }
 }
