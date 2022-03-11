@@ -387,7 +387,7 @@
                       <b-td
                         ><b>
                           {{
-                            charge.surcharge ? charge.surcharge.name : "Inlands"
+                            charge.surcharge ? charge.surcharge.name : charge.name
                           }}
                         </b></b-td
                       >
