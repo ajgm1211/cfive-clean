@@ -41,11 +41,9 @@
                 </li>
               </ul>
 
-              <span v-show="showTotals"
-                ><b class="mr-3">Show totals in:</b></span
+              <span><b class="mr-3">Show totals in:</b></span
               >
               <multiselect
-                v-show="showTotals"
                 v-model="totalsCurrency"
                 :multiple="false"
                 :options="datalists['filtered_currencies']"
@@ -64,7 +62,6 @@
               </multiselect>
 
               <ul
-                v-show="showTotals"
                 class="exchange-rates"
                 style="margin-bottom: 0px !important"
               >
