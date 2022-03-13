@@ -6,47 +6,49 @@
         <h3>{{ action + " " + title }}</h3>
       </div>
       <div v-if="!create" class="modal-content-create">
-        <form on="" class="create-form" autocomplete="off">
-          <div v-for="(field, fieldKey) in fields" :key="fieldKey">
-            <CustomInput
-              v-if="field.type == 'input'"
-              :custom_error="field.error"
-              :label="field.label"
-              :name="field.name"
-              :ref="field.name"
-              v-model="model[field.name]"
-              :placeholder="field.placeholder"
-              :rules="field.rules"
-              :type="field.input_type ? field.input_type : 'text'"
-            />
+        <div v-if="dataLoaded">
+          <form on="" class="create-form" autocomplete="off">
+            <div v-for="(field, fieldKey) in fields" :key="fieldKey">
+              <CustomInput
+                v-if="field.type == 'input'"
+                :custom_error="field.error"
+                :label="field.label"
+                :name="field.name"
+                :ref="field.name"
+                v-model="model[field.name]"
+                :placeholder="field.placeholder"
+                :rules="field.rules"
+                :type="field.input_type ? field.input_type : 'text'"
+              />
 
-            <SorteableDropdown
-              :class="[
-                showCurrency == false && field.name == 'currency' ? 'hidden' : '',
-              ]"
-              v-else-if="field.type == 'dropdown'"
-              @reset="model[field.name] = ''"
-              :error="selectable_error"
-              :label="field.label"
-              @selected="setSelected($event, field.name)"
-              :itemList="field.items"
-              :show_by="field.show_by"
-              :preselected="model[field.name]"
-            />
-          </div>
-        </form>
-        <div class="modal-footer-create-container">
-          <div class="modal-footer-content-wl">
-            <input type="checkbox" id="checkbox" v-model="model.whitelabel">
-            <label for="checkbox">Add to whitelabel</label>
-          </div>
-          <div class="modal-footer-create-container-btns">
-            <p @click="$emit('cancel')">Cancel</p>
-            <MainButton
-              @click="createCompany()"
-              :text="action + ' ' + title"
-              :add="true"
-            />
+              <SorteableDropdown
+                :class="[
+                  showCurrency == false && field.name == 'currency' ? 'hidden' : '',
+                ]"
+                v-else-if="field.type == 'dropdown'"
+                @reset="model[field.name] = ''"
+                :error="selectable_error"
+                :label="field.label"
+                @selected="setSelected($event, field.name)"
+                :itemList="field.items"
+                :show_by="field.show_by"
+                :preselected="model[field.name]"
+              />
+            </div>
+          </form>
+          <div class="modal-footer-create-container">
+            <div class="modal-footer-content-wl">
+              <input type="checkbox" id="checkbox" v-model="model.whitelabel">
+              <label for="checkbox">Add to whitelabel</label>
+            </div>
+            <div class="modal-footer-create-container-btns">
+              <p @click="$emit('cancel')">Cancel</p>
+              <MainButton
+                @click="createCompany()"
+                :text="action + ' ' + title"
+                :add="true"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -137,6 +139,8 @@ export default {
       showDismissibleAlert: false,
       showDismissibleAlertSuccess: false,
       messageFile:'',
+      input_error: false,
+      dataLoaded: false,
       validformats:[
                     ".csv",
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -147,15 +151,15 @@ export default {
   },
   methods: {
     async createCompany(){
-      try {
+
+        if (!this.validate()) return;
+        this.setBody()
         const {newCompany} = await this.actions.create(this.model)  
         //this.company  = newCompany
         toastr.success("successful create")
         this.$root.$emit('submitData')
         this.$emit('cancel')
-      } catch (error) {
-        toastr.error("unsuccessful create.")
-      }
+      
     },
     async onSubmitValidate() {
         var url = 'api/contracts'
@@ -204,7 +208,65 @@ export default {
     },
     addToWhiteLabel(){
       this.whiteLabel = !this.whiteLabel
+    },
+    validate() {
+      let component = this;
+
+      let bool;
+
+      this.fields.forEach(function(field) {
+        if (field.type == "input") {
+          if (!component.model[field.name] && field.rules.required) {
+            field.error = true;
+            bool = false;
+          } else {
+            field.error = false;
+            bool = true;
+          }
+        } else if (field.type == "dropdown") {
+          if (!component.model[field.name] && field.rules.required) {
+            component.selectable_error = true;
+            bool = false;
+          } else {
+            bool = true;
+          }
+        }
+      });
+
+      if (bool == false) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    setInitialData() {
+      let component = this;
+      var dataIndex = 0;
+
+      this.fields.forEach(function(field) {
+        field.id = dataIndex;
+        if (!component.model[field.name]) {
+          component.model[field.name] = "";
+        }
+        field.placeholder = "Insert " + field.label;
+        dataIndex += 1;
+      });
+
+      this.dataLoaded = true;
+    },
+    setBody() {
+      var body = {};
+      let component = this;
+
+      this.fields.forEach(function(field) {
+        body[field.name] = component.model[field.name];
+      });
+
+      return body;
     }
+  },
+  mounted() {
+    this.setInitialData();
   },
 };
 </script>
