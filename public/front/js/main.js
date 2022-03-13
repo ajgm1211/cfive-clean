@@ -76982,7 +76982,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         type: "input",
         label: "Business Name",
         name: "business_name",
-        error: true,
+        error: false,
         rules: {
           required: true
         }
@@ -76990,7 +76990,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         type: "input",
         label: "Phone",
         name: "phone",
-        error: true,
+        error: false,
         rules: {
           required: true
         }
@@ -76998,7 +76998,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         type: "input",
         label: "Email",
         name: "email",
-        error: true,
+        error: false,
         rules: {
           required: true
         }
@@ -77006,7 +77006,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         type: "input",
         label: "Address",
         name: "address",
-        error: true,
+        error: false,
         rules: {
           required: true
         }
@@ -77014,7 +77014,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         type: "input",
         label: "Tax Number",
         name: "tax_number",
-        error: true,
+        error: false,
         rules: {
           required: true
         }
@@ -81307,19 +81307,21 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                _context.prev = 0;
+
                 if (this.validate()) {
-                  _context.next = 2;
+                  _context.next = 3;
                   break;
                 }
 
                 return _context.abrupt("return");
 
-              case 2:
+              case 3:
                 this.setBody();
-                _context.next = 5;
+                _context.next = 6;
                 return this.actions.create(this.model);
 
-              case 5:
+              case 6:
                 _ref2 = _context.sent;
                 newCompany = _ref2.newCompany;
 
@@ -81327,13 +81329,21 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 __WEBPACK_IMPORTED_MODULE_4_toastr___default.a.success("successful create");
                 this.$root.$emit('submitData');
                 this.$emit('cancel');
+                _context.next = 16;
+                break;
 
-              case 10:
+              case 13:
+                _context.prev = 13;
+                _context.t0 = _context["catch"](0);
+
+                __WEBPACK_IMPORTED_MODULE_4_toastr___default.a.success("unsuccessful create");
+
+              case 16:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this);
+        }, _callee, this, [[0, 13]]);
       }));
 
       function createCompany() {
@@ -81460,7 +81470,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
         field.placeholder = "Insert " + field.label;
         dataIndex += 1;
       });
-
       this.dataLoaded = true;
     },
     setBody: function setBody() {
@@ -81575,7 +81584,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       default: "Placeholder"
     },
     type: {
-      default: "text"
+      type: String
     },
     name: {
       type: String,
@@ -81603,6 +81612,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     showLabel: {
       type: Boolean,
       default: true
+    },
+    custom_error: {
+      type: Boolean,
+      default: false
     }
   },
   data: function data() {
@@ -81618,7 +81631,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
   methods: {
     handleChange: function handleChange(_value) {
-      this.$emit("input", _value);
+      if (this.type == "number") {
+        this.$emit("input", parseInt(_value));
+      } else {
+        this.$emit("input", _value);
+      }
     },
     validate: function validate() {
       this.$v.value.$touch();
@@ -81663,6 +81680,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
           });
         }
 
+        if (this.rules.minValue) {
+          validations = _extends({}, validations, {
+            minValue: Object(__WEBPACK_IMPORTED_MODULE_0_vuelidate_lib_validators__["minValue"])(this.rules.minValue)
+          });
+        }
+
         if (this.rules.numeric) {
           validations = _extends({}, validations, {
             numeric: __WEBPACK_IMPORTED_MODULE_0_vuelidate_lib_validators__["numeric"]
@@ -81694,12 +81717,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       if (this.$v.value.alphaNum === false) {
         return "The input " + this.name + " must be alphanumeric";
       }
+      if (this.$v.value.minValue === false) {
+        return "This input must be grater than " + this.rules.minValue;
+      }
       if (this.$v.value.numeric === false) {
         return "The input " + this.name + " must be only numeric";
       }
       if (this.$v.value.email === false) {
         return "The input " + this.name + " must be a valid email address";
       }
+
       return "";
     }
   }
@@ -81719,7 +81746,10 @@ var render = function() {
           "label",
           {
             staticClass: "d-block labelv2",
-            class: _vm.$v.value.$error ? "error-msj" : "",
+            class:
+              _vm.$v.value.$error || _vm.custom_error == true
+                ? "error-msj"
+                : "",
             attrs: { for: _vm.name }
           },
           [_vm._v("\n    " + _vm._s(_vm.label) + "\n  ")]
@@ -81729,7 +81759,7 @@ var render = function() {
     _c("input", {
       staticClass: "input-v2",
       class: [
-        _vm.$v.value.$error ? "input-err" : "",
+        _vm.$v.value.$error || _vm.custom_error == true ? "input-err" : "",
         _vm.mixed === true ? "mixedborder" : ""
       ],
       attrs: {
@@ -81751,7 +81781,7 @@ var render = function() {
       }
     }),
     _vm._v(" "),
-    _vm.$v.value.$error
+    _vm.$v.value.$error || _vm.custom_error == true
       ? _c("div", { staticClass: "error-msj-container" }, [
           _c("span", {
             staticClass: "error-msj",

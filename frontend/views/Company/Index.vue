@@ -85,7 +85,7 @@ export default {
           type: "input",
           label: "Business Name",
           name: "business_name",
-          error:true,
+          error:false,
           rules: {
             required: true,
           },
@@ -94,7 +94,7 @@ export default {
           type: "input",
           label: "Phone",
           name: "phone",
-          error:true,
+          error:false,
           rules: {
             required: true,
           },
@@ -103,7 +103,7 @@ export default {
           type: "input",
           label: "Email",
           name: "email",
-          error:true,
+          error:false,
           rules: {
             required: true,
           },
@@ -112,7 +112,7 @@ export default {
           type: "input",
           label: "Address",
           name: "address",
-          error:true,
+          error:false,
           rules: {
             required: true,
           },
@@ -121,7 +121,7 @@ export default {
           type: "input",
           label: "Tax Number",
           name: "tax_number",
-          error:true,
+          error:false,
           rules: {
             required: true,
           },

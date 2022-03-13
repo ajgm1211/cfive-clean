@@ -151,7 +151,7 @@ export default {
   },
   methods: {
     async createCompany(){
-
+      try {
         if (!this.validate()) return;
         this.setBody()
         const {newCompany} = await this.actions.create(this.model)  
@@ -159,6 +159,10 @@ export default {
         toastr.success("successful create")
         this.$root.$emit('submitData')
         this.$emit('cancel')
+      } catch (error) {
+        toastr.success("unsuccessful create")
+      }
+        
       
     },
     async onSubmitValidate() {
@@ -250,8 +254,7 @@ export default {
         }
         field.placeholder = "Insert " + field.label;
         dataIndex += 1;
-      });
-
+      })
       this.dataLoaded = true;
     },
     setBody() {
