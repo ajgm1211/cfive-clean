@@ -3577,7 +3577,10 @@ class ImportationController extends Controller
         $harbor = Harbor::pluck('display_name', 'id');
         $currency = Currency::pluck('alphacode', 'id');
         $calculationtypeselect = CalculationType::all();
-
+        $calculationtypeselect = $calculationtypeselect->map(function ($item, $key) {
+            $item->setAttribute('options_decode',(!empty($item->options))?json_decode($item->options,true):[]);
+            return $item;
+        });
         $failsurcharge = FailSurCharge::find($id);
         $failsurcharge->load('contract', 'fail_overweight_ranges');
         $surchargeSelect = Surcharge::where('company_user_id', '=', $failsurcharge->contract->company_user_id)->pluck('name', 'id');

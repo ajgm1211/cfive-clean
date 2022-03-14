@@ -145,7 +145,7 @@ $portRadio = false;
                     </div>
                 </div>
             </div>
-            <div class="form-group m-form__group row">
+            <div class="form-group m-form__group row" id="div_ow">
                 <div class="col-lg-4">
                     {!! Form::label('ammountL', 'Lower Limit',['style' => $failsurchargeArre['classlowerlimit']]) !!}
                     <div class="m-input-icon m-input-icon--right">
@@ -171,6 +171,7 @@ $portRadio = false;
             </div>
         </div>  
         <input type="hidden" value="{{$failsurchargeArre['contract_id']}}" name="contract_id" id="contract_id" />
+        <input type="hidden" value="{{$calculationtypeselect->pluck('options_decode', 'id')}}" name="calculation_type_options" id="calculation_type_options_id" />
     </div>
 </div>
 
@@ -190,10 +191,18 @@ $portRadio = false;
 
     $(document).ready(function(e){
         //alert(nameTab);
+        shoe_ow();
         // frmSurcharges id del formulario Auto Save TAB
         $("#frmSurcharges").append('<input type="hidden" name="nameTab" value="'+nameTab+'">');
     });
 
+    function shoe_ow(){
+        calculationT_id = $('#calculationtype').val();
+        var calculationsT_ow = $('#calculation_type_options_id').val();
+        //alert(calculationT_id);
+        alert(calculationsT_ow[1]);
+
+    }
     function radio_place(val){
         if(val == 1){
             $('#portOrig').attr('required','required');
