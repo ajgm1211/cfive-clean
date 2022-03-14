@@ -216,7 +216,6 @@ class QuotationController extends Controller
         $company_user = $user->worksAt();
         $formatted_code=quitar_acentos($company_user->name);
         $company_code = strtoupper(substr($formatted_code, 0, 2));
-        dd($company_code);
         $higherq_id = $company_user->getHigherId($company_code);
         $newq_id = $company_code . '-' . strval($higherq_id + 1);        
 
