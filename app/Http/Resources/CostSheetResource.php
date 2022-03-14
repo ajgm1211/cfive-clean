@@ -7,6 +7,7 @@ use App\LocalChargeQuote;
 use App\LocalChargeQuoteLcl;
 use App\ChargeLclAir;
 use App\Charge;
+use App\Currency;
 use App\Http\Traits\QuoteV2Trait;
 
 class CostSheetResource extends JsonResource
@@ -30,7 +31,7 @@ class CostSheetResource extends JsonResource
         $this->quote = $quote;        
         $this->autorate = $autorate;
         $this->header_fields = $this->getHeaderFields();
-        $this->currencyToReport = $this->autorate->currency;  
+        $this->currencyToReport = Currency::find($quote->pdf_options['totalsCurrency']['id']);
         
         // Variables para acumular montos para hallar totales
         $this->buyingAmountAll = [];
@@ -81,9 +82,14 @@ class CostSheetResource extends JsonResource
             'inlands' => $this->inlandsBuying,
             'totals' => $this->getSumaAmountTotals($this->buyingAmountAll)
         ]);
-        
+    
         array_push($ratesSelling, [
-            'total_freight' => $this->getFreightChargeTotal(),
+            'total_freight' => $this->getAmountPerContainer($this->convertToCurrencyQuote(
+                $this->autorate->currency, 
+                $this->currencyToReport,
+                $this->getFreightChargeTotalArray(),
+                $this->quote
+            )),
             'locales' => $this->localesSelling,
             'inlands' => $this->getInlandsTotal($this->inlandsSelling),
             'totals' => $this->getSumaAmountTotals($this->sellingAmountAll)
@@ -124,15 +130,6 @@ class CostSheetResource extends JsonResource
 
         foreach ($freightChargesModel as $charge) { 
             
-            $freightAmountsCharges = json_decode($charge['amount'],true);
-
-            array_push($this->freightCharges, [
-                'type' => $charge->type->description, 
-                'surcharge' => $charge->surcharge->name, 
-                'currency' => ['currency_id' => $charge->currency_id, 'alphacode' => $charge->currency->alphacode],
-                'amount' => $this->getFreightChargePrice($charge)
-            ]); 
-
             // Acumular para calcular subtotal de compra. Se debe enviar montos por contenedor convertidos al tipo de moneda del rate            
             $convertToCurrencyfreightAmountsCharges = $this->convertToCurrencyQuote(
                 $charge->currency , 
@@ -140,6 +137,14 @@ class CostSheetResource extends JsonResource
                 $this->getFreightChargePriceArray($charge),
                 $this->quote
             );   
+            
+            array_push($this->freightCharges, [
+                'type' => $charge->type->description, 
+                'surcharge' => $charge->surcharge->name, 
+                'currency' => ['currency_id' => $this->currencyToReport->id, 'alphacode' => $this->currencyToReport->alphacode],
+                'amount' => $this->getAmountPerContainer($convertToCurrencyfreightAmountsCharges)
+            ]); 
+
             if ($this->quote->type == 'FCL') {
                 array_push($this->buyingAmountAll, $this->getAmountPerContainer($convertToCurrencyfreightAmountsCharges));              
             }
@@ -149,7 +154,7 @@ class CostSheetResource extends JsonResource
         }
         
         $convertToCurrencyfreightAmountSelling = $this->convertToCurrencyQuote(
-            $this->currencyToReport, 
+            $this->autorate->currency, 
             $this->currencyToReport,
             $this->getFreightChargeTotalArray(),
             $this->quote
@@ -171,14 +176,6 @@ class CostSheetResource extends JsonResource
             // Solo locales donde su port coindicen conel origen o destino del rate.
             if ($local->port_id == $this->autorate->origin_port_id || $local->port_id == $this->autorate->destination_port_id) {
 
-                // Asignamos campos de local charges a mostrar
-                array_push($this->localesSelling, [
-                    'type' => $local->type->description,
-                    'surcharge' => $local->charge,
-                    'currency' => ['currency_id' => $local->currency_id, 'alphacode' => $local->currency->alphacode],
-                    'amount' => $this->getLocalTotal($local)
-                ]);
-
                 // Convertimos el/los monto(s) del local charge al tipo de moneda del rate correspondiente. 
                 $convertToCurrencylocalCharge = $this->convertToCurrencyQuote(
                     $local->currency, 
@@ -186,6 +183,15 @@ class CostSheetResource extends JsonResource
                     $this->getLocalTotalArray($local),
                     $this->quote
                 );
+
+                // Asignamos campos de local charges a mostrar
+                array_push($this->localesSelling, [
+                    'type' => $local->type->description,
+                    'surcharge' => $local->charge,
+                    'currency' => ['currency_id' => $this->currencyToReport->id, 'alphacode' => $this->currencyToReport->alphacode],
+                    'amount' => $this->getLocalChargeSameCoin($convertToCurrencylocalCharge)
+                ]);
+
 
                 //Una vez convertido al tipo de moneda del rate se asigna a un arreglo para acumular la suma.
                 array_push($this->sellingAmountAll, $this->getLocalChargeSameCoin($convertToCurrencylocalCharge));
@@ -196,14 +202,6 @@ class CostSheetResource extends JsonResource
 
         foreach ($charges_model as $charge) {
 
-            // Asignamos campos de charges a mostrar
-            array_push($this->localesBuying, [ 
-                'type' => $charge->type->description,
-                'surcharge' => $charge->surcharge->name,
-                'currency' => ['currency_id' => $charge->currency_id, 'alphacode' => $charge->currency->alphacode],
-                'amount' => $this->getCharge($charge)
-            ]);
-
             // Convertimos el/los monto(s) de los charges al tipo de moneda del rate correspondiente. 
             $convertToCurrencyCharge = $this->convertToCurrencyQuote(
                 $charge->currency, 
@@ -211,6 +209,15 @@ class CostSheetResource extends JsonResource
                 $this->getChargeArray($charge),
                 $this->quote
             );
+
+            // Asignamos campos de charges a mostrar
+            array_push($this->localesBuying, [ 
+                'type' => $charge->type->description,
+                'surcharge' => $charge->surcharge->name,
+                'currency' => ['currency_id' => $this->currencyToReport->id, 'alphacode' => $this->currencyToReport->alphacode],
+                'amount' => $this->getChargeSameCoin($convertToCurrencyCharge)
+            ]);
+
 
             //Una vez convertido al tipo de moneda del rate se asigna a un arreglo para acumular la suma.
             array_push($this->buyingAmountAll, $this->getChargeSameCoin($convertToCurrencyCharge));
@@ -231,19 +238,20 @@ class CostSheetResource extends JsonResource
         foreach ($inlands as $inland) {
             if ($inland->port_id == $this->autorate->origin_port_id || $inland->port_id == $this->autorate->destination_port_id) {
                 
-                array_push($this->inlandsBuying, [
-                    'type' => $inland->type,
-                    'charge' => $inland->charge,
-                    'currency' => ['currency_id' => $inland->currency_id, 'alphacode' => $inland->currency->alphacode], 
-                    'rate' => $this->getInlandRate($inland)
-                ]);        
-                
                 $convertToCurrencyInlandRate = $this->convertToCurrencyQuote(
                     $inland->currency, 
                     $this->currencyToReport,
                     $this->getInlandRateArray($inland),
                     $this->quote
                 );
+
+                array_push($this->inlandsBuying, [
+                    'type' => $inland->type,
+                    'charge' => $inland->charge,
+                    'currency' => ['currency_id' => $this->currencyToReport->id, 'alphacode' => $this->currencyToReport->alphacode], 
+                    'rate' => $this->getAmountPerContainer($convertToCurrencyInlandRate)
+                ]);        
+                
                 $convertToCurrencyInlandMarkup = $this->convertToCurrencyQuote(
                     $inland->currency, 
                     $this->currencyToReport,
@@ -285,7 +293,7 @@ class CostSheetResource extends JsonResource
                 array_push($this->sellingAmountAll, $totalInland['amount']);   
             }
         }
-        //dd($totalInland);
+        
     }
 
     public function getHeaderFields() {
@@ -324,8 +332,13 @@ class CostSheetResource extends JsonResource
             } else { 
                 array_push($amountPerContainer, ['name' => $container['name'], 'amount' => round((float)$amount, 2)]);              
             }
+        } 
+        if ($this->quote->type == 'FCL') {
+            return $amountPerContainer;
         }
-        return $amountPerContainer; 
+        else {
+            return $amountPerContainer[0]['amount'];
+        }
     }
 
     public function sumaAmountPerContainer($array) {
