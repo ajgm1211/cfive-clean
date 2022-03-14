@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class DistanceKmLocation extends Model
 {
     protected $table    = "distances_km_location";
-    protected $fillable = ['id','distance', 'location_id', 'harbor_id'];
+    protected $fillable = ['id','distance', 'location_id', 'harbors_id'];
 
     public function location()
     {
-        return $this->belongsToMany('App\Location', 'location_id');
+        return $this->belongsTo('App\Location');
     }
 
     public function harbors()
     {
-        return $this->belongsToMany('App\Harbor', 'harbors_id');
+        return $this->belongsTo('App\Harbor');
     }
 }
 

@@ -41,7 +41,7 @@ class InlandPerLocationController extends Controller
             $containers['C' . $code] = $value;
         }
         $inlandPL = new InlandPerLocation();
-        $inlandPL->json_container = $containers;
+        $inlandPL->json_containers = $containers;
         $inlandPL->currency_id = $data['currency'];
         $inlandPL->harbor_id = $data['port'];
         $inlandPL->inland_id = $inland->id;
@@ -69,7 +69,7 @@ class InlandPerLocationController extends Controller
             $containers['C' . $code] = $value;
         }
 
-        $location->json_container = $containers;
+        $location->json_containers = $containers;
         $location->currency_id = $data['currency'];
         $location->harbor_id = $data['port'];
         $location->location_id = $data['location'];

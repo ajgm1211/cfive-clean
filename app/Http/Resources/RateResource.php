@@ -46,7 +46,12 @@ class RateResource extends JsonResource
             'client_remarks' => isset($this->client_remarks) ? $this->client_remarks : null,
             'contract_backup_id' => $this->contractBackupId,
             'contract_request_id' => $this->contractRequestId,
-            'contract_id' => $this->contractId
+            'contract_id' => $this->contractId,
+            'inland_origin' => isset($this->inland_origin) ? $this->inland_origin : null,
+            'inland_destiny' => isset($this->inland_destiny) ? $this->inland_destiny : null,
+            'inlands' => $this->inlands,
+            'origin_address' => isset($this->originAddress) ? $this->originAddress : null,
+            'destination_address' => isset($this->destinationAddress) ? $this->destinationAddress : null,
         ];
     }
 }

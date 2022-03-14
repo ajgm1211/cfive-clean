@@ -4,9 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class InlandsProvinces extends Model
+class InlandProvince extends Model
 {
-    protected $table    = "inlands_provinces";
     protected $fillable = ['id','name', 'region', 'country_id'];
 
     public function country()

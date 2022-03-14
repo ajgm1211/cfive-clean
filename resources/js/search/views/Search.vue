@@ -75,25 +75,126 @@
 
         <!-- ORIGIN PORT -->
         <div class="col-lg-3 mb-2 input-search-form origen-search">
-          <multiselect
-            v-model="searchRequest.originPorts"
-            :multiple="true"
-            :close-on-select="true"
-            :clear-on-select="true"
-            :show-labels="false"
-            :options="originPortOptions"
-            @input="updateQuoteSearchOptions()"
-            label="display_name"
-            track-by="display_name"
-            placeholder="From"
-            class="s-input"
-          >
-          </multiselect>
-          <img
-            src="/images/port.svg"
-            class="img-icon img-icon-left img-icon-origin"
-            alt="port"
-          />
+          <div class="od-input" @click="openSelect('origin')">
+            <img src="/images/port.svg" class="img-icon" alt="port" />
+            <div style="cursor:pointer">
+              <p class="input-places">
+                <span v-for="(data, index) in placeInShowFrom" :key="index">
+                  {{ data.location }}
+                  <b
+                    @click="deletePlaceFrom(index)"
+                    class="delete-input-country"
+                    >x</b
+                  ></span
+                >
+              </p>
+              <!-- form input goes initialy here  -->
+              <span v-if="placeInShowFrom.length == 0">From</span>
+            </div>
+            <span class="city-port" v-if="showTagPlaceFrom">{{
+              fromCity == true && fromPort == true
+                ? "multi"
+                : fromCity == true && fromPort == false
+                ? "city"
+                : fromCity == false && fromPort == true
+                ? "port"
+                : ""
+            }}</span>
+          </div>
+          <ul class="places-list" v-if="openOriginPlacesFrom === true">
+            <div
+              class="d-flex"
+              style="align-items: center; padding: 0 20px; border-bottom: 1px solid #f1f1f1;"
+            >
+              <b-icon icon="search" class="mr-2"></b-icon>
+              <b-form-input
+                autocomplete="off"
+                v-model.trim="originPlacesFrom"
+                placeholder="From"
+                @keyup="filterHarbors('originPlacesFrom')"
+                style="color: #333333;border: none !important;background: transparent !important;height: 20px;"
+              ></b-form-input>
+            </div>
+
+            <div
+              v-if="!filtered_harbors.length && searching_harbors == false"
+              class="no-results-filter"
+            >
+              We couldn't find any matching result.
+            </div>
+
+            <div v-if="searching_harbors == true">
+              <div
+                class="d-flex align-items-center mx-auto"
+                style="padding: 15px 10px; width: fit-content;"
+                v-for="i in skeletons"
+                :key="i"
+              >
+                <VueSkeletonLoader
+                  type="rect"
+                  :width="40"
+                  :height="40"
+                  animation="fade"
+                  :rounded="true"
+                />
+
+                <div class="d-grid" style="margin: 0 20px">
+                  <VueSkeletonLoader
+                    type="rect"
+                    :width="200"
+                    :height="15"
+                    animation="fade"
+                    :rounded="true"
+                  />
+
+                  <VueSkeletonLoader
+                    style="margin-top:10px"
+                    type="rect"
+                    :width="150"
+                    :height="10"
+                    animation="fade"
+                    :rounded="true"
+                  />
+                </div>
+
+                <VueSkeletonLoader
+                  type="rect"
+                  :width="40"
+                  :height="20"
+                  animation="fade"
+                  :rounded="true"
+                />
+              </div>
+            </div>
+
+            <li
+              v-for="(data, key) in filtered_harbors"
+              :key="key"
+              style="cursor:pointer"
+            >
+              <b-form-checkbox
+                :id="'place-' + key"
+                v-model="placeInShowFrom"
+                :value="data"
+                @change="placeCheckedFrom(data)"
+              >
+                <b-icon
+                  v-if="data.type == 'city'"
+                  icon="map"
+                  class="mr-2"
+                ></b-icon>
+                <b-icon v-else icon="geo" class="mr-2"></b-icon>
+                <div class="text-places">
+                  <h6>{{ data.location }}</h6>
+                  <p v-if="data.type == 'city'">
+                    Includes transport to the Port
+                  </p>
+                  <p v-if="data.type == 'port'">{{ data.country }}</p>
+                </div>
+                <span class="city-port">{{ data.type }}</span>
+              </b-form-checkbox>
+            </li>
+          </ul>
           <span
             v-if="errorsExist && 'originPorts' in responseErrors"
             style="color: red"
@@ -104,21 +205,124 @@
 
         <!-- DESTINATION PORT -->
         <div class="col-lg-3 mb-2 input-search-form destination-search">
-          <multiselect
-            v-model="searchRequest.destinationPorts"
-            :multiple="true"
-            :close-on-select="true"
-            :clear-on-select="true"
-            :show-labels="false"
-            :options="destinationPortOptions"
-            @input="updateQuoteSearchOptions()"
-            label="display_name"
-            track-by="display_name"
-            placeholder="To"
-            class="s-input"
+          <div class="od-input od-input-to" @click="openSelect('destiny')">
+            <img src="/images/port.svg" class="img-icon" alt="port" />
+            <div style="cursor: pointer">
+              <p class="input-places">
+                <span v-for="(data, index) in placeInShowTo" :key="index">
+                  {{ data.location }}
+                  <b @click="deletePlaceTo(index)" class="delete-input-country"
+                    >x</b
+                  ></span
+                >
+              </p>
+              <span v-if="placeInShowTo.length == 0">To</span>
+            </div>
+            <span class="city-port" v-if="showTagPlaceTo">{{
+              toCity == true && toPort == true
+                ? "multi"
+                : toCity == true && toPort == false
+                ? "city"
+                : toCity == false && toPort == true
+                ? "port"
+                : ""
+            }}</span>
+          </div>
+          <ul
+            class="places-list"
+            style="width:100%"
+            v-show="openOriginPlacesTo === true"
           >
-          </multiselect>
-          <img src="/images/port.svg" class="img-icon" alt="port" />
+            <div
+              class="d-flex"
+              style="align-items: center; padding: 0 20px; border-bottom: 1px solid #f1f1f1;"
+            >
+              <b-icon icon="search" class="mr-2"></b-icon>
+              <b-form-input
+                @keyup="filterHarbors('originPlacesTo')"
+                v-model.trim="originPlacesTo"
+                placeholder="To"
+                style="color: #333333;border: none !important;background: transparent !important;height: 20px;"
+              ></b-form-input>
+            </div>
+
+            <div
+              v-if="!filtered_harbors.length && searching_harbors == false"
+              class="no-results-filter"
+            >
+              We couldn't find any matching result.
+            </div>
+
+            <div v-if="searching_harbors == true">
+              <div
+                class="d-flex align-items-center mx-auto"
+                style="padding: 15px 10px; width: fit-content;"
+                v-for="i in skeletons"
+                :key="i"
+              >
+                <VueSkeletonLoader
+                  type="rect"
+                  :width="40"
+                  :height="40"
+                  animation="fade"
+                  :rounded="true"
+                />
+
+                <div class="d-grid" style="margin: 0 20px">
+                  <VueSkeletonLoader
+                    type="rect"
+                    :width="200"
+                    :height="15"
+                    animation="fade"
+                    :rounded="true"
+                  />
+
+                  <VueSkeletonLoader
+                    style="margin-top:10px"
+                    type="rect"
+                    :width="150"
+                    :height="10"
+                    animation="fade"
+                    :rounded="true"
+                  />
+                </div>
+
+                <VueSkeletonLoader
+                  type="rect"
+                  :width="40"
+                  :height="20"
+                  animation="fade"
+                  :rounded="true"
+                />
+              </div>
+            </div>
+
+            <li
+              v-show="searching_harbors == false"
+              style="cursor:pointer"
+              v-for="(data, key) in filtered_harbors"
+              :key="key"
+            >
+              <b-form-checkbox
+                :id="'placeTo-' + key"
+                v-model="placeInShowTo"
+                :value="data"
+                @change="placeCheckedTo(data)"
+              >
+                <b-icon
+                  v-if="data.type == 'city'"
+                  icon="map"
+                  class="mr-2"
+                ></b-icon>
+                <b-icon v-else icon="geo" class="mr-2"></b-icon>
+                <div class="text-places">
+                  <h6>{{ data.location }}</h6>
+                  <p>{{ data.country }}</p>
+                </div>
+                <span class="city-port">{{ data.type }}</span>
+              </b-form-checkbox>
+            </li>
+          </ul>
           <span
             v-if="errorsExist && 'destinationPorts' in responseErrors"
             style="color:red"
@@ -194,90 +398,6 @@
         <!-- FIN CONTAINERS -->
       </div>
       <!-- FIN INPUTS DEL SEARCH -->
-
-      <!-- INPUT FROM AND TO PORT -->
-      <div v-if="ptdActive || dtpActive || dtdActive" class="row mr-0 ml-0">
-        <div class="col-lg-1"></div>
-
-        <div
-          v-if="ptdActive"
-          class="col-lg-3"
-          style="padding-left: 30px; padding-right: inherit"
-        ></div>
-
-        <!-- Origin City -->
-        <div
-          v-if="dtpActive || dtdActive"
-          class="col-lg-3 mb-2 origen-search input-search-form"
-        >
-          <multiselect
-            v-if="originDistance"
-            v-model="searchRequest.originAddress"
-            disabled="true"
-            :multiple="false"
-            :close-on-select="true"
-            :clear-on-select="true"
-            :show-labels="false"
-            :options="originAddressOptions"
-            placeholder="Under construction"
-            label="display_name"
-            track-by="display_name"
-            class="s-input"
-          >
-          </multiselect>
-          <gmap-autocomplete
-            v-else
-            @place_changed="setOriginPlace"
-            @input="commitOriginAutocomplete"
-            :value="originAutocompleteValue"
-            class="form-input form-control"
-            placeholder="Start typing an address"
-          >
-          </gmap-autocomplete>
-          <img
-            src="/images/city.svg"
-            class="img-icon img-icon-left img-icon-origin"
-            alt="port"
-          />
-        </div>
-
-        <!-- Destination City -->
-        <div
-          v-if="ptdActive || dtdActive"
-          class="col-lg-3 mb-2 input-search-form"
-        >
-          <multiselect
-            v-if="destinationDistance"
-            v-model="searchRequest.destinationAddress"
-            disabled="true"
-            :multiple="false"
-            :close-on-select="true"
-            :clear-on-select="true"
-            :show-labels="false"
-            :options="destinationAddressOptions"
-            placeholder="Under construction"
-            label="display_name"
-            track-by="display_name"
-            class="s-input"
-          >
-          </multiselect>
-          <gmap-autocomplete
-            v-else
-            @place_changed="setDestinationPlace"
-            @input="commitDestinationAutocomplete"
-            :value="destinationAutocompleteValue"
-            class="form-input form-control"
-            placeholder="Start typing an address"
-          >
-          </gmap-autocomplete>
-          <img
-            src="/images/city.svg"
-            class="img-icon img-icon-left"
-            alt="port"
-          />
-        </div>
-      </div>
-      <!-- FIN INPUT FROM AND TO PORT -->
 
       <!-- ADDITIONAL SERVICES -->
       <b-collapse :visible="additionalVisible" id="collapse-1" class="mt-3">
@@ -738,13 +858,15 @@
 
       <div v-if="!searching" class="col-lg-8">
         <div
-          v-if="((searchRequest.type == 'FCL' &&
+          v-if="
+            ((searchRequest.type == 'FCL' &&
               Array.isArray(foundRates) &&
               foundRates.length == 0) ||
               (searchRequest.type == 'LCL' &&
                 Array.isArray(foundRatesLcl) &&
                 foundRatesLcl.length == 0)) &&
-              !foundApiRates"
+              !foundApiRates
+          "
           class="alert alert-danger"
           role="alert"
         >
@@ -760,6 +882,7 @@
             v-if="!searching"
             class="btn-search"
             @click="searchButtonPressed"
+            type="button"
           >
             SEARCH
           </button>
@@ -1414,6 +1537,7 @@ import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import "vue2-daterange-picker/dist/vue2-daterange-picker.css";
 import actions from "../../actions";
+import VueSkeletonLoader from "skeleton-loader-vue";
 
 export default {
   components: {
@@ -1421,9 +1545,32 @@ export default {
     Multiselect,
     DateRangePicker,
     vueDropzone: vue2Dropzone,
+    VueSkeletonLoader,
   },
   data() {
     return {
+      // test new select harbors
+      filtered_harbors: [],
+      searching_harbors: false,
+      skeletons: [1, 2, 3, 4],
+      // end test new select harbors
+      fromCity: "",
+      fromPort: "",
+      toCity: "",
+      toPort: "",
+      // datos estaticos search con inlands aqui
+      originPlacesFrom: "",
+      openOriginPlacesFrom: "",
+      originPlacesTo: "",
+      openOriginPlacesTo: "",
+      showPlaces: false,
+      showTagPlaceTo: false,
+      showTagPlaceFrom: false,
+      inputSearchFrom: true,
+      inputSearchTo: true,
+      nameTagPlaces: "",
+      placeInShowTo: [],
+      placeInShowFrom: [],
       loaded: false,
       additionalVisible: false,
       searching: false,
@@ -1527,13 +1674,6 @@ export default {
       destinationAddressPlaceholder: "Select an address",
       invalidPackagingCalculation: false,
       invalidShipmentCalculation: false,
-      //Gene defined
-      ptdActive: false,
-      dtpActive: false,
-      dtdActive: false,
-      indeterminate: false,
-      selected: "radio1",
-
       //DATEPICKER
       locale: "en-US",
       dateFormat: { year: "numeric", month: "long", day: "numeric" },
@@ -1541,7 +1681,6 @@ export default {
         startDate: "",
         endDate: "",
       },
-
       //modal
       checked1: false,
       checked2: false,
@@ -1584,9 +1723,122 @@ export default {
     api.getData({}, "/api/search/data", (err, data) => {
       this.setDropdownLists(err, data.data);
       this.getQuery();
+      this.filtered_harbors = this.datalists.harbors.filter((val, i) => i < 10);
     });
   },
-  methods: {    
+  methods: {
+    openSelect(e) {
+      this.filtered_harbors = this.datalists.harbors.filter((val, i) => i < 10);
+      if (e == "destiny") {
+        this.originPlacesFrom = "";
+        this.openOriginPlacesTo = !this.openOriginPlacesTo;
+        this.openOriginPlacesFrom = false;
+      } else if (e == "origin") {
+        this.originPlacesTo = "";
+        this.openOriginPlacesFrom = !this.openOriginPlacesFrom;
+        this.openOriginPlacesTo = false;
+      }
+    },
+    filterHarbors: _.debounce(function(vmodel) {
+      this.searching_harbors = true;
+
+      let currentInput;
+      if (vmodel == "originPlacesFrom") {
+        currentInput = this.originPlacesFrom.toLowerCase();
+      } else {
+        currentInput = this.originPlacesTo.toLowerCase();
+      }
+
+      this.filtered_harbors = [];
+
+      let new_harbors = [];
+      this.datalists.harbors.filter((item, index) => {
+        let freeze = Object.freeze(item);
+
+        let filtered = freeze.location
+          .toLowerCase()
+          .includes(currentInput.toLowerCase());
+
+        if (filtered == true) {
+          new_harbors.push(freeze);
+        }
+      });
+
+      setTimeout(() => {
+        this.searching_harbors = false;
+      }, 800);
+
+      this.filtered_harbors = new_harbors.filter((val, i) => i < 10);
+    }, 800),
+    placeCheckedFrom(data) {
+      let placeType = [];
+
+      if (this.placeInShowFrom.length >= 1) {
+        this.showTagPlaceFrom = true;
+
+        this.inputSearchFrom = false;
+
+        this.placeInShowFrom.forEach((element) => {
+          placeType.push(element.type);
+        });
+
+        this.searchRequest.originPorts = this.placeInShowFrom;
+
+        this.fromPort = placeType
+          .map((e) => e.toLocaleLowerCase())
+          .includes("port");
+        this.fromCity = placeType
+          .map((e) => e.toLocaleLowerCase())
+          .includes("city");
+      }
+      if (this.placeInShowFrom.length == 0) {
+        placeType = [];
+        this.showTagPlaceFrom = false;
+      }
+      this.openOriginPlacesFrom = false;
+    },
+    placeCheckedTo(data) {
+      let placeType = [];
+      if (this.placeInShowTo.length >= 1) {
+        this.showTagPlaceTo = true;
+
+        this.inputSearchFrom = false;
+
+        this.placeInShowTo.forEach((element) => {
+          placeType.push(element.type);
+        });
+
+        this.toPort = placeType
+          .map((e) => e.toLocaleLowerCase())
+          .includes("port");
+        this.toCity = placeType
+          .map((e) => e.toLocaleLowerCase())
+          .includes("city");
+
+        this.searchRequest.destinationPorts = this.placeInShowTo;
+      }
+      if (this.placeInShowTo.length == 0) {
+        placeType = [];
+        this.showTagPlaceTo = false;
+      }
+      this.openOriginPlacesTo = false;
+    },
+    deletePlaceFrom(e) {
+      this.placeInShowFrom.splice(e, 1);
+      if (this.placeInShowFrom.length == 0) {
+        this.showTagPlaceFrom = false;
+        return;
+      }
+    },
+    deletePlaceTo(e) {
+      this.placeInShowTo.splice(e, 1);
+      if (this.placeInShowTo.length == 0) {
+        this.showTagPlaceTo = false;
+        countPort = 0;
+        countCity = 0;
+        return;
+      }
+    },
     //modal
     nextStep() {
       if (this.stepOne) {
@@ -1739,13 +1991,23 @@ export default {
     getSearchData(id) {
       let component = this;
 
-      component.actions.search
+      this.actions.search
         .retrieve(id)
         .then((response) => {
-          component.searchData = response.data.data;
-          component.setSearchDisplay(
-            component.searchRequest.requestData.requested
-          );
+          this.searchData = response.data.data;
+          this.setSearchDisplay(this.searchRequest.requestData.requested);
+
+          if (this.searchData.destination_address.length) {
+            this.placeInShowTo = this.searchData.destination_address;
+          } else {
+            this.placeInShowTo = this.searchData.destination_ports;
+          }
+
+          if (this.searchData.origin_address.length) {
+            this.placeInShowFrom = this.searchData.origin_address;
+          } else {
+            this.placeInShowFrom = this.searchData.origin_ports;
+          }
         })
         .catch((error) => {
           if (error.status === 422) {
@@ -1772,7 +2034,6 @@ export default {
     //set UI elements
     setSearchDisplay(requestType) {
       let component = this;
-
       component.originPortOptions = component.datalists.harbors;
       component.destinationPortOptions = component.datalists.harbors;
       component.directionOptions = [
@@ -1857,20 +2118,23 @@ export default {
         this.searchRequest.direction = this.searchData.direction_id;
         //this.deliveryType = this.searchData.delivery_type;
         this.searchRequest.deliveryType = this.searchData.delivery_type;
+
         this.searchRequest.originPorts = [];
         component.searchData.origin_ports.forEach(function(origPort) {
-          if (!origPortNames.includes(origPort.name)) {
-            origPortNames.push(origPort.name);
+          if (!origPortNames.includes(origPort.location)) {
+            origPortNames.push(origPort.location);
             component.searchRequest.originPorts.push(origPort);
           }
         });
+
         this.searchRequest.destinationPorts = [];
         component.searchData.destination_ports.forEach(function(destPort) {
-          if (!destPortNames.includes(destPort.name)) {
-            destPortNames.push(destPort.name);
+          if (!destPortNames.includes(destPort.location)) {
+            destPortNames.push(destPort.location);
             component.searchRequest.destinationPorts.push(destPort);
           }
         });
+
         if (this.searchData.type == "FCL") {
           this.selectedContainerGroup = this.searchData.container_group;
           this.searchRequest.selectedContainerGroup = this.searchData.container_group;
@@ -2142,9 +2406,20 @@ export default {
 
     requestSearch() {
       let component = this;
-      this.$emit("clearResults",'searchStarted');
+      this.$emit("clearResults", "searchStarted");
       this.searching = true;
       this.$emit("searchRequested", this.searchRequest);
+
+      if (this.placeInShowTo.length && this.placeInShowFrom.length) {
+        this.searchRequest.destinationPorts = this.placeInShowTo;
+        this.searchRequest.originPorts = this.placeInShowFrom;
+      }
+      if (this.searchData.destination_address.length) {
+        this.searchRequest.destinationPorts = this.searchData.destination_address;
+      }
+      if (this.searchData.origin_address.length) {
+        this.searchRequest.originPorts = this.searchData.origin_address;
+      }
 
       component.searchActions
         .process(this.searchRequest)
@@ -2231,16 +2506,14 @@ export default {
 
     updateQuoteSearchOptions() {
       let component = this;
-      
+
       if (this.searchRequest.requestData.requested == 1) {
         component.actions.quotes
           .updateSearch(
             this.searchRequest.requestData.model_id,
             this.searchRequest
           )
-          .then((response) => {
-            console.log("Quote updated!");
-          })
+          .then((response) => {})
           .catch((error) => {
             this.errorsExist = true;
             if (error.status === 422) {
@@ -2248,75 +2521,6 @@ export default {
             }
           });
       }
-    },
-
-    setOriginAddressMode() {
-      let component = this;
-
-      if (component.searchRequest.originPorts.length > 1) {
-        component.originAddressPlaceholder =
-          "Please select only one Origin Port";
-      } else {
-        component.originAddressPlaceholder = "Select an address";
-        if (component.searchRequest.originPorts.length == 1) {
-          component.datalists.inland_distances.forEach(function(distance) {
-            if (
-              distance.harbor_id == component.searchRequest.originPorts[0].id
-            ) {
-              component.originAddressOptions.push(distance);
-            }
-          });
-
-          if (component.originAddressOptions.length == 0) {
-            component.originDistance = false;
-          } else {
-            component.originDistance = true;
-          }
-        }
-      }
-    },
-
-    setDestinationAddressMode() {
-      let component = this;
-
-      if (component.searchRequest.destinationPorts.length > 1) {
-        component.destinationAddressPlaceholder =
-          "Please select only one Origin Port";
-      } else {
-        component.destinationAddressPlaceholder = "Select an address";
-        if (component.searchRequest.destinationPorts.length == 1) {
-          component.datalists.inland_distances.forEach(function(distance) {
-            if (
-              distance.harbor_id ==
-              component.searchRequest.destinationPorts[0].id
-            ) {
-              component.destinationAddressOptions.push(distance);
-            }
-          });
-
-          if (component.destinationAddressOptions.length == 0) {
-            component.destinationDistance = false;
-          } else {
-            component.destinationDistance = true;
-          }
-        }
-      }
-    },
-
-    setOriginPlace(place) {
-      this.searchRequest.originAddress = place.formatted_address;
-    },
-
-    setDestinationPlace(place) {
-      this.searchRequest.destinationAddress = place.formatted_address;
-    },
-
-    commitOriginAutocomplete() {
-      this.originAutocompleteValue = this.searchRequest.originAddresses;
-    },
-
-    commitDestinationAutocomplete() {
-      this.destinationAutocompleteValue = this.searchRequest.destinationAddresses;
     },
 
     setSearchType() {
@@ -2402,7 +2606,6 @@ export default {
       let url_tags = $(".img-link").last();
       url_tags.attr("href", response.url);
     },
-
     isNumber: function(evt) {
       evt = evt ? evt : window.event;
       var charCode = evt.which ? evt.which : evt.keyCode;
@@ -2420,11 +2623,9 @@ export default {
     setChargeableWeight() {
       if (this.searchRequest.lclTypeIndex == 0) {
         if (this.lclShipmentVolume > this.lclShipmentWeight / 1000) {
-          this.lclShipmentChargeableWeight =
-            this.lclShipmentVolume ;
+          this.lclShipmentChargeableWeight = this.lclShipmentVolume;
         } else {
-          this.lclShipmentChargeableWeight =
-            (this.lclShipmentWeight / 1000) ;
+          this.lclShipmentChargeableWeight = this.lclShipmentWeight / 1000;
         }
       } else if (this.searchRequest.lclTypeIndex == 1) {
         let component = this;
@@ -2437,57 +2638,21 @@ export default {
           component.lclPackagingQuantity += parseFloat(pack.quantity);
           component.lclPackagingVolume +=
             (parseFloat(pack.depth) *
-            parseFloat(pack.height) *
-            parseFloat(pack.width)) / 1000000;
+              parseFloat(pack.height) *
+              parseFloat(pack.width)) /
+            1000000;
           component.lclPackagingWeight += parseFloat(pack.weight);
         });
 
         if (this.lclPackagingVolume > this.lclPackagingWeight / 1000) {
-          this.lclPackagingChargeableWeight =
-            this.lclPackagingVolume ;
+          this.lclPackagingChargeableWeight = this.lclPackagingVolume;
         } else {
-          this.lclPackagingChargeableWeight =
-            (this.lclPackagingWeight / 1000);
+          this.lclPackagingChargeableWeight = this.lclPackagingWeight / 1000;
         }
       }
     },
   },
   watch: {
-
-    /**deliveryType: function () {
-            if (this.deliveryType.id == 1) {
-                this.ptdActive = false;
-                this.dtpActive = false;
-                this.dtdActive = false;
-                return;
-            } else if (this.deliveryType.id == 2) {
-                this.dtpActive = false;
-                this.dtdActive = false;
-
-                this.ptdActive = !this.ptdActive;
-
-                this.setDestinationAddressMode();
-                return;
-            } else if (this.deliveryType.id == 3) {
-                this.ptdActive = false;
-                this.dtdActive = false;
-
-                this.dtpActive = !this.dtpActive;
-
-                this.setOriginAddressMode();
-                return;
-            } else if (this.deliveryType.id == 4) {
-                this.ptdActive = false;
-                this.dtpActive = false;
-
-                this.dtdActive = !this.dtdActive;
-
-                this.setDestinationAddressMode();
-                this.setOriginAddressMode();
-                return;
-            }
-        },**/
-
     selectedContainerGroup: function() {
       let component = this;
       let fullContainersByGroup = [];
@@ -2611,13 +2776,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.c-gap-20 {
-  column-gap: 20px;
-}
-
-.ml-10px {
-  margin-left: 10px;
-}
-</style>

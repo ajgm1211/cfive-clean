@@ -17,6 +17,7 @@ use App\Harbor;
 use App\Direction;
 use App\SearchRate;
 use App\SearchPort;
+use App\SearchLocation;
 use App\SearchCarrier;
 use App\ApiProvider;
 use App\ApiCredential;
@@ -39,20 +40,28 @@ use App\PriceLevel;
 use App\Surcharge;
 use App\QuoteV2;
 use App\NewContractRequest;
+use App\DistanceKmLocation;
 use App\CargoType;
 use Illuminate\Http\Request;
 use App\GroupContainer;
 use App\Http\Traits\MixPanelTrait;
+use App\InlandPerLocation;
+use App\InlandKm;
+use App\InlandPort;
+use App\Location;
+use App\Inland;
 use App\LocalCharge;
 use App\Rate;
 use App\RemarkCondition;
 use App\ScheduleType;
 use App\TermAndConditionV2;
 use App\TypeDestiny;
+use App\HarborsLocationSearch;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaStream;
 use Spatie\MediaLibrary\Models\Media;
+use Illuminate\Support\Collection;
 
 class SearchApiController extends Controller
 {
@@ -144,7 +153,7 @@ class SearchApiController extends Controller
         /*$harbors = Harbor::get()->map(function ($harbor) {
         return $harbor->only(['id', 'display_name', 'code', 'harbor_parent']);
         });*/
-        $harbors = \DB::select('call  select_harbors_search');
+        // $harbors =  \DB::select('call  select_harbors_search');
 
         $delivery_types = DeliveryType::get()->map(function ($delivery_type) {
             return $delivery_type->only(['id', 'name']);
@@ -196,6 +205,37 @@ class SearchApiController extends Controller
             return $cargo_type->only(['id', 'name']);
         });
         
+        $ports = Harbor::get()->map(function ($harbor){
+            return $harbor->only(['id','display_name','country']);
+        });
+        $locationsHarbors = HarborsLocationSearch::get()->map(function ($harbor){
+            return $harbor->only(['location_id']);
+        });
+
+        $locations = Location::whereIn('id',$locationsHarbors)->get();
+
+        $harbors=[];
+
+        foreach ($locations as $locationSearch){
+        $country=Country::find($locationSearch['province']['country_id']);
+            $harbors[]=[
+                'id'=>$locationSearch['id'],
+                'country'=>$country->name,
+                'location'=>$locationSearch['name'],
+                'type'=>'city'
+            ];
+        };
+
+        foreach ($ports as $harborsSearch){
+            $harbors[]=[
+                'id'=>$harborsSearch['id'],
+                'country'=>$harborsSearch['country']['name'],
+                'location'=>$harborsSearch['display_name'],
+                'type'=>'port'
+            ];
+        };
+
+        $environment_name = env('APP_ENV');
         /*
             implementacion de variable custom para no depender de consultar el enviroment
         */
@@ -263,25 +303,31 @@ class SearchApiController extends Controller
     public function processSearch(Request $request)
     {
         //Setting current company and user
-         $user = \Auth::user();
-         $user_id = $user->id;
-         $company_user = $user->companyUser()->first();
-         $company_user_id = $company_user->id;
-        
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $company_user = $user->companyUser()->first();
+        $company_user_id = $company_user->id;
+
         $search_array = $request->input();
 
         $search_array['dateRange'] = $this->formatSearchDate($search_array);
         $search_array['client_currency'] = $company_user->currency;
 
+        $search_array= $this->changeLocationsByPort($search_array);
+        
         $search_ids = $this->getIdsFromArray($search_array);
+        
         $search_ids['company_user'] = $company_user_id;
         $search_ids['user'] = $user_id;
         $search_ids['client_currency'] = $company_user->currency;
+        
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
 
+        $ratesDuplicate= $this->duplicateRates($rates,$search_array);
+
         //$rateNo = 0;
-        foreach ($rates as $rate) {
+        foreach ($ratesDuplicate as $rate) {
             //$rateNo += 1;
             //dump($rate->contract);
             //dump('for rate '. strval($rateNo));
@@ -300,8 +346,10 @@ class SearchApiController extends Controller
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
             $charges = $this->joinCharges($charges, $search_ids);
 
+            //Get inland
+            $inland = $this-> searchInlands($rate,$search_array, $search_ids['client_currency']);
             //Appending Rate Id to Charges
-            $this->addChargesToRate($rate, $charges, $search_ids);
+            $this->addChargesToRate($rate, $charges, $search_ids, $inland);
 
             //Getting price levels if requested
             if ($search_array['pricelevel'] || $search_array['requestData']['requested'] == 2) {
@@ -315,7 +363,7 @@ class SearchApiController extends Controller
                 $this->addMarkups($price_level_markups, $rate, $search_ids);
             }
 
-            $this->calculateTotals($rate, $search_array);
+            $this->calculateTotals($rate, $search_array,$inland);
 
             $remarks = $this->searchRemarks($rate, $search_ids);
 
@@ -327,21 +375,24 @@ class SearchApiController extends Controller
 
             $rate->setAttribute('request_type', $request->input('requested'));
 
+            $rate->setAttribute('inlands', $inland);
+
             $this->stringifyFclRateAmounts($rate);
 
             $this->setDownloadParameters($rate, $search_ids);
+
         }
 
-        if ($rates != null && count($rates) != 0) {
+        if ($ratesDuplicate != null && count($ratesDuplicate) != 0) {
             //Ordering rates by totals (cheaper to most expensive)
-            $rates = $this->sortRates($rates, $search_ids);
+            $ratesDuplicate = $this->sortRates($ratesDuplicate, $search_ids);
+        
 
             $terms = $this->searchTerms($search_ids);
 
             $search_array['terms'] = $terms;
 
-
-            $rates[0]->SetAttribute('search', $search_array);
+            $ratesDuplicate[0]->SetAttribute('search', $search_array);
         }
 
         $track_array = [];
@@ -358,16 +409,14 @@ class SearchApiController extends Controller
             return WhitelabelRateResource::collection($rates);
         }
 
-        return RateResource::collection($rates);
+        return RateResource::collection($ratesDuplicate);
     }
 
     //Stores current search
     public function store(Request $request)
-    {
-        // dd($request->input());
-
+    {       
         //Validating request data from form
-        $new_search_data = $request->validate([
+        $new_search = $request->validate([
             'originPorts' => 'required|array|min:1',
             'destinationPorts' => 'required|array|min:1',
             'dateRange.startDate' => 'required',
@@ -388,9 +437,7 @@ class SearchApiController extends Controller
             'destinationAddress' => 'sometimes',
         ]);
 
-
-
-
+        $new_search_data = $this->changeLocationsByPort($new_search);
         //Stripping time stamp from date
         $new_search_data['dateRange']['startDate'] = substr($new_search_data['dateRange']['startDate'], 0, 10);
         $new_search_data['dateRange']['endDate'] = substr($new_search_data['dateRange']['endDate'], 0, 10);
@@ -445,11 +492,13 @@ class SearchApiController extends Controller
             //'destination_address' => $new_search_data_ids['destinationAddress']
         ]);
 
-        foreach ($new_search_data_ids['originPorts'] as $origPort) {
-            foreach ($new_search_data_ids['destinationPorts'] as $destPort) {
+        foreach ($new_search_data['originPorts'] as $origPort) {
+            foreach ($new_search_data['destinationPorts'] as $destPort) {
                 $searchPort = new SearchPort();
-                $searchPort->port_orig = $origPort;
-                $searchPort->port_dest = $destPort;
+                $searchPort->port_orig = $origPort['id'];
+                $searchPort->port_dest = $destPort['id'];
+                $searchPort->location_orig = $origPort['location_id'];
+                $searchPort->location_dest = $destPort['location_id'];
                 $searchPort->search_rate()->associate($new_search);
                 $searchPort->save();
             }
@@ -572,18 +621,42 @@ class SearchApiController extends Controller
     }
 
     //Finds any Inlands matching search search ports, and calculates costs based on Inland data
-    public function searchInlands($data)
+    public function searchInlands($rate,$search_array,$current_client)
     {
-        dd($data);
-        /**Tables
-    - inland additional_kms (extra KM cost)
-    - inland_distances (distancieros)
-    - inland_kms (costs from kms tabs)
-    - inland_ranges (costs from ranges tab)
-    - inland_types (KM or RANGE)
-    - inlands (names and such)
-    - inlandsports (inland+port association)
-         **/
+    
+        $inland = array();
+        $container_type = $search_array['selectedContainerGroup']['id'];
+        $start_date = $search_array['dateRange']['startDate'];
+        $end_date  = $search_array['dateRange']['endDate'];
+        $direction =[ '0'=>$search_array['direction'],'1'=>'3'];
+        $carrier = $rate['carrier_id'];
+        $company_user = \Auth::user()->companyUser->id;
+        $origin_port = $rate['origin_port'];
+        $destiny_port = $rate['destiny_port'];
+        $origin_address = $rate['originAddress'];
+        $destination_address =$rate['destinationAddress'];
+        
+        $origInland=$this->getInland($container_type,$start_date,$end_date,$direction,$carrier,$company_user,$search_array['locationOrig'],$origin_port,$origin_address);
+        $destInland=$this->getInland($container_type,$start_date,$end_date,$direction,$carrier,$company_user,$search_array['locationDest'],$destiny_port,$destination_address);
+
+
+        $filterOrig= $this->filterInland($origInland,$search_array['containers'],$current_client,$origin_port,$origin_address,$rate); 
+        $filterDest= $this->filterInland($destInland,$search_array['containers'],$current_client,$destiny_port,$destination_address,$rate); 
+
+        $selectOriginInland=$this->selectInland($filterOrig,$rate,$type=1);
+        $selectDestinyInland=$this->selectInland($filterDest,$rate,$type=2);
+     
+        $inland['origin_inland']= $selectOriginInland!=null ? $selectOriginInland : null ;
+            if ( $inland['origin_inland']!=null) {
+                $rate->setAttribute('origin_inland_id', $selectOriginInland['inland_id']);
+            }
+
+        $inland['destiny_inland']=  $selectDestinyInland!=null ? $selectDestinyInland : null ;
+            if ( $inland['destiny_inland']!=null) {
+                $rate->setAttribute('destiny_inland_id', $selectDestinyInland['inland_id']);
+            }
+
+        return $inland;
     }
 
     //Finds local charges matching contracts
@@ -814,7 +887,7 @@ class SearchApiController extends Controller
         $rate->setAttribute('container_markups', $rate_markups);
     }
 
-    public function calculateTotals($rate, $search_data)
+    public function calculateTotals($rate,$search_data,$inland)
     {
         $client_currency = $search_data['client_currency'];
         $charge_type_totals = [];
@@ -838,8 +911,8 @@ class SearchApiController extends Controller
 
             //Looping through charges by type
             foreach ($charge_direction as $charge) {
-
-                if (is_a($charge, "App\LocalCharge") || is_a($charge, "App\GlobalCharge")) {
+                
+                if (is_a($charge, "App\LocalCharge") || is_a($charge, "App\GlobalCharge")|| is_a($charge,"App\InlandRange") || is_a($charge,"App\InlandPerLocation") || is_a($charge,"App\InlandKm") ) {
 
                     if (isset($charge->totals_with_markups)) {
                         if ($direction == "Freight") {
@@ -851,7 +924,7 @@ class SearchApiController extends Controller
                                 $charges_to_add_original = $this->convertToCurrency($charge->currency, $rate->currency, $charge->containers_with_markups);
                             }
                             $charges_to_add_rate_currency = $charges_to_add_original;
-                        } else {
+                        }else{
                             $charges_to_add = $charge->totals_with_markups;
                             $charges_to_add_rate_currency = $this->convertToCurrency($charge->currency, $rate->currency, $charge->totals_with_markups);
                         }
@@ -896,7 +969,7 @@ class SearchApiController extends Controller
                             $charge_type_totals[$direction][$code] += isDecimal($charges_to_add[$code], true);
                         }
                     }
-
+                   
                     //Updating rate totals to new added array
                     if(($direction == "Origin" && $search_data['originCharges']) || 
                         ($direction == "Destination" && $search_data['destinationCharges'])
@@ -961,7 +1034,7 @@ class SearchApiController extends Controller
 
             $rate->setAttribute('quantity_totals', $single_totals);
             $rate->setAttribute('global_total', $global_total);
-        }
+        }       
     }
 
     public function storeContractNewSearch(StoreContractSearch $request)

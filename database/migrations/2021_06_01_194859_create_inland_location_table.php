@@ -15,7 +15,7 @@ class CreateInlandLocationTable extends Migration
     {
         Schema::create('inland_location', function (Blueprint $table) {
             $table->increments('id');
-            $table->json('json_container')->nullable();
+            $table->json('json_containers')->nullable();
             $table->integer('currency_id')->unsigned();
             $table->foreign('currency_id')->references('id')->on('currency');
             $table->integer('harbor_id')->unsigned();
