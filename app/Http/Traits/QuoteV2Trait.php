@@ -1818,7 +1818,7 @@ trait QuoteV2Trait
             $formattedTotal[$newCode] = $price;
         }
 
-        $this->formatMarkupsForQuote($markups);
+        $formattedMarkups = $this->formatMarkupsForQuote($markups);
 
         $charge['amount'] = $formattedAmount;
         $charge['markups'] = $formattedMarkups;
@@ -1893,7 +1893,7 @@ trait QuoteV2Trait
         $company_user = $user->worksAt();
         $company_user_id = $company_user->id;
         $carriers = Carrier::get()->map(function ($carrier) {
-            return $carrier->only(['id', 'options']);
+            return $carrier->only(['id', 'options', 'varation']);
         });
 
         $currency = Currency::where('alphacode',$result['pricingDetails']['surcharges']['freightSurcharges'][0]['containers'][0]['currencyCode'])->first();
@@ -1907,8 +1907,9 @@ trait QuoteV2Trait
 
         foreach($carriers as $carrier){
             $carrier_options = json_decode($carrier['options'], true);
+            $carrier_varation = json_decode($carrier['varation'], true); 
             
-            if($carrier_options['api_code'] == $result['companyCode']){
+            if($carrier_options['api_code'] == $result['companyCode'] || in_array($result['companyCode'], $carrier_varation['type'])) {
                 $result['carrier_id'] = $carrier['id'];
             }
         }

@@ -1427,7 +1427,7 @@ export default {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
         },
-        onDelete(id, type) { 
+        onDelete(id, type) {
             if (this.currentQuoteData.type == "FCL") {
                 actions.localcharges
                     .delete(id, type)
@@ -1449,18 +1449,21 @@ export default {
                         this.$refs.observer.setErrors(data.data.errors);
                     });
             }
+
             this.charges = this.charges.filter(function (item) {
                 return id != item.id;
             });
+
             this.localcharges = this.localcharges.filter(function (item) {
                 return id != item.id;
             });
+
             //Delete charge to selected charges array
             this.selectedCharges = this.selectedCharges.filter(function (item) {
                 return id != item.id; 
             });
         },
-        onSubmit() { 
+        onSubmit() {
             if (this.selectedCharges.length > 0 || this.selectedInputs.length > 0) {
                 this.charges = [];
                 this.totals = [];

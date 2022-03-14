@@ -243,8 +243,11 @@ BANDA DE CARDS CMA Y MAERSK
 .banda-top.cma span, 
 .banda-top.maersk span,
 .banda-top.sealand span,
+.banda-top.seau span,
 .banda-top.evergreen span,
-.banda-top.hapag span {
+.banda-top.hapag span,
+.banda-top.cosco span,
+.banda-top.one span  {
     text-transform: uppercase;
     position: relative;
     left: -7px;
@@ -259,6 +262,10 @@ BANDA DE CARDS CMA Y MAERSK
 }
 
 .banda-top.sealand span {
+    left: -3px;
+}
+
+.banda-top.seau span {
     left: -3px;
 }
 
@@ -289,6 +296,18 @@ BANDA DE CARDS CMA Y MAERSK
 }
 
 .banda-top.sealand {
+    border-bottom: 26px solid #216E91;
+    &::after {
+        top: 26px;
+        border-top: 10px solid #368eac;
+    }
+    &::before {
+        top: 26px;
+        border-top: 11px solid #368eac;
+    }
+}
+
+.banda-top.seau {
     border-bottom: 26px solid #216E91;
     &::after {
         top: 26px;
@@ -335,6 +354,34 @@ BANDA DE CARDS CMA Y MAERSK
     }
     &::before {
         border-top: 11px solid #051046;
+    }
+    span {
+        top: 2px;
+        font-size: 9px;
+    }
+}
+
+.banda-top.one {
+    border-bottom: 26px solid #BD0E72;
+    &::after {
+        border-top: 10px solid #7a0949;
+    }
+    &::before {
+        border-top: 11px solid #7a0949;
+    }
+    span {
+        top: 2px;
+        font-size: 9px;
+    }
+}
+
+.banda-top.cosco {
+    border-bottom: 26px solid #085A96;
+    &::after {
+        border-top: 10px solid #043152;
+    }
+    &::before {
+        border-top: 11px solid #043152;
     }
     span {
         top: 2px;

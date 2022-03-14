@@ -74,6 +74,7 @@ class SearchApiResource extends JsonResource
             'overweight_charges' => $this->overweight_charges,
             'origin_address' => $this->origin_address,
             'destination_address' => $this->destination_address,
+            'options' => $this->options,
             'show_rate_currency' => $this->show_rate_currency,
         ];
     }

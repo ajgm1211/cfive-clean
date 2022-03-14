@@ -29,7 +29,7 @@
       <span v-else-if="mixed === true" style="color: #fff;">
         {{ selected === "Fixed Markup" ? "$" : "%" }}
       </span>
-      <span v-else :style="{ color: font_color }"
+      <span v-else-if="selected" :style="{ color: font_color }"
         >{{ selected.name ? selected.name : selected }}
       </span>
       <ChevronDown v-if="icon == true" />
@@ -41,10 +41,10 @@
 
     <div
       class="options"
-      v-if="open"
+      v-if="open && options"
       :class="mixed == true ? 'mixedOptions' : ''"
     >
-      <p v-for="option in options" :key="option" @click="select(option)">
+      <p v-for="(option, i) in options" :key="i" @click="select(option)">
         {{ option.name ? option.name : option }}
       </p>
     </div>

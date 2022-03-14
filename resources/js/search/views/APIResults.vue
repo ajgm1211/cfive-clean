@@ -1724,7 +1724,7 @@
               >Export Demurrage & Detention T&C</a
             >
             <a
-              v-else-if="result.companyCode == 'sealand'"
+              v-else-if="result.companyCode == 'sealand' || result.companyCode == 'seau'"
               href="https://assets.maerskline.com/combined-pricing-assets/seau/dnd/free_time_offer_for_Sealand_SPOT.xlsx"
               >Export Demurrage & Detention T&C</a
             >
@@ -3555,683 +3555,500 @@
     </div>
     <!-- FIN TARJETA HAPAG -->
 
-    <div v-if="false">
-      <!-- eliminar div par que se muentren las tarjetas -->
-      <!-- TARJETA YML -->
-      <div
-        class="mb-4"
-        v-for="(cmaResult, cmaResultKey) in orderedCmaRates"
-        :key="cmaResultKey + 'yml'"
-      >
-        <div class="result-search">
-          <div class="banda-top yml"><span>YML</span></div>
+    <!-- TARJETA ONE -->
+    <div
+      class="mb-4"
+      v-for="(oneResult, oneResultKey) in orderedOneRates"
+      :key="oneResultKey + 'one'"
+    >
+      <div class="result-search">
+        <div class="banda-top one"><span>ONE QUOTE</span></div>
 
-          <!-- INFORMACION DE TARIFA -->
-          <div class="row">
-            <!-- CARRIER -->
-            <div
-              class="
-                col-12 col-lg-2
-                carrier-img
-                d-flex
-                justify-content-center
-                align-items-center
+        <!-- INFORMACION DE TARIFA -->
+        <div class="row" style="min-height: 199px !important">
+          <!-- CARRIER -->
+          <div
+            class="
+              col-12 col-lg-2
+              carrier-img
+              d-flex
+              justify-content-center
+              align-items-center
+            "
+            style="border-right: 1px solid #f3f3f3"
+          >
+            <img
+              :src="
+                'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
+                  oneResult.image
               "
-              style="border-right: 1px solid #f3f3f3"
-            >
-              <img
-                :src="
-                  'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
-                    cmaResult.image
-                "
-                alt="logo"
-                width="115px"
-              />
+              alt="logo"
+              width="115px"
+            />
+          </div>
+          <!-- FIN CARRIER -->
+
+          <!-- INFORMACION PRINCIPAL -->
+          <div class="row col-12 col-lg-8 margin-res">
+            <!-- CONTRACT NAME -->
+            <div class="col-12">
+              <h6 class="mt-4 mb-5 contract-title">
+                <!-- {{ oneResult.quoteLine }} -->
+                <!-- {{ oneResult.contractReference }} -->
+              </h6>
             </div>
-            <!-- FIN CARRIER -->
+            <!-- FIN CONTRACT NAME -->
 
-            <!-- INFORMACION PRINCIPAL -->
-            <div class="row col-12 col-lg-8 margin-res">
-              <!-- CONTRACT NAME -->
-              <div class="col-12">
-                <h6 class="mt-4 mb-5 contract-title">
-                  {{ cmaResult.contractReference }}
-                </h6>
-              </div>
-              <!-- FIN CONTRACT NAME -->
-
-              <!-- RUTA Y PRECIOS -->
+            <!-- RUTA Y PRECIOS -->
+            <div
+              class="row col-12 mr-0 ml-0"
+              style="border-bottom: 1px solid #f3f3f3"
+            >
+              <!-- RUTA -->
               <div
-                class="row col-12 mr-0 ml-0"
-                style="border-bottom: 1px solid #f3f3f3"
+                class="col-12 col-lg-6 d-none d-lg-flex"
+                style="border-bottom: 1px solid #eeeeee"
               >
-                <!-- RUTA -->
+                <!-- ORGIEN -->
+                <div class="origin mr-4">
+                  <span>origin</span>
+                  <p class="mb-0">
+                    {{ oneResult.departureName }}
+                  </p>
+                  <p v-if="oneResult.departureDateGmt">
+                    {{ oneResult.departureDateGmt.substring(0, 10) }}
+                  </p>
+                </div>
+                <!-- FIN ORGIEN -->
+
+                <!-- LINEA DE RUTA -->
                 <div
-                  class="col-12 col-lg-6 d-none d-lg-flex"
-                  style="border-bottom: 1px solid #eeeeee"
+                  class="
+                    d-flex
+                    flex-column
+                    justify-content-center
+                    align-items-center
+                  "
                 >
-                  <!-- ORGIEN -->
-                  <div class="origin mr-4">
-                    <span>origin</span>
-                    <p class="mb-0">
-                      {{ cmaResult.departureName }}
+                  <div class="direction-form">
+                    <img src="/images/logo-ship-blue.svg" alt="bote" />
+
+                    <div class="route-direct d-flex align-items-center">
+                      <div class="circle mr-2"></div>
+                      <div class="line"></div>
+                      <div class="circle fill-circle ml-2"></div>
+                    </div>
+                  </div>
+
+                  <div class="direction-desc mt-2">
+                    <p class="mb-1">
+                      <b>Transit Time: </b>
+                      {{ oneResult.transitTime + " days" }}
                     </p>
-                    <p>{{ cmaResult.departureDateGmt.substring(0, 10) }}</p>
+                    <p v-if="oneResult.vehiculeName">
+                      <b>Vessel: </b> {{ oneResult.vehiculeName }}
+                    </p>
+                  </div>
+                </div>
+                <!-- FIN LINEA DE RUTA -->
+
+                <!-- DESTINO -->
+                <div class="destination ml-4">
+                  <span>destination</span>
+                  <p class="mb-0">
+                    {{ oneResult.arrivalName }}
+                  </p>
+                  <p v-if="oneResult.arrivalDateGmt">
+                    {{ oneResult.arrivalDateGmt.substring(0, 10) }}
+                  </p>
+                </div>
+                <!-- FIN DESTINO -->
+              </div>
+              <!-- FIN RUTA -->
+
+              <!-- RUTA RESPONSIVA -->
+              <div
+                class="row col-lg-6 d-lg-none mr-0 ml-0"
+                style="border-bottom: 1px solid #eeeeee"
+              >
+                <!-- DESTINOS -->
+                <div class="col-sm-6">
+                  <!-- ORGIEN -->
+                  <div class="origin mb-3">
+                    <span>origin</span>
+                    <p class="mb-1">
+                      {{ oneResult.departureName }}
+                    </p>
+                    <p v-if="oneResult.departureDateGmt">
+                      {{ oneResult.departureDateGmt.substring(0, 10) }}
+                    </p>
                   </div>
                   <!-- FIN ORGIEN -->
 
-                  <!-- LINEA DE RUTA -->
-                  <div
-                    class="
-                      d-flex
-                      flex-column
-                      justify-content-center
-                      align-items-center
-                    "
-                  >
-                    <div class="direction-form">
-                      <img src="/images/logo-ship-blue.svg" alt="bote" />
-
-                      <div class="route-indirect d-flex align-items-center">
-                        <div class="circle mr-2"></div>
-                        <div class="line"></div>
-                        <div class="circle fill-circle-gray mr-2 ml-2"></div>
-                        <div class="line line-blue"></div>
-                        <div class="circle fill-circle ml-2"></div>
-                      </div>
-                    </div>
-
-                    <div class="direction-desc mt-2">
-                      <p class="mb-1">
-                        <b>Transit Time: </b>
-                        {{ cmaResult.transitTime + " days" }}
-                      </p>
-                      <p><b>Vessel: </b> {{ cmaResult.vehiculeName }}</p>
-                    </div>
-                  </div>
-                  <!-- FIN LINEA DE RUTA -->
-
                   <!-- DESTINO -->
-                  <div class="destination ml-4">
+                  <div class="destination align-items-start mb-3">
                     <span>destination</span>
-                    <p class="mb-0">
-                      {{ cmaResult.arrivalName }}
+                    <p class="mb-1">
+                      {{ oneResult.arrivalName }}
                     </p>
-                    <p>{{ cmaResult.arrivalDateGmt.substring(0, 10) }}</p>
+                    <p v-if="oneResult.arrivalDateGmt">
+                      {{ oneResult.arrivalDateGmt.substring(0, 10) }}
+                    </p>
                   </div>
                   <!-- FIN DESTINO -->
                 </div>
-                <!-- FIN RUTA -->
+                <!-- FIN DESTINOS -->
 
-                <!-- RUTA RESPONSIVA -->
-                <div
-                  class="row col-lg-6 d-lg-none mr-0 ml-0"
-                  style="border-bottom: 1px solid #eeeeee"
-                >
-                  <!-- DESTINOS -->
-                  <div class="col-sm-6">
-                    <!-- ORGIEN -->
-                    <div class="origin mb-3">
-                      <span>origin</span>
-                      <p class="mb-1">
-                        {{ cmaResult.departureName }}
-                      </p>
-                      <p>{{ cmaResult.departureDateGmt.substring(0, 10) }}</p>
-                    </div>
-                    <!-- FIN ORGIEN -->
-
-                    <!-- DESTINO -->
-                    <div class="destination align-items-start mb-3">
-                      <span>destination</span>
-                      <p class="mb-1">
-                        {{ cmaResult.arrivalName }}
-                      </p>
-                      <p>{{ cmaResult.arrivalDateGmt.substring(0, 10) }}</p>
-                    </div>
-                    <!-- FIN DESTINO -->
+                <!-- TRANSIT TIME -->
+                <div class="col-sm-6">
+                  <!-- LINEA DE RUTA -->
+                  <div class="via">
+                    <ul class="pl-0" style="list-style: none">
+                      <li>
+                        <p class="mb-1">
+                          <b>Transit Time: </b
+                          >{{ oneResult.transitTime + " days" }}
+                        </p>
+                      </li>
+                      <li>
+                        <p><b>Vessel: </b>{{ oneResult.vehiculeName }}</p>
+                      </li>
+                    </ul>
                   </div>
-                  <!-- FIN DESTINOS -->
-
-                  <!-- TRANSIT TIME -->
-                  <div class="col-sm-6">
-                    <!-- LINEA DE RUTA -->
-                    <div class="via">
-                      <ul class="pl-0" style="list-style: none">
-                        <li>
-                          <p class="mb-1">
-                            <b>Transit Time: </b
-                            >{{ cmaResult.transitTime + " days" }}
-                          </p>
-                        </li>
-                        <li>
-                          <p><b>Vessel: </b>{{ cmaResult.vehiculeName }}</p>
-                        </li>
-                      </ul>
-                    </div>
-                    <!-- FIN LINEA DE RUTA -->
-                  </div>
-                  <!-- FIN TRANSIT TIME -->
+                  <!-- FIN LINEA DE RUTA -->
                 </div>
-                <!-- FIN RUTA RESPONSIVA -->
+                <!-- FIN TRANSIT TIME -->
+              </div>
+              <!-- FIN RUTA RESPONSIVA -->
+
+              <!-- PRECIO -->
+              <div class="col-12 col-lg-6">
+                <!-- PRECIO RESPONSIVE -->
+                <div class="row card-amount card-amount-header__res">
+                  <div
+                    class="col-2 pl-0 pr-0 prices-card-res"
+                    v-for="(cont, contCode) in request.containers"
+                    :key="contCode"
+                  >
+                    <p>
+                      <b>{{ cont.code }}</b>
+                    </p>
+                  </div>
+                </div>
+                <!-- FIN PRECIO RESPONSIVE -->
 
                 <!-- PRECIO -->
-                <div class="col-12 col-lg-6">
-                  <!-- PRECIO RESPONSIVE -->
-                  <div class="row card-amount card-amount-header__res">
-                    <div
-                      class="col-2 pl-0 pr-0 prices-card-res"
-                      v-for="(cont, contCode) in request.containers"
-                      :key="contCode"
-                    >
-                      <p>
-                        <b>{{ cont.code }}</b>
-                      </p>
-                    </div>
+                <div class="row card-amount card-amount__res">
+                  <div
+                    class="col-2 pl-0 pr-0 prices-card-res"
+                    :class="countContainersClass()"
+                    v-for="(oneGlobalTotal, oneTotalKey) in oneResult
+                      .pricingDetails.totalRatePerContainer"
+                    :key="oneTotalKey"
+                  >
+                    <p>
+                      <b style="font-size: 16px">
+                        {{
+                          datalists.company_user.decimals === 1
+                            ? oneGlobalTotal.total
+                            : parseFloat(oneGlobalTotal.total).toFixed(0)
+                        }}
+                        <span style="font-size: 10px">{{
+                          oneGlobalTotal.currencyCode
+                        }}</span></b
+                      >
+                    </p>
                   </div>
-                  <!-- FIN PRECIO RESPONSIVE -->
-
-                  <!-- PRECIO -->
-                  <div class="row card-amount card-amount__res">
-                    <div
-                      class="col-2 pl-0 pr-0 prices-card-res"
-                      :class="countContainersClass()"
-                      v-for="(cmaGlobalTotal, cmaTotalKey) in cmaResult
-                        .pricingDetails.totalRatePerContainer"
-                      :key="cmaTotalKey"
-                    >
-                      <p>
-                        <b style="font-size: 16px">
-                          {{ cmaGlobalTotal.total }}
-                          <span style="font-size: 10px">{{
-                            cmaGlobalTotal.currencyCode
-                          }}</span></b
-                        >
-                      </p>
-                    </div>
-                  </div>
-                  <!-- FIN PRECIO -->
                 </div>
                 <!-- FIN PRECIO -->
               </div>
-              <!-- RUTA Y PRECIOS -->
+              <!-- FIN PRECIO -->
+            </div>
+            <!-- RUTA Y PRECIOS -->
 
-              <!-- OPCIONES E INFORMACION EXTRA -->
-              <div class="col-12 mt-3 mb-3 result-action">
-                <div class="d-flex align-items-center">
-                  <span style="color: #006bfa; text-transform: capitalize"
-                    ><b-icon icon="check-circle-fill"></b-icon> CMA CGM My
-                    PRICES</span
-                  >
-                  <p class="ml-4 mb-0">
-                    <b style="font-size:11px;">VALIDITY:</b>
-                    {{
-                      cmaResult.validityFrom.substring(0, 10) +
-                        " / " +
-                        cmaResult.validityTo.substring(0, 10)
-                    }}
-                  </p>
-                </div>
-
-                <div class="d-flex justify-content-end align-items-center">
-                  <b-button
-                    class="rs-btn"
-                    v-b-toggle="
-                      'schedules_' +
-                        String(cmaResult.contractReference) +
-                        '_' +
-                        String(cmaResult.accordion_id)
-                    "
-                    ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
-                  ></b-button>
-                  <b-button
-                    class="rs-btn"
-                    v-b-toggle="
-                      'details_' +
-                        String(cmaResult.contractReference) +
-                        '_' +
-                        String(cmaResult.accordion_id)
-                    "
-                    ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
-                  ></b-button>
-                </div>
+            <!-- OPCIONES E INFORMACION EXTRA -->
+            <div class="col-12 mt-3 mb-3 result-action">
+              <div class="d-flex align-items-center">
+                <span style="color: #006bfa; text-transform: capitalize"
+                  ><b-icon icon="check-circle-fill"></b-icon> ONE QUOTE</span
+                >
+                <p
+                  class="ml-4 mb-0"
+                  v-if="oneResult.validityFrom && oneResult.validityTo"
+                >
+                  <b style="font-size:11px;">VALIDITY:</b>
+                  {{
+                    oneResult.validityFrom.substring(0, 10) +
+                      " / " +
+                      oneResult.validityTo.substring(0, 10)
+                  }}
+                </p>
               </div>
-              <!-- FIN OPCIONES E INFORMACION EXTRA -->
-            </div>
-            <!-- FIN INFORMACION PRINCIPAL -->
 
-            <!-- ADD QUOTE BTN -->
-            <div
-              class="
-                col-12 col-lg-2
-                d-flex
-                justify-content-center
-                align-items-center
-                btn-quote-res
-              "
-              style="border-left: 1px solid #f3f3f3"
-            >
-              <b-form-checkbox
-                v-model="cmaResult.addToQuote"
-                class="btn-add-quote"
-                name="check-button"
-                button
-                @change="addResultToQuote(cmaResult)"
-              >
-                <b>add to quote</b>
-              </b-form-checkbox>
+              <div class="d-flex justify-content-end align-items-center">
+                <b-button
+                  v-if="oneResult.remarks && oneResult.remarks != ''"
+                  class="rs-btn"
+                  v-b-toggle="
+                    'remarks_' +
+                      String(oneResult.contractReference) +
+                      '_' +
+                      String(oneResult.accordion_id)
+                  "
+                  ><b>remarks</b><b-icon icon="caret-down-fill"></b-icon
+                ></b-button>
+                <b-button
+                  class="rs-btn"
+                  v-b-toggle="
+                    'schedules_' +
+                      String(oneResult.contractReference) +
+                      '_' +
+                      String(oneResult.accordion_id)
+                  "
+                  v-if="oneResult.routingDetails.length"
+                  ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
+                ></b-button>
+                <b-button
+                  class="rs-btn"
+                  v-b-toggle="
+                    'details_' +
+                      String(oneResult.contractReference) +
+                      '_' +
+                      String(oneResult.accordion_id)
+                  "
+                  ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
+                ></b-button>
+              </div>
             </div>
+            <!-- FIN OPCIONES E INFORMACION EXTRA -->
           </div>
-          <!-- FIN INFORMACION DE TARIFA -->
+          <!-- FIN INFORMACION PRINCIPAL -->
 
-          <!-- INFORMACION DESPLEGADA -->
+          <!-- ADD QUOTE BTN -->
           <div
-            :id="'my-accordion-' + cmaResult.accordion_id"
-            class="row mr-0 ml-0 accordion"
-            role="tablist"
+            class="
+              col-12 col-lg-2
+              d-flex
+              justify-content-center
+              align-items-center
+              btn-quote-res
+            "
+            style="border-left: 1px solid #f3f3f3"
           >
-            <!-- DETALLES DE TARIFA -->
-            <b-collapse
-              :id="
-                'details_' +
-                  String(cmaResult.contractReference) +
-                  '_' +
-                  String(cmaResult.accordion_id)
-              "
-              class="pt-5 pb-5 pl-5 pr-5 col-12"
-              :accordion="'my-accordion-' + cmaResult.accordion_id"
-              role="tabpanel"
-              v-model="cmaResult.detailCollapse"
+            <b-form-checkbox
+              v-model="oneResult.addToQuote"
+              class="btn-add-quote"
+              name="check-button"
+              button
+              @change="addResultToQuote(oneResult)"
             >
-              <div
-                v-for="(cmaSurchargeType, cmaSurchargeKey) in cmaResult
-                  .pricingDetails.surcharges"
-                :key="cmaSurchargeKey"
-              >
-                <h5>
-                  <b>{{
-                    cmaSurchargeKey
-                      .substring(0, cmaSurchargeKey.length - 10)
-                      .charAt(0)
-                      .toUpperCase() +
-                      cmaSurchargeKey
-                        .substring(0, cmaSurchargeKey.length - 10)
-                        .slice(1)
-                  }}</b>
-                </h5>
+              <b>add to quote</b>
+            </b-form-checkbox>
+          </div>
+        </div>
+        <!-- FIN INFORMACION DE TARIFA -->
 
-                <b-table-simple hover small responsive class="sc-table">
-                  <b-thead>
-                    <b-tr>
-                      <b-th style="width: 300px">Charge</b-th>
-                      <b-th style="width: 325px">Detail</b-th>
-                      <!-- <b-th></b-th>
+        <!-- INFORMACION DESPLEGADA -->
+        <div
+          :id="'my-accordion-' + oneResult.accordion_id"
+          class="row mr-0 ml-0 accordion"
+          role="tablist"
+        >
+
+          <!-- REMARKS -->
+          <b-collapse
+            :id="
+              'remarks_' +
+                String(oneResult.contractReference) +
+                '_' +
+                String(oneResult.accordion_id)"
+            class="pt-5 pb-5 pl-5 pr-5 col-12"
+            :accordion="'my-accordion-' + oneResult.accordion_id"
+            role="tabpanel"
+            v-model="oneResult.remarksCollapse"
+          >
+            <h5><b>Remarks</b></h5>
+
+            <b-card>
+              <p v-html="oneResult.remarks"></p>
+            </b-card>
+          </b-collapse>
+          <!-- FIN REMARKS -->
+
+          <!-- DETALLES DE TARIFA -->
+          <b-collapse
+            :id="
+              'details_' +
+                String(oneResult.contractReference) +
+                '_' +
+                String(oneResult.accordion_id)
+            "
+            class="pt-5 pb-5 pl-5 pr-5 col-12"
+            :accordion="'my-accordion-' + oneResult.accordion_id"
+            role="tabpanel"
+            v-model="oneResult.detailCollapse"
+          >
+            <div
+              v-for="(oneSurchargeType, oneSurchargeKey) in oneResult
+                .pricingDetails.surcharges"
+              :key="oneSurchargeKey"
+            >
+              <h5 v-show="(searchData.originCharges && oneSurchargeKey=='originSurcharges') || (searchData.destinationCharges && oneSurchargeKey=='destinationSurcharges') || oneSurchargeKey=='freightSurcharges'">
+                <b>{{
+                  oneSurchargeKey
+                    .substring(0, oneSurchargeKey.length - 10)
+                    .charAt(0)
+                    .toUpperCase() +
+                    oneSurchargeKey
+                      .substring(0, oneSurchargeKey.length - 10)
+                      .slice(1)
+                }}</b>
+              </h5>
+
+              <b-table-simple 
+                hover small responsive class="sc-table"
+                v-show="(searchData.originCharges && oneSurchargeKey=='originSurcharges') || (searchData.destinationCharges && oneSurchargeKey=='destinationSurcharges') || oneSurchargeKey=='freightSurcharges'">
+                <b-thead>
+                  <b-tr>
+                    <b-th style="width: 300px">Charge</b-th>
+                    <b-th style="width: 325px">Detail</b-th>
+                    <!-- <b-th></b-th>
                           <b-th></b-th> -->
-                      <b-th
-                        style="
-                          padding: 0.75rem 0.75rem 0.3rem 0.75rem !important;
-                        "
-                        v-for="(requestContainer,
-                        rContainerKey) in request.containers"
-                        :key="rContainerKey"
-                        >{{ requestContainer.code }}
-                      </b-th>
-                    </b-tr>
-                  </b-thead>
+                    <b-th
+                      style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
+                      v-for="(requestContainer,
+                      rContainerKey) in request.containers"
+                      :key="rContainerKey"
+                      >{{ requestContainer.code }}
+                    </b-th>
+                  </b-tr>
+                </b-thead>
 
-                  <b-tbody>
-                    <b-tr
-                      v-for="(cmaSurchargeName, cmaNameKey) in cmaSurchargeType"
-                      :key="cmaNameKey"
+                <b-tbody>
+                  <b-tr
+                    v-for="(oneSurchargeName,
+                    oneNameKey) in oneSurchargeType"
+                    :key="oneNameKey"
+                  >
+                    <b-td
+                      ><b>{{
+                        oneSurchargeName.chargeName != null
+                          ? oneSurchargeName.chargeCode +
+                            " - " +
+                            oneSurchargeName.chargeName
+                          : oneSurchargeName.chargeCode
+                      }}</b></b-td
                     >
-                      <b-td
-                        ><b>{{
-                          cmaSurchargeName.chargeName != null
-                            ? cmaSurchargeName.chargeCode +
-                              " - " +
-                              cmaSurchargeName.chargeName
-                            : cmaSurchargeName.chargeCode
-                        }}</b></b-td
-                      >
-                      <b-td>{{ cmaSurchargeName.calculationType }}</b-td>
-                      <!-- <b-td></b-td>
+                    <b-td>{{ oneSurchargeName.calculationType }}</b-td>
+                    <!-- <b-td></b-td>
                           <b-td></b-td> -->
-                      <b-td
-                        v-for="(cmaSurchargeContainer,
-                        cmaContainerKey) in cmaSurchargeName.containers"
-                        :key="cmaContainerKey"
-                        ><p>
-                          <b
-                            >{{ cmaSurchargeContainer.currencyCode }}
-                            {{ cmaSurchargeContainer.amount }}</b
-                          >
-                        </p></b-td
-                      >
-                    </b-tr>
+                    <b-td
+                      v-for="(oneSurchargeContainer,
+                      oneContainerKey) in oneSurchargeName.containers"
+                      :key="oneContainerKey"
+                      ><p>
+                        <b
+                          >{{ oneSurchargeContainer.currencyCode }}
+                          {{ oneSurchargeContainer.amount }}</b
+                        >
+                      </p></b-td
+                    >
+                  </b-tr>
 
-                    <b-tr>
-                      <!-- <b-td></b-td>
+                  <b-tr>
+                    <!-- <b-td></b-td>
                           <b-td></b-td>
                           <b-td></b-td> -->
-                      <b-td colspan="2" style="text-align: right"
-                        ><b
-                          >Total
-                          {{
-                            cmaSurchargeKey
-                              .substring(0, cmaSurchargeKey.length - 10)
-                              .charAt(0)
-                              .toUpperCase() +
-                              cmaSurchargeKey
-                                .substring(0, cmaSurchargeKey.length - 10)
-                                .slice(1)
-                          }}</b
-                        ></b-td
-                      >
-                      <b-td
-                        v-for="(cmaTypeTotal, cmaTypeTotalKey) in cmaResult
-                          .pricingDetails.totalRatePerType[
-                          'totalRate' +
-                            cmaSurchargeKey
-                              .substring(0, cmaSurchargeKey.length - 10)
-                              .charAt(0)
-                              .toUpperCase() +
-                            cmaSurchargeKey
-                              .substring(0, cmaSurchargeKey.length - 10)
+                    <b-td colspan="2" style="text-align: right"
+                      ><b
+                        >Total
+                        {{
+                          oneSurchargeKey
+                            .substring(0, oneSurchargeKey.length - 10)
+                            .charAt(0)
+                            .toUpperCase() +
+                            oneSurchargeKey
+                              .substring(0, oneSurchargeKey.length - 10)
                               .slice(1)
-                        ]"
-                        :key="cmaTypeTotalKey"
-                      >
-                        <b
-                          >{{ cmaTypeTotal.currencyCode }}
-                          {{ cmaTypeTotal.total }}
-                        </b></b-td
-                      >
-                    </b-tr>
-                  </b-tbody>
-                </b-table-simple>
-              </div>
-            </b-collapse>
-            <!-- FIN DETALLES DE TARIFA-->
-
-            <!-- SCHEDULES -->
-            <b-collapse
-              :id="
-                'schedules_' +
-                  String(cmaResult.contractReference) +
-                  '_' +
-                  String(cmaResult.accordion_id)
-              "
-              class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
-              :accordion="'my-accordion-' + cmaResult.accordion_id"
-              role="tabpanel"
-              v-model="cmaResult.scheduleCollapse"
-            >
-              <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
-
-              <!-- SCHEDULE INFORMATION -->
-              <b-tabs
-                pills
-                card
-                vertical
-                class="d-none d-lg-flex"
-                v-model="cmaResult.activeTab"
-              >
-                <b-tab
-                  v-for="(route, routeKey) in cmaResult.routingDetails"
-                  :key="routeKey"
-                >
-                  <!-- INFORMACION PRINCIPAL -->
-                  <template #title>
-                    <div class="margin-res">
-                      <!-- NOMBRE -->
-                      <div class="col-12">
-                        <h6 class="mt-4 mb-5 contract-title">
-                          {{ cmaResult.contractReference }}
-                        </h6>
-                      </div>
-                      <!-- FIN NOMBRE -->
-
-                      <!-- RUTA -->
-                      <div class="row col-12 mr-0 ml-0">
-                        <div
-                          class="
-                            col-12
-                            d-none d-lg-flex
-                            justify-content-between
-                          "
-                        >
-                          <!-- ORGIEN -->
-                          <div class="origin mr-4">
-                            <span>origin</span>
-                            <p class="mb-0">
-                              {{ route.details[0].departureName }}
-                            </p>
-                            <p>
-                              {{
-                                route.details[0].departureDateGmt.substring(
-                                  0,
-                                  10
-                                )
-                              }}
-                            </p>
-                          </div>
-                          <!-- FIN ORGIEN -->
-
-                          <!-- LINEA DE RUTA -->
-                          <div
-                            class="
-                              d-flex
-                              flex-column
-                              justify-content-center
-                              align-items-center
-                            "
-                          >
-                            <div class="direction-form">
-                              <img
-                                src="/images/logo-ship-blue.svg"
-                                alt="bote"
-                                style="top: -30px"
-                              />
-
-                              <div
-                                class="route-indirect d-flex align-items-center"
-                              >
-                                <div class="circle mr-2"></div>
-                                <div class="line"></div>
-                                <div
-                                  class="circle fill-circle-gray mr-2 ml-2"
-                                ></div>
-                                <div class="line line-blue"></div>
-                                <div class="circle fill-circle ml-2"></div>
-                              </div>
-                            </div>
-
-                            <div class="direction-desc mt-2">
-                              <p class="mb-1">
-                                <b>Transit Time: </b
-                                >{{ route.transitTime }} days
-                              </p>
-                              <p v-if="route.details.length > 1">
-                                <b>Via: </b>{{ route.details[0].arrivalName }}
-                              </p>
-                              <p>
-                                <b>Service: </b
-                                >{{
-                                  route.details.length > 1
-                                    ? "Transhipment"
-                                    : "Direct"
-                                }}
-                              </p>
-                            </div>
-                          </div>
-                          <!-- FIN LINEA DE RUTA -->
-
-                          <!-- DESTINO -->
-                          <div class="destination ml-4">
-                            <span>destination</span>
-                            <p class="mb-0">
-                              {{ route.details[0].arrivalName }}
-                            </p>
-                            <p>
-                              {{
-                                route.details[0].arrivalDateGmt.substring(0, 10)
-                              }}
-                            </p>
-                          </div>
-                          <!-- FIN DESTINO -->
-                        </div>
-                      </div>
-                      <!-- FIN RUTA -->
-                    </div>
-                  </template>
-                  <!-- FIN INFORMACION PRINCIPAL -->
-
-                  <!-- INFORMACION DE LA RUTA -->
-                  <div class="row">
-                    <div
-                      class="col-12 d-none d-lg-flex align-items-center pl-5"
-                      style="border-left: 1px solid #eee"
+                        }}</b
+                      ></b-td
                     >
-                      <div class="row" style="width: 100%">
-                        <!-- INFORMACION DEL BARCO -->
-                        <div class="col-xl-6 schedule-info">
-                          <!-- VESSEL Information -->
-                          <h5 class="title-schedule mb-3">
-                            <b-icon icon="hdd-rack"></b-icon> Vessel Information
-                          </h5>
-                          <ul>
-                            <li>
-                              <h5
-                                class="sub-title-schedule"
-                                v-if="route.details[0].imoNumber != null"
-                              >
-                                <b>IMO:</b>
-                              </h5>
-                              <p class="text-schedule">
-                                {{ route.details[0].imoNumber }}
-                              </p>
-                            </li>
-                            <li>
-                              <h5 class="sub-title-schedule">
-                                <b>Vessel/Voyage:</b>
-                              </h5>
-                              <p class="text-schedule">
-                                {{
-                                  route.details[0].vehiculeName +
-                                    " / " +
-                                    route.details[0].voyageNumber
-                                }}
-                              </p>
-                            </li>
-                          </ul>
+                    <b-td
+                      v-for="(oneTypeTotal, oneTypeTotalKey) in oneResult
+                        .pricingDetails.totalRatePerType[
+                        'totalRate' +
+                          oneSurchargeKey
+                            .substring(0, oneSurchargeKey.length - 10)
+                            .charAt(0)
+                            .toUpperCase() +
+                          oneSurchargeKey
+                            .substring(0, oneSurchargeKey.length - 10)
+                            .slice(1)
+                      ]"
+                      :key="oneTypeTotalKey"
+                    >
+                      <b
+                        >{{ oneTypeTotal.currency }}
+                        {{ oneTypeTotal.total }}
+                      </b></b-td
+                    >
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </div>
+          </b-collapse>
+          <!-- FIN DETALLES DE TARIFA-->
 
-                          <!-- DEADLINE Information -->
-                          <h5
-                            class="title-schedule mb-3"
-                            style="margin-top: 25px"
-                          >
-                            <b-icon icon="stopwatch"></b-icon> Deadlines
-                          </h5>
-                          <ul>
-                            <li
-                              v-for="(cmaDeadline, cmaDeadlineKey) in route
-                                .details[0].deadlines"
-                              :key="cmaDeadlineKey"
-                            >
-                              <h5 class="sub-title-schedule">
-                                <b>{{ cmaDeadline.deadlineKey }}:</b>
-                              </h5>
-                              <p class="text-schedule">
-                                {{
-                                  cmaDeadline.deadline.substring(0, 10) +
-                                    " " +
-                                    cmaDeadline.deadline.substring(
-                                      11,
-                                      cmaDeadline.deadline.length - 4
-                                    )
-                                }}
-                              </p>
-                            </li>
-                          </ul>
-                        </div>
-                        <!-- FIN INFORMACION DEL BARCO -->
+          <!-- SCHEDULES -->
+          <b-collapse
+            :id="
+              'schedules_' +
+                String(oneResult.contractReference) +
+                '_' +
+                String(oneResult.accordion_id)
+            "
+            class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
+            :accordion="'my-accordion-' + oneResult.accordion_id"
+            role="tabpanel"
+            v-model="oneResult.scheduleCollapse"
+          >
+            <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
 
-                        <!-- DIAGRAMA DE LA RUTA -->
-                        <div class="col-xl-6 schedule-route-info">
-                          <h5 class="title-schedule mb-3">
-                            <b-icon icon="calendar2-check"></b-icon> Itinerary
-                            details
-                          </h5>
-                          <ul>
-                            <li
-                              v-for="(routeDetail, detailKey) in route.details"
-                              :key="detailKey"
-                            >
-                              <div>
-                                <p>
-                                  {{
-                                    routeDetail.arrivalDateGmt.substring(0, 10)
-                                  }}
-                                  {{
-                                    routeDetail.arrivalDateGmt.substring(12, 16)
-                                  }}
-                                </p>
-                              </div>
-                              <div class="sri-circle"></div>
-                              <div class="d-flex">
-                                <img
-                                  src="/images/port.svg"
-                                  width="25px"
-                                  alt="port"
-                                />
-                                <p>{{ routeDetail.arrivalName }}</p>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                        <!-- FIN DIAGRAMA DE LA RUTA -->
-                      </div>
+            <!-- SCHEDULE INFORMATION -->
+            <b-tabs
+              pills
+              card
+              vertical
+              class="d-none d-lg-flex"
+              v-model="oneResult.activeTab"
+            >
+              <b-tab
+                v-for="(route, routeKey) in oneResult.routingDetails"
+                :key="routeKey"
+              >
+                <!-- INFORMACION PRINCIPAL -->
+                <template #title>
+                  <div class="margin-res">
+                    <!-- NOMBRE -->
+                    <div class="col-12">
+                      <h6 class="mt-4 mb-5 contract-title">
+                        <!-- {{ oneResult.contractReference }} -->
+                      </h6>
                     </div>
-                  </div>
-                  <!-- FIN INFORMACION DE LA RUTA -->
-                </b-tab>
-              </b-tabs>
-              <!-- FIN SCHEDULE INFORMATION -->
+                    <!-- FIN NOMBRE -->
 
-              <!-- SCHEDULE INFORMATION RESPONSIVE -->
-              <div>
-                <div
-                  class="d-block d-lg-none si-responsive mb-3"
-                  v-for="(route, routeKey) in cmaResult.routingDetails"
-                  :key="routeKey"
-                >
-                  <!-- INFORMACION PRINCIPAL -->
-                  <b-button
-                    v-b-toggle="
-                      'responsiveCollapse_' +
-                        cmaResult.accordion_id +
-                        '_' +
-                        routeKey
-                    "
-                    style="width: 100%"
-                  >
-                    <div class="row margin-res">
-                      <!-- CONTRACT NAME -->
-                      <div class="col-12">
-                        <h6 class="mt-4 mb-5 contract-title">
-                          {{ cmaResult.contractReference }}
-                        </h6>
-                      </div>
-                      <!-- FIN CONTRACT NAME -->
-
-                      <!-- INFORMACION DE LA RUTA -->
-                      <div class="col-12 mr-0 ml-0 si-route-info">
+                    <!-- RUTA -->
+                    <div class="row col-12 mr-0 ml-0">
+                      <div
+                        class="col-12 d-none d-lg-flex justify-content-between"
+                      >
                         <!-- ORGIEN -->
-                        <div class="origin">
+                        <div class="origin mr-4">
                           <span>origin</span>
                           <p class="mb-0">
                             {{ route.details[0].departureName }}
                           </p>
-                          <p>
+                          <p v-if="route.details[0].departureDateGmt">
                             {{
                               route.details[0].departureDateGmt.substring(0, 10)
                             }}
@@ -4240,29 +4057,58 @@
                         <!-- FIN ORGIEN -->
 
                         <!-- LINEA DE RUTA -->
-                        <div class="direction-desc">
-                          <p class="mb-1">
-                            <b>Transit Time: </b>{{ route.transitTime }} days
-                          </p>
-                          <p v-if="route.details.length > 1">
-                            <b>Via: </b>{{ route.details[0].arrivalName }}
-                          </p>
-                          <p>
-                            <b>Service: </b
-                            >{{
-                              route.details.length > 1
-                                ? "Transhipment"
-                                : "Direct"
-                            }}
-                          </p>
+                        <div
+                          class="
+                            d-flex
+                            flex-column
+                            justify-content-center
+                            align-items-center
+                          "
+                        >
+                          <div class="direction-form">
+                            <img
+                              src="/images/logo-ship-blue.svg"
+                              alt="bote"
+                              style="top: -30px"
+                            />
+
+                            <div
+                              class="route-indirect d-flex align-items-center"
+                            >
+                              <div class="circle mr-2"></div>
+                              <div class="line"></div>
+                              <div
+                                class="circle fill-circle-gray mr-2 ml-2"
+                              ></div>
+                              <div class="line line-blue"></div>
+                              <div class="circle fill-circle ml-2"></div>
+                            </div>
+                          </div>
+
+                          <div class="direction-desc mt-2">
+                            <p class="mb-1">
+                              <b>Transit Time: </b>{{ route.transitTime }} days
+                            </p>
+                            <p v-if="route.details.length > 1">
+                              <b>Via: </b>{{ route.details[0].arrivalName }}
+                            </p>
+                            <p>
+                              <b>Service: </b
+                              >{{
+                                route.details.length > 1
+                                  ? "Transhipment"
+                                  : "Direct"
+                              }}
+                            </p>
+                          </div>
                         </div>
                         <!-- FIN LINEA DE RUTA -->
 
                         <!-- DESTINO -->
-                        <div class="destination">
+                        <div class="destination ml-4">
                           <span>destination</span>
                           <p class="mb-0">{{ route.details[0].arrivalName }}</p>
-                          <p>
+                          <p v-if="route.details[0].arrivalDateGmt">
                             {{
                               route.details[0].arrivalDateGmt.substring(0, 10)
                             }}
@@ -4270,148 +4116,1220 @@
                         </div>
                         <!-- FIN DESTINO -->
                       </div>
-                      <!-- FIN INFORMACION DE LA RUTA -->
                     </div>
-                  </b-button>
+                    <!-- FIN RUTA -->
+                  </div>
+                </template>
+                <!-- FIN INFORMACION PRINCIPAL -->
 
-                  <b-collapse
-                    :id="
-                      'responsiveCollapse_' +
-                        cmaResult.accordion_id +
-                        '_' +
-                        routeKey
-                    "
-                    class="mt-2"
+                <!-- INFORMACION DE LA RUTA -->
+                <div class="row">
+                  <div
+                    class="col-12 d-none d-lg-flex align-items-center pl-5"
+                    style="border-left: 1px solid #eee"
                   >
-                    <b-card>
-                      <!-- RUTA -->
-                      <div class="row">
-                        <div class="col-12 d-flex align-items-center mt-3">
-                          <div class="row" style="width: 100%">
-                            <!-- INFORMACION DEL BARCO -->
-                            <div class="col-sm-6 schedule-info">
-                              <!-- Vessel Information -->
-                              <h5 class="title-schedule mb-3">
-                                <b-icon icon="hdd-rack"></b-icon> Vessel
-                                Information
-                              </h5>
+                    <div class="row" style="width: 100%">
+                      <!-- INFORMACION DEL BARCO -->
+                      <div class="col-xl-6 schedule-info">
+                        <!-- VESSEL Information -->
+                        <h5 class="title-schedule mb-3">
+                          <b-icon icon="hdd-rack"></b-icon> Vessel Information
+                        </h5>
+                        <ul>
+                          <li>
+                            <h5
+                              class="sub-title-schedule"
+                              v-if="route.details[0].imoNumber != null"
+                            >
+                              <b>IMO:</b>
+                            </h5>
+                            <p class="text-schedule">
+                              {{ route.details[0].imoNumber }}
+                            </p>
+                          </li>
+                          <li>
+                            <h5 class="sub-title-schedule">
+                              <b>Vessel/Voyage:</b>
+                            </h5>
+                            <p class="text-schedule">
+                              {{
+                                route.details[0].vehiculeName +
+                                  " / " +
+                                  route.details[0].voyageNumber
+                              }}
+                            </p>
+                          </li>
+                        </ul>
 
-                              <ul>
-                                <li>
-                                  <h5
-                                    class="sub-title-schedule"
-                                    v-if="route.details[0].imoNumber != null"
-                                  >
-                                    <b>IMO:</b>
-                                  </h5>
-                                  <p class="text-schedule">
-                                    {{ route.details[0].imoNumber }}
-                                  </p>
-                                </li>
-                                <li>
-                                  <h5 class="sub-title-schedule">
-                                    <b>Vessel/Voyage:</b>
-                                  </h5>
-                                  <p class="text-schedule">
-                                    {{
-                                      route.details[0].vehiculeName +
-                                        " / " +
-                                        route.details[0].voyageNumber
-                                    }}
-                                  </p>
-                                </li>
-                              </ul>
+                        <!-- DEADLINE Information -->
+                        <h5
+                          class="title-schedule mb-3"
+                          style="margin-top: 25px"
+                        >
+                          <b-icon icon="stopwatch"></b-icon> Deadlines
+                        </h5>
+                        <ul>
+                          <li
+                            v-for="(oneDeadline, oneDeadlineKey) in route
+                              .details[0].deadlines"
+                            :key="oneDeadlineKey"
+                          >
+                            <h5 class="sub-title-schedule">
+                              <b>{{ oneDeadline.deadlineKey }}:</b>
+                            </h5>
+                            <p class="text-schedule">
+                              {{
+                                oneDeadline.deadline.substring(0, 10) +
+                                  " " +
+                                  oneDeadline.deadline.substring(
+                                    11,
+                                    oneDeadline.deadline.length - 4
+                                  )
+                              }}
+                            </p>
+                          </li>
+                        </ul>
+                      </div>
+                      <!-- FIN INFORMACION DEL BARCO -->
 
-                              <!-- Vessel Information -->
-                              <h5
-                                class="title-schedule mb-3"
-                                style="margin-top: 25px"
+                      <!-- DIAGRAMA DE LA RUTA -->
+                      <div class="col-xl-6 schedule-route-info">
+                        <h5 class="title-schedule mb-3">
+                          <b-icon icon="calendar2-check"></b-icon> Itinerary
+                          details
+                        </h5>
+                        <ul>
+                          <li
+                            v-for="(routeDetail, detailKey) in route.details"
+                            :key="detailKey"
+                          >
+                            <div>
+                              <p v-if="routeDetail.arrivalDateGmt">
+                                {{
+                                  routeDetail.arrivalDateGmt.substring(0, 10)
+                                }}
+                                {{
+                                  routeDetail.arrivalDateGmt.substring(12, 16)
+                                }}
+                              </p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img
+                                src="/images/port.svg"
+                                width="25px"
+                                alt="port"
+                              />
+                              <p>{{ routeDetail.arrivalName }}</p>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      <!-- FIN DIAGRAMA DE LA RUTA -->
+                    </div>
+                  </div>
+                </div>
+                <!-- FIN INFORMACION DE LA RUTA -->
+              </b-tab>
+            </b-tabs>
+            <!-- FIN SCHEDULE INFORMATION -->
+
+            <!-- SCHEDULE INFORMATION RESPONSIVE -->
+            <div>
+              <div
+                class="d-block d-lg-none si-responsive mb-3"
+                v-for="(route, routeKey) in oneResult.routingDetails"
+                :key="routeKey"
+              >
+                <!-- INFORMACION PRINCIPAL -->
+                <b-button
+                  v-b-toggle="
+                    'responsiveCollapse_' +
+                      oneResult.accordion_id +
+                      '_' +
+                      routeKey
+                  "
+                  style="width: 100%"
+                >
+                  <div class="row margin-res">
+                    <!-- CONTRACT NAME -->
+                    <div class="col-12">
+                      <h6 class="mt-4 mb-5 contract-title">
+                        <!-- {{ oneResult.contractReference }} -->
+                      </h6>
+                    </div>
+                    <!-- FIN CONTRACT NAME -->
+
+                    <!-- INFORMACION DE LA RUTA -->
+                    <div class="col-12 mr-0 ml-0 si-route-info">
+                      <!-- ORGIEN -->
+                      <div class="origin">
+                        <span>origin</span>
+                        <p class="mb-0">{{ route.details[0].departureName }}</p>
+                        <p v-if="route.details[0].departureDateGmt">
+                          {{
+                            route.details[0].departureDateGmt.substring(0, 10)
+                          }}
+                        </p>
+                      </div>
+                      <!-- FIN ORGIEN -->
+
+                      <!-- LINEA DE RUTA -->
+                      <div class="direction-desc">
+                        <p class="mb-1">
+                          <b>Transit Time: </b>{{ route.transitTime }} days
+                        </p>
+                        <p v-if="route.details.length > 1">
+                          <b>Via: </b>{{ route.details[0].arrivalName }}
+                        </p>
+                        <p>
+                          <b>Service: </b
+                          >{{
+                            route.details.length > 1 ? "Transhipment" : "Direct"
+                          }}
+                        </p>
+                      </div>
+                      <!-- FIN LINEA DE RUTA -->
+
+                      <!-- DESTINO -->
+                      <div class="destination">
+                        <span>destination</span>
+                        <p class="mb-0">{{ route.details[0].arrivalName }}</p>
+                        <p v-if="route.details[0].arrivalDateGmt">
+                          {{ route.details[0].arrivalDateGmt.substring(0, 10) }}
+                        </p>
+                      </div>
+                      <!-- FIN DESTINO -->
+                    </div>
+                    <!-- FIN INFORMACION DE LA RUTA -->
+                  </div>
+                </b-button>
+
+                <b-collapse
+                  :id="
+                    'responsiveCollapse_' +
+                      oneResult.accordion_id +
+                      '_' +
+                      routeKey
+                  "
+                  class="mt-2"
+                >
+                  <b-card>
+                    <!-- RUTA -->
+                    <div class="row">
+                      <div class="col-12 d-flex align-items-center mt-3">
+                        <div class="row" style="width: 100%">
+                          <!-- INFORMACION DEL BARCO -->
+                          <div class="col-sm-6 schedule-info">
+                            <!-- Vessel Information -->
+                            <h5 class="title-schedule mb-3">
+                              <b-icon icon="hdd-rack"></b-icon> Vessel
+                              Information
+                            </h5>
+
+                            <ul>
+                              <li>
+                                <h5
+                                  class="sub-title-schedule"
+                                  v-if="route.details[0].imoNumber != null"
+                                >
+                                  <b>IMO:</b>
+                                </h5>
+                                <p class="text-schedule">
+                                  {{ route.details[0].imoNumber }}
+                                </p>
+                              </li>
+                              <li>
+                                <h5 class="sub-title-schedule">
+                                  <b>Vessel/Voyage:</b>
+                                </h5>
+                                <p class="text-schedule">
+                                  {{
+                                    route.details[0].vehiculeName +
+                                      " / " +
+                                      route.details[0].voyageNumber
+                                  }}
+                                </p>
+                              </li>
+                            </ul>
+
+                            <!-- Vessel Information -->
+                            <h5
+                              class="title-schedule mb-3"
+                              style="margin-top: 25px"
+                            >
+                              <b-icon icon="stopwatch"></b-icon> Deadlines
+                            </h5>
+
+                            <ul>
+                              <li
+                                v-for="(oneDeadline,
+                                oneDeadlineKey) in route.details[0].deadlines"
+                                :key="oneDeadlineKey"
                               >
-                                <b-icon icon="stopwatch"></b-icon> Deadlines
-                              </h5>
+                                <h5 class="sub-title-schedule">
+                                  <b>{{ oneDeadline.deadlineKey }}:</b>
+                                </h5>
+                                <p class="text-schedule">
+                                  {{
+                                    oneDeadline.deadline.substring(0, 10) +
+                                      " " +
+                                      oneDeadline.deadline.substring(
+                                        11,
+                                        oneDeadline.deadline.length - 4
+                                      )
+                                  }}
+                                </p>
+                              </li>
+                            </ul>
+                          </div>
+                          <!-- FIN INFORMACION DEL BARCO -->
 
-                              <ul>
-                                <li
-                                  v-for="(cmaDeadline, cmaDeadlineKey) in route
-                                    .details[0].deadlines"
-                                  :key="cmaDeadlineKey"
-                                >
-                                  <h5 class="sub-title-schedule">
-                                    <b>{{ cmaDeadline.deadlineKey }}:</b>
-                                  </h5>
-                                  <p class="text-schedule">
+                          <div class="col-sm-6 schedule-route-info mt-3">
+                            <h5 class="title-schedule mb-3">
+                              <b-icon icon="calendar2-check"></b-icon> Itinerary
+                              details
+                            </h5>
+                            <ul>
+                              <li
+                                v-for="(routeDetail,
+                                detailKey) in route.details"
+                                :key="detailKey"
+                              >
+                                <div>
+                                  <p v-if="routeDetail.arrivalDateGmt">
                                     {{
-                                      cmaDeadline.deadline.substring(0, 10) +
-                                        " " +
-                                        cmaDeadline.deadline.substring(
-                                          11,
-                                          cmaDeadline.deadline.length - 4
-                                        )
+                                      routeDetail.arrivalDateGmt.substring(
+                                        0,
+                                        10
+                                      )
+                                    }}
+                                    {{
+                                      routeDetail.arrivalDateGmt.substring(
+                                        12,
+                                        16
+                                      )
                                     }}
                                   </p>
-                                </li>
-                              </ul>
-                            </div>
-                            <!-- FIN INFORMACION DEL BARCO -->
-
-                            <div class="col-sm-6 schedule-route-info mt-3">
-                              <h5 class="title-schedule mb-3">
-                                <b-icon icon="calendar2-check"></b-icon>
-                                Itinerary details
-                              </h5>
-                              <ul>
-                                <li
-                                  v-for="(routeDetail,
-                                  detailKey) in route.details"
-                                  :key="detailKey"
-                                >
-                                  <div>
-                                    <p>
-                                      {{
-                                        routeDetail.arrivalDateGmt.substring(
-                                          0,
-                                          10
-                                        )
-                                      }}
-                                      {{
-                                        routeDetail.arrivalDateGmt.substring(
-                                          12,
-                                          16
-                                        )
-                                      }}
-                                    </p>
-                                  </div>
-                                  <div class="sri-circle"></div>
-                                  <div class="d-flex">
-                                    <img
-                                      src="/images/port.svg"
-                                      width="25px"
-                                      alt="port"
-                                    />
-                                    <p>{{ routeDetail.arrivalName }}</p>
-                                  </div>
-                                </li>
-                              </ul>
-                            </div>
+                                </div>
+                                <div class="sri-circle"></div>
+                                <div class="d-flex">
+                                  <img
+                                    src="/images/port.svg"
+                                    width="25px"
+                                    alt="port"
+                                  />
+                                  <p>{{ routeDetail.arrivalName }}</p>
+                                </div>
+                              </li>
+                            </ul>
                           </div>
                         </div>
                       </div>
-                      <!-- FIN RUTA -->
-                    </b-card>
-                  </b-collapse>
+                    </div>
+                    <!-- FIN RUTA -->
+                  </b-card>
+                </b-collapse>
 
-                  <!-- FIN INFORMACION PRINCIPAL -->
-                </div>
+                <!-- FIN INFORMACION PRINCIPAL -->
               </div>
-              <!-- FIN SCHEDULE INFORMATION RESPONSIVE -->
-            </b-collapse>
-            <!-- FIN SCHEDULES -->
-          </div>
-          <!-- FIN INFORMACION DESPLEGADA -->
+            </div>
+            <!-- FIN SCHEDULE INFORMATION RESPONSIVE -->
+          </b-collapse>
+          <!-- FIN SCHEDULES -->
         </div>
+        <!-- FIN INFORMACION DESPLEGADA -->
       </div>
-      <!-- FIN TARJETA YML -->
     </div>
+    <!-- FIN TARJETA ONE -->
+
+    <!-- TARJETA COSCO -->
+    <div
+      class="mb-4"
+      v-for="(coscoResult, coscoResultKey) in orderedCoscoRates"
+      :key="coscoResultKey + 'cosco'"
+    >
+      <div class="result-search">
+        <div class="banda-top cosco"><span>SYNCONHUB</span></div>
+
+        <!-- INFORMACION DE TARIFA -->
+        <div class="row" style="min-height: 199px !important">
+          <!-- CARRIER -->
+          <div
+            class="
+              col-12 col-lg-2
+              carrier-img
+              d-flex
+              justify-content-center
+              align-items-center
+            "
+            style="border-right: 1px solid #f3f3f3"
+          >
+            <img
+              :src="
+                'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
+                  coscoResult.image
+              "
+              alt="logo"
+              width="115px"
+            />
+          </div>
+          <!-- FIN CARRIER -->
+
+          <!-- INFORMACION PRINCIPAL -->
+          <div class="row col-12 col-lg-8 margin-res">
+            <!-- CONTRACT NAME -->
+            <div class="col-12">
+              <h6 class="mt-4 mb-5 contract-title">
+                <!-- {{ coscoResult.quoteLine }} -->
+                <!-- {{ coscoResult.contractReference }} -->
+              </h6>
+            </div>
+            <!-- FIN CONTRACT NAME -->
+
+            <!-- RUTA Y PRECIOS -->
+            <div
+              class="row col-12 mr-0 ml-0"
+              style="border-bottom: 1px solid #f3f3f3"
+            >
+              <!-- RUTA -->
+              <div
+                class="col-12 col-lg-6 d-none d-lg-flex"
+                style="border-bottom: 1px solid #eeeeee"
+              >
+                <!-- ORGIEN -->
+                <div class="origin mr-4">
+                  <span>origin</span>
+                  <p class="mb-0">
+                    {{ coscoResult.departureName }}
+                  </p>
+                  <p v-if="coscoResult.departureDateGmt">
+                    {{ coscoResult.departureDateGmt.substring(0, 10) }}
+                  </p>
+                </div>
+                <!-- FIN ORGIEN -->
+
+                <!-- LINEA DE RUTA -->
+                <div
+                  class="
+                    d-flex
+                    flex-column
+                    justify-content-center
+                    align-items-center
+                  "
+                >
+                  <div class="direction-form">
+                    <img src="/images/logo-ship-blue.svg" alt="bote" />
+
+                    <div class="route-direct d-flex align-items-center">
+                      <div class="circle mr-2"></div>
+                      <div class="line"></div>
+                      <div class="circle fill-circle ml-2"></div>
+                    </div>
+                  </div>
+
+                  <div class="direction-desc mt-2">
+                    <p class="mb-1">
+                      <b>Transit Time: </b>
+                      {{ coscoResult.transitTime + " days" }}
+                    </p>
+                    <p v-if="coscoResult.vehiculeName">
+                      <b>Vessel: </b> {{ coscoResult.vehiculeName }}
+                    </p>
+                  </div>
+                </div>
+                <!-- FIN LINEA DE RUTA -->
+
+                <!-- DESTINO -->
+                <div class="destination ml-4">
+                  <span>destination</span>
+                  <p class="mb-0">
+                    {{ coscoResult.arrivalName }}
+                  </p>
+                  <p v-if="coscoResult.arrivalDateGmt">
+                    {{ coscoResult.arrivalDateGmt.substring(0, 10) }}
+                  </p>
+                </div>
+                <!-- FIN DESTINO -->
+              </div>
+              <!-- FIN RUTA -->
+
+              <!-- RUTA RESPONSIVA -->
+              <div
+                class="row col-lg-6 d-lg-none mr-0 ml-0"
+                style="border-bottom: 1px solid #eeeeee"
+              >
+                <!-- DESTINOS -->
+                <div class="col-sm-6">
+                  <!-- ORGIEN -->
+                  <div class="origin mb-3">
+                    <span>origin</span>
+                    <p class="mb-1">
+                      {{ coscoResult.departureName }}
+                    </p>
+                    <p v-if="coscoResult.departureDateGmt">
+                      {{ coscoResult.departureDateGmt.substring(0, 10) }}
+                    </p>
+                  </div>
+                  <!-- FIN ORGIEN -->
+
+                  <!-- DESTINO -->
+                  <div class="destination align-items-start mb-3">
+                    <span>destination</span>
+                    <p class="mb-1">
+                      {{ coscoResult.arrivalName }}
+                    </p>
+                    <p v-if="coscoResult.arrivalDateGmt">
+                      {{ coscoResult.arrivalDateGmt.substring(0, 10) }}
+                    </p>
+                  </div>
+                  <!-- FIN DESTINO -->
+                </div>
+                <!-- FIN DESTINOS -->
+
+                <!-- TRANSIT TIME -->
+                <div class="col-sm-6">
+                  <!-- LINEA DE RUTA -->
+                  <div class="via">
+                    <ul class="pl-0" style="list-style: none">
+                      <li>
+                        <p class="mb-1">
+                          <b>Transit Time: </b
+                          >{{ coscoResult.transitTime + " days" }}
+                        </p>
+                      </li>
+                      <li>
+                        <p><b>Vessel: </b>{{ coscoResult.vehiculeName }}</p>
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- FIN LINEA DE RUTA -->
+                </div>
+                <!-- FIN TRANSIT TIME -->
+              </div>
+              <!-- FIN RUTA RESPONSIVA -->
+
+              <!-- PRECIO -->
+              <div class="col-12 col-lg-6">
+                <!-- PRECIO RESPONSIVE -->
+                <div class="row card-amount card-amount-header__res">
+                  <div
+                    class="col-2 pl-0 pr-0 prices-card-res"
+                    v-for="(cont, contCode) in request.containers"
+                    :key="contCode"
+                  >
+                    <p>
+                      <b>{{ cont.code }}</b>
+                    </p>
+                  </div>
+                </div>
+                <!-- FIN PRECIO RESPONSIVE -->
+
+                <!-- PRECIO -->
+                <div class="row card-amount card-amount__res">
+                  <div
+                    class="col-2 pl-0 pr-0 prices-card-res"
+                    :class="countContainersClass()"
+                    v-for="(coscoGlobalTotal, coscoTotalKey) in coscoResult
+                      .pricingDetails.totalRatePerContainer"
+                    :key="coscoTotalKey"
+                  >
+                    <p>
+                      <b style="font-size: 16px">
+                        {{
+                          datalists.company_user.decimals === 1
+                            ? coscoGlobalTotal.total
+                            : parseFloat(coscoGlobalTotal.total).toFixed(0)
+                        }}
+                        <span style="font-size: 10px">{{
+                          coscoGlobalTotal.currencyCode
+                        }}</span></b
+                      >
+                    </p>
+                  </div>
+                </div>
+                <!-- FIN PRECIO -->
+              </div>
+              <!-- FIN PRECIO -->
+            </div>
+            <!-- RUTA Y PRECIOS -->
+
+            <!-- OPCIONES E INFORMACION EXTRA -->
+            <div class="col-12 mt-3 mb-3 result-action">
+              <div class="d-flex align-items-center">
+                <span style="color: #006bfa; text-transform: capitalize"
+                  ><b-icon icon="check-circle-fill"></b-icon> SYNCONHUB</span
+                >
+                <p
+                  class="ml-4 mb-0"
+                  v-if="coscoResult.validityFrom && coscoResult.validityTo"
+                >
+                  <b style="font-size:11px;">VALIDITY:</b>
+                  {{
+                    coscoResult.validityFrom.substring(0, 10) +
+                      " / " +
+                      coscoResult.validityTo.substring(0, 10)
+                  }}
+                </p>
+              </div>
+
+              <div class="d-flex justify-content-end align-items-center">
+                <b-button
+                  v-if="coscoResult.remarks && coscoResult.remarks != ''"
+                  class="rs-btn"
+                  v-b-toggle="
+                    'remarks_' +
+                      String(coscoResult.contractReference) +
+                      '_' +
+                      String(coscoResult.accordion_id)
+                  "
+                  ><b>remarks</b><b-icon icon="caret-down-fill"></b-icon
+                ></b-button>
+                <b-button
+                  class="rs-btn"
+                  v-b-toggle="
+                    'schedules_' +
+                      String(coscoResult.contractReference) +
+                      '_' +
+                      String(coscoResult.accordion_id)
+                  "
+                  v-if="coscoResult.routingDetails.length"
+                  ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
+                ></b-button>
+                <b-button
+                  class="rs-btn"
+                  v-b-toggle="
+                    'details_' +
+                      String(coscoResult.contractReference) +
+                      '_' +
+                      String(coscoResult.accordion_id)
+                  "
+                  ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
+                ></b-button>
+              </div>
+            </div>
+            <!-- FIN OPCIONES E INFORMACION EXTRA -->
+          </div>
+          <!-- FIN INFORMACION PRINCIPAL -->
+
+          <!-- ADD QUOTE BTN -->
+          <div
+            class="
+              col-12 col-lg-2
+              d-flex
+              justify-content-center
+              align-items-center
+              btn-quote-res
+            "
+            style="border-left: 1px solid #f3f3f3"
+          >
+            <b-form-checkbox
+              v-model="coscoResult.addToQuote"
+              class="btn-add-quote"
+              name="check-button"
+              button
+              @change="addResultToQuote(coscoResult)"
+            >
+              <b>add to quote</b>
+            </b-form-checkbox>
+          </div>
+        </div>
+        <!-- FIN INFORMACION DE TARIFA -->
+
+        <!-- INFORMACION DESPLEGADA -->
+        <div
+          :id="'my-accordion-' + coscoResult.accordion_id"
+          class="row mr-0 ml-0 accordion"
+          role="tablist"
+        >
+
+          <!-- REMARKS -->
+          <b-collapse
+            :id="
+              'remarks_' +
+                String(coscoResult.contractReference) +
+                '_' +
+                String(coscoResult.accordion_id)"
+            class="pt-5 pb-5 pl-5 pr-5 col-12"
+            :accordion="'my-accordion-' + coscoResult.accordion_id"
+            role="tabpanel"
+            v-model="coscoResult.remarksCollapse"
+          >
+            <h5><b>Remarks</b></h5>
+
+            <b-card>
+              <p v-html="coscoResult.remarks"></p>
+            </b-card>
+          </b-collapse>
+          <!-- FIN REMARKS -->
+
+          <!-- DETALLES DE TARIFA -->
+          <b-collapse
+            :id="
+              'details_' +
+                String(coscoResult.contractReference) +
+                '_' +
+                String(coscoResult.accordion_id)
+            "
+            class="pt-5 pb-5 pl-5 pr-5 col-12"
+            :accordion="'my-accordion-' + coscoResult.accordion_id"
+            role="tabpanel"
+            v-model="coscoResult.detailCollapse"
+          >
+            <div
+              v-for="(coscoSurchargeType, coscoSurchargeKey) in coscoResult
+                .pricingDetails.surcharges"
+              :key="coscoSurchargeKey"
+            >
+              <h5 v-show="(searchData.originCharges && coscoSurchargeKey=='originSurcharges') || (searchData.destinationCharges && coscoSurchargeKey=='destinationSurcharges') || coscoSurchargeKey=='freightSurcharges'">
+                <b>{{
+                  coscoSurchargeKey
+                    .substring(0, coscoSurchargeKey.length - 10)
+                    .charAt(0)
+                    .toUpperCase() +
+                    coscoSurchargeKey
+                      .substring(0, coscoSurchargeKey.length - 10)
+                      .slice(1)
+                }}</b>
+              </h5>
+
+              <b-table-simple 
+                hover small responsive class="sc-table"
+                v-show="(searchData.originCharges && coscoSurchargeKey=='originSurcharges') || (searchData.destinationCharges && coscoSurchargeKey=='destinationSurcharges') || coscoSurchargeKey=='freightSurcharges'">
+                <b-thead>
+                  <b-tr>
+                    <b-th style="width: 300px">Charge</b-th>
+                    <b-th style="width: 325px">Detail</b-th>
+                    <!-- <b-th></b-th>
+                          <b-th></b-th> -->
+                    <b-th
+                      style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
+                      v-for="(requestContainer,
+                      rContainerKey) in request.containers"
+                      :key="rContainerKey"
+                      >{{ requestContainer.code }}
+                    </b-th>
+                  </b-tr>
+                </b-thead>
+
+                <b-tbody>
+                  <b-tr
+                    v-for="(coscoSurchargeName,
+                    coscoNameKey) in coscoSurchargeType"
+                    :key="coscoNameKey"
+                  >
+                    <b-td
+                      ><b>{{
+                        coscoSurchargeName.chargeName != null
+                          ? coscoSurchargeName.chargeCode +
+                            " - " +
+                            coscoSurchargeName.chargeName
+                          : coscoSurchargeName.chargeCode
+                      }}</b></b-td
+                    >
+                    <b-td>{{ coscoSurchargeName.calculationType }}</b-td>
+                    <!-- <b-td></b-td>
+                          <b-td></b-td> -->
+                    <b-td
+                      v-for="(coscoSurchargeContainer,
+                      coscoContainerKey) in coscoSurchargeName.containers"
+                      :key="coscoContainerKey"
+                      ><p>
+                        <b
+                          >{{ coscoSurchargeContainer.currencyCode }}
+                          {{ coscoSurchargeContainer.amount }}</b
+                        >
+                      </p></b-td
+                    >
+                  </b-tr>
+
+                  <b-tr>
+                    <!-- <b-td></b-td>
+                          <b-td></b-td>
+                          <b-td></b-td> -->
+                    <b-td colspan="2" style="text-align: right"
+                      ><b
+                        >Total
+                        {{
+                          coscoSurchargeKey
+                            .substring(0, coscoSurchargeKey.length - 10)
+                            .charAt(0)
+                            .toUpperCase() +
+                            coscoSurchargeKey
+                              .substring(0, coscoSurchargeKey.length - 10)
+                              .slice(1)
+                        }}</b
+                      ></b-td
+                    >
+                    <b-td
+                      v-for="(coscoTypeTotal, coscoTypeTotalKey) in coscoResult
+                        .pricingDetails.totalRatePerType[
+                        'totalRate' +
+                          coscoSurchargeKey
+                            .substring(0, coscoSurchargeKey.length - 10)
+                            .charAt(0)
+                            .toUpperCase() +
+                          coscoSurchargeKey
+                            .substring(0, coscoSurchargeKey.length - 10)
+                            .slice(1)
+                      ]"
+                      :key="coscoTypeTotalKey"
+                    >
+                      <b
+                        >{{ coscoTypeTotal.currency }}
+                        {{ coscoTypeTotal.total }}
+                      </b></b-td
+                    >
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </div>
+          </b-collapse>
+          <!-- FIN DETALLES DE TARIFA-->
+
+          <!-- SCHEDULES -->
+          <b-collapse
+            :id="
+              'schedules_' +
+                String(coscoResult.contractReference) +
+                '_' +
+                String(coscoResult.accordion_id)
+            "
+            class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
+            :accordion="'my-accordion-' + coscoResult.accordion_id"
+            role="tabpanel"
+            v-model="coscoResult.scheduleCollapse"
+          >
+            <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
+
+            <!-- SCHEDULE INFORMATION -->
+            <b-tabs
+              pills
+              card
+              vertical
+              class="d-none d-lg-flex"
+              v-model="coscoResult.activeTab"
+            >
+              <b-tab
+                v-for="(route, routeKey) in coscoResult.routingDetails"
+                :key="routeKey"
+              >
+                <!-- INFORMACION PRINCIPAL -->
+                <template #title>
+                  <div class="margin-res">
+                    <!-- NOMBRE -->
+                    <div class="col-12">
+                      <h6 class="mt-4 mb-5 contract-title">
+                        <!-- {{ coscoResult.contractReference }} -->
+                      </h6>
+                    </div>
+                    <!-- FIN NOMBRE -->
+
+                    <!-- RUTA -->
+                    <div class="row col-12 mr-0 ml-0">
+                      <div
+                        class="col-12 d-none d-lg-flex justify-content-between"
+                      >
+                        <!-- ORGIEN -->
+                        <div class="origin mr-4">
+                          <span>origin</span>
+                          <p class="mb-0">
+                            {{ route.details[0].departureName }}
+                          </p>
+                          <p v-if="route.details[0].departureDateGmt">
+                            {{
+                              route.details[0].departureDateGmt.substring(0, 10)
+                            }}
+                          </p>
+                        </div>
+                        <!-- FIN ORGIEN -->
+
+                        <!-- LINEA DE RUTA -->
+                        <div
+                          class="
+                            d-flex
+                            flex-column
+                            justify-content-center
+                            align-items-center
+                          "
+                        >
+                          <div class="direction-form">
+                            <img
+                              src="/images/logo-ship-blue.svg"
+                              alt="bote"
+                              style="top: -30px"
+                            />
+
+                            <div
+                              class="route-indirect d-flex align-items-center"
+                            >
+                              <div class="circle mr-2"></div>
+                              <div class="line"></div>
+                              <div
+                                class="circle fill-circle-gray mr-2 ml-2"
+                              ></div>
+                              <div class="line line-blue"></div>
+                              <div class="circle fill-circle ml-2"></div>
+                            </div>
+                          </div>
+
+                          <div class="direction-desc mt-2">
+                            <p class="mb-1">
+                              <b>Transit Time: </b>{{ route.transitTime }} days
+                            </p>
+                            <p v-if="route.details.length > 1">
+                              <b>Via: </b>{{ route.details[0].arrivalName }}
+                            </p>
+                            <p>
+                              <b>Service: </b
+                              >{{
+                                route.details.length > 1
+                                  ? "Transhipment"
+                                  : "Direct"
+                              }}
+                            </p>
+                          </div>
+                        </div>
+                        <!-- FIN LINEA DE RUTA -->
+
+                        <!-- DESTINO -->
+                        <div class="destination ml-4">
+                          <span>destination</span>
+                          <p class="mb-0">{{ route.details[0].arrivalName }}</p>
+                          <p v-if="route.details[0].arrivalDateGmt">
+                            {{
+                              route.details[0].arrivalDateGmt.substring(0, 10)
+                            }}
+                          </p>
+                        </div>
+                        <!-- FIN DESTINO -->
+                      </div>
+                    </div>
+                    <!-- FIN RUTA -->
+                  </div>
+                </template>
+                <!-- FIN INFORMACION PRINCIPAL -->
+
+                <!-- INFORMACION DE LA RUTA -->
+                <div class="row">
+                  <div
+                    class="col-12 d-none d-lg-flex align-items-center pl-5"
+                    style="border-left: 1px solid #eee"
+                  >
+                    <div class="row" style="width: 100%">
+                      <!-- INFORMACION DEL BARCO -->
+                      <div class="col-xl-6 schedule-info">
+                        <!-- VESSEL Information -->
+                        <h5 class="title-schedule mb-3">
+                          <b-icon icon="hdd-rack"></b-icon> Vessel Information
+                        </h5>
+                        <ul>
+                          <li>
+                            <h5
+                              class="sub-title-schedule"
+                              v-if="route.details[0].imoNumber != null"
+                            >
+                              <b>IMO:</b>
+                            </h5>
+                            <p class="text-schedule">
+                              {{ route.details[0].imoNumber }}
+                            </p>
+                          </li>
+                          <li>
+                            <h5 class="sub-title-schedule">
+                              <b>Vessel/Voyage:</b>
+                            </h5>
+                            <p class="text-schedule">
+                              {{
+                                route.details[0].vehiculeName +
+                                  " / " +
+                                  route.details[0].voyageNumber
+                              }}
+                            </p>
+                          </li>
+                        </ul>
+
+                        <!-- DEADLINE Information -->
+                        <h5
+                          class="title-schedule mb-3"
+                          style="margin-top: 25px"
+                        >
+                          <b-icon icon="stopwatch"></b-icon> Deadlines
+                        </h5>
+                        <ul>
+                          <li
+                            v-for="(coscoDeadline, coscoDeadlineKey) in route
+                              .details[0].deadlines"
+                            :key="coscoDeadlineKey"
+                          >
+                            <h5 class="sub-title-schedule">
+                              <b>{{ coscoDeadline.deadlineKey }}:</b>
+                            </h5>
+                            <p class="text-schedule">
+                              {{
+                                coscoDeadline.deadline.substring(0, 10) +
+                                  " " +
+                                  coscoDeadline.deadline.substring(
+                                    11,
+                                    coscoDeadline.deadline.length - 4
+                                  )
+                              }}
+                            </p>
+                          </li>
+                        </ul>
+                      </div>
+                      <!-- FIN INFORMACION DEL BARCO -->
+
+                      <!-- DIAGRAMA DE LA RUTA -->
+                      <div class="col-xl-6 schedule-route-info">
+                        <h5 class="title-schedule mb-3">
+                          <b-icon icon="calendar2-check"></b-icon> Itinerary
+                          details
+                        </h5>
+                        <ul>
+                          <li
+                            v-for="(routeDetail, detailKey) in route.details"
+                            :key="detailKey"
+                          >
+                            <div>
+                              <p v-if="routeDetail.arrivalDateGmt">
+                                {{
+                                  routeDetail.arrivalDateGmt.substring(0, 10)
+                                }}
+                                {{
+                                  routeDetail.arrivalDateGmt.substring(12, 16)
+                                }}
+                              </p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img
+                                src="/images/port.svg"
+                                width="25px"
+                                alt="port"
+                              />
+                              <p>{{ routeDetail.arrivalName }}</p>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      <!-- FIN DIAGRAMA DE LA RUTA -->
+                    </div>
+                  </div>
+                </div>
+                <!-- FIN INFORMACION DE LA RUTA -->
+              </b-tab>
+            </b-tabs>
+            <!-- FIN SCHEDULE INFORMATION -->
+
+            <!-- SCHEDULE INFORMATION RESPONSIVE -->
+            <div>
+              <div
+                class="d-block d-lg-none si-responsive mb-3"
+                v-for="(route, routeKey) in coscoResult.routingDetails"
+                :key="routeKey"
+              >
+                <!-- INFORMACION PRINCIPAL -->
+                <b-button
+                  v-b-toggle="
+                    'responsiveCollapse_' +
+                      coscoResult.accordion_id +
+                      '_' +
+                      routeKey
+                  "
+                  style="width: 100%"
+                >
+                  <div class="row margin-res">
+                    <!-- CONTRACT NAME -->
+                    <div class="col-12">
+                      <h6 class="mt-4 mb-5 contract-title">
+                        {{ coscoResult.contractReference }}
+                      </h6>
+                    </div>
+                    <!-- FIN CONTRACT NAME -->
+
+                    <!-- INFORMACION DE LA RUTA -->
+                    <div class="col-12 mr-0 ml-0 si-route-info">
+                      <!-- ORGIEN -->
+                      <div class="origin">
+                        <span>origin</span>
+                        <p class="mb-0">{{ route.details[0].departureName }}</p>
+                        <p v-if="route.details[0].departureDateGmt">
+                          {{
+                            route.details[0].departureDateGmt.substring(0, 10)
+                          }}
+                        </p>
+                      </div>
+                      <!-- FIN ORGIEN -->
+
+                      <!-- LINEA DE RUTA -->
+                      <div class="direction-desc">
+                        <p class="mb-1">
+                          <b>Transit Time: </b>{{ route.transitTime }} days
+                        </p>
+                        <p v-if="route.details.length > 1">
+                          <b>Via: </b>{{ route.details[0].arrivalName }}
+                        </p>
+                        <p>
+                          <b>Service: </b
+                          >{{
+                            route.details.length > 1 ? "Transhipment" : "Direct"
+                          }}
+                        </p>
+                      </div>
+                      <!-- FIN LINEA DE RUTA -->
+
+                      <!-- DESTINO -->
+                      <div class="destination">
+                        <span>destination</span>
+                        <p class="mb-0">{{ route.details[0].arrivalName }}</p>
+                        <p v-if="route.details[0].arrivalDateGmt">
+                          {{ route.details[0].arrivalDateGmt.substring(0, 10) }}
+                        </p>
+                      </div>
+                      <!-- FIN DESTINO -->
+                    </div>
+                    <!-- FIN INFORMACION DE LA RUTA -->
+                  </div>
+                </b-button>
+
+                <b-collapse
+                  :id="
+                    'responsiveCollapse_' +
+                      coscoResult.accordion_id +
+                      '_' +
+                      routeKey
+                  "
+                  class="mt-2"
+                >
+                  <b-card>
+                    <!-- RUTA -->
+                    <div class="row">
+                      <div class="col-12 d-flex align-items-center mt-3">
+                        <div class="row" style="width: 100%">
+                          <!-- INFORMACION DEL BARCO -->
+                          <div class="col-sm-6 schedule-info">
+                            <!-- Vessel Information -->
+                            <h5 class="title-schedule mb-3">
+                              <b-icon icon="hdd-rack"></b-icon> Vessel
+                              Information
+                            </h5>
+
+                            <ul>
+                              <li>
+                                <h5
+                                  class="sub-title-schedule"
+                                  v-if="route.details[0].imoNumber != null"
+                                >
+                                  <b>IMO:</b>
+                                </h5>
+                                <p class="text-schedule">
+                                  {{ route.details[0].imoNumber }}
+                                </p>
+                              </li>
+                              <li>
+                                <h5 class="sub-title-schedule">
+                                  <b>Vessel/Voyage:</b>
+                                </h5>
+                                <p class="text-schedule">
+                                  {{
+                                    route.details[0].vehiculeName +
+                                      " / " +
+                                      route.details[0].voyageNumber
+                                  }}
+                                </p>
+                              </li>
+                            </ul>
+
+                            <!-- Vessel Information -->
+                            <h5
+                              class="title-schedule mb-3"
+                              style="margin-top: 25px"
+                            >
+                              <b-icon icon="stopwatch"></b-icon> Deadlines
+                            </h5>
+
+                            <ul>
+                              <li
+                                v-for="(coscoDeadline,
+                                coscoDeadlineKey) in route.details[0].deadlines"
+                                :key="coscoDeadlineKey"
+                              >
+                                <h5 class="sub-title-schedule">
+                                  <b>{{ coscoDeadline.deadlineKey }}:</b>
+                                </h5>
+                                <p class="text-schedule">
+                                  {{
+                                    coscoDeadline.deadline.substring(0, 10) +
+                                      " " +
+                                      coscoDeadline.deadline.substring(
+                                        11,
+                                        coscoDeadline.deadline.length - 4
+                                      )
+                                  }}
+                                </p>
+                              </li>
+                            </ul>
+                          </div>
+                          <!-- FIN INFORMACION DEL BARCO -->
+
+                          <div class="col-sm-6 schedule-route-info mt-3">
+                            <h5 class="title-schedule mb-3">
+                              <b-icon icon="calendar2-check"></b-icon> Itinerary
+                              details
+                            </h5>
+                            <ul>
+                              <li
+                                v-for="(routeDetail,
+                                detailKey) in route.details"
+                                :key="detailKey"
+                              >
+                                <div>
+                                  <p v-if="routeDetail.arrivalDateGmt">
+                                    {{
+                                      routeDetail.arrivalDateGmt.substring(
+                                        0,
+                                        10
+                                      )
+                                    }}
+                                    {{
+                                      routeDetail.arrivalDateGmt.substring(
+                                        12,
+                                        16
+                                      )
+                                    }}
+                                  </p>
+                                </div>
+                                <div class="sri-circle"></div>
+                                <div class="d-flex">
+                                  <img
+                                    src="/images/port.svg"
+                                    width="25px"
+                                    alt="port"
+                                  />
+                                  <p>{{ routeDetail.arrivalName }}</p>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- FIN RUTA -->
+                  </b-card>
+                </b-collapse>
+
+                <!-- FIN INFORMACION PRINCIPAL -->
+              </div>
+            </div>
+            <!-- FIN SCHEDULE INFORMATION RESPONSIVE -->
+          </b-collapse>
+          <!-- FIN SCHEDULES -->
+        </div>
+        <!-- FIN INFORMACION DESPLEGADA -->
+      </div>
+    </div>
+    <!-- FIN TARJETA COSCO -->
   </div>
 </template>
 
@@ -4439,12 +5357,7 @@ export default {
         "20FR": 0,
         "40FR": 0,
       },
-      results: {
-        maersk: [],
-        cmacgm: [],
-        evergreen: [],
-        "hapag-lloyd": [],
-      },
+      results: {},
       containerCodesMaerskPenalties: [],
       containerCodesMaerskDetentions: [],
       resultsForQuote: [],
@@ -4486,6 +5399,13 @@ export default {
       let fullResponseLength = 0;
       var params = [];
       let reqCounter = 0;
+      let today = new Date();
+
+      today = today.toISOString().slice(0,10);
+
+      if(apiDate < today){
+        apiDate = today;
+      }
 
       component.$emit("apiSearchStarted", "apiSearchStart");
 
@@ -4505,7 +5425,7 @@ export default {
 
       apiContainers = component.setApiContainers();
       component.datalists.carriers_api.forEach(function(carrier) {
-        component.results[carrier.code] = [];
+        component.$set(component.results, carrier.code, []);
       });
 
       if (
@@ -4550,8 +5470,9 @@ export default {
             .then((response) => {
               response.data.forEach(function(respData) {
                 if (
-                  respData.company == "Maersk Spot" ||
-                  respData.company == "Sealand Spot"
+                  respData.companyCode == "maersk" ||
+                  respData.companyCode == "sealand" ||
+                  respData.companyCode == "seau"
                 ) {
                   component.results["maersk"].push(respData);
                   component.setPenalties(respData);
@@ -4595,7 +5516,7 @@ export default {
               }
             })
             .catch((error) => {
-              console.log(error);
+              console.log(error)
               component.$emit("apiSearchDone", fullResponseLength);
             });
         });
@@ -4743,21 +5664,22 @@ export default {
           let totalRateOriginSelected = totalRateOrigin[indexOrigin]
 
           //En caso exista un totalCommon debe usarse para evitar diferencias entre monedas diferentes y resultados negativos
-          if(totalRateOriginSelected.totalCommon) {
-            totalOrigin = totalRateOriginSelected.totalCommon;
-          } else {
-            totalOrigin = totalRateOriginSelected.total;
+          if(totalRateOrigin.length > 0){
+            if(totalRateOriginSelected.totalCommon) {
+              totalOrigin = totalRateOriginSelected.totalCommon;
+            } else {
+              totalOrigin = totalRateOriginSelected.total;
+            }
+            
+            newTotal = totalPerCont.total - totalOrigin;
+            newTotal = newTotal.toFixed(2);
+  
+            responseData.pricingDetails.totalRatePerContainer[
+              responseData.pricingDetails.totalRatePerContainer.indexOf(
+                totalPerCont
+              )
+            ].total = newTotal;
           }
-          
-          newTotal = totalPerCont.total - totalOrigin;
-          console.log(newTotal);
-          newTotal = newTotal.toFixed(2);
-
-          responseData.pricingDetails.totalRatePerContainer[
-            responseData.pricingDetails.totalRatePerContainer.indexOf(
-              totalPerCont
-            )
-          ].total = newTotal;
         });
 
         responseData.pricingDetails.totalRatePerType.totalRateOrigin = null;
@@ -4777,25 +5699,28 @@ export default {
           let totalRateDestinationSelected = totalRateDestination[indexDestination];
 
           //En caso exista un totalCommon debe usarse para evitar diferencias entre monedas diferentes y resultados negativos
-          if(totalRateDestinationSelected.totalCommon) {
-            totalDestination = totalRateDestinationSelected.totalCommon;
-          } else {
-            totalDestination = totalRateDestinationSelected.total;
+          if(totalRateDestination.length > 0){
+            if(totalRateDestinationSelected.totalCommon) {
+              totalDestination = totalRateDestinationSelected.totalCommon;
+            } else {
+              totalDestination = totalRateDestinationSelected.total;
+            }
+          
+            newTotal = totalPerCont.total - totalDestination;
+      
+            newTotal = newTotal.toFixed(2);
+            responseData.pricingDetails.totalRatePerContainer[
+              responseData.pricingDetails.totalRatePerContainer.indexOf(
+                totalPerCont
+              )
+            ].total = newTotal;
           }
-
-          newTotal = totalPerCont.total - totalDestination;
-    
-          newTotal = newTotal.toFixed(2);
-          responseData.pricingDetails.totalRatePerContainer[
-            responseData.pricingDetails.totalRatePerContainer.indexOf(
-              totalPerCont
-            )
-          ].total = newTotal;
         });
 
         responseData.pricingDetails.totalRatePerType.totalRateDestination = null;
       }
     },
+
     setApiContainers() {
       let component = this;
       let finalContainers = [];
@@ -4938,26 +5863,6 @@ export default {
         (item) => item.pricingDetails.totalRatePerContainer[0].total,
         ["asc"]
       );
-
-      /**var sortedArray = _(this.results.maersk).chain().sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[0]){
-                return result.pricingDetails.totalRatePerContainer[0].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[1]){
-                return result.pricingDetails.totalRatePerContainer[1].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[2]){
-                return result.pricingDetails.totalRatePerContainer[2].total;
-            }
-        }).sortBy(function(result) {
-            if(result.pricingDetails.totalRatePerContainer[3]){
-                return result.pricingDetails.totalRatePerContainer[3].total;
-            }
-        }).value();
-
-        return sortedArray;**/
     },
 
     orderedCmaRates: function() {
@@ -4983,7 +5888,23 @@ export default {
         ["asc"]
       );
     },
-  },
+
+    orderedOneRates: function() {
+      return _.orderBy(
+        this.results.one,
+        (item) => item.pricingDetails.totalRatePerContainer[0].total,
+        ["asc"]
+      );
+    },
+    
+    orderedCoscoRates: function() {
+      return _.orderBy(
+        this.results.cosco,
+        (item) => item.pricingDetails.totalRatePerContainer[0].total,
+        ["asc"]
+      );
+    },
+  }
 };
 </script>
 
