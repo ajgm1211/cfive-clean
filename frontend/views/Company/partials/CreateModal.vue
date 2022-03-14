@@ -156,11 +156,11 @@ export default {
         this.setBody()
         const {newCompany} = await this.actions.create(this.model)  
         //this.company  = newCompany
-        toastr.success("successful create")
+        toastr.success("Created successfully")
         this.$root.$emit('submitData')
         this.$emit('cancel')
       } catch (error) {
-        toastr.success("unsuccessful create")
+        toastr.success("Not created successfully")
       }
         
       
