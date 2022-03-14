@@ -1,8 +1,8 @@
 <script src="/js/Contracts/editcontracts.js"></script>
 @if($differentiator == 1)
 @php
-$portRadio = true; 
-$countryRadio = false; 
+$portRadio = true;
+$countryRadio = false;
 @endphp
 <script>
     activarCountry('divport');
@@ -10,8 +10,8 @@ $countryRadio = false;
 @endif
 @if($differentiator == 2)
 @php
-$countryRadio = true; 
-$portRadio = false; 
+$countryRadio = true;
+$portRadio = false;
 @endphp
 <script>
     activarCountry('divcountry');
@@ -61,7 +61,7 @@ $portRadio = false;
                     {{ Form::select('surcharge_id', $surchargeSelect,$failsurchargeArre['surcharge'],['id' => 'type','class'=>'m-select2-general form-control ','style' => 'width:100%;']) }}
                 </div>
                 <div class="col-lg-4">
-                    <div class="divport" >
+                    <div class="divport">
                         {!! Form::label('orig', 'Origin Port',['style' => $failsurchargeArre['classorigin']]) !!}
                         {{ Form::select('port_origlocal[]', $harbor,$failsurchargeArre['origin_port'],['id' => 'portOrig','class'=>'m-select2-general  form-control ','multiple' => 'multiple' ,'style' => 'width:100%;']) }}
                     </div>
@@ -72,7 +72,7 @@ $portRadio = false;
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <div class="divport" >
+                    <div class="divport">
                         {!! Form::label('dest', 'Destination Port',['style' => $failsurchargeArre['classdestiny']]) !!}
 
                         <div class="m-input-icon m-input-icon--right">
@@ -145,11 +145,11 @@ $portRadio = false;
                     </div>
                 </div>
             </div>
-            <div class="form-group m-form__group row" id="div_ow">
+            <div class="form-group m-form__group row" id="div_ow" hidden>
                 <div class="col-lg-4">
                     {!! Form::label('ammountL', 'Lower Limit',['style' => $failsurchargeArre['classlowerlimit']]) !!}
                     <div class="m-input-icon m-input-icon--right">
-                        {!! Form::text('lower_limit', $failsurchargeArre['lower_limit'], ['id' => 'lower_limit','placeholder' => 'Please enter Lower limit','class' => 'form-control m-input','required']) !!}
+                        {!! Form::text('lower_limit', @$failsurchargeArre['lower_limit'], ['id' => 'lower_limit','placeholder' => 'Please enter Lower limit','class' => 'form-control m-input','required']) !!}
                         <span class="m-input-icon__icon m-input-icon__icon--right">
                             <span>
                                 <i class="la la-bookmark-o"></i>
@@ -160,7 +160,7 @@ $portRadio = false;
                 <div class="col-lg-4">
                     {!! Form::label('ammountL', 'Upper Limit',['style' => $failsurchargeArre['classupperlimit']]) !!}
                     <div class="m-input-icon m-input-icon--right">
-                        {!! Form::text('upper_limit', $failsurchargeArre['upper_limit'], ['id' => 'lower_limit','placeholder' => 'Please enter Upper limit','class' => 'form-control m-input','required']) !!}
+                        {!! Form::text('upper_limit', @$failsurchargeArre['upper_limit'], ['id' => 'upper_limit','placeholder' => 'Please enter Upper limit','class' => 'form-control m-input','required']) !!}
                         <span class="m-input-icon__icon m-input-icon__icon--right">
                             <span>
                                 <i class="la la-bookmark-o"></i>
@@ -169,7 +169,7 @@ $portRadio = false;
                     </div>
                 </div>
             </div>
-        </div>  
+        </div>
         <input type="hidden" value="{{$failsurchargeArre['contract_id']}}" name="contract_id" id="contract_id" />
         <input type="hidden" value="{{$calculationtypeselect->pluck('options_decode', 'id')}}" name="calculation_type_options" id="calculation_type_options_id" />
     </div>
@@ -184,52 +184,67 @@ $portRadio = false;
 {!! Form::close() !!}
 
 <script>
-
     $('.m-select2-general').select2({
         placeholder: "Select an option"
     });
 
-    $(document).ready(function(e){
+    $(document).ready(function(e) {
         //alert(nameTab);
-        shoe_ow();
+        show_ow();
         // frmSurcharges id del formulario Auto Save TAB
-        $("#frmSurcharges").append('<input type="hidden" name="nameTab" value="'+nameTab+'">');
+        $("#frmSurcharges").append('<input type="hidden" name="nameTab" value="' + nameTab + '">');
     });
 
-    function shoe_ow(){
-        calculationT_id = $('#calculationtype').val();
-        var calculationsT_ow = $('#calculation_type_options_id').val();
-        //alert(calculationT_id);
-        alert(calculationsT_ow[1]);
+    $('#calculationtype').select2().on('select2:select', function(e) {
+        show_ow();
+    });
 
+    function show_ow() {
+        calculationT_id = $('#calculationtype').val();
+        var calculationsT_ow = jQuery.parseJSON($('#calculation_type_options_id').val());
+        if (calculationT_id != null) {
+            if (calculationT_id in calculationsT_ow) {
+                if (calculationsT_ow[calculationT_id]['limits_ow'] == true) {
+                    $('#div_ow').removeAttr('hidden', 'hidden');
+                } else{
+                    $('#div_ow').attr('hidden', 'hidden');
+                    $('#lower_limit').val(null);
+                    $('#upper_limit').val(null);
+                }
+            } else {
+                $('#div_ow').attr('hidden', 'hidden');
+                $('#lower_limit').val(null);
+                $('#upper_limit').val(null);
+            }
+        }
     }
-    function radio_place(val){
-        if(val == 1){
-            $('#portOrig').attr('required','required');
+
+    function radio_place(val) {
+        if (val == 1) {
+            $('#portOrig').attr('required', 'required');
             $('#country_orig').removeAttr('required');
-            $('#portDest').attr('required','required');
+            $('#portDest').attr('required', 'required');
             $('#country_dest').removeAttr('required');
-        }else if(val == 2){
-            $('#country_orig').attr('required','required');
+        } else if (val == 2) {
+            $('#country_orig').attr('required', 'required');
             $('#portOrig').removeAttr('required');
-            $('#country_dest').attr('required','required');
+            $('#country_dest').attr('required', 'required');
             $('#portDest').removeAttr('required');
         }
     }
-    $(document).on('click','.radio-place',function(e){
+    $(document).on('click', '.radio-place', function(e) {
         var val = $(this).attr('data');
 
-        if(val == 1){
-            $('#portOrig').attr('required','required');
-            $('#portDest').attr('required','required');
+        if (val == 1) {
+            $('#portOrig').attr('required', 'required');
+            $('#portDest').attr('required', 'required');
             $('#country_orig').removeAttr('required');
             $('#country_dest').removeAttr('required');
-        }else if(val == 2){
-            $('#country_orig').attr('required','required');
+        } else if (val == 2) {
+            $('#country_orig').attr('required', 'required');
             $('#portOrig').removeAttr('required');
-            $('#country_dest').attr('required','required');
+            $('#country_dest').attr('required', 'required');
             $('#portDest').removeAttr('required');
         }
     });
-
 </script>
