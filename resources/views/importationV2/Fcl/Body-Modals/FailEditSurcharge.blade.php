@@ -110,7 +110,7 @@ $portRadio = false;
                 <div class="col-lg-4">
                     {!! Form::label('calculationt', 'Calculation Type',['style' => $failsurchargeArre['classcalculationtype']]) !!}
                     <div class="m-input-icon m-input-icon--right">
-                        {{ Form::select('calculationtype_id', $calculationtypeselect,$failsurchargeArre['calculationtype'],['id' => 'calculationtype','class'=>'m-select2-general form-control ','style' => 'width:80%;']) }}
+                        {{ Form::select('calculationtype_id', $calculationtypeselect->pluck('name', 'id'),$failsurchargeArre['calculationtype'],['id' => 'calculationtype','class'=>'m-select2-general form-control ','style' => 'width:80%;']) }}
                         <span class="m-input-icon__icon m-input-icon__icon--right">
                             <span>
                                 <i class="la la-map-marker"></i>

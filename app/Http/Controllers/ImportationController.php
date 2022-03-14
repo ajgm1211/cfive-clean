@@ -3570,23 +3570,17 @@ class ImportationController extends Controller
     /////lllalalala
     public function EditSurchargersFail($id)
     {
-        $objharbor = new Harbor();
-        $objcurrency = new Currency();
-        $objcarrier = new Carrier();
-        $objsurcharge = new Surcharge();
-        $objtypedestiny = new TypeDestiny();
-        $objCalculationType = new CalculationType();
 
         $countries = Country::pluck('name', 'id');
-        $typedestiny = $objtypedestiny->all()->pluck('description', 'id');
-        $carrierSelect = $objcarrier->all()->pluck('name', 'id');
-        $harbor = $objharbor->all()->pluck('display_name', 'id');
-        $currency = $objcurrency->all()->pluck('alphacode', 'id');
-        $calculationtypeselect = $objCalculationType->all()->pluck('name', 'id');
+        $typedestiny = TypeDestiny::pluck('description', 'id');
+        $carrierSelect = Carrier::pluck('name', 'id');
+        $harbor = Harbor::pluck('display_name', 'id');
+        $currency = Currency::pluck('alphacode', 'id');
+        $calculationtypeselect = CalculationType::all();
 
         $failsurcharge = FailSurCharge::find($id);
         $failsurcharge->load('contract', 'fail_overweight_ranges');
-        $surchargeSelect = $objsurcharge->where('company_user_id', '=', $failsurcharge->contract->company_user_id)->pluck('name', 'id');
+        $surchargeSelect = Surcharge::where('company_user_id', '=', $failsurcharge->contract->company_user_id)->pluck('name', 'id');
         $is_ow_limits = $failsurcharge->fail_overweight_ranges->isEmpty();
         $differentiator = $failsurcharge->differentiator;
 
