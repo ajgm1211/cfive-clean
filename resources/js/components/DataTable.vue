@@ -502,6 +502,13 @@
                             </button>
                             <button
                                 class="btn-action"
+                                v-if="singleActions.includes('pdfQuotation')"
+                                v-on:click="onPdfQuotation(item)"
+                            >
+                                PDF quotation
+                            </button>
+                            <button
+                                class="btn-action"
                                 v-if="singleActions.includes('seeProgressDetails')"
                                 @click="onOpenProgressModal(item.id)"
                             >
@@ -1340,7 +1347,10 @@ export default {
             this.$emit("onEdit", data);
             this.refreshData();
         },
-
+        onPdfQuotation(data) {
+            this.currentData = data;
+            this.$emit("onPdfQuotation", data);            
+        },
         onDelete(id) {
             swal({
                 title: 'Are you sure?',
