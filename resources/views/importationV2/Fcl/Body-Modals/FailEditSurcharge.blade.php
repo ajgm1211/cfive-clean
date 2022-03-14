@@ -170,6 +170,7 @@ $portRadio = false;
                 </div>
             </div>
         </div>
+        <input type="hidden" value="{{$failsurchargeArre['is_ow_limits']}}" name="is_ow_limits" id="is_ow_limits_id" />
         <input type="hidden" value="{{$failsurchargeArre['contract_id']}}" name="contract_id" id="contract_id" />
         <input type="hidden" value="{{$calculationtypeselect->pluck('options_decode', 'id')}}" name="calculation_type_options" id="calculation_type_options_id" />
     </div>
@@ -206,13 +207,16 @@ $portRadio = false;
             if (calculationT_id in calculationsT_ow) {
                 if (calculationsT_ow[calculationT_id]['limits_ow'] == true) {
                     $('#div_ow').removeAttr('hidden', 'hidden');
+                    $('#is_ow_limits_id').val(true);
                 } else{
                     $('#div_ow').attr('hidden', 'hidden');
+                    $('#is_ow_limits_id').val(false);
                     $('#lower_limit').val(null);
                     $('#upper_limit').val(null);
                 }
             } else {
                 $('#div_ow').attr('hidden', 'hidden');
+                $('#is_ow_limits_id').val(false);
                 $('#lower_limit').val(null);
                 $('#upper_limit').val(null);
             }
