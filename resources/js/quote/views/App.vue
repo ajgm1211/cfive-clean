@@ -20,9 +20,9 @@
               :fields="fields"
               :actions="actions.quotes"
               :filter="true"
-              :singleActions="['edit', 'duplicate', 'delete', 'specialduplicate', 'pdfQuotation']"
+              :singleActions="['edit', 'duplicate', 'delete', 'specialduplicate', 'generatePDF']"
               @onEdit="onEdit"
-              @onPdfQuotation="onPdfQuotation"
+              @onGeneratePDF="onGeneratePDF"
               :totalResults="totalResults"
             ></DataTable>
           </b-card>
@@ -110,7 +110,7 @@ export default {
     onEdit(data) {
       window.location = `/api/quote/${data.id}/edit`;
     },
-    onPdfQuotation(data) { 
+    onGeneratePDF(data) { 
       window.open(`/api/quote/pdf/${data.id}`, '_blank');
     },
 

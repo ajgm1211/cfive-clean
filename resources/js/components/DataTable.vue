@@ -502,10 +502,10 @@
                             </button>
                             <button
                                 class="btn-action"
-                                v-if="singleActions.includes('pdfQuotation')"
-                                v-on:click="onPdfQuotation(item)"
+                                v-if="singleActions.includes('generatePDF')"
+                                v-on:click="onGeneratePDF(item)"
                             >
-                                PDF quotation
+                                Generate PDF
                             </button>
                             <button
                                 class="btn-action"
@@ -1347,9 +1347,9 @@ export default {
             this.$emit("onEdit", data);
             this.refreshData();
         },
-        onPdfQuotation(data) {
+        onGeneratePDF(data) {
             this.currentData = data;
-            this.$emit("onPdfQuotation", data);            
+            this.$emit("onGeneratePDF", data);            
         },
         onDelete(id) {
             swal({
