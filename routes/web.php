@@ -33,6 +33,20 @@ Route::get('/home', function () {
     }
 });
 
+Route::middleware(['auth'])->prefix('companies')->group(function () {
+    route::get('v2', 'CompanyV2Controller@index');
+    route::get('v2/{id}/edit', 'CompanyV2Controller@edit');
+    route::get('v2/template', 'CompanyV2Controller@downloadTemplatefile');
+    route::get('v2/failed', 'CompanyV2Controller@failed');
+    Route::get('v2/{id}/contacts', 'CompanyV2Controller@contactByCompanyList');
+});
+
+Route::middleware(['auth'])->prefix('contacts')->group(function () {
+    route::get('v2', 'ContactV2Controller@index');
+    route::get('v2/{id}/edit', 'ContactV2Controller@edit');
+});
+
+
 Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
 
 Route::middleware(['auth'])->prefix('oauth')->group(function () {
@@ -815,6 +829,11 @@ Route::middleware(['auth'])->prefix('RegionP')->group(function () {
 });
 Route::resource('RegionP', 'RegionHarborController');
 
+Route::middleware(['auth'])->prefix('RegionP')->group(function () {
+    Route::get('/LoadViewRegion', 'RegionHarborController@LoadViewAdd')->name('add-regionP');
+});
+Route::resource('RegionP', 'RegionHarborController');
+
 //Manager Carriers
 
 Route::middleware(['auth', 'role:administrator|data_entry'])->prefix('ManagerCarriers')->group(function () {
@@ -1178,7 +1197,7 @@ Route::group(['middleware' => ['auth']], function () {
     /** Providers view routes **/
     Route::get('api/providers', 'ProvidersController@index')->name('providers.index');
     /** End providers routes view **/
-    Route::get('inlandperlocation', 'inlandPerLocationController@index')->name('inlandperlocation.index');
+    Route::get('inlandperlocation', 'InlandPerLocationController@index')->name('inlandperlocation.index');
 });
 
 /*****************************************************************************************
@@ -1322,12 +1341,12 @@ Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function (
     /* End API Inland Km EndPoints **/
 
     /* API Inland location EndPoints **/
-    Route::get('{inland}/location', 'inlandPerLocationController@list');
-    Route::post('{inland}/location/store', 'inlandPerLocationController@store');
-    Route::post('{inland}/location/{location}/update', 'inlandPerLocationController@update');
-    Route::post('location/{location}/duplicate', 'inlandPerLocationController@duplicate');
-    Route::delete('location/{location}/destroy', 'inlandPerLocationController@destroy');
-    Route::post('location/destroyAll', 'inlandPerLocationController@destroyAll');
+    Route::get('{inland}/location', 'InlandPerLocationController@list');
+    Route::post('{inland}/location/store', 'InlandPerLocationController@store');
+    Route::post('{inland}/location/{location}/update', 'InlandPerLocationController@update');
+    Route::post('location/{location}/duplicate', 'InlandPerLocationController@duplicate');
+    Route::delete('location/{location}/destroy', 'InlandPerLocationController@destroy');
+    Route::post('location/destroyAll', 'InlandPerLocationController@destroyAll');
     /* End API Inland location EndPoints **/
     /*
     Route::get('groupc/{inland}', 'InlandController@groupInlandContainer')->middleware('check_company:inland');
