@@ -7,7 +7,9 @@ use App\Company;
 use App\Contact;
 use App\FailCompany;
 use App\CompanyPrice;
+use GuzzleHttp\Client;
 use App\GroupUserCompany;
+use App\SettingsWhitelabel;
 use Illuminate\Http\Request;
 use App\Http\Traits\SearchTrait;
 use Illuminate\Support\Facades\DB;
@@ -139,6 +141,7 @@ class CompanyV2Controller extends Controller
     {
         $filepath_tmp    = null;
         $file            = Input::file('logo');
+        $companyForUpdate = $request->all();
         try {
             DB::beginTransaction();
 
@@ -148,7 +151,7 @@ class CompanyV2Controller extends Controller
                 }
 
                 if ($company) {
-                    $company->fill($request->get('company'))->save();
+                    $company->fill($companyForUpdate['company'])->save();
                 }
                 
                 if ($file != null) {
@@ -156,6 +159,9 @@ class CompanyV2Controller extends Controller
                 }
 
             DB::commit();
+                if ($companyForUpdate['company']['whitelabel']) {
+                    $this->callApiWhiteLabel($company);
+                }
             return new CompanyResource($company);
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -267,10 +273,35 @@ class CompanyV2Controller extends Controller
             foreach ($companies as $key => $value) {
                 Company::where('id', $value['id'])->update(array('whitelabel' => 1 ));
             }
-            return "Transfer to whiteLevel";
+            return "Transfer to whiteLabel";
         } catch (\Throwable $th) {
             return $th->getMessage();
         }
             
+    }
+
+    public function callApiWhiteLabel($companyForTransfer){
+        $company = $companyForTransfer->toArray();
+        $company_user_id = \Auth::user()->company_user_id;
+
+        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url','token')->first();  
+        dd($url);
+        $client = new Client();
+        
+        $result =   $service->post($endPoint,
+                        [
+                            'http_errors' => false,
+                            'headers'=>[
+                                'Accept' => 'application/json',
+                                'Content-Type' => 'application/x-www-form-urlencoded',
+                                'Authorization' => Auth::user()->api_token,
+                            ],
+                            'form_params'=>[
+                                $company
+                            ]
+                        ]
+                    );
+
+        return $result;
     }
 }
