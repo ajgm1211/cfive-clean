@@ -188,6 +188,7 @@ Route::group(['prefix'=>'companies','middleware' => 'auth:api'], function () {
     Route::get('template', 'CompanyV2Controller@downloadTemplatefile');
     Route::get('failed/list', 'CompanyV2Controller@failedList');
     Route::get('{company}/contacts', 'CompanyV2Controller@contactByCompanyList');
+    Route::post('toWhiteLevel', 'CompanyV2Controller@transferToWhiteLevel');
 });
 
 Route::group(['prefix'=>'contacts','middleware' => 'auth:api'], function () {

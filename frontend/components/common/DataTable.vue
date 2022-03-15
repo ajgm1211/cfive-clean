@@ -1807,7 +1807,8 @@ export default {
             deep: true,
         },
         selected() {
-            this.$emit("input", this.selected);
+            this.$emit("input", this.selected)
+            this.$emit("selectedData", this.selected)
             this.$emit("toggleButtonWL", this.toggleAddToWhiteLavel)
         },
         search: {

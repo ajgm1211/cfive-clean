@@ -25,5 +25,8 @@ export default {
     },
     create(company){
         return api.call('post', `/api/companies/store`, {company});
+    },
+    transferCompanies(companies){
+        return api.call('post', `/api/companies/toWhiteLevel`, {companies});
     }
 }

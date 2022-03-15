@@ -259,4 +259,18 @@ class CompanyV2Controller extends Controller
         $contactsByCompany = Contact::filterByCurrentEditingCompany($company)->orderBy('id', 'asc')->filter($request);
         return  ContactResource::collection($contactsByCompany);
     }
+
+    public function transferToWhiteLevel(Request $request){
+        $companies = $request->get('companies');
+
+        try {
+            foreach ($companies as $key => $value) {
+                Company::where('id', $value['id'])->update(array('whitelabel' => 1 ));
+            }
+            return "Transfer to whiteLevel";
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+            
+    }
 }

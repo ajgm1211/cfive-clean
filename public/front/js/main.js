@@ -73774,6 +73774,9 @@ module.exports = Component.exports
     },
     create: function create(company) {
         return api.call('post', '/api/companies/store', { company: company });
+    },
+    transferCompanies: function transferCompanies(companies) {
+        return api.call('post', '/api/companies/toWhiteLevel', { companies: companies });
     }
 });
 
@@ -76901,15 +76904,24 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_modules_company_actions__ = __webpack_require__(450);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_common_MainButton__ = __webpack_require__(446);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_common_MainButton___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_common_MainButton__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_common_DataTable__ = __webpack_require__(451);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_common_DataTable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_common_DataTable__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__partials_CreateModal__ = __webpack_require__(781);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__partials_CreateModal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__partials_CreateModal__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__partials_ToWhiteLevelModal__ = __webpack_require__(788);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__partials_ToWhiteLevelModal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__partials_ToWhiteLevelModal__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(387);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actions__ = __webpack_require__(450);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton__ = __webpack_require__(446);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_common_MainButton__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_common_DataTable__ = __webpack_require__(451);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_common_DataTable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_common_DataTable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__partials_CreateModal__ = __webpack_require__(781);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__partials_CreateModal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__partials_CreateModal__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__partials_ToWhiteLevelModal__ = __webpack_require__(788);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__partials_ToWhiteLevelModal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__partials_ToWhiteLevelModal__);
+
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+//
+//
+//
 //
 //
 //
@@ -76973,15 +76985,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: { DataTable: __WEBPACK_IMPORTED_MODULE_2__components_common_DataTable___default.a, MainButton: __WEBPACK_IMPORTED_MODULE_1__components_common_MainButton___default.a, CreateModal: __WEBPACK_IMPORTED_MODULE_3__partials_CreateModal___default.a, ToWLModal: __WEBPACK_IMPORTED_MODULE_4__partials_ToWhiteLevelModal___default.a },
+  components: { DataTable: __WEBPACK_IMPORTED_MODULE_3__components_common_DataTable___default.a, MainButton: __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton___default.a, CreateModal: __WEBPACK_IMPORTED_MODULE_4__partials_CreateModal___default.a, ToWLModal: __WEBPACK_IMPORTED_MODULE_5__partials_ToWhiteLevelModal___default.a },
   data: function data() {
     return {
-      actions: __WEBPACK_IMPORTED_MODULE_0__store_modules_company_actions__["a" /* default */],
+      actions: __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actions__["a" /* default */],
       totalResults: true,
       create: false,
       ModalWhiteLabel: false,
       isMassiveCreation: false,
       AddToWhiteLevel: true,
+      selectForTransfer: [],
       fields: [{ key: "id", label: "ID", filterIsOpen: true }, { key: "business_name", label: "Business Name", filterIsOpen: false }, { key: "phone", label: "Phone", filterIsOpen: false }, { key: "email", label: "Email", filterIsOpen: false }, { key: "address", label: "Address", filterIsOpen: false }, { key: "tax_number", label: "Tax Number", filterIsOpen: false }, { key: "created_at", label: "Created at", filterIsOpen: false }],
       classTable: "table table-striped table-responsive",
       modal_fields: [{
@@ -77049,6 +77062,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     AddToWhiteLevelModal: function AddToWhiteLevelModal() {
       this.ModalWhiteLabel = true;
+    },
+    transferTWL: function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee() {
+        return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return this.actions.transferCompanies(this.selectForTransfer);
+
+              case 2:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function transferTWL() {
+        return _ref.apply(this, arguments);
+      }
+
+      return transferTWL;
+    }(),
+    selectedData: function selectedData(selectedCompanies) {
+      this.selectForTransfer = selectedCompanies;
     }
   }
 });
@@ -78928,6 +78967,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
         selected: function selected() {
             this.$emit("input", this.selected);
+            this.$emit("selectedData", this.selected);
             this.$emit("toggleButtonWL", this.toggleAddToWhiteLavel);
         },
 
@@ -82274,11 +82314,10 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(387);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actionToWhiteLevel__ = __webpack_require__(790);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton__ = __webpack_require__(446);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_common_MainButton__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_toastr__ = __webpack_require__(398);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_toastr___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_toastr__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_common_MainButton__ = __webpack_require__(446);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_common_MainButton___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_common_MainButton__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_toastr__ = __webpack_require__(398);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_toastr___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_toastr__);
 
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -82319,25 +82358,33 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 //
 //
 //
-
+//
+//
+//
+//
+//
+//
 
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: { MainButton: __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton___default.a },
+  components: { MainButton: __WEBPACK_IMPORTED_MODULE_1__components_common_MainButton___default.a },
   props: {
     title: {
       type: String
+    },
+    action: {
+      type: String
+    },
+    selectedCompanies: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
     }
   },
-  data: function data() {
-    return {
-      actions: __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actionToWhiteLevel__["a" /* default */]
-    };
-  },
-
   methods: {
     AddToWhiteLevel: function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee() {
@@ -82345,21 +82392,28 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                try {
-                  //const {newCompany} = await this.actions.addToWL()  
-                  //this.company  = newCompany
-                  __WEBPACK_IMPORTED_MODULE_3_toastr___default.a.success("successful create");
-                  this.$emit('cancel');
-                } catch (error) {
-                  __WEBPACK_IMPORTED_MODULE_3_toastr___default.a.error("unsuccessful create.");
-                }
+                _context.prev = 0;
+                _context.next = 3;
+                return this.$emit('transferTWL');
 
-              case 1:
+              case 3:
+                __WEBPACK_IMPORTED_MODULE_2_toastr___default.a.success("successful create");
+                this.$emit('cancel');
+                _context.next = 10;
+                break;
+
+              case 7:
+                _context.prev = 7;
+                _context.t0 = _context["catch"](0);
+
+                __WEBPACK_IMPORTED_MODULE_2_toastr___default.a.error("unsuccessful create.");
+
+              case 10:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this);
+        }, _callee, this, [[0, 7]]);
       }));
 
       function AddToWhiteLevel() {
@@ -82372,17 +82426,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 });
 
 /***/ }),
-/* 790 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = ({
-    addToWL: function addToWL(companies) {
-        return api.call('post', '/api/companies/toWhiteLevel', { companies: companies });
-    }
-});
-
-/***/ }),
+/* 790 */,
 /* 791 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -82426,10 +82470,53 @@ var render = function() {
                   _c(
                     "b-row",
                     [
-                      _c("b-col", {
-                        staticClass: "mb-2",
-                        attrs: { cols: "12", md: "12" }
-                      })
+                      _c(
+                        "b-col",
+                        {
+                          staticClass: "mb-2",
+                          attrs: { cols: "12", md: "12" }
+                        },
+                        [
+                          _c("p", [
+                            _vm._v(
+                              "Are you sure to transfer these companies to WhiteLevel?"
+                            )
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        {
+                          staticClass: "mb-2",
+                          attrs: { cols: "12", md: "12" }
+                        },
+                        [
+                          _vm._l(_vm.selectedCompanies, function(
+                            company,
+                            companyKey
+                          ) {
+                            return _c(
+                              "b-list-group",
+                              { key: companyKey },
+                              [
+                                _c("b-list-group-item", [
+                                  _vm._v(_vm._s(company.business_name))
+                                ])
+                              ],
+                              1
+                            )
+                          }),
+                          _vm._v(" "),
+                          _c("p", [
+                            _vm._v(
+                              "selected companies: " +
+                                _vm._s(_vm.selectedCompanies.length)
+                            )
+                          ])
+                        ],
+                        2
+                      )
                     ],
                     1
                   ),
@@ -82607,7 +82694,8 @@ var render = function() {
             },
             on: {
               onEdit: _vm.onEdit,
-              toggleButtonWL: _vm.toggleButtonWhiteLevel
+              toggleButtonWL: _vm.toggleButtonWhiteLevel,
+              selectedData: _vm.selectedData
             }
           })
         ],
@@ -82632,11 +82720,16 @@ var render = function() {
       _vm._v(" "),
       _vm.ModalWhiteLabel
         ? _c("ToWLModal", {
-            attrs: { title: "To WhiteLevel", action: "Add" },
+            attrs: {
+              title: "To WhiteLevel",
+              action: "Add",
+              selectedCompanies: _vm.selectForTransfer
+            },
             on: {
               cancel: function($event) {
                 _vm.ModalWhiteLabel = false
-              }
+              },
+              transferTWL: _vm.transferTWL
             }
           })
         : _vm._e()

@@ -30,6 +30,7 @@
           :classTable="classTable"
           :toggleAddToWhiteLevel="toggleTWL"
           @toggleButtonWL="toggleButtonWhiteLevel"
+          @selectedData="selectedData"
         >
         </DataTable>
       </div>
@@ -45,7 +46,9 @@
           v-if="ModalWhiteLabel"
           :title="'To WhiteLevel'"
           :action="'Add'"
+          :selectedCompanies="selectForTransfer"
           @cancel="ModalWhiteLabel = false"
+          @transferTWL="transferTWL"
         />
         
         
@@ -70,6 +73,7 @@ export default {
       ModalWhiteLabel: false,
       isMassiveCreation:false,
       AddToWhiteLevel:true,
+      selectForTransfer:[],
       fields: [
         { key: "id", label: "ID", filterIsOpen:true },
         { key: "business_name", label: "Business Name", filterIsOpen:false },
@@ -150,6 +154,12 @@ export default {
     },
     AddToWhiteLevelModal(){
       this.ModalWhiteLabel = true
+    },
+    async transferTWL(){
+      await this.actions.transferCompanies(this.selectForTransfer)
+    },
+    selectedData(selectedCompanies){
+      this.selectForTransfer = selectedCompanies
     }
   }
 }
