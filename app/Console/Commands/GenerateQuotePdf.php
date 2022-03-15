@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\FclPdf;
 use App\LclPdf;
 use App\QuoteV2;
+use Log;
+use Exception;
 use Illuminate\Console\Command;
 
 class GenerateQuotePdf extends Command
@@ -41,7 +43,7 @@ class GenerateQuotePdf extends Command
     public function handle()
     {
         $quotes = QuoteV2::whereHas('pdf_quote_status', function ($query) {
-            $query->where('status', 0);
+            $query->where('status', false);
         })->get();
 
         foreach ($quotes as $quote) {
@@ -52,19 +54,18 @@ class GenerateQuotePdf extends Command
                     case "FCL":
                         $pdf = new FclPdf($upload);
                         $pdf->generate($quote);
-                        $quote->pdf_quote_status()->update(['status' => 1]);
-                        \Log::info("Updated FCL quote: " . $quote->quote_id );
+                        $quote->pdf_quote_status()->update(['status' => true]);
 
                         break;
                     case "LCL":
                         $pdf = new LclPdf($upload);
                         $pdf->generate($quote);
-                        $quote->pdf_quote_status()->update(['status' => 1]);
+                        $quote->pdf_quote_status()->update(['status' => true]);
 
                         break;
                 }
-            } catch (\Exception $e) {
-                \Log::error("Error creating API PDF: " . $e->getMessage() . " for quote: " . $quote->quote_id . " in line : " . $e->getLine());
+            } catch (Exception $e) {
+                Log::error("Error creating API PDF: " . $e->getMessage() . " for quote: " . $quote->quote_id . " in line : " . $e->getLine());
             }
         }
 
