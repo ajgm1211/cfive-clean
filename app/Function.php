@@ -186,7 +186,7 @@ function Quitar_Espacios($cadena)
     return implode(' ', array_filter(explode(' ', $cadena)));
 }
 
-function quitar_acentos($cadena)
+function changeSpecialCharacter($cadena)
 {
     $originales = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿ';
     $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyyby';

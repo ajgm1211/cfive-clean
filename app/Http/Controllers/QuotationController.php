@@ -214,7 +214,8 @@ class QuotationController extends Controller
     {
         $user = \Auth::user('web');
         $company_user = $user->worksAt();
-        $company_code = strtoupper(substr($company_user->name, 0, 2));
+        $formatted_code=changeSpecialCharacter($company_user->name);
+        $company_code = strtoupper(substr($formatted_code, 0, 2));
         $higherq_id = $company_user->getHigherId($company_code);
         $newq_id = $company_code . '-' . strval($higherq_id + 1);        
 
