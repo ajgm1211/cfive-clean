@@ -3474,11 +3474,11 @@ class ImportationController extends Controller
             $mediaItem = $account->getFirstMedia('document');
             $name = explode('_', $mediaItem->file_name);
             $name = str_replace($name[0] . '_', '', $mediaItem->file_name);
-            $name = changeSpecialCharacter($name);
+            $name = replaceSpecialCharacter($name);
             return Storage::disk('FclAccount')->download($mediaItem->id . '/' . $mediaItem->file_name, $name);
         } else {
             $name = $account->id . '-' . $company->name . '_' . $now . '-FLC.' . $ext;
-            $name = changeSpecialCharacter($name);
+            $name = replaceSpecialCharacter($name);
             try {
                 return Storage::disk('s3_upload')->download('Account/FCL/' . $account->namefile, $name);
             } catch (\Exception $e) {

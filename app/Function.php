@@ -186,7 +186,7 @@ function Quitar_Espacios($cadena)
     return implode(' ', array_filter(explode(' ', $cadena)));
 }
 
-function changeSpecialCharacter($cadena)
+function replaceSpecialCharacter($cadena)
 {
     $originales = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿ';
     $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyyby';

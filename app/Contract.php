@@ -460,8 +460,10 @@ class Contract extends Model implements HasMedia, Auditable
     {
         $lastContract = Contract::where('company_user_id', $this->company_user_id)
             ->whereNotNull('contract_code')->orderBy('id', 'desc')->first();
+            
+        $companyName=replaceSpecialCharacter( $this->companyUser->name);
 
-        $company = strtoupper(substr($this->companyUser->name, 0, 3));
+        $company = strtoupper(substr($companyName, 0, 3));
 
         $code = 'FCL-' . $company . '-1';
 
