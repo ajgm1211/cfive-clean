@@ -149,7 +149,7 @@ $portRadio = false;
                 <div class="col-lg-4">
                     {!! Form::label('ammountL', 'Lower Limit',['style' => $failsurchargeArre['classlowerlimit']]) !!}
                     <div class="m-input-icon m-input-icon--right">
-                        {!! Form::text('lower_limit', @$failsurchargeArre['lower_limit'], ['id' => 'lower_limit','placeholder' => 'Please enter Lower limit','class' => 'form-control m-input','required']) !!}
+                        {!! Form::text('lower_limit', @$failsurchargeArre['lower_limit'], ['id' => 'lower_limit','placeholder' => 'Please enter Lower limit','class' => 'form-control m-input']) !!}
                         <span class="m-input-icon__icon m-input-icon__icon--right">
                             <span>
                                 <i class="la la-bookmark-o"></i>
@@ -160,7 +160,7 @@ $portRadio = false;
                 <div class="col-lg-4">
                     {!! Form::label('ammountL', 'Upper Limit',['style' => $failsurchargeArre['classupperlimit']]) !!}
                     <div class="m-input-icon m-input-icon--right">
-                        {!! Form::text('upper_limit', @$failsurchargeArre['upper_limit'], ['id' => 'upper_limit','placeholder' => 'Please enter Upper limit','class' => 'form-control m-input','required']) !!}
+                        {!! Form::text('upper_limit', @$failsurchargeArre['upper_limit'], ['id' => 'upper_limit','placeholder' => 'Please enter Upper limit','class' => 'form-control m-input']) !!}
                         <span class="m-input-icon__icon m-input-icon__icon--right">
                             <span>
                                 <i class="la la-bookmark-o"></i>
@@ -207,16 +207,16 @@ $portRadio = false;
             if (calculationT_id in calculationsT_ow) {
                 if (calculationsT_ow[calculationT_id]['limits_ow'] == true) {
                     $('#div_ow').removeAttr('hidden', 'hidden');
-                    $('#is_ow_limits_id').val(true);
+                    $('#is_ow_limits_id').val(1);
                 } else{
                     $('#div_ow').attr('hidden', 'hidden');
-                    $('#is_ow_limits_id').val(false);
+                    $('#is_ow_limits_id').val(0);
                     $('#lower_limit').val(null);
                     $('#upper_limit').val(null);
                 }
             } else {
                 $('#div_ow').attr('hidden', 'hidden');
-                $('#is_ow_limits_id').val(false);
+                $('#is_ow_limits_id').val(0);
                 $('#lower_limit').val(null);
                 $('#upper_limit').val(null);
             }

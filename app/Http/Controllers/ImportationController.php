@@ -3602,23 +3602,25 @@ class ImportationController extends Controller
 
     public function EditSurchargersGood($id)
     {
-        $objharbor = new Harbor();
-        $objcurrency = new Currency();
-        $objcarrier = new Carrier();
-        $objsurcharge = new Surcharge();
-        $objtypedestiny = new TypeDestiny();
-        $objCalculationType = new CalculationType();
         $countries = Country::pluck('name', 'id');
 
-        $typedestiny = $objtypedestiny->all()->pluck('description', 'id');
-        $carrierSelect = $objcarrier->all()->pluck('name', 'id');
-        $harbor = $objharbor->all()->pluck('display_name', 'id');
-        $currency = $objcurrency->all()->pluck('alphacode', 'id');
-        $calculationtypeselect = $objCalculationType->all()->pluck('name', 'id');
+        $typedestiny = TypeDestiny::all()->pluck('description', 'id');
+        $carrierSelect = Carrier::all()->pluck('name', 'id');
+        $harbor = Harbor::all()->pluck('display_name', 'id');
+        $currency = Currency::all()->pluck('alphacode', 'id');
+        $calculationtypeselect = CalculationType::all();
+        $calculationtypeselect = $calculationtypeselect->map(function ($item, $key) {
+            $item->setAttribute('options_decode', (!empty($item->options)) ? json_decode($item->options, true) : []);
+            return $item;
+        });
 
-        $goodsurcharges = LocalCharge::with('currency', 'calculationtype', 'surcharge', 'typedestiny', 'localcharcarriers.carrier', 'localcharports.portOrig', 'localcharports.portDest', 'localcharcountries.countryOrig', 'localcharcountries.countryDest')->find($id);
-        $surchargeSelect = $objsurcharge->where('company_user_id', '=', $goodsurcharges->contract->company_user_id)->pluck('name', 'id');
-        //dd($goodsurcharges);
+        $goodsurcharges = LocalCharge::with('currency', 'calculationtype', 'surcharge', 'typedestiny',
+                                            'localcharcarriers.carrier', 'localcharports.portOrig', 'localcharports.portDest',
+                                            'localcharcountries.countryOrig', 'localcharcountries.countryDest','overweight_ranges')->find($id);
+        $is_ow_limits = !$goodsurcharges->overweight_ranges->isEmpty();
+        $limits = ($is_ow_limits)?$goodsurcharges->overweight_ranges->first():['lower_limit' => null,'upper_limit' => null];
+        $surchargeSelect = Surcharge::where('company_user_id', '=', $goodsurcharges->contract->company_user_id)->pluck('name', 'id');
+        //dd($goodsurcharges,$is_ow_limits,$limits);
         return view('importationV2.Fcl.Body-Modals.GoodEditSurcharge', compact(
             'harbor',
             'currency',
@@ -3627,7 +3629,9 @@ class ImportationController extends Controller
             'carrierSelect',
             'goodsurcharges',
             'surchargeSelect',
-            'calculationtypeselect'
+            'calculationtypeselect',
+            'is_ow_limits',
+            'limits'
         ));
     }
     /////lllalalala
@@ -3962,6 +3966,9 @@ class ImportationController extends Controller
         $currencyVar = $request->currency_id;
         $carrierVarArr = $request->carrier_id;
         $typerate = $request->typeroute;
+        $is_ow_limits = $request->is_ow_limits;
+        $lower_limit = $request->lower_limit;
+        $upper_limit = $request->upper_limit;
 
         $SurchargeId = new LocalCharge();
         $SurchargeId = LocalCharge::find($id);
@@ -4014,7 +4021,31 @@ class ImportationController extends Controller
                 }
             }
         }
-
+        $SurchargeId = $SurchargeId->load('overweight_ranges');
+        $ow_r = $SurchargeId->overweight_ranges;
+        if($is_ow_limits){
+            if($ow_r->isEmpty()){
+                OverweightRange::create([
+                    'lower_limit' => $lower_limit,
+                    'upper_limit' => $upper_limit,
+                    'amount' => $ammountVar,
+                    'model_id' => $SurchargeId->id,
+                    'model_type' => 'App\\LocalCharge',
+                ]);
+            } else{
+                $ow_r = $ow_r->first();
+                $ow_r->upper_limit = $upper_limit;
+                $ow_r->lower_limit = $lower_limit;
+                $ow_r->update();
+            }
+        } else{
+            if(!$ow_r->isEmpty()){
+                $ow_r->map(function($item,$key){
+                    $item->delete();
+                });
+            }
+        }
+        
         $request->session()->flash('message.content', 'Surcharge Updated');
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
