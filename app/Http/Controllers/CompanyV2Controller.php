@@ -116,6 +116,10 @@ class CompanyV2Controller extends Controller
 
         $this->saveExtraData($request, $company);
 
+        if ($company->whitelabel) {
+            $this->callApiTransferToWhiteLabel($company);
+        }
+
         return new CompanyResource($company);
     }
 
@@ -159,8 +163,8 @@ class CompanyV2Controller extends Controller
                 }
 
             DB::commit();
-                if ($companyForUpdate['company']['whitelabel']) {
-                    $this->callApiWhiteLabel($company);
+                if ($companyForUpdate['company']['whitelabel'] == 1) {
+                    $this->callApiTransferToWhiteLabel($company);
                 }
             return new CompanyResource($company);
         } catch (\Throwable $th) {
@@ -273,6 +277,9 @@ class CompanyV2Controller extends Controller
             foreach ($companies as $key => $value) {
                 Company::where('id', $value['id'])->update(array('whitelabel' => 1 ));
             }
+            
+            $this->callApiTransferToWhiteLabel();
+
             return "Transfer to whiteLabel";
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -280,13 +287,13 @@ class CompanyV2Controller extends Controller
             
     }
 
-    public function callApiWhiteLabel($companyForTransfer){
+    public function callApiTransferToWhiteLabel($companyForTransfer){
         $company = $companyForTransfer->toArray();
         $company_user_id = \Auth::user()->company_user_id;
 
-        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url','token')->first();  
-        dd($url);
-        $client = new Client();
+        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url','token')->first()->toArray();  
+        $endPoint = $url['url'].'shipper';
+        $service = new Client();
         
         $result =   $service->post($endPoint,
                         [
