@@ -37,9 +37,19 @@
             </div>
           </form>
           <div class="modal-footer-create-container">
-            <div class="modal-footer-content-wl">
-              <input type="checkbox" id="checkbox" v-model="model.whitelabel">
-              <label for="checkbox">Add to whitelabel</label>
+            <div class="modal-footer-content-wl input-box">
+              <div id="checkbox-create">
+                  <b-form-checkbox
+                    v-model="model.whitelabel"
+                    name="checkbox-create"
+                    value="1"
+                    unchecked-value="0"
+                  >
+                    <label for="">
+                      Add to whitelabel
+                    </label> 
+                  </b-form-checkbox>
+              </div>
             </div>
             <div class="modal-footer-create-container-btns">
               <p @click="$emit('cancel')">Cancel</p>
