@@ -290,7 +290,7 @@ class ImportationController extends Controller
     {
         $countfailsurchargers = FailSurCharge::where('contract_id', '=', $id)->count();
         if ($countfailsurchargers <= 150) {
-            $failsurchargers = FailSurCharge::where('contract_id', '=', $id)->get();
+            $failsurchargers = FailSurCharge::with('fail_overweight_ranges')->where('contract_id', '=', $id)->get();
             foreach ($failsurchargers as $FailSurchager) {
                 $surchargerEX = '';
                 $origenEX = '';
@@ -320,6 +320,10 @@ class ImportationController extends Controller
                 $destinyB = false;
                 $surcharB = false;
                 $currencyB = false;
+                $lowerlimitB = false;
+                $upperlimitB = false;
+                $lower_limit = 0;
+                $upper_limit = 0;
 
                 $surchargerEX = explode('_', trim($FailSurchager['surcharge_id']));
                 $originEX = explode('_', trim($FailSurchager['port_orig']));
@@ -329,7 +333,25 @@ class ImportationController extends Controller
                 $ammountEX = explode('_', trim($FailSurchager['ammount']));
                 $currencyEX = explode('_', trim($FailSurchager['currency_id']));
                 $carrierEX = explode('_', trim($FailSurchager['carrier_id']));
+                $is_ow_range = !$FailSurchager->fail_overweight_ranges->isEmpty();
+                if ($is_ow_range) {
+                    $limits = $FailSurchager->fail_overweight_ranges->first();
+                    $upper_limitEx = explode('_', trim($limits['upper_limit']));
+                    $lower_limitEx = explode('_', trim($limits['lower_limit']));
+                    if (count($upper_limitEx) <= 1) {
+                        $upperlimitB = true;
+                        $upper_limit = (!empty($upper_limitEx[0]))?$upper_limitEx[0]:null;
 
+                    }
+                    if (count($lower_limitEx) <= 1) {
+                        $lowerlimitB = true;
+                        $lower_limit = (!empty($lower_limitEx[0]))?$lower_limitEx[0]:null;
+                    }
+                } else {
+                    $lowerlimitB = true;
+                    $upperlimitB = true;
+                }
+                //dd($lowerlimitB,$upperlimitB,$upper_limit,$lower_limit);
                 if (
                     count($surchargerEX) <= 1 && count($typedestinyEX) <= 1
                     && count($typedestinyEX) <= 1 && count($calculationtypeEX) <= 1
@@ -362,39 +384,39 @@ class ImportationController extends Controller
 
                     //  Surcharge ------------------------------------------------------------------------------
 
-                    $surchargerV = Surcharge::where('name', '=', $surchargerEX[0])->first();
-                    if (count((array) $surchargerV) == 1) {
+                    $surchargerV = Surcharge::where('name', '=', $surchargerEX[0])->get();
+                    if (!$surchargerV->isEmpty()) {
                         $surcharB = true;
-                        $surchargerV = $surchargerV['id'];
+                        $surchargerV = $surchargerV[0]['id'];
                     }
-
+                    
                     //  Type Destiny ---------------------------------------------------------------------------
 
-                    $typedestunyV = TypeDestiny::where('description', '=', $typedestinyEX[0])->first();
-                    if (count((array) $typedestunyV) == 1) {
+                    $typedestunyV = TypeDestiny::where('description', '=', $typedestinyEX[0])->get();
+                    if (!$typedestunyV->isEmpty()) {
                         $typedestinyB = true;
-                        $typedestunyV = $typedestunyV['id'];
+                        $typedestunyV = $typedestunyV[0]['id'];
                     }
 
                     //  Calculation Type -----------------------------------------------------------------------
 
-                    $calculationtypeV = CalculationType::where('code', '=', $calculationtypeEX[0])->orWhere('name', '=', $calculationtypeEX[0])->first();
+                    $calculationtypeV = CalculationType::where('code', '=', $calculationtypeEX[0])->orWhere('name', '=', $calculationtypeEX[0])->get();
 
-                    if (count((array) $calculationtypeV) == 1) {
-                        $calculationtypeV = $calculationtypeV['id'];
+                    if (!$calculationtypeV->isEmpty()) {
+                        $calculationtypeV = $calculationtypeV[0]['id'];
+                        $calculationtypeB = true;
                     }
 
-                    $calculationtypeB = true;
                     //  Amount ---------------------------------------------------------------------------------
 
                     $amountV = floatval($ammountEX[0]);
 
                     //  Currency -------------------------------------------------------------------------------
 
-                    $currencyV = Currency::where('alphacode', '=', $currencyEX[0])->first();
-                    if (count((array) $currencyV) == 1) {
+                    $currencyV = Currency::where('alphacode', '=', $currencyEX[0])->get();
+                    if (!$currencyV->isEmpty()) {
                         $currencyB = true;
-                        $currencyV = $currencyV['id'];
+                        $currencyV = $currencyV[0]['id'];
                     }
 
                     //  Carrier -------------------------------------------------------------------------------
@@ -413,14 +435,19 @@ class ImportationController extends Controller
                     'currencyV'         =>  $currencyV,
                     'carrierV'          =>  $carrierV,
                     'relation'          =>  $carrierArr['relation'],
-                    ];
+                    'lowerlimitB'       =>  $lowerlimitB,
+                    'upperlimitB'       =>  $upperlimitB,
+                    'upper_limit'       =>  $upper_limit,
+                    'lower_limit'       =>  $lower_limit
+                    ];*/
 
-                    dd($colleccion);*/
+                    //dd($originB,$destinyB,$surcharB,$typedestinyB,$calculationtypeB,$currencyB,$lowerlimitB,$upperlimitB,$carrierB);
 
                     if (
                         $originB == true && $destinyB == true
                         && $surcharB == true && $typedestinyB == true
                         && $calculationtypeB == true && $currencyB == true
+                        && $lowerlimitB == true && $upperlimitB == true
                         && $carrierB == true
                     ) {
                         $LocalchargeId = null;
@@ -429,18 +456,36 @@ class ImportationController extends Controller
                             ->where('contract_id', $id)
                             ->where('calculationtype_id', $calculationtypeV)
                             ->where('ammount', $amountV)
-                            ->where('currency_id', $currencyV)
-                            ->first();
+                            ->where('currency_id', $currencyV);
 
-                        if (count((array) $LocalchargeId) == 0) {
+                        if ($is_ow_range) {
+                            $LocalchargeId->whereHas('overweight_ranges', function ($query) use ($upper_limit, $lower_limit, $amountV) {
+                                $query->where('lower_limit', $lower_limit)
+                                    ->where('upper_limit', $upper_limit)
+                                    ->where('amount', $amountV)
+                                    ->where('model_type', 'App\\LocalCharge');
+                            });
+                        }
+                        $LocalchargeId = $LocalchargeId->get();
+
+                        if ($LocalchargeId->isEmpty()) {
                             $LocalchargeId = LocalCharge::create([
-                                'surcharge_id' => $surchargerV,
-                                'typedestiny_id' => $typedestunyV,
-                                'contract_id' => $id,
-                                'calculationtype_id' => $calculationtypeV,
-                                'ammount' => $amountV,
-                                'currency_id' => $currencyV,
+                                'surcharge_id'          => $surchargerV,
+                                'typedestiny_id'        => $typedestunyV,
+                                'contract_id'           => $id,
+                                'calculationtype_id'    => $calculationtypeV,
+                                'ammount'               => $amountV,
+                                'currency_id'           => $currencyV,
                             ]);
+                            OverweightRange::create([
+                                'lower_limit' => $lower_limit,
+                                'upper_limit' => $upper_limit,
+                                'amount' => $amountV,
+                                'model_id' => $LocalchargeId->id,
+                                'model_type' => 'App\\LocalCharge',
+                            ]);
+                        } else {
+                            $LocalchargeId = $LocalchargeId->first();
                         }
 
                         $LocalchargeId = $LocalchargeId->id;
@@ -1556,21 +1601,14 @@ class ImportationController extends Controller
                                                     // ---------------------- Limits OW ------------------------------------------
 
                                                     if ($ct_options['limits_ow'] == true) {
-                                                        $owrange = OverweightRange::where('lower_limit', $limits_val[0])
-                                                            ->where('upper_limit', $limits_val[1])
-                                                            ->where('amount', $ammount)
-                                                            ->where('model_id', $surchargeObj->id)
-                                                            ->where('model_type', 'App\\LocalCharge')->get();
 
-                                                        if ($owrange->isEmpty()) {
-                                                            OverweightRange::create([
-                                                                'lower_limit' => $limits_val[0],
-                                                                'upper_limit' => $limits_val[1],
-                                                                'amount' => $ammount,
-                                                                'model_id' => $surchargeObj->id,
-                                                                'model_type' => 'App\\LocalCharge',
-                                                            ]);
-                                                        }
+                                                        OverweightRange::create([
+                                                            'lower_limit' => $limits_val[0],
+                                                            'upper_limit' => $limits_val[1],
+                                                            'amount' => $ammount,
+                                                            'model_id' => $surchargeObj->id,
+                                                            'model_type' => 'App\\LocalCharge',
+                                                        ]);
                                                     }
                                                 } else {
                                                     $surchargeObj = $surchargeObj->first();
@@ -1667,21 +1705,13 @@ class ImportationController extends Controller
                                                         // ---------------------- Limits OW ------------------------------------------
 
                                                         if ($row_calculation['limits_ow'] == true) {
-                                                            $owrange = OverweightRange::where('lower_limit', $limits_val[0])
-                                                                ->where('upper_limit', $limits_val[1])
-                                                                ->where('amount', $row_calculation['ammount'])
-                                                                ->where('model_id', $surchargeObj->id)
-                                                                ->where('model_type', 'App\\LocalCharge')->get();
-                                                            //dd($datos_finales);
-                                                            if ($owrange->isEmpty()) {
-                                                                OverweightRange::create([
-                                                                    'lower_limit' => $limits_val[0],
-                                                                    'upper_limit' => $limits_val[1],
-                                                                    'amount' => $row_calculation['ammount'],
-                                                                    'model_id' => $surchargeObj->id,
-                                                                    'model_type' => 'App\\LocalCharge',
-                                                                ]);
-                                                            }
+                                                            OverweightRange::create([
+                                                                'lower_limit' => $limits_val[0],
+                                                                'upper_limit' => $limits_val[1],
+                                                                'amount' => $row_calculation['ammount'],
+                                                                'model_id' => $surchargeObj->id,
+                                                                'model_type' => 'App\\LocalCharge',
+                                                            ]);
                                                         }
                                                     } else {
                                                         $surchargeObj = $surchargeObj->first();
@@ -1775,21 +1805,13 @@ class ImportationController extends Controller
                                             // ---------------------- Limits OW ------------------------------------------
 
                                             if ($ct_options['limits_ow'] == true) {
-                                                $owrange = OverweightRange::where('lower_limit', $limits_val[0])
-                                                    ->where('upper_limit', $limits_val[1])
-                                                    ->where('amount', $ammount)
-                                                    ->where('model_id', $surchargeObj->id)
-                                                    ->where('model_type', 'App\\LocalCharge')->get();
-                                                //dd($datos_finales, $owrange,count((array)$owrange));
-                                                if ($owrange->isEmpty()) {
-                                                    OverweightRange::create([
-                                                        'lower_limit' => $limits_val[0],
-                                                        'upper_limit' => $limits_val[1],
-                                                        'amount' => $ammount,
-                                                        'model_id' => $surchargeObj->id,
-                                                        'model_type' => 'App\\LocalCharge',
-                                                    ]);
-                                                }
+                                                OverweightRange::create([
+                                                    'lower_limit' => $limits_val[0],
+                                                    'upper_limit' => $limits_val[1],
+                                                    'amount' => $ammount,
+                                                    'model_id' => $surchargeObj->id,
+                                                    'model_type' => 'App\\LocalCharge',
+                                                ]);
                                             }
                                         } else {
                                             $surchargeObj = $surchargeObj->first();
@@ -2174,19 +2196,12 @@ class ImportationController extends Controller
                                                                     'differentiator' => $differentiatorVal,
                                                                 ]);
                                                                 if ($row_calculation['limits_ow'] == true) {
-                                                                    $failowRange = FailOverweightRange::where('lower_limit', $limits_val[0])
-                                                                        ->where('upper_limit', $limits_val[1])
-                                                                        ->where('model_id', $failSurcharge->id)
-                                                                        ->where('model_type', 'App\\FailSurCharge')
-                                                                        ->get();
-                                                                    if ($failowRange->isEmpty()) {
-                                                                        FailOverweightRange::create([
-                                                                            'lower_limit' => $limits_val[0],
-                                                                            'upper_limit' => $limits_val[1],
-                                                                            'model_id' => $failSurcharge->id,
-                                                                            'model_type' => 'App\\FailSurCharge',
-                                                                        ]);
-                                                                    }
+                                                                    FailOverweightRange::create([
+                                                                        'lower_limit' => $limits_val[0],
+                                                                        'upper_limit' => $limits_val[1],
+                                                                        'model_id' => $failSurcharge->id,
+                                                                        'model_type' => 'App\\FailSurCharge',
+                                                                    ]);
                                                                 }
                                                             }
                                                         }
@@ -2262,19 +2277,13 @@ class ImportationController extends Controller
                                                         'differentiator' => $differentiatorVal,
                                                     ]);
                                                     if ($ct_options['limits_ow'] == true) {
-                                                        $failowRange = FailOverweightRange::where('lower_limit', $limits_val[0])
-                                                            ->where('upper_limit', $limits_val[1])
-                                                            ->where('model_id', $failSurcharge->id)
-                                                            ->where('model_type', 'App\\FailSurCharge')
-                                                            ->get();
-                                                        if ($failowRange->isEmpty()) {
-                                                            FailOverweightRange::create([
-                                                                'lower_limit' => $limits_val[0],
-                                                                'upper_limit' => $limits_val[1],
-                                                                'model_id' => $failSurcharge->id,
-                                                                'model_type' => 'App\\FailSurCharge',
-                                                            ]);
-                                                        }
+
+                                                        FailOverweightRange::create([
+                                                            'lower_limit' => $limits_val[0],
+                                                            'upper_limit' => $limits_val[1],
+                                                            'model_id' => $failSurcharge->id,
+                                                            'model_type' => 'App\\FailSurCharge',
+                                                        ]);
                                                     }
                                                 }
                                             }
@@ -2345,19 +2354,13 @@ class ImportationController extends Controller
                                                             'differentiator' => $differentiatorVal,
                                                         ]);
                                                         if ($row_calculation['limits_ow'] == true) {
-                                                            $failowRange = FailOverweightRange::where('lower_limit', $limits_val[0])
-                                                                ->where('upper_limit', $limits_val[1])
-                                                                ->where('model_id', $failSurcharge->id)
-                                                                ->where('model_type', 'App\\FailSurCharge')
-                                                                ->get();
-                                                            if ($failowRange->isEmpty()) {
-                                                                FailOverweightRange::create([
-                                                                    'lower_limit' => $limits_val[0],
-                                                                    'upper_limit' => $limits_val[1],
-                                                                    'model_id' => $failSurcharge->id,
-                                                                    'model_type' => 'App\\FailSurCharge',
-                                                                ]);
-                                                            }
+
+                                                            FailOverweightRange::create([
+                                                                'lower_limit' => $limits_val[0],
+                                                                'upper_limit' => $limits_val[1],
+                                                                'model_id' => $failSurcharge->id,
+                                                                'model_type' => 'App\\FailSurCharge',
+                                                            ]);
                                                         }
                                                     }
                                                 }
@@ -3614,11 +3617,20 @@ class ImportationController extends Controller
             return $item;
         });
 
-        $goodsurcharges = LocalCharge::with('currency', 'calculationtype', 'surcharge', 'typedestiny',
-                                            'localcharcarriers.carrier', 'localcharports.portOrig', 'localcharports.portDest',
-                                            'localcharcountries.countryOrig', 'localcharcountries.countryDest','overweight_ranges')->find($id);
+        $goodsurcharges = LocalCharge::with(
+            'currency',
+            'calculationtype',
+            'surcharge',
+            'typedestiny',
+            'localcharcarriers.carrier',
+            'localcharports.portOrig',
+            'localcharports.portDest',
+            'localcharcountries.countryOrig',
+            'localcharcountries.countryDest',
+            'overweight_ranges'
+        )->find($id);
         $is_ow_limits = !$goodsurcharges->overweight_ranges->isEmpty();
-        $limits = ($is_ow_limits)?$goodsurcharges->overweight_ranges->first():['lower_limit' => null,'upper_limit' => null];
+        $limits = ($is_ow_limits) ? $goodsurcharges->overweight_ranges->first() : ['lower_limit' => null, 'upper_limit' => null];
         $surchargeSelect = Surcharge::where('company_user_id', '=', $goodsurcharges->contract->company_user_id)->pluck('name', 'id');
         //dd($goodsurcharges,$is_ow_limits,$limits);
         return view('importationV2.Fcl.Body-Modals.GoodEditSurcharge', compact(
@@ -3890,7 +3902,7 @@ class ImportationController extends Controller
                     'model_type' => 'App\\LocalCharge',
                 ]);
             }
-        } else{
+        } else {
             $SurchargeId = $SurchargeId->first();
         }
 
@@ -4023,8 +4035,8 @@ class ImportationController extends Controller
         }
         $SurchargeId = $SurchargeId->load('overweight_ranges');
         $ow_r = $SurchargeId->overweight_ranges;
-        if($is_ow_limits){
-            if($ow_r->isEmpty()){
+        if ($is_ow_limits) {
+            if ($ow_r->isEmpty()) {
                 OverweightRange::create([
                     'lower_limit' => $lower_limit,
                     'upper_limit' => $upper_limit,
@@ -4032,20 +4044,20 @@ class ImportationController extends Controller
                     'model_id' => $SurchargeId->id,
                     'model_type' => 'App\\LocalCharge',
                 ]);
-            } else{
+            } else {
                 $ow_r = $ow_r->first();
                 $ow_r->upper_limit = $upper_limit;
                 $ow_r->lower_limit = $lower_limit;
                 $ow_r->update();
             }
-        } else{
-            if(!$ow_r->isEmpty()){
-                $ow_r->map(function($item,$key){
+        } else {
+            if (!$ow_r->isEmpty()) {
+                $ow_r->map(function ($item, $key) {
                     $item->delete();
                 });
             }
         }
-        
+
         $request->session()->flash('message.content', 'Surcharge Updated');
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
@@ -5188,14 +5200,7 @@ class ImportationController extends Controller
     {
         //$behaviourContainers = HelperAll::calculationByContainers(1);
         //$behaviourContainers = BehaviourPerContainer::pluck('name')->all();
-        $surchargeObj = LocalCharge::where('surcharge_id', 20625)
-            ->where('typedestiny_id', 3)
-            ->where('contract_id', 60575)
-            ->where('calculationtype_id', 2)
-            ->where('ammount', 50)
-            ->where('currency_id', 46)
-            ->has('localcharports');
-        $surchargeObj = $surchargeObj->get();
-        dd($surchargeObj->isEmpty());
+        $surchargeObj = FailSurCharge::with('fail_overweight_ranges')->find(978658);
+        dd($surchargeObj->fail_overweight_ranges->isEmpty());
     }
 }
