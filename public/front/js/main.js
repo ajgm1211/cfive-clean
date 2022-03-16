@@ -73049,14 +73049,14 @@ var index = {
 /* 383 */,
 /* 384 */,
 /* 385 */,
-/* 386 */,
-/* 387 */
+/* 386 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(494);
 
 
 /***/ }),
+/* 387 */,
 /* 388 */,
 /* 389 */,
 /* 390 */,
@@ -76627,11 +76627,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__layouts_DefaultLayout_vue__ = __webpack_require__(525);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__layouts_DefaultLayout_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__layouts_DefaultLayout_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(763);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(827);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__store__ = __webpack_require__(826);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_bootstrap_vue__ = __webpack_require__(312);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__assets_styles_sass_app_scss__ = __webpack_require__(832);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__assets_styles_sass_app_scss__ = __webpack_require__(831);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__assets_styles_sass_app_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__assets_styles_sass_app_scss__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__api__ = __webpack_require__(834);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__api__ = __webpack_require__(833);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_vuelidate__ = __webpack_require__(491);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_vuelidate___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_vuelidate__);
 
@@ -76778,7 +76778,7 @@ var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_DefaultLayout__ = __webpack_require__(525);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__layouts_DefaultLayout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__layouts_DefaultLayout__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__company__ = __webpack_require__(765);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__contact__ = __webpack_require__(818);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__contact__ = __webpack_require__(817);
 
 
 
@@ -76808,11 +76808,11 @@ var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_Company_Index__ = __webpack_require__(766);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_Company_Index___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__views_Company_Index__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_Company_Edit__ = __webpack_require__(793);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_Company_Edit__ = __webpack_require__(792);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_Company_Edit___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__views_Company_Edit__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_Company_Create__ = __webpack_require__(811);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_Company_Create__ = __webpack_require__(810);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_Company_Create___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__views_Company_Create__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__views_Company_Failed__ = __webpack_require__(812);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__views_Company_Failed__ = __webpack_require__(811);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__views_Company_Failed___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__views_Company_Failed__);
 
 
@@ -76860,7 +76860,7 @@ var normalizeComponent = __webpack_require__(33)
 /* script */
 var __vue_script__ = __webpack_require__(767)
 /* template */
-var __vue_template__ = __webpack_require__(792)
+var __vue_template__ = __webpack_require__(791)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -76904,7 +76904,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(387);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(386);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actions__ = __webpack_require__(450);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton__ = __webpack_require__(446);
@@ -81183,7 +81183,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(387);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(386);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actions__ = __webpack_require__(450);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_common_CustomInput__ = __webpack_require__(526);
@@ -82268,7 +82268,7 @@ var normalizeComponent = __webpack_require__(33)
 /* script */
 var __vue_script__ = __webpack_require__(789)
 /* template */
-var __vue_template__ = __webpack_require__(791)
+var __vue_template__ = __webpack_require__(790)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -82312,7 +82312,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(387);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(386);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_common_MainButton__ = __webpack_require__(446);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_common_MainButton___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_common_MainButton__);
@@ -82426,8 +82426,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 });
 
 /***/ }),
-/* 790 */,
-/* 791 */
+/* 790 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -82598,7 +82597,7 @@ if (false) {
 }
 
 /***/ }),
-/* 792 */
+/* 791 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -82757,19 +82756,19 @@ if (false) {
 }
 
 /***/ }),
-/* 793 */
+/* 792 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(794)
+  __webpack_require__(793)
 }
 var normalizeComponent = __webpack_require__(33)
 /* script */
-var __vue_script__ = __webpack_require__(796)
+var __vue_script__ = __webpack_require__(795)
 /* template */
-var __vue_template__ = __webpack_require__(810)
+var __vue_template__ = __webpack_require__(809)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -82808,13 +82807,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 794 */
+/* 793 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(795);
+var content = __webpack_require__(794);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -82834,7 +82833,7 @@ if(false) {
 }
 
 /***/ }),
-/* 795 */
+/* 794 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(44)(false);
@@ -82848,25 +82847,22 @@ exports.push([module.i, "", ""]);
 
 
 /***/ }),
-/* 796 */
+/* 795 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(387);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(386);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__partials_EditInputs__ = __webpack_require__(797);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__partials_EditInputs__ = __webpack_require__(796);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__partials_EditInputs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__partials_EditInputs__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store_modules_company_actions__ = __webpack_require__(450);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__partials_Contacts__ = __webpack_require__(804);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__partials_Contacts__ = __webpack_require__(803);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__partials_Contacts___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__partials_Contacts__);
 
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-//
-//
-//
 //
 //
 //
@@ -82934,19 +82930,19 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 });
 
 /***/ }),
-/* 797 */
+/* 796 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(798)
+  __webpack_require__(797)
 }
 var normalizeComponent = __webpack_require__(33)
 /* script */
-var __vue_script__ = __webpack_require__(800)
+var __vue_script__ = __webpack_require__(799)
 /* template */
-var __vue_template__ = __webpack_require__(803)
+var __vue_template__ = __webpack_require__(802)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -82985,13 +82981,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 798 */
+/* 797 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(799);
+var content = __webpack_require__(798);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -83011,7 +83007,7 @@ if(false) {
 }
 
 /***/ }),
-/* 799 */
+/* 798 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(44)(false);
@@ -83025,15 +83021,15 @@ exports.push([module.i, "", ""]);
 
 
 /***/ }),
-/* 800 */
+/* 799 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(387);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(386);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actions__ = __webpack_require__(450);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_icons_LeftArrow__ = __webpack_require__(801);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_icons_LeftArrow__ = __webpack_require__(800);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_icons_LeftArrow___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_icons_LeftArrow__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_common_CustomInput__ = __webpack_require__(526);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_common_CustomInput___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_common_CustomInput__);
@@ -83043,6 +83039,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -83125,8 +83128,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
   },
   data: function data() {
     return {
-      actions: __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actions__["a" /* default */]
-
+      actions: __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actions__["a" /* default */],
+      options_pdf_lenguages: [{ text: 'English', value: '1' }, { text: 'Spanish', value: '2' }, { text: 'Portuguese', value: '3' }]
     };
   },
 
@@ -83188,7 +83191,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 });
 
 /***/ }),
-/* 801 */
+/* 800 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
@@ -83196,7 +83199,7 @@ var normalizeComponent = __webpack_require__(33)
 /* script */
 var __vue_script__ = null
 /* template */
-var __vue_template__ = __webpack_require__(802)
+var __vue_template__ = __webpack_require__(801)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -83235,7 +83238,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 802 */
+/* 801 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -83275,7 +83278,7 @@ if (false) {
 }
 
 /***/ }),
-/* 803 */
+/* 802 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -83375,11 +83378,20 @@ var render = function() {
           _c(
             "b-col",
             [
-              _c("CustomInput", {
-                ref: "pdf_language",
-                attrs: { label: "Pdf Language", name: "pdf_language" },
+              _c(
+                "label",
+                { staticClass: "labelv2", attrs: { for: "select-lenguage" } },
+                [_vm._v("Pdf language")]
+              ),
+              _vm._v(" "),
+              _c("b-form-select", {
+                staticClass: "input-v2",
+                attrs: {
+                  name: "select-lenguage",
+                  options: _vm.options_pdf_lenguages
+                },
                 on: {
-                  blur: function($event) {
+                  change: function($event) {
                     return _vm.update()
                   }
                 },
@@ -83418,32 +83430,42 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c(
-            "b-col",
-            [
-              _c("CustomInput", {
-                ref: "whitelabel",
-                attrs: {
-                  type: "checkbox",
-                  label: "WhiteLabel",
-                  name: "whitelabel"
-                },
-                on: {
-                  blur: function($event) {
-                    return _vm.update()
-                  }
-                },
-                model: {
-                  value: _vm.companyData.whitelabel,
-                  callback: function($$v) {
-                    _vm.$set(_vm.companyData, "whitelabel", $$v)
+          _c("b-col", { staticClass: "input-box" }, [
+            _c(
+              "div",
+              { attrs: { id: "checkbox-edit" } },
+              [
+                _c(
+                  "b-form-checkbox",
+                  {
+                    attrs: {
+                      name: "checkbox-edit",
+                      value: "1",
+                      "unchecked-value": "0"
+                    },
+                    on: {
+                      change: function($event) {
+                        return _vm.update()
+                      }
+                    },
+                    model: {
+                      value: _vm.companyData.whitelabel,
+                      callback: function($$v) {
+                        _vm.$set(_vm.companyData, "whitelabel", $$v)
+                      },
+                      expression: "companyData.whitelabel"
+                    }
                   },
-                  expression: "companyData.whitelabel"
-                }
-              })
-            ],
-            1
-          )
+                  [
+                    _c("label", { attrs: { for: "" } }, [
+                      _vm._v("\n              WhiteLabel\n            ")
+                    ])
+                  ]
+                )
+              ],
+              1
+            )
+          ])
         ],
         1
       )
@@ -83462,19 +83484,19 @@ if (false) {
 }
 
 /***/ }),
-/* 804 */
+/* 803 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(805)
+  __webpack_require__(804)
 }
 var normalizeComponent = __webpack_require__(33)
 /* script */
-var __vue_script__ = __webpack_require__(807)
+var __vue_script__ = __webpack_require__(806)
 /* template */
-var __vue_template__ = __webpack_require__(809)
+var __vue_template__ = __webpack_require__(808)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -83513,13 +83535,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 805 */
+/* 804 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(806);
+var content = __webpack_require__(805);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -83539,7 +83561,7 @@ if(false) {
 }
 
 /***/ }),
-/* 806 */
+/* 805 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(44)(false);
@@ -83553,14 +83575,14 @@ exports.push([module.i, "", ""]);
 
 
 /***/ }),
-/* 807 */
+/* 806 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(387);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(386);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actionContact__ = __webpack_require__(808);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actionContact__ = __webpack_require__(807);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton__ = __webpack_require__(446);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_common_MainButton__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_common_DataTable__ = __webpack_require__(451);
@@ -83630,7 +83652,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 });
 
 /***/ }),
-/* 808 */
+/* 807 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -83645,7 +83667,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 });
 
 /***/ }),
-/* 809 */
+/* 808 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -83682,7 +83704,7 @@ if (false) {
 }
 
 /***/ }),
-/* 810 */
+/* 809 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -83705,11 +83727,7 @@ var render = function() {
                 { attrs: { title: "Contacts", active: "" } },
                 [_c("Contacts")],
                 1
-              ),
-              _vm._v(" "),
-              _c("b-tab", { attrs: { title: "Second" } }, [
-                _c("p", [_vm._v("I'm the second tab")])
-              ])
+              )
             ],
             1
           )
@@ -83730,7 +83748,7 @@ if (false) {
 }
 
 /***/ }),
-/* 811 */
+/* 810 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var normalizeComponent = __webpack_require__(33)
@@ -83760,19 +83778,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 812 */
+/* 811 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(813)
+  __webpack_require__(812)
 }
 var normalizeComponent = __webpack_require__(33)
 /* script */
-var __vue_script__ = __webpack_require__(815)
+var __vue_script__ = __webpack_require__(814)
 /* template */
-var __vue_template__ = __webpack_require__(817)
+var __vue_template__ = __webpack_require__(816)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -83811,13 +83829,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 813 */
+/* 812 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(814);
+var content = __webpack_require__(813);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -83837,7 +83855,7 @@ if(false) {
 }
 
 /***/ }),
-/* 814 */
+/* 813 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(44)(false);
@@ -83851,14 +83869,14 @@ exports.push([module.i, "", ""]);
 
 
 /***/ }),
-/* 815 */
+/* 814 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_common_DataTable__ = __webpack_require__(451);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_common_DataTable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_common_DataTable__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actionFailed__ = __webpack_require__(816);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actionFailed__ = __webpack_require__(815);
 //
 //
 //
@@ -83901,7 +83919,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 816 */
+/* 815 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -83917,7 +83935,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 817 */
+/* 816 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -83969,15 +83987,15 @@ if (false) {
 }
 
 /***/ }),
-/* 818 */
+/* 817 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_Contact_Index__ = __webpack_require__(819);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_Contact_Index__ = __webpack_require__(818);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_Contact_Index___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__views_Contact_Index__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_Contact_Edit__ = __webpack_require__(825);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_Contact_Edit__ = __webpack_require__(824);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_Contact_Edit___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__views_Contact_Edit__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_Contact_Create__ = __webpack_require__(826);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_Contact_Create__ = __webpack_require__(825);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_Contact_Create___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__views_Contact_Create__);
 
 
@@ -84009,19 +84027,19 @@ if (false) {
 }]);
 
 /***/ }),
-/* 819 */
+/* 818 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(820)
+  __webpack_require__(819)
 }
 var normalizeComponent = __webpack_require__(33)
 /* script */
-var __vue_script__ = __webpack_require__(822)
+var __vue_script__ = __webpack_require__(821)
 /* template */
-var __vue_template__ = __webpack_require__(824)
+var __vue_template__ = __webpack_require__(823)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -84060,13 +84078,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 820 */
+/* 819 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(821);
+var content = __webpack_require__(820);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -84086,7 +84104,7 @@ if(false) {
 }
 
 /***/ }),
-/* 821 */
+/* 820 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(44)(false);
@@ -84100,14 +84118,14 @@ exports.push([module.i, "", ""]);
 
 
 /***/ }),
-/* 822 */
+/* 821 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(387);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(386);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_modules_contact_actions__ = __webpack_require__(823);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_modules_contact_actions__ = __webpack_require__(822);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton__ = __webpack_require__(446);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_common_MainButton__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_common_DataTable__ = __webpack_require__(451);
@@ -84184,7 +84202,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 });
 
 /***/ }),
-/* 823 */
+/* 822 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -84212,7 +84230,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 });
 
 /***/ }),
-/* 824 */
+/* 823 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -84267,7 +84285,7 @@ if (false) {
 }
 
 /***/ }),
-/* 825 */
+/* 824 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var normalizeComponent = __webpack_require__(33)
@@ -84297,7 +84315,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 826 */
+/* 825 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var normalizeComponent = __webpack_require__(33)
@@ -84327,14 +84345,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 827 */
+/* 826 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(74);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(378);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_auth__ = __webpack_require__(828);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_auth__ = __webpack_require__(827);
 
 
 
@@ -84357,13 +84375,13 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$store = store;
 /* harmony default export */ __webpack_exports__["a"] = (store);
 
 /***/ }),
-/* 828 */
+/* 827 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__state__ = __webpack_require__(829);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mutations__ = __webpack_require__(830);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions__ = __webpack_require__(831);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__state__ = __webpack_require__(828);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mutations__ = __webpack_require__(829);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions__ = __webpack_require__(830);
 
 
 
@@ -84376,7 +84394,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$store = store;
 });
 
 /***/ }),
-/* 829 */
+/* 828 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -84387,7 +84405,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$store = store;
 });
 
 /***/ }),
-/* 830 */
+/* 829 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -84406,7 +84424,7 @@ function SET_TOKEN(state, token) {
 }
 
 /***/ }),
-/* 831 */
+/* 830 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -84426,13 +84444,13 @@ function setCurrentUser(_ref2, user) {
 }
 
 /***/ }),
-/* 832 */
+/* 831 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(833);
+var content = __webpack_require__(832);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -84457,7 +84475,7 @@ if(false) {
 }
 
 /***/ }),
-/* 833 */
+/* 832 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(44)(false);
@@ -84465,13 +84483,13 @@ exports = module.exports = __webpack_require__(44)(false);
 
 
 // module
-exports.push([module.i, "section {\n  width: 100%;\n  height: 100%;\n  padding: 20px; }\n\n.body-container {\n  background-color: #fff;\n  border-radius: 10px;\n  width: 100%;\n  height: fit-content;\n  padding: 20px; }\n\nh2 {\n  color: #006bfa;\n  font-size: 24px;\n  font-weight: 500;\n  margin: 0; }\n\n.head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  margin-bottom: 20px; }\n\n/* width */\n::-webkit-scrollbar {\n  width: 8px; }\n\n/* Track */\n::-webkit-scrollbar-track {\n  background: transparent; }\n\n/* Handle */\n::-webkit-scrollbar-thumb {\n  background: #f2f2f2;\n  border-radius: 5px; }\n\n/* Handle on hover */\n::-webkit-scrollbar-thumb:hover {\n  background: #b8b8b8; }\n\n.table th,\n.table td {\n  vertical-align: middle; }\n\n.table {\n  min-height: 200px; }\n\n.main-btn {\n  background-color: #006bfa;\n  border: none;\n  outline: none;\n  color: white;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  height: fit-content;\n  align-items: center;\n  padding: 5px 25px;\n  text-transform: capitalize;\n  box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24);\n  border-radius: 40px;\n  margin-left: 3px; }\n  .main-btn:hover {\n    background-color: #0051bb;\n    box-shadow: 0px 4px 8px rgba(28, 111, 255, 0.295); }\n\n.head-btns {\n  display: flex;\n  align-items: center; }\n  .head-btns .btn.dropdown-toggle.btn-secondary {\n    background-color: #006bfa !important;\n    border: none !important;\n    outline: none;\n    color: white;\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n    height: fit-content;\n    align-items: center;\n    padding: 7px 25px;\n    text-transform: capitalize;\n    box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24) !important;\n    border-radius: 40px; }\n    .head-btns .btn.dropdown-toggle.btn-secondary:hover {\n      background-color: #0051bb;\n      box-shadow: 0px 4px 8px rgba(28, 111, 255, 0.295); }\n\n/* .table-responsive {\n    overflow: initial !important;\n    overflow-x: initial !important;\n} */\n.sc-table.table-sm tr:nth-child(odd) {\n  background-color: transparent !important; }\n\n/* .sc-table.table-sm tr:nth-child(even) {\n    background-color: #fbfbfb !important;\n} */\n.btn.btn-secondary {\n  background-color: transparent !important;\n  border: 2px solid #80888B !important; }\n\n.btn.btn-secondary:focus i {\n  color: #006bf9; }\n\n.table-responsive-sm {\n  overflow-x: scroll !important; }\n\n/* @media only screen and (min-width: 320px) and (max-width: 1024px) {\n    .table-responsive-sm {\n        overflow-x: scroll !important;\n    }   \n}\n */\na,\ninput,\nh1,\nh2,\nh3,\nh4,\nh5,\nh6,\nspan,\nli,\np,\nlabel,\ntextarea,\ntd,\nth,\ntr,\nlegend,\nbutton,\nb,\ndiv,\n.h6 {\n  font-family: \"Sailec\" !important; }\n\n.multiselect .multiselect__select {\n  width: 15px;\n  height: 17px;\n  padding: 0px;\n  right: 10px;\n  top: 17px;\n  z-index: 5; }\n\n.multiselect .multiselect__tags {\n  font-size: 13px !important;\n  min-height: 40px !important;\n  border: 2px solid #eee !important;\n  border-radius: 0.25rem !important;\n  height: auto !important; }\n\n.multiselect__content-wrapper::-webkit-scrollbar,\n#carriers-list::-webkit-scrollbar {\n  width: 6px; }\n\n.multiselect__content-wrapper::-webkit-scrollbar-thumb,\n#carriers-list::-webkit-scrollbar-thumb,\n.table-responsive-sm::-webkit-scrollbar-thumb {\n  background: #aaa;\n  border-radius: 10px; }\n\n.multiselect__content-wrapper::-webkit-scrollbar-thumb:hover,\n#carriers-list::-webkit-scrollbar-thumb:hover,\n.table-responsive-sm::-webkit-thumb:hover {\n  background: #006bf9; }\n\n.tab-pane .card-body::-webkit-scrollbar,\n.table-responsive-sm::-webkit-scrollbar {\n  height: 5px; }\n\n.tab-pane .card-body::-webkit-scrollbar-thumb {\n  background: #aaa;\n  border-radius: 10px; }\n\n.tab-pane .card-body::-webkit-scrollbar-thumb:hover {\n  background: #006bf9; }\n\n/*** genetal styles ***/\n.m-body {\n  background-color: #f8f8fc !important;\n  height: auto; }\n\n.btns-form-modal {\n  padding: 25px 40px 25px 40px;\n  position: absolute;\n  bottom: -82.5px;\n  left: 0;\n  background-color: #fff;\n  border-top: 1px solid #dee2e6;\n  width: 100%;\n  border-radius: 0px 0px 3.2px 3.2px;\n  display: flex;\n  justify-content: flex-end;\n  align-items: center; }\n\n.btns-form-modal button:nth-child(1) {\n  background: transparent;\n  border: none;\n  color: #ff6464;\n  margin-right: 15px; }\n\n.btns-form-modal button:nth-child(1):hover:not(:disabled) {\n  color: #ff6464 !important; }\n\n.status-st {\n  color: #fff;\n  font-size: 9px;\n  border-radius: 5px;\n  padding: 5px 10px;\n  text-transform: uppercase; }\n\n.truncate {\n  max-width: 125px !important;\n  white-space: nowrap !important;\n  overflow: hidden !important;\n  text-overflow: ellipsis !important; }\n\n.truncate-contract {\n  max-width: 300px !important; }\n\n.publish {\n  background-color: #5fe2a0; }\n\n.incomplete {\n  background-color: #FAB429; }\n\n.expired {\n  background-color: #ff6464; }\n\n.incomplete::before {\n  content: 'processing';\n  font-weight: bold; }\n\n.publish::before {\n  content: 'published';\n  font-weight: bold; }\n\n.expired::before {\n  content: 'expired';\n  font-weight: bold; }\n\n/**** --- Table Card--- ****/\n.card {\n  border: 2px solid rgba(0, 0, 0, 0.125);\n  border-radius: 0.50rem; }\n\n.card-title {\n  color: #031b4e;\n  font-weight: bold; }\n\n.btn-bg {\n  color: #fff !important;\n  font-weight: bold;\n  border: none !important;\n  background-color: #006bf9 !important;\n  transition: all 100ms ease-in-out;\n  box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24) !important; }\n\n.btn-bg:hover {\n  box-shadow: none !important; }\n\n.btn-bg:hover {\n  opacity: 0.8; }\n\n.btn-link {\n  font-weight: bold; }\n\n.form-control:focus {\n  box-shadow: none; }\n\ntable thead {\n  background-color: transparent !important;\n  border-bottom: 1px solid #eee;\n  border-top: 1px solid #eee; }\n\ntable tr th {\n  color: #031b4e;\n  font-weight: bold !important; }\n\ntable tr td {\n  color: #031b4e; }\n\ntable tr th:focus {\n  outline: none; }\n\n.form-inline {\n  position: relative; }\n\n.form-inline i {\n  position: absolute;\n  left: 12px;\n  color: #525f7e; }\n\n.form-inline input {\n  border: 2px solid #eee;\n  padding-left: 33px; }\n\n.custom-control-label::before,\n.custom-control-label::after,\n.custom-control-input {\n  width: 1.5rem;\n  height: 1.5rem;\n  border-width: 2px;\n  border-color: #EEE; }\n\n.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before,\n.custom-checkbox .custom-control-input ~ .custom-control-label::before {\n  box-shadow: none; }\n\n/*.input-check[type=checkbox] + label {\n    //display: block;\n    margin: 0.2em;\n    cursor: pointer;\n    padding: 0.2em;\n}\n.input-check[type=checkbox] {\n    display: none;\n}\n.input-check[type=checkbox] + label:before {\n    content: \"\\2714\";\n    border: 0.15em solid #006bf9;\n    border-radius: 0.2em;\n    display: flex; \n    align-items: center;\n    justify-content: center;\n    width: 1.3em;\n    height: 1.3em;\n    padding-left: 0.15em;\n    margin-right: 0.15em;\n    color: transparent;\n    transition: .2s;\n    font-size: 14px;\n}\n.input-check[type=checkbox] + label:active:before {\n    transform: scale(0);\n}\n.input-check[type=checkbox]:checked + label:before {\n    color: #006bf9;\n}\n.input-check[type=checkbox]:disabled + label:before {\n    transform: scale(1);\n    border-color: #006bf9;\n}\n.input-check[type=checkbox]:checked:disabled + label:before {\n    transform: scale(1);\n    background-color: transparent;\n    border-color: #006bf9;\n}*/\ntd.checkbox-add-fcl,\ntd.actions-add-fcl {\n  width: 45px; }\n\n/* .btn.btn-secondary {\n    background-color: transparent!important;\n    border: 2px solid #80888B !important;\n}\n\naqui\n\n.btn.btn-secondary:focus i {\n    color: #006bf9;\n} */\n.action-app {\n  padding: 0.1rem 0.40rem; }\n\n.action-app i {\n  color: #eee; }\n\n#actions-box[type=checkbox]:checked + .popup-actions {\n  display: inline-block; }\n\n.table-hover tbody tr:hover {\n  background-color: transparent !important; }\n\n#actions-box {\n  display: none; }\n\n.actions-box {\n  padding: 5px;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  border-radius: 5px;\n  position: relative;\n  cursor: pointer;\n  border: 2px solid #eee; }\n\n.actions-box span {\n  position: relative;\n  z-index: 1; }\n\n.all-action-app {\n  position: absolute;\n  right: 30px; }\n\n.popup-actions[data-action=\"false\"] {\n  background: red; }\n\n.actions-box:hover .icon-add-fcl {\n  color: #006bf9; }\n\n.popup-actions {\n  display: none;\n  top: 30px;\n  right: 0;\n  padding: 5px 10px;\n  background: #fff;\n  border: 2px solid #eee;\n  border-radius: 5px;\n  position: absolute;\n  z-index: 10; }\n\n.active {\n  display: block; }\n\n.btn-action {\n  width: 100%;\n  display: block;\n  text-align: right;\n  font-weight: bold;\n  font-size: 14px;\n  color: #525f7e;\n  border: none;\n  background: transparent; }\n\n.btn-action:hover {\n  text-decoration: underline; }\n\n.btn-action:focus {\n  outline: none; }\n\n.btn-action:nth-child(3) {\n  color: #ff6464; }\n\n.btn-action-harbor {\n  width: 100%;\n  display: block;\n  text-align: right;\n  font-weight: bold;\n  font-size: 14px;\n  color: #525f7e;\n  border: none;\n  background: transparent; }\n\n.btn-action-harbor:hover {\n  text-decoration: underline; }\n\n.btn-action-harbor:focus {\n  outline: none; }\n\n/**** Modal Add Contract ***/\n.modal-body {\n  background-color: #f8f8fc !important; }\n\n.modal-footer button:nth-child(1) {\n  border: none !important;\n  color: #ff6464;\n  font-weight: bold; }\n\n.modal-footer button:nth-child(2) {\n  background-color: #006bf9 !important;\n  border: none !important; }\n\n.add-fcl input {\n  border-width: 2px; }\n\n.mx-datepicker-range {\n  width: 100% !important; }\n\n.mx-input {\n  padding-top: 6px !important;\n  padding-bottom: 6px !important;\n  padding-right: 6px !important;\n  padding-left: 30px !important; }\n\ni.mx-icon-calendar {\n  left: 8px;\n  right: 0px; }\n\n.modal-input {\n  padding-left: 15px !important;\n  padding-right: 15px !important; }\n\n.modal-header h5 {\n  font-weight: bold !important;\n  color: #031b4e !important; }\n\n.multiselect__option--highlight,\n.multiselect__option--selected {\n  background-color: #dddddd !important;\n  color: #333333 !important; }\n\n.form-control {\n  min-height: 40px !important; }\n\n.multiselect__tags-wrap {\n  width: 100% !important; }\n\n.multiselect__option {\n  font-size: 12px;\n  padding: 6px !important;\n  min-height: 30px !important; }\n\n.modal-input label {\n  color: #626e8b;\n  font-weight: medium; }\n\n.multiselect__select {\n  width: 30px;\n  height: 25px; }\n\n.multiselect__select::before {\n  font-family: 'FontAwesome' !important;\n  content: \"\\F107\" !important;\n  border: none !important;\n  font-size: 16px;\n  color: #525f7f;\n  top: 10% !important; }\n\n.multiselect__single {\n  top: 5px;\n  color: #031b4e;\n  font-size: 12px !important;\n  margin-bottom: 0px !important; }\n\n.multiselect__content-wrapper {\n  bottom: auto !important;\n  max-height: 140px !important;\n  box-shadow: 0px 0px 13px 3px rgba(0, 0, 0, 0.1) !important;\n  margin-top: 3px !important;\n  overflow-y: auto !important;\n  overflow-x: hidden !important; }\n\n.multiselect__content {\n  display: block !important; }\n\n.multiselect:hover .multiselect__tags {\n  border-color: #006bf9 !important; }\n\n/* Datepicker */\n.q-input::placeholder,\n.text-muted {\n  color: #adadad !important; }\n\n.text-break {\n  display: flex;\n  align-items: center;\n  color: #031b4e;\n  font-size: 12px !important; }\n\n.b-form-datepicker {\n  border: 2px solid #eee !important; }\n\n.b-form-datepicker:hover {\n  border-color: #006bf9 !important; }\n\n.b-form-btn-label-control.b-form-datepicker {\n  height: 40px !important;\n  min-height: 40px !important; }\n\n.vue-daterange-picker.s-input .reportrange-text i {\n  padding-top: 6px;\n  font-size: 30px; }\n\n/*** --- Tabs --- ***/\n.tabs ul {\n  margin-bottom: -0.75rem !important; }\n\n.card-tabs {\n  margin-top: 25px;\n  background: transparent !important;\n  border: none !important; }\n\n.card-tabs .card-header {\n  padding-left: 30px;\n  padding-right: 50px;\n  border-width: 2px !important;\n  background: transparent !important; }\n\n.nav-tabs .nav-link.active {\n  background: transparent !important;\n  border-color: #006bf9 !important;\n  border-width: 4px !important;\n  font-weight: bold !important; }\n\n.nav-tabs .nav-link {\n  border: none;\n  font-size: 16px;\n  color: #031b4e !important; }\n\n.multiselect__placeholder {\n  white-space: nowrap;\n  margin-bottom: 0px !important;\n  padding-top: 0px !important;\n  padding-left: 3px; }\n\n.search .multiselect__input,\n.search .multiselect__single {\n  margin-bottom: 0px; }\n\n.select-all {\n  position: relative;\n  top: 25px;\n  left: 11px; }\n\n#id_carriers .multiselect__tags,\n.multiselect-height .multiselect__tags {\n  height: 35px !important; }\n\n/*** Validations ***/\n.form-control.is-invalid:focus,\n.form-control.is-valid:focus {\n  box-shadow: none !important; }\n\n/*** --- REMARK --- ***/\n.remarks {\n  min-height: 150px; }\n\n.update-remark {\n  width: 30px;\n  height: 30px;\n  bottom: 3%;\n  right: 2%;\n  border-radius: 100px;\n  background: #19c39b;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  position: absolute;\n  color: #fff; }\n\n.title-dropzone {\n  font-weight: bold;\n  color: #031b4e;\n  position: absolute;\n  top: 15px;\n  left: 35px; }\n\n.title-card {\n  color: #031b4e; }\n\n#dropzone {\n  border: none; }\n\n.no-padding .card-body {\n  padding: 0px; }\n\n.reportrange-text {\n  height: 35px;\n  border: 2px solid #eee !important; }\n\n.multiselect--disabled {\n  min-height: 35px !important; }\n  .multiselect--disabled .multiselect__select {\n    height: 26px; }\n\n.vue-daterange-picker {\n  width: 100%;\n  white-space: nowrap; }\n\ninput.multiselect__input {\n  font-size: 13px;\n  padding-left: 3px; }\n\ninput.multiselect__input:focus {\n  border: 0px;\n  outline: none; }\n\n#id_name input {\n  font-size: 13px;\n  color: #35495e !important;\n  border: 2px solid #eee !important; }\n\n#id_name input::placeholder {\n  color: #adadad !important; }\n\n.form-group legend {\n  font-size: 12px !important;\n  color: #626e8b !important; }\n\n@media only screen and (max-width: 425px) {\n  .nav-tabs .nav-item {\n    text-align: center;\n    width: 100% !important; }\n  .nav-tabs .nav-link {\n    font-size: 16px !important; }\n  .card-body {\n    overflow-x: scroll; }\n  .form-inline i {\n    bottom: 16px; } }\n\n.th-max {\n  max-width: 60px; }\n\n.multiselect__tags {\n  font-size: 12px !important; }\n\n.form-control {\n  font-size: 0.85rem; }\n\n.col-pr-5 {\n  padding-right: 5px !important; }\n\n.col-pl-5 {\n  padding-left: 5px !important; }\n\n/* .tab-pane .card-body {\n    overflow-x: scroll;\n} */\n.btn-adds {\n  right: 60px;\n  /* position: fixed; */ }\n\n.dropzone.dz-started .dz-message {\n  width: 382px !important;\n  float: left !important;\n  display: block !important;\n  margin: 0px; }\n\n#dropzone {\n  height: 100% !important; }\n\n#dropzone .dz-preview {\n  width: 160px;\n  height: 200px;\n  display: inline-block;\n  border-radius: 5px; }\n\n#dropzone .dz-preview .dz-image {\n  width: 100%;\n  height: 100%;\n  border-radius: 5px; }\n\n#dropzone .dz-preview .dz-image > div {\n  width: inherit;\n  height: inherit;\n  border-radius: 50%;\n  background-size: contain; }\n\n#dropzone .dz-preview .dz-image > img {\n  width: 100%; }\n\n#dropzone .dz-preview .dz-details {\n  color: white;\n  transition: opacity .2s linear;\n  text-align: center;\n  border-radius: 5px; }\n\n#dropzone .dz-success-mark,\n.dz-error-mark,\n.dz-remove {\n  display: none; }\n\n#dropzone .dz-remove {\n  border-radius: 5px !important;\n  padding: 5px !important;\n  margin-left: 0px !important;\n  right: 19%; }\n\n.no-scroll .card-body {\n  overflow-x: inherit !important; }\n\n.pagination {\n  width: 100%;\n  display: flex; }\n\n/* Quote */\n.quote-header {\n  width: 100%;\n  padding-top: 50px;\n  background-color: #ffffff; }\n\n.p-light {\n  color: rgba(0, 0, 0, 0.5); }\n\n.quote-link {\n  font-size: 16px; }\n  .quote-link i {\n    margin-right: 10px;\n    font-size: 18px; }\n\n.quote-content-tab .tab-content {\n  background-color: #f8f8fc !important; }\n\n.quote-card {\n  display: flex;\n  flex-direction: column; }\n\n.quote-card div:nth-child(1) {\n  display: flex;\n  align-items: center;\n  justify-content: space-between; }\n\n.gmap {\n  border: 2px solid #eeeeee;\n  padding: 6px 15px;\n  display: block;\n  border-radius: 4px !important; }\n\n.gmap:hover,\n.gmap:focus {\n  border-color: #006BFA !important; }\n\n.warning-no-address {\n  width: 100%;\n  height: 100px;\n  display: flex;\n  justify-content: center;\n  align-items: center; }\n\n.quote-card div:nth-child(2) {\n  display: flex;\n  margin-top: 10px;\n  justify-content: space-between; }\n\n@media only screen and (min-width: 426px) {\n  .quote-card {\n    flex-direction: row;\n    justify-content: space-between; } }\n\n.label-text {\n  color: #182026;\n  font-size: 10px;\n  font-weight: 500;\n  text-transform: uppercase; }\n\n.q-label {\n  width: 100%;\n  margin-top: 15px;\n  margin-bottom: 15px; }\n\n/* .btn-pdf {\n    right: 15px;\n    position: absolute;\n} */\n.q-input {\n  padding-top: 4px;\n  padding-bottom: 4px;\n  color: #071C4B !important;\n  font-size: 12px !important;\n  font-weight: 500 !important;\n  border: 2px solid #eee !important; }\n\n.form-control {\n  border: 2px solid #eee !important; }\n\n#id_exp_date__value_,\n#id_validity_start__value_,\n#id_validity_end__value_ {\n  border: none !important; }\n\n.q-width {\n  width: 50%; }\n\n.q-input:focus,\n.form-control:hover,\n.q-input:hover {\n  border-color: #006BFA !important; }\n\n.q-label:focus span.label-text {\n  color: #006BFA !important; }\n\n.q-textarea {\n  width: 100%;\n  height: 100%;\n  color: #071C4B;\n  min-height: 100px;\n  max-height: 100px;\n  border-radius: 5px;\n  padding-left: 15px;\n  border: 2px solid #e8e8e8 !important; }\n\n.q-textarea:focus {\n  outline: none;\n  border-color: #006BFA !important; }\n\n.btn-delete {\n  border: none;\n  color: #ff6464;\n  background: transparent; }\n\n.q-thead {\n  border-bottom: 2px solid #031b4e !important; }\n  .q-thead th {\n    padding: 0.75rem !important; }\n    .q-thead th span {\n      font-size: 12px !important; }\n\n.q-title {\n  color: #031b4e;\n  font-weight: 600;\n  font-size: 14px; }\n\n.q-select {\n  width: 30% !important; }\n\n.q-total {\n  border-top: 1px solid #031b4e !important; }\n\n.modal-width {\n  width: 80% !important; }\n\n.q-card .card-body {\n  overflow: inherit !important; }\n\n.q-modal {\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100vh;\n  position: fixed;\n  display: none;\n  align-items: center;\n  justify-content: center;\n  background: rgba(0, 0, 0, 0.6); }\n\n.q-modal-content {\n  width: 70%;\n  height: 50%;\n  padding: 25px;\n  position: relative;\n  background: #fff;\n  border-radius: 5px; }\n\n.showModal {\n  display: flex !important; }\n\n.q-modal-close {\n  top: 10px;\n  right: 10px;\n  border: none;\n  color: #ff6464;\n  position: absolute;\n  background: transparent; }\n\n.multiselect__placeholder {\n  font-size: 12px;\n  position: relative;\n  top: 2px; }\n\n/* Ocean Freight */\n.q-freight-card {\n  margin-bottom: 25px;\n  transition: all 300ms ease-in-out; }\n\n.q-freight-card:hover {\n  border-color: #031b4e !important; }\n\n.table-sm,\n.table-sm td {\n  padding: 0.75rem !important; }\n\n.custom-control-label span {\n  top: 7px;\n  left: 7px;\n  position: relative; }\n\n.hideFreight {\n  height: 0;\n  overflow: hidden;\n  transition: all 150ms ease-in-out; }\n\n.showFreight {\n  height: auto !important; }\n\n.turnButton {\n  transition: all 300ms ease-in-out;\n  transform: rotate(180deg) !important; }\n\n.badge {\n  font-size: 12px !important; }\n\n.multiselect__tag {\n  margin-bottom: 0px !important; }\n\n.md-field {\n  margin: -15px 0 -5px !important; }\n\n.md-field label {\n  font-size: 10px !important; }\n\n.md-field.md-has-value .md-input {\n  font-size: 12px !important; }\n\n.md-field.md-has-value label {\n  opacity: 0 !important; }\n\n.closeFilter {\n  display: none !important; }\n\n.openFilter {\n  display: block !important; }\n\n.btn-filter {\n  cursor: pointer; }\n\n/* Search */\n.btn.btn-secondary.btn-aditonal-services {\n  float: right;\n  color: #006BFA;\n  font-size: 12px;\n  font-weight: 900;\n  letter-spacing: 1px;\n  border: none !important;\n  text-transform: uppercase; }\n\n.t-as,\n.t-recent {\n  color: #80888B;\n  font-weight: 900;\n  font-size: 14px;\n  letter-spacing: 2px;\n  text-transform: uppercase; }\n\n.t-recent b {\n  color: #071C4B; }\n\n.result-action {\n  display: flex;\n  justify-content: space-between;\n  align-items: center; }\n  .result-action a {\n    color: #43B54E;\n    font-weight: 900;\n    font-size: 10px;\n    text-transform: uppercase; }\n\n.addcontract-createquote {\n  display: flex;\n  justify-content: flex-end;\n  align-items: center; }\n\n@media only screen and (max-width: 768px) {\n  .margin-res {\n    margin: 0px !important; }\n    .margin-res .contract-title {\n      text-align: center; }\n  .calendar-icon {\n    left: 40px; } }\n\n@media only screen and (max-width: 425px) {\n  .result-action {\n    align-items: start;\n    justify-content: center;\n    flex-direction: column;\n    margin-bottom: 10px; }\n  .margin-res {\n    margin: 0px !important; }\n    .margin-res .contract-title {\n      text-align: center; }\n  .carrier-img {\n    padding: 50px 0px; }\n  .result-and-filter {\n    flex-flow: inherit;\n    margin-bottom: 15px; }\n  .addcontract-createquote {\n    justify-content: flex-start; } }\n\n.btn.btn-secondary.rs-btn {\n  border: none !important;\n  color: #006BFA;\n  font-size: 10px;\n  font-weight: 900;\n  letter-spacing: 1px;\n  border: none !important;\n  text-transform: uppercase; }\n\n.btn.btn-secondary.rs-btn:hover {\n  color: #071C4B !important; }\n\n/* Recent Search */\n.recent-search {\n  display: flex;\n  border-radius: 4px;\n  flex-direction: column;\n  align-items: center;\n  justify-items: center;\n  background: #ffffff;\n  position: relative;\n  transition: all 300ms ease-in-out;\n  height: 250px; }\n\n@media only screen and (max-width: 375px) {\n  .recent-search {\n    height: 300px; } }\n\n.recent-search:hover {\n  box-shadow: 0px 0px 30px 15px rgba(0, 0, 0, 0.04); }\n\n.recent-search a {\n  width: 100%;\n  color: #fff;\n  font-size: 16px;\n  font-weight: 900;\n  letter-spacing: 1px;\n  padding: 10px 0px;\n  border-radius: 4px;\n  text-align: center;\n  background: #006BFA;\n  text-transform: uppercase;\n  cursor: pointer !important;\n  position: absolute;\n  bottom: 0px; }\n\n.recent-search a:hover {\n  text-decoration: none;\n  background: rgba(0, 107, 250, 0.8); }\n\n.recent-search p {\n  font-size: 18px;\n  color: #071C4B;\n  text-align: center; }\n\n.recent-search span {\n  color: #006BFA; }\n\n.recent-search .direction-spot {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center; }\n\n.recent-search b {\n  color: #006BFA; }\n\n.recent-search .direction-spot .circle {\n  width: 12px;\n  height: 12px;\n  border-radius: 50px;\n  border: 2px solid #80888B;\n  background-color: transparent; }\n\n.recent-search .direction-spot .line {\n  width: 2px;\n  height: 15px;\n  background-color: #80888B; }\n\n.recent-search .direction-spot .fill-circle {\n  border-color: #006BFA;\n  background-color: #006BFA; }\n\n.filter-search {\n  position: relative;\n  top: 4px; }\n\n.filter-search b {\n  text-transform: uppercase; }\n\n.filter-search .multiselect__single {\n  background: #f8f8fc; }\n\n.filter-search .multiselect.s-input {\n  min-height: 25px !important; }\n\n.vue-daterange-picker.s-input .reportrange-text i {\n  padding-top: 6px;\n  font-size: 25px; }\n\n.recent-search img {\n  left: 22px;\n  top: 10px;\n  width: 34px;\n  position: absolute; }\n\n/* Search Result */\n@media only screen and (max-width: 768px) {\n  .destination-search {\n    padding-right: 30px !important; }\n  .datepicker-search {\n    padding-left: 30px !important; } }\n\n/* @media only screen and (max-width: 425px) {\n    .destination-search {\n        padding-left: 10px !important;\n    }\n    .datepicker-search,\n    .origin-search {\n        padding-right: 10px !important;\n    }\n} */\n.btn.btn-secondary.btn-create-quote {\n  color: #ffffff;\n  font-weight: 900;\n  background: #006BFA !important;\n  border-radius: 4px !important;\n  border: none !important;\n  position: relative;\n  box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24) !important; }\n\n.result-header b {\n  color: #80888B;\n  font-size: 14px;\n  font-weight: 900;\n  text-transform: uppercase; }\n\n.profit {\n  color: #051b4e;\n  margin: 0px 5px;\n  padding: 2px !important;\n  border-radius: 4px;\n  background: #F0F0F0; }\n\n.type-style .btn-outline-primary {\n  display: flex;\n  align-items: center; }\n\n.as-checkbox .custom-control-label::before,\n.as-checkbox .custom-control-label::after {\n  top: -2px; }\n\n#sticky-header-results {\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  padding: 25px 0px;\n  z-index: 100;\n  position: fixed;\n  display: none;\n  background-color: white;\n  transform: translateY(-200px);\n  transition: all 300ms ease-in-out;\n  box-shadow: 0px 3px 10px 2px rgba(0, 0, 0, 0.03); }\n\n.btn-action-sticky {\n  display: flex;\n  justify-content: flex-end;\n  align-items: center; }\n\n.activeSticky {\n  display: block !important;\n  transform: translateY(0px) !important; }\n\n.type-mode,\n.delivery-type {\n  top: 5px;\n  width: 12px;\n  height: 12px;\n  z-index: 50;\n  position: absolute; }\n\n.type-mode {\n  right: 23px !important; }\n\n.delivery-type {\n  right: 16px !important; }\n\n.card-amount p {\n  font-size: 13px; }\n\n.card-amount {\n  justify-content: flex-end; }\n\n@media only screen and (max-width: 425px) {\n  .card-amount {\n    justify-content: center; } }\n\n.s-input .form-control.reportrange-text i {\n  display: none !important; }\n\n.input-search-form {\n  padding-left: 5px;\n  padding-right: inherit; }\n\n.input-search-form .form-control.reportrange-text {\n  padding: 16px 50px; }\n\n.origen-search {\n  padding-left: 30px; }\n\n.containers-search {\n  padding-right: 15px; }\n\n@media only screen and (max-width: 768px) {\n  .containers-search {\n    padding-right: 30px !important; } }\n\n@media only screen and (max-width: 425px) {\n  .containers-search,\n  .destination-search,\n  .datepicker-search,\n  .origen-search {\n    padding-left: 10px !important;\n    padding-right: 10px !important;\n    margin-bottom: 5px; } }\n\n.font-tabs .nav-item a {\n  font-size: 12px; }\n\n.type-packages {\n  width: 160px !important;\n  height: 33.5px;\n  position: relative;\n  top: -7px; }\n\n.type-packages .delivery-type {\n  top: 15px;\n  right: 3px !important; }\n\n.search #dropdown-containers button,\n.search #dropdown-carriers button {\n  color: #333333 !important;\n  height: 50px;\n  border: none !important;\n  font-size: 12px;\n  white-space: normal;\n  padding-left: 47px;\n  text-align: left; }\n\n.search #dropdown-containers button::after,\n.search #dropdown-carriers button::after {\n  display: none !important; }\n\n#dropdown-containers,\n#dropdown-carriers {\n  background: #f8f8f8;\n  width: 100%;\n  border: none;\n  padding: 0px !important;\n  margin: 0px !important; }\n\n#dropdown-containers .custom-control-inline,\n#dropdown-carriers .custom-control-inline {\n  margin-bottom: 10px; }\n\n#carrier .custom-control {\n  display: block;\n  margin-bottom: 10px; }\n\n#containers,\n#equipment {\n  display: flex;\n  flex-direction: column;\n  align-items: left; }\n\n#dropdown-containers .dropdown-menu,\n#dropdown-carriers .dropdown-menu {\n  width: 100%;\n  border: none; }\n\n#dropdown-carriers label {\n  display: flex;\n  justify-content: space-between; }\n\n#carriers-list {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  overflow-y: scroll;\n  height: 200px; }\n\n.input-quantity {\n  padding: 4px 7px 5px 14px !important; }\n\n.lcl-inputs .form-control:focus {\n  background: #f8f8f8 !important; }\n\n/* .data-surcharge, \n.data-currency, \n.data-detail, \n.data-showas,\n.data-provider {\n    .multiselect__select {\n        width: 17px !important;\n        height: 20px !important;\n        right: 3px !important;\n        top: 6px !important;\n        padding: 0px !important;\n    }\n    .multiselect__tags {\n        padding: 4px 15px 4px 10px !important;\n    }\n} */\n/* Tablas */\n#origin .oceanfreight,\n#destination .oceanfreight {\n  width: 250px; }\n  #origin .oceanfreight .multiselect__tags,\n  #destination .oceanfreight .multiselect__tags {\n    width: 250px; }\n\n#origin .surcharges,\n#destination .surcharges {\n  width: 150px; }\n  #origin .surcharges .multiselect__tags,\n  #destination .surcharges .multiselect__tags {\n    width: 150px; }\n\n#carrier .oceanfreight,\n#carrier .surcharges,\n#carriers .oceanfreight,\n#carriers .surcharges {\n  width: 150px; }\n  #carrier .oceanfreight .multiselect__tags,\n  #carrier .surcharges .multiselect__tags,\n  #carriers .oceanfreight .multiselect__tags,\n  #carriers .surcharges .multiselect__tags {\n    width: 150px; }\n\n#currency .oceanfreight,\n#currency .currency {\n  width: 120px; }\n  #currency .oceanfreight .multiselect__tags,\n  #currency .currency .multiselect__tags {\n    width: 120px; }\n\n#surcharge .surcharges,\n#destination_type .surcharges,\n#calculation_type .surcharges {\n  width: 130px; }\n  #surcharge .surcharges .multiselect__tags,\n  #destination_type .surcharges .multiselect__tags,\n  #calculation_type .surcharges .multiselect__tags {\n    width: 130px; }\n\n#destination_type .surcharges .multiselect__tags {\n  width: 150px; }\n\n#id_incoterm_id .multiselect__tags {\n  padding-right: 25px !important; }\n\n#id_incoterm_id .multiselect__select {\n  width: 25px; }\n\n@media (min-width: 1200px) {\n  .modal-xl {\n    max-width: 1330px !important; } }\n\n@media (min-width: 1024px) {\n  .incoterm {\n    padding-right: 0.25rem !important; }\n    .incoterm legend {\n      white-space: nowrap !important; }\n  .custom_incoterm {\n    padding-left: 0px !important; } }\n\n.card-amount-header__res {\n  display: none;\n  margin-top: 15px;\n  border-bottom: 1px solid #eeeeee;\n  margin-bottom: 25px; }\n  .card-amount-header__res p {\n    font-size: 14px; }\n\n.container-cards {\n  padding-left: 40px;\n  padding-right: 40px;\n  padding-top: 0px;\n  padding-bottom: 0px; }\n\n@media only screen and (max-width: 991px) {\n  .card-amount-header__res {\n    display: flex;\n    justify-content: center; }\n  .card-amount__res {\n    display: flex;\n    justify-content: center; }\n  .container-cards {\n    padding: 10px; }\n  .btn-quote-res {\n    padding: 50px 0px !important; }\n  .carrier-img {\n    padding: 50px 0px !important; } }\n\n.input-search-form {\n  position: relative; }\n  .input-search-form .close {\n    position: absolute;\n    top: 16px;\n    right: 45px;\n    width: 25px;\n    height: 25px; }\n\n.table-contract {\n  height: 600px; }\n\n.multiselect--disabled .multiselect__tags {\n  background: #ededed !important; }\n  .multiselect--disabled .multiselect__tags .multiselect__single {\n    background: #ededed !important; }\n\n@media only screen and (max-width: 1024px) {\n  td #rates_20FR,\n  td #rates_40FR,\n  td #rates_20DV,\n  td #rates_40DV,\n  td #rates_40HC,\n  td #rates_45HC,\n  td #rates_40NOR,\n  td #rates_20RF,\n  td #rates_40RF,\n  td #rates_40HCRF {\n    width: 80px; } }\n\n.invalid-feedback {\n  margin-top: 5px !important; }\n\n/* .table-modal-local-charges {\n    height: 300px;\n} */\n@media only screen and (min-width: 320px) and (max-width: 1024px) {\n  table #amount {\n    width: 100px; } }\n\n#lower.form-control,\n#upper.form-control {\n  width: 130px; }\n\n.checkbox-thead label::after,\n.checkbox-thead label:before {\n  left: -15px !important;\n  top: 0px !important; }\n\n.action-thead {\n  left: 6px !important;\n  position: relative; }\n\n.local_charge_currency {\n  width: 170px !important; }\n\n.local_charge_table {\n  height: 300px; }\n\n@media only screen and (min-width: 320px) and (max-width: 768px) {\n  .local_calculation_type,\n  .local_charge_input {\n    width: 180px !important; }\n  .local_charge_total_input {\n    width: 80px !important; } }\n\n@media only screen and (min-width: 1024px) {\n  .local_calculation_type,\n  .local_charge_total_input,\n  .local_charge_input {\n    width: 100% !important; } }\n\n.back-btn {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  width: fit-content; }\n  .back-btn > span {\n    margin-left: 5px;\n    font-weight: bold;\n    text-transform: capitalize; }\n\n.i-container {\n  padding: 0 100px;\n  margin-top: 20px;\n  display: flex;\n  justify-content: space-between;\n  align-items: center; }\n\n.inputs-container {\n  display: grid;\n  grid-template-columns: 200px 200px 200px 200px;\n  column-gap: 20px; }\n\n.layer {\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 0, 0, 0.397);\n  z-index: 5000;\n  position: fixed;\n  top: 0;\n  left: 0; }\n\n.create-modal {\n  background: #f9f9f9;\n  border-radius: 15px;\n  width: 600px;\n  position: absolute;\n  left: 50%;\n  top: 30%;\n  transform: translate(-50%, -50%);\n  z-index: 50010; }\n\n.create-form {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  column-gap: 20px;\n  row-gap: 30px;\n  padding: 40px 40px 20px 40px;\n  grid-template-rows: repeat(3, 1fr); }\n\n.controls-container {\n  display: flex;\n  justify-content: flex-end;\n  padding: 20px;\n  align-items: center; }\n\n.modal-head {\n  background-color: white;\n  border-top-left-radius: 15px;\n  border-top-right-radius: 15px;\n  padding: 10px 20px; }\n  .modal-head > h3 {\n    margin: 0;\n    text-transform: capitalize;\n    font-size: 17px;\n    color: #071c4b;\n    letter-spacing: 0.05em;\n    font-weight: 500; }\n\n.hidden {\n  display: none; }\n\n.modal-content-create {\n  padding: 10px 25px; }\n\n.modal-footer-create-container {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  margin-bottom: 20px; }\n\n.modal-footer-create-container-btns {\n  display: flex;\n  align-items: center;\n  justify-content: right; }\n  .modal-footer-create-container-btns > p {\n    margin: 0;\n    margin-right: 20px;\n    color: #ff4c61;\n    cursor: pointer; }\n\n.modal-footer-content-wl {\n  align-items: center;\n  display: flex;\n  justify-content: left;\n  padding-top: 4px; }\n  .modal-footer-content-wl > p {\n    margin: 0;\n    margin-right: 20px;\n    color: #ff4c61;\n    cursor: pointer; }\n  .modal-footer-content-wl label {\n    width: 100%;\n    margin: 0; }\n  .modal-footer-content-wl .input-v2 {\n    width: auto;\n    height: auto;\n    margin-top: 0; }\n", ""]);
+exports.push([module.i, "section {\n  width: 100%;\n  height: 100%;\n  padding: 20px; }\n\n.body-container {\n  background-color: #fff;\n  border-radius: 10px;\n  width: 100%;\n  height: fit-content;\n  padding: 20px; }\n\nh2 {\n  color: #006bfa;\n  font-size: 24px;\n  font-weight: 500;\n  margin: 0; }\n\n.head {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  margin-bottom: 20px; }\n\n/* width */\n::-webkit-scrollbar {\n  width: 8px; }\n\n/* Track */\n::-webkit-scrollbar-track {\n  background: transparent; }\n\n/* Handle */\n::-webkit-scrollbar-thumb {\n  background: #f2f2f2;\n  border-radius: 5px; }\n\n/* Handle on hover */\n::-webkit-scrollbar-thumb:hover {\n  background: #b8b8b8; }\n\n.table th,\n.table td {\n  vertical-align: middle; }\n\n.table {\n  min-height: 200px; }\n\n.main-btn {\n  background-color: #006bfa;\n  border: none;\n  outline: none;\n  color: white;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  height: fit-content;\n  align-items: center;\n  padding: 5px 25px;\n  text-transform: capitalize;\n  box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24);\n  border-radius: 40px;\n  margin-left: 3px; }\n  .main-btn:hover {\n    background-color: #0051bb;\n    box-shadow: 0px 4px 8px rgba(28, 111, 255, 0.295); }\n\n.head-btns {\n  display: flex;\n  align-items: center; }\n  .head-btns .btn.dropdown-toggle.btn-secondary {\n    background-color: #006bfa !important;\n    border: none !important;\n    outline: none;\n    color: white;\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n    height: fit-content;\n    align-items: center;\n    padding: 7px 25px;\n    text-transform: capitalize;\n    box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24) !important;\n    border-radius: 40px; }\n    .head-btns .btn.dropdown-toggle.btn-secondary:hover {\n      background-color: #0051bb;\n      box-shadow: 0px 4px 8px rgba(28, 111, 255, 0.295); }\n\n/* .table-responsive {\n    overflow: initial !important;\n    overflow-x: initial !important;\n} */\n.sc-table.table-sm tr:nth-child(odd) {\n  background-color: transparent !important; }\n\n/* .sc-table.table-sm tr:nth-child(even) {\n    background-color: #fbfbfb !important;\n} */\n.btn.btn-secondary {\n  background-color: transparent !important;\n  border: 2px solid #80888B !important; }\n\n.btn.btn-secondary:focus i {\n  color: #006bf9; }\n\n.table-responsive-sm {\n  overflow-x: scroll !important; }\n\n/* @media only screen and (min-width: 320px) and (max-width: 1024px) {\n    .table-responsive-sm {\n        overflow-x: scroll !important;\n    }   \n}\n */\na,\ninput,\nh1,\nh2,\nh3,\nh4,\nh5,\nh6,\nspan,\nli,\np,\nlabel,\ntextarea,\ntd,\nth,\ntr,\nlegend,\nbutton,\nb,\ndiv,\n.h6 {\n  font-family: \"Sailec\" !important; }\n\n.multiselect .multiselect__select {\n  width: 15px;\n  height: 17px;\n  padding: 0px;\n  right: 10px;\n  top: 17px;\n  z-index: 5; }\n\n.multiselect .multiselect__tags {\n  font-size: 13px !important;\n  min-height: 40px !important;\n  border: 2px solid #eee !important;\n  border-radius: 0.25rem !important;\n  height: auto !important; }\n\n.multiselect__content-wrapper::-webkit-scrollbar,\n#carriers-list::-webkit-scrollbar {\n  width: 6px; }\n\n.multiselect__content-wrapper::-webkit-scrollbar-thumb,\n#carriers-list::-webkit-scrollbar-thumb,\n.table-responsive-sm::-webkit-scrollbar-thumb {\n  background: #aaa;\n  border-radius: 10px; }\n\n.multiselect__content-wrapper::-webkit-scrollbar-thumb:hover,\n#carriers-list::-webkit-scrollbar-thumb:hover,\n.table-responsive-sm::-webkit-thumb:hover {\n  background: #006bf9; }\n\n.tab-pane .card-body::-webkit-scrollbar,\n.table-responsive-sm::-webkit-scrollbar {\n  height: 5px; }\n\n.tab-pane .card-body::-webkit-scrollbar-thumb {\n  background: #aaa;\n  border-radius: 10px; }\n\n.tab-pane .card-body::-webkit-scrollbar-thumb:hover {\n  background: #006bf9; }\n\n/*** genetal styles ***/\n.m-body {\n  background-color: #f8f8fc !important;\n  height: auto; }\n\n.btns-form-modal {\n  padding: 25px 40px 25px 40px;\n  position: absolute;\n  bottom: -82.5px;\n  left: 0;\n  background-color: #fff;\n  border-top: 1px solid #dee2e6;\n  width: 100%;\n  border-radius: 0px 0px 3.2px 3.2px;\n  display: flex;\n  justify-content: flex-end;\n  align-items: center; }\n\n.btns-form-modal button:nth-child(1) {\n  background: transparent;\n  border: none;\n  color: #ff6464;\n  margin-right: 15px; }\n\n.btns-form-modal button:nth-child(1):hover:not(:disabled) {\n  color: #ff6464 !important; }\n\n.status-st {\n  color: #fff;\n  font-size: 9px;\n  border-radius: 5px;\n  padding: 5px 10px;\n  text-transform: uppercase; }\n\n.truncate {\n  max-width: 125px !important;\n  white-space: nowrap !important;\n  overflow: hidden !important;\n  text-overflow: ellipsis !important; }\n\n.truncate-contract {\n  max-width: 300px !important; }\n\n.publish {\n  background-color: #5fe2a0; }\n\n.incomplete {\n  background-color: #FAB429; }\n\n.expired {\n  background-color: #ff6464; }\n\n.incomplete::before {\n  content: 'processing';\n  font-weight: bold; }\n\n.publish::before {\n  content: 'published';\n  font-weight: bold; }\n\n.expired::before {\n  content: 'expired';\n  font-weight: bold; }\n\n/**** --- Table Card--- ****/\n.card {\n  border: 2px solid rgba(0, 0, 0, 0.125);\n  border-radius: 0.50rem; }\n\n.card-title {\n  color: #031b4e;\n  font-weight: bold; }\n\n.btn-bg {\n  color: #fff !important;\n  font-weight: bold;\n  border: none !important;\n  background-color: #006bf9 !important;\n  transition: all 100ms ease-in-out;\n  box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24) !important; }\n\n.btn-bg:hover {\n  box-shadow: none !important; }\n\n.btn-bg:hover {\n  opacity: 0.8; }\n\n.btn-link {\n  font-weight: bold; }\n\n.form-control:focus {\n  box-shadow: none; }\n\ntable thead {\n  background-color: transparent !important;\n  border-bottom: 1px solid #eee;\n  border-top: 1px solid #eee; }\n\ntable tr th {\n  color: #031b4e;\n  font-weight: bold !important; }\n\ntable tr td {\n  color: #031b4e; }\n\ntable tr th:focus {\n  outline: none; }\n\n.form-inline {\n  position: relative; }\n\n.form-inline i {\n  position: absolute;\n  left: 12px;\n  color: #525f7e; }\n\n.form-inline input {\n  border: 2px solid #eee;\n  padding-left: 33px; }\n\n.custom-control-label::before,\n.custom-control-label::after,\n.custom-control-input {\n  width: 1.5rem;\n  height: 1.5rem;\n  border-width: 2px;\n  border-color: #EEE; }\n\n.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before,\n.custom-checkbox .custom-control-input ~ .custom-control-label::before {\n  box-shadow: none; }\n\n/*.input-check[type=checkbox] + label {\n    //display: block;\n    margin: 0.2em;\n    cursor: pointer;\n    padding: 0.2em;\n}\n.input-check[type=checkbox] {\n    display: none;\n}\n.input-check[type=checkbox] + label:before {\n    content: \"\\2714\";\n    border: 0.15em solid #006bf9;\n    border-radius: 0.2em;\n    display: flex; \n    align-items: center;\n    justify-content: center;\n    width: 1.3em;\n    height: 1.3em;\n    padding-left: 0.15em;\n    margin-right: 0.15em;\n    color: transparent;\n    transition: .2s;\n    font-size: 14px;\n}\n.input-check[type=checkbox] + label:active:before {\n    transform: scale(0);\n}\n.input-check[type=checkbox]:checked + label:before {\n    color: #006bf9;\n}\n.input-check[type=checkbox]:disabled + label:before {\n    transform: scale(1);\n    border-color: #006bf9;\n}\n.input-check[type=checkbox]:checked:disabled + label:before {\n    transform: scale(1);\n    background-color: transparent;\n    border-color: #006bf9;\n}*/\ntd.checkbox-add-fcl,\ntd.actions-add-fcl {\n  width: 45px; }\n\n/* .btn.btn-secondary {\n    background-color: transparent!important;\n    border: 2px solid #80888B !important;\n}\n\naqui\n\n.btn.btn-secondary:focus i {\n    color: #006bf9;\n} */\n.action-app {\n  padding: 0.1rem 0.40rem; }\n\n.action-app i {\n  color: #eee; }\n\n#actions-box[type=checkbox]:checked + .popup-actions {\n  display: inline-block; }\n\n.table-hover tbody tr:hover {\n  background-color: transparent !important; }\n\n#actions-box {\n  display: none; }\n\n.actions-box {\n  padding: 5px;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  border-radius: 5px;\n  position: relative;\n  cursor: pointer;\n  border: 2px solid #eee; }\n\n.actions-box span {\n  position: relative;\n  z-index: 1; }\n\n.all-action-app {\n  position: absolute;\n  right: 30px; }\n\n.popup-actions[data-action=\"false\"] {\n  background: red; }\n\n.actions-box:hover .icon-add-fcl {\n  color: #006bf9; }\n\n.popup-actions {\n  display: none;\n  top: 30px;\n  right: 0;\n  padding: 5px 10px;\n  background: #fff;\n  border: 2px solid #eee;\n  border-radius: 5px;\n  position: absolute;\n  z-index: 10; }\n\n.active {\n  display: block; }\n\n.btn-action {\n  width: 100%;\n  display: block;\n  text-align: right;\n  font-weight: bold;\n  font-size: 14px;\n  color: #525f7e;\n  border: none;\n  background: transparent; }\n\n.btn-action:hover {\n  text-decoration: underline; }\n\n.btn-action:focus {\n  outline: none; }\n\n.btn-action:nth-child(3) {\n  color: #ff6464; }\n\n.btn-action-harbor {\n  width: 100%;\n  display: block;\n  text-align: right;\n  font-weight: bold;\n  font-size: 14px;\n  color: #525f7e;\n  border: none;\n  background: transparent; }\n\n.btn-action-harbor:hover {\n  text-decoration: underline; }\n\n.btn-action-harbor:focus {\n  outline: none; }\n\n/**** Modal Add Contract ***/\n.modal-body {\n  background-color: #f8f8fc !important; }\n\n.modal-footer button:nth-child(1) {\n  border: none !important;\n  color: #ff6464;\n  font-weight: bold; }\n\n.modal-footer button:nth-child(2) {\n  background-color: #006bf9 !important;\n  border: none !important; }\n\n.add-fcl input {\n  border-width: 2px; }\n\n.mx-datepicker-range {\n  width: 100% !important; }\n\n.mx-input {\n  padding-top: 6px !important;\n  padding-bottom: 6px !important;\n  padding-right: 6px !important;\n  padding-left: 30px !important; }\n\ni.mx-icon-calendar {\n  left: 8px;\n  right: 0px; }\n\n.modal-input {\n  padding-left: 15px !important;\n  padding-right: 15px !important; }\n\n.modal-header h5 {\n  font-weight: bold !important;\n  color: #031b4e !important; }\n\n.multiselect__option--highlight,\n.multiselect__option--selected {\n  background-color: #dddddd !important;\n  color: #333333 !important; }\n\n.form-control {\n  min-height: 40px !important; }\n\n.multiselect__tags-wrap {\n  width: 100% !important; }\n\n.multiselect__option {\n  font-size: 12px;\n  padding: 6px !important;\n  min-height: 30px !important; }\n\n.modal-input label {\n  color: #626e8b;\n  font-weight: medium; }\n\n.multiselect__select {\n  width: 30px;\n  height: 25px; }\n\n.multiselect__select::before {\n  font-family: 'FontAwesome' !important;\n  content: \"\\F107\" !important;\n  border: none !important;\n  font-size: 16px;\n  color: #525f7f;\n  top: 10% !important; }\n\n.multiselect__single {\n  top: 5px;\n  color: #031b4e;\n  font-size: 12px !important;\n  margin-bottom: 0px !important; }\n\n.multiselect__content-wrapper {\n  bottom: auto !important;\n  max-height: 140px !important;\n  box-shadow: 0px 0px 13px 3px rgba(0, 0, 0, 0.1) !important;\n  margin-top: 3px !important;\n  overflow-y: auto !important;\n  overflow-x: hidden !important; }\n\n.multiselect__content {\n  display: block !important; }\n\n.multiselect:hover .multiselect__tags {\n  border-color: #006bf9 !important; }\n\n/* Datepicker */\n.q-input::placeholder,\n.text-muted {\n  color: #adadad !important; }\n\n.text-break {\n  display: flex;\n  align-items: center;\n  color: #031b4e;\n  font-size: 12px !important; }\n\n.b-form-datepicker {\n  border: 2px solid #eee !important; }\n\n.b-form-datepicker:hover {\n  border-color: #006bf9 !important; }\n\n.b-form-btn-label-control.b-form-datepicker {\n  height: 40px !important;\n  min-height: 40px !important; }\n\n.vue-daterange-picker.s-input .reportrange-text i {\n  padding-top: 6px;\n  font-size: 30px; }\n\n/*** --- Tabs --- ***/\n.tabs ul {\n  margin-bottom: -0.75rem !important; }\n\n.card-tabs {\n  margin-top: 25px;\n  background: transparent !important;\n  border: none !important; }\n\n.card-tabs .card-header {\n  padding-left: 30px;\n  padding-right: 50px;\n  border-width: 2px !important;\n  background: transparent !important; }\n\n.nav-tabs .nav-link.active {\n  background: transparent !important;\n  border-color: #006bf9 !important;\n  border-width: 4px !important;\n  font-weight: bold !important; }\n\n.nav-tabs .nav-link {\n  border: none;\n  font-size: 16px;\n  color: #031b4e !important; }\n\n.multiselect__placeholder {\n  white-space: nowrap;\n  margin-bottom: 0px !important;\n  padding-top: 0px !important;\n  padding-left: 3px; }\n\n.search .multiselect__input,\n.search .multiselect__single {\n  margin-bottom: 0px; }\n\n.select-all {\n  position: relative;\n  top: 25px;\n  left: 11px; }\n\n#id_carriers .multiselect__tags,\n.multiselect-height .multiselect__tags {\n  height: 35px !important; }\n\n/*** Validations ***/\n.form-control.is-invalid:focus,\n.form-control.is-valid:focus {\n  box-shadow: none !important; }\n\n/*** --- REMARK --- ***/\n.remarks {\n  min-height: 150px; }\n\n.update-remark {\n  width: 30px;\n  height: 30px;\n  bottom: 3%;\n  right: 2%;\n  border-radius: 100px;\n  background: #19c39b;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  position: absolute;\n  color: #fff; }\n\n.title-dropzone {\n  font-weight: bold;\n  color: #031b4e;\n  position: absolute;\n  top: 15px;\n  left: 35px; }\n\n.title-card {\n  color: #031b4e; }\n\n#dropzone {\n  border: none; }\n\n.no-padding .card-body {\n  padding: 0px; }\n\n.reportrange-text {\n  height: 35px;\n  border: 2px solid #eee !important; }\n\n.multiselect--disabled {\n  min-height: 35px !important; }\n  .multiselect--disabled .multiselect__select {\n    height: 26px; }\n\n.vue-daterange-picker {\n  width: 100%;\n  white-space: nowrap; }\n\ninput.multiselect__input {\n  font-size: 13px;\n  padding-left: 3px; }\n\ninput.multiselect__input:focus {\n  border: 0px;\n  outline: none; }\n\n#id_name input {\n  font-size: 13px;\n  color: #35495e !important;\n  border: 2px solid #eee !important; }\n\n#id_name input::placeholder {\n  color: #adadad !important; }\n\n.form-group legend {\n  font-size: 12px !important;\n  color: #626e8b !important; }\n\n@media only screen and (max-width: 425px) {\n  .nav-tabs .nav-item {\n    text-align: center;\n    width: 100% !important; }\n  .nav-tabs .nav-link {\n    font-size: 16px !important; }\n  .card-body {\n    overflow-x: scroll; }\n  .form-inline i {\n    bottom: 16px; } }\n\n.th-max {\n  max-width: 60px; }\n\n.multiselect__tags {\n  font-size: 12px !important; }\n\n.form-control {\n  font-size: 0.85rem; }\n\n.col-pr-5 {\n  padding-right: 5px !important; }\n\n.col-pl-5 {\n  padding-left: 5px !important; }\n\n/* .tab-pane .card-body {\n    overflow-x: scroll;\n} */\n.btn-adds {\n  right: 60px;\n  /* position: fixed; */ }\n\n.dropzone.dz-started .dz-message {\n  width: 382px !important;\n  float: left !important;\n  display: block !important;\n  margin: 0px; }\n\n#dropzone {\n  height: 100% !important; }\n\n#dropzone .dz-preview {\n  width: 160px;\n  height: 200px;\n  display: inline-block;\n  border-radius: 5px; }\n\n#dropzone .dz-preview .dz-image {\n  width: 100%;\n  height: 100%;\n  border-radius: 5px; }\n\n#dropzone .dz-preview .dz-image > div {\n  width: inherit;\n  height: inherit;\n  border-radius: 50%;\n  background-size: contain; }\n\n#dropzone .dz-preview .dz-image > img {\n  width: 100%; }\n\n#dropzone .dz-preview .dz-details {\n  color: white;\n  transition: opacity .2s linear;\n  text-align: center;\n  border-radius: 5px; }\n\n#dropzone .dz-success-mark,\n.dz-error-mark,\n.dz-remove {\n  display: none; }\n\n#dropzone .dz-remove {\n  border-radius: 5px !important;\n  padding: 5px !important;\n  margin-left: 0px !important;\n  right: 19%; }\n\n.no-scroll .card-body {\n  overflow-x: inherit !important; }\n\n.pagination {\n  width: 100%;\n  display: flex; }\n\n/* Quote */\n.quote-header {\n  width: 100%;\n  padding-top: 50px;\n  background-color: #ffffff; }\n\n.p-light {\n  color: rgba(0, 0, 0, 0.5); }\n\n.quote-link {\n  font-size: 16px; }\n  .quote-link i {\n    margin-right: 10px;\n    font-size: 18px; }\n\n.quote-content-tab .tab-content {\n  background-color: #f8f8fc !important; }\n\n.quote-card {\n  display: flex;\n  flex-direction: column; }\n\n.quote-card div:nth-child(1) {\n  display: flex;\n  align-items: center;\n  justify-content: space-between; }\n\n.gmap {\n  border: 2px solid #eeeeee;\n  padding: 6px 15px;\n  display: block;\n  border-radius: 4px !important; }\n\n.gmap:hover,\n.gmap:focus {\n  border-color: #006BFA !important; }\n\n.warning-no-address {\n  width: 100%;\n  height: 100px;\n  display: flex;\n  justify-content: center;\n  align-items: center; }\n\n.quote-card div:nth-child(2) {\n  display: flex;\n  margin-top: 10px;\n  justify-content: space-between; }\n\n@media only screen and (min-width: 426px) {\n  .quote-card {\n    flex-direction: row;\n    justify-content: space-between; } }\n\n.label-text {\n  color: #182026;\n  font-size: 10px;\n  font-weight: 500;\n  text-transform: uppercase; }\n\n.q-label {\n  width: 100%;\n  margin-top: 15px;\n  margin-bottom: 15px; }\n\n/* .btn-pdf {\n    right: 15px;\n    position: absolute;\n} */\n.q-input {\n  padding-top: 4px;\n  padding-bottom: 4px;\n  color: #071C4B !important;\n  font-size: 12px !important;\n  font-weight: 500 !important;\n  border: 2px solid #eee !important; }\n\n.form-control {\n  border: 2px solid #eee !important; }\n\n#id_exp_date__value_,\n#id_validity_start__value_,\n#id_validity_end__value_ {\n  border: none !important; }\n\n.q-width {\n  width: 50%; }\n\n.q-input:focus,\n.form-control:hover,\n.q-input:hover {\n  border-color: #006BFA !important; }\n\n.q-label:focus span.label-text {\n  color: #006BFA !important; }\n\n.q-textarea {\n  width: 100%;\n  height: 100%;\n  color: #071C4B;\n  min-height: 100px;\n  max-height: 100px;\n  border-radius: 5px;\n  padding-left: 15px;\n  border: 2px solid #e8e8e8 !important; }\n\n.q-textarea:focus {\n  outline: none;\n  border-color: #006BFA !important; }\n\n.btn-delete {\n  border: none;\n  color: #ff6464;\n  background: transparent; }\n\n.q-thead {\n  border-bottom: 2px solid #031b4e !important; }\n  .q-thead th {\n    padding: 0.75rem !important; }\n    .q-thead th span {\n      font-size: 12px !important; }\n\n.q-title {\n  color: #031b4e;\n  font-weight: 600;\n  font-size: 14px; }\n\n.q-select {\n  width: 30% !important; }\n\n.q-total {\n  border-top: 1px solid #031b4e !important; }\n\n.modal-width {\n  width: 80% !important; }\n\n.q-card .card-body {\n  overflow: inherit !important; }\n\n.q-modal {\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100vh;\n  position: fixed;\n  display: none;\n  align-items: center;\n  justify-content: center;\n  background: rgba(0, 0, 0, 0.6); }\n\n.q-modal-content {\n  width: 70%;\n  height: 50%;\n  padding: 25px;\n  position: relative;\n  background: #fff;\n  border-radius: 5px; }\n\n.showModal {\n  display: flex !important; }\n\n.q-modal-close {\n  top: 10px;\n  right: 10px;\n  border: none;\n  color: #ff6464;\n  position: absolute;\n  background: transparent; }\n\n.multiselect__placeholder {\n  font-size: 12px;\n  position: relative;\n  top: 2px; }\n\n/* Ocean Freight */\n.q-freight-card {\n  margin-bottom: 25px;\n  transition: all 300ms ease-in-out; }\n\n.q-freight-card:hover {\n  border-color: #031b4e !important; }\n\n.table-sm,\n.table-sm td {\n  padding: 0.75rem !important; }\n\n.custom-control-label span {\n  top: 7px;\n  left: 7px;\n  position: relative; }\n\n.hideFreight {\n  height: 0;\n  overflow: hidden;\n  transition: all 150ms ease-in-out; }\n\n.showFreight {\n  height: auto !important; }\n\n.turnButton {\n  transition: all 300ms ease-in-out;\n  transform: rotate(180deg) !important; }\n\n.badge {\n  font-size: 12px !important; }\n\n.multiselect__tag {\n  margin-bottom: 0px !important; }\n\n.md-field {\n  margin: -15px 0 -5px !important; }\n\n.md-field label {\n  font-size: 10px !important; }\n\n.md-field.md-has-value .md-input {\n  font-size: 12px !important; }\n\n.md-field.md-has-value label {\n  opacity: 0 !important; }\n\n.closeFilter {\n  display: none !important; }\n\n.openFilter {\n  display: block !important; }\n\n.btn-filter {\n  cursor: pointer; }\n\n/* Search */\n.btn.btn-secondary.btn-aditonal-services {\n  float: right;\n  color: #006BFA;\n  font-size: 12px;\n  font-weight: 900;\n  letter-spacing: 1px;\n  border: none !important;\n  text-transform: uppercase; }\n\n.t-as,\n.t-recent {\n  color: #80888B;\n  font-weight: 900;\n  font-size: 14px;\n  letter-spacing: 2px;\n  text-transform: uppercase; }\n\n.t-recent b {\n  color: #071C4B; }\n\n.result-action {\n  display: flex;\n  justify-content: space-between;\n  align-items: center; }\n  .result-action a {\n    color: #43B54E;\n    font-weight: 900;\n    font-size: 10px;\n    text-transform: uppercase; }\n\n.addcontract-createquote {\n  display: flex;\n  justify-content: flex-end;\n  align-items: center; }\n\n@media only screen and (max-width: 768px) {\n  .margin-res {\n    margin: 0px !important; }\n    .margin-res .contract-title {\n      text-align: center; }\n  .calendar-icon {\n    left: 40px; } }\n\n@media only screen and (max-width: 425px) {\n  .result-action {\n    align-items: start;\n    justify-content: center;\n    flex-direction: column;\n    margin-bottom: 10px; }\n  .margin-res {\n    margin: 0px !important; }\n    .margin-res .contract-title {\n      text-align: center; }\n  .carrier-img {\n    padding: 50px 0px; }\n  .result-and-filter {\n    flex-flow: inherit;\n    margin-bottom: 15px; }\n  .addcontract-createquote {\n    justify-content: flex-start; } }\n\n.btn.btn-secondary.rs-btn {\n  border: none !important;\n  color: #006BFA;\n  font-size: 10px;\n  font-weight: 900;\n  letter-spacing: 1px;\n  border: none !important;\n  text-transform: uppercase; }\n\n.btn.btn-secondary.rs-btn:hover {\n  color: #071C4B !important; }\n\n/* Recent Search */\n.recent-search {\n  display: flex;\n  border-radius: 4px;\n  flex-direction: column;\n  align-items: center;\n  justify-items: center;\n  background: #ffffff;\n  position: relative;\n  transition: all 300ms ease-in-out;\n  height: 250px; }\n\n@media only screen and (max-width: 375px) {\n  .recent-search {\n    height: 300px; } }\n\n.recent-search:hover {\n  box-shadow: 0px 0px 30px 15px rgba(0, 0, 0, 0.04); }\n\n.recent-search a {\n  width: 100%;\n  color: #fff;\n  font-size: 16px;\n  font-weight: 900;\n  letter-spacing: 1px;\n  padding: 10px 0px;\n  border-radius: 4px;\n  text-align: center;\n  background: #006BFA;\n  text-transform: uppercase;\n  cursor: pointer !important;\n  position: absolute;\n  bottom: 0px; }\n\n.recent-search a:hover {\n  text-decoration: none;\n  background: rgba(0, 107, 250, 0.8); }\n\n.recent-search p {\n  font-size: 18px;\n  color: #071C4B;\n  text-align: center; }\n\n.recent-search span {\n  color: #006BFA; }\n\n.recent-search .direction-spot {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center; }\n\n.recent-search b {\n  color: #006BFA; }\n\n.recent-search .direction-spot .circle {\n  width: 12px;\n  height: 12px;\n  border-radius: 50px;\n  border: 2px solid #80888B;\n  background-color: transparent; }\n\n.recent-search .direction-spot .line {\n  width: 2px;\n  height: 15px;\n  background-color: #80888B; }\n\n.recent-search .direction-spot .fill-circle {\n  border-color: #006BFA;\n  background-color: #006BFA; }\n\n.filter-search {\n  position: relative;\n  top: 4px; }\n\n.filter-search b {\n  text-transform: uppercase; }\n\n.filter-search .multiselect__single {\n  background: #f8f8fc; }\n\n.filter-search .multiselect.s-input {\n  min-height: 25px !important; }\n\n.vue-daterange-picker.s-input .reportrange-text i {\n  padding-top: 6px;\n  font-size: 25px; }\n\n.recent-search img {\n  left: 22px;\n  top: 10px;\n  width: 34px;\n  position: absolute; }\n\n/* Search Result */\n@media only screen and (max-width: 768px) {\n  .destination-search {\n    padding-right: 30px !important; }\n  .datepicker-search {\n    padding-left: 30px !important; } }\n\n/* @media only screen and (max-width: 425px) {\n    .destination-search {\n        padding-left: 10px !important;\n    }\n    .datepicker-search,\n    .origin-search {\n        padding-right: 10px !important;\n    }\n} */\n.btn.btn-secondary.btn-create-quote {\n  color: #ffffff;\n  font-weight: 900;\n  background: #006BFA !important;\n  border-radius: 4px !important;\n  border: none !important;\n  position: relative;\n  box-shadow: 0px 4px 8px rgba(54, 123, 245, 0.24) !important; }\n\n.result-header b {\n  color: #80888B;\n  font-size: 14px;\n  font-weight: 900;\n  text-transform: uppercase; }\n\n.profit {\n  color: #051b4e;\n  margin: 0px 5px;\n  padding: 2px !important;\n  border-radius: 4px;\n  background: #F0F0F0; }\n\n.type-style .btn-outline-primary {\n  display: flex;\n  align-items: center; }\n\n.as-checkbox .custom-control-label::before,\n.as-checkbox .custom-control-label::after {\n  top: -2px; }\n\n#sticky-header-results {\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  padding: 25px 0px;\n  z-index: 100;\n  position: fixed;\n  display: none;\n  background-color: white;\n  transform: translateY(-200px);\n  transition: all 300ms ease-in-out;\n  box-shadow: 0px 3px 10px 2px rgba(0, 0, 0, 0.03); }\n\n.btn-action-sticky {\n  display: flex;\n  justify-content: flex-end;\n  align-items: center; }\n\n.activeSticky {\n  display: block !important;\n  transform: translateY(0px) !important; }\n\n.type-mode,\n.delivery-type {\n  top: 5px;\n  width: 12px;\n  height: 12px;\n  z-index: 50;\n  position: absolute; }\n\n.type-mode {\n  right: 23px !important; }\n\n.delivery-type {\n  right: 16px !important; }\n\n.card-amount p {\n  font-size: 13px; }\n\n.card-amount {\n  justify-content: flex-end; }\n\n@media only screen and (max-width: 425px) {\n  .card-amount {\n    justify-content: center; } }\n\n.s-input .form-control.reportrange-text i {\n  display: none !important; }\n\n.input-search-form {\n  padding-left: 5px;\n  padding-right: inherit; }\n\n.input-search-form .form-control.reportrange-text {\n  padding: 16px 50px; }\n\n.origen-search {\n  padding-left: 30px; }\n\n.containers-search {\n  padding-right: 15px; }\n\n@media only screen and (max-width: 768px) {\n  .containers-search {\n    padding-right: 30px !important; } }\n\n@media only screen and (max-width: 425px) {\n  .containers-search,\n  .destination-search,\n  .datepicker-search,\n  .origen-search {\n    padding-left: 10px !important;\n    padding-right: 10px !important;\n    margin-bottom: 5px; } }\n\n.font-tabs .nav-item a {\n  font-size: 12px; }\n\n.type-packages {\n  width: 160px !important;\n  height: 33.5px;\n  position: relative;\n  top: -7px; }\n\n.type-packages .delivery-type {\n  top: 15px;\n  right: 3px !important; }\n\n.search #dropdown-containers button,\n.search #dropdown-carriers button {\n  color: #333333 !important;\n  height: 50px;\n  border: none !important;\n  font-size: 12px;\n  white-space: normal;\n  padding-left: 47px;\n  text-align: left; }\n\n.search #dropdown-containers button::after,\n.search #dropdown-carriers button::after {\n  display: none !important; }\n\n#dropdown-containers,\n#dropdown-carriers {\n  background: #f8f8f8;\n  width: 100%;\n  border: none;\n  padding: 0px !important;\n  margin: 0px !important; }\n\n#dropdown-containers .custom-control-inline,\n#dropdown-carriers .custom-control-inline {\n  margin-bottom: 10px; }\n\n#carrier .custom-control {\n  display: block;\n  margin-bottom: 10px; }\n\n#containers,\n#equipment {\n  display: flex;\n  flex-direction: column;\n  align-items: left; }\n\n#dropdown-containers .dropdown-menu,\n#dropdown-carriers .dropdown-menu {\n  width: 100%;\n  border: none; }\n\n#dropdown-carriers label {\n  display: flex;\n  justify-content: space-between; }\n\n#carriers-list {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  overflow-y: scroll;\n  height: 200px; }\n\n.input-quantity {\n  padding: 4px 7px 5px 14px !important; }\n\n.lcl-inputs .form-control:focus {\n  background: #f8f8f8 !important; }\n\n/* .data-surcharge, \n.data-currency, \n.data-detail, \n.data-showas,\n.data-provider {\n    .multiselect__select {\n        width: 17px !important;\n        height: 20px !important;\n        right: 3px !important;\n        top: 6px !important;\n        padding: 0px !important;\n    }\n    .multiselect__tags {\n        padding: 4px 15px 4px 10px !important;\n    }\n} */\n/* Tablas */\n#origin .oceanfreight,\n#destination .oceanfreight {\n  width: 250px; }\n  #origin .oceanfreight .multiselect__tags,\n  #destination .oceanfreight .multiselect__tags {\n    width: 250px; }\n\n#origin .surcharges,\n#destination .surcharges {\n  width: 150px; }\n  #origin .surcharges .multiselect__tags,\n  #destination .surcharges .multiselect__tags {\n    width: 150px; }\n\n#carrier .oceanfreight,\n#carrier .surcharges,\n#carriers .oceanfreight,\n#carriers .surcharges {\n  width: 150px; }\n  #carrier .oceanfreight .multiselect__tags,\n  #carrier .surcharges .multiselect__tags,\n  #carriers .oceanfreight .multiselect__tags,\n  #carriers .surcharges .multiselect__tags {\n    width: 150px; }\n\n#currency .oceanfreight,\n#currency .currency {\n  width: 120px; }\n  #currency .oceanfreight .multiselect__tags,\n  #currency .currency .multiselect__tags {\n    width: 120px; }\n\n#surcharge .surcharges,\n#destination_type .surcharges,\n#calculation_type .surcharges {\n  width: 130px; }\n  #surcharge .surcharges .multiselect__tags,\n  #destination_type .surcharges .multiselect__tags,\n  #calculation_type .surcharges .multiselect__tags {\n    width: 130px; }\n\n#destination_type .surcharges .multiselect__tags {\n  width: 150px; }\n\n#id_incoterm_id .multiselect__tags {\n  padding-right: 25px !important; }\n\n#id_incoterm_id .multiselect__select {\n  width: 25px; }\n\n@media (min-width: 1200px) {\n  .modal-xl {\n    max-width: 1330px !important; } }\n\n@media (min-width: 1024px) {\n  .incoterm {\n    padding-right: 0.25rem !important; }\n    .incoterm legend {\n      white-space: nowrap !important; }\n  .custom_incoterm {\n    padding-left: 0px !important; } }\n\n.card-amount-header__res {\n  display: none;\n  margin-top: 15px;\n  border-bottom: 1px solid #eeeeee;\n  margin-bottom: 25px; }\n  .card-amount-header__res p {\n    font-size: 14px; }\n\n.container-cards {\n  padding-left: 40px;\n  padding-right: 40px;\n  padding-top: 0px;\n  padding-bottom: 0px; }\n\n@media only screen and (max-width: 991px) {\n  .card-amount-header__res {\n    display: flex;\n    justify-content: center; }\n  .card-amount__res {\n    display: flex;\n    justify-content: center; }\n  .container-cards {\n    padding: 10px; }\n  .btn-quote-res {\n    padding: 50px 0px !important; }\n  .carrier-img {\n    padding: 50px 0px !important; } }\n\n.input-search-form {\n  position: relative; }\n  .input-search-form .close {\n    position: absolute;\n    top: 16px;\n    right: 45px;\n    width: 25px;\n    height: 25px; }\n\n.table-contract {\n  height: 600px; }\n\n.multiselect--disabled .multiselect__tags {\n  background: #ededed !important; }\n  .multiselect--disabled .multiselect__tags .multiselect__single {\n    background: #ededed !important; }\n\n@media only screen and (max-width: 1024px) {\n  td #rates_20FR,\n  td #rates_40FR,\n  td #rates_20DV,\n  td #rates_40DV,\n  td #rates_40HC,\n  td #rates_45HC,\n  td #rates_40NOR,\n  td #rates_20RF,\n  td #rates_40RF,\n  td #rates_40HCRF {\n    width: 80px; } }\n\n.invalid-feedback {\n  margin-top: 5px !important; }\n\n/* .table-modal-local-charges {\n    height: 300px;\n} */\n@media only screen and (min-width: 320px) and (max-width: 1024px) {\n  table #amount {\n    width: 100px; } }\n\n#lower.form-control,\n#upper.form-control {\n  width: 130px; }\n\n.checkbox-thead label::after,\n.checkbox-thead label:before {\n  left: -15px !important;\n  top: 0px !important; }\n\n.action-thead {\n  left: 6px !important;\n  position: relative; }\n\n.local_charge_currency {\n  width: 170px !important; }\n\n.local_charge_table {\n  height: 300px; }\n\n@media only screen and (min-width: 320px) and (max-width: 768px) {\n  .local_calculation_type,\n  .local_charge_input {\n    width: 180px !important; }\n  .local_charge_total_input {\n    width: 80px !important; } }\n\n@media only screen and (min-width: 1024px) {\n  .local_calculation_type,\n  .local_charge_total_input,\n  .local_charge_input {\n    width: 100% !important; } }\n\n.back-btn {\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  width: fit-content; }\n  .back-btn > span {\n    margin-left: 5px;\n    font-weight: bold;\n    text-transform: capitalize; }\n\n.i-container {\n  padding: 0 100px;\n  margin-top: 20px;\n  display: flex;\n  justify-content: space-between;\n  align-items: center; }\n\n.inputs-container {\n  display: grid;\n  grid-template-columns: 200px 200px 200px 200px;\n  column-gap: 20px; }\n\n.input-box {\n  align-items: center;\n  display: flex; }\n\n#checkbox-edit .custom-control-label {\n  font-size: 14px;\n  line-height: 21px;\n  letter-spacing: 0.05em;\n  padding: 3px 0px 0px 5px; }\n  #checkbox-edit .custom-control-label:before {\n    left: -1.5rem !important; }\n  #checkbox-edit .custom-control-label:after {\n    left: -1.5rem !important; }\n\n.layer {\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 0, 0, 0.397);\n  z-index: 5000;\n  position: fixed;\n  top: 0;\n  left: 0; }\n\n.create-modal {\n  background: #f9f9f9;\n  border-radius: 15px;\n  width: 600px;\n  position: absolute;\n  left: 50%;\n  top: 30%;\n  transform: translate(-50%, -50%);\n  z-index: 50010; }\n\n.create-form {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  column-gap: 20px;\n  row-gap: 30px;\n  padding: 40px 40px 20px 40px;\n  grid-template-rows: repeat(3, 1fr); }\n\n.controls-container {\n  display: flex;\n  justify-content: flex-end;\n  padding: 20px;\n  align-items: center; }\n\n.modal-head {\n  background-color: white;\n  border-top-left-radius: 15px;\n  border-top-right-radius: 15px;\n  padding: 10px 20px; }\n  .modal-head > h3 {\n    margin: 0;\n    text-transform: capitalize;\n    font-size: 17px;\n    color: #071c4b;\n    letter-spacing: 0.05em;\n    font-weight: 500; }\n\n.hidden {\n  display: none; }\n\n.modal-content-create {\n  padding: 10px 25px; }\n\n.modal-footer-create-container {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  margin-bottom: 20px; }\n\n.modal-footer-create-container-btns {\n  display: flex;\n  align-items: center;\n  justify-content: right; }\n  .modal-footer-create-container-btns > p {\n    margin: 0;\n    margin-right: 20px;\n    color: #ff4c61;\n    cursor: pointer; }\n\n.modal-footer-content-wl {\n  align-items: center;\n  display: flex;\n  justify-content: left;\n  padding-top: 4px; }\n  .modal-footer-content-wl > p {\n    margin: 0;\n    margin-right: 20px;\n    color: #ff4c61;\n    cursor: pointer; }\n  .modal-footer-content-wl label {\n    width: 100%;\n    margin: 0; }\n  .modal-footer-content-wl .input-v2 {\n    width: auto;\n    height: auto;\n    margin-top: 0; }\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 834 */
+/* 833 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

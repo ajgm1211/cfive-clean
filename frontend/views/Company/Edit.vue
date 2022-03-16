@@ -10,9 +10,6 @@
           <b-tab title="Contacts" active>
             <Contacts/>
           </b-tab>
-          <b-tab title="Second">
-            <p>I'm the second tab</p>
-          </b-tab>
         </b-tabs>
       </div>
     </section>

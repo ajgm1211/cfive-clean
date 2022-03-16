@@ -22,3 +22,22 @@
   grid-template-columns: 200px 200px 200px 200px;
   column-gap: 20px;
 }
+.input-box{
+  align-items: center;
+  display: flex;
+}
+#checkbox-edit{
+
+  .custom-control-label{
+    font-size: 14px;
+    line-height: 21px;
+    letter-spacing: 0.05em;
+    padding: 3px 0px 0px 5px;
+    &:before{
+      left: -1.5rem !important;
+    }
+    &:after{
+      left: -1.5rem !important;
+    }
+  }
+} 
