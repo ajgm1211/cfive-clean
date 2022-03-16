@@ -85,9 +85,52 @@ trait SearchTrait
             }
 
             $inlandDetails = [];
+            $inlandDetailsP=[];
             foreach ($inlandsValue->inlandports as $ports) {
 
                 $monto = 0;
+                $perlocation=false;
+                //PER LOCATION
+                if(count($inlandsValue->inlandLocation)>0){
+                    foreach ($inlandsValue->inlandLocation as  $key=>$location) {
+                       if($port[0]==$location['harbor_id'] && $addressId==$location['location_id'] ){
+                            $rateI = $this->ratesCurrency($location->currency->id, $typeCurrency);
+                            $jsonContainer = json_encode($location->json_containers, JSON_FORCE_OBJECT);
+                            $json = json_decode($jsonContainer);
+
+                            foreach ($contain as $cont) {
+                                $km = 'km' . $cont->code;
+                                if (in_array($cont->id, $equipment)) {
+                                    if (isset($json->{'C' . $cont->code})) {
+                                        $rateMount = $json->{'C' . $cont->code};
+                                        $sub_20 = number_format($rateMount/$rateI, 2, '.', '');
+                                        $amount_inland = number_format($rateMount, 2, '.', '');
+                                        $price_per_unit = number_format($rateMount , 2, '.', '');
+                                    }else {
+                                        $rateMount = 0;
+                                        $amount_inland = 0;
+                                        $price_per_unit = 0;
+                                        $sub_20 = 0;
+                                    }
+                                    $monto += number_format($sub_20, 2, '.', '');
+                                    $$km = false;
+                                    // CALCULO MARKUPS
+                                    $markupI20 = $this->inlandMarkup($markup['inland']['inlandPercentage'], $markup['inland']['inlandAmmount'], $markup['inland']['inlandMarkup'], $sub_20, $typeCurrency, $markup['inland']['inlandMarkup']);
+
+                                    // FIN CALCULO MARKUPS
+                                    $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'amount' => $amount_inland, 'currency' =>$typeCurrency, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
+                                    // $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'amount' => $amount_inland, 'currency' => $location->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
+                                    $arrayInland20 = array_merge($markupI20, $arrayInland20);
+                                    
+                                    $inlandDetailsP[$key][] = $arrayInland20;
+                                }
+                            }
+                        }
+                    }
+                    // dd($inlandDetailsP);
+                    $perlocation=true;
+                }
+
                 if (in_array($ports->ports->id, $port)) {
                     if ($distancia == 0) {
                         if ($type == 'destino') {
@@ -165,43 +208,6 @@ trait SearchTrait
                             }  
                         }
                     }
-                    //PER LOCATION
-                        if(count($inlandsValue->inlandLocation)>0){
-                            foreach ($inlandsValue->inlandLocation as $location) {
-                               if($port[0]==$location['harbor_id'] && $addressId==$location['location_id'] ){
-                                    $rateI = $this->ratesCurrency($location->currency->id, $typeCurrency);
-                                    $jsonContainer = json_encode($location->json_containers, JSON_FORCE_OBJECT);
-                                    $json = json_decode($jsonContainer);
-
-                                    foreach ($contain as $cont) {
-                                        $km = 'km' . $cont->code;
-                                        if (in_array($cont->id, $equipment)) {
-                                            if (isset($json->{'C' . $cont->code})) {
-                                                $rateMount = $json->{'C' . $cont->code};
-                                                $sub_20 = number_format($rateMount/$rateI, 2, '.', '');
-                                                $amount_inland = number_format($rateMount, 2, '.', '');
-                                                $price_per_unit = number_format($rateMount , 2, '.', '');
-                                            }else {
-                                                $rateMount = 0;
-                                                $amount_inland = 0;
-                                                $price_per_unit = 0;
-                                                $sub_20 = 0;
-                                            }
-                                            $monto += number_format($sub_20, 2, '.', '');
-                                            $$km = false;
-                                            // CALCULO MARKUPS
-                                            $markupI20 = $this->inlandMarkup($markup['inland']['inlandPercentage'], $markup['inland']['inlandAmmount'], $markup['inland']['inlandMarkup'], $sub_20, $typeCurrency, $markup['inland']['inlandMarkup']);
-
-                                            // FIN CALCULO MARKUPS
-                                            $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'amount' => $amount_inland, 'currency' =>$typeCurrency, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
-                                            // $arrayInland20 = ['cant_cont' => '1', 'sub_in' => $sub_20, 'amount' => $amount_inland, 'currency' => $location->currency->alphacode, 'price_unit' => $price_per_unit, 'typeContent' => $cont->code];
-                                            $arrayInland20 = array_merge($markupI20, $arrayInland20);
-                                            $inlandDetails[] = $arrayInland20;
-                                        }
-                                    }
-                                }
-                            }
-                        }
                     // KILOMETROS ADICIONALES
 
                     if (isset($inlandsValue->inlandkms)) {
@@ -253,7 +259,31 @@ trait SearchTrait
 
                     $monto = number_format($monto, 2, '.', '');
 
-                    if ($monto > 0) {
+                    if ($monto > 0 && $perlocation==true) {
+                        foreach($inlandDetailsP as $key=>$inlandDetail){
+                            $inlandDetailsP = Collection::make($inlandDetailsP);
+                            //HECTOR ADDED PROVIDER_ID ON 28/04/2021
+                            $arregloInland = ['prov_id' => $inlandsValue->id, 
+                                            'provider' => 'Inland Haulage', 
+                                            'providerName' => $inlandsValue->provider, 
+                                            'port_id' => $ports->ports->id, 
+                                            'port_name' => $ports->ports->name, 
+                                            'port_id' => $ports->ports->id, 
+                                            'validity_start' => $inlandsValue->validity, 
+                                            'validity_end' => $inlandsValue->expire, 
+                                            'km' => $distancia, 
+                                            'monto' => $monto, 
+                                            'type' => $textType, 
+                                            'type_currency' => $inlandDetail[$key]['currency'], 
+                                            'idCurrency' => $typeCurrency, 
+                                            'provider_id' => $inlandsValue->provider_id];
+                            foreach($inlandDetail as $inlandD){
+                                $arregloInland['inlandDetails'][$inlandD['typeContent']] = $inlandD;                          
+                            }
+                            $dataDest[] = $arregloInland;
+                        }
+                         
+                    }elseif($monto > 0 ){
                         $inlandDetails = Collection::make($inlandDetails);
 
                         //HECTOR ADDED PROVIDER_ID ON 28/04/2021
