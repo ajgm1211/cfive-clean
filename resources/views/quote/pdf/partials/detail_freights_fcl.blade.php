@@ -92,7 +92,17 @@
                                                     @foreach ($containers as $c)
                                                         @if($c->code == $key)
                                                             <?php
-                                                                $total_w_profit = $v->surcharge_id != '' ? $v->${'sum_amount_markup_'.$c->code}:$v->${'sum_amount_markup_'.$c->code}+@$r->total_rate->markups['m'.$c->code];
+                                                                if($v->surcharge->name == "Ocean Freight" && $v->surcharge->company_user_id==null){
+                                                                    $total = $v->surcharge_id != '' ? $v->${'sum_amount_markup_'.$c->code}:$v->${'sum_amount_markup_'.$c->code}+@$r->total_rate->markups['m'.$c->code];
+                                                                    foreach($r['markups'] as $m=>$markups ){
+                                                                        $containerM=str_replace("m", "", $m);
+                                                                        if ($containerM==$c->code) {
+                                                                            $total_w_profit=$total+$markups;
+                                                                        }
+                                                                    }
+                                                                }else{
+                                                                    $total_w_profit = $v->surcharge_id != '' ? $v->${'sum_amount_markup_'.$c->code}:$v->${'sum_amount_markup_'.$c->code}+@$r->total_rate->markups['m'.$c->code];
+                                                                }
                                                             ?>
                                                             <!--<td {{ $hide }}>{{isDecimal($v->${'total_sum_'.$c->code}, true)}}</td>-->
                                                             <td {{ $hide }}>{{ @$total_w_profit == null ? 0 : isDecimal( @$total_w_profit, false, true) . ' ' .$v->currency->alphacode}}</td>
