@@ -2745,9 +2745,9 @@ class ImportationController extends Controller
         $type_destiny = TypeDestiny::pluck('description', 'id');
         $equiment = HelperAll::LoadHearderContaniers($equiment_id, 'rates');
 
-
         foreach ($request->idAr as $surcharge_fail_id) {
             $failsurcharge = FailSurCharge::find($surcharge_fail_id);
+            $failsurcharge->load('fail_overweight_ranges');
             $surchargesV = null;
             $originV = null;
             $destinationV = null;
@@ -2773,6 +2773,8 @@ class ImportationController extends Controller
             $classamount = 'green';
             $classcarrier = 'green';
             $classcurrency = 'green';
+            $classupperlimit = 'green';
+            $classlowerlimit = 'green';
 
             $surchargeA = explode('_', $failsurcharge['surcharge_id']);
             $originA = explode('_', $failsurcharge['port_orig']);
@@ -2782,6 +2784,28 @@ class ImportationController extends Controller
             $amountA = explode('_', $failsurcharge['ammount']);
             $carrierA = explode('_', $failsurcharge['carrier_id']);
             $currencyA = explode('_', $failsurcharge['currency_id']);
+
+            $is_ow_limits = $failsurcharge->fail_overweight_ranges->isEmpty();
+            if (!$is_ow_limits) {
+                $lower_limitA = explode('_', $failsurcharge->fail_overweight_ranges->first()->lower_limit);
+                $upper_limitA = explode('_', $failsurcharge->fail_overweight_ranges->first()->upper_limit);
+            } else {
+                $lower_limitA = [0];
+                $upper_limitA = [0];
+            }
+            if (count($lower_limitA) > 1) {
+                $lower_limitA = $lower_limitA[0] . ' (error)';
+                $classlowerlimit = 'red';
+            } else {
+                $lower_limitA = $lower_limitA[0];
+            }
+    
+            if (count($upper_limitA) > 1) {
+                $upper_limitA = $upper_limitA[0] . ' (error)';
+                $classupperlimit = 'red';
+            } else {
+                $upper_limitA = $upper_limitA[0];
+            }
 
             if ($failsurcharge->differentiator == 1) {
                 $originOb = Harbor::where('varation->type', 'like', '%' . strtolower($originA[0]) . '%')
@@ -2871,6 +2895,8 @@ class ImportationController extends Controller
                 'calculation_type' => $calculation_typeV,
                 'type_destiny' => $type_destinyV,
                 'amount' => $amountV,
+                'lower_limit' => $lower_limitA,
+                'upper_limit' => $upper_limitA,
                 'carrierAIn' => $carrierV,
                 'currencyAIn' => $currencyV,
                 'classorigin' => $classdorigin,
@@ -2880,6 +2906,8 @@ class ImportationController extends Controller
                 'classsurcharger' => $classsurcharger,
                 'classtypedestiny' => $classtypedestiny,
                 'classcalculationtype' => $classcalculationtype,
+                'classupperlimit' => $classupperlimit,
+                'classlowerlimit' => $classlowerlimit,
                 'classamount' => $classamount,
                 'type_rate' => $type_rate,
             ];
