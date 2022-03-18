@@ -340,12 +340,11 @@ class ImportationController extends Controller
                     $lower_limitEx = explode('_', trim($limits['lower_limit']));
                     if (count($upper_limitEx) <= 1) {
                         $upperlimitB = true;
-                        $upper_limit = (!empty($upper_limitEx[0]))?$upper_limitEx[0]:null;
-
+                        $upper_limit = (!empty($upper_limitEx[0])) ? $upper_limitEx[0] : null;
                     }
                     if (count($lower_limitEx) <= 1) {
                         $lowerlimitB = true;
-                        $lower_limit = (!empty($lower_limitEx[0]))?$lower_limitEx[0]:null;
+                        $lower_limit = (!empty($lower_limitEx[0])) ? $lower_limitEx[0] : null;
                     }
                 } else {
                     $lowerlimitB = true;
@@ -389,7 +388,7 @@ class ImportationController extends Controller
                         $surcharB = true;
                         $surchargerV = $surchargerV[0]['id'];
                     }
-                    
+
                     //  Type Destiny ---------------------------------------------------------------------------
 
                     $typedestunyV = TypeDestiny::where('description', '=', $typedestinyEX[0])->get();
@@ -2799,7 +2798,7 @@ class ImportationController extends Controller
             } else {
                 $lower_limitA = $lower_limitA[0];
             }
-    
+
             if (count($upper_limitA) > 1) {
                 $upper_limitA = $upper_limitA[0] . ' (error)';
                 $classupperlimit = 'red';
@@ -2931,27 +2930,64 @@ class ImportationController extends Controller
         $data_carrier = $request->carrier_id;
         $data_currency = $request->currency_id;
         $typerate = $request->typerate;
+        $data_lower_limit = $request->lower_limit;
+        $data_upper_limit = $request->upper_limit;
         $equiment_id = $request->equiment_id;
+        $calculationtype = CalculationType::all();
+        $calculationtype = $calculationtype->map(function ($item, $key) {
+            $item->setAttribute('options_decode', (!empty($item->options)) ? json_decode($item->options, true) : []);
+            return $item;
+        });
 
         // dd($typerate);
         foreach ($data_surcharges as $key => $data_surcharge) {
+            $ct_get = $calculationtype->get($data_type_calculation[$key]);
+            $limits_val = [];
+            $ammount = $data_amount[$key];
             $surcharge_id = LocalCharge::where('surcharge_id', $data_surcharge_id[$key])
                 ->where('typedestiny_id', $data_type_destiny[$key])
                 ->where('contract_id', $contract_id)
                 ->where('calculationtype_id', $data_type_calculation[$key])
-                ->where('ammount', $data_amount[$key])
-                ->where('currency_id', $data_currency[$key])
-                ->first();
-            // dd($exists_surcharge);
-            if (empty($surcharge_id)) {
+                ->where('ammount', $ammount)
+                ->where('currency_id', $data_currency[$key]);
+            if ($ct_get->options_decode['limits_ow']) {
+                $limits_val[0] = (!empty($data_lower_limit[$key])) ? intval($data_lower_limit[$key]) : null;
+                $limits_val[1] = (!empty($data_upper_limit[$key])) ? intval($data_upper_limit[$key]) : null;
+                $limits_val[0] = ($limits_val[0] == 0) ? null : $limits_val[0];
+                $limits_val[1] = ($limits_val[1] == 0) ? null : $limits_val[1];
+                $surcharge_id->whereHas('overweight_ranges', function ($query) use ($limits_val, $ammount) {
+                    $query->where('lower_limit', $limits_val[0])
+                        ->where('upper_limit', $limits_val[1])
+                        ->where('amount', $ammount)
+                        ->where('model_type', 'App\\LocalCharge');
+                });
+            }
+            $surcharge_id = $surcharge_id->get();
+            //dd($surcharge_id, $limits_val, $ct_get);
+            if ($surcharge_id->isEmpty()) {
                 $surcharge_id = new LocalCharge();
                 $surcharge_id->surcharge_id = $data_surcharge_id[$key];
                 $surcharge_id->typedestiny_id = $data_type_destiny[$key];
                 $surcharge_id->calculationtype_id = $data_type_calculation[$key];
-                $surcharge_id->ammount = $data_amount[$key];
+                $surcharge_id->ammount = $ammount;
                 $surcharge_id->currency_id = $data_currency[$key];
                 $surcharge_id->contract_id = $contract_id;
-                $surcharge_id->save();
+                if ($ct_get->options_decode['limits_ow']) {
+                    if ((($limits_val[0] == null && $limits_val[1] == null) != true)) {
+                        $surcharge_id->save();
+                        OverweightRange::create([
+                            'lower_limit' => $limits_val[0],
+                            'upper_limit' => $limits_val[1],
+                            'amount' => $ammount,
+                            'model_id' => $surcharge_id->id,
+                            'model_type' => 'App\\LocalCharge',
+                        ]);
+                    }
+                } else {
+                    $surcharge_id->save();
+                }
+            } else {
+                $surcharge_id = $surcharge_id->first();
             }
 
             if ($typerate[$key]  == 'port') {
@@ -3002,7 +3038,13 @@ class ImportationController extends Controller
                 }
             }
             $failSurcharge = FailSurCharge::find($data_surcharge);
-            $failSurcharge->forceDelete();
+            if ($ct_get->options_decode['limits_ow']) {
+                if ((($limits_val[0] == null && $limits_val[1] == null) != true)) {
+                    $failSurcharge->forceDelete();
+                }
+            } else {
+                $failSurcharge->forceDelete();
+            }
             //eliminar fail aqui
         }
 
