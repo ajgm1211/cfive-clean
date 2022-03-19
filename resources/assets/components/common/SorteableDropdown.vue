@@ -116,6 +116,13 @@ export default {
       this.$nextTick(() => this.$refs.dropdowninput.focus());
       this.$emit("reset");
     },
+    focusInput(){
+      this.$nextTick(() => this.$refs.dropdowninput.focus());
+      console.log('focusing??')
+    },
+    blur(){
+      console.log('blur')
+    }
   },
   computed: {
     returnItems() {

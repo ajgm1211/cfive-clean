@@ -13,7 +13,6 @@ class ApiCredentialsController extends Controller
         $clients = CompanyUser::paginate(10);
         return $clients;
     }
-
     public function listAvailableApiProviders(Request $request){
         $company_user_id = $request->input("company_user_id");
         $company_user = CompanyUser::find($company_user_id);
@@ -28,12 +27,10 @@ class ApiCredentialsController extends Controller
         
         return $apiProviders;
     }
-
     public function searchCompanyUsers($search) { 
         $clients = CompanyUser::where('name', 'like', '%'.$search.'%')->paginate(10);
         return $clients;
     }
-
     public function listApiProvidersByCompanyUser(CompanyUser $companyUser) {
         
         $companyUserId = $companyUser->id; 

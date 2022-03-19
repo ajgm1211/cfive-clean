@@ -799,6 +799,7 @@ class SearchApiController extends Controller
                             $totals_with_markups[$code] = isDecimal($target_totals[$code], true);
                         }
                     }
+                    $fixed = false;
                 }
         
                 //Appending markups and added containers and totals to rate or charge
