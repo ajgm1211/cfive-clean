@@ -66,6 +66,7 @@ class GenerateQuotePdf extends Command
                 }
             } catch (Exception $e) {
                 Log::error("Error creating API PDF: " . $e->getMessage() . " for quote: " . $quote->quote_id . " in line : " . $e->getLine());
+                continue;
             }
         }
 
