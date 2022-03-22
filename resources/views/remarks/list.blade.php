@@ -3,6 +3,20 @@
 @section('content')
 
 <div class="m-content">
+    <div class="dropdown show" align="right" style="margin:20px;">
+        <a class="dropdown-toggle" style="font-size:16px" href="#" role="button" id="helpOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            See how it works
+        </a>
+
+        <div 
+            class="dropdown-menu" 
+            aria-labelledby="helpOptions"
+        >
+            <a class="dropdown-item" target="_blank" href="https://support.cargofive.com/how-to-edit-or-add-remarks/"> 
+                How to edit or add remarks
+            </a>
+        </div>
+    </div>
     <div class="m-portlet m-portlet--mobile">
         <div class="m-portlet__head">
             <div class="m-portlet__head-caption">
