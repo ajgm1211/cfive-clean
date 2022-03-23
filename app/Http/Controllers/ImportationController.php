@@ -873,12 +873,12 @@ class ImportationController extends Controller
             $json_account = json_decode($account->data, true);
             if (array_key_exists('final_columns', $json_account)) {
                 // colocar contract_id al despachar para evitar el borrado mientras se importa el contracto
-                /*if (env('APP_VIEW') == 'operaciones') {
+                if (env('APP_VIEW') == 'operaciones') {
                     ImportationRatesSurchargerJob::dispatch($account->id, $contract_id, \Auth::user()->id)->onQueue('operaciones'); //NO BORRAR!!
                 } else {
                     ImportationRatesSurchargerJob::dispatch($account->id, $contract_id, \Auth::user()->id); //NO BORRAR!!
-                }*/
-                $this->handle($account->id);
+                }
+                ///$this->handle($account->id);
                 return redirect()->route('redirect.Processed.Information', $contract_id);
             } else {
                 Log::error('Json-Account data load error. Reload the page and try again please. ' . Auth::user()->email);
@@ -1025,6 +1025,7 @@ class ImportationController extends Controller
                     $typeChargeExiBol = false;
                     $calculationtypeExiBol = false;
                     $typedestinyExitBol = false;
+                    $ct_converted_Bol = false;
 
                     $calculation_type_exc = null;
                     $chargeExc_val = null;
@@ -1884,27 +1885,31 @@ class ImportationController extends Controller
                                         }
                                     }
                                     //---------------------------- CALCULATION TYPE -----------------------
-                                    if ($calculationtypeExiBol) {
+                                    if ($calculationtypeExiBol == true && $ct_converted_Bol == false) {
                                         $calculationtypeVal = CalculationType::find($calculationtypeVal);
-                                        $calculationtypeVal = $calculationtypeVal->name;
+                                        $calculationtypeVal = $calculationtypeVal['name'];
+                                        $ct_converted_Bol = true;
                                     }
                                     //---------------------------- TYPE - SURCHARGE -----------------------
                                     if (strnatcasecmp($chargeExc_val, $chargeVal) != 0) {
                                         if ($typeChargeExiBol) {
                                             $surchargeVal = Surcharge::find($surchargeVal);
                                             $surchargeVal = $surchargeVal->name;
+                                            $typeChargeExiBol = false;
                                         }
                                     }
                                     //---------------------------- CARRIER --------------------------------
                                     if ($carriExitBol) {
                                         $carrierVal = Carrier::find($carrierVal);
                                         $carrierVal = $carrierVal->name;
+                                        $carriExitBol = false;
                                     }
                                     //---------------------------- TYPE DESTINY ---------------------------
                                     if ($typedestinyExitBol == true && strnatcasecmp($chargeExc_val, $chargeVal) != 0) {
                                         try {
                                             $typedestinyVal = TypeDestiny::find($typedestinyVal);
                                             $typedestinyVal = $typedestinyVal->description;
+                                            $typedestinyExitBol = false;
                                         } catch (\Exception $e) {
                                             dd($datos_finales);
                                         }
@@ -2033,7 +2038,7 @@ class ImportationController extends Controller
                                         } else {
                                             $differentiatorVal = 1;
                                         }
-                                        if ($calculationtypeExiBol) {
+                                        if ($calculationtypeExiBol == true && $ct_converted_Bol == true) {
                                             // Es PER_CONTAINER PER_CONATINER_IMO .....
                                             if (in_array($calculation_type_exc, $behaviourContainers)) {
                                                 $equals_values = [];
@@ -2310,11 +2315,17 @@ class ImportationController extends Controller
                                                 if ($conta_row[0] == 0.0 || $conta_row[0] == 0) {
                                                     $ammoun_zero = true;
                                                 }
+                                                $limit_ow_bool = false;
+                                                if (array_key_exists($calculation_type_exc, $conatiner_calculation_id)) {
+                                                    $limit_ow_bool = $conatiner_calculation_id[$calculation_type_exc][$key]['limits_ow'];
+                                                }
+
                                                 $rows_calculations[$key] = [
-                                                    'calculationtype' => $calculationtypeValFail . 'Fila ' . $countRow,
+                                                    'calculationtype' => $calculationtypeValFail . ' Fila ' . $countRow,
                                                     'ammount' => $ammount,
                                                     'ammount_zero' => $ammoun_zero,
                                                     'currency' => $currency_val,
+                                                    'limits_ow' => $limit_ow_bool,
                                                 ];
                                             }
                                             //dd('llega aqui Cals',$rows_calculations);
@@ -5268,9 +5279,7 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(Request $request)
     {
-        //$behaviourContainers = HelperAll::calculationByContainers(1);
-        //$behaviourContainers = BehaviourPerContainer::pluck('name')->all();
-        $surchargeObj = FailSurCharge::with('fail_overweight_ranges')->find(978658);
-        dd($surchargeObj->fail_overweight_ranges->isEmpty());
+        $carrierArr = PrvCarrier::get_carrier('MAERSK');
+        dd($carrierArr);
     }
 }

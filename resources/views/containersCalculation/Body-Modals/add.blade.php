@@ -16,7 +16,7 @@
         <div class="col-md-5">
             <label class="">Conatiner</label>
             <div class="" id="conatiner_class">
-                {!! Form::select('container_id',$containers,null,['class'=>'m-select2-general form-control','required','id'=>'conatiner'])!!}
+                {!! Form::select('container_id[]',$containers,null,['class'=>'m-select2-general form-control','required','id'=>'conatiner','multiple' => 'multiple'])!!}
             </div>
         </div>
         <div class="col-md-5">
