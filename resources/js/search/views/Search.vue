@@ -1,5 +1,5 @@
 <template>
-  <div id="search" class="search pt-5">
+  <div id="search" class="search" style="padding-top:1px;">
     <HelpDropdown
       :options="helpOptions"
     ></HelpDropdown>
