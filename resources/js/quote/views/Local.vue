@@ -373,7 +373,8 @@
                                 class="q-total"
                                 v-if="currentQuoteData.type == 'LCL'"
                             >
-                                <b-td colspan="4"></b-td>
+                                
+                                <b-td colspan="5"></b-td>
 
                                 <b-td
                                     ><span><b>Total</b></span></b-td
