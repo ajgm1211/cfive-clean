@@ -10,7 +10,21 @@ class LocalChargeQuoteLcl extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
     
-    protected $fillable = ['charge', 'calculation_type_id', 'sale_term_code_id', 'units', 'price', 'total', 'currency_id', 'port_id', 'quote_id', 'type_id', 'provider_name', 'surcharge_id'];
+    protected $fillable = [
+        'charge', 
+        'calculation_type_id', 
+        'sale_term_code_id', 
+        'units', 
+        'price', 
+        'profit',
+        'total', 
+        'currency_id', 
+        'port_id', 
+        'quote_id', 
+        'type_id', 
+        'provider_name', 
+        'surcharge_id'
+    ];
 
     public function quotev2()
     {
