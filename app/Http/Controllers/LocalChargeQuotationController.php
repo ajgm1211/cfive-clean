@@ -636,11 +636,13 @@ class LocalChargeQuotationController extends Controller
     }
 
     public function storeInPivotChargeSaleCodeQuote($sale_code_id, $charge, $local_charge_quote){
+        
         $chargeSaleCode=ChargeSaleCodeQuote::where([
             'charge_id' => $charge['id'],
             'sale_term_code_id' => $sale_code_id,
             'local_charge_quote_id' => $local_charge_quote->id,
-        ]);
+        ])->first();
+
         if($chargeSaleCode==null){
             ChargeSaleCodeQuote::create([
                 'charge_id' => $charge['id'],
