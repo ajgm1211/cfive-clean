@@ -1985,47 +1985,62 @@ trait QuoteV2Trait
 
         return $result;
     }
-    public function convertToCurrencyQuote(Currency $fromCurrency, Currency $toCurrency, Array $amounts,$quote)
+    public function convertToCurrencyQuote(Currency $fromCurrency, Currency $toCurrency, Array $amounts, $quote)
     {    
-       if (isset($quote['pdf_options']['exchangeRates'])) {
-            foreach($quote['pdf_options']['exchangeRates'] as $key=>$exchangeRate){
-                
-                if ($fromCurrency->alphacode==$exchangeRate['alphacode']) {
-                    $exchangeRatefrom=$quote['pdf_options']['exchangeRates'][$key];
-                }elseif($toCurrency['alphacode']==$exchangeRate['alphacode']){
-                    $exchangeRateTo=$quote['pdf_options']['exchangeRates'][$key];
-                }
-            }
-        } 
-        if (isset($exchangeRatefrom)) {
-            $fromCurrency=$exchangeRatefrom;
-            $inputConversion=$exchangeRatefrom['exchangeUSD'];
-        }
-        else {
-            $inputConversion=$fromCurrency->rates;
-        }
-        if (isset($exchangeRateTo)) {
-            $toCurrency=$exchangeRateTo;
-            $outputConversion=$exchangeRateTo['exchangeUSD'];
-        }else {
-            $outputConversion=$toCurrency->rates;
+        if ($fromCurrency['alphacode'] == $toCurrency['alphacode']) {                
+            return $amounts;
         }
 
-        if ($fromCurrency['alphacode'] != $toCurrency['alphacode']) {
-            foreach ($amounts as $container => $price) {
-                $convertedPrice = $price / $inputConversion;
-                $amounts[$container] = isDecimal($convertedPrice,true);
-            }
-            if($toCurrency['alphacode']=='USD'){
-                return $amounts;
-            }else{
-                foreach ($amounts as $container => $price) {
-                    $convertedPrice = $price * $outputConversion;
-                    $amounts[$container] = isDecimal($convertedPrice,true);
+        $exchangeRates = $quote['pdf_options']['exchangeRates'];
+        $factorType = ['direct', 'reverse'];
+
+        if($exchangeRates) {
+            foreach($exchangeRates as $key=>$exchangeRate){            
+                if ($fromCurrency->alphacode == $exchangeRate['alphacode']) {
+                    $exchangeRatefrom=$exchangeRates[$key];
+                }
+                if($toCurrency->alphacode == $exchangeRate['alphacode']){
+                    $exchangeRateTo=$exchangeRates[$key];
                 }
             }
         }
+        
+        // Si toCurrency = USD O EUR, usar el factor de conversión de pdf_options        
+        if($toCurrency->alphacode == 'USD') {               
+            return $this->convertToCurrencyPrevious($amounts, $exchangeRatefrom['exchangeUSD'], $factorType[0]);
+        }
+        if($toCurrency->alphacode == 'EUR') {
+            return $this->convertToCurrencyPrevious($amounts, $exchangeRatefrom['exchangeEUR'], $factorType[0]);
+        }
+    
+        //Si no, primero convertir a USD luego a la moneda destino         
+        $usdExchangeRateFrom = $this->getUsdExchangeRate($exchangeRatefrom, $fromCurrency);
+        $usdExchangeRateTo = $this->getUsdExchangeRate($exchangeRateTo, $toCurrency);        
+        $amountsUSD = $this->convertToCurrencyPrevious($amounts, $usdExchangeRateFrom, $factorType[0]);
 
+        return $this->convertToCurrencyPrevious($amountsUSD, $usdExchangeRateTo, $factorType[1]);
+    }
+
+    public function convertToCurrencyPrevious($amounts, $exchangeRate, $factorType) {
+        foreach ($amounts as $container => $price) {
+            if($factorType == 'direct') {
+                $convertedPrice = $price / $exchangeRate;
+            } 
+            if($factorType == 'reverse') {
+                $convertedPrice = $price * $exchangeRate;
+            }
+            $amounts[$container] = isDecimal($convertedPrice,true);
+        }
         return $amounts;
+    }
+
+    public function getUsdExchangeRate($exchangeRate, $currency) {
+        if (isset($exchangeRate)) {
+            $inputConversion=$exchangeRate['exchangeUSD'];
+        }
+        else { 
+            $inputConversion=$currency->rates;
+        }
+        return $inputConversion;
     }
 }
