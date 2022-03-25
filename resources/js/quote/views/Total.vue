@@ -696,4 +696,8 @@ h4 {
   justify-self: right;
   margin-bottom: -15px;
 }
+
+section {
+  width: auto;
+}
 </style>
