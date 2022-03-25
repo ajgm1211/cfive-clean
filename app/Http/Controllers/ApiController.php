@@ -3619,7 +3619,8 @@ $company_cliente = null;
             // Local charges
                 $types=[
                     0 =>'origin',
-                    1 =>'destiny'
+                    1 =>'destiny',
+                    2 =>'freight'
                 ];
                 $contractId = $data->contract->id;
                 $data1 = \DB::select(\DB::raw('call proc_localchar(' . $data->contract->id . ')'));
