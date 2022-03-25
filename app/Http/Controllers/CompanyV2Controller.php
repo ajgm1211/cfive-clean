@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Excel;
 use App\Company;
 use App\Contact;
 use App\FailCompany;
@@ -14,12 +13,12 @@ use Illuminate\Http\Request;
 use App\Http\Traits\SearchTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Input;
 use App\Http\Resources\CompanyResource;
 use App\Http\Resources\ContactResource;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\FailCompanyResource;
-
 
 class CompanyV2Controller extends Controller
 {
@@ -287,6 +286,15 @@ class CompanyV2Controller extends Controller
             
     }
 
+    public function createCompaniesMassive(Request $request){
+        //guardar el archivo excel
+        //leer el archivo excel
+        //insertar en la base de datos las compañias que todos los datos esten bien en la tabla companies
+        //insertar en la base de datos las compañias que todos los datos que no esten bien en la tabla failed_companies
+        //retornar el estado de la carga 200 para creacion completa 205 para creacion parcial 500 para fallo de creacion o almacenado de la info
+    }
+
+    //enviar esta funcion a un trait de wl
     public function callApiTransferToWhiteLabel($companyForTransfer){
         $company = $companyForTransfer->toArray();
         $company_user_id = \Auth::user()->company_user_id;
@@ -310,5 +318,46 @@ class CompanyV2Controller extends Controller
                     );
 
         return $result;
+    }
+
+    public function exportCompanies(Request $request, $format){
+
+        $filename       = "companies";
+        $titleSheet1    = "companies";
+        $Sheet1header   = ['business_name','phone','address','email','tax_number', 'whitelabel'];
+        $sheet1Content  = Company::where('company_user_id',  \Auth::user()->company_user_id )->get()->toArray();
+        $formatExport   = [];
+
+        return Excel::create($filename, function($excel) use ($titleSheet1, $Sheet1header, $sheet1Content, $formatExport) {
+
+            $excel->sheet($titleSheet1, function($sheet) use ($Sheet1header, $sheet1Content, $formatExport){
+                
+                $sheet->row(1, $Sheet1header);
+                $sheet->row(1, function($row){
+                    $row->setBackground('#006bfa');
+                    $row->setFontColor('#ffffff');
+                    $row->setAlignment('center');
+                });
+                
+                $sheetRow = 2;
+                foreach ($sheet1Content as $key => $value) {
+
+                    $formatExport['business_name'] = $value['business_name'] != null ? $value['business_name'] : 'N/A';
+                    $formatExport['phone'] = $value['phone'] != null ? $value['phone'] : 'N/A';
+                    $formatExport['address'] = $value['address'] != null ? $value['address'] : 'N/A';
+                    $formatExport['email'] = $value['email'] != null ? $value['email'] : 'N/A';
+                    $formatExport['tax_number'] = $value['tax_number'] != null ? $value['tax_number'] : 'N/A';
+                    $formatExport['whitelabel'] = $value['whitelabel'] ? 'On Whitelabel' : 'Not on whitelabel';
+                    
+                    $sheet->row($sheetRow, $formatExport);
+                    $sheet->row($sheetRow, function($row){
+                        $row->setAlignment('center');
+                    });
+                    
+                    $sheetRow ++;
+                    $formatExport= [];
+                }
+            });
+        })->export($format);
     }
 }

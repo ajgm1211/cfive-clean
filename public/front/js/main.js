@@ -73775,6 +73775,9 @@ module.exports = Component.exports
     create: function create(company) {
         return api.call('post', '/api/companies/store', { company: company });
     },
+    createMassive: function createMassive(companies) {
+        return api.call('post', '/api/companies/create-massive', { companies: companies });
+    },
     transferCompanies: function transferCompanies(companies) {
         return api.call('post', '/api/companies/toWhiteLevel', { companies: companies });
     }
@@ -76915,6 +76918,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__partials_CreateModal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__partials_CreateModal__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__partials_ToWhiteLevelModal__ = __webpack_require__(788);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__partials_ToWhiteLevelModal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__partials_ToWhiteLevelModal__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__partials_ExportModal__ = __webpack_require__(837);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__partials_ExportModal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__partials_ExportModal__);
 
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -76976,6 +76981,15 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -76985,15 +76999,16 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: { DataTable: __WEBPACK_IMPORTED_MODULE_3__components_common_DataTable___default.a, MainButton: __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton___default.a, CreateModal: __WEBPACK_IMPORTED_MODULE_4__partials_CreateModal___default.a, ToWLModal: __WEBPACK_IMPORTED_MODULE_5__partials_ToWhiteLevelModal___default.a },
+  components: { DataTable: __WEBPACK_IMPORTED_MODULE_3__components_common_DataTable___default.a, MainButton: __WEBPACK_IMPORTED_MODULE_2__components_common_MainButton___default.a, CreateModal: __WEBPACK_IMPORTED_MODULE_4__partials_CreateModal___default.a, ToWLModal: __WEBPACK_IMPORTED_MODULE_5__partials_ToWhiteLevelModal___default.a, ExportModal: __WEBPACK_IMPORTED_MODULE_6__partials_ExportModal___default.a },
   data: function data() {
     return {
       actions: __WEBPACK_IMPORTED_MODULE_1__store_modules_company_actions__["a" /* default */],
       totalResults: true,
       create: false,
-      ModalWhiteLabel: false,
+      modalWhiteLabel: false,
       isMassiveCreation: false,
       AddToWhiteLevel: true,
+      exportCompaniesModal: false,
       selectForTransfer: [],
       fields: [{ key: "id", label: "ID", filterIsOpen: true }, { key: "business_name", label: "Business Name", filterIsOpen: false }, { key: "phone", label: "Phone", filterIsOpen: false }, { key: "email", label: "Email", filterIsOpen: false }, { key: "address", label: "Address", filterIsOpen: false }, { key: "tax_number", label: "Tax Number", filterIsOpen: false }, { key: "created_at", label: "Created at", filterIsOpen: false }],
       classTable: "table table-striped table-responsive",
@@ -77061,7 +77076,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       this.AddToWhiteLevel = !status;
     },
     AddToWhiteLevelModal: function AddToWhiteLevelModal() {
-      this.ModalWhiteLabel = true;
+      this.modalWhiteLabel = true;
     },
     transferTWL: function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee() {
@@ -77088,6 +77103,9 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
     }(),
     selectedData: function selectedData(selectedCompanies) {
       this.selectForTransfer = selectedCompanies;
+    },
+    exportCompaniesModalShow: function exportCompaniesModalShow() {
+      this.exportCompaniesModal = true;
     }
   }
 });
@@ -81304,6 +81322,16 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -81350,7 +81378,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       input_error: false,
       dataLoaded: false,
       validformats: [".csv", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel"],
-      whiteLabel: false
+      whitelabel: "0"
     };
   },
 
@@ -81412,12 +81440,11 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
       var _ref3 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee2() {
         var _this = this;
 
-        var url, formData, validation;
+        var formData, validation;
         return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                url = 'api/contracts';
                 formData = new FormData();
 
                 formData.append('_token', this.csrf);
@@ -81425,18 +81452,18 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 validation = this.validateFormat(this.$refs.file.files[0].type);
 
                 if (!(validation == true)) {
-                  _context2.next = 12;
+                  _context2.next = 11;
                   break;
                 }
 
                 this.messageFile = "The File is valid!";
                 if ($(this.$refs.file.files[0]) !== undefined) {
                   formData.append('file', this.$refs.file.files[0]);
-                  formData.append('whiteLabel', this.whiteLabel);
+                  formData.append('whitelabel', this.whitelabel);
                 }
                 this.show = !this.show;
-                _context2.next = 10;
-                return this.actions.update(url, formData).then(function (response) {
+                _context2.next = 9;
+                return this.actions.createMassive(formData).then(function (response) {
                   _this.messageFile = 'We have registered the information correctly!';
                   _this.showDismissibleAlert = false;
                   _this.showDismissibleAlertSuccess = true;
@@ -81449,14 +81476,14 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                   _this.messageFile = 'We are sorry, it seems that a communication error occurred or it may be that the excel format does not comply with the requested standard';
                 });
 
-              case 10:
-                _context2.next = 13;
+              case 9:
+                _context2.next = 12;
                 break;
 
-              case 12:
+              case 11:
                 this.messageFile = "The file is invalid, please enter a valid file format: .csv, .xlsx, .xls";
 
-              case 13:
+              case 12:
               case "end":
                 return _context2.stop();
             }
@@ -81540,7 +81567,9 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
     }
   },
   mounted: function mounted() {
-    this.setInitialData();
+    if (!this.create) {
+      this.setInitialData();
+    }
   }
 });
 
@@ -82141,56 +82170,45 @@ var render = function() {
                               [
                                 _c(
                                   "div",
-                                  { staticClass: "modal-footer-content-wl" },
+                                  {
+                                    staticClass:
+                                      "modal-footer-content-wl input-box"
+                                  },
                                   [
-                                    _c("input", {
-                                      directives: [
-                                        {
-                                          name: "model",
-                                          rawName: "v-model",
-                                          value: _vm.whitelabel,
-                                          expression: "whitelabel"
-                                        }
-                                      ],
-                                      attrs: {
-                                        type: "checkbox",
-                                        id: "checkbox"
-                                      },
-                                      domProps: {
-                                        checked: Array.isArray(_vm.whitelabel)
-                                          ? _vm._i(_vm.whitelabel, null) > -1
-                                          : _vm.whitelabel
-                                      },
-                                      on: {
-                                        change: function($event) {
-                                          var $$a = _vm.whitelabel,
-                                            $$el = $event.target,
-                                            $$c = $$el.checked ? true : false
-                                          if (Array.isArray($$a)) {
-                                            var $$v = null,
-                                              $$i = _vm._i($$a, $$v)
-                                            if ($$el.checked) {
-                                              $$i < 0 &&
-                                                (_vm.whitelabel = $$a.concat([
-                                                  $$v
-                                                ]))
-                                            } else {
-                                              $$i > -1 &&
-                                                (_vm.whitelabel = $$a
-                                                  .slice(0, $$i)
-                                                  .concat($$a.slice($$i + 1)))
-                                            }
-                                          } else {
-                                            _vm.whitelabel = $$c
-                                          }
-                                        }
-                                      }
-                                    }),
-                                    _vm._v(" "),
                                     _c(
-                                      "label",
-                                      { attrs: { for: "checkbox" } },
-                                      [_vm._v("Add to whitelabel")]
+                                      "div",
+                                      { attrs: { id: "checkbox-create" } },
+                                      [
+                                        _c(
+                                          "b-form-checkbox",
+                                          {
+                                            attrs: {
+                                              name: "checkbox-create",
+                                              value: "1",
+                                              "unchecked-value": "0"
+                                            },
+                                            model: {
+                                              value: _vm.whitelabel,
+                                              callback: function($$v) {
+                                                _vm.whitelabel = $$v
+                                              },
+                                              expression: "whitelabel"
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "label",
+                                              { attrs: { for: "" } },
+                                              [
+                                                _vm._v(
+                                                  "\n                              Add to whitelabel\n                            "
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      ],
+                                      1
                                     )
                                   ]
                                 ),
@@ -82623,7 +82641,7 @@ var render = function() {
             _vm._v(" "),
             _c(
               "b-dropdown",
-              { attrs: { id: "dropdown-left", text: "Importacion" } },
+              { attrs: { id: "dropdown-left", text: "Import" } },
               [
                 _c(
                   "b-dropdown-item",
@@ -82638,9 +82656,18 @@ var render = function() {
                   [_vm._v("Upload Companies")]
                 ),
                 _vm._v(" "),
-                _c("b-dropdown-item", { attrs: { href: "#" } }, [
-                  _vm._v("Donwload File")
-                ]),
+                _c(
+                  "b-dropdown-item",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        return _vm.exportCompaniesModalShow()
+                      }
+                    }
+                  },
+                  [_vm._v("Donwload File")]
+                ),
                 _vm._v(" "),
                 _c(
                   "b-dropdown-item",
@@ -82714,7 +82741,7 @@ var render = function() {
           })
         : _vm._e(),
       _vm._v(" "),
-      _vm.ModalWhiteLabel
+      _vm.modalWhiteLabel
         ? _c("ToWLModal", {
             attrs: {
               title: "To WhiteLevel",
@@ -82723,9 +82750,24 @@ var render = function() {
             },
             on: {
               cancel: function($event) {
-                _vm.ModalWhiteLabel = false
+                _vm.modalWhiteLabel = false
               },
               transferTWL: _vm.transferTWL
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.exportCompaniesModal
+        ? _c("ExportModal", {
+            attrs: {
+              title: "Companies",
+              action: "Export",
+              selectedCompanies: _vm.selectForTransfer
+            },
+            on: {
+              cancel: function($event) {
+                _vm.exportCompaniesModal = false
+              }
             }
           })
         : _vm._e()
@@ -83109,6 +83151,15 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -83375,29 +83426,20 @@ var render = function() {
           _c(
             "b-col",
             [
-              _c(
-                "label",
-                { staticClass: "labelv2", attrs: { for: "select-lenguage" } },
-                [_vm._v("Pdf language")]
-              ),
-              _vm._v(" "),
-              _c("b-form-select", {
-                staticClass: "input-v2",
-                attrs: {
-                  name: "select-lenguage",
-                  options: _vm.options_pdf_lenguages
-                },
+              _c("CustomInput", {
+                ref: "tax_number",
+                attrs: { label: "Tax number", name: "tax_number" },
                 on: {
-                  change: function($event) {
+                  blur: function($event) {
                     return _vm.update()
                   }
                 },
                 model: {
-                  value: _vm.companyData.pdf_language,
+                  value: _vm.companyData.tax_number,
                   callback: function($$v) {
-                    _vm.$set(_vm.companyData, "pdf_language", $$v)
+                    _vm.$set(_vm.companyData, "tax_number", $$v)
                   },
-                  expression: "companyData.pdf_language"
+                  expression: "companyData.tax_number"
                 }
               })
             ],
@@ -84557,6 +84599,331 @@ var Api = function () {
 }();
 
 /* harmony default export */ __webpack_exports__["a"] = (Api);
+
+/***/ }),
+/* 834 */,
+/* 835 */,
+/* 836 */,
+/* 837 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(33)
+/* script */
+var __vue_script__ = __webpack_require__(838)
+/* template */
+var __vue_template__ = __webpack_require__(839)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "frontend/views/Company/partials/ExportModal.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4002952e", Component.options)
+  } else {
+    hotAPI.reload("data-v-4002952e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 838 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(386);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_toastr__ = __webpack_require__(398);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_toastr___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_toastr__);
+
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    title: {
+      type: String
+    },
+    action: {
+      type: String
+    }
+  },
+  data: function data() {
+    return {
+      format: 'xlsx',
+      options_formats: [{ text: 'csv', value: 'csv' }, { text: 'xls', value: 'xls' }, { text: 'xlsx', value: 'xlsx' }]
+    };
+  },
+
+  methods: {
+    exportCompanies: function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee() {
+        return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                __WEBPACK_IMPORTED_MODULE_1_toastr___default.a.warning("Export in progress...");
+                this.$emit('cancel');
+
+              case 2:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function exportCompanies() {
+        return _ref.apply(this, arguments);
+      }
+
+      return exportCompanies;
+    }()
+  }
+});
+
+/***/ }),
+/* 839 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("section", [
+    _c("div", {
+      staticClass: "layer",
+      on: {
+        click: function($event) {
+          return _vm.$emit("cancel")
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("div", { staticClass: "create-modal" }, [
+      _c("div", { staticClass: "modal-head" }, [
+        _c("h3", [_vm._v(_vm._s(_vm.action + " " + _vm.title))])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "modal-content-create" },
+        [
+          _c(
+            "b-form",
+            {
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.exportCompanies.apply(null, arguments)
+                }
+              }
+            },
+            [
+              _c(
+                "b-container",
+                [
+                  _c(
+                    "b-row",
+                    [
+                      _c(
+                        "b-col",
+                        {
+                          staticClass: "mb-2",
+                          attrs: { cols: "12", md: "12" }
+                        },
+                        [
+                          _c("p", [
+                            _vm._v(
+                              "In what format do you want to export the companies?"
+                            )
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        {
+                          staticClass: "mb-2",
+                          attrs: { cols: "12", md: "12" }
+                        },
+                        [
+                          _c("b-form-select", {
+                            staticClass: "input-v2",
+                            attrs: {
+                              name: "select-format",
+                              options: _vm.options_formats
+                            },
+                            model: {
+                              value: _vm.format,
+                              callback: function($$v) {
+                                _vm.format = $$v
+                              },
+                              expression: "format"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "b-row",
+                    { staticClass: "modal-footer-create" },
+                    [
+                      _c("b-col", { attrs: { cols: "12", md: "12" } }, [
+                        _c("div"),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "modal-footer-create-container" },
+                          [
+                            _c("div", {
+                              staticClass: "modal-footer-content-wl"
+                            }),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "modal-footer-create-container-btns"
+                              },
+                              [
+                                _c(
+                                  "p",
+                                  {
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.$emit("cancel")
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Cancel")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "b-link",
+                                  {
+                                    staticClass: "btn-form",
+                                    attrs: {
+                                      href:
+                                        "/companies/v2/export-companies/" +
+                                        _vm.format
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.exportCompanies()
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Export")]
+                                )
+                              ],
+                              1
+                            )
+                          ]
+                        )
+                      ])
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4002952e", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

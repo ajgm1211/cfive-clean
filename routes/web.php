@@ -39,6 +39,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     route::get('v2/template', 'CompanyV2Controller@downloadTemplatefile');
     route::get('v2/failed', 'CompanyV2Controller@failed');
     Route::get('v2/{id}/contacts', 'CompanyV2Controller@contactByCompanyList');
+    Route::get('v2/export-companies/{format}', 'CompanyV2Controller@exportCompanies');
 });
 
 Route::middleware(['auth'])->prefix('contacts')->group(function () {

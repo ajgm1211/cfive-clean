@@ -33,6 +33,15 @@
             />
           </b-col>
           <b-col>
+            <CustomInput
+                  label="Tax number"
+                  name="tax_number"
+                  ref="tax_number"
+                  v-model="companyData.tax_number"
+                  @blur="update()"
+            />
+          </b-col>
+          <!--b-col>
             <label for="select-lenguage" class="labelv2">Pdf language</label>
             <b-form-select
               name="select-lenguage"
@@ -42,7 +51,7 @@
               @change="update()"
             >
             </b-form-select>
-          </b-col>
+          </b-col-->
           <b-col>
             <CustomInput
                   label="Address"
