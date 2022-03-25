@@ -442,7 +442,7 @@ class CompanyController extends Controller
             $options_key = $this->processArray($request->key_name);
             $options_value = $this->processArray($request->key_value);
 
-            $options_array = json_encode(array_combine($options_key, $options_value));
+            $options_array = json_encode(array_merge($options_key, $options_value));
         }
 
         if ($request->ajax()) {
