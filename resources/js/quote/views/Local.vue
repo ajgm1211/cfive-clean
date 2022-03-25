@@ -107,6 +107,10 @@
                                 </b-th>
 
                                 <b-th v-if="currentQuoteData.type == 'LCL'">
+                                    <span class="label-text">profit</span>
+                                </b-th>
+
+                                <b-th v-if="currentQuoteData.type == 'LCL'">
                                     <span class="label-text">total</span>
                                 </b-th>
 
@@ -284,7 +288,24 @@
 
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
-                                        v-model="charge.price * charge.units"
+                                        v-model="charge.profit"
+                                        class="q-input local_charge_total_input"
+                                        @keypress="isNumber($event)"
+                                        disabled
+                                        v-on:change="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.profit,
+                                                'profit',
+                                                6
+                                            )
+                                        "
+                                    ></b-form-input>
+                                </b-td>
+
+                                <b-td v-if="currentQuoteData.type == 'LCL'">
+                                    <b-form-input
+                                        v-model="charge.total"
                                         class="q-input local_charge_total_input"
                                         disabled
                                     ></b-form-input>
@@ -352,7 +373,8 @@
                                 class="q-total"
                                 v-if="currentQuoteData.type == 'LCL'"
                             >
-                                <b-td colspan="4"></b-td>
+                                
+                                <b-td colspan="5"></b-td>
 
                                 <b-td
                                     ><span><b>Total</b></span></b-td

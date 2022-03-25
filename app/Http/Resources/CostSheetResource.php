@@ -64,13 +64,11 @@ class CostSheetResource extends JsonResource
         $inlands = $this->getInlandsModel();        
         $this->buildInlandsData($inlands);  
         
-        // Obtenemos los charges
-        $charges_model = $this->getChargesModel();
-        $this->buildChargesData($charges_model);   
-
         // Obtenemos los local charges
         $local_charges_model = $this->getLocalChargesModel();
-        $this->buildLocalChargesData($local_charges_model);  
+
+        $this->buildChargesData($local_charges_model); // compra
+        $this->buildLocalChargesData($local_charges_model); // venta
 
         // Obtener freight charges
         $freightChargesModel = $this->getChargesFreightModel();
@@ -173,47 +171,43 @@ class CostSheetResource extends JsonResource
 
         foreach ($local_charges_model as $local) {
             
-            // Solo locales donde su port coindicen conel origen o destino del rate.
-            if ($local->port_id == $this->autorate->origin_port_id || $local->port_id == $this->autorate->destination_port_id) {
-
-                // Convertimos el/los monto(s) del local charge al tipo de moneda del rate correspondiente. 
-                $convertToCurrencylocalCharge = $this->convertToCurrencyQuote(
-                    $local->currency, 
-                    $this->currencyToReport,
-                    $this->getLocalTotalArray($local),
-                    $this->quote
-                );
-
-                // Asignamos campos de local charges a mostrar
-                array_push($this->localesSelling, [
-                    'type' => $local->type->description,
-                    'surcharge' => $local->charge,
-                    'currency' => ['currency_id' => $this->currencyToReport->id, 'alphacode' => $this->currencyToReport->alphacode],
-                    'amount' => $this->getLocalChargeSameCoin($convertToCurrencylocalCharge)
-                ]);
-
-
-                //Una vez convertido al tipo de moneda del rate se asigna a un arreglo para acumular la suma.
-                array_push($this->sellingAmountAll, $this->getLocalChargeSameCoin($convertToCurrencylocalCharge));
-            }
-        }
-    }
-    public function buildChargesData($charges_model) {
-
-        foreach ($charges_model as $charge) {
-
-            // Convertimos el/los monto(s) de los charges al tipo de moneda del rate correspondiente. 
-            $convertToCurrencyCharge = $this->convertToCurrencyQuote(
-                $charge->currency, 
+            // Convertimos el/los monto(s) del local charge al tipo de moneda del rate correspondiente. 
+            $convertToCurrencylocalCharge = $this->convertToCurrencyQuote(
+                $local->currency, 
                 $this->currencyToReport,
-                $this->getChargeArray($charge),
+                $this->getLocalTotalArray($local),
                 $this->quote
             );
 
+            // Asignamos campos de local charges a mostrar
+            array_push($this->localesSelling, [
+                'type' => $local->type->description,
+                'surcharge' => $local->charge,
+                'currency' => ['currency_id' => $this->currencyToReport->id, 'alphacode' => $this->currencyToReport->alphacode],
+                'amount' => $this->getLocalChargeSameCoin($convertToCurrencylocalCharge)
+            ]);
+
+
+            //Una vez convertido al tipo de moneda del rate se asigna a un arreglo para acumular la suma.
+            array_push($this->sellingAmountAll, $this->getLocalChargeSameCoin($convertToCurrencylocalCharge));
+        
+        }
+    }
+    public function buildChargesData($local_charges) {
+        
+        foreach ($local_charges as $local_charge) {    
+            // Convertimos el/los monto(s) de los charges al tipo de moneda del rate correspondiente. 
+            $convertToCurrencyCharge = $this->convertToCurrencyQuote(
+                $local_charge->currency, 
+                $this->currencyToReport,
+                $this->getChargeArray($local_charge),
+                $this->quote
+            ); 
+            
             // Asignamos campos de charges a mostrar
             array_push($this->localesBuying, [ 
-                'type' => $charge->type->description,
-                'surcharge' => $charge->surcharge->name,
+                'type' => $local_charge->type->description,
+                'surcharge' => $local_charge->charge,
                 'currency' => ['currency_id' => $this->currencyToReport->id, 'alphacode' => $this->currencyToReport->alphacode],
                 'amount' => $this->getChargeSameCoin($convertToCurrencyCharge)
             ]);
@@ -391,7 +385,10 @@ class CostSheetResource extends JsonResource
 
     public function getLocalChargesModel() {
         if ($this->quote->type == 'FCL') {
-            return LocalChargeQuote::where('quote_id', $this->quote->id)->get();
+            return $this
+                ->quote
+                ->local_charges
+                ->whereIn('port_id', [$this->autorate->origin_port_id, $this->autorate->destination_port_id]);
         }
         if ($this->quote->type == 'LCL') {
             return LocalChargeQuoteLcl::where('quote_id', $this->quote->id)->get();
@@ -430,21 +427,12 @@ class CostSheetResource extends JsonResource
         return $amount_array;
     }
 
-    public function getCharge($charge) {
+    public function getChargeArray($charge) { 
         if ($this->quote->type == 'FCL') {
-            return $this->getAmountPerContainer(json_decode($charge['amount'],true));
+            return $this->convertToArray($charge['price']);
         }
-        if ($this->quote->type == 'LCL') {
-            return $charge->units * $charge->price_per_unit;
-        }        
-    }
-
-    public function getChargeArray($charge) {
-        if ($this->quote->type == 'FCL') {
-            return $this->convertToArray(json_decode($charge['amount'],true));
-        }
-        if ($this->quote->type == 'LCL') {
-            return ['amount' => $charge->units * $charge->price_per_unit];
+        if ($this->quote->type == 'LCL') { 
+            return ['amount' => $charge->units * $charge->price];
         }  
     }
 
@@ -594,43 +582,6 @@ class CostSheetResource extends JsonResource
         }
         if ($this->quote->type == 'LCL') {
             return $data['amount'];
-        }
-    }
-
-    public function getChargesModel() {
-        if ($this->quote->type == 'FCL') {
-            $originCollection = Charge::select('*')
-                ->where('type_id', 1)
-                ->whereHas('automatic_rate', function ($q) {
-                    $q
-                    ->whereIn('origin_port_id', [$this->autorate->origin_port_id, $this->autorate->destination_port_id])
-                    ->where('quote_id', $this->quote->id);
-                })->get();
-            $destinyCollection = Charge::select('*')
-                ->where('type_id', 2)
-                ->whereHas('automatic_rate', function ($q) {
-                    $q
-                    ->whereIn('destination_port_id', [$this->autorate->origin_port_id, $this->autorate->destination_port_id])
-                    ->where('quote_id', $this->quote->id);
-                })->get(); 
-            return $originCollection->concat($destinyCollection);
-        }
-        if ($this->quote->type == 'LCL') {
-            $originCollection = ChargeLclAir::select('*')
-                ->where('type_id', 1)
-                ->whereHas('automatic_rate', function ($q) {
-                    $q
-                    ->whereIn('origin_port_id', [$this->autorate->origin_port_id, $this->autorate->destination_port_id])
-                    ->where('quote_id', $this->quote->id);
-                })->get();
-            $destinyCollection = ChargeLclAir::select('*')
-                ->where('type_id', 2)
-                ->whereHas('automatic_rate', function ($q) {
-                    $q
-                    ->whereIn('destination_port_id', [$this->autorate->origin_port_id, $this->autorate->destination_port_id])
-                    ->where('quote_id', $this->quote->id);
-                })->get();
-            return $originCollection->concat($destinyCollection);
         }
     }
 }
