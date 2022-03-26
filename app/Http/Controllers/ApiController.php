@@ -3629,7 +3629,7 @@ $company_cliente = null;
                 if ($data1 != null) {
                     foreach($types as $type){
                         for ($i = 0; $i < count($data1); $i++) {
-                            if($data1[$i]->changetype ==$type && $data1[$i]->deleted_at==null){
+                            if($data1[$i]->changetype ==$type && $data1[$i]->deleted_at==null && $data1[$i]->carrier==$data->carrier->name){
                                 if(strpos($data1[$i]->port_orig, $data->port_origin->code) && strpos($data1[$i]->port_dest, $data->port_destiny->code) || $data1[$i]->port_orig =="ALL" && strpos($data1[$i]->port_dest, $data->port_destiny->code)
                                 || strpos($data1[$i]->port_orig, $data->port_origin->code) && $data1[$i]->port_dest =="ALL" || $data1[$i]->port_orig =="ALL" && $data1[$i]->port_dest =="ALL"
                                 ){
