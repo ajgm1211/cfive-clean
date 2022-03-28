@@ -91,7 +91,7 @@ class Inland extends Model implements Auditable
         $new_inland->provider .= ' copy';
         $new_inland->save();
 
-        $this->load('inlandports', 'inland_company_restriction', 'inlandRange', 'inlandkms');
+        $this->load('inlandports', 'inland_company_restriction', 'inlandRange', 'inlandkms','inlandLocation');
         $relations = $this->getRelations();
 
         foreach ($relations as $relation) {
