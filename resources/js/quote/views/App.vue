@@ -2,6 +2,9 @@
     <div class="container-fluid">
       <div class="row mt-5">
         <div class="col-12">
+          <HelpDropdown
+            :options="helpOptions"
+          ></HelpDropdown>
           <b-card>
             <div class="row">
               <div class="col-6">
@@ -39,6 +42,7 @@ import Ocean from "./Ocean";
 import actions from "../../actions";
 import Local from "./Local";
 import DataTable from "../../components/DataTable";
+import HelpDropdown from "../../components/HelpDropdown";
 
 export default {
   components: {
@@ -47,6 +51,7 @@ export default {
     Inland,
     Ocean,
     Local,
+    HelpDropdown,
   },
   data() {
     return {
@@ -102,6 +107,16 @@ export default {
         },
         { key: "created_at", label: "Created at", filterIsOpen:false },
       ],
+      helpOptions: [
+        {
+          title: "How to manage your quotes",
+          link: "https://support.cargofive.com/how-to-manage-your-quotes/"
+        },
+        {
+          title: "How to generate an FCL Quote",
+          link: "https://support.cargofive.com/how-to-generate-an-fcl-quote-new/"
+        }
+      ]
     };
   },
   created() {},
