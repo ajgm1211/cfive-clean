@@ -13,15 +13,15 @@ class AddedNewKeyToOptionsInCompanyUsersTable extends Migration
      */
     public function up()
     {
-           $companyUser = DB::table('company_users')->get();
+        $companyUser = DB::table('company_users')->get();
 
         foreach($companyUser as $company){
             $array=json_decode($company->options,true);
             $options = json_encode([
-                "api_providers" => empty($array['api_providers'])==true ? [] : $array['api_providers'],
-                "company_address_pdf"=> empty($array['company_address_pdf'])==true ? 1 : $array['company_address_pdf'],
-                "store_hidden_charges" => empty($array['store_hidden_charges'])==true ? false : $array['store_hidden_charges'],
-                "totals_in_freight_currency"=> empty($array['totals_in_freight_currency'])==true ? false : $array['totals_in_freight_currency'],
+                "api_providers" => empty($array['api_providers']) ? [] : $array['api_providers'],
+                "company_address_pdf"=> empty($array['company_address_pdf']) ? 1 : $array['company_address_pdf'],
+                "store_hidden_charges" => empty($array['store_hidden_charges']) ? false : $array['store_hidden_charges'],
+                "totals_in_freight_currency"=> empty($array['totals_in_freight_currency']) ? false : $array['totals_in_freight_currency'],
                 "contract_upload" => 'web'
             ]);
 
