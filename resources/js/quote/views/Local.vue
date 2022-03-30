@@ -242,28 +242,12 @@
                                             class="q-input data-profit"
                                             @keypress="isNumber($event)"
                                             disabled
-                                            v-on:blur="
-                                                onUpdate(
-                                                    charge.id,
-                                                    charge.price['c' + item],
-                                                    'total->c' + item,
-                                                    1
-                                                )
-                                            "
                                         ></b-form-input>
                                         <b-form-input
                                             v-model="charge.profit['m' + item]"
                                             class="q-input data-profit"
                                             @keypress="isNumber($event)"
                                             disabled
-                                            v-on:blur="
-                                                onUpdate(
-                                                    charge.id,
-                                                    charge.profit['m' + item],
-                                                    'total->c' + item,
-                                                    1
-                                                )
-                                            "
                                         ></b-form-input>
                                     </div>
                                 </b-td>
