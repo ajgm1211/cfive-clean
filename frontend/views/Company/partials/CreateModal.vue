@@ -37,9 +37,19 @@
             </div>
           </form>
           <div class="modal-footer-create-container">
-            <div class="modal-footer-content-wl">
-              <input type="checkbox" id="checkbox" v-model="model.whitelabel">
-              <label for="checkbox">Add to whitelabel</label>
+            <div class="modal-footer-content-wl input-box">
+              <div id="checkbox-create">
+                  <b-form-checkbox
+                    v-model="model.whitelabel"
+                    name="checkbox-create"
+                    value="1"
+                    unchecked-value="0"
+                  >
+                    <label for="">
+                      Add to whitelabel
+                    </label> 
+                  </b-form-checkbox>
+              </div>
             </div>
             <div class="modal-footer-create-container-btns">
               <p @click="$emit('cancel')">Cancel</p>
@@ -78,9 +88,19 @@
                         <b-alert v-model="showDismissibleAlert" variant="danger" dismissible>{{messageFile}}</b-alert>
                       </div>
                       <div class="modal-footer-create-container">
-                        <div class="modal-footer-content-wl">
-                          <input type="checkbox" id="checkbox" v-model="whitelabel">
-                          <label for="checkbox">Add to whitelabel</label>
+                        <div class="modal-footer-content-wl input-box">
+                          <div id="checkbox-create">
+                            <b-form-checkbox
+                              v-model="whitelabel"
+                              name="checkbox-create"
+                              value="1"
+                              unchecked-value="0"
+                            >
+                              <label for="">
+                                Add to whitelabel
+                              </label> 
+                            </b-form-checkbox>
+                          </div>    
                         </div>
                         <div class="modal-footer-create-container-btns">
                           <p @click="$emit('cancel')">Cancel</p>
@@ -146,7 +166,7 @@ export default {
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     "application/vnd.ms-excel"
       ],
-      whiteLabel:false
+      whitelabel:"0"
     }
   },
   methods: {
@@ -166,7 +186,6 @@ export default {
       
     },
     async onSubmitValidate() {
-        var url = 'api/contracts'
         
         let formData = new FormData()
         formData.append('_token', this.csrf)
@@ -178,10 +197,10 @@ export default {
             this.messageFile = "The File is valid!"
             if($(this.$refs.file.files[0]) !== undefined){
                 formData.append('file', this.$refs.file.files[0])
-                formData.append('whiteLabel', this.whiteLabel)
+                formData.append('whitelabel', this.whitelabel)
             }
             this.show = !this.show
-            await this.actions.update(url , formData)
+            await this.actions.createMassive(formData)
             .then((response)=>{
                 this.messageFile = 'We have registered the information correctly!'
                 this.showDismissibleAlert=false
@@ -269,7 +288,9 @@ export default {
     }
   },
   mounted() {
-    this.setInitialData();
+    if(!this.create){
+      this.setInitialData();
+    }
   },
 };
 </script>

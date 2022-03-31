@@ -34,13 +34,24 @@
           </b-col>
           <b-col>
             <CustomInput
-                  label="Pdf Language"
-                  name="pdf_language"
-                  ref="pdf_language"
-                  v-model="companyData.pdf_language"
+                  label="Tax number"
+                  name="tax_number"
+                  ref="tax_number"
+                  v-model="companyData.tax_number"
                   @blur="update()"
             />
           </b-col>
+          <!--b-col>
+            <label for="select-lenguage" class="labelv2">Pdf language</label>
+            <b-form-select
+              name="select-lenguage"
+              class="input-v2" 
+              v-model="companyData.pdf_language" 
+              :options="options_pdf_lenguages" 
+              @change="update()"
+            >
+            </b-form-select>
+          </b-col-->
           <b-col>
             <CustomInput
                   label="Address"
@@ -50,15 +61,20 @@
                   @blur="update()"
             />
           </b-col>
-          <b-col>
-            <CustomInput
-                  type= "checkbox"
-                  label="WhiteLabel"
-                  name="whitelabel"
-                  ref="whitelabel"
-                  v-model="companyData.whitelabel"
-                  @blur="update()"
-            />
+          <b-col class="input-box" >
+            <div id="checkbox-edit">
+              <b-form-checkbox
+                v-model="companyData.whitelabel"
+                name="checkbox-edit"
+                value="1"
+                unchecked-value="0"
+                @change="update()"
+              >
+                <label for="">
+                  WhiteLabel
+                </label> 
+              </b-form-checkbox>
+            </div>
           </b-col>
         </b-row>
     </div>
@@ -81,7 +97,11 @@ export default {
   data() {
     return {
       actions:actions,
-      
+      options_pdf_lenguages: [
+        { text: 'English', value: '1' },
+        { text: 'Spanish', value: '2' },
+        { text: 'Portuguese', value: '3' }
+      ]
     }
   },
   computed:{
@@ -111,4 +131,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+
 </style>

@@ -26,6 +26,9 @@ export default {
     create(company){
         return api.call('post', `/api/companies/store`, {company});
     },
+    createMassive(companies) {
+        return api.call('post', `/api/companies/create-massive`, {companies});
+    },
     transferCompanies(companies){
         return api.call('post', `/api/companies/toWhiteLevel`, {companies});
     }

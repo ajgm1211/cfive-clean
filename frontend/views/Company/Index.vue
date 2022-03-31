@@ -10,9 +10,9 @@
           text="Add Companies"
           :add="true"
           />
-          <b-dropdown id="dropdown-left" text="Importacion">
+          <b-dropdown id="dropdown-left" text="Import">
             <b-dropdown-item href="#" @click="createMasive(true)">Upload Companies</b-dropdown-item>
-            <b-dropdown-item href="#">Donwload File</b-dropdown-item>
+            <b-dropdown-item href="#" @click="exportCompaniesModalShow()">Donwload File</b-dropdown-item>
             <b-dropdown-item href="/companies/v2/failed">Failed compañias</b-dropdown-item>
             <b-dropdown-item href="#" :disabled="toggleTWL" @click="AddToWhiteLevelModal()" ref="tranferTWL">Transfer to WL</b-dropdown-item>
             <b-dropdown-item href="/companies/v2/template">Download template</b-dropdown-item>
@@ -34,6 +34,7 @@
         >
         </DataTable>
       </div>
+
         <CreateModal
           :create="isMassive"
           v-if="create"
@@ -43,12 +44,19 @@
           :fields="modal_fields"
         />
         <ToWLModal
-          v-if="ModalWhiteLabel"
+          v-if="modalWhiteLabel"
           :title="'To WhiteLevel'"
           :action="'Add'"
           :selectedCompanies="selectForTransfer"
-          @cancel="ModalWhiteLabel = false"
+          @cancel="modalWhiteLabel = false"
           @transferTWL="transferTWL"
+        />
+        <ExportModal
+          v-if="exportCompaniesModal"
+          :title="'Companies'"
+          :action="'Export'"
+          :selectedCompanies="selectForTransfer"
+          @cancel="exportCompaniesModal = false"
         />
         
         
@@ -62,17 +70,19 @@ import MainButton from "../../components/common/MainButton"
 import DataTable from '../../components/common/DataTable'
 import CreateModal from './partials/CreateModal'
 import ToWLModal from './partials/ToWhiteLevelModal'
+import ExportModal from './partials/ExportModal'
 
 export default {
-  components: {DataTable, MainButton, CreateModal, ToWLModal},
+  components: {DataTable, MainButton, CreateModal, ToWLModal, ExportModal},
   data() {
     return {
       actions: actions,
       totalResults:true,
       create: false,
-      ModalWhiteLabel: false,
+      modalWhiteLabel: false,
       isMassiveCreation:false,
       AddToWhiteLevel:true,
+      exportCompaniesModal:false,
       selectForTransfer:[],
       fields: [
         { key: "id", label: "ID", filterIsOpen:true },
@@ -153,13 +163,16 @@ export default {
       this.AddToWhiteLevel = !status
     },
     AddToWhiteLevelModal(){
-      this.ModalWhiteLabel = true
+      this.modalWhiteLabel = true
     },
     async transferTWL(){
       await this.actions.transferCompanies(this.selectForTransfer)
     },
     selectedData(selectedCompanies){
       this.selectForTransfer = selectedCompanies
+    },
+    exportCompaniesModalShow(){
+      this.exportCompaniesModal = true
     }
   }
 }

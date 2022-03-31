@@ -189,6 +189,9 @@ Route::group(['prefix'=>'companies','middleware' => 'auth:api'], function () {
     Route::get('failed/list', 'CompanyV2Controller@failedList');
     Route::get('{company}/contacts', 'CompanyV2Controller@contactByCompanyList');
     Route::post('toWhiteLevel', 'CompanyV2Controller@transferToWhiteLevel');
+    Route::get('export/{format}', 'CompanyV2Controller@exportCompanies');
+    Route::post('create-massive', 'CompanyV2Controller@createCompaniesMassive');
+    
 });
 
 Route::group(['prefix'=>'contacts','middleware' => 'auth:api'], function () {
