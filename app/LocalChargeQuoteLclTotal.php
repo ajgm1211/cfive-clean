@@ -59,8 +59,8 @@ class LocalChargeQuoteLclTotal extends Model
             if ($charge->total != null) {
                 $quote = $this->quote()->first();
                 $exchange = ratesCurrencyQuote($charge->currency_id, $this->currency->alphacode,$quote['pdf_options']['exchangeRates']);
-                // $total_w_exchange = $charge->total / $exchange;
-                $total_w_exchange == 0 ? 0 : ($charge->total /  $exchange);
+                //Fix error for Division Zero
+                $total_w_exchange = $charge->total / (($exchange == 0) ? 1 : $exchange);
                 $totals += number_format((float)$total_w_exchange, 2, '.', '');
             }
         }
