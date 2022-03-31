@@ -95,7 +95,7 @@
                                     v-for="(item, key) in quoteEquip"
                                     :key="key"
                                 >
-                                    <span class="label-text">{{ item }}</span>
+                                    <span class="label-text">{{ item }} + PROFIT</span>
                                 </b-th>
 
                                 <b-th v-if="currentQuoteData.type == 'LCL'">
@@ -236,20 +236,20 @@
                                     v-for="(item, key) in quoteEquip"
                                     :key="key"
                                 >
-                                    <b-form-input
-                                        v-model="charge.total['c' + item]"
-                                        class="q-input local_charge_total_input"
-                                        @keypress="isNumber($event)"
-                                        disabled
-                                        v-on:blur="
-                                            onUpdate(
-                                                charge.id,
-                                                charge.total['c' + item],
-                                                'total->c' + item,
-                                                1
-                                            )
-                                        "
-                                    ></b-form-input>
+                                    <div style="display:flex; width: 100px;">
+                                        <b-form-input
+                                            v-model="charge.price['c' + item]"
+                                            class="q-input data-profit"
+                                            @keypress="isNumber($event)"
+                                            disabled
+                                        ></b-form-input>
+                                        <b-form-input
+                                            v-model="charge.profit['m' + item]"
+                                            class="q-input data-profit"
+                                            @keypress="isNumber($event)"
+                                            disabled
+                                        ></b-form-input>
+                                    </div>
                                 </b-td>
 
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
