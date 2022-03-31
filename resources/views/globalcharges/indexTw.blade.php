@@ -23,6 +23,20 @@
 
 
 <div class="m-content">
+    <div class="dropdown show" align="right" style="margin-bottom:20px;margin-right:20px;">
+        <a class="dropdown-toggle" style="font-size:16px" href="#" role="button" id="helpOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            See how it works
+        </a>
+
+        <div 
+            class="dropdown-menu" 
+            aria-labelledby="helpOptions"
+        >
+            <a class="dropdown-item" target="_blank" href="https://support.cargofive.com/how-to-manage-local-charges/"> 
+                How to manage Local Charges
+            </a>
+        </div>
+    </div>
     <div class="m-portlet m-portlet--mobile">
         <div class="m-portlet__head">
             <div class="m-portlet__head-caption">

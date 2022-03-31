@@ -3547,13 +3547,13 @@ $company_cliente = null;
                     $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
                 })->when($reference, function($query,$name){
                     return $query->where('name','LIKE','%'.$name.'%');
-                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code);
+                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code)->where('status_erased',0);
             } else {
                 $q->where(function ($query) use ($dateSince, $dateUntil) {
                     $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
                 })->when($reference, function($query,$name){
                     return $query->where('name','LIKE','%'.$name.'%');
-                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code);
+                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code)->where('status_erased',0);
             }
         })->orderBy('contract_id')->get();
 
@@ -3617,52 +3617,62 @@ $company_cliente = null;
 
             $a++;
             // Local charges
-            if ($contractId != $data->contract->id) {
-
+                $types=[
+                    0 =>'origin',
+                    1 =>'destiny',
+                    2 =>'freight'
+                ];
                 $contractId = $data->contract->id;
                 $data1 = \DB::select(\DB::raw('call proc_localchar(' . $data->contract->id . ')'));
                 $arrayCompleteLocal = array();
                 $resultado['contract']['surcharges'] = array();
                 if ($data1 != null) {
-                    for ($i = 0; $i < count($data1); $i++) {
-                        $montosLocal = array();
-                        $montosLocal2 = array();
-                        $arrayFirstPartLocal = array(
-                            'charge' => $data1[$i]->surcharge,
-                            'type' => $data1[$i]->changetype,
-                            'calculation_type' => $data1[$i]->calculation_type,
+                    foreach($types as $type){
+                        for ($i = 0; $i < count($data1); $i++) {
+                            if($data1[$i]->changetype ==$type && $data1[$i]->deleted_at==null && $data1[$i]->carrier==$data->carrier->name){
+                                if(strpos($data1[$i]->port_orig, $data->port_origin->code) && strpos($data1[$i]->port_dest, $data->port_destiny->code) || $data1[$i]->port_orig =="ALL" && strpos($data1[$i]->port_dest, $data->port_destiny->code)
+                                || strpos($data1[$i]->port_orig, $data->port_origin->code) && $data1[$i]->port_dest =="ALL" || $data1[$i]->port_orig =="ALL" && $data1[$i]->port_dest =="ALL"
+                                ){
+                                    $montosLocal = array();
+                                    $montosLocal2 = array();
+                                    $arrayFirstPartLocal = array(
+                                        'charge' => $data1[$i]->surcharge,
+                                        'type' => $data1[$i]->changetype,
+                                        'calculation_type' => $data1[$i]->calculation_type,
 
-                        );
+                                    );
 
-                        $calculationID = CalculationType::where('name', $data1[$i]->calculation_type)->first();
-                        $currencyID = Currency::where('alphacode', $data1[$i]->currency)->first();
-                        
-                        foreach ($containers as $cont) {
-                            $name_arreglo = 'array' . $cont->code;
-                            $name_rate = 'rate' . $cont->code;
-                            if (in_array($calculationID->id, $$name_arreglo)) {
-                                $monto = $this->perTeu($data1[$i]->ammount, $calculationID->id, $cont->code);
-                                $currency_rate = $this->ratesCurrency($currencyID->id, $data->currency->alphacode);
-                                $$name_rate = number_format($$name_rate + ($monto / $currency_rate), 2, '.', '');
-                                $montosAllInTot[$cont->code] = (float)$$name_rate;
-                                $montosLocal2 = array($cont->code => (float)$monto);
-                                $montosLocal = array_merge($montosLocal, $montosLocal2);
-                            } else {
-                                $montosLocal2 = array($cont->code => '0');
+                                    $calculationID = CalculationType::where('name', $data1[$i]->calculation_type)->first();
+                                    $currencyID = Currency::where('alphacode', $data1[$i]->currency)->first();
+                                    
+                                    foreach ($containers as $cont) {
+                                        $name_arreglo = 'array' . $cont->code;
+                                        $name_rate = 'rate' . $cont->code;
+                                        if (in_array($calculationID->id, $$name_arreglo)) {
+                                            $monto = $this->perTeu($data1[$i]->ammount, $calculationID->id, $cont->code);
+                                            $currency_rate = $this->ratesCurrency($currencyID->id, $data->currency->alphacode);
+                                            $$name_rate = number_format($$name_rate + ($monto / $currency_rate), 2, '.', '');
+                                            $montosAllInTot[$cont->code] = (float)$$name_rate;
+                                            $montosLocal2 = array($cont->code => (float)$monto);
+                                            $montosLocal = array_merge($montosLocal, $montosLocal2);
+                                        } else {
+                                            $montosLocal2 = array($cont->code => '0');
 
-                                $montosLocal = array_merge($montosLocal, $montosLocal2);
+                                            $montosLocal = array_merge($montosLocal, $montosLocal2);
+                                        }
+                                    }
+                                    $arrayFirstPartLocal = array_merge($arrayFirstPartLocal, $montosLocal);
+
+                                    $arraySecondPartLocal = array(
+                                        'currency' => $data1[$i]->currency,
+
+                                    );
+                                    $resultado['contract']['surcharges'][] = array_merge($arrayFirstPartLocal, $arraySecondPartLocal);
+                                }
                             }
                         }
-                        $arrayFirstPartLocal = array_merge($arrayFirstPartLocal, $montosLocal);
-
-                        $arraySecondPartLocal = array(
-                            'currency' => $data1[$i]->currency,
-
-                        );
-                        $resultado['contract']['surcharges'][] = array_merge($arrayFirstPartLocal, $arraySecondPartLocal);
                     }
                 }
-            }
             // ALL IN AMOUNTS
             $arrayFirstPartAmountAllIn = array(
                 'charge' => 'freight - ALL IN',

@@ -52,7 +52,7 @@ class ProvidersController extends Controller
         $company_user_id = \Auth::user()->company_user_id;
 
         $providers = Provider::get()->map(function ($providers) {
-            return $providers->only(['id', 'name','description']);
+            return $providers->only(['id', 'name','description','options']);
         });
 
         $users = User::whereHas('companyUser', function ($q) use ($company_user_id) {
@@ -88,8 +88,12 @@ class ProvidersController extends Controller
         $providers = Provider::create([
             'name' => $data['name'],
             'description' => $data['description'],
-            'company_user_id' => $company_user_id,       
+            'company_user_id' => $company_user_id,
+            'options' => [
+                'generic'=>$request->generic==1 ? true : false
+            ]       
         ]);
+        
         $request->session()->flash('message.content', 'Register created successfully!');
         return new ProvidersResource($providers);
     }
@@ -112,6 +116,9 @@ class ProvidersController extends Controller
         $providers->update([
             'name' => $data['name'],
             'description' => $data['description'],
+            'options' => [
+                'generic'=>$request->generic==1 ? true : false
+            ] 
         ]);
 
         return new ProvidersResource($providers);

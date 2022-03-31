@@ -1,5 +1,8 @@
 <template>
   <section>
+    <HelpDropdown
+      :options="helpOptions"
+    ></HelpDropdown>
     <div class="price-container" v-if="!loading">
       <div class="head">
         <h2>Price levels</h2>
@@ -59,9 +62,17 @@ import Paginate from "../../../../js/components/paginate.vue";
 import CreateModal from "../../../components/PriceLevel/CreateModal.vue";
 import { mapGetters } from "vuex";
 import axios from "axios";
+import HelpDropdown from "../../../../js/components/HelpDropdown";
 
 export default {
-  components: { MainButton, InputSearch, ListPrices, Paginate, CreateModal },
+  components: { 
+    MainButton, 
+    InputSearch,
+    ListPrices, 
+    Paginate, 
+    CreateModal,
+    HelpDropdown, 
+  },
   data: () => ({
     filtered: "",
     create: false,
@@ -98,6 +109,13 @@ export default {
         },
       },
     ],
+    //HELP DROPDOWN
+    helpOptions: [
+      {
+        title: "How to create price levels",
+        link: "https://support.cargofive.com/how-to-create-price-levels/"
+      },
+    ]
   }),
   async mounted() {
     await this.$store.dispatch("getPriceLevels", { page: this.currentPage });

@@ -2,6 +2,9 @@
   <div class="container-fluid">
     <div class="row mt-5">
       <div class="col-12">
+        <HelpDropdown
+          :options="helpOptions"
+        ></HelpDropdown>
         <b-card>
           <div class="row">
             <div class="col-6">
@@ -121,11 +124,13 @@
 import DataTable from "../../components/DataTable";
 import actions from "../../actions";
 import FormView from "../../components/views/FormView.vue";
+import HelpDropdown from "../../components/HelpDropdown";
 
 export default {
   components: {
     DataTable,
     FormView,
+    HelpDropdown,
   },
   data() {
     return {
@@ -245,6 +250,14 @@ export default {
           options: "directions",
         },
       },
+
+      //HELP DROPDOWN
+      helpOptions: [
+        {
+          title: "How to import an LCL contract",
+          link: "https://support.cargofive.com/how-to-import-an-lcl-contract/"
+        },
+      ]
     };
   },
   created() {
