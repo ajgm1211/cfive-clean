@@ -402,7 +402,8 @@ class RequestFclV2Controller extends Controller
         } elseif ($status == 'Processing') {
             $status_arr['Processing'] = 'Processing';
             $status_arr['Review'] = 'Review';
-        } elseif ($status == 'Imp Finished') {
+            $status_arr['Clarification needed'] = 'Clarification needed';
+        } elseif ($status == 'Imp Finished' || $status == 'Clarification needed') {
             $status_arr['Processing'] = 'Processing';
             $status_arr['Imp Finished'] = 'Imp Finished';
             $status_arr['Review'] = 'Review';
@@ -442,7 +443,7 @@ class RequestFclV2Controller extends Controller
                     $Ncontract->time_star_one = true;
                 }
                 //Calling Mix Panel's event
-            } elseif ($Ncontract->status == 'Review') {
+            } elseif ($Ncontract->status == 'Review' || $Ncontract->status == 'Clarification needed') {
                 $this->setStatusContract($Ncontract->contract_id,'incomplete');
                 if ($Ncontract->time_total == null) {
                     $fechaEnd = Carbon::parse($now2);
@@ -459,7 +460,9 @@ class RequestFclV2Controller extends Controller
                         }
                         $Ncontract->time_total = $time_exacto;
                     }
-                    $this->trackEvents("Request_Review", $Ncontract);
+                    if($Ncontract->status == 'Review'){
+                        $this->trackEvents("Request_Review", $Ncontract);
+                    }
                 }
                 //Calling Mix Panel's event
             } elseif ($Ncontract->status == 'Done') {

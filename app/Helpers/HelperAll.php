@@ -127,7 +127,9 @@ class HelperAll
             $color = '#e07000';
         } elseif (strnatcasecmp($status, 'Imp Finished') == 0) {
             $color = '#431b02';
-        } else {
+        } elseif (strnatcasecmp($status, 'Clarification needed') == 0) {
+            $color = '#fc94af';
+        } elseif (strnatcasecmp($status, 'Done') == 0) {
             $color = '#04950f';
         }
 

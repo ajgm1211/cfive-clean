@@ -179,6 +179,10 @@ div,
     background-color: #ff6464;
 }
 
+.Clarification {
+    background-color: #fc94af;
+}
+
 .incomplete::before {
     content: 'processing';
     font-weight: bold;
@@ -191,6 +195,11 @@ div,
 
 .expired::before {
     content: 'expired';
+    font-weight: bold;
+}
+
+.Clarification::before {
+    content: 'Clarification needed';
     font-weight: bold;
 }
 
