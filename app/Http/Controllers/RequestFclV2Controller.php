@@ -444,7 +444,6 @@ class RequestFclV2Controller extends Controller
                 }
                 //Calling Mix Panel's event
             } elseif ($Ncontract->status == 'Review' || $Ncontract->status == 'Clarification needed') {
-                $this->setStatusContract($Ncontract->contract_id,'incomplete');
                 if ($Ncontract->time_total == null) {
                     $fechaEnd = Carbon::parse($now2);
                     if (empty($Ncontract->time_star) == true) {
@@ -462,6 +461,9 @@ class RequestFclV2Controller extends Controller
                     }
                     if($Ncontract->status == 'Review'){
                         $this->trackEvents("Request_Review", $Ncontract);
+                        $this->setStatusContract($Ncontract->contract_id,'incomplete');
+                    }else if($Ncontract->status == 'Clarification needed') {
+                        $this->setStatusContract($Ncontract->contract_id,'Clarification needed');
                     }
                 }
                 //Calling Mix Panel's event

@@ -109,8 +109,10 @@ class NewContractRequestLclController extends Controller
                         $color = 'color:#5527f0';
                     } else if (strnatcasecmp($Ncontracts->status, 'Review') == 0) {
                         $color = 'color:#e07000';
-                    } else {
+                    } else if (strnatcasecmp($Ncontracts->status, 'Done') == 0) {
                         $color = 'color:#04950f';
+                    } else if (strnatcasecmp($Ncontracts->status, 'Clarification needed') == 0) {
+                        $color = 'color:#e11584';
                     }
 
                 if ($Ncontracts->erased_contract == false || empty($Ncontracts->erased_contract) == true) {
@@ -215,8 +217,10 @@ class NewContractRequestLclController extends Controller
                     $color = 'color:#5527f0';
                 } else if (strnatcasecmp($Ncontracts->status, 'Review') == 0) {
                     $color = 'color:#e07000';
-                } else {
-                    $color = 'color:#04950f';
+                } else if (strnatcasecmp($Ncontracts->status, 'Done') == 0) {
+                    $color = '#04950f';
+                } else if (strnatcasecmp($Ncontracts->status, 'Clarification needed') == 0) {
+                    $color = '#e11584';
                 }
 
                 return '<label style="' . $color . '">' . $Ncontracts->status . '</label>';
@@ -493,6 +497,11 @@ class NewContractRequestLclController extends Controller
                     }
                 }
                 //Calling Mix Panel's event
+                if ($Ncontract->contract_id != null && $Ncontract->status == 'Clarification needed') {
+                    $contract = ContractLcl::find($Ncontract->contract_id);
+                    $contract->status = 'Clarification needed';
+                    $contract->update();
+                }
 
 
             } elseif ($Ncontract->status == 'Done') {
@@ -543,7 +552,7 @@ class NewContractRequestLclController extends Controller
             } else if (strnatcasecmp($Ncontract->status, 'Done') == 0) {
                 $color = '#04950f';
             } else if (strnatcasecmp($Ncontract->status, 'Clarification needed') == 0) {
-                $color = '#fc94af';
+                $color = '#e11584';
             }
             return response()->json($data = ['data' => 1, 'status' => $Ncontract->status, 'color' => $color, 'request' => $Ncontract->toArray()]);
         } catch (\Exception $e) {
