@@ -13,7 +13,7 @@ class AddStatusToContractRequestLcl extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE new_contract_request_lcl MODIFY status ENUM('Pending','Processing','Done','Review','Clarification needed')");
+        DB::statement("ALTER TABLE new_contract_request_lcl MODIFY status ENUM('Pending','Processing','Done','Review','Clarification needed') DEFAULT 'Pending'");
     }
 
     /**
@@ -23,6 +23,6 @@ class AddStatusToContractRequestLcl extends Migration
      */
     public function down()
     {
-        DB::statement("ALTER TABLE new_contract_request_lcl MODIFY status ENUM('Pending','Processing','Done','Review')");
+        DB::statement("ALTER TABLE new_contract_request_lcl MODIFY status ENUM('Pending','Processing','Done','Review') DEFAULT 'Pending'");
     }
 }

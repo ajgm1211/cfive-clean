@@ -13,7 +13,7 @@ class AddStatusToContractRequest extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE newcontractrequests MODIFY status ENUM('Pending','Processing','Done','Review','Imp Finished','Clarification needed')");
+        DB::statement("ALTER TABLE newcontractrequests MODIFY status ENUM('Pending','Processing','Done','Review','Imp Finished','Clarification needed') DEFAULT 'Pending'");
     }
 
     /**
@@ -23,6 +23,6 @@ class AddStatusToContractRequest extends Migration
      */
     public function down()
     {
-        DB::statement("ALTER TABLE newcontractrequests MODIFY status ENUM('Pending','Processing','Done','Review','Imp Finished')");
+        DB::statement("ALTER TABLE newcontractrequests MODIFY status ENUM('Pending','Processing','Done','Review','Imp Finished') DEFAULT 'Pending'");
     }
 }

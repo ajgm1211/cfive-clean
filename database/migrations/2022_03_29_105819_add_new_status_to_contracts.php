@@ -13,7 +13,7 @@ class AddNewStatusToContracts extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE contracts MODIFY status ENUM('publish','draft','incomplete','expired','Clarification needed')");
+        DB::statement("ALTER TABLE contracts MODIFY status ENUM('publish','draft','incomplete','expired','Clarification needed') DEFAULT 'draft'");
     }
 
     /**
@@ -23,6 +23,6 @@ class AddNewStatusToContracts extends Migration
      */
     public function down()
     {
-        DB::statement("ALTER TABLE contracts MODIFY status ENUM('publish','draft','incomplete','expired')");
+        DB::statement("ALTER TABLE contracts MODIFY status ENUM('publish','draft','incomplete','expired') DEFAULT 'draft'");
     }
 }
