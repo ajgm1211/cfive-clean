@@ -476,6 +476,11 @@ class NewContractRequestLclController extends Controller
                 }
                 //Calling Mix Panel's event
                 $this->trackEvents("Request_Status_lcl", $Ncontract);
+                if ($Ncontract->contract_id != null) {
+                    $contract = ContractLcl::find($Ncontract->contract_id);
+                    $contract->status = 'incomplete';
+                    $contract->update();
+                }
             } elseif ($Ncontract->status == 'Review' || $Ncontract->status == 'Clarification needed') {
                 if ($Ncontract->time_total == null) {
                     $fechaEnd = Carbon::parse($now2);
