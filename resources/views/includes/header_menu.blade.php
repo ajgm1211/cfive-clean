@@ -14,30 +14,7 @@
 
                 @endif
             </div>
-            <div class="m-stack__item m-stack__item--middle m-brand__tools">
-                <!-- BEGIN: Left Aside Minimize Toggle 1 -->
-                <!--<a href="javascript:;" id="m_aside_left_minimize_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-desktop-inline-block 
-">
-<span></span>
-</a>-->
-                <!-- END -->
-                <!-- BEGIN: Responsive Aside Left Menu Toggler 2 -->
-                <!--<a href="javascript:;" id="m_aside_left_offcanvas_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-tablet-and-mobile-inline-block">
-<span></span>
-</a>-->
-                <!-- END -->
-                <!-- BEGIN: Responsive Header Menu Toggler 3 -->
-                <a id="m_aside_header_menu_mobile_toggle" href="javascript:;"
-                    class="m-brand__icon m-brand__toggler m--visible-tablet-and-mobile-inline-block">
-                    <span></span>
-                </a>
-                <!-- END -->
-                <!-- BEGIN: Topbar Toggler 4 -->
-                <!--<a id="m_aside_header_topbar_mobile_toggle" href="javascript:;" class="m-brand__icon m--visible-tablet-and-mobile-inline-block">
-<i class="flaticon-more"></i>
-</a>-->
-                <!-- BEGIN: Topbar Toggler 5 -->
-            </div>
+            
         </div>
     </div>
     <!-- END: Brand -->
