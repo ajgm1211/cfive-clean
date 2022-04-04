@@ -47,6 +47,7 @@
                 v-model="vdata[key]"
                 :placeholder="item.placeholder"
                 :id="key"
+                :type="item.type"
                 @change="cleanInput(key)"
                 @keypress="isNumber($event)"
               >
@@ -462,7 +463,7 @@ export default {
       if (this.validateForm()) {
 
         if (!this.creatingData) {
-        this.creatingData = true;
+          this.creatingData = true;
 
           let data = this.prepareData();
 
@@ -538,6 +539,8 @@ export default {
                 });
             }
           }
+
+          this.creatingData = false;
         }
       }
     },
