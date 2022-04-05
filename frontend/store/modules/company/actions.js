@@ -29,7 +29,7 @@ export default {
     createMassive(companies) {
         return api.call('post', `/api/companies/create-massive`, {companies});
     },
-    transferCompanies(companies){
+    transfer(companies){
         return api.call('post', `/api/companies/toWhiteLevel`, {companies});
     }
 }

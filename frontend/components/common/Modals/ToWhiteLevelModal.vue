@@ -10,13 +10,13 @@
           <b-container>
               <b-row>
                   <b-col cols="12" md="12" class="mb-2">
-                      <p>Are you sure to transfer these companies to WhiteLevel?</p>
+                      <p>Are you sure to transfer these {{title}} to WhiteLevel?</p>
                   </b-col>
                   <b-col cols="12" md="12" class="mb-2">
-                    <b-list-group v-for="(company, companyKey) in selectedCompanies" :key="companyKey">
+                    <b-list-group v-for="(company, companyKey) in selected" :key="companyKey">
                       <b-list-group-item>{{company.business_name}}</b-list-group-item>
                     </b-list-group>
-                    <p>selected companies: {{selectedCompanies.length}}</p>
+                    <p>selected {{title}}: {{selected.length}}</p>
                   </b-col>
               </b-row>
               <b-row class="modal-footer-create">
@@ -54,7 +54,7 @@ export default {
     action:{
       type:String
     },
-    selectedCompanies:{
+    selected:{
       type:Array,
       default(){
         return []

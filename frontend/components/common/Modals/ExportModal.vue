@@ -6,11 +6,11 @@
         <h3>{{ action + " " + title }}</h3>
       </div>
       <div class="modal-content-create">
-        <b-form @submit.prevent="exportCompanies">
+        <b-form @submit.prevent="exportEntity">
           <b-container>
               <b-row>
                   <b-col cols="12" md="12" class="mb-2">
-                      <p>In what format do you want to export the companies?</p>
+                      <p>In what format do you want to export?</p>
                   </b-col>
                   <b-col cols="12" md="12" class="mb-2">
                     <b-form-select
@@ -31,7 +31,7 @@
                         <div class="modal-footer-content-wl"></div>
                         <div class="modal-footer-create-container-btns">
                           <p @click="$emit('cancel')">Cancel</p>
-                          <b-link class="btn-form" :href="'/companies/v2/export-companies/' + format" @click="exportCompanies()">Export</b-link>
+                          <b-link class="btn-form" :href="exportLink + '/' + format" @click="exportEntity()">Export</b-link>
                         </div>
                       </div>
                   </b-col>
@@ -54,6 +54,9 @@ export default {
     },
     action:{
       type:String
+    },
+    exportLink:{
+      type:String
     }
   },
   data(){
@@ -67,7 +70,7 @@ export default {
     }
   },
   methods: {
-    async exportCompanies(){
+    async exportEntity(){
         toastr.warning("Export in progress...")
         this.$emit('cancel')
     }

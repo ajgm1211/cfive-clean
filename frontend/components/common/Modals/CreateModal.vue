@@ -104,7 +104,7 @@
                         </div>
                         <div class="modal-footer-create-container-btns">
                           <p @click="$emit('cancel')">Cancel</p>
-                          <b-button type="submit" class="btn-form" variant="primary">Add Companies</b-button>
+                          <b-button type="submit" class="btn-form" variant="primary">{{action}} {{title}}</b-button>
                         </div>
                       </div>
                   </b-col>

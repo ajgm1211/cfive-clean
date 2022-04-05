@@ -12,7 +12,7 @@
           />
           <b-dropdown id="dropdown-left" text="Import">
             <b-dropdown-item href="#" @click="createMasive(true)">Upload Companies</b-dropdown-item>
-            <b-dropdown-item href="#" @click="exportCompaniesModalShow()">Donwload File</b-dropdown-item>
+            <b-dropdown-item href="#" @click="exportEntityModalShow()">Donwload File</b-dropdown-item>
             <b-dropdown-item href="/companies/v2/failed">Failed compañias</b-dropdown-item>
             <b-dropdown-item v-if="user.whitelabel == 1" href="#" :disabled="toggleTWL" @click="AddToWhiteLevelModal()" ref="tranferTWL">Transfer to WL</b-dropdown-item>
             <b-dropdown-item href="/companies/v2/template">Download template</b-dropdown-item>
@@ -48,16 +48,16 @@
           v-if="modalWhiteLabel"
           :title="'To WhiteLevel'"
           :action="'Add'"
-          :selectedCompanies="selectForTransfer"
+          :selected="selectForTransfer"
           @cancel="modalWhiteLabel = false"
           @transferTWL="transferTWL"
         />
         <ExportModal
-          v-if="exportCompaniesModal"
+          v-if="exportEntityModal"
           :title="'Companies'"
           :action="'Export'"
-          :selectedCompanies="selectForTransfer"
-          @cancel="exportCompaniesModal = false"
+          :exportLink="'companies/v2/export-companies'"
+          @cancel="exportEntityModal = false"
         />
         
         
@@ -69,9 +69,9 @@
 import actions from '../../store/modules/company/actions'
 import MainButton from "../../components/common/MainButton"
 import DataTable from '../../components/common/DataTable'
-import CreateModal from './partials/CreateModal'
-import ToWLModal from './partials/ToWhiteLevelModal'
-import ExportModal from './partials/ExportModal'
+import CreateModal from '../../components/common/Modals/CreateModal'
+import ToWLModal from '../../components/common/Modals/ToWhiteLevelModal'
+import ExportModal from '../../components/common//Modals/ExportModal'
 import { mapState } from 'vuex'
 
 export default {
@@ -84,7 +84,7 @@ export default {
       modalWhiteLabel: false,
       isMassiveCreation:false,
       AddToWhiteLevel:true,
-      exportCompaniesModal:false,
+      exportEntityModal:false,
       selectForTransfer:[],
       fields: [
         { key: "id", label: "ID", filterIsOpen:true },
@@ -169,16 +169,14 @@ export default {
       this.modalWhiteLabel = true
     },
     async transferTWL(){
-      await this.actions.transferCompanies(this.selectForTransfer)
+      await this.actions.transfer(this.selectForTransfer)
     },
-    selectedData(selectedCompanies){
-      this.selectForTransfer = selectedCompanies
+    selectedData(selected){
+      this.selectForTransfer = selected
     },
-    exportCompaniesModalShow(){
-      this.exportCompaniesModal = true
+    exportEntityModalShow(){
+      this.exportEntityModal = true
     }
-  },
-  created(){
   }
 }
 </script>
