@@ -18,10 +18,10 @@ export default {
     this.getData();
   },
   computed: {
-    ...mapState('auth', ['token'])
+    ...mapState('auth', ['token','user'])
   },
   methods: {
-    ...mapActions('auth', ['setToken','setCurrentUser']),
+    ...mapActions('auth', ['setToken','setUser']),
     getData() {
       let url = "/users/data";
       api.getData({}, url, (err, data) => {
@@ -34,6 +34,9 @@ export default {
         axios.defaults.headers.common['Authorization'] = token
         this.setToken(token)
         this.tokenReady = true
+    },
+    setCurrentUser(user){
+      this.setUser(user)
     }
   },
 }

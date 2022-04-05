@@ -14,7 +14,7 @@
             <b-dropdown-item href="#" @click="createMasive(true)">Upload Companies</b-dropdown-item>
             <b-dropdown-item href="#" @click="exportCompaniesModalShow()">Donwload File</b-dropdown-item>
             <b-dropdown-item href="/companies/v2/failed">Failed compañias</b-dropdown-item>
-            <b-dropdown-item href="#" :disabled="toggleTWL" @click="AddToWhiteLevelModal()" ref="tranferTWL">Transfer to WL</b-dropdown-item>
+            <b-dropdown-item v-if="user.whitelabel == 1" href="#" :disabled="toggleTWL" @click="AddToWhiteLevelModal()" ref="tranferTWL">Transfer to WL</b-dropdown-item>
             <b-dropdown-item href="/companies/v2/template">Download template</b-dropdown-item>
           </b-dropdown>
         </div>
@@ -42,6 +42,7 @@
           :action="'Add'"
           @cancel="create = false"
           :fields="modal_fields"
+          :user="user"
         />
         <ToWLModal
           v-if="modalWhiteLabel"
@@ -71,6 +72,7 @@ import DataTable from '../../components/common/DataTable'
 import CreateModal from './partials/CreateModal'
 import ToWLModal from './partials/ToWhiteLevelModal'
 import ExportModal from './partials/ExportModal'
+import { mapState } from 'vuex'
 
 export default {
   components: {DataTable, MainButton, CreateModal, ToWLModal, ExportModal},
@@ -149,7 +151,8 @@ export default {
     },
     toggleTWL: function (){
       return this.AddToWhiteLevel
-    }
+    },
+    ...mapState('auth', ['user'])
   },
   methods: {
     onEdit(data) {
@@ -174,6 +177,8 @@ export default {
     exportCompaniesModalShow(){
       this.exportCompaniesModal = true
     }
+  },
+  created(){
   }
 }
 </script>
