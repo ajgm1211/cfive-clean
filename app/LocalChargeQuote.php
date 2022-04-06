@@ -218,6 +218,11 @@ class LocalChargeQuote extends Model implements Auditable
         return $query->where('type_id', $type);
     }
 
+    public function type()
+    {
+        return $this->belongsTo('App\TypeDestiny', 'type_id');
+    }
+
     public function scopeGetPort($q)
     {
         return $q->with(['port' => function ($query) {
