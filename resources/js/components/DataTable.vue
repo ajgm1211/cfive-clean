@@ -502,6 +502,13 @@
                             </button>
                             <button
                                 class="btn-action"
+                                v-if="singleActions.includes('generatePDF')"
+                                v-on:click="onGeneratePDF(item)"
+                            >
+                                Generate PDF
+                            </button>
+                            <button
+                                class="btn-action"
                                 v-if="singleActions.includes('seeProgressDetails')"
                                 @click="onOpenProgressModal(item.id)"
                             >
@@ -1340,7 +1347,10 @@ export default {
             this.$emit("onEdit", data);
             this.refreshData();
         },
-
+        onGeneratePDF(data) {
+            this.currentData = data;
+            this.$emit("onGeneratePDF", data);            
+        },
         onDelete(id) {
             swal({
                 title: 'Are you sure?',

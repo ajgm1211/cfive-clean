@@ -137,11 +137,20 @@ class RemarkConditionsController extends Controller
     {
         $request->request->add(['user_id' => Auth::user()->id, 'company_user_id' => Auth::user()->company_user_id]);
 
-        $remark = RemarkCondition::findOrFail($id)->update($request->all());
-
+        $remark = RemarkCondition::findOrFail($id);
+        
+        if ($remark->mode != $request->get('mode')) {
+            RemarkHarbor::where('remark_condition_id', $id)->delete();
+            RemarkCarrier::where('remark_condition_id', $id)->delete();
+            RemarkCountry::where('remark_condition_id', $id)->delete();
+        }
+        
         $ports = $request->ports;
         $carriers = $request->carriers;
         $countries = $request->countries;
+    
+        
+        $remark->update($request->all());
 
         if (count((array) $ports) >= 1) {
             RemarkHarbor::where('remark_condition_id', $id)->delete();

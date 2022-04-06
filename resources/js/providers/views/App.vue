@@ -88,13 +88,16 @@
                         colClass: 'col-sm-12' 
                     },
                     description: { 
-                        label: 'description', 
+                        label: 'Description', 
                         type: 'text', 
                         rules: 'required', 
-                        placeholder: 'description', 
+                        placeholder: 'Description', 
                         colClass: 'col-sm-12' 
                     },
-                
+                    generic: { 
+                        label:'Generic',
+                        type: 'checkbox',
+                    }
                 }
             }
         },
