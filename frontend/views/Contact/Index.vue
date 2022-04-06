@@ -1,153 +1,153 @@
 <template>
-    <div class="col-12">
-      <div class="head">
-        <div class="head-title">
-          <h2>Contacts</h2>
-        </div>
-        <div class="head-btns">
-          <MainButton
-          @click="createMasive(false)"
-          text="Add Companies"
-          :add="true"
-          />
-          <DropdownHeadboard
-            :items="items"
-            :whitelabel="user.whitelabel"
-            @createMasive="createMasive(true)"
-          ></DropdownHeadboard>
-          <b-dropdown id="dropdown-left" text="Import">
-            <b-dropdown-item href="#" @click="createMasive(true)">Upload Companies</b-dropdown-item>
-            <b-dropdown-item href="#" @click="exportEntityModalShow()">Donwload File</b-dropdown-item>
-            <b-dropdown-item href="/companies/v2/failed">Failed compañias</b-dropdown-item>
-            <b-dropdown-item v-if="user.whitelabel == 1" href="#" :disabled="toggleTWL" @click="AddToWhiteLevelModal()" ref="tranferTWL">Transfer to WL</b-dropdown-item>
-            <b-dropdown-item href="/companies/v2/template">Download template</b-dropdown-item>
-          </b-dropdown>
-        </div>
+  <div class="col-12">
+    <div class="head">
+      <div class="head-title">
+        <h2>Contacts</h2>
       </div>
-      <div>
-        <DataTable
-          :fields="fields"
-          :actions="actions"
-          :filter="true"
-          :singleActions="['edit', 'duplicate', 'delete']"
-          @onEdit="onEdit"
-          :totalResults="totalResults"
-          :classTable="classTable"
-          :toggleAddToWhiteLevel="toggleTWL"
-          @toggleButtonWL="toggleButtonWhiteLevel"
-        ></DataTable>
-      </div>
-      <div>
-        <CreateModal
-          :create="isMassive"
-          v-if="create"
-          :title="'Contacts'"
-          :action="'Add'"
-          @cancel="create = false"
-          :fields="modal_fields"
-          :user="user"
-        />
-        <ToWLModal
-          v-if="modalWhiteLabel"
-          :title="'To WhiteLevel'"
-          :action="'Add'"
-          :selected="selectForTransfer"
-          @cancel="modalWhiteLabel = false"
-          @transferTWL="transferTWL"
-        />
-        <ExportModal
-          v-if="exportEntityModal"
-          :title="'Contacts'"
-          :action="'Export'"
-          :exportLink="'contacts/v2/export-contacts'"
-          @cancel="exportEntityModal = false"
-        />
+      <div class="head-btns">
+        <MainButton @click="createMasive(false)" text="Add Companies" :add="true" />
+        <DropdownHeadboard :items="items" :whitelabel="user.whitelabel"></DropdownHeadboard>
+        <b-dropdown id="dropdown-left" text="Import">
+          <b-dropdown-item href="#" @click="createMasive(true)">Upload Companies</b-dropdown-item>
+          <b-dropdown-item href="#" @click="exportEntityModalShow()">Donwload File</b-dropdown-item>
+          <b-dropdown-item href="/companies/v2/failed">Failed compañias</b-dropdown-item>
+          <b-dropdown-item
+            v-if="user.whitelabel == 1"
+            href="#"
+            :disabled="toggleTWL"
+            @click="AddToWhiteLevelModal()"
+            ref="tranferTWL"
+            >Transfer to WL</b-dropdown-item
+          >
+          <b-dropdown-item href="/companies/v2/template">Download template</b-dropdown-item>
+        </b-dropdown>
       </div>
     </div>
+    <div>
+      <DataTable
+        :fields="fields"
+        :actions="actions"
+        :filter="true"
+        :singleActions="['edit', 'duplicate', 'delete']"
+        @onEdit="onEdit"
+        :totalResults="totalResults"
+        :classTable="classTable"
+        :toggleAddToWhiteLevel="toggleTWL"
+        @toggleButtonWL="toggleButtonWhiteLevel"
+      ></DataTable>
+    </div>
+    <div>
+      <CreateModal
+        :create="isMassive"
+        v-if="create"
+        :title="'Contacts'"
+        :action="'Add'"
+        @cancel="create = false"
+        :fields="modal_fields"
+        :user="user"
+      />
+      <ToWLModal
+        v-if="modalWhiteLabel"
+        :title="'To WhiteLevel'"
+        :action="'Add'"
+        :selected="selectForTransfer"
+        @cancel="modalWhiteLabel = false"
+        @transferTWL="transferTWL"
+      />
+      <ExportModal
+        v-if="exportEntityModal"
+        :title="'Contacts'"
+        :action="'Export'"
+        :exportLink="'contacts/v2/export-contacts'"
+        @cancel="exportEntityModal = false"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
-
-import actions from '../../store/modules/contact/actions'
-import MainButton from "../../components/common/MainButton"
-import DataTable from '../../components/common/DataTable'
-import DropdownHeadboard from '../../components/common/DropdownHeadboard'
-import CreateModal from '../../components/common/Modals/CreateModal'
-import ToWLModal from '../../components/common/Modals/ToWhiteLevelModal'
-import ExportModal from '../../components/common/Modals/ExportModal'
-import { mapState } from 'vuex'
+import actions from "../../store/modules/contact/actions";
+import MainButton from "../../components/common/MainButton";
+import DataTable from "../../components/common/DataTable";
+import DropdownHeadboard from "../../components/common/DropdownHeadboard";
+import CreateModal from "../../components/common/Modals/CreateModal";
+import ToWLModal from "../../components/common/Modals/ToWhiteLevelModal";
+import ExportModal from "../../components/common/Modals/ExportModal";
+import { mapState } from "vuex";
 //import toastr from "toastr"
 
 export default {
-  components: {DataTable, MainButton, ToWLModal, ExportModal, CreateModal, DropdownHeadboard},
+  components: { DataTable, MainButton, ToWLModal, ExportModal, CreateModal, DropdownHeadboard },
   data() {
     return {
       actions: actions,
-      totalResults:true,
+      totalResults: true,
       fields: [
-        { key: "id", label: "ID", filterIsOpen:true },
-        { key: "first_name", label: "First Name", filterIsOpen:false },
-        { key: "last_name", label: "Last Name", filterIsOpen:false },
-        { key: "email", label: "Email", filterIsOpen:false },
-        { key: "phone", label: "Phone", filterIsOpen:false },
-        { key: "position", label: "Position", filterIsOpen:false },
-        { key: "created_at", label: "Created at", filterIsOpen:false },
+        { key: "id", label: "ID", filterIsOpen: true },
+        { key: "first_name", label: "First Name", filterIsOpen: false },
+        { key: "last_name", label: "Last Name", filterIsOpen: false },
+        { key: "email", label: "Email", filterIsOpen: false },
+        { key: "phone", label: "Phone", filterIsOpen: false },
+        { key: "position", label: "Position", filterIsOpen: false },
+        { key: "created_at", label: "Created at", filterIsOpen: false },
       ],
-      classTable:"table table-striped table-responsive",
+      classTable: "table table-striped table-responsive",
       create: false,
       modalWhiteLabel: false,
-      selectForTransfer:[],
-      exportEntityModal:false,
-      isMassiveCreation:false,
-      AddToWhiteLevel:true,
+      selectForTransfer: [],
+      exportEntityModal: false,
+      isMassiveCreation: false,
+      AddToWhiteLevel: true,
       modal_fields: [],
-      items:[
+      items: [
         {
-          link:'#',
-          label:'upload contacts',
-          ref:'tag-ref',
-          click: this.createMasive(true)
-        }
-      ]
-    }
+          link: "#",
+          label: "upload contacts",
+          ref: "tag-ref",
+          click: () => this.createMasive(true),
+        },
+      ],
+    };
   },
-  computed:{
-    isMassive: function () {
-        return this.isMassiveCreation 
+  computed: {
+    isMassive: function() {
+      return this.isMassiveCreation;
     },
-    toggleTWL: function (){
-      return this.AddToWhiteLevel
+    toggleTWL: function() {
+      return this.AddToWhiteLevel;
     },
-    ...mapState('auth', ['user'])
+    ...mapState("auth", ["user"]),
   },
   methods: {
     onEdit(data) {
       window.location = `/contacts/v2/${data.id}/edit`;
     },
-    createMasive(state){
-      this.create = true
-      this.isMassiveCreation = state
+    createMasive(state) {
+      this.create = true;
+      this.isMassiveCreation = state;
 
-      return 'hola'
+      console.log("test", state);
     },
-    toggleButtonWhiteLevel(status){
-      this.AddToWhiteLevel = !status
+    testing() {
+      return this.createMasive(true);
     },
-    AddToWhiteLevelModal(){
-      this.modalWhiteLabel = true
+    toggleButtonWhiteLevel(status) {
+      this.AddToWhiteLevel = !status;
     },
-    async transferTWL(){
-      await this.actions.transfer(this.selectForTransfer)
+    AddToWhiteLevelModal() {
+      this.modalWhiteLabel = true;
     },
-    selectedData(selected){
-      this.selectForTransfer = selected
+    async transferTWL() {
+      await this.actions.transfer(this.selectForTransfer);
     },
-    exportEntityModalShow(){
-      this.exportEntityModal = true
-    }
-  }
-}
+    selectedData(selected) {
+      this.selectForTransfer = selected;
+    },
+    exportEntityModalShow() {
+      this.exportEntityModal = true;
+    },
+  },
+};
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
