@@ -3554,7 +3554,7 @@ $company_cliente = null;
         })->orderBy('contract_id')->get();
 
 
-        return GetContractApiResource::collection($rates);
+        return GetContractApiResource::collection($rates, $code);
         //return response()->json($collectionGeneral, 200);
     }
 

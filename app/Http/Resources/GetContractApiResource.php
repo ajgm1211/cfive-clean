@@ -2,10 +2,22 @@
 
 namespace App\Http\Resources;
 
+use App\CompanyUser;
+use App\Container;
+use App\ContainerCalculation;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class GetContractApiResource extends JsonResource
 {
+
+    protected $code;
+
+    public function code($value)
+    {
+        $this->code = $value;
+        return $this;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -24,6 +36,9 @@ class GetContractApiResource extends JsonResource
                 'destination' => ucwords(strtoupper($this->port_destiny->code)),
                 'valid_from' => $this->contract->validity,
                 'valid_until' => $this->contract->expire,
+            ],
+            'ocean_freight' => [
+                $this->oceanFreight(),
             ]
         ];
 
@@ -134,5 +149,55 @@ class GetContractApiResource extends JsonResource
         }*/
 
         return $data;
+    }
+
+    public function oceanFreight(){
+        $containers = Container::where('gp_container_id', $this->code)->get();
+        //$contArray = $containers->pluck('code')->toArray();
+
+        $resultado['contract']['surcharge'] = array();
+
+        //$company_user_id = \Auth::user()->company_user_id;
+
+        //$company_setting = CompanyUser::where('id', $company_user_id)->first();
+        $container_calculation = ContainerCalculation::get();
+
+        foreach ($containers as $cont) {
+            $name_rate = 'rate' . $cont->code;
+
+            $var = 'array' . $cont->code;
+            $$var = $container_calculation->where('container_id', $cont->id)->pluck('calculationtype_id')->toArray();
+   
+            $options = json_decode($cont->options);
+            if (@$options->field_rate == 'containers') {
+                $jsonContainer = json_decode($data->{$options->field_rate});
+                if (isset($jsonContainer->{'C' . $cont->code})) {
+                    $rateMount = $jsonContainer->{'C' . $cont->code};
+                    $$name_rate = $rateMount;
+                    $montosAllIn = array($cont->code => (float)$$name_rate);
+                } else {
+                    $rateMount = 0;
+                    $$name_rate = $rateMount;
+                    $montosAllIn = array($cont->code => (float)$$name_rate);
+                }
+            } else {
+                $rateMount = $data->{$options->field_rate};
+                $$name_rate = $rateMount;
+                $montosAllIn = array($cont->code => (float)$$name_rate);
+            }
+
+            $montos2 = array($cont->code => (float)$rateMount);
+            $montos = array_merge($montos, $montos2);
+            $montosAllInTot = array_merge($montosAllInTot, $montosAllIn);
+
+        }
+        $arraySecondPartAmount = array(
+            'charge' => 'freight',
+            'currency' => $data->currency->alphacode,
+
+        );
+        $ocean_freight = array_merge($montos, $arraySecondPartAmount);
+
+        return $ocean_freight;
     }
 }
