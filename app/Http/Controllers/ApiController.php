@@ -17,6 +17,7 @@ use App\Currency;
 use App\GlobalCharge;
 use App\GlobalChargeLcl;
 use App\Harbor;
+use App\Http\Resources\GetContractApiResource;
 use App\Http\Traits\MixPanelTrait;
 use App\Http\Traits\SearchTraitApi;
 use App\Http\Traits\UtilTrait;
@@ -31,6 +32,7 @@ use App\QuoteV2;
 use App\Rate;
 use App\RateLcl;
 use App\Surcharge;
+use App\SurchargePerContract;
 use App\User;
 use App\ViewGlobalCharge;
 use Carbon\Carbon;
@@ -451,9 +453,9 @@ class ApiController extends Controller
     public function carriers(Request $request)
     {
         if ($request->paginate) {
-            $carriers = Carrier::select('id','name','uncode','scac','image')->paginate($request->paginate);
+            $carriers = Carrier::select('id', 'name', 'uncode', 'scac', 'image')->paginate($request->paginate);
         } else {
-            $carriers = Carrier::select('id','name','uncode','scac','image')->take($request->size)->get();
+            $carriers = Carrier::select('id', 'name', 'uncode', 'scac', 'image')->take($request->size)->get();
         }
 
         return $carriers;
@@ -543,7 +545,6 @@ class ApiController extends Controller
     {
         if ($carrierUrl == "all") {
             $carriers = Carrier::all()->pluck('id')->toArray();
-
         } else {
             $carriers = Carrier::where('name', $carrierUrl)->orWhere('uncode', $carrierUrl)->orWhere('id', $carrierUrl)->pluck('id')->toArray();
         }
@@ -1022,7 +1023,7 @@ class ApiController extends Controller
                 // TOTALES
                 $name_tot = 'total' . $cont->code;
                 $$name_tot = $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_O'];
-                $$name_tot += ${$sum_origin . $cont->code}+${$sum_freight . $cont->code}+${$sum_destination . $cont->code};
+                $$name_tot += ${$sum_origin . $cont->code} + ${$sum_freight . $cont->code} + ${$sum_destination . $cont->code};
                 $data->setAttribute($name_tot, number_format($$name_tot, 2, '.', ''));
             }
 
@@ -1135,7 +1136,7 @@ class ApiController extends Controller
         }
     }
 
-//************************************************************************************************** */
+    //************************************************************************************************** */
 
     public function processSearchLCL(Request $request, $code_origin, $code_destination, $init_date, $end_date)
     {
@@ -1291,10 +1292,9 @@ class ApiController extends Controller
                 $totalFreight += $totalT;
                 $totalRates += $totalT;
 
-                $array = array('type' => 'Ocean Freight', 'quantity' => (float)$weight, 'detail' => 'W/M', 'price' => (float)$priceRate, 'currency' => $data->currency->alphacode, 'subtotal' => (float)$subtotalT, 'total' => (float)$totalT . " " . $typeCurrency );
+                $array = array('type' => 'Ocean Freight', 'quantity' => (float)$weight, 'detail' => 'W/M', 'price' => (float)$priceRate, 'currency' => $data->currency->alphacode, 'subtotal' => (float)$subtotalT, 'total' => (float)$totalT . " " . $typeCurrency);
 
                 $collectionRate->push($array);
-
             }
 
             $data->setAttribute('rates', $collectionRate);
@@ -1381,7 +1381,6 @@ class ApiController extends Controller
                                         $arregloOrigin = array('surcharge_id' => $local->surcharge->id, 'surcharge_name' => $local->surcharge->name, 'price_unit' => number_format($local->ammount, 2, '.', ''), 'monto' => 0.00, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name, 'contract_id' => $data->contract_id, 'carrier_id' => $carrierGlobal->carrier_id, 'type' => '99', 'rate_id' => $data->id, 'calculation_id' => $local->calculationtypelcl->id, 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency, 'currency_id' => $local->currency->id, 'cantidad' => $cantidadT);
 
                                         $collectionOrig->push($arregloOrigin);
-
                                     }
                                 }
                             }
@@ -2284,7 +2283,6 @@ class ApiController extends Controller
                         }
                     }
                 }
-
             } // Fin del calculo de los local charges
 
             //######################## GLOBALES #########################
@@ -3338,22 +3336,22 @@ class ApiController extends Controller
 
             $status = $data->contract->status;
 
-            if($data->contract->status == 'publish'){
+            if ($data->contract->status == 'publish') {
                 $status = "published";
             }
 
-            $information['contract'] = array('name'=>$data->contract->name,'valid_from'=>$data->contract->validity,'valid_until'=>$data->contract->expire,'status'=>$status,'contract_id'=> $data->contract->id,'rate_id' => $data->id, 'uom' => $data->uom, 'minimum' => $data->minimum, 'transit_time' => $data->transit_time, 'via' => $data->via, 'created_at' => $data->contract->created_at, 'updated_at' => $data->contract->updated_at);
+            $information['contract'] = array('name' => $data->contract->name, 'valid_from' => $data->contract->validity, 'valid_until' => $data->contract->expire, 'status' => $status, 'contract_id' => $data->contract->id, 'rate_id' => $data->id, 'uom' => $data->uom, 'minimum' => $data->minimum, 'transit_time' => $data->transit_time, 'via' => $data->via, 'created_at' => $data->contract->created_at, 'updated_at' => $data->contract->updated_at);
             $information['contract']['origin_port'] = array('id' => $data->port_origin->id, 'name' => $data->port_origin->display_name, 'code' => $data->port_origin->code, 'coordinates' => $data->port_destiny->coordinates);
             $information['contract']['destination_port'] = array('id' => $data->port_destiny->id, 'name' => $data->port_destiny->display_name, 'code' => $data->port_destiny->code, 'coordinates' => $data->port_destiny->coordinates);
-            $information['contract']['carrier'] = array('id' => $data->carrier->id, 'name' => $data->carrier->name, 'code' => $data->carrier->uncode, 'scac' => $data->carrier->scac, 'image' => $data->carrier->image, 'url' => $data->carrier->url.$data->carrier->image);
+            $information['contract']['carrier'] = array('id' => $data->carrier->id, 'name' => $data->carrier->name, 'code' => $data->carrier->uncode, 'scac' => $data->carrier->scac, 'image' => $data->carrier->image, 'url' => $data->carrier->url . $data->carrier->image);
             $information['contract']['ocean_freight'] = $array;
             $information['contract']['freight_charges'] = $collectionFreight;
             $information['contract']['origin_charges'] = $collectionOrig;
             $information['contract']['destination_charges'] = $collectionDest;
-            $information['contract']['totals'] = array('freight' => $FreightCharges, 'origin' => $totalOrigin, 'destination' => $totalDestiny,'rates'=> number_format($totalRates, 2, '.', ''),'all_freight'=>$totalFreight,'quote'=> number_format($totalQuote, 2, '.', ''));
+            $information['contract']['totals'] = array('freight' => $FreightCharges, 'origin' => $totalOrigin, 'destination' => $totalDestiny, 'rates' => number_format($totalRates, 2, '.', ''), 'all_freight' => $totalFreight, 'quote' => number_format($totalQuote, 2, '.', ''));
 
 
-            $collectionGeneral->push( $information);
+            $collectionGeneral->push($information);
 
             // INLANDS
 
@@ -3375,7 +3373,7 @@ class ApiController extends Controller
         $collectionGeneral = $collectionGeneral->sortBy('totalQuote');
 
         return response()->json($collectionGeneral);
-/*
+        /*
 
 $mixSearch = array();
 $company_setting = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
@@ -3414,7 +3412,6 @@ $company_cliente = null;
                     foreach ($items as $itemsT) {
                         foreach ($itemsT as $itemsDetail) {
                             $monto += $itemsDetail['monto'];
-
                         }
                     }
                     $itemsDetail['monto'] = number_format($monto, 2, '.', '');
@@ -3435,7 +3432,6 @@ $company_cliente = null;
 
                     $collect->push($itemsDetail);
                     $monto = 0;
-
                 } else {
                     foreach ($items as $itemsT) {
                         foreach ($itemsT as $itemsDetail) {
@@ -3513,7 +3509,7 @@ $company_cliente = null;
      */
     public function getContract(Request $request)
     {
-        if(!$request->carrier || !$request->container || !$request->direction || !$request->since || !$request->until){
+        if (!$request->carrier || !$request->container || !$request->direction || !$request->since || !$request->until) {
             return response()->json(['message' => 'There are missing parameters. You must send direction, carrier, since, until and container'], 400);
         }
 
@@ -3540,148 +3536,18 @@ $company_cliente = null;
         }
         $carrier = $this->getCarrier($request->carrier);
         $reference = $request->reference;
-        
-            $arreglo = Rate::whereIn('carrier_id',$carrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $company_setting, $direction, $code,$reference) {
-            if ($company_setting->future_dates == 1) {
-                $q->where(function ($query) use ($dateSince) {
-                    $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                })->when($reference, function($query,$name){
-                    return $query->where('name','LIKE','%'.$name.'%');
-                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code)->where('status_erased',0);
-            } else {
-                $q->where(function ($query) use ($dateSince, $dateUntil) {
-                    $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                })->when($reference, function($query,$name){
-                    return $query->where('name','LIKE','%'.$name.'%');
-                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code)->where('status_erased',0);
-            }
-        })->orderBy('contract_id')->get();
 
-        $a = 2;
-        $contractId = -1;
-        foreach ($arreglo as $data) {
+        $rates = Contract::where(function ($query) use ($dateSince) {
+            $query->where('validity', '>=', $dateSince)
+                ->orWhere('expire', '>=', $dateSince);
+        })->where('company_user_id', $company_user_id)
+            ->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code)->where('status_erased', 0)
+            ->whereHas('rates', function ($query) use ($carrier) {
+                $query->whereIn('carrier_id', $carrier)->with('port_origin', 'port_destiny');
+            })->get();
 
-            $montos = array();
-            $montos2 = array();
-            $montosAllIn = array();
-            $montosAllInTot = array();
-       
-            foreach ($containers as $cont) {
-                $name_rate = 'rate' . $cont->code;
 
-                $var = 'array' . $cont->code;
-                $$var = $container_calculation->where('container_id', $cont->id)->pluck('calculationtype_id')->toArray();
-       
-                $options = json_decode($cont->options);
-                if (@$options->field_rate == 'containers') {
-                    $test = json_encode($data->{$options->field_rate});
-                    $jsonContainer = json_decode($data->{$options->field_rate});
-                    if (isset($jsonContainer->{'C' . $cont->code})) {
-                        $rateMount = $jsonContainer->{'C' . $cont->code};
-                        $$name_rate = $rateMount;
-                        $montosAllIn = array($cont->code => (float)$$name_rate);
-                    } else {
-                        $rateMount = 0;
-                        $$name_rate = $rateMount;
-                        $montosAllIn = array($cont->code => (float)$$name_rate);
-                    }
-                } else {
-                    $rateMount = $data->{$options->field_rate};
-                    $$name_rate = $rateMount;
-                    $montosAllIn = array($cont->code => (float)$$name_rate);
-                }
-
-                $montos2 = array($cont->code => (float)$rateMount);
-                $montos = array_merge($montos, $montos2);
-                $montosAllInTot = array_merge($montosAllInTot, $montosAllIn);
-
-            }
-            $arrayFirstPartAmount = array(
-                'contract' => $data->contract->name,
-                'reference' => $data->contract->id,
-                'carrier' => $data->carrier->name,
-                'direction' => $data->contract->direction->name,
-                'origin' => ucwords(strtoupper($data->port_origin->code)),
-                'destination' => ucwords(strtoupper($data->port_destiny->code)),
-                'valid_from' => $data->contract->validity,
-                'valid_until' => $data->contract->expire,
-            );
-            $arraySecondPartAmount = array(
-                'charge' => 'freight',
-                'currency' => $data->currency->alphacode,
-
-            );
-            $ocean_freight = array_merge($montos, $arraySecondPartAmount);
-            $resultado['contract']['general'] = $arrayFirstPartAmount;
-            $resultado['contract']['ocean_freight'] = $ocean_freight;
-
-            $a++;
-            // Local charges
-            if ($contractId != $data->contract->id) {
-                $contractId = $data->contract->id;
-                $data1 = \DB::select(\DB::raw('call proc_localchar(' . $data->contract->id . ')'));
-            }
-                $arrayCompleteLocal = array();
-                $resultado['contract']['surcharges'] = array();
-                if ($data1 != null) {
-                    for ($i = 0; $i < count($data1); $i++) {                        
-                        if( strpos($data1[$i]->carrier,$data->carrier->name )!== false && $data1[$i]->deleted_at==null){
-                            if( strpos($data1[$i]->port_orig, $data->port_origin->code) && strpos($data1[$i]->port_dest, $data->port_destiny->code) || $data1[$i]->port_orig =="ALL" && strpos($data1[$i]->port_dest, $data->port_destiny->code)
-                            || strpos($data1[$i]->port_orig, $data->port_origin->code) && $data1[$i]->port_dest =="ALL" || $data1[$i]->port_orig =="ALL" && $data1[$i]->port_dest =="ALL"  
-                            ){
-                                $montosLocal = array();
-                                $montosLocal2 = array();
-                                $arrayFirstPartLocal = array(
-                                    'charge' => $data1[$i]->surcharge,
-                                    'type' => $data1[$i]->changetype,
-                                    'calculation_type' => $data1[$i]->calculation_type,
-                                );
-
-                                $calculationID = CalculationType::where('name', $data1[$i]->calculation_type)->first();
-                                $currencyID = Currency::where('alphacode', $data1[$i]->currency)->first();
-                                
-                                foreach ($containers as $cont) {
-                                    $name_arreglo = 'array' . $cont->code;
-                                    $name_rate = 'rate' . $cont->code;
-                                    if (in_array($calculationID->id, $$name_arreglo)) {
-                                        $monto = $this->perTeu($data1[$i]->ammount, $calculationID->id, $cont->code);
-                                        $currency_rate = $this->ratesCurrency($currencyID->id, $data->currency->alphacode);
-                                        $$name_rate = number_format($$name_rate + ($monto / $currency_rate), 2, '.', '');
-                                        $montosAllInTot[$cont->code] = (float)$$name_rate;
-                                        $montosLocal2 = array($cont->code => (float)$monto);
-                                        $montosLocal = array_merge($montosLocal, $montosLocal2);
-                                    } else {
-                                        $montosLocal2 = array($cont->code => '0');
-
-                                        $montosLocal = array_merge($montosLocal, $montosLocal2);
-                                    }
-                                }
-                                $arrayFirstPartLocal = array_merge($arrayFirstPartLocal, $montosLocal);
-
-                                $arraySecondPartLocal = array(
-                                    'currency' => $data1[$i]->currency,
-
-                                );
-                                $resultado['contract']['surcharges'][] = array_merge($arrayFirstPartLocal, $arraySecondPartLocal);
-                            }
-                        }
-                    }
-                }
-            // ALL IN AMOUNTS
-            $arrayFirstPartAmountAllIn = array(
-                'charge' => 'freight - ALL IN',
-            );
-            $arrayFirstPartAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $montosAllInTot);
-            $arraySecondPartAmountAllIn = array(
-                'currency' => $data->currency->alphacode,
-            );
-            $arrayCompleteAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $arraySecondPartAmountAllIn);
-            $resultado['contract']['allIn'] = $arrayCompleteAmountAllIn;
-            $collectionGeneral->push($resultado);
-
-        }
-        return response()->json($collectionGeneral, 200);
-
+        return GetContractApiResource::collection($rates);
     }
 
 
@@ -3704,8 +3570,8 @@ $company_cliente = null;
 
     public function pdfApi($id)
     {
-        $quote = QuoteV2::where('company_user_id',Auth::user()->company_user_id)->where('id', $id)
-        ->orwhere('quote_id', $id)->first();
+        $quote = QuoteV2::where('company_user_id', Auth::user()->company_user_id)->where('id', $id)
+            ->orwhere('quote_id', $id)->first();
         if (!empty($quote)) {
             $mediaItem = Media::where('model_id', $quote->id)->where('model_type', 'App\QuoteV2')->first();
             if (!empty($mediaItem)) {
@@ -3726,5 +3592,4 @@ $company_cliente = null;
             ], 404);
         }
     }
-
 }
