@@ -14,6 +14,11 @@ class GetContractApiResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+
+        $data = [
+            'id' => $this->id
+        ];
+
+        return $data;
     }
 }
