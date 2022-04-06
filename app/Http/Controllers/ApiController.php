@@ -3537,14 +3537,21 @@ $company_cliente = null;
         $carrier = $this->getCarrier($request->carrier);
         $reference = $request->reference;
 
-        $rates = Contract::where(function ($query) use ($dateSince) {
-            $query->where('validity', '>=', $dateSince)
-                ->orWhere('expire', '>=', $dateSince);
-        })->where('company_user_id', $company_user_id)
-            ->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code)->where('status_erased', 0)
-            ->whereHas('rates', function ($query) use ($carrier) {
-                $query->whereIn('carrier_id', $carrier)->with('port_origin', 'port_destiny');
-            })->get();
+        $rates = Rate::whereIn('carrier_id', $carrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $company_setting, $direction, $code, $reference) {
+            if ($company_setting->future_dates == 1) {
+                $q->where(function ($query) use ($dateSince) {
+                    $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
+                })->when($reference, function ($query, $name) {
+                    return $query->where('name', 'LIKE', '%' . $name . '%');
+                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code);
+            } else {
+                $q->where(function ($query) use ($dateSince, $dateUntil) {
+                    $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
+                })->when($reference, function ($query, $name) {
+                    return $query->where('name', 'LIKE', '%' . $name . '%');
+                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code);
+            }
+        })->orderBy('contract_id')->get();
 
 
         return GetContractApiResource::collection($rates);

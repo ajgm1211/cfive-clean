@@ -14,21 +14,18 @@ class GetContractApiResource extends JsonResource
      */
     public function toArray($request)
     {
-
-        foreach($this->rates as $rate){
-            $data = [
-                'general' => [
-                    'contract' => $rate->contract->name,
-                    'reference' => $rate->contract->id,
-                    'carrier' => $rate->carrier->name,
-                    'direction' => $rate->contract->direction->name,
-                    'origin' => ucwords(strtoupper($rate->port_origin->code)),
-                    'destination' => ucwords(strtoupper($rate->port_destiny->code)),
-                    'valid_from' => $rate->contract->validity,
-                    'valid_until' => $rate->contract->expire,
-                ]
-            ];
-        }
+        $data = [
+            'general' => [
+                'contract' => $this->contract->name,
+                'reference' => $this->contract->id,
+                'carrier' => $this->carrier->name,
+                'direction' => $this->contract->direction->name,
+                'origin' => ucwords(strtoupper($this->port_origin->code)),
+                'destination' => ucwords(strtoupper($this->port_destiny->code)),
+                'valid_from' => $this->contract->validity,
+                'valid_until' => $this->contract->expire,
+            ]
+        ];
 
         /*foreach ($arreglo as $data) {
 
