@@ -3548,6 +3548,7 @@ $company_cliente = null;
 
 
         return GetContractApiResource::collection($rates);
+        //return response()->json($collectionGeneral, 200);
     }
 
 
