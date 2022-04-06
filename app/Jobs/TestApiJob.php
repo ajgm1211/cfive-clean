@@ -44,8 +44,8 @@ class TestApiJob implements ShouldQueue
      */
     public function handle()
     {
-        ini_set('memory_limit', '8000M');
-        $rates = Contract::where('created_at', '>', '2021-05-30 00:00:00')->with('rates')->get();
+        //ini_set('memory_limit', '8000M');
+        $rates = Contract::where('created_at', '>', '2022-03-01 00:00:00')->where('company_user_id',241)->with('rates')->get();
         $container_calculation = ContainerCalculation::get();
         foreach ($rates as $value) {
 
