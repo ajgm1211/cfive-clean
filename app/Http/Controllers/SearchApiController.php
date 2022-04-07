@@ -414,7 +414,7 @@ class SearchApiController extends Controller
 
     //Stores current search
     public function store(Request $request)
-    {       
+    {          
         //Validating request data from form
         $new_search = $request->validate([
             'originPorts' => 'required|array|min:1',
@@ -643,8 +643,8 @@ class SearchApiController extends Controller
         $filterOrig= $this->filterInland($origInland,$search_array['containers'],$current_client,$origin_port,$origin_address,$rate); 
         $filterDest= $this->filterInland($destInland,$search_array['containers'],$current_client,$destiny_port,$destination_address,$rate); 
 
-        $selectOriginInland=$this->selectInland($filterOrig,$rate,$type=1);
-        $selectDestinyInland=$this->selectInland($filterDest,$rate,$type=2);
+        $selectOriginInland=$origInland!=null ? $this->selectInland($filterOrig) : null;
+        $selectDestinyInland=$destInland!=null ? $this->selectInland($filterDest) : null;
      
         $inland['origin_inland']= $selectOriginInland!=null ? $selectOriginInland : null ;
             if ( $inland['origin_inland']!=null) {

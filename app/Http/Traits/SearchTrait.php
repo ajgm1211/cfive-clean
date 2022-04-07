@@ -1783,29 +1783,32 @@ trait SearchTrait
                     $a->where('port',$port);
                 })
                 ->get();
-               
+                $distance=DistanceKmLocation::where('location_id',$locations['id'])->where('harbors_id',$locations['harbor'])->first();
+
                 foreach($inlands as $inland){
-                    if(count($inland['inlandRange'])>0){
+                    if(count($inland['inlandRange'])>0 && isset($distance)){
                         foreach($inland['inlandRange'] as $range){
                             if(isset($range)){
                                 $range['name']=$inland['provider'];
                                 $range['location']=$address['name'];
                                 $range['providers']=$inland['providers'];
                                 $inlandsResults['range'][]=$range;
+                                $range['distance']=intval($distance['distance']);
                             }
                         }
                     }
-                    if(count($inland['inlandkms'])>0){
+                    if(count($inland['inlandkms'])>0 && isset($distance) ){
                         foreach($inland['inlandkms'] as $kms){
                             if(isset($kms)){
                                 $kms['name']=$inland['provider'];
                                 $kms['location']=$address['name'];
                                 $kms['providers']=$inland['providers'];
                                 $inlandsResults['km'][]=$kms;
+                                $kms['distance']=intval($distance['distance']);
                             }
                         }
                     }
-                    if(count($inland['inlandLocation'])>0){
+                    if(count($inland['inlandLocation'])>0 ){
                         foreach($inland['inlandLocation'] as $location){
                             if(isset($location) && $location['harbor_id'] == $port && $location['location_id'] == $locations['id'] ){
                                 $location['name']=$inland['provider'];
@@ -1817,19 +1820,19 @@ trait SearchTrait
                     } 
                 }
             }
-        }
+        }      
         return $inlandsResults;
     }
 
     public function filterInland($inland,$containers,$current_client,$port,$address){
 
-        $inlands= null;
+        $inlands= [];
         //location
         if(isset($inland['location'])){
             $l=null;
             foreach($inland['location'] as $a => $location){
-                if (count($location['json_containers'])>0) {
-                    $result=$this->selectContainerInland($location,$containers,$current_client,$port,$address,$type='location');
+                if (array_sum($location['json_containers'])>0) {
+                    $result=$this->selectContainerInland($location,$containers,$current_client,$type='location');
                     if($l==null){
                         $l=$inland['location'][$a];
                         $l['value']=$result['sum'];
@@ -1837,7 +1840,6 @@ trait SearchTrait
                         $l['containers_client_currency']=$result['containers_client_currency'];
                         $l['currency']=$result['currency'];
                         $l['type']='location';
-                        $l['distance']=$result['distance'];
                     }else{
                         if($l['value']<$result['sum']){
                             $l=$inland['location'][$a];                            
@@ -1846,19 +1848,18 @@ trait SearchTrait
                             $l['containers_client_currency']=$result['containers_client_currency'];
                             $l['currency']=$result['currency'];
                             $l['type']='location';
-                            $l['distance']=$result['distance'];
                         }
                     }
+                    $inlands['location']=$l;
                 }
             }
-            $inlands['location'][]=$l;
         }  
         //range
         if(isset($inland['range'])){
             $r=null;
             foreach($inland['range'] as $b => $range){
-                if (count($range['json_containers'])>0) {
-                    $result=$this->selectContainerInland($range,$containers,$current_client,$port,$address,$type='range');
+                if (array_sum($range['json_containers'])>0  && $range['distance'] >= $range['lower'] && $range['distance'] <= $range['upper']) {
+                    $result=$this->selectContainerInland($range,$containers,$current_client,$type='range');
                     if($r==null){
                         $r=$inland['range'][$b];
                         $r['value']=$result['sum'];
@@ -1866,7 +1867,6 @@ trait SearchTrait
                         $r['containers_client_currency']=$result['containers_client_currency'];
                         $r['currency']=$result['currency'];
                         $r['type']='ranges';
-                        $r['distance']=$result['distance'];
                     }else{
                         if($r['value']<$result['sum']){
                             $r=$inland['range'][$b];
@@ -1875,19 +1875,18 @@ trait SearchTrait
                             $r['containers_client_currency']=$result['containers_client_currency'];
                             $r['currency']=$result['currency'];
                             $r['type']='ranges';
-                            $r['distance']=$result['distance'];
                         }
                     }
+                    $inlands['range']=$r;
                 }
             }
-            $inlands['range'][]=$r;
         }
         //km
-        if(isset($inland['km'])){
+        if(isset($inland['km']) && !array_key_exists('range',$inlands)   ){
             $k=null;
             foreach($inland['km'] as $c => $km){
-                if (count($km['json_containers'])>0) {
-                    $result=$this->selectContainerInland($km,$containers,$current_client,$port,$address,$type='km');
+                if (array_sum($km['json_containers'])>0) {
+                    $result=$this->selectContainerInland($km,$containers,$current_client,$type='km');
                     if($k==null){
                         $k=$inland['km'][$c];
                         $k['value']=$result['sum'];
@@ -1895,7 +1894,6 @@ trait SearchTrait
                         $k['containers_client_currency']=$result['containers_client_currency'];
                         $k['currency']=$result['currency'];
                         $k['type']='km';
-                        $k['distance']=$result['distance'];
                     }else{
                         if($k['value']<$result['sum']){
                             $k=$inland['km'][$c];
@@ -1904,114 +1902,54 @@ trait SearchTrait
                             $k['containers_client_currency']=$result['containers_client_currency'];
                             $k['currency']=$result['currency'];
                             $k['type']='km';
-                            $k['distance']=$result['distance'];
                         }
                     }
+                    $inlands['km']=$k;
                 }
             }
-            $inlands['km'][]=$k;
         }
+        
         return $inlands;
     }
 
-    public function selectInland($inlands,$rate,$type){
+    public function selectInland($inlands){
 
-        $inland=array();
+        $inlandResult=array();
+        $new_value=null;
+        $old_value=null;
+        $key_new=null;
 
-        $km = isset($inlands['km'][0]) ? $inlands['km'][0] : null;
-        $range = isset($inlands['range'][0]) ? $inlands['range'][0] : null;
-        $location = isset($inlands['location'][0]) ? $inlands['location'][0] : null;
+        foreach($inlands as $key=>$inland){
 
-        if($location!=null && $range!=null && $km!=null && array_sum($inlands['km'][0]['json_containers'])!=0){ 
- 
-            $distance=DistanceKmLocation::where('location_id',$location['location_id'])->where('harbors_id',$location['harbor_id'])->first();
-            $upper=$range['upper'];
-            $lower=$range['lower'];
+            if($old_value==null){
+                $old_value=$inland['value'];
+                $inlandResult=$inlands[$key];    
+            }elseif($new_value==null && isset($inland)){
+                $new_value=$inland['value'];
+                $key_new=$key;  
 
-            if($distance['distance']>=$lower && $distance['distance']<=$upper){            
-                $value1=$range['value'];
-                $value2=$location['value'];          
-                if($value1>$value2){
-                    $inland=$range;
-                }elseif($value1<$value2){
-                    $inland=$location;
-                }                                    
-            }else{
-                $value1=$km['value'];
-                $value2=$location['value'];
-                if($value1>$value2){
-                    $inland=$km;
-                }else{
-                    $inland=$location;
-                }
-            }
-        }elseif($location==null && $range!=null && $km!=null && array_sum($inlands['km'][0]['json_containers'])!=0){
-            if ($type==1) {
-                $distance=DistanceKmLocation::where('location_id',$rate['originAddress']['id'])->where('harbors_id',$rate['origin_port'])->first(); 
-            }else{
-                $distance=DistanceKmLocation::where('location_id',$rate['destinationAddress']['id'])->where('harbors_id',$rate['destiny_port'])->first();
-            }
-            $upper=$range['upper'];
-            $lower=$range['lower'];
-            if($distance['distance']>=$lower && $distance['distance']<=$upper){
-                $value1=$range['value'];
-                $value2=$km['value'];
-                if($value1>$value2){
-                    $inland=$range;
-                }else{
-                    $inland=$km;
-                }
-            }else{
-                    $inland=$km;
-            }
-        }elseif($location!=null && $range!=null && $km==null || $km!=null && array_sum($km['json_containers'])==0 ){
-            $distance=DistanceKmLocation::where('location_id',$location['location_id'])->where('harbors_id',$location['harbor_id'])->first();
-            $upper=$range['upper'];
-            $lower=$range['lower'];
-
-            if($distance['distance']>=$lower && $distance['distance']<=$upper){            
-                $value1=$range['value'];
-                $value2=$location['value']; 
-
-                if($value1>$value2){
-                    $inland=$range;
-                }elseif($value1<$value2){
-                    $inland=$location;
-                }
-            }else{
-                $inland=$range;
-            }     
-        }elseif($location!=null && $range==null && $km!=null){
-            
-            $value1=$location['value'];
-            $value2=$km['value'];
-
-            if($value1>$value2){
-                $inland=$location;
-            }else{
-                $inland=$km;
-            }
-        }elseif($location == null && $range!=null && $km==null || $km!=null  && array_sum($km['json_containers'])==0){
-            $inland=$range;
-        }elseif($location == null && $range==null && $km!=null){
-            $inland=$km;
-        }elseif($location!=null && $range==null && $km==null){
-            $inland=$location;
+                if($old_value>$new_value){
+                    $new_value=null;    
+                }elseif($old_value<$new_value){
+                    $old_value=$inlands[$key_new]['value'];
+                    $new_value=null;
+                    $inlandResult=$inlands[$key_new];
+                } 
+            }         
         }
-
-        return $inland;
+    
+        return $inlandResult;
     }
 
-    public function selectContainerInland ($inland,$containers,$current_client,$port,$address,$type){
+    public function selectContainerInland ($inland,$containers,$current_client,$type){
         $result = array();
         $inputConversion = currency::find($inland['currency_id']);
-        $distance=DistanceKmLocation::where('location_id',$address['id'])->where('harbors_id',$port)->first(); 
 
         foreach($containers as $container){
             foreach ($inland['json_containers'] as $key=>$inlandC){
-                if($type=='km'){
+               if($type=='km'){
                     if ($key=='C'.$container['code']) {
-                        $containerResult['C'.$container['code']]=$inlandC*$distance['distance'];
+                        $containerResult['C'.$container['code']]=$inlandC*$inland['distance'];
                     }
                 }else{
                     if ($key=='C'.$container['code']) {
@@ -2023,22 +1961,22 @@ trait SearchTrait
         
         $change_current=$this->convertToCurrency($inputConversion,$current_client,$containerResult);
 
-        if ($inland['currency_id']!=149) {
+        if ($inland['currency_id']!=149 && isset($containerResult)) {
             $sum=array_sum($containerResult);
             $result=[
                 'sum' => $sum/$inputConversion->rates,
                 'containers'=> $containerResult,
                 'containers_client_currency'=>$change_current, 
                 'currency'=>$inputConversion,
-                'distance'=>$distance
+                'distance'=>$inland['distance']
              ];
-        }else{
+        }elseif(isset($containerResult)){
             $result=[
                'sum' => array_sum($containerResult),
                'containers'=> $containerResult,
                'containers_client_currency'=>$change_current, 
                'currency'=>$inputConversion,
-               'distance'=>$distance
+               'distance'=>$inland['distance']
             ];
         }
         
