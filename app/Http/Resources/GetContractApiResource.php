@@ -100,7 +100,7 @@ class GetContractApiResource extends JsonResource
         }
 
         $arraySecondPartAmount = array(
-            'charge' => 'freight',
+            'charge' => 'Ocean Freight',
             'currency' => $data->currency->alphacode,
 
         );

@@ -34,6 +34,7 @@ class ApiControllerV2 extends Controller
             $rates = $this->getRates($request);
 
             return GetContractApiResource::collection($rates);
+            
         } catch (\Exception $e) {
             if ($e instanceof ModelNotFoundException) {
                 return response()->json([
