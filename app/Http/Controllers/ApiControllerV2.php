@@ -67,6 +67,13 @@ class ApiControllerV2 extends Controller
         $direction = $data->input('direction') == 3 ? array(1, 2, 3) : array($data->input('direction'));
         $code = GroupContainer::where('id', $data->input('container'))->orWhere('name', $data->input('container'))->firstOrFail();
 
+        //Setting order by default
+        $orderBy = 'desc';
+
+        if($data->order) {
+            $orderBy = $data->order;
+        }
+
         //Setting pagination size
         $paginate = 50;
 
@@ -88,7 +95,7 @@ class ApiControllerV2 extends Controller
                     return $query->where('name', 'LIKE', '%' . $name . '%');
                 })->where('company_user_id', '=', $company_user->id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code->id);
             }
-        })->orderBy('contract_id','desc')->paginate($paginate);
+        })->orderBy('contract_id',$orderBy)->paginate($paginate);
 
         return $rates;
     }
@@ -106,7 +113,11 @@ class ApiControllerV2 extends Controller
         if ($carrierUrl == "all") {
             $carriers = Carrier::all()->pluck('id')->toArray();
         } else {
-            $carriers = Carrier::where('name', $carrierUrl)->orWhere('uncode', $carrierUrl)->orWhere('id', $carrierUrl)->pluck('id')->toArray();
+            $carriers = Carrier::where('name', $carrierUrl)
+            ->orWhere('uncode', $carrierUrl)
+            ->orWhere('scac', $carrierUrl)
+            ->orWhere('id', $carrierUrl)
+            ->pluck('id')->toArray();
         }
 
         return $carriers;
