@@ -639,7 +639,7 @@ import paginate from "./paginate";
 
 export default {
     props: {
-        toggleAddToWhiteLavel:{
+        toggleAddToWhiteLabel:{
             type:Boolean,
             required: false,
             default: true,
@@ -1809,7 +1809,7 @@ export default {
         selected() {
             this.$emit("input", this.selected)
             this.$emit("selectedData", this.selected)
-            this.$emit("toggleButtonWL", this.toggleAddToWhiteLavel)
+            this.$emit("toggleButtonWL", this.toggleAddToWhiteLabel)
         },
         search: {
             handler: function (val, oldVal) {

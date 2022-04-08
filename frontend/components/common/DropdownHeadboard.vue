@@ -1,8 +1,13 @@
 <template>
   <div>
     <b-dropdown id="dropdown-left" text="Import">
-      <b-dropdown-item v-for="(item, i) in items" :href="item.link" @click="item.click" :ref="item.ref" :key="i"
-        >{{ item.label }}
+      <b-dropdown-item v-for="(item, i) in items" :key="i"
+        :href="item.link" 
+        @click="item.click" 
+        :ref="item.ref" 
+        :disabled="item.disabled"
+      >
+        {{ item.label }}
       </b-dropdown-item>
     </b-dropdown>
   </div>
@@ -18,6 +23,15 @@ export default {
       type: Array,
       default: [],
     },
+    toggleWl:{
+      type:Boolean,
+      default:() => {return false} ,
+    }
+  },
+  watch:{
+    toggleWl(){
+      this.$emit("toggleButtonWL", this.toggleWl)
+    }
   },
   methods: {
     createMasiveEntity() {
