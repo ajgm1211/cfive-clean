@@ -411,7 +411,8 @@ class SendExcelFile implements ShouldQueue
     public function getArrayPortCountry($id)
     {
         $info = Harbor::find($id);
-        return $info->country_id;
+        $arregloCountry[] = $info->country_id;
+        return $arregloCountry;
     }
 
     public function getArrayCountryPort($id)
