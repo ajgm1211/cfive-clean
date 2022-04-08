@@ -90,7 +90,7 @@ Route::group(['prefix' => 'v2'], function () {
 
         // Providers
         Route::put('provider/{id}/update/refcode', 'ProvidersController@updateRefCode');
-        Route::get('getContract', 'ApiController@getContractV2');
+        Route::get('getContract', 'ApiControllerV2@getContract');
     });
 });
 

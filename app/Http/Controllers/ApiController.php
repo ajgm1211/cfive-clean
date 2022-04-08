@@ -3679,62 +3679,6 @@ $company_cliente = null;
         return response()->json($collectionGeneral, 200);
     }
 
-    /**
-     * Get contract's details by parameters.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function getContractV2(Request $request)
-    {
-        try {
-            //Check if were received all needed parameters
-            if (!$request->carrier || !$request->container || !$request->direction || !$request->since || !$request->until) {
-                return response()->json(['message' => 'There are missing parameters. You must send direction, carrier, since, until and container'], 400);
-            }
-
-            //Setting variables from request
-            $dateSince = $request->input('since');
-            $dateUntil = $request->input('until');
-            $reference = $request->reference;
-            $company_user = \Auth::user()->CompanyUser;
-            $carrier = $this->getCarrier($request->carrier);
-            $direction = $request->input('direction') == 3 ? array(1, 2, 3) : array($request->input('direction'));
-            $code = GroupContainer::where('id', $request->input('container'))->orWhere('name', $request->input('container'))->firstOrFail();
-
-            //Getting ocean freight rates from DB
-            $rates = Rate::whereIn('carrier_id', $carrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user, $direction, $code, $reference) {
-                if ($company_user->future_dates == 1) {
-                    $q->where(function ($query) use ($dateSince) {
-                        $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
-                    })->when($reference, function ($query, $name) {
-                        return $query->where('name', 'LIKE', '%' . $name . '%');
-                    })->where('company_user_id', '=', $company_user->id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code->id);
-                } else {
-                    $q->where(function ($query) use ($dateSince, $dateUntil) {
-                        $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
-                    })->when($reference, function ($query, $name) {
-                        return $query->where('name', 'LIKE', '%' . $name . '%');
-                    })->where('company_user_id', '=', $company_user->id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code->id);
-                }
-            })->orderBy('contract_id')->paginate(100);
-
-            return GetContractApiResource::collection($rates);
-
-        } catch (\Exception $e) {
-            if($e instanceof ModelNotFoundException) {
-                return response()->json([
-                    'message' => 'The requested container type does not exist',
-                ], 404);
-            }else{
-                return response()->json([
-                    'message' => 'There was an error trying to get the data',
-                ], 500);
-            }
-        }
-    }
-
-
     public function perTeu($monto, $calculation_type, $code)
     {
         $arrayTeu = CalculationType::where('options->isteu', true)->pluck('id')->toArray();
