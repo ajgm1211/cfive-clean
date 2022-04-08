@@ -34,7 +34,7 @@ class ApiControllerV2 extends Controller
             $rates = $this->getRates($request);
 
             return GetContractApiResource::collection($rates);
-            
+
         } catch (\Exception $e) {
             if ($e instanceof ModelNotFoundException) {
                 return response()->json([
@@ -88,7 +88,7 @@ class ApiControllerV2 extends Controller
                     return $query->where('name', 'LIKE', '%' . $name . '%');
                 })->where('company_user_id', '=', $company_user->id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code->id);
             }
-        })->orderBy('contract_id')->paginate($paginate);
+        })->orderBy('contract_id','desc')->paginate($paginate);
 
         return $rates;
     }
