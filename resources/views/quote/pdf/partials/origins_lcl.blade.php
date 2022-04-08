@@ -42,9 +42,8 @@
                         <td>{!! $charge->charge !!}</td>
                         <td>{{  $charge->calculation_type['name'] ?? @$charge->address ?? "--" }}</td>
                         <td>{{ ($charge->units != 0 || $charge->units != "")? isDecimal($charge->units, false, true):1 }}</td>
-                        
                         @if($charge->price != 0 || $charge->price != "")
-                            <td>{{ isDecimal($charge->total/$charge->units, false, true) ?? "--" }}</td>
+                            <td>{{ isDecimal($charge->price, false, true) ?? "--" }}</td>
                         @elseif(isset($charge->totals))
                                 @php
                                     $array_total_inland = json_decode($charge->totals);
@@ -55,7 +54,6 @@
                         @else
                                 <td>{!! isDecimal(@$charge->sum_total, false, true) !!}</td>
                         @endif
-                        
                         @if(isset($charge->totals))
                             @php
                                 $array_total_inland = json_decode($charge->totals);
