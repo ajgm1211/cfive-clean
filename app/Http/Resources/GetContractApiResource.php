@@ -41,12 +41,14 @@ class GetContractApiResource extends JsonResource
                 'valid_from' => $this->contract->validity,
                 'valid_until' => $this->contract->expire,
             ],
+            //Rates
             'ocean_freight' => [
                 $this->oceanFreight($this, $containers, $container_calculation),
             ],
             'surcharges' => [
                 $this->surcharges($this, $containers, $container_calculation),
             ],
+            //Total (Ocean Freight + Surcharges)
             'all_in' => [
                 $this->allIn($this, $containers, $container_calculation),
             ],
@@ -70,8 +72,6 @@ class GetContractApiResource extends JsonResource
 
         $amount = array();
         $amount2 = array();
-        $amountAllIn = array();
-        $amountAllInTot = array();
 
         foreach ($containers as $cont) {
 
@@ -86,21 +86,17 @@ class GetContractApiResource extends JsonResource
                 if (isset($jsonContainer->{'C' . $cont->code})) {
                     $rateMount = $jsonContainer->{'C' . $cont->code};
                     $$name_rate = $rateMount;
-                    $amountAllIn = array($cont->code => (float)$$name_rate);
                 } else {
                     $rateMount = 0;
                     $$name_rate = $rateMount;
-                    $amountAllIn = array($cont->code => (float)$$name_rate);
                 }
             } else {
                 $rateMount = $data->{$options->field_rate};
                 $$name_rate = $rateMount;
-                $amountAllIn = array($cont->code => (float)$$name_rate);
             }
 
             $amount2 = array($cont->code => (float)$rateMount);
             $amount = array_merge($amount, $amount2);
-            $amountAllInTot = array_merge($amountAllInTot, $amountAllIn);
         }
 
         $arraySecondPartAmount = array(

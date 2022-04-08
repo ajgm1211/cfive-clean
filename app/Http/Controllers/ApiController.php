@@ -16,6 +16,7 @@ use App\Country;
 use App\Currency;
 use App\GlobalCharge;
 use App\GlobalChargeLcl;
+use App\GroupContainer;
 use App\Harbor;
 use App\Http\Resources\GetContractApiResource;
 use App\Http\Traits\MixPanelTrait;
@@ -3693,39 +3694,34 @@ $company_cliente = null;
      */
     public function getContractV2(Request $request)
     {
+        //Check if were received all needed parameters
         if (!$request->carrier || !$request->container || !$request->direction || !$request->since || !$request->until) {
             return response()->json(['message' => 'There are missing parameters. You must send direction, carrier, since, until and container'], 400);
         }
 
-        $direction = $request->input('direction');
-        $code = $request->input('container');
+        //Setting variables from request
         $dateSince = $request->input('since');
         $dateUntil = $request->input('until');
-        $company_user_id = \Auth::user()->company_user_id;
-        $company_setting = CompanyUser::where('id', $company_user_id)->first();
-        $carrier = $this->getCarrier($request->carrier);
         $reference = $request->reference;
-
-        if ($direction == 3) {
-            $direction = array(1, 2, 3);
-        } else {
-            $direction = array($direction);
-        }
+        $company_user = \Auth::user()->CompanyUser;
+        $carrier = $this->getCarrier($request->carrier);
+        $direction = $request->input('direction') == 3 ? array(1, 2, 3):array($request->input('direction'));
+        $code = GroupContainer::where('id', $request->input('container'))->orWhere('name', $request->input('container'))->first();
 
         //Getting ocean freight rates from DB
-        $rates = Rate::whereIn('carrier_id', $carrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user_id, $company_setting, $direction, $code, $reference) {
-            if ($company_setting->future_dates == 1) {
+        $rates = Rate::whereIn('carrier_id', $carrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $company_user, $direction, $code, $reference) {
+            if ($company_user->future_dates == 1) {
                 $q->where(function ($query) use ($dateSince) {
                     $query->where('validity', '>=', $dateSince)->orwhere('expire', '>=', $dateSince);
                 })->when($reference, function ($query, $name) {
                     return $query->where('name', 'LIKE', '%' . $name . '%');
-                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code);
+                })->where('company_user_id', '=', $company_user->id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code->id);
             } else {
                 $q->where(function ($query) use ($dateSince, $dateUntil) {
                     $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
                 })->when($reference, function ($query, $name) {
                     return $query->where('name', 'LIKE', '%' . $name . '%');
-                })->where('company_user_id', '=', $company_user_id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code);
+                })->where('company_user_id', '=', $company_user->id)->whereIn('direction_id', $direction)->where('status', '!=', 'incomplete')->where('gp_container_id', $code->id);
             }
         })->orderBy('contract_id')->paginate(100);
 
