@@ -1,10 +1,10 @@
 <template>
     <div class="container-fluid">
+      <HelpDropdown
+        :options="helpOptions"
+      ></HelpDropdown>
       <div class="row mt-5">
         <div class="col-12">
-          <HelpDropdown
-            :options="helpOptions"
-          ></HelpDropdown>
           <b-card>
             <div class="row">
               <div class="col-6">
