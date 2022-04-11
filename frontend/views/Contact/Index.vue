@@ -57,33 +57,32 @@
 </template>
 
 <script>
-
-import actions from '../../store/modules/contact/actions'
-import MainButton from "../../components/common/MainButton"
-import DataTable from '../../components/common/DataTable'
-import DropdownHeadboard from '../../components/common/DropdownHeadboard'
-import CreateModal from '../../components/common/Modals/CreateModal'
-import ToWLModal from '../../components/common/Modals/ToWhiteLevelModal'
-import ExportModal from '../../components/common/Modals/ExportModal'
-import { mapState } from 'vuex'
+import actions from "../../store/modules/contact/actions";
+import MainButton from "../../components/common/MainButton";
+import DataTable from "../../components/common/DataTable";
+import DropdownHeadboard from "../../components/common/DropdownHeadboard";
+import CreateModal from "../../components/common/Modals/CreateModal";
+import ToWLModal from "../../components/common/Modals/ToWhiteLevelModal";
+import ExportModal from "../../components/common/Modals/ExportModal";
+import { mapState } from "vuex";
 //import toastr from "toastr"
 
 export default {
-  components: {DataTable, MainButton, ToWLModal, ExportModal, CreateModal, DropdownHeadboard},
+  components: { DataTable, MainButton, ToWLModal, ExportModal, CreateModal, DropdownHeadboard },
   data() {
     return {
       actions: actions,
-      totalResults:true,
+      totalResults: true,
       fields: [
-        { key: "id", label: "ID", filterIsOpen:true },
-        { key: "first_name", label: "First Name", filterIsOpen:false },
-        { key: "last_name", label: "Last Name", filterIsOpen:false },
-        { key: "email", label: "Email", filterIsOpen:false },
-        { key: "phone", label: "Phone", filterIsOpen:false },
-        { key: "position", label: "Position", filterIsOpen:false },
-        { key: "created_at", label: "Created at", filterIsOpen:false },
+        { key: "id", label: "ID", filterIsOpen: true },
+        { key: "first_name", label: "First Name", filterIsOpen: false },
+        { key: "last_name", label: "Last Name", filterIsOpen: false },
+        { key: "email", label: "Email", filterIsOpen: false },
+        { key: "phone", label: "Phone", filterIsOpen: false },
+        { key: "position", label: "Position", filterIsOpen: false },
+        { key: "created_at", label: "Created at", filterIsOpen: false },
       ],
-      classTable:"table table-striped table-responsive",
+      classTable: "table table-striped table-responsive",
       create: false,
       modalWhiteLabel: false,
       selectForTransfer: [],
@@ -91,7 +90,7 @@ export default {
       isMassiveCreation: false,
       AddToWhiteLabel: true,
       modal_fields: [],
-      items:[
+      items: [
         {
           link: "#",
           label: "upload contacts",
@@ -130,7 +129,7 @@ export default {
     toggleTWL: function() {
       return this.AddToWhiteLabel
     },
-    ...mapState('auth', ['user'])
+    ...mapState("auth", ["user"]),
   },
   methods: {
     onEdit(data) {
@@ -166,5 +165,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
