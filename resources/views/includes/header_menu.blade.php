@@ -672,8 +672,17 @@
                             </div>
                         </li>
                     </div>
-                
                 </div>
+
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel">
+                    <div class="col-md-6">
+                        <a target="_blank" href="https://support.cargofive.com/frequent-questions/"> 
+                            <span class="m-menu__link-text">
+                                <u><b>FAQ</b></u>
+                            </span>
+                        </a>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>

@@ -65,6 +65,23 @@
 @section('content')
 
 <div class="container m-content">
+    <div class="dropdown show" align="right" style="margin:20px;">
+        <a class="dropdown-toggle" style="font-size:16px" href="#" role="button" id="helpOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            See how it works
+        </a>
+
+        <div 
+            class="dropdown-menu" 
+            aria-labelledby="helpOptions"
+        >
+            <a class="dropdown-item" target="_blank" href="https://support.cargofive.com/how-to-setup-your-freight-forwarder-on-cargofive/"> 
+                How to setup your freight forwarder
+            </a>
+            <a class="dropdown-item" target="_blank" href="https://support.cargofive.com/how-to-modify-the-main-currency/"> 
+                How to modify your main currency
+            </a>
+        </div>
+    </div>
     <div class="m-portlet m-portlet--mobile" style="border-radius:10px;">
         <br>
         <br>
