@@ -5,6 +5,7 @@ namespace App\Http\Traits;
 use App\Container;
 use App\Currency;
 use App\PriceLevelDetail;
+use App\QuotaRequest;
 use Illuminate\Support\Collection as Collection;
 
 trait UtilTrait
@@ -234,4 +235,16 @@ trait UtilTrait
 
         return $is_unique;
     }
+
+    public function validateQuota($company)
+    {
+        $quota = QuotaRequest::where('company_user_id', $company)->first();
+        
+        if(($quota->type == 'limited' && $quota->remaining_quota<=0) || $quota->status == 0){
+            return false;
+        }
+
+        return true;
+    }
+
 }

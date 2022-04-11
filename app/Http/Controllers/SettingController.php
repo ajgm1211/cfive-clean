@@ -174,7 +174,6 @@ class SettingController extends Controller
             $company->save();
 
             User::where('id', \Auth::id())->update(['company_user_id' => $company->id]);
-            $usuario = User::find(\Auth::id());
 
             $email_settings = new EmailSetting();
             $email_settings->company_user_id = $company->id;
@@ -237,6 +236,9 @@ class SettingController extends Controller
                 $email_settings->save();
             }
         }
+
+        //Creating quota to import contracts
+        $company->createQuota($request);
 
         return response()->json(['message' => 'Ok']);
     }

@@ -2,8 +2,10 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\QuotaRequest;
 
 class CompanyUser extends Model implements Auditable
 {
@@ -54,5 +56,38 @@ class CompanyUser extends Model implements Auditable
     public function settingsWhitelabel()
     {
         return $this->hasOne('App\SettingsWhitelabel');
+    }
+
+    public function createQuota($data){
+
+        $due_date = $this->addMonthYearToDate($data->issued_date,$data->payment_type);
+
+        QuotaRequest::updateOrCreate([
+            'company_user_id' => $this->id
+        ],[
+            'type' => $data->type,
+            'payment_type' => $data->payment_type,
+            'quota' => $data->quota,
+            'remaining_quota' => $data->remaining_quota,
+            'company_user_id' => $this->id,
+            'issued_date' => $data->issued_date,
+            'due_date' => $due_date->format('Y-m-d'),
+            'status' => $data->status,
+        ]);
+    }
+
+    public function addMonthYearToDate($date, $type){
+
+        $date = Carbon::createFromFormat('Y-m-d', $date);
+
+        if($type=='monthly'){
+            $due_date = $date->addMonth();
+        }else if($type=='biannual'){
+            $due_date = $date->addMonths(6);
+        }else{
+            $due_date = $date->addYear();
+        }
+
+        return $due_date;
     }
 }
