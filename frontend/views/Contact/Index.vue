@@ -106,6 +106,13 @@ export default {
           click: () => this.exportEntityModalShow()
         },
         {
+          link: "/contacts/v2/failed",
+          label: "Failed contacts",
+          ref: "failedContacts",
+          disabled: false,
+          click: () => this.defaultEvent()
+        },
+        {
           link: "#",
           label: "Transfer to WL",
           ref: "tranferTWL",
