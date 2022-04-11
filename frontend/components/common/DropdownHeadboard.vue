@@ -4,7 +4,7 @@
 
             <b-dropdown-item v-for="(item, i) in items" 
                 :href="item.link" 
-                @click="func" 
+                @click="item.click" 
                 :ref="item.ref" 
                 :key="i">{{item.label}}
             </b-dropdown-item>
@@ -21,20 +21,7 @@
             },
             items:{
                 type: Array,
-                default:[
-                    
-                ]
-            }
-        },
-        methods:{
-            createMasiveEntity(){
-                this.$emit('createMasive',true)
-            },
-            exportEntityShow(){
-                this.$emit('exportEntityModalShow')
-            },
-            AddToWhiteLevel(){
-                this.$emit('AddToWhiteLevelModal')    
+                default:[]
             }
         }
     }

@@ -45,6 +45,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
 Route::middleware(['auth'])->prefix('contacts')->group(function () {
     route::get('v2', 'ContactV2Controller@index');
     route::get('v2/{id}/edit', 'ContactV2Controller@edit');
+    Route::get('v2/template', 'ContactV2Controller@downloadTemplatefile');
 });
 
 

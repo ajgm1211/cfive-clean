@@ -13,15 +13,7 @@
           <DropdownHeadboard
             :items="items"
             :whitelabel="user.whitelabel"
-            @createMasive="createMasive(true)"
-          ></DropdownHeadboard>
-          <b-dropdown id="dropdown-left" text="Import">
-            <b-dropdown-item href="#" @click="createMasive(true)">Upload Companies</b-dropdown-item>
-            <b-dropdown-item href="#" @click="exportEntityModalShow()">Donwload File</b-dropdown-item>
-            <b-dropdown-item href="/companies/v2/failed">Failed compañias</b-dropdown-item>
-            <b-dropdown-item v-if="user.whitelabel == 1" href="#" :disabled="toggleTWL" @click="AddToWhiteLevelModal()" ref="tranferTWL">Transfer to WL</b-dropdown-item>
-            <b-dropdown-item href="/companies/v2/template">Download template</b-dropdown-item>
-          </b-dropdown>
+          />
         </div>
       </div>
       <div>
@@ -105,8 +97,30 @@ export default {
         {
           link:'#',
           label:'upload contacts',
-          ref:'tag-ref',
-          click: this.createMasive(true)
+          ref:'uploadContacts',
+          disabled:false,
+          click:() => this.createMasive(true)
+        },
+        {
+          link:'#',
+          label:'Donwload File',
+          ref:'donwloadFile',
+          disabled:false,
+          click:() => this.exportEntityModalShow()
+        },
+        {
+          link:'#',
+          label:'Transfer to WL',
+          ref:'tranferTWL',
+          disabled:false,
+          click:() => this.AddToWhiteLevelModal()
+        },
+        {
+          link:'/contacts/v2/template',
+          label:'Download template',
+          ref:'downloadTemplate',
+          disabled:false,
+          click:() => {return false}
         }
       ]
     }
@@ -127,8 +141,6 @@ export default {
     createMasive(state){
       this.create = true
       this.isMassiveCreation = state
-
-      return 'hola'
     },
     toggleButtonWhiteLevel(status){
       this.AddToWhiteLevel = !status
