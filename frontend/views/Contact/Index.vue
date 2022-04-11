@@ -4,58 +4,56 @@
         <div class="head-title">
           <h2>Contacts</h2>
         </div>
-        <div class="head-btns">
-          <MainButton
-          @click="createMasive(false)"
-          text="Add Companies"
-          :add="true"
-          />
-          <DropdownHeadboard
-            :items="items"
-            :whitelabel="user.whitelabel"
-          />
-        </div>
-      </div>
-      <div>
-        <DataTable
-          :fields="fields"
-          :actions="actions"
-          :filter="true"
-          :singleActions="['edit', 'duplicate', 'delete']"
-          @onEdit="onEdit"
-          :totalResults="totalResults"
-          :classTable="classTable"
-          :toggleAddToWhiteLevel="toggleTWL"
-          @toggleButtonWL="toggleButtonWhiteLevel"
-        ></DataTable>
-      </div>
-      <div>
-        <CreateModal
-          :create="isMassive"
-          v-if="create"
-          :title="'Contacts'"
-          :action="'Add'"
-          @cancel="create = false"
-          :fields="modal_fields"
-          :user="user"
-        />
-        <ToWLModal
-          v-if="modalWhiteLabel"
-          :title="'To WhiteLevel'"
-          :action="'Add'"
-          :selected="selectForTransfer"
-          @cancel="modalWhiteLabel = false"
-          @transferTWL="transferTWL"
-        />
-        <ExportModal
-          v-if="exportEntityModal"
-          :title="'Contacts'"
-          :action="'Export'"
-          :exportLink="'contacts/v2/export-contacts'"
-          @cancel="exportEntityModal = false"
+      <div class="head-btns">
+        <MainButton @click="createMasive(false)" text="Add Companies" :add="true" />
+        <DropdownHeadboard 
+          :items="items" 
+          :whitelabel="user.whitelabel"
+          :toggleWl="toggleTWL"
+          @toggleButtonWL="toggleAddToButtonWL"
         />
       </div>
     </div>
+    <div>
+      <DataTable
+        :fields="fields"
+        :actions="actions"
+        :filter="true"
+        :singleActions="['edit', 'duplicate', 'delete']"
+        @onEdit="onEdit"
+        :totalResults="totalResults"
+        :classTable="classTable"
+        :toggleAddToWhiteLabel="toggleTWL"
+        @toggleButtonWL="toggleButtonWhiteLabel"
+      ></DataTable>
+    </div>
+    <div>
+      <CreateModal
+        :create="isMassive"
+        v-if="create"
+        :title="'Contacts'"
+        :action="'Add'"
+        @cancel="create = false"
+        :fields="modal_fields"
+        :user="user"
+      />
+      <ToWLModal
+        v-if="modalWhiteLabel"
+        :title="'To WhiteLevel'"
+        :action="'Add'"
+        :selected="selectForTransfer"
+        @cancel="modalWhiteLabel = false"
+        @transferTWL="transferTWL"
+      />
+      <ExportModal
+        v-if="exportEntityModal"
+        :title="'Contacts'"
+        :action="'Export'"
+        :exportLink="'contacts/v2/export-contacts'"
+        @cancel="exportEntityModal = false"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -88,77 +86,91 @@ export default {
       classTable:"table table-striped table-responsive",
       create: false,
       modalWhiteLabel: false,
-      selectForTransfer:[],
-      exportEntityModal:false,
-      isMassiveCreation:false,
-      AddToWhiteLevel:true,
+      selectForTransfer: [],
+      exportEntityModal: false,
+      isMassiveCreation: false,
+      AddToWhiteLabel: true,
       modal_fields: [],
       items:[
         {
-          link:'#',
-          label:'upload contacts',
-          ref:'uploadContacts',
-          disabled:false,
-          click:() => this.createMasive(true)
+          link: "#",
+          label: "upload contacts",
+          ref: "uploadContacts",
+          disabled: false,
+          click: () => this.createMasive(true)
         },
         {
-          link:'#',
-          label:'Donwload File',
-          ref:'donwloadFile',
-          disabled:false,
-          click:() => this.exportEntityModalShow()
+          link: "#",
+          label: "Donwload File",
+          ref: "donwloadFile",
+          disabled: false,
+          click: () => this.exportEntityModalShow()
         },
         {
-          link:'#',
-          label:'Transfer to WL',
-          ref:'tranferTWL',
-          disabled:false,
-          click:() => this.AddToWhiteLevelModal()
+          link: "/contacts/v2/failed",
+          label: "Failed compañias",
+          ref: "failedCompañias",
+          disabled: () => this.toggleTWL,
+          click: () => this.defaultEvent()
         },
         {
-          link:'/contacts/v2/template',
-          label:'Download template',
-          ref:'downloadTemplate',
-          disabled:false,
-          click:() => {return false}
+          link: "#",
+          label: "Transfer to WL",
+          ref: "tranferTWL",
+          disabled: true,
+          click: () => this.AddToWhiteLabelModal()
+        },
+        {
+          link: "/contacts/v2/template",
+          label: "Download template",
+          ref: "downloadTemplate",
+          disabled: false,
+          click: () => this.defaultEvent()
         }
-      ]
+      ],
     }
   },
-  computed:{
-    isMassive: function () {
-        return this.isMassiveCreation 
+  computed: {
+    isMassive: function() {
+      return this.isMassiveCreation
     },
-    toggleTWL: function (){
-      return this.AddToWhiteLevel
+    toggleTWL: function() {
+      return this.AddToWhiteLabel
     },
     ...mapState('auth', ['user'])
   },
   methods: {
     onEdit(data) {
-      window.location = `/contacts/v2/${data.id}/edit`;
+      window.location = `/contacts/v2/${data.id}/edit`
     },
-    createMasive(state){
-      this.create = true
+    createMasive(state) {
+      this.create = true;
       this.isMassiveCreation = state
     },
-    toggleButtonWhiteLevel(status){
-      this.AddToWhiteLevel = !status
+    toggleButtonWhiteLabel(status) {
+      this.AddToWhiteLabel = !status
     },
-    AddToWhiteLevelModal(){
+    AddToWhiteLabelModal() {
       this.modalWhiteLabel = true
     },
-    async transferTWL(){
+    async transferTWL() {
       await this.actions.transfer(this.selectForTransfer)
     },
-    selectedData(selected){
+    selectedData(selected) {
       this.selectForTransfer = selected
     },
-    exportEntityModalShow(){
+    exportEntityModalShow() {
       this.exportEntityModal = true
+    },
+    defaultEvent(){
+      console.log('click')
+    },
+    toggleAddToButtonWL(status){
+      //console.log(this.$refs.tranferTWL)
+      this.$refs.tranferTWL[0]._props.disabled = status
     }
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
