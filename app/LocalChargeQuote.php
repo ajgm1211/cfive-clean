@@ -43,6 +43,11 @@ class LocalChargeQuote extends Model implements Auditable
         return $this->belongsTo('App\Harbor', 'port_id');
     }
 
+    public function type()
+    {
+        return $this->belongsTo('App\TypeDestiny', 'type_id');
+    }
+
     /**
      * sumarize
      *

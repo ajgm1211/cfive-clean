@@ -300,7 +300,7 @@ class LocalChargeQuotationLclController extends Controller
                 $local_charge = $previous_charge;
             } else {
                 $local_charge = LocalChargeQuoteLcl::create([
-                    'price' => (((float)$localcharge['price_per_unit'] * (float)$units) + (float)$localcharge['markup']) / (float)$units,
+                    'price' => (float)$localcharge['price_per_unit'],
                     'units' => $units,
                     'profit' => $localcharge['markup'],
                     'total' => ((float)$localcharge['price_per_unit'] * (float)$units) + (float)$localcharge['markup'],
@@ -333,7 +333,7 @@ class LocalChargeQuotationLclController extends Controller
             $units = $localcharge['units'] == 0 ? 1:$localcharge['units'];
 
             $local_charge = LocalChargeQuoteLcl::create([
-                'price' => (((float)$localcharge['price_per_unit'] * (float)$units) + (float)$localcharge['markup']) / (float)$units,
+                'price' => (float)$localcharge['price_per_unit'],
                 'units' => $units,
                 'profit' => $localcharge['markup'],
                 'total' => ((float)$localcharge['price_per_unit'] * (float)$units) + (float)$localcharge['markup'],
