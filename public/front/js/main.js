@@ -84637,20 +84637,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
           return _this.exportEntityModalShow();
         }
       }, {
-        link: "/contacts/v2/failed",
-        label: "Failed compañias",
-        ref: "failedCompañias",
-        disabled: function disabled() {
-          return _this.toggleTWL;
-        },
-        click: function click() {
-          return _this.defaultEvent();
-        }
-      }, {
         link: "#",
         label: "Transfer to WL",
         ref: "tranferTWL",
-        disabled: true,
+        disabled: function disabled() {
+          return _this.toggleTWL;
+        },
         click: function click() {
           return _this.AddToWhiteLabelModal();
         }

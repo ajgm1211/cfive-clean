@@ -107,17 +107,10 @@ export default {
           click: () => this.exportEntityModalShow()
         },
         {
-          link: "/contacts/v2/failed",
-          label: "Failed compañias",
-          ref: "failedCompañias",
-          disabled: () => this.toggleTWL,
-          click: () => this.defaultEvent()
-        },
-        {
           link: "#",
           label: "Transfer to WL",
           ref: "tranferTWL",
-          disabled: true,
+          disabled: () => this.toggleTWL,
           click: () => this.AddToWhiteLabelModal()
         },
         {
