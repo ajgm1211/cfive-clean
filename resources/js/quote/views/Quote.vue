@@ -1,5 +1,8 @@
 <template>
     <div class="quote-header">
+        <HelpDropdown
+            :options="helpOptions"
+        ></HelpDropdown>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12" style="padding: 0px 50px">
@@ -139,6 +142,7 @@ import Ocean from "./Ocean";
 import Local from "./Local";
 import Total from "./Total";
 import FormInlineView from "../../components/views/FormInlineView.vue";
+import HelpDropdown from "../../components/HelpDropdown";
 
 export default {
     components: {
@@ -150,6 +154,7 @@ export default {
         Local,
         FormInlineView,
         Total,
+        HelpDropdown,
     },
     data() {
         return {
@@ -386,6 +391,16 @@ export default {
             freights: {},
             quoteEquip: [],
             quote_id: this.$route.params.id,
+            helpOptions: [
+                {
+                    title: "How to manage your quotes",
+                    link: "https://support.cargofive.com/how-to-manage-your-quotes/"
+                },
+                {
+                    title: "How to generate an FCL Quote",
+                    link: "https://support.cargofive.com/how-to-generate-an-fcl-quote-new/"
+                }
+            ]
         };
     },
     watch: {

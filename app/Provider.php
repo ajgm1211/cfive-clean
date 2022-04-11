@@ -12,8 +12,10 @@ use Illuminate\Http\Request;
 class Provider extends Model
 {
     protected $table    = "providers";
-    protected $fillable = ['id','name', 'description','company_user_id'];
-
+    protected $fillable = ['id','name','options','description','company_user_id'];
+    protected $casts = [
+        'options' => 'array',
+    ];
 
 /**
      * Scope a query to only include contracts by authenticated users.

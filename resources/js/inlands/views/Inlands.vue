@@ -1,5 +1,8 @@
 <template>
 	<div class="container-fluid">
+		<HelpDropdown
+			:options="helpOptions"
+		></HelpDropdown>
 		<div class="row mt-5" >
 			<div class="col-12 mb-2" style="padding: 0px 50px">
 				<a href="/api/inlands/" class="p-light quote-link">
@@ -68,13 +71,15 @@
 	import PerLocation from './PerLocation';
 	import actions from '../../actions';
 	import FormInlineView from '../../components/views/FormInlineView.vue';
+	import HelpDropdown from "../../components/HelpDropdown";
 
 	export default {
 		components: { 
 			InlandRanges,
 			InlandKm,
 			PerLocation,
-			FormInlineView
+			FormInlineView,
+			HelpDropdown
 		},
 		data() {
 			return {
@@ -175,7 +180,15 @@
                         
                     },
 					
-				}
+				},
+
+				//HELP DROPDOWN
+                helpOptions: [
+                    {
+                        title: "How to create an inland contract",
+                        link: "https://support.cargofive.com/how-to-create-an-inland-contract/"
+                    },
+                ]
 			}
 		},
 		created() {

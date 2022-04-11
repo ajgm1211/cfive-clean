@@ -2,6 +2,9 @@
 	<div class="container-fluid">
 		<div class="row mt-5">
 			<div class="col-12">
+				<HelpDropdown
+					:options="helpOptions"
+				></HelpDropdown>
 			<div class="col-12 mb-2" style="padding: 0px 35px">
 				<a href="/api/sale_terms/" class="p-light quote-link">
 					<i class="fa fa-long-arrow-left" aria-hidden="true"></i> Back
@@ -44,13 +47,15 @@
 </template>
 <script>
 	import FormInlineView from '../../components/views/FormInlineView.vue';
+	import HelpDropdown from "../../components/HelpDropdown";
     import actions from '../../actions';
     import SaleCharges from './SaleCharges';
 
 	export default {
 		components: {
             FormInlineView,
-            SaleCharges
+            SaleCharges,
+			HelpDropdown,
 		},
 		data() {
 			return {
@@ -97,7 +102,15 @@
 	                    options: 'equipments',
 						disabled: true,
 	                },
-				}
+				},
+
+				//HELP DROPDOWN
+				helpOptions: [
+					{
+						title: "How to manage sales templates",
+						link: "https://support.cargofive.com/how-to-manage-sales-templates/"
+					},
+				]
 			}
 		},
 		created() {

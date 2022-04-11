@@ -66,10 +66,11 @@ trait SearchTrait
             $q->whereIn('port', $port);
         })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', $groupContainer)->with('inlandRange', 'inlandports.ports', 'inlandkms.currency','inlandLocation');
 
-        $inlands->where(function ($query) use ($modality_inland) {
-            $query->where('type', $modality_inland)->orwhere('type', '2')->orwhere('type', '3');
-        });
-
+        // HECTOR ON 24-03-2022 - Why is this validation here?
+        /**$inlands->where(function ($query) use ($modality_inland) {
+            $query->where('type', $modality_inland)->orwhere('type', '3');
+        });**/
+        
         // HECTOR ON 11-01 - ADDING VALIDATION FOR EXPIRE, MODIFYING QUERY
         $inlands->where('status','publish');
         

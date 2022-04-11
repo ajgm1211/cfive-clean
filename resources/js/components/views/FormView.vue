@@ -3,6 +3,19 @@
     <b-form ref="form" class="modal-input">
       <div class="row">
         <div v-for="(item, key) in fields" :key="key" :class="getClass(item)">
+
+          <div v-if="item.type == 'checkbox'">        
+              <b-form-group > 
+                <b-form-checkbox
+                  :id="key"
+                  v-model="vdata[key]"
+                  value=1
+                  unchecked-value=2
+                >
+                    &nbsp;&nbsp;<b>{{item.label}}</b> 
+                </b-form-checkbox>
+              </b-form-group>
+          </div>
           <!-- Text Field -->
           <div v-if="item.type == 'text'">
             <b-form-group
@@ -423,6 +436,12 @@ export default {
                 "YYYY/MM/DD"
               );
             }
+            break;
+            case "checkbox":
+               if (component.vdata[key]==true) ;
+              data[key] = component.vdata[key];
+              if (key in component.vdata ==false || component.vdata[key]==false )
+              data[key]=false;
             break;
         }
 
