@@ -2,6 +2,8 @@
 
 namespace App\Http\Traits;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\AutomaticRate;
 use App\Charge;
 use App\ChargeLclAir;
@@ -17,6 +19,8 @@ use App\SaleTermV2;
 use App\SendQuote;
 use App\User;
 use App\Surcharge;
+use App\LocalChargeQuoteLclTotal;
+use App\LocalChargeQuoteTotal;
 use Illuminate\Support\Collection as Collection;
 
 trait QuoteV2Trait
@@ -1985,6 +1989,7 @@ trait QuoteV2Trait
 
         return $result;
     }
+
     public function convertToCurrencyQuote(Currency $fromCurrency, Currency $toCurrency, Array $amounts,$quote)
     {    
        if (isset($quote['pdf_options']['exchangeRates'])) {
@@ -2027,5 +2032,37 @@ trait QuoteV2Trait
         }
 
         return $amounts;
+    }
+
+    public function createLocalChargeTotal(Array $params)
+    {
+        $quote = QuoteV2::findOrFail($params['quote_id']);
+        $currency_id = Auth::user()->companyUser->currency_id;
+        
+        if($quote->type == "FCL"){
+            $local_charge_total = LocalChargeQuoteTotal::where(['quote_id' => $quote->id, 'type_id' => $params['type_id'], 'port_id' =>  $params['port_id']])->first();
+            
+            if(empty($local_charge_total)){
+                $local_charge_total = LocalChargeQuoteTotal::create([
+                    'total' => [],
+                    'quote_id' => $quote->id,
+                    'port_id' => $params['port_id'],
+                    'currency_id' => $currency_id,
+                    'type_id' => $params['type_id']
+                ]);
+            }
+        } else if($quote->type == "LCL"){
+            $local_charge_total = LocalChargeQuoteLclTotal::where('quote_id',$quote->id)->first();
+
+            if(empty($local_charge_total)){
+                $local_charge_total = LocalChargeQuoteLclTotal::create([
+                    'total' => 0,
+                    'quote_id' => $quote->id,
+                    'port_id' => $params['port_id'],
+                    'currency_id' => $currency_id,
+                    'type_id' => $params['type_id']
+                ]);
+            }
+        }
     }
 }

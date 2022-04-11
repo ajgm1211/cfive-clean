@@ -75,21 +75,12 @@ class LocalChargeQuoteLcl extends Model implements Auditable
             if ($charge->total != null) {
                 $exchange = ratesCurrencyQuote($charge->currency_id, $currency,$quote['pdf_options']['exchangeRates']);
                 $total_w_exchange = $charge->total / $exchange;
-                $totals += number_format((float)$total_w_exchange, 2, '.', '');
+                $totals += isDecimal($total_w_exchange);
             }
         }
 
-        if (!empty($local_charge_quote_total)) {
-            $local_charge_quote_total->delete();
-        }
-
-        LocalChargeQuoteLclTotal::create([
-            'total' => $totals,
-            'quote_id' => $quote->id,
-            'port_id' => $this->port_id,
-            'currency_id' => $currency_id,
-            'type_id' => $this->type_id,
-        ]);
+        $local_charge_quote_total->total = $totals;
+        $local_charge_quote_total->update();
     }
 
     /**
