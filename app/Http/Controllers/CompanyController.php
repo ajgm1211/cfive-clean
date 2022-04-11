@@ -45,10 +45,8 @@ class CompanyController extends Controller
             ->whereHas('api_integration', function ($query) {
                 $query->where('module', 'Companies');
             })->first();
-
         $user_id = \Auth::user()->id;
-        $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('id', '!=', \Auth::user()->id)->where('type', '!=', 'company')->pluck('name', 'id');
-
+        $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('type', '!=', 'company')->pluck('name', 'id');
         if (\Auth::user()->hasRole('subuser')) {
             $query = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
@@ -141,7 +139,7 @@ class CompanyController extends Controller
      */
     public function add()
     {
-        $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('id', '!=', \Auth::user()->id)->where('type', '!=', 'company')->get()->map(function ($user) {
+        $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('type', '!=', 'company')->get()->map(function ($user) {
             $user->name = $user->getFullNameAttribute();
             return $user;
         })->pluck('name', 'id');
