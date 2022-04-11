@@ -120,7 +120,7 @@ export default {
           click: () => this.AddToWhiteLabelModal()
         },
         {
-          link: "/companies/v2/template",
+          link: "/contacts/v2/template",
           label: "Download template",
           ref: "downloadTemplate",
           disabled: false,
