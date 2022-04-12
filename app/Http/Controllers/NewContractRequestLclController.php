@@ -238,10 +238,11 @@ class NewContractRequestLclController extends Controller
 
     public function store2(StoreNewRequestLcl $request)
     {
+        //Validate if the company has remaining requests
         $quota = $this->validateQuota($request->CompanyUserId);
         if(!$quota){
             $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.content', 'You have exceeded the contract quota. Please contact our support or sales team.');
+            $request->session()->flash('message.content', 'You have exceeded your contract quota or you are not enabled to create new requests. Please contact our support or sales team.');
             return redirect()->route('Request.importaion.lcl');
         }
         $fileBoll = false;

@@ -37,6 +37,11 @@ class CompanyUser extends Model implements Auditable
         return $this->hasMany('App\QuoteV2');
     }
 
+    public function quota()
+    {
+        return $this->hasOne('App\QuotaRequest','id');
+    }
+
     public function getHigherId($companyCode)
     {
         $ids = [];
@@ -58,6 +63,13 @@ class CompanyUser extends Model implements Auditable
         return $this->hasOne('App\SettingsWhitelabel');
     }
 
+    /**
+     * Create quantity of requests per company
+     * 
+     * @param mixed $data
+     * 
+     * @return void
+     */
     public function createQuota($data){
 
         $due_date = $this->addMonthYearToDate($data->issued_date,$data->payment_type);
@@ -76,6 +88,13 @@ class CompanyUser extends Model implements Auditable
         ]);
     }
 
+    /**
+     * Format date to add month or year
+     * 
+     * @param mixed $data
+     * 
+     * @return date
+     */
     public function addMonthYearToDate($date, $type){
 
         $date = Carbon::createFromFormat('Y-m-d', $date);

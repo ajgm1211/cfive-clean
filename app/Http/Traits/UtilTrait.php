@@ -236,6 +236,13 @@ trait UtilTrait
         return $is_unique;
     }
 
+    /**
+     * Get quantity of available requests
+     * 
+     * @param mixed $company
+     * 
+     * @return boolean
+     */
     public function validateQuota($company)
     {
         $quota = QuotaRequest::where('company_user_id', $company)->first();
