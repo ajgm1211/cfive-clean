@@ -42,16 +42,10 @@ class GetContractApiResource extends JsonResource
                 'valid_until' => $this->contract->expire,
             ],
             //Rates
-            'ocean_freight' => [
-                $this->oceanFreight($this, $containers, $container_calculation),
-            ],
-            'surcharges' => [
-                $this->surcharges($this, $containers, $container_calculation),
-            ],
+            'ocean_freight' => $this->oceanFreight($this, $containers, $container_calculation),
+            'surcharges' => $this->surcharges($this, $containers, $container_calculation),
             //Total (Ocean Freight + Surcharges)
-            'all_in' => [
-                $this->allIn($this, $containers, $container_calculation),
-            ],
+            'all_in' => $this->allIn($this, $containers, $container_calculation),
         ];
 
         return $data;
