@@ -10,7 +10,7 @@
           text="Add Companies"
           :add="true"
           />
-          <DropdownHeadboard 
+          <DropdownButton 
             :items="items"
             :btnText="'Import'"
             :whitelabel="user.whitelabel"
@@ -72,11 +72,11 @@ import actions from '../../store/modules/company/actions'
 import MainButton from "../../components/common/MainButton"
 import CreateModal from '../../components/common/Modals/CreateModal'
 import ExportModal from '../../components/common//Modals/ExportModal'
-import DropdownHeadboard from "../../components/common/DropdownHeadboard"
+import DropdownButton from "../../components/common/DropdownButton"
 import ToWhiteLabelModal from '../../components/common/Modals/ToWhiteLabelModal'
 
 export default {
-  components: {DataTable, MainButton, CreateModal, ToWhiteLabelModal, ExportModal, DropdownHeadboard},
+  components: {DataTable, MainButton, CreateModal, ToWhiteLabelModal, ExportModal, DropdownButton},
   data() {
     return {
       actions: actions,
