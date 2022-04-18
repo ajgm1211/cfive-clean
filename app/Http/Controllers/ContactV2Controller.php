@@ -148,7 +148,7 @@ class ContactV2Controller extends Controller
         return response()->json(null, 204);
     }
 
-    public function downloadTemplatefile(){
+    public function downloadTemplateFile(){
         return Storage::disk('DownLoadFile')->download('contacts_template.xlsx');
     }
 }

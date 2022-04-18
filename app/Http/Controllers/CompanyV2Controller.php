@@ -249,7 +249,7 @@ class CompanyV2Controller extends Controller
         return true;
     }
 
-    public function downloadTemplatefile(){
+    public function downloadTemplateFile(){
         return Storage::disk('DownLoadFile')->download('company_template.xlsx');
     }
     
