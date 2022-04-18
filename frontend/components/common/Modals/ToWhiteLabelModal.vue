@@ -64,7 +64,7 @@ export default {
   methods: {
     async AddToWhiteLabel(){
       try {
-        await this.$emit('transferTWhiteLabel')
+        await this.$emit('transferToWhiteLabel')
         toastr.success("successful create")
         this.$emit('cancel')
       } catch (error) {

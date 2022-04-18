@@ -6,8 +6,9 @@
         </div>
       <div class="head-btns">
         <MainButton @click="createMasive(false)" text="Add Companies" :add="true" />
-        <DropdownHeadboard 
-          :items="items" 
+        <DropdownHeadboard
+          :items="items"
+          :btnText="'Import'"
           :whitelabel="user.whitelabel"
           :toggleAddToWhiteLabel="toggleToWhiteLabel"
           @toggleButtonWhiteLabel="toggleButtonWhiteLabel"
@@ -43,7 +44,7 @@
         :action="'Add'"
         :selected="selectForTransfer"
         @cancel="modalWhiteLabel = false"
-        @transferTWhiteLabel="transferTWhiteLabel"
+        @transferToWhiteLabel="transferToWhiteLabel"
       />
       <ExportModal
         v-if="exportEntityModal"
@@ -57,15 +58,15 @@
 </template>
 
 <script>
-import actions from "../../store/modules/contact/actions";
-import MainButton from "../../components/common/MainButton";
-import DataTable from "../../components/common/DataTable";
-import DropdownHeadboard from "../../components/common/DropdownHeadboard";
-import CreateModal from "../../components/common/Modals/CreateModal";
-import ToWhiteLabelModal from "../../components/common/Modals/ToWhiteLabelModal";
-import ExportModal from "../../components/common/Modals/ExportModal";
-import { mapState } from "vuex";
-//import toastr from "toastr"
+
+import { mapState } from "vuex"
+import DataTable from "../../components/common/DataTable"
+import actions from "../../store/modules/contact/actions"
+import MainButton from "../../components/common/MainButton"
+import CreateModal from "../../components/common/Modals/CreateModal"
+import ExportModal from "../../components/common/Modals/ExportModal"
+import DropdownHeadboard from "../../components/common/DropdownHeadboard"
+import ToWhiteLabelModal from "../../components/common/Modals/ToWhiteLabelModal"
 
 export default {
   components: { DataTable, MainButton, ToWhiteLabelModal, ExportModal, CreateModal, DropdownHeadboard },
@@ -117,7 +118,7 @@ export default {
           label: "Transfer to WL",
           ref: "tranferTWhiteLabel",
           disabled: () => this.toggleToWhiteLabel,
-          click: () => this.AddToWhiteLabelModal()
+          click: () => this.addToWhiteLabelModal()
         },
         {
           link: "/contacts/v2/template",
@@ -146,13 +147,13 @@ export default {
       this.create = true;
       this.isMassiveCreation = state
     },
-    toggleButtonWhiteLabel(status) {
-      this.AddToWhiteLabel = !status
+    toggleButtonWhiteLabel(){
+      this.AddToWhiteLabel = this.selectForTransfer.length > 0 ? false : true
     },
-    AddToWhiteLabelModal() {
+    addToWhiteLabelModal() {
       this.modalWhiteLabel = true
     },
-    async transferTWhiteLabel() {
+    async transferToWhiteLabel() {
       await this.actions.transfer(this.selectForTransfer)
     },
     selectedData(selected) {

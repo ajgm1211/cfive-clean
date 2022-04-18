@@ -10,13 +10,13 @@
           text="Add Companies"
           :add="true"
           />
-          <b-dropdown id="dropdown-left" text="Import">
-            <b-dropdown-item href="#" @click="createMasive(true)">Upload Companies</b-dropdown-item>
-            <b-dropdown-item href="#" @click="exportEntityModalShow()">Donwload File</b-dropdown-item>
-            <b-dropdown-item href="/companies/v2/failed">Failed compañias</b-dropdown-item>
-            <b-dropdown-item v-if="user.whitelabel == 1" href="#" :disabled="toggleTWhiteLabel" @click="AddToWhiteLabelModal()" ref="tranferTWhiteLabel">Transfer to WhiteLabel</b-dropdown-item>
-            <b-dropdown-item href="/companies/v2/template">Download template</b-dropdown-item>
-          </b-dropdown>
+          <DropdownHeadboard 
+            :items="items"
+            :btnText="'Import'"
+            :whitelabel="user.whitelabel"
+            :toggleAddToWhiteLabel="toggleToWhiteLabel"
+            @toggleButtonWhiteLabel="toggleButtonWhiteLabel"
+          />
         </div>
       </div>
       <div>
@@ -28,7 +28,7 @@
           @onEdit="onEdit"
           :totalResults="totalResults"
           :classTable="classTable"
-          :toggleAddToWhiteLabel="toggleTWhiteLabel"
+          :toggleAddToWhiteLabel="toggleToWhiteLabel"
           @toggleButtonWhiteLabel="toggleButtonWhiteLabel"
           @selectedData="selectedData"
         >
@@ -50,7 +50,7 @@
           :action="'Add'"
           :selected="selectForTransfer"
           @cancel="modalWhiteLabel = false"
-          @transferTWhiteLabel="transferTWhiteLabel"
+          @transferToWhiteLabel="transferToWhiteLabel"
         />
         <ExportModal
           v-if="exportEntityModal"
@@ -66,16 +66,17 @@
 
 <script>
 
+import { mapState } from 'vuex'
+import DataTable from '../../components/common/DataTable'
 import actions from '../../store/modules/company/actions'
 import MainButton from "../../components/common/MainButton"
-import DataTable from '../../components/common/DataTable'
 import CreateModal from '../../components/common/Modals/CreateModal'
-import ToWhiteLabelModal from '../../components/common/Modals/ToWhiteLabelModal'
 import ExportModal from '../../components/common//Modals/ExportModal'
-import { mapState } from 'vuex'
+import DropdownHeadboard from "../../components/common/DropdownHeadboard"
+import ToWhiteLabelModal from '../../components/common/Modals/ToWhiteLabelModal'
 
 export default {
-  components: {DataTable, MainButton, CreateModal, ToWhiteLabelModal, ExportModal},
+  components: {DataTable, MainButton, CreateModal, ToWhiteLabelModal, ExportModal, DropdownHeadboard},
   data() {
     return {
       actions: actions,
@@ -142,14 +143,51 @@ export default {
             required: true,
           },
         }
-      ]
+      ],
+      items: [
+        {
+          link: "#",
+          label: "upload companies",
+          ref: "uploadCompanies",
+          disabled: () => false,
+          click: () => this.createMasive(true)
+        },
+        {
+          link: "#",
+          label: "Donwload File",
+          ref: "donwloadFile",
+          disabled: () => false,
+          click: () => this.exportEntityModalShow()
+        },
+        {
+          link: "/companies/v2/failed",
+          label: "Failed company",
+          ref: "failedCompanies",
+          disabled: () => false,
+          click: () => this.defaultEvent()
+        },
+        {
+          link: "#",
+          label: "Transfer to WL",
+          ref: "tranferToWhiteLabel",
+          disabled: () => this.toggleToWhiteLabel,
+          click: () => this.addToWhiteLabelModal()
+        },
+        {
+          link: "/companies/v2/template",
+          label: "Download template",
+          ref: "downloadTemplate",
+          disabled: () => false,
+          click: () => this.defaultEvent()
+        }
+      ],
     }
   },
   computed:{
     isMassive: function () {
         return this.isMassiveCreation 
     },
-    toggleTWhiteLabel: function (){
+    toggleToWhiteLabel: function (){
       return this.AddToWhiteLabel
     },
     ...mapState('auth', ['user'])
@@ -162,13 +200,13 @@ export default {
       this.create = true
       this.isMassiveCreation = state
     },
-    toggleButtonWhiteLabel(status){
-      this.AddToWhiteLabel = !status
+    toggleButtonWhiteLabel(){
+      this.AddToWhiteLabel = this.selectForTransfer.length > 0 ? false : true
     },
-    AddToWhiteLabelModal(){
+    addToWhiteLabelModal(){
       this.modalWhiteLabel = true
     },
-    async transferTWhiteLabel(){
+    async transferToWhiteLabel(){
       await this.actions.transfer(this.selectForTransfer)
     },
     selectedData(selected){
