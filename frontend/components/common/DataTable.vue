@@ -1809,7 +1809,7 @@ export default {
         selected() {
             this.$emit("input", this.selected)
             this.$emit("selectedData", this.selected)
-            this.$emit("toggleButtonWL", this.toggleAddToWhiteLabel)
+            this.$emit("toggleButtonWhiteLabel", this.toggleAddToWhiteLabel)
         },
         search: {
             handler: function (val, oldVal) {

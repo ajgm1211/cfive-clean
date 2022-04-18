@@ -30,7 +30,7 @@ export default {
   },
   watch:{
     toggleWl(){
-      this.$emit("toggleButtonWL", this.toggleWl)
+      this.$emit("toggleButtonWhiteLabel", this.toggleWl)
     }
   }
 };

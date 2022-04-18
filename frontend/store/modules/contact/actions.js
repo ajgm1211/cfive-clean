@@ -27,6 +27,6 @@ export default {
         return api.call('post', `/api/contacts/create-massive`, {contacts});
     },
     transfer(contacts){
-        return api.call('post', `/api/contacts/toWhiteLevel`, {contacts});
+        return api.call('post', `/api/contacts/toWhiteLabel`, {contacts});
     }
 }

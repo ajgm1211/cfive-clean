@@ -269,7 +269,7 @@ class CompanyV2Controller extends Controller
         return  ContactResource::collection($contactsByCompany);
     }
 
-    public function transferToWhiteLevel(Request $request){
+    public function transferToWhiteLabel(Request $request){
         $companies = $request->get('companies');
 
         try {

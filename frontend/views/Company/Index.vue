@@ -14,7 +14,7 @@
             <b-dropdown-item href="#" @click="createMasive(true)">Upload Companies</b-dropdown-item>
             <b-dropdown-item href="#" @click="exportEntityModalShow()">Donwload File</b-dropdown-item>
             <b-dropdown-item href="/companies/v2/failed">Failed compañias</b-dropdown-item>
-            <b-dropdown-item v-if="user.whitelabel == 1" href="#" :disabled="toggleTWL" @click="AddToWhiteLevelModal()" ref="tranferTWL">Transfer to WL</b-dropdown-item>
+            <b-dropdown-item v-if="user.whitelabel == 1" href="#" :disabled="toggleTWhiteLabel" @click="AddToWhiteLabelModal()" ref="tranferTWhiteLabel">Transfer to WhiteLabel</b-dropdown-item>
             <b-dropdown-item href="/companies/v2/template">Download template</b-dropdown-item>
           </b-dropdown>
         </div>
@@ -28,8 +28,8 @@
           @onEdit="onEdit"
           :totalResults="totalResults"
           :classTable="classTable"
-          :toggleAddToWhiteLevel="toggleTWL"
-          @toggleButtonWL="toggleButtonWhiteLevel"
+          :toggleAddToWhiteLabel="toggleTWhiteLabel"
+          @toggleButtonWhiteLabel="toggleButtonWhiteLabel"
           @selectedData="selectedData"
         >
         </DataTable>
@@ -44,13 +44,13 @@
           :fields="modal_fields"
           :user="user"
         />
-        <ToWLModal
+        <ToWhiteLabelModal
           v-if="modalWhiteLabel"
-          :title="'To WhiteLevel'"
+          :title="'To WhiteLabel'"
           :action="'Add'"
           :selected="selectForTransfer"
           @cancel="modalWhiteLabel = false"
-          @transferTWL="transferTWL"
+          @transferTWhiteLabel="transferTWhiteLabel"
         />
         <ExportModal
           v-if="exportEntityModal"
@@ -70,12 +70,12 @@ import actions from '../../store/modules/company/actions'
 import MainButton from "../../components/common/MainButton"
 import DataTable from '../../components/common/DataTable'
 import CreateModal from '../../components/common/Modals/CreateModal'
-import ToWLModal from '../../components/common/Modals/ToWhiteLevelModal'
+import ToWhiteLabelModal from '../../components/common/Modals/ToWhiteLabelModal'
 import ExportModal from '../../components/common//Modals/ExportModal'
 import { mapState } from 'vuex'
 
 export default {
-  components: {DataTable, MainButton, CreateModal, ToWLModal, ExportModal},
+  components: {DataTable, MainButton, CreateModal, ToWhiteLabelModal, ExportModal},
   data() {
     return {
       actions: actions,
@@ -83,7 +83,7 @@ export default {
       create: false,
       modalWhiteLabel: false,
       isMassiveCreation:false,
-      AddToWhiteLevel:true,
+      AddToWhiteLabel:true,
       exportEntityModal:false,
       selectForTransfer:[],
       fields: [
@@ -149,8 +149,8 @@ export default {
     isMassive: function () {
         return this.isMassiveCreation 
     },
-    toggleTWL: function (){
-      return this.AddToWhiteLevel
+    toggleTWhiteLabel: function (){
+      return this.AddToWhiteLabel
     },
     ...mapState('auth', ['user'])
   },
@@ -162,13 +162,13 @@ export default {
       this.create = true
       this.isMassiveCreation = state
     },
-    toggleButtonWhiteLevel(status){
-      this.AddToWhiteLevel = !status
+    toggleButtonWhiteLabel(status){
+      this.AddToWhiteLabel = !status
     },
-    AddToWhiteLevelModal(){
+    AddToWhiteLabelModal(){
       this.modalWhiteLabel = true
     },
-    async transferTWL(){
+    async transferTWhiteLabel(){
       await this.actions.transfer(this.selectForTransfer)
     },
     selectedData(selected){

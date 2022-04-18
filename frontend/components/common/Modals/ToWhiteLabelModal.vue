@@ -6,11 +6,11 @@
         <h3>{{ action + " " + title }}</h3>
       </div>
       <div class="modal-content-create">
-        <b-form @submit.prevent="AddToWhiteLevel">
+        <b-form @submit.prevent="AddToWhiteLabel">
           <b-container>
               <b-row>
                   <b-col cols="12" md="12" class="mb-2">
-                      <p>Are you sure to transfer these {{title}} to WhiteLevel?</p>
+                      <p>Are you sure to transfer these {{title}} to WhiteLabel?</p>
                   </b-col>
                   <b-col cols="12" md="12" class="mb-2">
                     <b-list-group v-for="(company, companyKey) in selected" :key="companyKey">
@@ -28,7 +28,7 @@
                         <div class="modal-footer-content-wl"></div>
                         <div class="modal-footer-create-container-btns">
                           <p @click="$emit('cancel')">Cancel</p>
-                          <b-button type="submit" class="btn-form" variant="primary">Add To WhiteLevel</b-button>
+                          <b-button type="submit" class="btn-form" variant="primary">Add To WhiteLabel</b-button>
                         </div>
                       </div>
                   </b-col>
@@ -62,9 +62,9 @@ export default {
     }
   },
   methods: {
-    async AddToWhiteLevel(){
+    async AddToWhiteLabel(){
       try {
-        await this.$emit('transferTWL')
+        await this.$emit('transferTWhiteLabel')
         toastr.success("successful create")
         this.$emit('cancel')
       } catch (error) {

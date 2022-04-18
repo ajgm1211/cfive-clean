@@ -1,5 +1,5 @@
 export default {
-    addToWL(companies){
-        return api.call('post', `/api/companies/toWhiteLevel`, {companies});
+    addToWhiteLabel(companies){
+        return api.call('post', `/api/companies/toWhiteLabel`, {companies});
     }
 }

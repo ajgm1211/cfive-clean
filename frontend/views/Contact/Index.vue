@@ -9,8 +9,8 @@
         <DropdownHeadboard 
           :items="items" 
           :whitelabel="user.whitelabel"
-          :toggleWl="toggleTWL"
-          @toggleButtonWL="toggleAddToButtonWL"
+          :toggleWl="toggleTWhiteLabel"
+          @toggleButtonWhiteLabel="toggleAddToButtonWhiteLabel"
         />
       </div>
     </div>
@@ -23,8 +23,8 @@
         @onEdit="onEdit"
         :totalResults="totalResults"
         :classTable="classTable"
-        :toggleAddToWhiteLabel="toggleTWL"
-        @toggleButtonWL="toggleButtonWhiteLabel"
+        :toggleAddToWhiteLabel="toggleTWhiteLabel"
+        @toggleButtonWhiteLabel="toggleButtonWhiteLabel"
       ></DataTable>
     </div>
     <div>
@@ -37,13 +37,13 @@
         :fields="modal_fields"
         :user="user"
       />
-      <ToWLModal
+      <ToWhiteLabelModal
         v-if="modalWhiteLabel"
-        :title="'To WhiteLevel'"
+        :title="'To WhiteLabel'"
         :action="'Add'"
         :selected="selectForTransfer"
         @cancel="modalWhiteLabel = false"
-        @transferTWL="transferTWL"
+        @transferTWhiteLabel="transferTWhiteLabel"
       />
       <ExportModal
         v-if="exportEntityModal"
@@ -62,13 +62,13 @@ import MainButton from "../../components/common/MainButton";
 import DataTable from "../../components/common/DataTable";
 import DropdownHeadboard from "../../components/common/DropdownHeadboard";
 import CreateModal from "../../components/common/Modals/CreateModal";
-import ToWLModal from "../../components/common/Modals/ToWhiteLevelModal";
+import ToWhiteLabelModal from "../../components/common/Modals/ToWhiteLabelModal";
 import ExportModal from "../../components/common/Modals/ExportModal";
 import { mapState } from "vuex";
 //import toastr from "toastr"
 
 export default {
-  components: { DataTable, MainButton, ToWLModal, ExportModal, CreateModal, DropdownHeadboard },
+  components: { DataTable, MainButton, ToWhiteLabelModal, ExportModal, CreateModal, DropdownHeadboard },
   data() {
     return {
       actions: actions,
@@ -114,9 +114,9 @@ export default {
         },
         {
           link: "#",
-          label: "Transfer to WL",
-          ref: "tranferTWL",
-          disabled: () => this.toggleTWL,
+          label: "Transfer to WhiteLabel",
+          ref: "tranferTWhiteLabel",
+          disabled: () => this.toggleTWhiteLabel,
           click: () => this.AddToWhiteLabelModal()
         },
         {
@@ -133,7 +133,7 @@ export default {
     isMassive: function() {
       return this.isMassiveCreation
     },
-    toggleTWL: function() {
+    toggleTWhiteLabel: function() {
       return this.AddToWhiteLabel
     },
     ...mapState("auth", ["user"]),
@@ -152,7 +152,7 @@ export default {
     AddToWhiteLabelModal() {
       this.modalWhiteLabel = true
     },
-    async transferTWL() {
+    async transferTWhiteLabel() {
       await this.actions.transfer(this.selectForTransfer)
     },
     selectedData(selected) {
@@ -164,9 +164,9 @@ export default {
     defaultEvent(){
       console.log('click')
     },
-    toggleAddToButtonWL(status){
-      //console.log(this.$refs.tranferTWL)
-      this.$refs.tranferTWL[0]._props.disabled = status
+    toggleAddToButtonWhiteLabel(status){
+      //console.log(this.$refs.tranferTWhiteLabel)
+      this.$refs.tranferTWhiteLabel[0]._props.disabled = status
     }
   },
 };
