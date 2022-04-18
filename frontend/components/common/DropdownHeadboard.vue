@@ -5,7 +5,7 @@
         :href="item.link" 
         @click="item.click" 
         :ref="item.ref" 
-        :disabled="item.disabled"
+        :disabled="item.disabled()"
       >
         {{ item.label }}
       </b-dropdown-item>
@@ -23,14 +23,15 @@ export default {
       type: Array,
       default: [],
     },
-    toggleWl:{
+    toggleAddToWhiteLabel:{
       type:Boolean,
-      default:() => {return false} ,
-    }
+      required: false,
+      default: true,
+    },
   },
   watch:{
-    toggleWl(){
-      this.$emit("toggleButtonWhiteLabel", this.toggleWl)
+    toggleWhiteLabel(){
+      this.$emit("toggleButtonWhiteLabel", this.toggleAddToWhiteLabel)
     }
   }
 };

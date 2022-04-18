@@ -9,8 +9,8 @@
         <DropdownHeadboard 
           :items="items" 
           :whitelabel="user.whitelabel"
-          :toggleWl="toggleTWhiteLabel"
-          @toggleButtonWhiteLabel="toggleAddToButtonWhiteLabel"
+          :toggleAddToWhiteLabel="toggleToWhiteLabel"
+          @toggleButtonWhiteLabel="toggleButtonWhiteLabel"
         />
       </div>
     </div>
@@ -23,7 +23,7 @@
         @onEdit="onEdit"
         :totalResults="totalResults"
         :classTable="classTable"
-        :toggleAddToWhiteLabel="toggleTWhiteLabel"
+        :toggleAddToWhiteLabel="toggleToWhiteLabel"
         @toggleButtonWhiteLabel="toggleButtonWhiteLabel"
       ></DataTable>
     </div>
@@ -95,35 +95,35 @@ export default {
           link: "#",
           label: "upload contacts",
           ref: "uploadContacts",
-          disabled: false,
+          disabled: () => false,
           click: () => this.createMasive(true)
         },
         {
           link: "#",
           label: "Donwload File",
           ref: "donwloadFile",
-          disabled: false,
+          disabled: () => false,
           click: () => this.exportEntityModalShow()
         },
         {
           link: "/contacts/v2/failed",
           label: "Failed contacts",
           ref: "failedContacts",
-          disabled: false,
+          disabled: () => false,
           click: () => this.defaultEvent()
         },
         {
           link: "#",
-          label: "Transfer to WhiteLabel",
+          label: "Transfer to WL",
           ref: "tranferTWhiteLabel",
-          disabled: () => this.toggleTWhiteLabel,
+          disabled: () => this.toggleToWhiteLabel,
           click: () => this.AddToWhiteLabelModal()
         },
         {
           link: "/contacts/v2/template",
           label: "Download template",
           ref: "downloadTemplate",
-          disabled: false,
+          disabled: () => false,
           click: () => this.defaultEvent()
         }
       ],
@@ -133,7 +133,7 @@ export default {
     isMassive: function() {
       return this.isMassiveCreation
     },
-    toggleTWhiteLabel: function() {
+    toggleToWhiteLabel: function() {
       return this.AddToWhiteLabel
     },
     ...mapState("auth", ["user"]),
@@ -163,13 +163,9 @@ export default {
     },
     defaultEvent(){
       console.log('click')
-    },
-    toggleAddToButtonWhiteLabel(status){
-      //console.log(this.$refs.tranferTWhiteLabel)
-      this.$refs.tranferTWhiteLabel[0]._props.disabled = status
     }
-  },
-};
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>
