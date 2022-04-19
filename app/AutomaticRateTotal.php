@@ -68,12 +68,11 @@ class AutomaticRateTotal extends Model implements Auditable
     {
         //getting all data needed to calculate totals
         $quote = $this->quote()->first();
+        $quote->updatePdfOptions('exchangeRates');
 
         $rate = $this->rate()->first();
 
         if ($quote->type == 'FCL') {
-
-            $quote->updatePdfOptions('exchangeRates');
 
             $equip = $quote->getContainerCodes($quote->equipment);
 
@@ -139,8 +138,6 @@ class AutomaticRateTotal extends Model implements Auditable
      
 
         } else if ($quote->type == 'LCL') {
-
-            $quote->updatePdfOptions('exchangeRates');
 
             $charges = $rate->charge_lcl_air()->where('type_id', 3)->whereHas('surcharge', function ($query) {
                 return $query->where('name', '!=', 'Ocean Freight');
