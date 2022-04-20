@@ -958,13 +958,16 @@ class SearchApiController extends Controller
         if( $search_data['requestData']['requested'] == 2 ){
             $global_total = 0;
             $single_totals = $rate->$to_update; 
+            $quantity = $rate->$to_update; 
             foreach($search_data['containers'] as $container){
                 $single_totals['C'.$container['code']] *= $container['qty'];
                 $global_total += $single_totals['C'.$container['code']];
+                $quantity['C'.$container['code']] = $container['qty'];
             }
 
             $rate->setAttribute('quantity_totals', $single_totals);
             $rate->setAttribute('global_total', $global_total);
+            $rate->setAttribute('qty', $quantity);
         }
     }
 
