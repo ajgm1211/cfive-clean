@@ -161,6 +161,8 @@ class UsersController extends Controller
     public function retrieve()
     {
         $user = user::find(\Auth::user()->id);
+        // search company_user with this company_user_id
+        //$companyUser = 
         return response()->json(['data' => compact('user')]);
     }
 

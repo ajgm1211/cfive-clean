@@ -18,16 +18,17 @@ export default {
     this.getData();
   },
   computed: {
-    ...mapState('auth', ['token','user'])
+    ...mapState('auth', ['token','user', 'companyUser' ])
   },
   methods: {
-    ...mapActions('auth', ['setToken','setUser']),
+    ...mapActions('auth', ['setToken','setUser', 'setCompanyUser']),
     getData() {
       let url = "/users/data";
       api.getData({}, url, (err, data) => {
         this.initialData = data.data
          this.setCurrentUser(this.initialData.user)
          this.setCurrentToken(this.initialData.user.api_token)
+         this.setCurrentCompanyUser(this.initialData.company_user)
       });
     },
     setCurrentToken(token) {
@@ -37,6 +38,9 @@ export default {
     },
     setCurrentUser(user){
       this.setUser(user)
+    },
+    setCurrentCompanyUser(companyUser){
+      this.setCompanyUser(companyUser)
     }
   },
 }
