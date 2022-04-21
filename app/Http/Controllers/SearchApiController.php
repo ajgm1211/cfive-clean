@@ -1178,7 +1178,7 @@ class SearchApiController extends Controller
         return $objeto;
     }
 
-    public function getPortAndLocation($request){
+    public function getPortAndLocationByInput($request){
 
         $ports = Harbor::where('display_name', 'like', '%'.$request.'%')->with('country')->get();
 
@@ -1203,6 +1203,7 @@ class SearchApiController extends Controller
             ];
         };
 
+        return $harbors;
         
     }
 }
