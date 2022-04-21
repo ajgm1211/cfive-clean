@@ -6,12 +6,10 @@
         </div>
       <div class="head-btns">
         <MainButton @click="createMasive(false)" text="Add Companies" :add="true" />
-        <DropdownButton
-          :items="items"
-          :btnText="'Import'"
-          :whitelabel="user.whitelabel"
-          :toggleAddToWhiteLabel="toggleToWhiteLabel"
-          @toggleButtonWhiteLabel="toggleButtonWhiteLabel"
+        <DropdownButton 
+            :items="items"
+            :btnText="'Import'"
+            @toggleButtonWhiteLabel="toggleButtonWhiteLabel"
         />
       </div>
     </div>
@@ -164,6 +162,16 @@ export default {
     },
     defaultEvent(){
       console.log('click')
+    }
+  },
+  created(){
+    if (this.$store.state.auth.user.settings_whitelabel == null) {
+      this.items.find(item => {
+        if (item.ref === 'tranferToWhiteLabel') {
+          this.items.splice(this.items.indexOf(item),1);
+          return
+        }
+      })
     }
   }
 }

@@ -13,8 +13,6 @@
           <DropdownButton 
             :items="items"
             :btnText="'Import'"
-            :whitelabel="user.whitelabel"
-            :toggleAddToWhiteLabel="toggleToWhiteLabel"
             @toggleButtonWhiteLabel="toggleButtonWhiteLabel"
           />
         </div>
@@ -214,6 +212,16 @@ export default {
     },
     exportEntityModalShow(){
       this.exportEntityModal = true
+    }
+  },
+  created(){
+    if (this.$store.state.auth.user.settings_whitelabel == null) {
+      this.items.find(item => {
+        if (item.ref === 'tranferToWhiteLabel') {
+          this.items.splice(this.items.indexOf(item),1);
+          return
+        }
+      })
     }
   }
 }

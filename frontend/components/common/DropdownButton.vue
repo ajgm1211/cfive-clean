@@ -15,10 +15,6 @@
 <script>
 export default {
   props: {
-    whitelabel: {
-      type: Number,
-      default: 0,
-    },
     items: {
       type: Array,
       default: [],

@@ -38,7 +38,7 @@
           </form>
           <div class="modal-footer-create-container">
             <div class="modal-footer-content-wl input-box" >
-              <div id="checkbox-create" v-if="user.whitelabel == 1">
+              <div id="checkbox-create" v-if="user.settings_whitelabel">
                   <b-form-checkbox
                     v-model="model.whitelabel"
                     name="checkbox-create"
@@ -89,7 +89,7 @@
                       </div>
                       <div class="modal-footer-create-container">
                         <div class="modal-footer-content-wl input-box">
-                          <div id="checkbox-create" v-if="user.whitelabel == 1">
+                          <div id="checkbox-create" v-if="user.settings_whitelabel">
                             <b-form-checkbox
                               v-model="whitelabel"
                               name="checkbox-create"
