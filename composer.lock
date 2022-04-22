@@ -12558,9 +12558,5 @@
     "platform-overrides": {
         "php": "7.1.3"
     },
-<<<<<<< HEAD
     "plugin-api-version": "2.1.0"
-=======
-    "plugin-api-version": "2.2.0"
->>>>>>> master
 }
