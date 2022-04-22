@@ -7,7 +7,7 @@
 
 <div class="form-group m-form__group">
     {!! Form::label('tax_number', 'Tax number') !!}<span style="color:red">*</span>
-    {!! Form::text('tax_number', null, ['placeholder' => 'Please enter a tax number','class' => 'form-control m-input tax_number_input','required' => 'required']) !!}
+    {!! Form::text('tax_number', null, ['placeholder' => 'Please enter a tax number','class' => 'form-control m-input tax_number_input']) !!}
 </div>
 
 

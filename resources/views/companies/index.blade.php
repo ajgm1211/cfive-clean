@@ -11,6 +11,23 @@
 @section('content')
 
 <div class="m-content">
+    <div class="dropdown show" align="right" style="margin-bottom:20px;margin-right:20px;">
+        <a class="dropdown-toggle" style="font-size:16px" href="#" role="button" id="helpOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            See how it works
+        </a>
+
+        <div 
+            class="dropdown-menu" 
+            aria-labelledby="helpOptions"
+        >
+            <a class="dropdown-item" target="_blank" href="https://support.cargofive.com/clients-companies-and-contacts/"> 
+                Companies and Contacts 
+            </a>
+            <a class="dropdown-item" target="_blank" href="https://support.cargofive.com/how-to-add-a-customer/" style="overflow-x:hidden;"> 
+                How to add a customer 
+            </a>
+        </div>
+    </div>
     <div class="m-portlet m-portlet--mobile">
         @if(Session::has('message.nivel'))
             <div class="col-md-12">

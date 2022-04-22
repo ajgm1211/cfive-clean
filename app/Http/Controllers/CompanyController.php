@@ -53,10 +53,8 @@ class CompanyController extends Controller
             ->whereHas('api_integration', function ($query) {
                 $query->where('module', 'Companies');
             })->first();
-
         $user_id = \Auth::user()->id;
-        $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('id', '!=', \Auth::user()->id)->where('type', '!=', 'company')->pluck('name', 'id');
-
+        $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('type', '!=', 'company')->pluck('name', 'id');
         if (\Auth::user()->hasRole('subuser')) {
             $query = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
@@ -149,7 +147,7 @@ class CompanyController extends Controller
      */
     public function add()
     {
-        $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('id', '!=', \Auth::user()->id)->where('type', '!=', 'company')->get()->map(function ($user) {
+        $users = User::where('company_user_id', \Auth::user()->company_user_id)->get()->map(function ($user) {
             $user->name = $user->getFullNameAttribute();
             return $user;
         })->pluck('name', 'id');
@@ -447,9 +445,17 @@ class CompanyController extends Controller
 
         if ($request->key_name && $request->key_value) {
             $options_array = [];
+            $key_names = $request->key_name;
+            unset($key_names[1]);
+            $key_values = $request->key_value;
+            unset($key_values[1]);
+            foreach ($key_values as $key => $value) {  
+                $key_names[$key] = $key_names[$key] == null ? $key.'_option_empty_name' : $key_names[$key];
+                $key_values[$key] = $value == null ? ' ' : $value;
+            }
 
-            $options_key = $this->processArray($request->key_name);
-            $options_value = $this->processArray($request->key_value);
+            $options_key = $this->processArray($key_names);
+            $options_value = $this->processArray($key_values);
 
             $options_array = json_encode(array_combine($options_key, $options_value));
         }
@@ -649,8 +655,17 @@ class CompanyController extends Controller
         if ($request->key_name && $request->key_value) {
             $options_array = [];
 
-            $options_key = $this->processArray($request->key_name);
-            $options_value = $this->processArray($request->key_value);
+            $key_names = $request->key_name;
+            unset($key_names[1]);
+            $key_values = $request->key_value;
+            unset($key_values[1]);
+            foreach ($key_values as $key => $value) {  
+                $key_names[$key] = $key_names[$key] == null ? $key.'_option_empty_name' : $key_names[$key];
+                $key_values[$key] = $value == null ? ' ' : $value;
+            }
+
+            $options_key = $this->processArray($key_names);
+            $options_value = $this->processArray($key_values);
 
             $options_array = json_encode(array_combine($options_key, $options_value));
         }
