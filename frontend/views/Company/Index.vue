@@ -215,7 +215,7 @@ export default {
     }
   },
   created(){
-    if (this.$store.state.auth.user.settings_whitelabel == null) {
+    if (this.user.settings_whitelabel == null) {
       this.items.find(item => {
         if (item.ref === 'tranferToWhiteLabel') {
           this.items.splice(this.items.indexOf(item),1);

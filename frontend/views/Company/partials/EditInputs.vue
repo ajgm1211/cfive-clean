@@ -61,7 +61,7 @@
                   @blur="update()"
             />
           </b-col>
-          <b-col class="input-box" >
+          <b-col class="input-box" v-if="user.settings_whitelabel">
             <div id="checkbox-edit">
               <b-form-checkbox
                 v-model="companyData.whitelabel"
@@ -81,6 +81,7 @@
 </template>
 
 <script>
+
 import actions from '../../../store/modules/company/actions'
 import LeftArrow from "../../../components/icons/LeftArrow"
 import CustomInput from "../../../components/common/CustomInput"
@@ -92,6 +93,12 @@ export default {
     company: {
       type: Object,
       default:{}
+    },
+    user:{
+      type: Object,
+      default(){
+        return {};
+      }
     }
   },
   data() {
@@ -114,7 +121,8 @@ export default {
         return newCompanyData
       }
 
-    }
+    },
+    
   },
   methods:{
     async update(){
@@ -129,8 +137,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-
-</style>
