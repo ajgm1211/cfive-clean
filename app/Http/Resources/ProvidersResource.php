@@ -20,7 +20,8 @@ class ProvidersResource extends JsonResource
             'type' => 'provider',
             'description' => $this->description,
             'company_user_id' => $this->company_user_id,
-            'referential_data' => $this->referentialData() != null ? json_decode($this->referentialData()->json_data):[]
+            'referential_data' => $this->referentialData() != null ? json_decode($this->referentialData()->json_data):[],
+            'generic'=> $this->options['generic'] == true ? 1 : 0
        ];
     }
 }

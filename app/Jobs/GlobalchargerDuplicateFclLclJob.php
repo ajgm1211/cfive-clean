@@ -284,7 +284,7 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                 $globalOfAr->load('surcharge', 'globalcharcarrierslcl', 'globalcharportlcl.portOrig', 'globalcharportlcl.portDest', 'globalcharcountrylcl.countryOrig', 'globalcharcountrylcl.countryDest');
                 $surchName = $globalOfAr->surcharge->name;
                 $surcharger = Surcharge::where('name', $surchName)->where('company_user_id', $company_user)->first();
-                if (count($surcharger) >= 1) {
+                if (count((array)$surcharger) >= 1) {
                     $surcharger = $surcharger->id;
                 } else {
                     $surcharger = Surcharge::create([
@@ -303,6 +303,7 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                     $place = 'globalcharcountrylcl';
                 }
 
+                /*
                 $global = GlobalChargeLcl::where('validity', $globalOfAr->validity)
                     ->where('expire', $globalOfAr->expire)
                     ->where('surcharge_id', $surcharger)
@@ -314,7 +315,7 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                     ->where('company_user_id', $company_user)
                     ->has($place)
                     ->first();
-                if (empty($global)) {
+                if (empty($global)) {*/
                     $global = GlobalChargeLcl::create([
                         'validity'              => $globalOfAr->validity,
                         'expire'                => $globalOfAr->expire,
@@ -326,7 +327,7 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                         'currency_id'           => $globalOfAr->currency_id,
                         'company_user_id'       => $company_user,
                     ]);
-                }
+                //}
                 $global = $global->id;
 
                 foreach ($globalOfAr->globalcharcarrierslcl->pluck('carrier_id') as $c) {

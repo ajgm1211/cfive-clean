@@ -55,12 +55,13 @@ class SaveFclRatesByContractJob implements ShouldQueue
 
     public function saveFclRates()
     {
-        $contracts = Contract::where('is_api', 1)
-            ->with(['rates' => function ($query) {
-                $query->with(['carrier' => function ($q) {
-                    $q->select('id', 'name', 'uncode', 'image', 'image as url');
-                }]);
-            }])->get();
+        $contracts = Contract::where('status_erased',0)->whereHas('companyUser', function ($query) {
+            $query->where('options->contract_upload', 'api');
+        })->with(['rates' => function ($query) {
+            $query->with(['carrier' => function ($q) {
+                $q->select('id', 'name', 'uncode', 'image', 'image as url');
+            }]);
+        }])->get();
 
         $container_calculation = ContainerCalculation::get();
         $containers = Container::get();

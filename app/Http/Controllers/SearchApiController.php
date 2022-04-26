@@ -372,6 +372,10 @@ class SearchApiController extends Controller
                 $transit_time = $this->searchTransitTime($rate);
     
                 $rate->setAttribute('transit_time', $transit_time);
+
+                $client_remarks = $this->searchRemarks($rate, $search_ids, ["client","both"]);
+
+                $rate->setAttribute('client_remarks', $client_remarks);
     
                 $rate->setAttribute('remarks', $remarks);
     
@@ -800,7 +804,7 @@ class SearchApiController extends Controller
                     $target_containers = $charge->containers;
                     $target_totals = $charge->containers_client_currency;
                 //INLANDS - CHECK AFTER INTEGRATION W INLANDS FLAT
-                } elseif (is_a($charge, 'App\Inland') && isset($markups['inlands'])) {
+                }  elseif (is_a($charge,'App\InlandRange') || is_a($charge,'App\InlandPerLocation') && isset($markups['inlands']))  {
                     //Info from markups array
                     $markups_to_add = $markups['inlands'];
                     $markups_currency = $markups_to_add['currency'];
