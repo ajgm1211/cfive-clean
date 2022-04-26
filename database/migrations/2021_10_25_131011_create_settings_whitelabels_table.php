@@ -16,7 +16,6 @@ class CreateSettingsWhitelabelsTable extends Migration
         Schema::create('settings_whitelabels', function (Blueprint $table) {
             $table->increments('id');
             $table->string('url');
-            $table->integer('company_user_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }
