@@ -15,6 +15,7 @@ use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use App\TermAndConditionV2;
 use App\User;
+use App\Http\Resources\UsersResource;
 use App\VerifyUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -158,10 +159,15 @@ class UsersController extends Controller
         return view('users.update', compact('user'));
     }
 
-    public function retrieve()
+    public function retrieve(Request $request, User $user)
     {
-        $user = user::find(\Auth::user()->id);
-        return response()->json(['data' => compact('user')]);
+        $user = User::where('id',\Auth::user()->id)->first();
+
+        $data = [
+            'user'=> new UsersResource($user),
+        ];
+        
+        return response()->json(compact('data'));
     }
 
     public function add()
@@ -323,6 +329,11 @@ class UsersController extends Controller
     {
         $user = User::find($id);
         $user->delete();
+        if($user === null){
+            // Si el usuario no existe
+            $message = 'The user you want to delete does not exist';
+            return redirect()->route('users.home')->with('message',$message);
+        }
 
         $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.4']);
         $cliente = $client->users->getUsers(["email" => $user->email]);

@@ -19,5 +19,14 @@ export default {
     },
     deleteAll(ids) {
         return api.call('put', `/api/contacts/deleteAll`, { ids: ids });
+    },
+    create(contact){
+        return api.call('post', `/api/contacts/store`, {contact});
+    },
+    createMassive(contacts) {
+        return api.call('post', `/api/contacts/create-massive`, {contacts});
+    },
+    transfer(contacts){
+        return api.call('post', `/api/contacts/toWhiteLabel`, {contacts});
     }
 }

@@ -10,13 +10,11 @@
           text="Add Companies"
           :add="true"
           />
-          <b-dropdown id="dropdown-left" text="Import">
-            <b-dropdown-item href="#" @click="createMasive(true)">Upload Companies</b-dropdown-item>
-            <b-dropdown-item href="#" @click="exportCompaniesModalShow()">Donwload File</b-dropdown-item>
-            <b-dropdown-item href="/companies/v2/failed">Failed compañias</b-dropdown-item>
-            <b-dropdown-item href="#" :disabled="toggleTWL" @click="AddToWhiteLevelModal()" ref="tranferTWL">Transfer to WL</b-dropdown-item>
-            <b-dropdown-item href="/companies/v2/template">Download template</b-dropdown-item>
-          </b-dropdown>
+          <DropdownButton 
+            :items="items"
+            :btnText="'Import'"
+            @toggleButtonWhiteLabel="toggleButtonWhiteLabel"
+          />
         </div>
       </div>
       <div>
@@ -28,8 +26,8 @@
           @onEdit="onEdit"
           :totalResults="totalResults"
           :classTable="classTable"
-          :toggleAddToWhiteLevel="toggleTWL"
-          @toggleButtonWL="toggleButtonWhiteLevel"
+          :toggleAddToWhiteLabel="toggleToWhiteLabel"
+          @toggleButtonWhiteLabel="toggleButtonWhiteLabel"
           @selectedData="selectedData"
         >
         </DataTable>
@@ -42,21 +40,22 @@
           :action="'Add'"
           @cancel="create = false"
           :fields="modal_fields"
+          :user="user"
         />
-        <ToWLModal
+        <ToWhiteLabelModal
           v-if="modalWhiteLabel"
-          :title="'To WhiteLevel'"
+          :title="'To WhiteLabel'"
           :action="'Add'"
-          :selectedCompanies="selectForTransfer"
+          :selected="selectForTransfer"
           @cancel="modalWhiteLabel = false"
-          @transferTWL="transferTWL"
+          @transferToWhiteLabel="transferToWhiteLabel"
         />
         <ExportModal
-          v-if="exportCompaniesModal"
+          v-if="exportEntityModal"
           :title="'Companies'"
           :action="'Export'"
-          :selectedCompanies="selectForTransfer"
-          @cancel="exportCompaniesModal = false"
+          :exportLink="'companies/v2/export-companies'"
+          @cancel="exportEntityModal = false"
         />
         
         
@@ -65,15 +64,17 @@
 
 <script>
 
+import { mapState } from 'vuex'
+import DataTable from '../../components/common/DataTable'
 import actions from '../../store/modules/company/actions'
 import MainButton from "../../components/common/MainButton"
-import DataTable from '../../components/common/DataTable'
-import CreateModal from './partials/CreateModal'
-import ToWLModal from './partials/ToWhiteLevelModal'
-import ExportModal from './partials/ExportModal'
+import CreateModal from '../../components/common/Modals/CreateModal'
+import ExportModal from '../../components/common//Modals/ExportModal'
+import DropdownButton from "../../components/common/DropdownButton"
+import ToWhiteLabelModal from '../../components/common/Modals/ToWhiteLabelModal'
 
 export default {
-  components: {DataTable, MainButton, CreateModal, ToWLModal, ExportModal},
+  components: {DataTable, MainButton, CreateModal, ToWhiteLabelModal, ExportModal, DropdownButton},
   data() {
     return {
       actions: actions,
@@ -81,8 +82,8 @@ export default {
       create: false,
       modalWhiteLabel: false,
       isMassiveCreation:false,
-      AddToWhiteLevel:true,
-      exportCompaniesModal:false,
+      AddToWhiteLabel:true,
+      exportEntityModal:false,
       selectForTransfer:[],
       fields: [
         { key: "id", label: "ID", filterIsOpen:true },
@@ -140,16 +141,54 @@ export default {
             required: true,
           },
         }
-      ]
+      ],
+      items: [
+        {
+          link: "#",
+          label: "upload companies",
+          ref: "uploadCompanies",
+          disabled: () => false,
+          click: () => this.createMasive(true)
+        },
+        {
+          link: "#",
+          label: "Donwload File",
+          ref: "donwloadFile",
+          disabled: () => false,
+          click: () => this.exportEntityModalShow()
+        },
+        {
+          link: "/companies/v2/failed",
+          label: "Failed company",
+          ref: "failedCompanies",
+          disabled: () => false,
+          click: () => this.defaultEvent()
+        },
+        {
+          link: "#",
+          label: "Transfer to WL",
+          ref: "tranferToWhiteLabel",
+          disabled: () => this.toggleToWhiteLabel,
+          click: () => this.addToWhiteLabelModal()
+        },
+        {
+          link: "/companies/v2/template",
+          label: "Download template",
+          ref: "downloadTemplate",
+          disabled: () => false,
+          click: () => this.defaultEvent()
+        }
+      ],
     }
   },
   computed:{
     isMassive: function () {
         return this.isMassiveCreation 
     },
-    toggleTWL: function (){
-      return this.AddToWhiteLevel
-    }
+    toggleToWhiteLabel: function (){
+      return this.AddToWhiteLabel
+    },
+    ...mapState('auth', ['user'])
   },
   methods: {
     onEdit(data) {
@@ -159,20 +198,30 @@ export default {
       this.create = true
       this.isMassiveCreation = state
     },
-    toggleButtonWhiteLevel(status){
-      this.AddToWhiteLevel = !status
+    toggleButtonWhiteLabel(){
+      this.AddToWhiteLabel = this.selectForTransfer.length > 0 ? false : true
     },
-    AddToWhiteLevelModal(){
+    addToWhiteLabelModal(){
       this.modalWhiteLabel = true
     },
-    async transferTWL(){
-      await this.actions.transferCompanies(this.selectForTransfer)
+    async transferToWhiteLabel(){
+      await this.actions.transfer(this.selectForTransfer)
     },
-    selectedData(selectedCompanies){
-      this.selectForTransfer = selectedCompanies
+    selectedData(selected){
+      this.selectForTransfer = selected
     },
-    exportCompaniesModalShow(){
-      this.exportCompaniesModal = true
+    exportEntityModalShow(){
+      this.exportEntityModal = true
+    }
+  },
+  created(){
+    if (this.user.settings_whitelabel == null) {
+      this.items.find(item => {
+        if (item.ref === 'tranferToWhiteLabel') {
+          this.items.splice(this.items.indexOf(item),1);
+          return
+        }
+      })
     }
   }
 }

@@ -2,7 +2,7 @@
 <template>
   <div class="col-12">
     <section>
-      <EditInputs :company="company" />
+      <EditInputs :company="company" :user="user" />
     </section>
     <section>
       <div>
@@ -18,11 +18,10 @@
 
 <script>
 
-
+import { mapState } from 'vuex'
 import EditInputs from './partials/EditInputs'
 import actions from '../../store/modules/company/actions'
 import Contacts from './partials/Contacts'
-//import toastr from "toastr"
 
 export default {
   components: {EditInputs, Contacts},
@@ -35,6 +34,9 @@ export default {
   async created(){
     const {data} =  await this.actions.retrieve(this.$route.params.id)
     this.company  = data.data
+  },
+  computed:{
+    ...mapState('auth', ['user'])
   }
 }
 </script>

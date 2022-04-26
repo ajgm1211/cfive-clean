@@ -249,7 +249,7 @@ class CompanyV2Controller extends Controller
         return true;
     }
 
-    public function downloadTemplatefile(){
+    public function downloadTemplateFile(){
         return Storage::disk('DownLoadFile')->download('company_template.xlsx');
     }
     
@@ -269,7 +269,7 @@ class CompanyV2Controller extends Controller
         return  ContactResource::collection($contactsByCompany);
     }
 
-    public function transferToWhiteLevel(Request $request){
+    public function transferToWhiteLabel(Request $request){
         $companies = $request->get('companies');
 
         try {
