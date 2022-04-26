@@ -204,6 +204,35 @@ class SearchApiController extends Controller
         $cargo_types = CargoType::get()->map(function ($cargo_type) {
             return $cargo_type->only(['id', 'name']);
         });
+        $ports = Harbor::get()->map(function ($harbor){
+            return $harbor->only(['id','display_name','country']);
+        });
+        $locationsHarbors = HarborsLocationSearch::get()->map(function ($harbor){
+            return $harbor->only(['location_id']);
+        });
+
+        $locations = Location::whereIn('id',$locationsHarbors)->get();
+
+        $harbors=[];
+
+        foreach ($locations as $locationSearch){
+        $country=Country::find($locationSearch['province']['country_id']);
+            $harbors[]=[
+                'id'=>$locationSearch['id'],
+                'country'=>$country->name,
+                'location'=>$locationSearch['name'],
+                'type'=>'city'
+            ];
+        };
+
+        foreach ($ports as $harborsSearch){
+            $harbors[]=[
+                'id'=>$harborsSearch['id'],
+                'country'=>$harborsSearch['country']['name'],
+                'location'=>$harborsSearch['display_name'],
+                'type'=>'port'
+            ];
+        };
         
         $environment_name = env('APP_ENV');
         /*
@@ -262,7 +291,8 @@ class SearchApiController extends Controller
             //'inland_distances',
             'calculation_type',
             'company_prices',
-            'cargo_types'
+            'cargo_types',
+            'harbors'
         );
 
         return response()->json(['data' => $data]);
@@ -296,62 +326,69 @@ class SearchApiController extends Controller
         $ratesDuplicate= $this->duplicateRates($rates,$search_array);
 
         //$rateNo = 0;
-        foreach ($ratesDuplicate as $rate) {
+        foreach ($ratesDuplicate as $key=>$rate) {
             //$rateNo += 1;
             //dump($rate->contract);
             //dump('for rate '. strval($rateNo));
             //Retrieving local charges with search data
-            $local_charges = $this->searchLocalCharges($search_ids, $rate);
-
-            //Retrieving global charges with search data
-            $global_charges = $this->searchGlobalCharges($search_ids, $rate);
-
-            //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
-            $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids,$company_user);
-
-            //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
-            $this->calculateFclCharges($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
-
-            //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
-            $charges = $this->joinCharges($charges, $search_ids);
-
             //Get inland
             $inland = $this-> searchInlands($rate,$search_array, $search_ids['client_currency']);
-            //Appending Rate Id to Charges
-            $this->addChargesToRate($rate, $charges, $search_ids, $inland);
 
-            //Getting price levels if requested
-            if ($search_array['pricelevel'] || $search_array['requestData']['requested'] == 2) {
-                $price_level_markups = $this->searchPriceLevels($search_ids);
-            } else {
-                $price_level_markups = [];
+            if((!empty($inland) && isset($rate['originAddress']) || isset($rate['destinationAddress'])) || ( empty($inland) && isset($rate['originAddress'])==false && isset($rate['destinationAddress'])==false)){
+                $local_charges = $this->searchLocalCharges($search_ids, $rate);
+
+                //Retrieving global charges with search data
+                $global_charges = $this->searchGlobalCharges($search_ids, $rate);
+    
+                //SEARCH TRAIT - Grouping charges by type (Origin, Destination, Freight)
+                $charges = $this->groupChargesByType($local_charges, $global_charges, $search_ids,$company_user);
+    
+                //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
+                $this->calculateFclCharges($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
+    
+                //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
+                $charges = $this->joinCharges($charges, $search_ids);
+    
+                
+                //Appending Rate Id to Charges
+                $this->addChargesToRate($rate, $charges, $search_ids, $inland);
+    
+                //Getting price levels if requested
+                if ($search_array['pricelevel'] || $search_array['requestData']['requested'] == 2) {
+                    $price_level_markups = $this->searchPriceLevels($search_ids);
+                } else {
+                    $price_level_markups = [];
+                }
+    
+                //Adding price levels
+                if ($price_level_markups != null && count($price_level_markups) != 0) {
+                    $this->addMarkups($price_level_markups, $rate, $search_ids);
+                }
+    
+                $this->calculateTotals($rate, $search_array,$inland);
+    
+                $remarks = $this->searchRemarks($rate, $search_ids);
+    
+                $transit_time = $this->searchTransitTime($rate);
+    
+                $rate->setAttribute('transit_time', $transit_time);
+    
+                $rate->setAttribute('remarks', $remarks);
+    
+                $rate->setAttribute('request_type', $request->input('requested'));
+    
+                $rate->setAttribute('inlands', $inland);
+    
+                $this->stringifyFclRateAmounts($rate);
+    
+                $this->setDownloadParameters($rate, $search_ids);
+    
+                
+            }else{
+                unset($ratesDuplicate[$key]);
             }
-
-            //Adding price levels
-            if ($price_level_markups != null && count($price_level_markups) != 0) {
-                $this->addMarkups($price_level_markups, $rate, $search_ids);
-            }
-
-            $this->calculateTotals($rate, $search_array,$inland);
-
-            $remarks = $this->searchRemarks($rate, $search_ids);
-
-            $transit_time = $this->searchTransitTime($rate);
-
-            $rate->setAttribute('transit_time', $transit_time);
-
-            $rate->setAttribute('remarks', $remarks);
-
-            $rate->setAttribute('request_type', $request->input('requested'));
-
-            $rate->setAttribute('inlands', $inland);
-
-            $this->stringifyFclRateAmounts($rate);
-
-            $this->setDownloadParameters($rate, $search_ids);
-
+            
         }
-
         if ($ratesDuplicate != null && count($ratesDuplicate) != 0) {
             //Ordering rates by totals (cheaper to most expensive)
             $ratesDuplicate = $this->sortRates($ratesDuplicate, $search_ids);
@@ -612,16 +649,16 @@ class SearchApiController extends Controller
         $filterOrig= $this->filterInland($origInland,$search_array['containers'],$current_client,$origin_port,$origin_address,$rate); 
         $filterDest= $this->filterInland($destInland,$search_array['containers'],$current_client,$destiny_port,$destination_address,$rate); 
 
-        $selectOriginInland=$origInland!=null ? $this->selectInland($filterOrig) : null;
-        $selectDestinyInland=$destInland!=null ? $this->selectInland($filterDest) : null;
-     
-        $inland['origin_inland']= $selectOriginInland!=null ? $selectOriginInland : null ;
-            if ( $inland['origin_inland']!=null) {
+        $selectOriginInland=$this->selectInland($filterOrig,$rate,$type=1);
+        $selectDestinyInland=$this->selectInland($filterDest,$rate,$type=2);
+        
+            if (!empty($selectOriginInland)) {
+                $inland['origin_inland']= $selectOriginInland;
                 $rate->setAttribute('origin_inland_id', $selectOriginInland['inland_id']);
             }
 
-        $inland['destiny_inland']=  $selectDestinyInland!=null ? $selectDestinyInland : null ;
-            if ( $inland['destiny_inland']!=null) {
+            if (!empty($selectDestinyInland)) {
+                $inland['destiny_inland']=  $selectDestinyInland;
                 $rate->setAttribute('destiny_inland_id', $selectDestinyInland['inland_id']);
             }
 
