@@ -205,36 +205,6 @@ class SearchApiController extends Controller
             return $cargo_type->only(['id', 'name']);
         });
         
-        $ports = Harbor::get()->map(function ($harbor){
-            return $harbor->only(['id','display_name','country']);
-        });
-        $locationsHarbors = HarborsLocationSearch::get()->map(function ($harbor){
-            return $harbor->only(['location_id']);
-        });
-
-        $locations = Location::whereIn('id',$locationsHarbors)->get();
-
-        $harbors=[];
-
-        foreach ($locations as $locationSearch){
-        $country=Country::find($locationSearch['province']['country_id']);
-            $harbors[]=[
-                'id'=>$locationSearch['id'],
-                'country'=>$country->name,
-                'location'=>$locationSearch['name'],
-                'type'=>'city'
-            ];
-        };
-
-        foreach ($ports as $harborsSearch){
-            $harbors[]=[
-                'id'=>$harborsSearch['id'],
-                'country'=>$harborsSearch['country']['name'],
-                'location'=>$harborsSearch['display_name'],
-                'type'=>'port'
-            ];
-        };
-
         $environment_name = env('APP_ENV');
         /*
             implementacion de variable custom para no depender de consultar el enviroment
@@ -284,7 +254,6 @@ class SearchApiController extends Controller
             //'countries',
             'delivery_types',
             'directions',
-            'harbors',
             'price_levels_fcl',
             'price_levels_lcl',
             'schedule_types',
@@ -1207,5 +1176,34 @@ class SearchApiController extends Controller
         $objeto = MediaStream::create('export.zip')->addMedia($downloads);
 
         return $objeto;
+    }
+
+    public function getPortAndLocationByInput($request){
+
+        $ports = Harbor::where('display_name', 'like', '%'.$request.'%')->with('country')->get();
+
+        $locations = Location::where('name', 'like', '%'.$request.'%')->with('province.country')->get();
+
+
+        foreach ($ports as $harborsSearch){
+            $harbors[]=[
+                'id'=>$harborsSearch['id'],
+                'country'=>$harborsSearch['country']['name'],
+                'location'=>$harborsSearch['display_name'],
+                'type'=>'port'
+            ];
+        };
+
+        foreach ($locations as $locationSearch){
+            $harbors[]=[
+                'id'=>$locationSearch['id'],
+                'country'=>$harborsSearch['province']['country']['name'],
+                'location'=>$locationSearch['name'],
+                'type'=>'city'
+            ];
+        };
+
+        return $harbors;
+        
     }
 }
