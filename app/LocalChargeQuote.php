@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class LocalChargeQuote extends Model implements Auditable
 {
@@ -91,7 +93,7 @@ class LocalChargeQuote extends Model implements Auditable
         } catch (Exception $e) {
             Log::error($e);
         }
-        
+
         $this->update(['total' => $totals]);
     }
 
