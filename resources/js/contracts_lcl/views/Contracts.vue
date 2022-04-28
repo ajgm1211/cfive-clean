@@ -1,5 +1,8 @@
 <template>
 	<div class="container-fluid">
+		<HelpDropdown
+          :options="helpOptions"
+        ></HelpDropdown>
 		<div class="row mt-5">
 			<div class="col-12 mb-2" style="padding: 0px 50px">
 				<a href="/api/contractslcl/" class="p-light quote-link">
@@ -86,6 +89,7 @@
 	import Files from './Files';
 	import actions from '../../actions';
     import FormInlineView from '../../components/views/FormInlineView.vue';
+	import HelpDropdown from "../../components/HelpDropdown";
 
 	export default {
 		components: { 
@@ -94,8 +98,8 @@
 			Restrictions,
 			Remarks,
 			Files,
-			FormInlineView
-
+			FormInlineView,
+			HelpDropdown,
 		},
 		data() {
 			return {
@@ -146,7 +150,15 @@
                     	label: 'Status',
                     	type: 'status'
                     }
-                }
+                },
+
+				//HELP DROPDOWN
+      			helpOptions: [
+					{
+						title: "How to import an LCL contract",
+						link: "https://support.cargofive.com/how-to-import-an-lcl-contract/"
+					},
+				]
 			}
 		},
 		created() {

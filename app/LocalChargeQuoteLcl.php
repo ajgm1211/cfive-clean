@@ -10,7 +10,7 @@ class LocalChargeQuoteLcl extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
     
-    protected $fillable = ['charge', 'calculation_type_id', 'sale_term_code_id', 'units', 'price', 'total', 'currency_id', 'port_id', 'quote_id', 'type_id', 'provider_name', 'surcharge_id'];
+    protected $fillable = ['charge', 'calculation_type_id', 'sale_term_code_id', 'units', 'profit', 'price', 'total', 'currency_id', 'port_id', 'quote_id', 'type_id', 'provider_name', 'surcharge_id'];
 
     public function quotev2()
     {
@@ -35,6 +35,11 @@ class LocalChargeQuoteLcl extends Model implements Auditable
     public function port()
     {
         return $this->belongsTo('App\Harbor', 'port_id');
+    }
+
+    public function type()
+    {
+        return $this->belongsTo('App\TypeDestiny', 'type_id');
     }
 
     public function totalLcl($index)
@@ -75,21 +80,12 @@ class LocalChargeQuoteLcl extends Model implements Auditable
             if ($charge->total != null) {
                 $exchange = ratesCurrencyQuote($charge->currency_id, $currency,$quote['pdf_options']['exchangeRates']);
                 $total_w_exchange = $charge->total / $exchange;
-                $totals += number_format((float)$total_w_exchange, 2, '.', '');
+                $totals += isDecimal($total_w_exchange);
             }
         }
 
-        if (!empty($local_charge_quote_total)) {
-            $local_charge_quote_total->delete();
-        }
-
-        LocalChargeQuoteLclTotal::create([
-            'total' => $totals,
-            'quote_id' => $quote->id,
-            'port_id' => $this->port_id,
-            'currency_id' => $currency_id,
-            'type_id' => $this->type_id,
-        ]);
+        $local_charge_quote_total->total = $totals;
+        $local_charge_quote_total->update();
     }
 
     /**

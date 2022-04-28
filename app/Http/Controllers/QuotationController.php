@@ -23,6 +23,7 @@ use App\DestinationType;
 use App\Harbor;
 use App\Http\Resources\QuotationListResource;
 use App\Http\Resources\QuotationResource;
+use App\Http\Resources\CostSheetResource;
 use App\Http\Traits\QuoteV2Trait;
 use App\Http\Traits\SearchTrait;
 use App\Incoterm;
@@ -1155,5 +1156,11 @@ class QuotationController extends Controller
         $collection = $data->values()->all();
 
         return $collection;
+    }
+
+    public function setCostSheet(QuoteV2 $quote, AutomaticRate $autorate) {
+
+        return new CostSheetResource($quote, $autorate);
+
     }
 }
