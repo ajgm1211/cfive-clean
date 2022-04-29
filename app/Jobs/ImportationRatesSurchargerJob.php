@@ -49,6 +49,35 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         $this->user_id = $user_id;
     }
 
+    public function changeStatusTime($ncontractRq,$start){
+        $start = false;
+        $time = new \DateTime();
+        $now = $time->format('Y-m-d H:i:s');
+        $data_options = json_decode($ncontractRq->data,true);
+        $status_time = $data_options["status_time"];
+        if(array_key_exists($ncontractRq->status,$status_time)){
+            if($start == true){
+                if(count($status_time[$ncontractRq->status]) >= 1){
+                    $fechaEnd = Carbon::parse($now);
+                    $fechaStar = Carbon::parse($status_time[$ncontractRq->status][count($status_time[$ncontractRq->status])-1][1]);
+                    $time_exacto = $fechaEnd->diffInMinutes($fechaStar);
+                    array_push($status_time[$ncontractRq->status][count($status_time[$ncontractRq->status])-1],$now,$time_exacto);
+                }elseif(count($status_time[$ncontractRq->status]) == 0){
+                    array_push($status_time[$ncontractRq->status],['admin',$now,$now,'0 mins.']);
+                }
+            }else{
+                array_push($status_time[$ncontractRq->status],['admin',$now]);
+            }
+        } else {
+            $status_time[$ncontractRq->status] = [['admin',$now]];
+        }
+        $data_options["status_time"] = $status_time;
+        $ncontractRq->data = json_encode($data_options);
+        //dd($data_options,$ncontractRq->data );
+        //$ncontractRq->update();
+        return $ncontractRq;
+    }
+
     public function handle()
     {
         $account_id = $this->account_id;
@@ -57,6 +86,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         $valuesSelecteds = $json_account_dc['valuesSelecteds'];
         $final_columns = $json_account_dc['final_columns'];
         $ncontractRq = NewContractRequest::find($account->request_id);
+        $ncontractRq = $this->changeStatusTime($ncontractRq,true);
         $ncontractRq->status = 'Processing';
         $ncontractRq->update();
         //dd($valuesSelecteds,$final_columns);
@@ -1388,6 +1418,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
             Storage::disk('FclImport')->Delete($file_csv);
         }
         $ncontractRq->status = 'Imp Finished';
+        $ncontractRq = $this->changeStatusTime($ncontractRq,false);
         $ncontractRq->update();
     }
 }
