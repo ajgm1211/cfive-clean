@@ -22,16 +22,23 @@ services:
       # - XDEBUG_REMOTE_PORT=9003
       # - XDEBUG_REMOTE_AUTOSTART=1
       # - XDEBUG_REMOTE_CONNECT_BACK=0
+    
     volumes:
       - ./:/app:cached
     working_dir: /app
     ports:
-      - "80:80"
+      - "8080:80"
       - "443:443"
       - "32823:22"
     links:
       - mysql8
       - redis
+    networks:
+      default:
+        ipv4_address: 172.19.0.3
+    extra_hosts:
+      - whitelabel.local:172.19.0.6
+      - petit.localhost:172.19.0.6
   mysql8:
     image: mysql:8
     container_name: mysql8_cargofive
@@ -42,8 +49,18 @@ services:
       - MYSQL_ROOT_PASSWORD=
       - MYSQL_DATABASE=cargofive
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    networks:
+      default:
+        ipv4_address: 172.19.0.4
   redis:
     image: redis
     container_name: redis_cargofive
     ports:
       - "6379:6379"
+    networks:
+      default:
+        ipv4_address: 172.19.0.5
+networks:
+  default:
+    external: true
+    name: cargofive_network
