@@ -1862,7 +1862,7 @@ trait SearchTrait
                         $r['type']='ranges';
                         $r['distanceDif']=$result['distanceDif'];
                     }else{
-                        if($result['distanceDif']<$r['distanceDif']){
+                        if($result['distanceDif']<$r['distanceDif'] || $result['distanceDif']=='' && $r['value']<$result['sum']){
                             $r=$inland['range'][$b];
                             $r['value']=$result['sum'];
                             $r['containers']=$result['containers'];
