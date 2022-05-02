@@ -13,6 +13,7 @@ use App\Country;
 use App\Currency;
 use App\FailRate;
 use App\Container;
+use Carbon\Carbon;
 use App\Surcharge;
 use App\TypeDestiny;
 use App\LocalCharge;
@@ -53,7 +54,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
     }
 
     public function changeStatusTime($ncontractRq,$start){
-        $start = false;
         $time = new \DateTime();
         $now = $time->format('Y-m-d H:i:s');
         $data_options = json_decode($ncontractRq->data,true);
@@ -77,7 +77,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         $data_options["status_time"] = $status_time;
         $ncontractRq->data = json_encode($data_options);
         //dd($data_options,$ncontractRq->data );
-        //$ncontractRq->update();
+        $ncontractRq->update();
         return $ncontractRq;
     }
 

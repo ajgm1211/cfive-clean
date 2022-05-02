@@ -5276,8 +5276,7 @@ class ImportationController extends Controller
         ]);
     }
 
-    public function changeStatusTime($ncontractRq,$start){
-        $start = false;
+    public function changeStatusTime($ncontractRq,$start=true){
         $time = new \DateTime();
         $now = $time->format('Y-m-d H:i:s');
         $data_options = json_decode($ncontractRq->data,true);
@@ -5300,19 +5299,15 @@ class ImportationController extends Controller
         }
         $data_options["status_time"] = $status_time;
         $ncontractRq->data = json_encode($data_options);
-        //dd($data_options,$ncontractRq->data );
+        dd($data_options,$ncontractRq->data );
         //$ncontractRq->update();
         return $ncontractRq;
     }
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(Request $request)
     {
-        /*$ncontractRq = NewContractRequest::find(43908);
-        $ncontractRq = $this->changeStatusTime($ncontractRq,false);
-        dd($ncontractRq);*/
-
-        $excel = Storage::disk('s3_upload')->get($mediaItem->id . '/' . $mediaItem->file_name);
-        Storage::disk('FclImport')->put($mediaItem->file_name, $excel);
-        $excelF = Storage::disk('FclImport')->url($mediaItem->file_name);
+        $ncontractRq = NewContractRequest::find(37179);
+        $ncontractRq = $this->changeStatusTime($ncontractRq,true);
+        dd(json_decode($ncontractRq->data,true));
     }
 }
