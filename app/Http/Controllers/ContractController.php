@@ -396,7 +396,9 @@ class ContractController extends Controller
     public function duplicate(Contract $contract)
     {
         $new_contract = $contract->duplicate();
-
+        $new_contract->update([
+            'user_id' => Auth::user()->id,
+        ]);
         return new ContractResource($new_contract);
     }
 
