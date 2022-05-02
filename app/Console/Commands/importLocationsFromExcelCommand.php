@@ -24,10 +24,11 @@ class importLocationsFromExcelCommand extends Command
      * @var string
      */
     protected $description = 'This command allows to import  locations from an Excel document into the connected Database. A few considerations: 
-                                - Upload your file into S3 (or storage/app/public/pdf for local testing). One file at a time
+                                - Upload your file into S3 (or storage/app/public/pdf for local testing)
                                 - This command uses the old locations structure
                                 - If you choose to import provinces, they will be compared by name. Else, you have to indicate the province ID, and it will be the same for all locations inserted
                                 - Distances will be considered in Kilometers
+                                - ZIPs are optional. If you dont want to import them include the header, but leave the fields blank
                                 - One Port at a time!';
 
     /**
@@ -162,11 +163,18 @@ class importLocationsFromExcelCommand extends Command
                 }
             }
 
-            $display_name = $location_array['Zip'] . ", " . $location_array['Location'] . ", " . $location_array['Province'];
+            if(isset($location_array['Zip'])){
+                $zip = $location_array['Zip'];
+                $display_name = $location_array['Zip'] . ", " . $location_array['Location'] . ", " . $location_array['Province'];
+            }else{
+                $zip = '';
+                $display_name = $location_array['Location'] . ", " . $location_array['Province'];
+            }
+
 
             $location = InlandDistance::create([
                 'address' => $location_array['Location'],
-                'zip' => $location_array['Zip'],
+                'zip' => !empty($zip) ? $zip : null,
                 'distance' => $location_array['Distance'],
                 'display_name' => $display_name,
                 'harbor_id' => $harbor_id,
