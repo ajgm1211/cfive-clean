@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class LocalChargeQuote extends Model implements Auditable
 {
@@ -65,29 +67,31 @@ class LocalChargeQuote extends Model implements Auditable
 
         $totals = [];
 
-        foreach ($equip_array as $eq) {
-            $totals['c' . $eq] = 0;
-        }
-
-        if ($this->price != null) {
+        try {
             foreach ($equip_array as $eq) {
-                foreach ($this->price as $key => $price) {
-                    if ($key == 'c' . $eq) {
-                        $totals[$key] += $price;
+                $totals['c' . $eq] = 0;
+            }    
+            if ($this->price != null) {
+                foreach ($equip_array as $eq) {
+                    foreach ($this->price as $key => $price) {
+                        if ($key == 'c' . $eq) {
+                            $totals[$key] += $price;
+                        }
                     }
                 }
-            }
-        }
-
-        if ($this->profit != null) {
-            foreach ($equip_array as $eq) {
-                foreach ($this->profit as $k => $profit) {
-                    if ($k == 'm' . $eq) {
-                        $clear_key = str_replace('m', 'c', $k);
-                        $totals[$clear_key] += $profit;
+            }    
+            if ($this->profit != null) {
+                foreach ($equip_array as $eq) {
+                    foreach ($this->profit as $k => $profit) {
+                        if ($k == 'm' . $eq) {
+                            $clear_key = str_replace('m', 'c', $k);
+                            $totals[$clear_key] += $profit;
+                        }
                     }
                 }
-            }
+            }            
+        } catch (Exception $e) {
+            Log::error($e);
         }
 
         $this->update(['total' => $totals]);

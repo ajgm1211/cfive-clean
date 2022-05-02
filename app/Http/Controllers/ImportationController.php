@@ -5276,10 +5276,43 @@ class ImportationController extends Controller
         ]);
     }
 
+    public function changeStatusTime($ncontractRq,$start){
+        $start = false;
+        $time = new \DateTime();
+        $now = $time->format('Y-m-d H:i:s');
+        $data_options = json_decode($ncontractRq->data,true);
+        $status_time = $data_options["status_time"];
+        if(array_key_exists($ncontractRq->status,$status_time)){
+            if($start == true){
+                if(count($status_time[$ncontractRq->status]) >= 1){
+                    $fechaEnd = Carbon::parse($now);
+                    $fechaStar = Carbon::parse($status_time[$ncontractRq->status][count($status_time[$ncontractRq->status])-1][1]);
+                    $time_exacto = $fechaEnd->diffInMinutes($fechaStar);
+                    array_push($status_time[$ncontractRq->status][count($status_time[$ncontractRq->status])-1],$now,$time_exacto);
+                }elseif(count($status_time[$ncontractRq->status]) == 0){
+                    array_push($status_time[$ncontractRq->status],['admin',$now,$now,'0 mins.']);
+                }
+            }else{
+                array_push($status_time[$ncontractRq->status],['admin',$now]);
+            }
+        } else {
+            $status_time[$ncontractRq->status] = [['admin',$now]];
+        }
+        $data_options["status_time"] = $status_time;
+        $ncontractRq->data = json_encode($data_options);
+        //dd($data_options,$ncontractRq->data );
+        //$ncontractRq->update();
+        return $ncontractRq;
+    }
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(Request $request)
     {
-        $carrierArr = PrvCarrier::get_carrier('MAERSK');
-        dd($carrierArr);
+        /*$ncontractRq = NewContractRequest::find(43908);
+        $ncontractRq = $this->changeStatusTime($ncontractRq,false);
+        dd($ncontractRq);*/
+
+        $excel = Storage::disk('s3_upload')->get($mediaItem->id . '/' . $mediaItem->file_name);
+        Storage::disk('FclImport')->put($mediaItem->file_name, $excel);
+        $excelF = Storage::disk('FclImport')->url($mediaItem->file_name);
     }
 }
