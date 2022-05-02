@@ -84,7 +84,7 @@
                 <p class="input-places">
                   <span v-for="(data, index) in placeInShowFrom" :key="index">
                     {{ data.location }}
-                    <b @click="deletePlaceFrom(index)" class="delete-input-country">x</b></span
+                    <b @click.stop.prevent="deletePlaceFrom(index)" class="delete-input-country">x</b></span
                   >
                 </p>
               </div>
@@ -177,7 +177,7 @@
                 <p class="input-places">
                   <span v-for="(data, index) in placeInShowTo" :key="index">
                     {{ data.location }}
-                    <b @click="deletePlaceTo(index)" class="delete-input-country">x</b></span
+                    <b @click.stop.prevent="deletePlaceTo(index)" class="delete-input-country">x</b></span
                   >
                 </p>
               </div>
@@ -1253,8 +1253,10 @@ export default {
       // end test new select harbors
       fromCity: "",
       fromPort: "",
+      fromMulti: "",
       toCity: "",
       toPort: "",
+      toMulti: "",
       // datos estaticos search con inlands aqui
       originPlacesFrom: "",
       openOriginPlacesFrom: "",
@@ -1504,7 +1506,7 @@ export default {
       }
       this.openOriginPlacesFrom = false;
     },
-    placeCheckedTo(data) {
+    placeCheckedTo() {
       let placeType = [];
       if (this.placeInShowTo.length >= 1) {
         this.showTagPlaceTo = true;
@@ -1527,11 +1529,20 @@ export default {
       this.openOriginPlacesTo = false;
     },
     deletePlaceFrom(e) {
+      let placeType = [];
+
       this.placeInShowFrom.splice(e, 1);
+
       if (this.placeInShowFrom.length == 0) {
         this.showTagPlaceFrom = false;
         return;
       }
+      this.placeInShowFrom.forEach((element) => {
+        placeType.push(element.type);
+      });
+
+      this.fromPort = placeType.map((e) => e.toLocaleLowerCase()).includes("port");
+      this.fromCity = placeType.map((e) => e.toLocaleLowerCase()).includes("city");
     },
     deletePlaceTo(e) {
       this.placeInShowTo.splice(e, 1);
@@ -1541,6 +1552,15 @@ export default {
         countCity = 0;
         return;
       }
+
+      let placeType = [];
+
+      this.placeInShowTo.forEach((element) => {
+        placeType.push(element.type);
+      });
+
+      this.toPort = placeType.map((e) => e.toLocaleLowerCase()).includes("port");
+      this.toCity = placeType.map((e) => e.toLocaleLowerCase()).includes("city");
     },
     //modal
     nextStep() {
