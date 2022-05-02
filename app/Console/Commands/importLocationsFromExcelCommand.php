@@ -24,9 +24,9 @@ class importLocationsFromExcelCommand extends Command
      * @var string
      */
     protected $description = 'This command allows to import  locations from an Excel document into the connected Database. A few considerations: 
-                                - Upload your file into S3 (or storage/app/public/pdf for local testing)
+                                - Upload your file into storage/app/public/pdf 
                                 - This command uses the old locations structure
-                                - If you choose to import provinces, they will be compared by name. Else, you have to indicate the province ID, and it will be the same for all locations inserted
+                                - Provinces are optional, but if you choose to import provinces, they will be compared by name.
                                 - Distances will be considered in Kilometers
                                 - ZIPs are optional. If you dont want to import them include the header, but leave the fields blank
                                 - One Port at a time!';
@@ -53,19 +53,8 @@ class importLocationsFromExcelCommand extends Command
         $filename = $this->ask('Insert the file name (with extension)');
         $country_id = $this->ask('Insert the country ID');
         $harbor_id = $this->ask('Insert the Port ID');
-        $import_provinces = $this->confirm('Import provinces?');
 
-        if(!$import_provinces){
-            $province_id = $this->ask('Insert the province ID');
-            array_pop($expected_headers);
-        }else{
-            $province_id = null;
-        }
-
-        $file = Storage::disk('s3')->url($filename);
-
-        //UNCOMMENT FOR LOCAL TESTING
-        //$file = Storage::disk('pdf')->url($filename);
+        $file = Storage::disk('pdf')->url($filename);
 
         $input_file_type = $this->validateFileExtension($filename, $file);
 
@@ -75,7 +64,7 @@ class importLocationsFromExcelCommand extends Command
 
         $location_data = $this->extractLocationData($sheet_data, $sheet, $expected_headers);
 
-        $this->createLocations($location_data, $import_provinces, $province_id, $country_id, $harbor_id);
+        $this->createLocations($location_data, $country_id, $harbor_id);
       
     }
 
@@ -146,41 +135,45 @@ class importLocationsFromExcelCommand extends Command
         return $final_array;
     }
 
-    public function createLocations($location_data, $import_provinces, $province_id, $country_id, $harbor_id)
+    public function createLocations($location_data, $country_id, $harbor_id)
     {
+        
         foreach($location_data as $location_array){
+            if(isset($location_array['Location'])){
 
-            if(!$import_provinces){
-                $province = Province::where('id',$province_id)->first();
-            }else{
-                $province = Province::where('name',$location_array['Province'])->first();
-
-                if(is_null($province)){
-                    $province = Province::create([
-                        'name' => $location_array['Province'],
-                        'country_id' => $country_id
-                    ]);
+                $display_name = $location_array['Location'];
+    
+                if(isset($location_array['Province'])){
+                    $province = Province::where('name',$location_array['Province'])->first();
+    
+                    if(is_null($province)){
+                        $province = Province::create([
+                            'name' => $location_array['Province'],
+                            'country_id' => $country_id
+                        ]);
+                    }
+    
+                    $display_name = $display_name . ", " . $location_array['Province'];
                 }
+    
+                if(isset($location_array['Zip'])){
+                    $zip = $location_array['Zip'];
+                    $display_name = $location_array['Zip'] . ", " . $display_name;
+                }else{
+                    $zip = '';
+                }
+    
+    
+                $location = InlandDistance::create([
+                    'address' => $location_array['Location'],
+                    'zip' => !empty($zip) ? $zip : null,
+                    'distance' => isset($location_array['Distance']) ? $location_array['Distance'] : 0,
+                    'display_name' => $display_name,
+                    'harbor_id' => $harbor_id,
+                    'province_id' => isset($province) ? $province->id : null
+                ]);
+    
             }
-
-            if(isset($location_array['Zip'])){
-                $zip = $location_array['Zip'];
-                $display_name = $location_array['Zip'] . ", " . $location_array['Location'] . ", " . $location_array['Province'];
-            }else{
-                $zip = '';
-                $display_name = $location_array['Location'] . ", " . $location_array['Province'];
-            }
-
-
-            $location = InlandDistance::create([
-                'address' => $location_array['Location'],
-                'zip' => !empty($zip) ? $zip : null,
-                'distance' => $location_array['Distance'],
-                'display_name' => $display_name,
-                'harbor_id' => $harbor_id,
-                'province_id' => $province->id
-            ]);
-
         }
     }
 }
