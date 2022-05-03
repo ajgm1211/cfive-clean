@@ -63,10 +63,10 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 if(count($status_time[$ncontractRq->status]) >= 1){
                     $fechaEnd = Carbon::parse($now);
                     $fechaStar = Carbon::parse($status_time[$ncontractRq->status][count($status_time[$ncontractRq->status])-1][1]);
-                    $time_exacto = $fechaEnd->diffInMinutes($fechaStar);
+                    $time_exacto = $fechaEnd->diffInMinutes($fechaStar).' minutes';
                     array_push($status_time[$ncontractRq->status][count($status_time[$ncontractRq->status])-1],$now,$time_exacto);
                 }elseif(count($status_time[$ncontractRq->status]) == 0){
-                    array_push($status_time[$ncontractRq->status],['admin',$now,$now,'0 mins.']);
+                    array_push($status_time[$ncontractRq->status],['admin',$now,$now,'0 minutes.']);
                 }
             }else{
                 array_push($status_time[$ncontractRq->status],['admin',$now]);
