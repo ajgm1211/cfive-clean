@@ -1649,27 +1649,27 @@ trait SearchTrait
         $portD=array();
         foreach ($new_search['originPorts'] as $key=> $dataLocations){
             if($dataLocations['type']=='city'){
-                $portOrig=HarborsLocationSearch::where('location_id',$dataLocations['id'])->with('harbors')->get();
+                $portOrig=HarborsLocationSearch::where('location_id',$dataLocations['id'])->with('harbor')->get();
                 if(count($portOrig)==1){
                     $portO[]=[
-                        'id' =>$portOrig[0]['harbors']['id'],
+                        'id' =>$portOrig[0]['harbor']['id'],
                         'location_id'=>$portOrig[0]['location_id'],
-                        'display_name' => $portOrig[0]['harbors']['display_name']
+                        'display_name' => $portOrig[0]['harbor']['display_name']
                     ];
                     $new_search['locationOrig'][$key]=[
                         'id'=>$portOrig[0]['location_id'],
-                        'harbor'=>$portOrig[0]['harbors']['id']
+                        'harbor'=>$portOrig[0]['harbor']['id']
                     ];
                 }else{
                     foreach($portOrig as $orig){             
                         $portO[]=[
-                            'id'=>$orig['harbors']['id'],
+                            'id'=>$orig['harbor']['id'],
                             'location_id'=>$orig['location_id'],
-                            'display_name' => $orig['harbors']['display_name']
+                            'display_name' => $orig['harbor']['display_name']
                         ];
                         $new_search['locationOrig'][]=[
                             'id'=>$orig['location_id'],
-                            'harbor'=>$orig['harbors']['id']
+                            'harbor'=>$orig['harbor']['id']
                         ];
                     }
                     $new_search['originPorts']=array_values($new_search['originPorts']);
@@ -1692,24 +1692,24 @@ trait SearchTrait
                 $portDest=HarborsLocationSearch::where('location_id',$dataLocations['id'])->with('harbors')->get();
                 if(count($portDest)==1){
                     $portD[]=[
-                        'id'=>$portDest[0]['harbors']['id'],
+                        'id'=>$portDest[0]['harbor']['id'],
                         'location_id'=>$portDest[0]['location_id'],
-                        'display_name' => $portDest[0]['harbors']['display_name']
+                        'display_name' => $portDest[0]['harbor']['display_name']
                     ];
                     $new_search['locationDest'][$key]=[
                         'id'=>$portDest[0]['location_id'],
-                        'harbor'=>$portDest[0]['harbors']['id']
+                        'harbor'=>$portDest[0]['harbor']['id']
                     ];
                 }else{
                     foreach($portDest as $dest){             
                         $portD[]=[
-                            'id'=>$dest['harbors']['id'],
+                            'id'=>$dest['harbor']['id'],
                             'location_id'=>$dest['location_id'],
-                            'display_name' => $dest['harbors']['display_name']
+                            'display_name' => $dest['harbor']['display_name']
                         ];
                         $new_search['locationDest']=[
                             'id'=>$dest['location_id'],
-                            'harbor'=>$dest['harbors']['id']
+                            'harbor'=>$dest['harbor']['id']
                         ];
                     }
                     $new_search['destinationPorts']=array_values($new_search['destinationPorts']);
@@ -1728,6 +1728,7 @@ trait SearchTrait
         $new_search['destinationPorts']=$portD;
 
         return $new_search;
+
     }
 
     public function duplicateRates($rates,$search_rate){
@@ -1783,7 +1784,7 @@ trait SearchTrait
                     $a->where('port',$port);
                 })
                 ->get();
-                $distance=DistanceKmLocation::where('location_id',$locations['id'])->where('harbors_id',$locations['harbor'])->first();
+                $distance=DistanceKmLocation::where('location_id',$locations['id'])->where('harbor_id',$locations['harbor'])->first();
 
                 
                 foreach($inlands as $key=>$inland){
