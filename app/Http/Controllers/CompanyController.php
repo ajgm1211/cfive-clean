@@ -139,7 +139,7 @@ class CompanyController extends Controller
      */
     public function add()
     {
-        $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('type', '!=', 'company')->get()->map(function ($user) {
+        $users = User::where('company_user_id', \Auth::user()->company_user_id)->get()->map(function ($user) {
             $user->name = $user->getFullNameAttribute();
             return $user;
         })->pluck('name', 'id');

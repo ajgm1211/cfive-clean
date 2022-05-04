@@ -2056,7 +2056,7 @@ trait QuoteV2Trait
                 ]);
             }
         } else if($quote->type == "LCL"){
-            $local_charge_total = LocalChargeQuoteLclTotal::where('quote_id',$quote->id)->first();
+            $local_charge_total = LocalChargeQuoteLclTotal::where(['quote_id' => $quote->id, 'type_id' => $params['type_id'], 'port_id' =>  $params['port_id']])->first();
 
             if(empty($local_charge_total)){
                 $local_charge_total = LocalChargeQuoteLclTotal::create([

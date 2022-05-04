@@ -441,10 +441,11 @@ export default {
       let originPorts = data.origin_ports;
       let destinyPorts = data.destiny_ports;
       let response = [];      
-      
-      let routeExist = false;
 
-      for(let i = 0; i < originPorts.length; i++) { 
+      for(let i = 0; i < originPorts.length; i++) {
+
+        let routeExist = false;
+        
         response.forEach(r => {
           if (r['key'] == `${originPorts[i]['id']}${destinyPorts[i]['id']}`) { 
             routeExist = true;
