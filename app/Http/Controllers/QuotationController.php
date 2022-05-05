@@ -513,18 +513,8 @@ class QuotationController extends Controller
 
                 ]);
             }
-            // else if ($request->input('cargo_type_id') != null) {
-            //     $data = $request->validate([
-            //         'cargo_type_id' => 'nullable',
-            //         'total_quantity' => 'nullable|numeric',
-            //         'total_volume' => 'nullable|numeric',
-            //         'total_weight' => 'nullable|numeric',
-            //         'chargeable_weight' => 'nullable',
-            //     ]);
-            // } 
             else {
                 $data = [];
-
                 foreach ($form_keys as $fkey) {
                     if (!in_array($fkey, $data) && $fkey != 'keys') {
                         $data[$fkey] = $request->input($fkey);
@@ -558,7 +548,25 @@ class QuotationController extends Controller
                 } else if ($data[$key] == 6) {
                     $data[$key] = 'Lost';
                 }
+            } 
+            
+            if ($key == 'language_id') {     
+                
+                $current_company_id = $quote->company_id;
+                $request_company_id = $data['company_id'];
+                
+                if ($request_company_id != $current_company_id) {
+                    if($request_company_id) {                     
+                        $company_id = (int)$request_company_id;
+                        $language_id = $this->getCompanyLanguageId($company_id);
+                        if ($language_id) {
+                            $data[$key] = $language_id;
+                        }
+                    }
+                }
+
             }
+
             $quote->update([$key => $data[$key]]);
 
             if ($key == 'validity_end') {
@@ -571,20 +579,6 @@ class QuotationController extends Controller
                 }
             }
         }
-
-        // if ($request->input('custom_incoterm') != null) {
-        //     $quote->update(['custom_incoterm' => $request->input('custom_incoterm')]);
-        // } 
-        // else {
-        //     $quote->update(['custom_incoterm' => null]);
-        // }
-
-        //  if ($request->input('custom_quote_id') != null) {
-        //      $quote->update(['custom_quote_id' => $request->input('custom_quote_id')]);
-        //  } 
-        //   else {
-        //       $quote->update(['custom_quote_id' => null]);
-        //     }
 
         if ($request->input('pdf_options') != null) {
 
@@ -610,6 +604,25 @@ class QuotationController extends Controller
                 $quote->update(['chargeable_weight' => $request['total_weight']]);
             }
         }
+    }
+
+    public function getCompanyLanguageId($company_id) {
+        $company = Company::find($company_id); 
+        $pdf_language = $company->pdf_language; 
+
+        if (!is_null($pdf_language)) {
+            $language = Language::where('name', strtoupper($pdf_language))->first();
+            if($language) {
+                return $language->id;
+            } else {
+                if($pdf_language == 0) {
+                    return 1;
+                } else { 
+                    return $pdf_language;
+                }
+            }
+        }
+        return false;
     }
 
     public function updateSearchOptions(Request $request, QuoteV2 $quote)
