@@ -43,7 +43,6 @@ class WhitelabelRateResource extends JsonResource
             'price_level' => isset($this->price_level) ? $this->price_level : null,
             'remarks' => isset($this->remarks) ? $this->remarks : null,
             'global_total' => strval($this->global_total),
-            'quantity_totals' => $this->quantity_totals,
             'quantity_container' => $this->qty,
             // 'contract_backup_id' => $this->contractBackupId,
             // 'contract_request_id' => $this->contractRequestId,
