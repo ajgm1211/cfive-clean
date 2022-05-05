@@ -309,7 +309,7 @@ class SearchApiController extends Controller
             }
         
             //Getting price levels if requested
-            if (isset($search_array['pricelevel'])) {
+            if (isset($search_array['pricelevel']) || $search_array['requestData']['requested'] == 2) {
                 $price_level_markups = $this->searchPriceLevels($search_ids);
             } else {
                 $price_level_markups = [];
@@ -321,24 +321,23 @@ class SearchApiController extends Controller
             }
 
             $this->calculateTotals($rate, $search_array);
-            
+
             $remarks = $this->searchRemarks($rate, $search_ids);
 
             $transit_time = $this->searchTransitTime($rate);
 
             $rate->setAttribute('transit_time', $transit_time);
-
             
             $client_remarks = $this->searchRemarks($rate, $search_ids, ["client","both"]);
-            
+
             $rate->setAttribute('client_remarks', $client_remarks);
-            
+
             $rate->setAttribute('remarks', $remarks);
-            
+
             $rate->setAttribute('request_type', $request->input('requested'));
-            
+
             $this->stringifyFclRateAmounts($rate);
-            
+
             $this->setDownloadParameters($rate, $search_ids);
         }
 
@@ -350,6 +349,7 @@ class SearchApiController extends Controller
 
             $search_array['terms'] = $terms;
 
+
             $rates[0]->SetAttribute('search', $search_array);
         }
 
@@ -359,7 +359,7 @@ class SearchApiController extends Controller
 
         
         /** Tracking search event with Mix Panel*/
-        //$this->trackEvents("search_fcl", $track_array);
+        $this->trackEvents("search_fcl", $track_array);
 
         // Whitelabel 
 
