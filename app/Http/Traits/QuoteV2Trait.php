@@ -1953,7 +1953,7 @@ trait QuoteV2Trait
                     $charge['type_id'] = 3;
                 }
 
-                if($charge['calculationType'] == 'Per Container' || $charge['calculationType'] == null || $charge['calculationType'] == 'PER CONTAINER' ){
+                if(in_array($charge['calculationType'],['Per Container', 'PER CONTAINER', null])){
                     if($containerGroup['id'] == 1){
                         $charge['calculationtype_id'] = 5;
                     }elseif($containerGroup['id'] == 2){
@@ -1963,7 +1963,7 @@ trait QuoteV2Trait
                     }elseif($containerGroup['id'] == 4){
                         $charge['calculationtype_id'] = 21;
                     }
-                }elseif($charge['calculationType'] == 'Per Doc' || $charge['calculationType'] == 'Per Document' || $charge['calculationType'] == 'PER DOC' ){
+                }elseif(in_array($charge['calculationType'],['Per Doc', 'Per Document', 'PER DOC', 'PER DOCUMENT'])){
                     if($containerGroup['id'] == 1){
                         $charge['calculationtype_id'] = 9;
                     }elseif($containerGroup['id'] == 2){
