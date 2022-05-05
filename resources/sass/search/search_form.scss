@@ -57,8 +57,15 @@ BUSCADOR
   .od-input {
     width: 100%;
     background: #f8f8f8;
-    height: 50px;
-    padding: 0px 65px 0px 50px;
+    min-height: 50px;
+    height: fit-content;
+    padding: 5px 65px 5px 20px;
+    display: flex;
+    align-items: center;
+
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    column-gap: 10px;
     div {
       display: flex;
       align-items: center;
@@ -68,7 +75,11 @@ BUSCADOR
       left: 43px;
     }
     p {
-      margin-bottom: 0px;
+      margin-bottom: 2px;
+
+      &:first-of-type {
+        margin-bottom: 0;
+      }
     }
     input {
       color: #333333;
@@ -107,9 +118,15 @@ BUSCADOR
       padding: 0px;
       margin: 0px;
       border-bottom: 1px solid #eeeeee;
+
+      &:hover {
+        background-color: #f5f5f5;
+      }
+
       .custom-checkbox {
         padding: 0px;
       }
+
       label {
         display: flex;
         align-items: center;
