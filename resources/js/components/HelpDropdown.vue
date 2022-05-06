@@ -1,5 +1,5 @@
 <template>
-    <div class="dropdown show" align="right" style="margin:20px;">
+    <div class="dropdown show" align="right" style="margin-right:20px;margin-top:20px;">
         <a class="dropdown-toggle" style="font-size:16px" href="#" role="button" id="helpOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             See how it works
         </a>

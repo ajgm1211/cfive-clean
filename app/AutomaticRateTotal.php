@@ -68,10 +68,12 @@ class AutomaticRateTotal extends Model implements Auditable
     {
         //getting all data needed to calculate totals
         $quote = $this->quote()->first();
+        $quote->updatePdfOptions('exchangeRates');
 
         $rate = $this->rate()->first();
 
         if ($quote->type == 'FCL') {
+
             $equip = $quote->getContainerCodes($quote->equipment);
 
             $equipArray = explode(',', $equip);
@@ -133,8 +135,7 @@ class AutomaticRateTotal extends Model implements Auditable
 
             $this->update(['totals' => $totalsJson, 'markups' => $markups]);
             $rate->update(['total' => $totalsJson]);
-
-            $quote->updatePdfOptions('exchangeRates');
+     
 
         } else if ($quote->type == 'LCL') {
 
@@ -193,7 +194,6 @@ class AutomaticRateTotal extends Model implements Auditable
             $this->update(['totals' => $totals, 'markups' => $markups]);
             $rate->update(['total' => $totals]);
 
-            $quote->updatePdfOptions('exchangeRates');
         }
     }
 }

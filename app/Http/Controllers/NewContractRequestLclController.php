@@ -110,8 +110,10 @@ class NewContractRequestLclController extends Controller
                         $color = 'color:#5527f0';
                     } else if (strnatcasecmp($Ncontracts->status, 'Review') == 0) {
                         $color = 'color:#e07000';
-                    } else {
+                    } else if (strnatcasecmp($Ncontracts->status, 'Done') == 0) {
                         $color = 'color:#04950f';
+                    } else if (strnatcasecmp($Ncontracts->status, 'Clarification needed') == 0) {
+                        $color = 'color:#e11584';
                     }
 
                 if ($Ncontracts->erased_contract == false || empty($Ncontracts->erased_contract) == true) {
@@ -216,8 +218,10 @@ class NewContractRequestLclController extends Controller
                     $color = 'color:#5527f0';
                 } else if (strnatcasecmp($Ncontracts->status, 'Review') == 0) {
                     $color = 'color:#e07000';
-                } else {
-                    $color = 'color:#04950f';
+                } else if (strnatcasecmp($Ncontracts->status, 'Done') == 0) {
+                    $color = '#04950f';
+                } else if (strnatcasecmp($Ncontracts->status, 'Clarification needed') == 0) {
+                    $color = '#e11584';
                 }
 
                 return '<label style="' . $color . '">' . $Ncontracts->status . '</label>';
@@ -380,7 +384,8 @@ class NewContractRequestLclController extends Controller
         } elseif ($status == 'Processing') {
             $status_arr['Processing'] = 'Processing';
             $status_arr['Review'] = 'Review';
-        } elseif ($status == 'Review' || $status == 'Done') {
+            $status_arr['Clarification needed'] = 'Clarification needed';
+        } elseif ($status == 'Review' || $status == 'Done' || $status == 'Clarification needed') {
             $status_arr['Processing'] = 'Processing';
             $status_arr['Review'] = 'Review';
             $status_arr['Done'] = 'Done';
@@ -478,7 +483,12 @@ class NewContractRequestLclController extends Controller
                 }
                 //Calling Mix Panel's event
                 $this->trackEvents("Request_Status_lcl", $Ncontract);
-            } elseif ($Ncontract->status == 'Review') {
+                if ($Ncontract->contract_id != null) {
+                    $contract = ContractLcl::find($Ncontract->contract_id);
+                    $contract->status = 'incomplete';
+                    $contract->update();
+                }
+            } elseif ($Ncontract->status == 'Review' || $Ncontract->status == 'Clarification needed') {
                 if ($Ncontract->time_total == null) {
                     $fechaEnd = Carbon::parse($now2);
                     if (empty($Ncontract->time_star) == true) {
@@ -494,9 +504,16 @@ class NewContractRequestLclController extends Controller
                         }
                         $Ncontract->time_total = $time_exacto;
                     }
-                    $this->trackEvents("Request_Review", $Ncontract);
+                    if($Ncontract->status == 'Review'){
+                        $this->trackEvents("Request_Review", $Ncontract);
+                    }
                 }
                 //Calling Mix Panel's event
+                if ($Ncontract->contract_id != null && $Ncontract->status == 'Clarification needed') {
+                    $contract = ContractLcl::find($Ncontract->contract_id);
+                    $contract->status = 'Clarification needed';
+                    $contract->update();
+                }
 
 
             } elseif ($Ncontract->status == 'Done') {
@@ -546,6 +563,8 @@ class NewContractRequestLclController extends Controller
                 $color = '#e07000';
             } else if (strnatcasecmp($Ncontract->status, 'Done') == 0) {
                 $color = '#04950f';
+            } else if (strnatcasecmp($Ncontract->status, 'Clarification needed') == 0) {
+                $color = '#e11584';
             }
             return response()->json($data = ['data' => 1, 'status' => $Ncontract->status, 'color' => $color, 'request' => $Ncontract->toArray()]);
         } catch (\Exception $e) {
