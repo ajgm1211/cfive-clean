@@ -1331,6 +1331,7 @@ trait SearchTrait
                     $calculation_type = CalculationType::select('options')->where('id', $charge['calculationtype']['id'])->first();
                     $calculation_options = json_decode($calculation_type->options, true);
                     $quantity_totals = $charge['containers'];
+                    $quantity_totals_client_currency = $charge['containers'];
                     $is_freight = true;
                 } else {
                     continue;
@@ -1341,7 +1342,7 @@ trait SearchTrait
                         $quantity_totals['C'.$container['code']] *= $container['qty'];
                         $quantity_totals_client_currency['C'.$container['code']] *= $container['qty'];
                     }
-
+                    
                     if(!$is_freight) {
                         $charge->containers = $quantity_totals;
                         $charge->containers_client_currency = $quantity_totals_client_currency;
