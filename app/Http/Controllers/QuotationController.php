@@ -247,6 +247,8 @@ class QuotationController extends Controller
             'terms_portuguese' => $search_data['terms'] ? $search_data['terms']['portuguese'] : null,
             'terms_and_conditions' => $search_data['terms'] ? $search_data['terms']['spanish'] : null,
             'terms_english' => $search_data['terms'] ? $search_data['terms']['english'] : null,
+            'terms_italian' => $search_data['terms'] ? $search_data['terms']['italian'] : null,
+            'terms_catalan' => $search_data['terms'] ? $search_data['terms']['catalan'] : null,
             'total_quantity' => $search_data['quantity'],
             'total_weight' => $search_data['weight'],
             'total_volume' => $search_data['volume'],
@@ -265,6 +267,10 @@ class QuotationController extends Controller
             $quote->update(['remarks_spanish' => $remarks]);
         } else if ($quote->language_id == 3) {
             $quote->update(['remarks_portuguese' => $remarks]);
+        } else if ($quote->language_id == 4) {
+            $quote->update(['remarks_italian' => $remarks]);
+        } else if ($quote->language_id == 5) {
+            $quote->update(['remarks_catalan' => $remarks]);
         }
 
         foreach ($rate_data as $rate) {
@@ -410,37 +416,6 @@ class QuotationController extends Controller
         
 
         return new QuotationResource($quote);
-    }
-
-    //Retrieves Terms and Conditions
-    public function searchTerms($search_data)
-    {
-        $terms = TermAndConditionV2::where([['company_user_id', \Auth::user()->company_user_id], ['type', $search_data['type']]])->get();
-
-        $terms_english = '';
-        $terms_spanish = '';
-        $terms_portuguese = '';
-
-        foreach ($terms as $term) {
-
-            if ($search_data['direction'] == 1) {
-                $terms_to_add = $term->import;
-            } else if ($search_data['direction'] == 2) {
-                $terms_to_add = $term->export;
-            }
-
-            if ($term->language_id == 1) {
-                $terms_english .= $terms_to_add . '<br>';
-            } else if ($term->language_id == 2) {
-                $terms_spanish .= $terms_to_add . '<br>';
-            } else if ($term->language_id == 3) {
-                $terms_portuguese .= $terms_to_add . '<br>';
-            }
-        }
-
-        $final_terms = ['english' => $terms_english, 'spanish' => $terms_spanish, 'portuguese' => $terms_portuguese];
-
-        return $final_terms;
     }
 
     public function edit(Request $request, QuoteV2 $quote)

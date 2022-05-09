@@ -537,6 +537,20 @@ export default {
                         colClass: "col-sm-12",
                     },
                 }  
+            }else if(language=="Italian"){
+                this.remarks_fields = {
+                    remarks_italian: {
+                        type: "ckeditor",
+                        colClass: "col-sm-12",
+                    },
+                }  
+            }else if(language=="Catalan"){
+                this.remarks_fields = {
+                    remarks_catalan: {
+                        type: "ckeditor",
+                        colClass: "col-sm-12",
+                    },
+                }  
             }
 
             this.global_remarks_fields = {
