@@ -75,7 +75,8 @@ class QuotationController extends Controller
         $company_user_id = \Auth::user()->company_user_id;
 
         $carriers = Carrier::get()->map(function ($carrier) {
-            return $carrier->only(['id', 'name', 'image']);
+            $carrier['model'] = 'App\Carrier';
+            return $carrier->only(['id', 'name', 'image', 'model']);
         });
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->get()->map(function ($company) {
@@ -1107,10 +1108,6 @@ class QuotationController extends Controller
     {
         $providers = Provider::where('company_user_id', \Auth::user()->company_user_id)->get();
 
-        foreach($carriers as $carrier){
-            $carrier['model'] = 'App\Carrier';
-        }
-        
         $providers = $providers->map(function ($value) {
             $value['model'] = 'App\Provider';
             return $value->only(['id', 'name', 'model']);
