@@ -1359,7 +1359,7 @@ trait SearchTrait
             $quantity['C'.$container['code']] = $container['qty'];
         }
 
-        $rate->setAttribute('qty', $quantity);
+        $rate->setAttribute('quantity', $quantity);
     }
 
     //Retrieves Global Remarks
