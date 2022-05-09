@@ -263,23 +263,24 @@ class SearchApiController extends Controller
     public function processSearch(Request $request)
     {
         //Setting current company and user
-         $user = \Auth::user();
-         $user_id = $user->id;
-         $company_user = $user->companyUser()->first();
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $company_user = $user->companyUser()->first();
          $company_user_id = $company_user->id;
         
         $search_array = $request->input();
 
         $search_array['dateRange'] = $this->formatSearchDate($search_array);
         $search_array['client_currency'] = $company_user->currency;
-
+        
         $search_ids = $this->getIdsFromArray($search_array);
         $search_ids['company_user'] = $company_user_id;
         $search_ids['user'] = $user_id;
         $search_ids['client_currency'] = $company_user->currency;
+
         //Retrieving rates with search data
         $rates = $this->searchRates($search_ids);
-
+        
         //$rateNo = 0;
         foreach ($rates as $rate) {
             //$rateNo += 1;
@@ -296,15 +297,19 @@ class SearchApiController extends Controller
 
             //SEARCH TRAIT - Calculates charges by container and appends the cost array to each charge instance
             $this->calculateFclCharges($charges, $search_array['containers'], $rate->containers, $search_ids['client_currency']);
-
+            
             //SEARCH TRAIT - Join charges (within group) if Surcharge, Carrier, Port and Typedestiny match
             $charges = $this->joinCharges($charges, $search_ids);
-
+            
             //Appending Rate Id to Charges
             $this->addChargesToRate($rate, $charges, $search_ids);
 
+            if( $search_array['requestData']['requested'] == 2 ){
+                $this->calculateChargesByQuantity($rate, $search_array['containers']);
+            }
+        
             //Getting price levels if requested
-            if ($search_array['pricelevel'] || $search_array['requestData']['requested'] == 2) {
+            if (isset($search_array['pricelevel']) || $search_array['requestData']['requested'] == 2) {
                 $price_level_markups = $this->searchPriceLevels($search_ids);
             } else {
                 $price_level_markups = [];
@@ -359,6 +364,15 @@ class SearchApiController extends Controller
         // Whitelabel 
 
         if($search_array['requestData']['requested'] == 2){
+
+            $track_array = [];
+            $track_array['company_user'] = $company_user;
+            $track_array['data'] = $search_array;
+
+            /** Tracking search event with Mix Panel*/
+            $this->trackEvents("search_fcl_whitelabel", $track_array);
+
+
             return WhitelabelRateResource::collection($rates);
         }
 
@@ -368,8 +382,6 @@ class SearchApiController extends Controller
     //Stores current search
     public function store(Request $request)
     {
-        // dd($request->input());
-
         //Validating request data from form
         $new_search_data = $request->validate([
             'originPorts' => 'required|array|min:1',
@@ -938,12 +950,13 @@ class SearchApiController extends Controller
 
                     //Updating rate totals to new added array
                     $rate->$to_update = $totals_array;
-                }
+                } 
+                
             }
-
+            
             $rate->setAttribute('charge_totals_by_type', $charge_type_totals);
         }
-
+        
         if (isset($search_data['showRateCurrency'])) {
             $rate->setAttribute('totals_freight_currency', $totals_array_freight_currency);
         } else {
@@ -958,18 +971,14 @@ class SearchApiController extends Controller
 
         if( $search_data['requestData']['requested'] == 2 ){
             $global_total = 0;
-            $single_totals = $rate->$to_update; 
-            $quantity = $rate->$to_update; 
+
             foreach($search_data['containers'] as $container){
-                $single_totals['C'.$container['code']] *= $container['qty'];
-                $global_total += $single_totals['C'.$container['code']];
-                $quantity['C'.$container['code']] = $container['qty'];
+                $global_total += $rate->$to_update['C'.$container['code']];
             }
 
-            $rate->setAttribute('quantity_totals', $single_totals);
             $rate->setAttribute('global_total', $global_total);
-            $rate->setAttribute('qty', $quantity);
         }
+
     }
 
     public function storeContractNewSearch(StoreContractSearch $request)

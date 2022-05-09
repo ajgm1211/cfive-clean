@@ -228,6 +228,9 @@ class ContractLclController extends Controller
     public function duplicate(ContractLcl $contract)
     {
         $new_contract = $contract->duplicate();
+        $new_contract->update([
+            'user_id' => Auth::user()->id,
+        ]);
 
         return new ContractLclResource($new_contract);
     }

@@ -559,41 +559,6 @@ trait SearchTrait
         return $arraymarkup;
     }
 
-    /*public function localMarkupsTrait($localPercentage, $localAmmount, $localMarkup, $monto, $montoOrig, $typeCurrency, $markupLocalCurre, $chargeCurrency,$rateFreight)
-    {
-        
-        if ($localPercentage != 0) {
-
-            // Monto original
-            $markupO = ($montoOrig * $localPercentage) / 100;
-            $montoOrig += $markupO;
-            $montoOrig = number_format($montoOrig, 2, '.', '');
-
-            $markup = ($monto * $localPercentage) / 100;
-            $markup = number_format($markup, 2, '.', '');
-            $monto += $markup;
-            $arraymarkup = array("markup" => $markup, "markupConvert" => $markupO, "typemarkup" => "$typeCurrency ($localPercentage%)", 'montoMarkup' => $monto, 'montoMarkupO' => $montoOrig);
-        } else { // oki
-          
-            $valor = $this->ratesCurrency($chargeCurrency, $typeCurrency);
-
-
-                $markupOrig = $localMarkup * $valor;
-
-         
-          
-            $monto = $monto / $rateFreight;
-            $markup = trim($localMarkup);
-            $markup = number_format($markup, 2, '.', '');
-            $monto += $localMarkup;
-            $monto = number_format($monto, 2, '.', '');
-
-            $arraymarkup = array("markup" => $markup, "markupConvert" => $markupOrig, "typemarkup" => $markupLocalCurre, 'montoMarkup' => $monto, 'montoMarkupO' => $montoOrig + $markupOrig);
-        }
-
-        return $arraymarkup;
-    }*/
-
     public function inlandMarkup($inlandPercentage, $inlandAmmount, $inlandMarkup, $monto, $typeCurrency, $markupInlandCurre)
     {
         if ($inlandPercentage != 0) {
@@ -698,12 +663,6 @@ trait SearchTrait
                 $transitArray['via'] = $transit->via;
                 $transitArray['transit_time'] = $transit->transit_time;
                 $transitArray['service'] = $transit->service->name;
-                /**if ($transit->service->id == '1') {
-                    $transitArray['service'] = '';
-                } else {
-                    $transitArray['service'] = $transit->service->name;
-                }**/
-
             } else {
                 $transitArray['via'] = '';
                 $transitArray['transit_time'] = '';
@@ -1356,6 +1315,51 @@ trait SearchTrait
             };
         }
         $rate->setAttribute('charges', $rate_charges);
+    }
+
+    public function calculateChargesByQuantity($rate, $search_containers)
+    {
+        foreach( $rate->charges as $direction => $direction_charges ) {
+            foreach( $direction_charges as $charge ) {
+                if (is_a($charge, 'App\LocalCharge') || is_a($charge, 'App\GlobalCharge')) {    
+                    $calculation_type = CalculationType::select('options')->where('id', $charge->calculationtype_id)->first();
+                    $calculation_options = json_decode($calculation_type->options, true);
+                    $quantity_totals = $charge->containers;
+                    $quantity_totals_client_currency = $charge->containers_client_currency;
+                    $is_freight = false;
+                } elseif (isset($charge['surcharge']) && $charge['surcharge']['name'] == "Ocean Freight") {
+                    $calculation_type = CalculationType::select('options')->where('id', $charge['calculationtype']['id'])->first();
+                    $calculation_options = json_decode($calculation_type->options, true);
+                    $quantity_totals = $charge['containers'];
+                    $quantity_totals_client_currency = $charge['containers'];
+                    $is_freight = true;
+                } else {
+                    continue;
+                }
+
+                if($calculation_options['iscont']) {
+                    foreach($search_containers as $container) {
+                        $quantity_totals['C'.$container['code']] *= $container['qty'];
+                        $quantity_totals_client_currency['C'.$container['code']] *= $container['qty'];
+                    }
+                    
+                    if(!$is_freight) {
+                        $charge->containers = $quantity_totals;
+                        $charge->containers_client_currency = $quantity_totals_client_currency;
+                    }else{
+                        $charge['containers'] = $quantity_totals;
+                    }
+                }
+            }
+        }
+
+        $quantity = json_decode($rate->containers, true);
+
+        foreach($search_containers as $container){
+            $quantity['C'.$container['code']] = $container['qty'];
+        }
+
+        $rate->setAttribute('quantity', $quantity);
     }
 
     //Retrieves Global Remarks

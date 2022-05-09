@@ -79,106 +79,75 @@ class QuotationController extends Controller
         });
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->get()->map(function ($company) {
-            return $company->only(['id', 'business_name']);
+            return $company->only(['id', 'business_name', 'pdf_language']);
         });
 
-        $comps = Company::where('company_user_id', '=', $company_user_id)->get();
+        $full_contacts = Contact::get()->map(function ($contact) {
+            return $contact->only(['id', 'first_name', 'last_name', 'company_id']);
+        });
+
         $contacts = [];
         $languages = [];
-        foreach ($comps as $comp) {
-            array_push($languages, ['company_id' => $comp->id, 'name' => $comp->pdf_language]);
-            $cts = $comp->contact()->get();
-            foreach ($cts as $ct) {
-                array_push($contacts, ['id' => $ct->id, 'company_id' => $ct->company_id, 'name' => $ct->getFullName()]);
+        foreach ($companies as $company) {
+            array_push($languages, ['company_id' => $company['id'], 'name' => $company['pdf_language']]);
+
+            foreach ($full_contacts as $contact) {
+                if($contact['company_id'] == $company['id']) {
+                    array_push($contacts, ['id' => $contact['id'], 'company_id' => $contact['company_id'], 'name' => $contact['first_name'] . " " . $contact['last_name']]);
+                }
             }
         };
 
-        $incoterms = Incoterm::get()->map(function ($incoterm) {
-            return $incoterm->only(['id', 'name']);
-        });
-
+        $incoterms = Incoterm::select(['id', 'name'])->get();
+  
         $users = User::whereHas('companyUser', function ($q) use ($company_user_id) {
             $q->where('company_user_id', '=', $company_user_id);
         })->get()->map(function ($user) {
             return $user->only(['id', 'name', 'lastname', 'fullname']);
         });
 
-        $harbors = Harbor::get()->map(function ($harbor) {
-            return $harbor->only(['id', 'display_name', 'country_id', 'code']);
-        });
+        $harbors = Harbor::select(['id', 'display_name', 'country_id', 'code'])->get();
 
-        $payment_conditions = PaymentCondition::get()->map(function ($payment_condition) {
-            return $payment_condition->only(['id', 'quote_id', 'name']);
-        });
+        $payment_conditions = PaymentCondition::select(['id', 'quote_id', 'content'])->get();
 
-        $terms_and_conditions = TermAndConditionV2::get()->map(function ($term_and_condition) {
-            return $term_and_condition->only(['id', 'name', 'user_id', 'type', 'company_user_id']);
-        });
+        $terms_and_conditions = TermAndConditionV2::select(['id', 'name', 'user_id', 'type', 'company_user_id'])->get();
 
-        $delivery_types = DeliveryType::get()->map(function ($delivery_type) {
-            return $delivery_type->only(['id', 'name']);
-        });
+        $delivery_types = DeliveryType::select(['id', 'name'])->get();
 
-        $status_options = StatusQuote::get()->map(function ($status) {
-            return $status->only(['id', 'name']);
-        });
+        $status_options = StatusQuote::select(['id', 'name'])->get();
 
-        $kind_of_cargo = CargoKind::get()->map(function ($kcargo) {
-            return $kcargo->only(['id', 'name']);
-        });
+        $kind_of_cargo = CargoKind::select(['id', 'name'])->get();
 
-        $languages = Language::get()->map(function ($language) {
-            return $language->only(['id', 'name']);
-        });
+        $languages = Language::select(['id', 'name'])->get();
 
-        $currency = Currency::get()->map(function ($curr) {
-            return $curr->only(['id', 'alphacode', 'rates', 'rates_eur']);
-        });
+        $currency = Currency::select(['id', 'alphacode', 'rates', 'rates_eur'])->get();
 
-        $filtered_currencies = Currency::whereIn('id', ['46', '149'])->get()->map(function ($curr) {
-            return $curr->only(['id', 'alphacode', 'rates', 'rates_eur']);
-        });
+        $filtered_currencies = Currency::whereIn('id', ['46', '149'])->select(['id', 'alphacode', 'rates', 'rates_eur'])->get();
 
-        $containers = Container::all();
+        $containers = Container::get();
 
-        $calculationtypes = CalculationType::get()->map(function ($ctype) {
-            return $ctype->only(['id', 'name']);
-        });
+        $calculationtypes = CalculationType::select(['id', 'name'])->get();
 
-        $surcharges = Surcharge::where('company_user_id', '=', $company_user_id)->get()->map(function ($surcharge) {
-            return $surcharge->only(['id', 'name']);
-        });
+        $surcharges = Surcharge::where('company_user_id', '=', $company_user_id)->select(['id', 'name'])->get();
 
-        $schedule_types = ScheduleType::get()->map(function ($schedule_type) {
-            return $schedule_type->only(['id', 'name']);
-        });
+        $schedule_types = ScheduleType::select(['id', 'name'])->get();
 
-        $countries = Country::get()->map(function ($country) {
-            return $country->only(['id', 'code', 'name']);
-        });
+        $countries = Country::select(['id', 'code', 'name'])->get();
 
-        $sale_codes = SaleTermCode::where('company_user_id', '=', $company_user_id)->get()->map(function ($surcharge) {
-            return $surcharge->only(['id', 'name']);
-        });
+        $sale_codes = SaleTermCode::where('company_user_id', '=', $company_user_id)->select(['id', 'name'])->get();
 
         $providers = Provider::where('company_user_id', $company_user_id)->get()->map(function ($provider) {
             $provider['model'] = 'App\Provider';
             return $provider->only(['id', 'name', 'model']);
         });
 
-        $cargo_types = CargoType::get()->map(function ($tcargo) {
-            return $tcargo->only(['id', 'name']);
-        });
+        $cargo_types = CargoType::select(['id', 'name'])->get();
 
-        $calculationtypeslcl = CalculationTypeLcl::get()->map(function ($ctype) {
-            return $ctype->only(['id', 'name']);
-        });
+        $calculationtypeslcl = CalculationTypeLcl::select(['id', 'name'])->get();
 
-        $destination_types = DestinationType::get()->map(function ($desttype) {
-            return $desttype->only(['id', 'name']);
-        });
+        $destination_types = DestinationType::select(['id', 'name'])->get();
 
-        $carrier_providers = $this->providers();
+        $carrier_providers = $this->providers($carriers);
 
         $data = compact(
             'companies',
@@ -431,8 +400,11 @@ class QuotationController extends Controller
             ]);
 
             $rateTotals->totalize($newRate->currency_id);
-        }
 
+        }
+        
+        $quote->updatePdfOptions();
+        
         /** Tracking create quote event with Mix Panel*/
         $this->trackEvents("create_quote", $quote);
         
@@ -475,7 +447,7 @@ class QuotationController extends Controller
     {  
         $this->authorize('author', $quote); //policy para autorizar acceso.
         
-        $this->validateOldQuote($quote);
+        // $this->validateOldQuote($quote);
 
         return view('quote.edit');
     }
@@ -513,18 +485,8 @@ class QuotationController extends Controller
 
                 ]);
             }
-            // else if ($request->input('cargo_type_id') != null) {
-            //     $data = $request->validate([
-            //         'cargo_type_id' => 'nullable',
-            //         'total_quantity' => 'nullable|numeric',
-            //         'total_volume' => 'nullable|numeric',
-            //         'total_weight' => 'nullable|numeric',
-            //         'chargeable_weight' => 'nullable',
-            //     ]);
-            // } 
             else {
                 $data = [];
-
                 foreach ($form_keys as $fkey) {
                     if (!in_array($fkey, $data) && $fkey != 'keys') {
                         $data[$fkey] = $request->input($fkey);
@@ -558,7 +520,25 @@ class QuotationController extends Controller
                 } else if ($data[$key] == 6) {
                     $data[$key] = 'Lost';
                 }
+            } 
+            
+            if ($key == 'language_id') {     
+                
+                $current_company_id = $quote->company_id;
+                $request_company_id = $data['company_id'];
+                
+                if ($request_company_id != $current_company_id) {
+                    if($request_company_id) {                     
+                        $company_id = (int)$request_company_id;
+                        $language_id = $this->getCompanyLanguageId($company_id);
+                        if ($language_id) {
+                            $data[$key] = $language_id;
+                        }
+                    }
+                }
+
             }
+
             $quote->update([$key => $data[$key]]);
 
             if ($key == 'validity_end') {
@@ -571,20 +551,6 @@ class QuotationController extends Controller
                 }
             }
         }
-
-        // if ($request->input('custom_incoterm') != null) {
-        //     $quote->update(['custom_incoterm' => $request->input('custom_incoterm')]);
-        // } 
-        // else {
-        //     $quote->update(['custom_incoterm' => null]);
-        // }
-
-        //  if ($request->input('custom_quote_id') != null) {
-        //      $quote->update(['custom_quote_id' => $request->input('custom_quote_id')]);
-        //  } 
-        //   else {
-        //       $quote->update(['custom_quote_id' => null]);
-        //     }
 
         if ($request->input('pdf_options') != null) {
 
@@ -610,6 +576,25 @@ class QuotationController extends Controller
                 $quote->update(['chargeable_weight' => $request['total_weight']]);
             }
         }
+    }
+
+    public function getCompanyLanguageId($company_id) {
+        $company = Company::find($company_id); 
+        $pdf_language = $company->pdf_language; 
+
+        if (!is_null($pdf_language)) {
+            $language = Language::where('name', strtoupper($pdf_language))->first();
+            if($language) {
+                return $language->id;
+            } else {
+                if($pdf_language == 0) {
+                    return 1;
+                } else { 
+                    return $pdf_language;
+                }
+            }
+        }
+        return false;
     }
 
     public function updateSearchOptions(Request $request, QuoteV2 $quote)
@@ -1131,16 +1116,14 @@ class QuotationController extends Controller
      * @param  mixed $request
      * @return void
      */
-    public function providers()
+    public function providers($carriers)
     {
-        $carriers = Carrier::all();
         $providers = Provider::where('company_user_id', \Auth::user()->company_user_id)->get();
 
-        $carriers = $carriers->map(function ($value) {
-            $value['model'] = 'App\Carrier';
-            return $value->only(['id', 'name', 'model']);
-        });
-
+        foreach($carriers as $carrier){
+            $carrier['model'] = 'App\Carrier';
+        }
+        
         $providers = $providers->map(function ($value) {
             $value['model'] = 'App\Provider';
             return $value->only(['id', 'name', 'model']);
