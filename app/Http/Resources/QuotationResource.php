@@ -134,9 +134,9 @@ class QuotationResource extends JsonResource
         $ports = ['origin' => [], 'destination' => []];
 
         foreach($addresses as $address){
-            if($address->type = 'Origin'){
+            if($address->type == 'Origin'){
                 array_push($ports['origin'], $address->port()->first());
-            }else if($address->type = 'Destination'){
+            }else if($address->type == 'Destination'){
                 array_push($ports['destination'], $address->port()->first());
             }
         }
