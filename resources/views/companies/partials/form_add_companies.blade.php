@@ -32,5 +32,5 @@
 </div>
 <div class="form-group m-form__group">
     {!! Form::label('pdf_language', 'PDF Language') !!}
-    {{ Form::select('pdf_language',['0'=>'Choose a language','english'=>'English','spanish'=>'Spanish','portuguese'=>'Portuguese'],null,['class'=>'custom-select form-control','id' => 'pdf_language']) }}
+    {{ Form::select('pdf_language',['0'=>'Choose a language','english'=>'English','spanish'=>'Spanish','portuguese'=>'Portuguese', 'italian'=>'Italian'],null,['class'=>'custom-select form-control','id' => 'pdf_language']) }}
 </div>
