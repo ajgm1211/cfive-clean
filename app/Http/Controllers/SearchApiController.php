@@ -364,6 +364,15 @@ class SearchApiController extends Controller
         // Whitelabel 
 
         if($search_array['requestData']['requested'] == 2){
+
+            $track_array = [];
+            $track_array['company_user'] = $company_user;
+            $track_array['data'] = $search_array;
+
+            /** Tracking search event with Mix Panel*/
+            $this->trackEvents("search_fcl_whitelabel", $track_array);
+
+
             return WhitelabelRateResource::collection($rates);
         }
 

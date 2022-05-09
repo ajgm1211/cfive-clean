@@ -84,6 +84,9 @@ trait MixPanelTrait
             case "search_lcl":
                 $this->trackSearchLclEvent($data, $user);
                 break;
+            case "search_fcl_whitelabel":
+                $this->trackSearchFclEventWhitelabel($data, $user);
+                break;
         }
     }
 
@@ -165,6 +168,42 @@ trait MixPanelTrait
                     'User' => $user->fullname,
                 )
             );
+        } else {
+            \Log::error('The origin port or destination port is empty , the user is ' . $user->email);
+        }
+    }
+
+    public function trackSearchFclEventWhitelabel($data, $user)
+    {
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        foreach ($data['data']['originPorts'] as $orig) {
+            $origin[] = $orig['display_name'];
+        }
+        foreach ($data['data']['destinationPorts'] as $dest) {
+            $destiny[] = $dest['display_name'];
+        }
+        foreach ($data['data']['containers'] as $cont) {
+            $containers[] = $cont['name'];
+        }
+        foreach ($data['data']['containers'] as $qty) {
+            $quantity[] = $qty['qty'];
+        }
+        if (!empty($origin) &&  !empty($destiny)) {
+            $mixPanel->track(
+                'Rate Finder FCL - Whitelabel',
+                array(
+                    'Company' => $data['company_user']['name'],
+                    'Origin' => $origin,
+                    'Destination' => $destiny,
+                    'Container_type' => $data['data']['selectedContainerGroup']['name'],
+                    'Containers' => $containers,
+                    'Containers Quantity' => $quantity,
+                    'User' => $user->fullname,
+                    )
+                );
         } else {
             \Log::error('The origin port or destination port is empty , the user is ' . $user->email);
         }
