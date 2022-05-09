@@ -41,14 +41,14 @@ class addDataToHarborLocationSearchTable extends Command
     {
         try {
             $LocationHarbors=DistanceKmLocation::get()->map(function ($locations){
-                return $locations->only(['location_id','harbors_id']);
+                return $locations->only(['location_id','harbor_id']);
             });
 
             foreach($LocationHarbors as $data){
                 HarborsLocationSearch::updateOrCreate(
-                    ['location_id'=>$data['location_id'],'harbors_id'=>$data['harbors_id']],
+                    ['location_id'=>$data['location_id'],'harbor_id'=>$data['harbor_id']],
                     [
-                        'harbors_id'=>$data['harbors_id'],
+                        'harbor_id'=>$data['harbor_id'],
                         'location_id'=>$data['location_id']
                     ]);
             }
