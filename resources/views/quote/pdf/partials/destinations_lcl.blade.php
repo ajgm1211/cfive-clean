@@ -24,7 +24,7 @@
 
                     <th class="unit"><b>{{__('pdf.units')}}</b></th>
 
-                    <th class="unit"><b>{{__('pdf.price')}}XXX</b></th>
+                    <th class="unit"><b>{{__('pdf.price')}}</b></th>
 
                     <th class="unit"><b>{{__('pdf.total')}}</b></th>
 

@@ -36,22 +36,16 @@ class GetContractApiResource extends JsonResource
                 'carrier' => $this->carrier->name,
                 'carrier_scac' => $this->carrier->scac,
                 'direction' => $this->contract->direction->name,
-                'origin' => ucwords(strtoupper($this->port_origin->display_name)),
-                'destination' => ucwords(strtoupper($this->port_destiny->display_name)),
+                'origin' => ucwords(strtoupper($this->port_origin->code)),
+                'destination' => ucwords(strtoupper($this->port_destiny->code)),
                 'valid_from' => $this->contract->validity,
                 'valid_until' => $this->contract->expire,
             ],
             //Rates
-            'ocean_freight' => [
-                $this->oceanFreight($this, $containers, $container_calculation),
-            ],
-            'surcharges' => [
-                $this->surcharges($this, $containers, $container_calculation),
-            ],
+            'ocean_freight' => $this->oceanFreight($this, $containers, $container_calculation),
+            'surcharges' => $this->surcharges($this, $containers, $container_calculation),
             //Total (Ocean Freight + Surcharges)
-            'all_in' => [
-                $this->allIn($this, $containers, $container_calculation),
-            ],
+            'all_in' => $this->allIn($this, $containers, $container_calculation),
         ];
 
         return $data;
