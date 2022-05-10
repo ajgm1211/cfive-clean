@@ -57,42 +57,29 @@ class QuotationController extends Controller
     {
         return view('quote.index');
     }
-
-    public function filterByDelegationQuery(Request $request)
-    {
+    
+    function list(Request $request)
+    {   
+        $company_user_id = \Auth::user()->company_user_id;
+        $company_user = CompanyUser::where('id','=',$company_user_id)->first();
+        $filter_delegation = $company_user['options']['filter_delegations'];
+        $subtype = \Auth::user()->options['subtype'];
         $user_id = \Auth::user()->id;
         $user_delegation =UserDelegation::where('users_id','=',$user_id)->first();
         $delegation=Delegation::find($user_delegation['delegations_id']);
         $id_delegation = $delegation['id'];
-
-        $query = DB::table('view_quote_v2s')
-                ->join('users_delegations','view_quote_v2s.user_id','=', 'users_delegations.users_id')
-                ->where('users_delegations.delegations_id', '=', $id_delegation )
-                ->get();
-        // Another Way 
-        $userDelegation = UserDelegation::whereHas('user', function ($query) use ($user_id) {
-            return $query->where('users_id', '=', $user_id);
-        })->get();
-        $quote = ViewQuoteV2::where('user_id', $userDelegation);
-        // dd($quote);
-        return $quote;
-    }
-
-
-
-    function list(Request $request)
-    {   
-        $company_user_id = \Auth::user()->company_user_id;
-        $subtype = \Auth::user()->options['subtype'];
-        $user_id = \Auth::user()->id;
         
         //Permisos de subtype comercial, solo puede acceder a sus propias cotizaiones
         if($subtype === 'comercial') {
             $results = ViewQuoteV2::filterByCurrentUser()->filter($request);
         }
-        // if($id_delegation != null) {
-        //     $results = ViewQuoteV2::filterByDelegation()->filter($request);
-        // }  
+        // Filtro para buscar por delegacion los quotes
+        if($filter_delegation == true) {
+             $results = ViewQuoteV2::select()
+                        ->join('users_delegations','view_quote_v2s.user_id','=', 'users_delegations.users_id')
+                        ->where('users_delegations.delegations_id', '=', $id_delegation )
+                        ->paginate(10);
+        }  
         else {
             $results = ViewQuoteV2::filterByCurrentCompany()->filter($request);
         }
