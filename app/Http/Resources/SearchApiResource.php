@@ -83,42 +83,38 @@ class SearchApiResource extends JsonResource
 
     public function formatData($searchPort,$data,$identificator,$p,$l){
         $array=[];
+        $ids_port=[];
+        $ids_location=[];
+
         foreach($searchPort as $search){
             foreach($data as $key=>$info){
                 if ($identificator==1) {  
-                    if(count($array)==0 && $search[$l]== null && $info['id']==$search[$p] ){
-                        $array[]=[
-                            'id'=>$info['id'],
-                            'display_name'=>$info['display_name'],
-                            'country'=>null,
-                            'location'=>$info['display_name'],
-                            'type'=>'port'
-                        ];
-                    }else{
-                        foreach($array as $id){
-                            if($id['id']!=$info['id'] && $search[$l]== null && $info['id']==$search[$p]){
-                                $array[]=[
-                                    'id'=>$info['id'],
-                                    'display_name'=>$info['display_name'],
-                                    'country'=>null,
-                                    'location'=>$info['display_name'],
-                                    'type'=>'port' 
-                                ];
-                            }
+                    if($search[$l]== null && $info['id']==$search[$p] ){
+                        if(empty($ids_port) || !in_array($info['id'],$ids_port) ){
+                            $array[]=[
+                                'id'=>$info['id'],
+                                'display_name'=>$info['display_name'],
+                                'country'=>null,
+                                'location'=>$info['display_name'],
+                                'type'=>'port'
+                            ];
+                            array_push($ids_port,$info['id']);
                         }
                     }
                 }else{
-
-                    if(count($array)==0  && $search[$l]!= null && $info['id']==$search[$l] ){
-                        $array[]=[
-                            'id'=>$info['id'],
-                            'country'=>null,
-                            'location'=>$info['name'],
-                            'type'=>'city'
-                        ];
+                    if($search[$l]!= null && $info['id']==$search[$l] ){
+                        if(empty($ids_location) || !in_array($info['id'],$ids_location) ){
+                            $array[]=[
+                                'id'=>$info['id'],
+                                'country'=>null,
+                                'location'=>$info['name'],
+                                'type'=>'city'
+                            ];
+                            array_push($ids_location,$info['id']);
+                        }
                     }else{
                         foreach($array as $id){
-                            if($id['id']!=$info['id']  && $search[$l]!= null && $info['id']==$search[$l]){
+                            if($id['id']!=$info['id']  && $info['id']==$search[$l]){
                                 $array[$key]=[
                                     'id'=>$info['id'],
                                     'country'=>null,

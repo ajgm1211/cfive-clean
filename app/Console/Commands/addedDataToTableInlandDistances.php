@@ -51,11 +51,11 @@ class addedDataToTableInlandDistances extends Command
                 $newLocation=Location::where('name',$location['address'])->first();
                 \Log::info($newLocation);
                 DistanceKmLocation::updateOrCreate(
-                ['distance'=> $location['distance'],'location_id'=>$newLocation->id,'harbors_id'=>$location['harbor_id']],
+                ['distance'=> $location['distance'],'location_id'=>$newLocation->id,'harbor_id'=>$location['harbor_id']],
                 [
                     'distance'=> $location['distance'],
                     'location_id'=>$newLocation->id,
-                    'harbors_id'=>$location['harbor_id']
+                    'harbor_id'=>$location['harbor_id']
                 ]);
 
             }

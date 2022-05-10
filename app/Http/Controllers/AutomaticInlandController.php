@@ -370,15 +370,15 @@ class AutomaticInlandController extends Controller
     {
         $format=[];
 
-        $distances = DistanceKmLocation::where('harbors_id', $port_id)->get()->map(function ($distance) {
-            return $distance->only(['id','distance', 'location', 'harbors_id']);
+        $distances = DistanceKmLocation::where('harbor_id', $port_id)->get()->map(function ($distance) {
+            return $distance->only(['id','distance', 'location', 'harbor_id']);
         });
         foreach($distances as $key=>$distance){
 
             $format[$key]=[
                 'id'=>$distance['id'],
                 'display_name'=>$distance['location']['name'],
-                'harbor_id'  =>$distance['harbors_id'],
+                'harbor_id'  =>$distance['harbor_id'],
                 'distance'=>$distance['distance'],
                 'location_id'=>$distance['location']['id']
             ];
