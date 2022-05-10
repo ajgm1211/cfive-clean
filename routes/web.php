@@ -1068,6 +1068,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/api/quotes/{quote}', 'QuotationController@retrieve')->middleware('check_company:quote');
     Route::get('api/quote/data', 'QuotationController@data')->name('quote.data');
     Route::get('api/quote/list', 'QuotationController@list')->name('quote.list');
+    Route::get('api/quote/delegation', 'QuotationController@filterByDelegationQuery')->name('quote.delegation');
     Route::post('api/quote/store', 'QuotationController@store')->name('quote.store');
     Route::get('api/quote/{quote}/edit', 'QuotationController@edit')->middleware('check_company:quote');
     Route::delete('api/quote/{quote}/destroy', 'QuotationController@destroy')->middleware('check_company:quote');

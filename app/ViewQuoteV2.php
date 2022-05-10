@@ -28,6 +28,14 @@ class ViewQuoteV2 extends Model
         return $query->where('company_user_id', '=', $company_id)
                      ->where('user_id', '=', $user_id);
     }
+    public function scopeFilterByDelegation($query)
+    {
+        $company_id = Auth::user()->company_user_id;
+        $user_id = Auth::user()->id;
+        $query = DB::table('view_quote_v2s')
+                ->join('users_delegations','view_quote_v2s.user_id','=', 'users_delegations.users_id');
+        return $query->where('user_id', '=', $user_id);
+    }
 
     public function rates_v2()
     {

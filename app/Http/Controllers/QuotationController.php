@@ -21,6 +21,8 @@ use App\Currency;
 use App\DeliveryType;
 use App\DestinationType;
 use App\Harbor;
+use App\Delegation;
+use App\UserDelegation;
 use App\Http\Resources\QuotationListResource;
 use App\Http\Resources\QuotationResource;
 use App\Http\Resources\CostSheetResource;
@@ -44,6 +46,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Traits\MixPanelTrait;
 use App\ViewQuoteV2;
 use App\LocalChargeQuote;
+use Illuminate\Support\Facades\DB;
+
 
 class QuotationController extends Controller
 {
@@ -54,6 +58,28 @@ class QuotationController extends Controller
         return view('quote.index');
     }
 
+    public function filterByDelegationQuery(Request $request)
+    {
+        $user_id = \Auth::user()->id;
+        $user_delegation =UserDelegation::where('users_id','=',$user_id)->first();
+        $delegation=Delegation::find($user_delegation['delegations_id']);
+        $id_delegation = $delegation['id'];
+
+        $query = DB::table('view_quote_v2s')
+                ->join('users_delegations','view_quote_v2s.user_id','=', 'users_delegations.users_id')
+                ->where('users_delegations.delegations_id', '=', $id_delegation )
+                ->get();
+        // Another Way 
+        $userDelegation = UserDelegation::whereHas('user', function ($query) use ($user_id) {
+            return $query->where('users_id', '=', $user_id);
+        })->get();
+        $quote = ViewQuoteV2::where('user_id', $userDelegation);
+        // dd($quote);
+        return $quote;
+    }
+
+
+
     function list(Request $request)
     {   
         $company_user_id = \Auth::user()->company_user_id;
@@ -63,7 +89,11 @@ class QuotationController extends Controller
         //Permisos de subtype comercial, solo puede acceder a sus propias cotizaiones
         if($subtype === 'comercial') {
             $results = ViewQuoteV2::filterByCurrentUser()->filter($request);
-        } else {
+        }
+        // if($id_delegation != null) {
+        //     $results = ViewQuoteV2::filterByDelegation()->filter($request);
+        // }  
+        else {
             $results = ViewQuoteV2::filterByCurrentCompany()->filter($request);
         }
 
