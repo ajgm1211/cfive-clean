@@ -46,7 +46,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Traits\MixPanelTrait;
 use App\ViewQuoteV2;
 use App\LocalChargeQuote;
-use Illuminate\Support\Facades\DB;
 
 
 class QuotationController extends Controller
@@ -57,7 +56,7 @@ class QuotationController extends Controller
     {
         return view('quote.index');
     }
-    
+
     function list(Request $request)
     {   
         $company_user_id = \Auth::user()->company_user_id;
