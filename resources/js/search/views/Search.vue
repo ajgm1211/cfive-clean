@@ -105,6 +105,7 @@
               ref="input_select_origin"
               v-model.trim="originPlacesFrom"
               placeholder="From"
+              @blur="closePlaceInput('origin')"
               @keyup="filterHarbors('originPlacesFrom')"
               style="color: #333333;border: none !important;background: transparent !important;height: 20px; min-width:70px"
             ></b-form-input>
@@ -193,6 +194,7 @@
             </div>
 
             <b-form-input
+              @blur="closePlaceInput('destination')"
               v-show="placeInShowTo.length == 0 || (openOriginPlacesTo == true && placeInShowTo.length > 0)"
               id="destiny"
               ref="input_select_destination"
@@ -1454,6 +1456,13 @@ export default {
         this.$nextTick(() => this.$refs.input_select_origin.focus());
       }
     },
+    closePlaceInput(data) {
+      setTimeout(() => {
+        // this.$nextTick(() =>
+        data == "destination" ? (this.openOriginPlacesTo = false) : (this.openOriginPlacesFrom = false);
+        // );
+      }, 200);
+    },
     filterHarbors: _.debounce(function(vmodel) {
       this.searching_harbors = true;
 
@@ -1548,8 +1557,8 @@ export default {
       this.placeInShowTo.splice(e, 1);
       if (this.placeInShowTo.length == 0) {
         this.showTagPlaceTo = false;
-        countPort = 0;
-        countCity = 0;
+        // countPort = 0;
+        // countCity = 0;
         return;
       }
 
