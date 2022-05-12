@@ -1,0 +1,43 @@
+.back-btn {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+  
+    & > span {
+      margin-left: 5px;
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+}
+.i-container {
+  padding: 0 100px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.inputs-container {
+  display: grid;
+  grid-template-columns: 200px 200px 200px 200px;
+  column-gap: 20px;
+}
+.input-box{
+  align-items: center;
+  display: flex;
+}
+#checkbox-edit{
+
+  .custom-control-label{
+    font-size: 14px;
+    line-height: 21px;
+    letter-spacing: 0.05em;
+    padding: 3px 0px 0px 5px;
+    &:before{
+      left: -1.5rem !important;
+    }
+    &:after{
+      left: -1.5rem !important;
+    }
+  }
+} 

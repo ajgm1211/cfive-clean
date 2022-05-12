@@ -27,6 +27,7 @@
     "laravel-echo": "^1.4.0",
     "npm": "^6.14.9",
     "pusher-js": "^4.2.2",
+    "skeleton-loader-vue": "^1.0.10",
     "toastr": "^2.1.4",
     "vue-browser-geolocation": "^1.8.0",
     "vue-ckeditor5": "^0.5.0",

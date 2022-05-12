@@ -10,7 +10,7 @@
                         <div class="col-6">
                             <b-card-title>Inlands</b-card-title>
                         </div>
-                        <div class="col-6">
+                        <div v-if="dataLoad === true"  class="col-6">
                             <div class="float-right">
                                 <button class="btn btn-primary btn-bg" v-b-modal.addInland>+ Add Inland</button>
                             </div>
@@ -60,6 +60,7 @@
         },
         data() {
             return {
+                dataLoad: false,
                 totalResults: true,
                 actions: actions,
                 fdata: { validity: { startDate: null, endDate: null } },
@@ -158,6 +159,7 @@
             /* Set the Dropdown lists to use in form */
             setDropdownLists(err, data){
                 this.datalists = data;
+                this.dataLoad = true;
             },
             closeModal(modal){
                 this.$bvModal.hide(modal);

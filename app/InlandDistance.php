@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InlandDistance extends Model
 {
+    protected $table = 'inland_distances';
     protected $fillable = ['distance', 'zip', 'address', 'harbor_id', 'province_id', 'display_name'];
     public $timestamps = false;
 

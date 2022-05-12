@@ -1,8 +1,6 @@
 <template>
   <div id="search" class="search" style="padding-top:1px;">
-    <HelpDropdown
-      :options="helpOptions"
-    ></HelpDropdown>
+    <HelpDropdown :options="helpOptions"></HelpDropdown>
     <div v-if="loaded">
       <!-- OPCIONES DE DELIVERY Y ADDITIONAL SERVICES BOTON -->
       <div class="row mr-0 ml-0">
@@ -78,28 +76,92 @@
 
         <!-- ORIGIN PORT -->
         <div class="col-lg-3 mb-2 input-search-form origen-search">
-          <multiselect
-            v-model="searchRequest.originPorts"
-            :multiple="true"
-            :close-on-select="true"
-            :clear-on-select="true"
-            :show-labels="false"
-            :options="originPortOptions"
-            @input="updateQuoteSearchOptions()"
-            label="display_name"
-            track-by="display_name"
-            placeholder="From"
-            class="s-input"
-          >
-          </multiselect>
-          <img
-            src="/images/port.svg"
-            class="img-icon img-icon-left img-icon-origin"
-            alt="port"
-          />
-          <span
-            v-if="errorsExist && 'originPorts' in responseErrors"
-            style="color: red"
+          <label for="input_select_origin" @click.prevent="openSelect('origin')" class="d-flex od-input">
+            <IconPort style="min-width: 58px;" v-show="openOriginPlacesFrom == false" alt="port" />
+
+            <div>
+              <div style="cursor:pointer">
+                <p class="input-places">
+                  <span v-for="(data, index) in placeInShowFrom" :key="index">
+                    {{ data.location }}
+                    <b @click.stop.prevent="deletePlaceFrom(index)" class="delete-input-country">x</b></span
+                  >
+                </p>
+              </div>
+              <span class="city-port" v-show="showTagPlaceFrom && openOriginPlacesFrom == false">{{
+                fromCity == true && fromPort == true
+                  ? "multi"
+                  : fromCity == true && fromPort == false
+                  ? "city"
+                  : fromCity == false && fromPort == true
+                  ? "port"
+                  : ""
+              }}</span>
+            </div>
+
+            <b-form-input
+              v-show="placeInShowFrom.length == 0 || (openOriginPlacesFrom == true && placeInShowFrom.length > 0)"
+              autocomplete="off"
+              ref="input_select_origin"
+              v-model.trim="originPlacesFrom"
+              placeholder="From"
+              @keyup="filterHarbors('originPlacesFrom')"
+              style="color: #333333;border: none !important;background: transparent !important;height: 20px; min-width:70px"
+            ></b-form-input>
+          </label>
+
+          <ul class="places-list" v-if="openOriginPlacesFrom === true">
+            <div v-if="!filtered_harbors.length && searching_harbors == false" class="no-results-filter">
+              We couldn't find any matching result.
+            </div>
+
+            <div v-if="searching_harbors == true">
+              <div
+                class="d-flex align-items-center mx-auto"
+                style="padding: 15px 10px; width: fit-content;"
+                v-for="i in skeletons"
+                :key="i"
+              >
+                <VueSkeletonLoader type="rect" :width="40" :height="40" animation="fade" :rounded="true" />
+
+                <div class="d-grid" style="margin: 0 20px">
+                  <VueSkeletonLoader type="rect" :width="200" :height="15" animation="fade" :rounded="true" />
+
+                  <VueSkeletonLoader
+                    style="margin-top:10px"
+                    type="rect"
+                    :width="150"
+                    :height="10"
+                    animation="fade"
+                    :rounded="true"
+                  />
+                </div>
+
+                <VueSkeletonLoader type="rect" :width="40" :height="20" animation="fade" :rounded="true" />
+              </div>
+            </div>
+
+            <li v-for="(data, key) in filtered_harbors" :key="key" style="cursor:pointer">
+              <b-form-checkbox
+                :id="'place-' + key"
+                v-model="placeInShowFrom"
+                :value="data"
+                @change="placeCheckedFrom(data)"
+              >
+                <IconPort v-if="data.type == 'port'" class="mr-2" alt="port" />
+                <b-icon style="width: 26px; height: 26px;" v-else icon="geo" class="mr-2"></b-icon>
+                <div class="text-places">
+                  <h6>{{ data.location }}</h6>
+                  <p v-if="data.type == 'city'">
+                    Includes transport to the Port
+                  </p>
+                  <p v-if="data.type == 'port'">{{ data.country }}</p>
+                </div>
+                <span class="city-port">{{ data.type }}</span>
+              </b-form-checkbox>
+            </li>
+          </ul>
+          <span v-if="errorsExist && 'originPorts' in responseErrors" style="color: red"
             >The Origin Port field is required!</span
           >
         </div>
@@ -107,24 +169,93 @@
 
         <!-- DESTINATION PORT -->
         <div class="col-lg-3 mb-2 input-search-form destination-search">
-          <multiselect
-            v-model="searchRequest.destinationPorts"
-            :multiple="true"
-            :close-on-select="true"
-            :clear-on-select="true"
-            :show-labels="false"
-            :options="destinationPortOptions"
-            @input="updateQuoteSearchOptions()"
-            label="display_name"
-            track-by="display_name"
-            placeholder="To"
-            class="s-input"
-          >
-          </multiselect>
-          <img src="/images/port.svg" class="img-icon" alt="port" />
-          <span
-            v-if="errorsExist && 'destinationPorts' in responseErrors"
-            style="color:red"
+          <label class="od-input d-flex od-input-to" @click.prevent="openSelect('destiny')" for="destiny">
+            <IconPort style="min-width: 58px;" alt="port" v-show="openOriginPlacesTo == false" />
+
+            <div>
+              <div style="cursor: pointer">
+                <p class="input-places">
+                  <span v-for="(data, index) in placeInShowTo" :key="index">
+                    {{ data.location }}
+                    <b @click.stop.prevent="deletePlaceTo(index)" class="delete-input-country">x</b></span
+                  >
+                </p>
+              </div>
+              <span class="city-port" v-if="showTagPlaceTo">{{
+                toCity == true && toPort == true
+                  ? "multi"
+                  : toCity == true && toPort == false
+                  ? "city"
+                  : toCity == false && toPort == true
+                  ? "port"
+                  : ""
+              }}</span>
+            </div>
+
+            <b-form-input
+              v-show="placeInShowTo.length == 0 || (openOriginPlacesTo == true && placeInShowTo.length > 0)"
+              id="destiny"
+              ref="input_select_destination"
+              @keyup="filterHarbors('originPlacesTo')"
+              v-model.trim="originPlacesTo"
+              placeholder="To"
+              style="color: #333333;border: none !important;background: transparent !important;height: 20px; min-width:70px"
+            ></b-form-input>
+          </label>
+          <ul class="places-list" style="width:100%" v-show="openOriginPlacesTo === true">
+            <div v-if="!filtered_harbors.length && searching_harbors == false" class="no-results-filter">
+              We couldn't find any matching result.
+            </div>
+
+            <div v-if="searching_harbors == true">
+              <div
+                class="d-flex align-items-center mx-auto"
+                style="padding: 15px 10px; width: fit-content;"
+                v-for="i in skeletons"
+                :key="i"
+              >
+                <VueSkeletonLoader type="rect" :width="40" :height="40" animation="fade" :rounded="true" />
+
+                <div class="d-grid" style="margin: 0 20px">
+                  <VueSkeletonLoader type="rect" :width="200" :height="15" animation="fade" :rounded="true" />
+
+                  <VueSkeletonLoader
+                    style="margin-top:10px"
+                    type="rect"
+                    :width="150"
+                    :height="10"
+                    animation="fade"
+                    :rounded="true"
+                  />
+                </div>
+
+                <VueSkeletonLoader type="rect" :width="40" :height="20" animation="fade" :rounded="true" />
+              </div>
+            </div>
+
+            <li
+              v-show="searching_harbors == false"
+              style="cursor:pointer"
+              v-for="(data, key) in filtered_harbors"
+              :key="key"
+            >
+              <b-form-checkbox
+                :id="'placeTo-' + key"
+                v-model="placeInShowTo"
+                :value="data"
+                @change="placeCheckedTo(data)"
+              >
+                <b-icon style="width: 26px; height: 26px;" v-if="data.type == 'city'" icon="geo" class="mr-2"></b-icon>
+                <IconPort v-else alt="port" />
+                <div class="text-places">
+                  <h6>{{ data.location }}</h6>
+                  <p>{{ data.country }}</p>
+                </div>
+                <span class="city-port">{{ data.type }}</span>
+              </b-form-checkbox>
+            </li>
+          </ul>
+          <span v-if="errorsExist && 'destinationPorts' in responseErrors" style="color:red"
             >The Destination Port field is required!</span
           >
         </div>
@@ -145,24 +276,15 @@
             :linkedCalendars="true"
             class="s-input"
           ></date-range-picker>
-          <img
-            src="/images/calendario.svg"
-            class="img-icon calendar-icon img-icon-left"
-            alt="calendario"
-          />
-          <span
-            v-if="errorsExist && 'dateRange.startDate' in responseErrors"
-            style="color:red"
+          <img src="/images/calendario.svg" class="img-icon calendar-icon img-icon-left" alt="calendario" />
+          <span v-if="errorsExist && 'dateRange.startDate' in responseErrors" style="color:red"
             >Please pick a date</span
           >
         </div>
         <!-- FIN DATEPICKER -->
 
         <!-- CONTAINERS -->
-        <div
-          class="col-lg-2 mb-2 input-search-form containers-search"
-          v-show="searchRequest.type == 'FCL'"
-        >
+        <div class="col-lg-2 mb-2 input-search-form containers-search" v-show="searchRequest.type == 'FCL'">
           <b-dropdown
             id="dropdown-containers"
             :disabled="searchRequest.requestData.requested == 1"
@@ -188,99 +310,13 @@
             </b-dropdown-form>
           </b-dropdown>
           <img src="/images/container.svg" class="img-icon" alt="port" />
-          <span
-            v-if="errorsExist && 'containers' in responseErrors"
-            style="color:red"
+          <span v-if="errorsExist && 'containers' in responseErrors" style="color:red"
             >Choose at least one container</span
           >
         </div>
         <!-- FIN CONTAINERS -->
       </div>
       <!-- FIN INPUTS DEL SEARCH -->
-
-      <!-- INPUT FROM AND TO PORT -->
-      <div v-if="ptdActive || dtpActive || dtdActive" class="row mr-0 ml-0">
-        <div class="col-lg-1"></div>
-
-        <div
-          v-if="ptdActive"
-          class="col-lg-3"
-          style="padding-left: 30px; padding-right: inherit"
-        ></div>
-
-        <!-- Origin City -->
-        <div
-          v-if="dtpActive || dtdActive"
-          class="col-lg-3 mb-2 origen-search input-search-form"
-        >
-          <multiselect
-            v-if="originDistance"
-            v-model="searchRequest.originAddress"
-            disabled="true"
-            :multiple="false"
-            :close-on-select="true"
-            :clear-on-select="true"
-            :show-labels="false"
-            :options="originAddressOptions"
-            placeholder="Under construction"
-            label="display_name"
-            track-by="display_name"
-            class="s-input"
-          >
-          </multiselect>
-          <gmap-autocomplete
-            v-else
-            @place_changed="setOriginPlace"
-            @input="commitOriginAutocomplete"
-            :value="originAutocompleteValue"
-            class="form-input form-control"
-            placeholder="Start typing an address"
-          >
-          </gmap-autocomplete>
-          <img
-            src="/images/city.svg"
-            class="img-icon img-icon-left img-icon-origin"
-            alt="port"
-          />
-        </div>
-
-        <!-- Destination City -->
-        <div
-          v-if="ptdActive || dtdActive"
-          class="col-lg-3 mb-2 input-search-form"
-        >
-          <multiselect
-            v-if="destinationDistance"
-            v-model="searchRequest.destinationAddress"
-            disabled="true"
-            :multiple="false"
-            :close-on-select="true"
-            :clear-on-select="true"
-            :show-labels="false"
-            :options="destinationAddressOptions"
-            placeholder="Under construction"
-            label="display_name"
-            track-by="display_name"
-            class="s-input"
-          >
-          </multiselect>
-          <gmap-autocomplete
-            v-else
-            @place_changed="setDestinationPlace"
-            @input="commitDestinationAutocomplete"
-            :value="destinationAutocompleteValue"
-            class="form-input form-control"
-            placeholder="Start typing an address"
-          >
-          </gmap-autocomplete>
-          <img
-            src="/images/city.svg"
-            class="img-icon img-icon-left"
-            alt="port"
-          />
-        </div>
-      </div>
-      <!-- FIN INPUT FROM AND TO PORT -->
 
       <!-- ADDITIONAL SERVICES -->
       <b-collapse :visible="additionalVisible" id="collapse-1" class="mt-3">
@@ -310,15 +346,9 @@
               "
             >
             </multiselect>
-            <img
-              src="/images/empresa.svg"
-              class="img-icon img-icon-left"
-              alt="port"
-            />
+            <img src="/images/empresa.svg" class="img-icon img-icon-left" alt="port" />
             <button
-              v-if="
-                searchRequest.company != '' && searchRequest.company != null
-              "
+              v-if="searchRequest.company != '' && searchRequest.company != null"
               type="button"
               class="close custom_close"
               aria-label="Close"
@@ -351,15 +381,9 @@
               @input="updateQuoteSearchOptions"
             >
             </multiselect>
-            <img
-              src="/images/contacto.svg"
-              class="img-icon img-icon-left"
-              alt="port"
-            />
+            <img src="/images/contacto.svg" class="img-icon img-icon-left" alt="port" />
             <button
-              v-if="
-                searchRequest.contact != '' && searchRequest.contact != null
-              "
+              v-if="searchRequest.contact != '' && searchRequest.contact != null"
               type="button"
               class="close custom_close"
               aria-label="Close"
@@ -385,16 +409,9 @@
               @input="updateQuoteSearchOptions"
             >
             </multiselect>
-            <img
-              src="/images/pricelevel.svg"
-              class="img-icon img-icon-left"
-              alt="port"
-            />
+            <img src="/images/pricelevel.svg" class="img-icon img-icon-left" alt="port" />
             <button
-              v-if="
-                searchRequest.pricelevel != '' &&
-                  searchRequest.pricelevel != null
-              "
+              v-if="searchRequest.pricelevel != '' && searchRequest.pricelevel != null"
               type="button"
               class="close custom_close"
               aria-label="Close"
@@ -405,36 +422,20 @@
           </div>
 
           <div class="col-lg-3 mb-2 input-search-form">
-            <b-dropdown
-              id="dropdown-carriers"
-              :text="carrierText"
-              ref="dropdown"
-              class="m-2"
-            >
-              <b-dropdown-form
-                :disabled="searchRequest.requestData.requested == 1"
-              >
+            <b-dropdown id="dropdown-carriers" :text="carrierText" ref="dropdown" class="m-2">
+              <b-dropdown-form :disabled="searchRequest.requestData.requested == 1">
                 <label class="mt-2">
                   <span>All Carriers</span>
-                  <b-form-checkbox
-                    v-model="allCarriers"
-                    class="switch-all-carriers"
-                  ></b-form-checkbox>
+                  <b-form-checkbox v-model="allCarriers" class="switch-all-carriers"></b-form-checkbox>
                 </label>
-                <b-form-group
-                  v-if="datalists.carriers_api.length > 0"
-                  label="SPOT Rates"
-                >
+                <b-form-group v-if="datalists.carriers_api.length > 0" label="SPOT Rates">
                   <b-form-checkbox-group
                     v-model="searchRequest.carriersApi"
                     :options="carriersApiOptions"
                   ></b-form-checkbox-group>
                 </b-form-group>
                 <label>
-                  <b-input
-                    v-model="carrierSearchQuery"
-                    placeholder="Search Carrier"
-                  ></b-input>
+                  <b-input v-model="carrierSearchQuery" placeholder="Search Carrier"></b-input>
                 </label>
                 <b-form-group label="Carriers">
                   <b-form-checkbox-group
@@ -445,11 +446,7 @@
                 </b-form-group>
               </b-dropdown-form>
             </b-dropdown>
-            <img
-              src="/images/carrier.svg"
-              class="img-icon img-icon-left"
-              alt="port"
-            />
+            <img src="/images/carrier.svg" class="img-icon img-icon-left" alt="port" />
           </div>
         </div>
         <!-- FIN INPUTS -->
@@ -488,29 +485,20 @@
               <div class="row">
                 <div v-if="invalidShipmentCalculation" class="col-12 mb-3">
                   <h6 class="invalid-data" style="color:red;">
-                    <b-icon icon="exclamation-circle" class="mr-2"></b-icon
-                    >Values cannot be empty or zero
+                    <b-icon icon="exclamation-circle" class="mr-2"></b-icon>Values cannot be empty or zero
                   </h6>
                 </div>
                 <div class="col-12 col-sm-3 d-flex align-items-center">
                   <label>
                     <b-form-input
                       v-model="lclShipmentQuantity"
-                      :placeholder="
-                        lclShipmentCargoType
-                          ? lclShipmentCargoType.name
-                          : 'Choose cargo type'
-                      "
+                      :placeholder="lclShipmentCargoType ? lclShipmentCargoType.name : 'Choose cargo type'"
                       class="s-input-form mr-1"
                       type="number"
                       @input="setChargeableWeight()"
                     >
                     </b-form-input>
-                    <img
-                      src="/images/paquete.svg"
-                      class="img-icon"
-                      alt="paquete"
-                    />
+                    <img src="/images/paquete.svg" class="img-icon" alt="paquete" />
                   </label>
                   <div class="type-packages">
                     <multiselect
@@ -555,11 +543,7 @@
                       @input="setChargeableWeight()"
                     >
                     </b-form-input>
-                    <img
-                      src="/images/espacio-de-trabajo.svg"
-                      class="img-icon"
-                      alt="volumen"
-                    />
+                    <img src="/images/espacio-de-trabajo.svg" class="img-icon" alt="volumen" />
                     <span>m<sup>3</sup></span>
                   </label>
                 </div>
@@ -575,18 +559,14 @@
               <div class="row">
                 <div v-if="invalidPackagingCalculation" class="col-12 mb-3">
                   <h6 class="invalid-data" style="color:red;">
-                    <b-icon icon="exclamation-circle" class="mr-2"></b-icon
-                    >Values cannot be empty or zero
+                    <b-icon icon="exclamation-circle" class="mr-2"></b-icon>Values cannot be empty or zero
                   </h6>
                 </div>
 
                 <div id="surcharges-list" class="col-12">
                   <div class="row surcharge-content">
                     <div class="col-12 col-sm-1 pr-0">
-                      <div
-                        class="type-packages"
-                        style="width: initial!important;"
-                      >
+                      <div class="type-packages" style="width: initial!important;">
                         <multiselect
                           v-model="addPackagingBar.cargoType"
                           :multiple="false"
@@ -625,11 +605,7 @@
                           class="s-input-form"
                         >
                         </b-form-input>
-                        <img
-                          src="/images/espacio-de-trabajo.svg"
-                          class="img-icon"
-                          alt="paquete"
-                        />
+                        <img src="/images/espacio-de-trabajo.svg" class="img-icon" alt="paquete" />
                       </label>
                     </div>
 
@@ -642,11 +618,7 @@
                           type="number"
                         >
                         </b-form-input>
-                        <img
-                          src="/images/espacio-de-trabajo.svg"
-                          class="img-icon"
-                          alt="paquete"
-                        />
+                        <img src="/images/espacio-de-trabajo.svg" class="img-icon" alt="paquete" />
                       </label>
                     </div>
 
@@ -658,11 +630,7 @@
                           class="s-input-form"
                           type="number"
                         ></b-form-input>
-                        <img
-                          src="/images/espacio-de-trabajo.svg"
-                          class="img-icon"
-                          alt="paquete"
-                        />
+                        <img src="/images/espacio-de-trabajo.svg" class="img-icon" alt="paquete" />
                       </label>
                     </div>
 
@@ -674,20 +642,12 @@
                           type="number"
                           class="s-input-form"
                         ></b-form-input>
-                        <img
-                          src="/images/peso.svg"
-                          class="img-icon"
-                          alt="peso"
-                        />
+                        <img src="/images/peso.svg" class="img-icon" alt="peso" />
                       </label>
                     </div>
 
-                    <div
-                      class="col-12 col-sm-1 pr-0 d-flex justify-content-center align-items-center"
-                    >
-                      <span @click="addLclPackaging" class="btn-add-surch"
-                        ><b-icon icon="check-circle"></b-icon
-                      ></span>
+                    <div class="col-12 col-sm-1 pr-0 d-flex justify-content-center align-items-center">
+                      <span @click="addLclPackaging" class="btn-add-surch"><b-icon icon="check-circle"></b-icon></span>
                     </div>
                   </div>
                 </div>
@@ -718,17 +678,14 @@
                     <p>{{ pack.weight }}</p>
                   </div>
                   <div class="col-12 col-sm-1 pr-0">
-                    <span v-on:click="deleteLclPackaging(index)"
-                      ><b-icon icon="x-circle"></b-icon
-                    ></span>
+                    <span v-on:click="deleteLclPackaging(index)"><b-icon icon="x-circle"></b-icon></span>
                   </div>
                 </div>
               </div>
 
               <div class="row c-gap-20">
                 <h6><b>TOTAL PACKAGES: </b></h6>
-                {{ lclPackagingQuantity }} units {{ lclPackagingVolume }} m3
-                {{ lclPackagingWeight }} Kg
+                {{ lclPackagingQuantity }} units {{ lclPackagingVolume }} m3 {{ lclPackagingWeight }} Kg
                 <h6 class="ml-10px"><b>CHARGEABLE WEIGHT: </b></h6>
                 <p>{{ lclPackagingChargeableWeight }} W/M</p>
               </div>
@@ -741,29 +698,22 @@
 
       <div v-if="!searching" class="col-lg-8">
         <div
-          v-if="((searchRequest.type == 'FCL' &&
-              Array.isArray(foundRates) &&
-              foundRates.length == 0) ||
-              (searchRequest.type == 'LCL' &&
-                Array.isArray(foundRatesLcl) &&
-                foundRatesLcl.length == 0)) &&
-              !foundApiRates"
+          v-if="
+            ((searchRequest.type == 'FCL' && Array.isArray(foundRates) && foundRates.length == 0) ||
+              (searchRequest.type == 'LCL' && Array.isArray(foundRatesLcl) && foundRatesLcl.length == 0)) &&
+              !foundApiRates
+          "
           class="alert alert-danger"
           role="alert"
         >
-          No results for this particular route. Create an express contract or
-          try another search
+          No results for this particular route. Create an express contract or try another search
         </div>
       </div>
 
       <!-- BOTON SEARCH Y ADD CONTRAT -->
       <div class="row justify-content-center mr-0 ml-0">
         <div class="col-2 d-flex justify-content-center">
-          <button
-            v-if="!searching"
-            class="btn-search"
-            @click="searchButtonPressed"
-          >
+          <button v-if="!searching" class="btn-search" @click="searchButtonPressed" type="button">
             SEARCH
           </button>
 
@@ -772,10 +722,7 @@
               <span class="sr-only">Loading...</span>
             </div>
           </button>
-          <b-button
-            v-b-modal.add-contract
-            v-if="searchRequest.type == 'FCL'"
-            class="btn-add-contract ml-4"
+          <b-button v-b-modal.add-contract v-if="searchRequest.type == 'FCL'" class="btn-add-contract ml-4"
             >Add Contract</b-button
           >
         </div>
@@ -783,14 +730,7 @@
       <!-- FIN BOTON SEARCH Y ADD CONTRAT -->
 
       <!-- MODAL ADD CONTRACT -->
-      <b-modal
-        id="add-contract"
-        size="lg"
-        centered
-        title="Created Contract"
-        ref="my-modal"
-        hide-footer
-      >
+      <b-modal id="add-contract" size="lg" centered title="Created Contract" ref="my-modal" hide-footer>
         <!-- STEPS -->
         <div id="add-contract-form-steps" class="row pt-5 pb-5 custom-step-box">
           <div
@@ -836,34 +776,20 @@
         <!-- FIN STEPS -->
 
         <!-- FORMULARIO -->
-        <form
-          id="add-contract-form"
-          action="/action_page.php"
-          class="add-contract-form"
-        >
+        <form id="add-contract-form" action="/action_page.php" class="add-contract-form">
           <!-- CONTRACT -->
           <fieldset v-if="stepOne">
             <div class="row">
               <div v-if="invalidInput" class="col-12 mt-3 mb-3">
                 <h5 class="invalid-data">
-                  <b-icon icon="exclamation-circle" class="mr-2"></b-icon>Please
-                  complete all the fields.
+                  <b-icon icon="exclamation-circle" class="mr-2"></b-icon>Please complete all the fields.
                 </h5>
               </div>
 
               <div class="col-12 mb-3">
                 <label>
-                  <b-form-input
-                    v-model="reference"
-                    placeholder="Reference"
-                    class="input-modal"
-                  ></b-form-input>
-                  <img
-                    src="/images/investigacion.svg"
-                    alt="reference"
-                    width="25px"
-                    height="25px"
-                  />
+                  <b-form-input v-model="reference" placeholder="Reference" class="input-modal"></b-form-input>
+                  <img src="/images/investigacion.svg" alt="reference" width="25px" height="25px" />
                 </label>
               </div>
               <div class="col-12 col-sm-6 mb-3">
@@ -898,12 +824,7 @@
                     class="input-modal"
                   >
                   </multiselect>
-                  <img
-                    src="/images/carrier.svg"
-                    alt="carrier"
-                    width="25px"
-                    height="25px"
-                  />
+                  <img src="/images/carrier.svg" alt="carrier" width="25px" height="25px" />
                 </label>
               </div>
               <div class="col-12 col-sm-6 mb-3">
@@ -921,12 +842,7 @@
                     class="input-modal"
                   >
                   </multiselect>
-                  <img
-                    src="/images/container.svg"
-                    alt="container"
-                    width="25px"
-                    height="25px"
-                  />
+                  <img src="/images/container.svg" alt="container" width="25px" height="25px" />
                 </label>
               </div>
               <div class="col-12 col-sm-6 mb-3">
@@ -944,12 +860,7 @@
                     class="input-modal"
                   >
                   </multiselect>
-                  <img
-                    src="/images/entrega.svg"
-                    alt="entrega"
-                    width="25px"
-                    height="25px"
-                  />
+                  <img src="/images/entrega.svg" alt="entrega" width="25px" height="25px" />
                 </label>
               </div>
             </div>
@@ -959,8 +870,7 @@
           <fieldset v-if="stepTwo">
             <div v-if="invalidInput" class="col-12 mt-3 mb-3">
               <h5 class="invalid-data">
-                <b-icon icon="exclamation-circle" class="mr-2"></b-icon>Please
-                complete all the fields.
+                <b-icon icon="exclamation-circle" class="mr-2"></b-icon>Please complete all the fields.
               </h5>
             </div>
 
@@ -980,12 +890,7 @@
                     class="input-modal"
                   >
                   </multiselect>
-                  <img
-                    src="/images/port.svg"
-                    alt="origen"
-                    width="25px"
-                    height="25px"
-                  />
+                  <img src="/images/port.svg" alt="origen" width="25px" height="25px" />
                 </label>
               </div>
               <div class="col-12 col-sm-6 mb-3">
@@ -1003,12 +908,7 @@
                     class="input-modal"
                   >
                   </multiselect>
-                  <img
-                    src="/images/port.svg"
-                    alt="destination"
-                    width="25px"
-                    height="25px"
-                  />
+                  <img src="/images/port.svg" alt="destination" width="25px" height="25px" />
                 </label>
               </div>
               <div class="col-12 col-sm-6 mb-3">
@@ -1026,12 +926,7 @@
                     class="input-modal"
                   >
                   </multiselect>
-                  <img
-                    src="/images/carrier.svg"
-                    alt="carrier"
-                    width="25px"
-                    height="25px"
-                  />
+                  <img src="/images/carrier.svg" alt="carrier" width="25px" height="25px" />
                 </label>
               </div>
               <div class="col-12 col-sm-6 mb-3">
@@ -1049,20 +944,11 @@
                     class="input-modal"
                   >
                   </multiselect>
-                  <img
-                    src="/images/dinero.svg"
-                    alt="currency"
-                    width="25px"
-                    height="25px"
-                  />
+                  <img src="/images/dinero.svg" alt="currency" width="25px" height="25px" />
                 </label>
               </div>
 
-              <div
-                v-for="(item, index) in items"
-                :key="index"
-                class="col-12 col-sm-6"
-              >
+              <div v-for="(item, index) in items" :key="index" class="col-12 col-sm-6">
                 <label>
                   <b-form-input
                     :name="item.name"
@@ -1071,12 +957,7 @@
                     v-model="equipType[item.name]"
                     required
                   ></b-form-input>
-                  <img
-                    src="/images/ordenar.svg"
-                    alt="ordenar"
-                    width="25px"
-                    height="25px"
-                  />
+                  <img src="/images/ordenar.svg" alt="ordenar" width="25px" height="25px" />
                 </label>
               </div>
             </div>
@@ -1086,11 +967,7 @@
           <fieldset v-if="stepThree">
             <h5 class="q-title">Remarks</h5>
             <br />
-            <ckeditor
-              id="inline-form-input-name"
-              type="classic"
-              v-model="remarks"
-            ></ckeditor>
+            <ckeditor id="inline-form-input-name" type="classic" v-model="remarks"></ckeditor>
 
             <br /><br />
           </fieldset>
@@ -1100,8 +977,7 @@
             <div class="row">
               <div v-if="invalidSurcharge" class="col-12 mb-3">
                 <h5 class="invalid-data">
-                  <b-icon icon="exclamation-circle" class="mr-2"></b-icon
-                  >Complete all the fileds
+                  <b-icon icon="exclamation-circle" class="mr-2"></b-icon>Complete all the fileds
                 </h5>
               </div>
               <div id="surcharges-list" class="col-12">
@@ -1168,9 +1044,7 @@
                       ></b-form-input>
                     </label>
                   </div>
-                  <div
-                    class="col-1 d-flex justify-content-center align-items-center"
-                  >
+                  <div class="col-1 d-flex justify-content-center align-items-center">
                     <span v-on:click="addSurchargeModal" class="btn-add-surch"
                       ><b-icon icon="check-circle"></b-icon
                     ></span>
@@ -1198,9 +1072,7 @@
                   <p>{{ item.amount }}</p>
                 </div>
                 <div class="col-12 col-sm-1">
-                  <span v-on:click="deleteSurchargeModal(index)"
-                    ><b-icon icon="x-circle"></b-icon
-                  ></span>
+                  <span v-on:click="deleteSurchargeModal(index)"><b-icon icon="x-circle"></b-icon></span>
                 </div>
               </div>
             </div>
@@ -1238,12 +1110,7 @@
                           filterUnits="objectBoundingBox"
                           id="filter-2"
                         >
-                          <feOffset
-                            dx="0"
-                            dy="6"
-                            in="SourceAlpha"
-                            result="shadowOffsetOuter1"
-                          ></feOffset>
+                          <feOffset dx="0" dy="6" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
                           <feGaussianBlur
                             stdDeviation="8"
                             in="shadowOffsetOuter1"
@@ -1255,12 +1122,7 @@
                             in="shadowBlurOuter1"
                             result="shadowMatrixOuter1"
                           ></feColorMatrix>
-                          <feOffset
-                            dx="0"
-                            dy="1"
-                            in="SourceAlpha"
-                            result="shadowOffsetOuter2"
-                          ></feOffset>
+                          <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter2"></feOffset>
                           <feGaussianBlur
                             stdDeviation="1"
                             in="shadowOffsetOuter2"
@@ -1278,49 +1140,15 @@
                           </feMerge>
                         </filter>
                       </defs>
-                      <g
-                        id="Page-1"
-                        stroke="none"
-                        stroke-width="1"
-                        fill="none"
-                        fill-rule="evenodd"
-                      >
-                        <g
-                          id="Artboard"
-                          transform="translate(-460.000000, -125.000000)"
-                        >
-                          <g
-                            id="Group-4"
-                            transform="translate(412.000000, 129.000000)"
-                          >
-                            <g
-                              id="Group-2"
-                              transform="translate(58.000000, 0.000000)"
-                            >
-                              <circle
-                                id="Oval"
-                                fill="#3560FF"
-                                opacity="0.100000001"
-                                cx="42"
-                                cy="42"
-                                r="42"
-                              ></circle>
-                              <g
-                                id="Group"
-                                transform="translate(6.000000, 6.000000)"
-                              >
+                      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g id="Artboard" transform="translate(-460.000000, -125.000000)">
+                          <g id="Group-4" transform="translate(412.000000, 129.000000)">
+                            <g id="Group-2" transform="translate(58.000000, 0.000000)">
+                              <circle id="Oval" fill="#3560FF" opacity="0.100000001" cx="42" cy="42" r="42"></circle>
+                              <g id="Group" transform="translate(6.000000, 6.000000)">
                                 <g id="Oval">
-                                  <use
-                                    fill="black"
-                                    fill-opacity="1"
-                                    filter="url(#filter-2)"
-                                    xlink:href="#path-1"
-                                  ></use>
-                                  <use
-                                    fill="#FFFFFF"
-                                    fill-rule="evenodd"
-                                    xlink:href="#path-1"
-                                  ></use>
+                                  <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                                  <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
                                 </g>
                                 <g
                                   id="upload-cloud"
@@ -1368,11 +1196,7 @@
             <div v-if="contractAdded" class="alert alert-success" role="alert">
               Contract saved successfully!
             </div>
-            <div
-              v-if="contractAddedFailed"
-              class="alert alert-danger"
-              role="alert"
-            >
+            <div v-if="contractAddedFailed" class="alert alert-danger" role="alert">
               Failed creating contract, complete all the fields!
             </div>
           </fieldset>
@@ -1386,19 +1210,8 @@
               class="mr-3"
               >Back</b-button
             >
-            <b-button
-              v-on:click="nextStep"
-              v-if="!stepFive"
-              class="btn-create-quote"
-              >Save & Continue</b-button
-            >
-            <b-button
-              v-if="stepFive"
-              class="btn-create-quote"
-              @click="contracButtonPressed"
-            >
-              Create Contract</b-button
-            >
+            <b-button v-on:click="nextStep" v-if="!stepFive" class="btn-create-quote">Save & Continue</b-button>
+            <b-button v-if="stepFive" class="btn-create-quote" @click="contracButtonPressed"> Create Contract</b-button>
           </div>
         </form>
         <!-- FIN FORMULARIO -->
@@ -1417,7 +1230,9 @@ import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import "vue2-daterange-picker/dist/vue2-daterange-picker.css";
 import actions from "../../actions";
+import VueSkeletonLoader from "skeleton-loader-vue";
 import HelpDropdown from "../../components/HelpDropdown";
+import IconPort from "../../../assets/components/Icons/IconPort.vue";
 
 export default {
   components: {
@@ -1425,10 +1240,36 @@ export default {
     Multiselect,
     DateRangePicker,
     vueDropzone: vue2Dropzone,
+    VueSkeletonLoader,
     HelpDropdown,
+    IconPort,
   },
   data() {
     return {
+      // test new select harbors
+      filtered_harbors: [],
+      searching_harbors: false,
+      skeletons: [1, 2, 3, 4],
+      // end test new select harbors
+      fromCity: "",
+      fromPort: "",
+      fromMulti: "",
+      toCity: "",
+      toPort: "",
+      toMulti: "",
+      // datos estaticos search con inlands aqui
+      originPlacesFrom: "",
+      openOriginPlacesFrom: "",
+      originPlacesTo: "",
+      openOriginPlacesTo: "",
+      showPlaces: false,
+      showTagPlaceTo: false,
+      showTagPlaceFrom: false,
+      inputSearchFrom: true,
+      inputSearchTo: true,
+      nameTagPlaces: "",
+      placeInShowTo: [],
+      placeInShowFrom: [],
       loaded: false,
       additionalVisible: false,
       searching: false,
@@ -1484,8 +1325,7 @@ export default {
         thumbnailWidth: 150,
         maxFilesize: 10,
         headers: {
-          "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]")
-            .content,
+          "X-CSRF-TOKEN": document.head.querySelector("[name=csrf-token]").content,
         },
         addRemoveLinks: true,
         autoProcessQueue: false,
@@ -1579,26 +1419,149 @@ export default {
       helpOptions: [
         {
           title: "How to search for FCL Rates",
-          link: "https://support.cargofive.com/how-to-search-for-fcl-rates-new/"
+          link: "https://support.cargofive.com/how-to-search-for-fcl-rates-new/",
         },
         {
           title: "How to search for LCL Rates",
-          link: "https://support.cargofive.com/how-to-perform-rate-searches-lcl-new/"
+          link: "https://support.cargofive.com/how-to-perform-rate-searches-lcl-new/",
         },
         {
           title: "How to create an FCL Express Contract",
-          link: "https://support.cargofive.com/how-to-create-a-fcl-express-contract/"
-        }
-      ]
+          link: "https://support.cargofive.com/how-to-create-a-fcl-express-contract/",
+        },
+      ],
     };
   },
   mounted() {
     api.getData({}, "/api/search/data", (err, data) => {
       this.setDropdownLists(err, data.data);
       this.getQuery();
+      this.filtered_harbors = this.datalists.harbors.filter((val, i) => i < 10);
     });
   },
-  methods: {    
+  methods: {
+    openSelect(e) {
+      this.filtered_harbors = this.datalists.harbors.filter((val, i) => i < 10);
+      if (e == "destiny") {
+        this.originPlacesTo = "";
+        this.openOriginPlacesTo = !this.openOriginPlacesTo;
+        this.openOriginPlacesFrom = false;
+        this.$nextTick(() => this.$refs.input_select_destination.focus());
+      } else if (e == "origin") {
+        this.originPlacesFrom = "";
+        this.openOriginPlacesFrom = !this.openOriginPlacesFrom;
+        this.openOriginPlacesTo = false;
+        this.$nextTick(() => this.$refs.input_select_origin.focus());
+      }
+    },
+    filterHarbors: _.debounce(function(vmodel) {
+      this.searching_harbors = true;
+
+      let currentInput;
+      if (vmodel == "originPlacesFrom") {
+        currentInput = this.originPlacesFrom.toLowerCase();
+      } else {
+        currentInput = this.originPlacesTo.toLowerCase();
+      }
+
+      this.filtered_harbors = [];
+
+      let new_harbors = [];
+      this.datalists.harbors.filter((item, index) => {
+        let freeze = Object.freeze(item);
+
+        let filtered = freeze.location.toLowerCase().includes(currentInput.toLowerCase());
+
+        if (filtered == true) {
+          new_harbors.push(freeze);
+        }
+      });
+
+      setTimeout(() => {
+        this.searching_harbors = false;
+      }, 800);
+
+      this.filtered_harbors = new_harbors.filter((val, i) => i < 10);
+    }, 800),
+    placeCheckedFrom(data) {
+      let placeType = [];
+
+      if (this.placeInShowFrom.length >= 1) {
+        this.showTagPlaceFrom = true;
+
+        this.inputSearchFrom = false;
+
+        this.placeInShowFrom.forEach((element) => {
+          placeType.push(element.type);
+        });
+
+        this.searchRequest.originPorts = this.placeInShowFrom;
+
+        this.fromPort = placeType.map((e) => e.toLocaleLowerCase()).includes("port");
+        this.fromCity = placeType.map((e) => e.toLocaleLowerCase()).includes("city");
+      }
+      if (this.placeInShowFrom.length == 0) {
+        placeType = [];
+        this.showTagPlaceFrom = false;
+      }
+      this.openOriginPlacesFrom = false;
+    },
+    placeCheckedTo() {
+      let placeType = [];
+      if (this.placeInShowTo.length >= 1) {
+        this.showTagPlaceTo = true;
+
+        this.inputSearchFrom = false;
+
+        this.placeInShowTo.forEach((element) => {
+          placeType.push(element.type);
+        });
+
+        this.toPort = placeType.map((e) => e.toLocaleLowerCase()).includes("port");
+        this.toCity = placeType.map((e) => e.toLocaleLowerCase()).includes("city");
+
+        this.searchRequest.destinationPorts = this.placeInShowTo;
+      }
+      if (this.placeInShowTo.length == 0) {
+        placeType = [];
+        this.showTagPlaceTo = false;
+      }
+      this.openOriginPlacesTo = false;
+    },
+    deletePlaceFrom(e) {
+      let placeType = [];
+
+      this.placeInShowFrom.splice(e, 1);
+
+      if (this.placeInShowFrom.length == 0) {
+        this.showTagPlaceFrom = false;
+        return;
+      }
+      this.placeInShowFrom.forEach((element) => {
+        placeType.push(element.type);
+      });
+
+      this.fromPort = placeType.map((e) => e.toLocaleLowerCase()).includes("port");
+      this.fromCity = placeType.map((e) => e.toLocaleLowerCase()).includes("city");
+    },
+    deletePlaceTo(e) {
+      this.placeInShowTo.splice(e, 1);
+      if (this.placeInShowTo.length == 0) {
+        this.showTagPlaceTo = false;
+        countPort = 0;
+        countCity = 0;
+        return;
+      }
+
+      let placeType = [];
+
+      this.placeInShowTo.forEach((element) => {
+        placeType.push(element.type);
+      });
+
+      this.toPort = placeType.map((e) => e.toLocaleLowerCase()).includes("port");
+      this.toCity = placeType.map((e) => e.toLocaleLowerCase()).includes("city");
+    },
     //modal
     nextStep() {
       if (this.stepOne) {
@@ -1676,11 +1639,7 @@ export default {
     },
 
     addSurchargeModal() {
-      if (
-        this.typeContract == "" ||
-        this.calculationType == "" ||
-        this.currencySurcharge == ""
-      ) {
+      if (this.typeContract == "" || this.calculationType == "" || this.currencySurcharge == "") {
         this.invalidSurcharge = true;
         return;
       }
@@ -1751,13 +1710,23 @@ export default {
     getSearchData(id) {
       let component = this;
 
-      component.actions.search
+      this.actions.search
         .retrieve(id)
         .then((response) => {
-          component.searchData = response.data.data;
-          component.setSearchDisplay(
-            component.searchRequest.requestData.requested
-          );
+          this.searchData = response.data.data;
+          this.setSearchDisplay(this.searchRequest.requestData.requested);
+
+          if (this.searchData.destination_address.length) {
+            this.placeInShowTo = this.searchData.destination_address;
+          } else {
+            this.placeInShowTo = this.searchData.destination_ports;
+          }
+
+          if (this.searchData.origin_address.length) {
+            this.placeInShowFrom = this.searchData.origin_address;
+          } else {
+            this.placeInShowFrom = this.searchData.origin_ports;
+          }
         })
         .catch((error) => {
           if (error.status === 422) {
@@ -1784,7 +1753,6 @@ export default {
     //set UI elements
     setSearchDisplay(requestType) {
       let component = this;
-
       component.originPortOptions = component.datalists.harbors;
       component.destinationPortOptions = component.datalists.harbors;
       component.directionOptions = [
@@ -1832,24 +1800,19 @@ export default {
         });
       }
       component.contactOptions = component.datalists.contacts;
-      if(component.searchRequest.type == "FCL"){
+      if (component.searchRequest.type == "FCL") {
         component.priceLevelOptions = component.datalists.price_levels_fcl;
-      }else if(component.searchRequest.type == "LCL"){
+      } else if (component.searchRequest.type == "LCL") {
         component.priceLevelOptions = component.datalists.price_levels_lcl;
       }
-      component.deliveryTypeOptions = component.datalists.delivery_types.filter(
-        function byGroup(dtype) {
-          return !dtype.name.includes("Door");
-        }
-      );
+      component.deliveryTypeOptions = component.datalists.delivery_types.filter(function byGroup(dtype) {
+        return !dtype.name.includes("Door");
+      });
       component.searchRequest.deliveryType = component.deliveryTypeOptions[0];
       component.allCarriers = true;
-      component.searchRequest.originCharges =
-        component.datalists.company_user.origincharge == null ? false : true;
+      component.searchRequest.originCharges = component.datalists.company_user.origincharge == null ? false : true;
       component.searchRequest.destinationCharges =
-        component.datalists.company_user.destinationcharge == null
-          ? false
-          : true;
+        component.datalists.company_user.destinationcharge == null ? false : true;
 
       this.fillInitialFields(requestType);
     },
@@ -1869,20 +1832,23 @@ export default {
         this.searchRequest.direction = this.searchData.direction_id;
         //this.deliveryType = this.searchData.delivery_type;
         this.searchRequest.deliveryType = this.searchData.delivery_type;
+
         this.searchRequest.originPorts = [];
         component.searchData.origin_ports.forEach(function(origPort) {
-          if (!origPortNames.includes(origPort.name)) {
-            origPortNames.push(origPort.name);
+          if (!origPortNames.includes(origPort.location)) {
+            origPortNames.push(origPort.location);
             component.searchRequest.originPorts.push(origPort);
           }
         });
+
         this.searchRequest.destinationPorts = [];
         component.searchData.destination_ports.forEach(function(destPort) {
-          if (!destPortNames.includes(destPort.name)) {
-            destPortNames.push(destPort.name);
+          if (!destPortNames.includes(destPort.location)) {
+            destPortNames.push(destPort.location);
             component.searchRequest.destinationPorts.push(destPort);
           }
         });
+
         if (this.searchData.type == "FCL") {
           this.selectedContainerGroup = this.searchData.container_group;
           this.searchRequest.selectedContainerGroup = this.searchData.container_group;
@@ -1890,9 +1856,7 @@ export default {
           this.searchRequest.containers = this.searchData.containers;
         } else if (this.searchData.type == "LCL") {
           this.selectedContainerGroup = this.datalists.container_groups[0];
-          this.containers = this.datalists.containers.filter(function byGroup(
-            container
-          ) {
+          this.containers = this.datalists.containers.filter(function byGroup(container) {
             return container.gp_container_id == 1;
           });
           let equipLcl = JSON.parse(this.searchData.equipment);
@@ -1909,10 +1873,8 @@ export default {
           }
           this.setSearchParameters();
         }
-        this.searchRequest.dateRange.startDate =
-          this.searchData.start_date + "T01:00:00";
-        this.searchRequest.dateRange.endDate =
-          this.searchData.end_date + "T01:00:00";
+        this.searchRequest.dateRange.startDate = this.searchData.start_date + "T01:00:00";
+        this.searchRequest.dateRange.endDate = this.searchData.end_date + "T01:00:00";
         this.searchRequest.company = this.searchData.company;
         this.unlockContacts();
         this.searchRequest.contact = this.searchData.contact;
@@ -1927,14 +1889,10 @@ export default {
         } else {
           this.searchRequest.carriers = this.datalists.carriers;
         }
-        this.searchRequest.originCharges =
-          this.searchData.origin_charges == 0 ? false : true;
-        this.searchRequest.destinationCharges =
-          this.searchData.destination_charges == 0 ? false : true;
+        this.searchRequest.originCharges = this.searchData.origin_charges == 0 ? false : true;
+        this.searchRequest.destinationCharges = this.searchData.destination_charges == 0 ? false : true;
         this.searchRequest.showRateCurrency =
-          this.datalists.company_user.options.totals_in_freight_currency == 1
-            ? true
-            : false;
+          this.datalists.company_user.options.totals_in_freight_currency == 1 ? true : false;
         this.requestSearch();
       } else if (requestType == 1) {
         if (this.quoteData.search_options != null) {
@@ -1947,10 +1905,8 @@ export default {
           this.searchRequest.destinationCharges = this.quoteData.search_options.destination_charges;
           this.searchRequest.originPorts = this.quoteData.search_options.origin_ports;
           this.searchRequest.destinationPorts = this.quoteData.search_options.destination_ports;
-          this.searchRequest.dateRange.startDate =
-            this.quoteData.search_options.start_date + "T01:00:00";
-          this.searchRequest.dateRange.endDate =
-            this.quoteData.search_options.end_date + "T01:00:00";
+          this.searchRequest.dateRange.startDate = this.quoteData.search_options.start_date + "T01:00:00";
+          this.searchRequest.dateRange.endDate = this.quoteData.search_options.end_date + "T01:00:00";
         } else {
           this.searchRequest.company = this.quoteData.company_id;
           this.unlockContacts();
@@ -1980,12 +1936,9 @@ export default {
       }
 
       if (
-        (this.searchRequest.company != null &&
-          this.searchRequest.company != "") ||
-        (this.searchRequest.contact != null &&
-          this.searchRequest.contact != "") ||
-        (this.searchRequest.pricelevel != null &&
-          this.searchRequest.pricelevel != "")
+        (this.searchRequest.company != null && this.searchRequest.company != "") ||
+        (this.searchRequest.contact != null && this.searchRequest.contact != "") ||
+        (this.searchRequest.pricelevel != null && this.searchRequest.pricelevel != "")
       ) {
         this.additionalVisible = true;
       }
@@ -2004,9 +1957,7 @@ export default {
 
       if (
         this.lclTypeIndex == 0 &&
-        (this.lclShipmentVolume == "" ||
-          this.lclShipmentWeight == "" ||
-          this.lclShipmentQuantity == "")
+        (this.lclShipmentVolume == "" || this.lclShipmentWeight == "" || this.lclShipmentQuantity == "")
       ) {
         this.invalidShipmentCalculation = true;
 
@@ -2023,10 +1974,7 @@ export default {
         }, 1500);
       }
 
-      if (
-        this.searchRequest.requestData.requested == undefined ||
-        this.searchRequest.requestData.requested == 0
-      ) {
+      if (this.searchRequest.requestData.requested == undefined || this.searchRequest.requestData.requested == 0) {
         component.searchActions
           .create(this.searchRequest)
           .then((response) => {
@@ -2044,11 +1992,7 @@ export default {
             this.searching = false;
             if (error.status === 422) {
               this.responseErrors = error.data.errors;
-              if (
-                this.responseErrors.quantity ||
-                this.responseErrors.volume ||
-                this.responseErrors.weight
-              ) {
+              if (this.responseErrors.quantity || this.responseErrors.volume || this.responseErrors.weight) {
                 this.invalidShipmentCalculation = true;
                 this.invalidPackagingCalculation = true;
 
@@ -2121,9 +2065,8 @@ export default {
         //stepFive
       };
       let vcomponent = this;
-      
-      if(!this.creatingContract){
 
+      if (!this.creatingContract) {
         vcomponent.creatingContract = true;
 
         component.searchActions
@@ -2132,7 +2075,7 @@ export default {
             vcomponent.$refs.myVueDropzone.dropzone.options.url = `/api/v2/contracts/${response.data.id}/storeMedia`;
             vcomponent.$refs.myVueDropzone.processQueue();
             vcomponent.contractAdded = true;
-  
+
             setTimeout(function() {
               vcomponent.contractAdded = false;
               vcomponent.$refs["my-modal"].hide();
@@ -2154,18 +2097,26 @@ export default {
 
     requestSearch() {
       let component = this;
-      this.$emit("clearResults",'searchStarted');
+      this.$emit("clearResults", "searchStarted");
       this.searching = true;
       this.$emit("searchRequested", this.searchRequest);
+
+      if (this.placeInShowTo.length && this.placeInShowFrom.length) {
+        this.searchRequest.destinationPorts = this.placeInShowTo;
+        this.searchRequest.originPorts = this.placeInShowFrom;
+      }
+      if (this.searchData.destination_address.length) {
+        this.searchRequest.destinationPorts = this.searchData.destination_address;
+      }
+      if (this.searchData.origin_address.length) {
+        this.searchRequest.originPorts = this.searchData.origin_address;
+      }
 
       component.searchActions
         .process(this.searchRequest)
         .then((response) => {
           response.data.data.forEach(function(rate) {
-            if (
-              component.searchRequest.type == "FCL" &&
-              typeof rate.containers == "string"
-            ) {
+            if (component.searchRequest.type == "FCL" && typeof rate.containers == "string") {
               rate.containers = JSON.parse(rate.containers);
             }
             if (rate.search == undefined) {
@@ -2191,10 +2142,7 @@ export default {
       let component = this;
       let dlist = this.datalists;
 
-      if (
-        component.searchRequest.company != null &&
-        component.searchRequest.company != ""
-      ) {
+      if (component.searchRequest.company != null && component.searchRequest.company != "") {
         component.contactOptions = [];
 
         dlist.contacts.forEach(function(contact) {
@@ -2215,20 +2163,20 @@ export default {
 
       component.priceLevelOptions = [];
 
-      pricelevels.forEach(function (priceLevel){
-        if(priceLevel.price_level_groups.length == 0){
+      pricelevels.forEach(function(priceLevel) {
+        if (priceLevel.price_level_groups.length == 0) {
           component.priceLevelOptions.push(priceLevel);
         }
 
         if (component.searchRequest.company != null) {
-          priceLevel.price_level_groups.forEach(function (group){
-            if(group.group_type == "App\\Company" && group.group_id == component.searchRequest.company.id){
+          priceLevel.price_level_groups.forEach(function(group) {
+            if (group.group_type == "App\\Company" && group.group_id == component.searchRequest.company.id) {
               component.priceLevelOptions.push(priceLevel);
-            }else if(group.group_type == "App\\CompanyGroup"){
-              dlist.company_groups.forEach(function (company_group){
-                if(company_group.id == group.group_id){
-                  company_group.companies.forEach(function (company){
-                    if(company.id == component.searchRequest.company.id){
+            } else if (group.group_type == "App\\CompanyGroup") {
+              dlist.company_groups.forEach(function(company_group) {
+                if (company_group.id == group.group_id) {
+                  company_group.companies.forEach(function(company) {
+                    if (company.id == component.searchRequest.company.id) {
                       component.priceLevelOptions.push(priceLevel);
                     }
                   });
@@ -2238,21 +2186,15 @@ export default {
           });
         }
       });
-      
     },
 
     updateQuoteSearchOptions() {
       let component = this;
-      
+
       if (this.searchRequest.requestData.requested == 1) {
         component.actions.quotes
-          .updateSearch(
-            this.searchRequest.requestData.model_id,
-            this.searchRequest
-          )
-          .then((response) => {
-            console.log("Quote updated!");
-          })
+          .updateSearch(this.searchRequest.requestData.model_id, this.searchRequest)
+          .then((response) => {})
           .catch((error) => {
             this.errorsExist = true;
             if (error.status === 422) {
@@ -2260,75 +2202,6 @@ export default {
             }
           });
       }
-    },
-
-    setOriginAddressMode() {
-      let component = this;
-
-      if (component.searchRequest.originPorts.length > 1) {
-        component.originAddressPlaceholder =
-          "Please select only one Origin Port";
-      } else {
-        component.originAddressPlaceholder = "Select an address";
-        if (component.searchRequest.originPorts.length == 1) {
-          component.datalists.inland_distances.forEach(function(distance) {
-            if (
-              distance.harbor_id == component.searchRequest.originPorts[0].id
-            ) {
-              component.originAddressOptions.push(distance);
-            }
-          });
-
-          if (component.originAddressOptions.length == 0) {
-            component.originDistance = false;
-          } else {
-            component.originDistance = true;
-          }
-        }
-      }
-    },
-
-    setDestinationAddressMode() {
-      let component = this;
-
-      if (component.searchRequest.destinationPorts.length > 1) {
-        component.destinationAddressPlaceholder =
-          "Please select only one Origin Port";
-      } else {
-        component.destinationAddressPlaceholder = "Select an address";
-        if (component.searchRequest.destinationPorts.length == 1) {
-          component.datalists.inland_distances.forEach(function(distance) {
-            if (
-              distance.harbor_id ==
-              component.searchRequest.destinationPorts[0].id
-            ) {
-              component.destinationAddressOptions.push(distance);
-            }
-          });
-
-          if (component.destinationAddressOptions.length == 0) {
-            component.destinationDistance = false;
-          } else {
-            component.destinationDistance = true;
-          }
-        }
-      }
-    },
-
-    setOriginPlace(place) {
-      this.searchRequest.originAddress = place.formatted_address;
-    },
-
-    setDestinationPlace(place) {
-      this.searchRequest.destinationAddress = place.formatted_address;
-    },
-
-    commitOriginAutocomplete() {
-      this.originAutocompleteValue = this.searchRequest.originAddresses;
-    },
-
-    commitDestinationAutocomplete() {
-      this.destinationAutocompleteValue = this.searchRequest.destinationAddresses;
     },
 
     setSearchType() {
@@ -2414,15 +2287,10 @@ export default {
       let url_tags = $(".img-link").last();
       url_tags.attr("href", response.url);
     },
-
     isNumber: function(evt) {
       evt = evt ? evt : window.event;
       var charCode = evt.which ? evt.which : evt.keyCode;
-      if (
-        charCode > 31 &&
-        (charCode < 48 || charCode > 57) &&
-        charCode !== 46
-      ) {
+      if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
         evt.preventDefault();
       } else {
         return true;
@@ -2432,11 +2300,9 @@ export default {
     setChargeableWeight() {
       if (this.searchRequest.lclTypeIndex == 0) {
         if (this.lclShipmentVolume > this.lclShipmentWeight / 1000) {
-          this.lclShipmentChargeableWeight =
-            this.lclShipmentVolume ;
+          this.lclShipmentChargeableWeight = this.lclShipmentVolume;
         } else {
-          this.lclShipmentChargeableWeight =
-            (this.lclShipmentWeight / 1000) ;
+          this.lclShipmentChargeableWeight = this.lclShipmentWeight / 1000;
         }
       } else if (this.searchRequest.lclTypeIndex == 1) {
         let component = this;
@@ -2448,58 +2314,19 @@ export default {
         component.lclPackaging.forEach(function(pack) {
           component.lclPackagingQuantity += parseFloat(pack.quantity);
           component.lclPackagingVolume +=
-            (parseFloat(pack.depth) *
-            parseFloat(pack.height) *
-            parseFloat(pack.width)) / 1000000;
+            (parseFloat(pack.depth) * parseFloat(pack.height) * parseFloat(pack.width)) / 1000000;
           component.lclPackagingWeight += parseFloat(pack.weight);
         });
 
         if (this.lclPackagingVolume > this.lclPackagingWeight / 1000) {
-          this.lclPackagingChargeableWeight =
-            this.lclPackagingVolume ;
+          this.lclPackagingChargeableWeight = this.lclPackagingVolume;
         } else {
-          this.lclPackagingChargeableWeight =
-            (this.lclPackagingWeight / 1000);
+          this.lclPackagingChargeableWeight = this.lclPackagingWeight / 1000;
         }
       }
     },
   },
   watch: {
-
-    /**deliveryType: function () {
-            if (this.deliveryType.id == 1) {
-                this.ptdActive = false;
-                this.dtpActive = false;
-                this.dtdActive = false;
-                return;
-            } else if (this.deliveryType.id == 2) {
-                this.dtpActive = false;
-                this.dtdActive = false;
-
-                this.ptdActive = !this.ptdActive;
-
-                this.setDestinationAddressMode();
-                return;
-            } else if (this.deliveryType.id == 3) {
-                this.ptdActive = false;
-                this.dtdActive = false;
-
-                this.dtpActive = !this.dtpActive;
-
-                this.setOriginAddressMode();
-                return;
-            } else if (this.deliveryType.id == 4) {
-                this.ptdActive = false;
-                this.dtpActive = false;
-
-                this.dtdActive = !this.dtdActive;
-
-                this.setDestinationAddressMode();
-                this.setOriginAddressMode();
-                return;
-            }
-        },**/
-
     selectedContainerGroup: function() {
       let component = this;
       let fullContainersByGroup = [];
@@ -2525,8 +2352,7 @@ export default {
         component.searchRequest.type == "FCL" &&
         Object.keys(component.searchRequest.requestData).length != 0 &&
         component.searchRequest.requestData.requested == 0 &&
-        component.searchData.container_group.id ==
-          component.selectedContainerGroup.id
+        component.searchData.container_group.id == component.selectedContainerGroup.id
       ) {
         selectedContainersByGroup = component.searchData.containers;
       } else {
@@ -2560,8 +2386,7 @@ export default {
       if (component.carriers.length == component.datalists.carriers.length) {
         component.carrierText = "All Carriers Selected";
       } else if (component.carriers.length >= 5) {
-        component.carrierText =
-          component.carriers.length + " Carriers Selected";
+        component.carrierText = component.carriers.length + " Carriers Selected";
       } else if (component.carriers.length == 0) {
         if (component.searchRequest.carriersApi.length == 0) {
           component.carrierText = "Select a Carrier";
@@ -2613,23 +2438,11 @@ export default {
   },
   computed: {
     carrierOptionsSearch() {
-      return this.carrierOptions.filter((c) =>
-        c.text.toLowerCase().includes(this.carrierSearchQuery.toLowerCase())
-      );
+      return this.carrierOptions.filter((c) => c.text.toLowerCase().includes(this.carrierSearchQuery.toLowerCase()));
     },
-    sortedContainers(){
-      return this.containers.sort((a,b) => a.id-b.id);
-    }
+    sortedContainers() {
+      return this.containers.sort((a, b) => a.id - b.id);
+    },
   },
 };
 </script>
-
-<style scoped>
-.c-gap-20 {
-  column-gap: 20px;
-}
-
-.ml-10px {
-  margin-left: 10px;
-}
-</style>

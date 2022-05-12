@@ -17,9 +17,9 @@ class CreateDistancesKmLocationTable extends Migration
             $table->increments('id');
             $table->string('distance');
             $table->integer('location_id')->unsigned();
-            $table->foreign('location_id')->references('id')->on('harbors');
-            $table->integer('harbors_id')->unsigned();
-            $table->foreign('harbors_id')->references('id')->on('locations');
+            $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
+            $table->integer('harbor_id')->unsigned();
+            $table->foreign('harbor_id')->references('id')->on('harbors')->onDelete('cascade');
             $table->timestamps();
         });
     }

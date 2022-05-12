@@ -1,0 +1,49 @@
+version: "3"
+services:
+  web:
+    image: webdevops/php-apache-dev:7.2
+    container_name: cargofive
+    restart: always
+    user: root
+    environment:
+      - WEB_ALIAS_DOMAIN=cargofive.local
+      - WEB_DOCUMENT_ROOT=/app/public
+      - PHP_DATE_TIMEZONE=EST
+      - PHP_DISPLAY_ERRORS=1
+      - PHP_MEMORY_LIMIT=2048M
+      # - PHP_MEMORY_LIMIT=8192M
+      - PHP_MAX_EXECUTION_TIME=3000
+      - PHP_POST_MAX_SIZE=500M
+      - PHP_UPLOAD_MAX_FILESIZE=1024M
+      - COMPOSER_VERSION=2
+      # - XDEBUG_MODE=xdebug
+      # - XDEBUG_START_WITH_REQUEST=yes
+      # - XDEBUG_REMOTE_HOST=host.docker.internal
+      # - XDEBUG_REMOTE_PORT=9003
+      # - XDEBUG_REMOTE_AUTOSTART=1
+      # - XDEBUG_REMOTE_CONNECT_BACK=0
+    volumes:
+      - ./:/app:cached
+    working_dir: /app
+    ports:
+      - "80:80"
+      - "443:443"
+      - "32823:22"
+    links:
+      - mysql8
+      - redis
+  mysql8:
+    image: mysql:8
+    container_name: mysql8_cargofive
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_DATABASE=cargofive
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+  redis:
+    image: redis
+    container_name: redis_cargofive
+    ports:
+      - "6379:6379"

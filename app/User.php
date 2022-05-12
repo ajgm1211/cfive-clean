@@ -21,7 +21,7 @@ class User extends Authenticatable implements Auditable
     ];
 
     protected $fillable = [
-        'id', 'name', 'lastname', 'password', 'email', 'phone', 'type', 'options', 'company_user_id', 'position', 'verified', 'access', 'api_token', 'whitelabel',
+        'id', 'name', 'lastname', 'password', 'email', 'phone', 'type', 'options', 'company_user_id', 'position', 'verified', 'access', 'api_token', 'whitelabel', 'created_at', 'updated_at'
     ];
 
     protected $hidden = [

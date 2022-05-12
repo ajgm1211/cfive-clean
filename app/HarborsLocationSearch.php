@@ -7,15 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class HarborsLocationSearch extends Model
 {
     protected $table    = "harbors_location_search";
-    protected $fillable = ['id','location_id', 'harbors_id'];
+    protected $fillable = ['id','location_id', 'harbor_id'];
 
     public function location()
     {
-        return $this->belongsToMany('App\Location', 'location_id');
+        return $this->belongsTo('App\Location');
     }
 
-    public function harbors()
+    public function harbor()
     {
-        return $this->belongsToMany('App\Harbor', 'harbors_id');
+        return $this->belongsTo('App\Harbor');
     }
 }

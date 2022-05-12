@@ -20,7 +20,7 @@ $factory->define(App\InlandPerLocation::class, function (Faker $faker) {
         'C40HC'=>90,
     ];
     return [
-        'json_container'=>json_encode($array), 
+        'json_containers'=>json_encode($array), 
         'currency_id'=>$faker->numberBetween($min = 1, $max = 167),
         'harbor_id'=>$faker->numberBetween($min = 743, $max = 1000), 
         'inland_id'=>$faker->numberBetween($min = 22, $max = 31), 

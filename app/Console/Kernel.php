@@ -44,6 +44,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new SaveFclRatesByContractJob)->cron('0 */8 * * *')->appendOutputTo(storage_path('logs/commands.log'));
         //$schedule->job(new GeneratePdfToApiJob)->cron('0 */3 * * *')->appendOutputTo(storage_path('logs/commands.log'));
 
+        
         $schedule->command('command:updateCurrenciesUsd')
             ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->command('command:updateCurrenciesEur')

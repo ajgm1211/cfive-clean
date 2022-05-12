@@ -15,6 +15,7 @@ use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use App\TermAndConditionV2;
 use App\User;
+use App\Http\Resources\UsersResource;
 use App\VerifyUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -158,10 +159,15 @@ class UsersController extends Controller
         return view('users.update', compact('user'));
     }
 
-    public function retrieve()
+    public function retrieve(Request $request, User $user)
     {
-        $user = user::find(\Auth::user()->id);
-        return response()->json(['data' => compact('user')]);
+        $user = User::where('id',\Auth::user()->id)->first();
+
+        $data = [
+            'user'=> new UsersResource($user),
+        ];
+        
+        return response()->json(compact('data'));
     }
 
     public function add()

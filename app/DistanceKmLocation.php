@@ -11,12 +11,12 @@ class DistanceKmLocation extends Model
 
     public function location()
     {
-        return $this->belongsToMany('App\Location', 'location_id');
+        return $this->belongsTo('App\Location');
     }
 
-    public function harbors()
+    public function harbor()
     {
-        return $this->belongsToMany('App\Harbor', 'harbors_id');
+        return $this->belongsTo('App\Harbor');
     }
 }
 

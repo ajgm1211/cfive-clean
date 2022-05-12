@@ -108,6 +108,7 @@
                 :show-labels="false"
                 :placeholder="item.placeholder"
                 @select="cleanInput(key)"
+                @input="unlockfilter(item)"
               >
               </multiselect>
 
@@ -586,6 +587,20 @@ export default {
         return true;
       }
     },
+    unlockfilter(item) {
+            let component = this;
+
+            if('condition' in item==true && item.condition=="inland" ){
+                component.datalists.location_filter=[];
+
+                component.datalists.location.forEach(function(harbor) {
+                  
+                    if (harbor.harbors_id == component.vdata.port.id) {
+                        component.datalists.location_filter.push(harbor.location);
+                    }
+                });
+            }
+        },
   },
   watch: {
     vdatalists: {

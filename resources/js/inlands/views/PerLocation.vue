@@ -27,7 +27,7 @@
       ></DynamicalDataTable>
     </b-card>
 
-      <b-modal id="editLocation" size="lg" cancel-title="Cancel" hide-header-close title="Update Range" hide-footer>
+    <b-modal id="editLocation" size="lg" cancel-title="Cancel" hide-header-close title="Update Location" hide-footer>
       <FormView 
           :data="currentData" 
           :fields="input_fields"
@@ -84,6 +84,7 @@ export default {
           trackby: "display_name",
           placeholder: "Select option",
           options: "harbors",
+          condition: "inland",
         },
         location: {
           label: "Address",
@@ -91,7 +92,7 @@ export default {
           rules: "required",
           trackby: "name",
           placeholder: "Select an Address",
-          options: "location",
+          options: "location_filter",
         },
         service: {
           label: "Service",
@@ -116,8 +117,9 @@ export default {
   methods: {
     /* Single Actions */
     onEdit(data) {
-      this.currentData = data;
       this.$bvModal.show("editLocation");
+      this.unlockfilter(data,this.datalists);
+      this.currentData = data;
     },
 
     /* Single Actions */
@@ -137,10 +139,23 @@ export default {
       setTimeout(function () {
         component.loaded = true;
       }, 100);
+      component.datalists.location_filter=[];
     },
 
     link() {
       window.location = "/RequestFcl/NewRqFcl";
+    },
+
+    unlockfilter(data,datalists ) {
+      let component = this;
+
+       datalists.location_filter=[];
+
+        datalists.location.forEach(function(harbor) {
+            if (harbor.harbors_id == data.port.id) {
+                component.datalists.location_filter.push(harbor.location);
+            }
+        });
     },
   },
 };
