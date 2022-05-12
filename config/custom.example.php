@@ -24,6 +24,14 @@ switch (env('APP_ENV')) {
         $baseUriDuplicates = 'http://prod.duplicatedscg.cargofive.com/DuplicateGCFCL/';
         $appView = 'local';
     break;
+
+    case 'develop':
+        $view    = 'dev';
+        $appUrl  = 'https://quality.cargofive.com';
+        $apiUrl  = 'https://carriersdev.cargofive.com/api/pricing';
+        $baseUriDuplicates = 'http://duplicateds-globalchargers-dev.eu-central-1.elasticbeanstalk.com/DuplicateGCFCL/';
+        $appView = 'local';
+    break;
     
     default:
         $view = '';
