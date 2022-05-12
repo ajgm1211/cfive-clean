@@ -108,9 +108,8 @@ BUSCADOR
     box-shadow: 0px 5px 30px 15px #dddddd;
     position: absolute;
     z-index: 10000;
-    height: 300px;
-    // min-height: ;
-    // max-height: 300px;
+    height: fit-content;
+    max-height: 300px;
     overflow-y: scroll;
     padding: 0px;
     width: calc(100% - 30px);
@@ -130,7 +129,7 @@ BUSCADOR
       label {
         display: flex;
         align-items: center;
-        padding: 15px 10px;
+        padding: 15px 50px 15px 10px;
         .text-places {
           top: 5px;
           margin-left: 10px;
@@ -704,5 +703,4 @@ input.input-modal {
   text-align: center;
   font-size: 19px;
   padding: 20px;
-  margin-top: 20%;
 }
