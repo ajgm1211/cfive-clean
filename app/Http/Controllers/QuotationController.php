@@ -74,10 +74,7 @@ class QuotationController extends Controller
         }
         // Filtro para buscar por delegacion los quotes
         if($filter_delegation == true) {
-             $results = ViewQuoteV2::select()
-                        ->join('users_delegations','view_quote_v2s.user_id','=', 'users_delegations.users_id')
-                        ->where('users_delegations.delegations_id', '=', $id_delegation )
-                        ->paginate(10);
+            $results =  ViewQuoteV2::filterByDelegation()->paginate(10);
         }  
         else {
             $results = ViewQuoteV2::filterByCurrentCompany()->filter($request);

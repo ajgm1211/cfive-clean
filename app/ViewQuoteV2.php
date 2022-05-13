@@ -29,6 +29,17 @@ class ViewQuoteV2 extends Model
                      ->where('user_id', '=', $user_id);
     }
     
+    public function scopeFilterByDelegation($query)
+    {
+        $user_id = Auth::user()->id;
+        $user_delegation =UserDelegation::where('users_id','=',$user_id)->first();
+        $delegation=Delegation::find($user_delegation['delegations_id']);
+        $id_delegation = $delegation['id'];
+        return $query->select()
+                    ->join('users_delegations','view_quote_v2s.user_id','=', 'users_delegations.users_id')
+                    ->where('users_delegations.delegations_id', '=', $id_delegation );
+    }
+
     public function rates_v2()
     {
         return $this->hasMany('App\AutomaticRate', 'quote_id', 'id');
