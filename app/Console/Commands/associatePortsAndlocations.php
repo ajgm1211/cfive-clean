@@ -22,7 +22,9 @@ class associatePortsAndlocations extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'to associate the towns and ports of the same country, 
+                              you must change the country_id to the id of the country 
+                              to which they belong';
 
     /**
      * Create a new command instance.
@@ -45,20 +47,21 @@ class associatePortsAndlocations extends Command
             $harbors=Harbor::where('country_id',66)->get();
             $locations=Location::with('province')->get();
 
-        foreach($locations as $location){
-            foreach($harbors as $harbor){
-                if($location['province']['country_id']==66){
-                    HarborsLocationSearch::updateOrCreate(
-                        ['location_id'=>$location['id'],'harbor_id'=>$harbor['id']],
-                        [
-                            'harbor_id'=>$harbor['id'],
-                            'location_id'=>$location['id']
-                        ]);
+            foreach($locations as $location){
+                foreach($harbors as $harbor){
+                    if($location['province']['country_id']==66){
+                        HarborsLocationSearch::updateOrCreate(
+                            ['location_id'=>$location['id'],'harbor_id'=>$harbor['id']],
+                            [
+                                'harbor_id'=>$harbor['id'],
+                                'location_id'=>$location['id']
+                            ]);
+                    }
                 }
             }
-        }
             \Log::info('done asociate locations');
         }catch(\Exception $e) {
-          
+            \Log::info($e->getMessage());
+        }
     }
 }
