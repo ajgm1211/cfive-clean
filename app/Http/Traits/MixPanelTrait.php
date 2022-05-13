@@ -51,6 +51,9 @@ trait MixPanelTrait
             case "create_quote":
                 $this->trackCreateQuoteEvent($data, $user);
                 break;
+            case "status_quote":
+                    $this->trackQuoteStatusEvent($data, $user);
+                break;    
             case "Request_Status_fcl":
                 $this->trackStatusFclEvent($data, $user);
                 break;
@@ -202,6 +205,36 @@ trait MixPanelTrait
                 'Delivery_type' => $data->delivery,
                 'Client_company' => $data->company->business_name ?? null,
                 'Client_contact' => $data->contact->fullname ?? null,
+                'User' => $user->fullname,
+            )
+        );
+    }
+
+
+    public function trackQuoteStatusEvent($data, $user)
+    {
+        $container_arr = [];
+
+        if($data->type == "FCL"){
+            $containers = $data->getContainersFromEquipment($data->equipment);
+        
+            foreach ($containers as $container) {
+                array_push($container_arr, $container->code);
+            }
+        }
+
+        $mixPanel = app('mixpanel');
+
+        $mixPanel->identify($user->id);
+
+        $mixPanel->track(
+            'Status Quote',
+            array(
+                'Company' => $data->company_user->name,
+                'Type' => $data->type,
+                'Status' =>$data->status,
+                'Equipment' => $container_arr,
+                'Delivery_type' => $data->delivery,
                 'User' => $user->fullname,
             )
         );
