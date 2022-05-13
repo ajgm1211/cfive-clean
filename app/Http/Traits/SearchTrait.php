@@ -1789,7 +1789,7 @@ trait SearchTrait
 
                 
                 foreach($inlands as $key=>$inland){
-                    if(count($inland['inlandRange'])>0 && count($inland['inlandkms'])>0 && isset($distance)){
+                    if(count($inland['inlandRange'])>0 && isset($distance) ){
                         foreach($inland['inlandRange'] as $key=>$range){
                             if(isset($range)){
                                 $range['name']=$inland['provider'];
@@ -1855,7 +1855,7 @@ trait SearchTrait
             foreach($inland['range'] as $b => $range){
                 if (array_sum($range['json_containers'])>0) {
                     $result=$this->selectContainerInland($range,$containers,$current_client,$type='range');
-                    if($r==null){
+                    if($r==null && !empty($result)){
                         $r=$inland['range'][$b];
                         $r['value']=$result['sum'];
                         $r['containers']=$result['containers'];
@@ -1863,7 +1863,7 @@ trait SearchTrait
                         $r['currency']=$result['currency'];
                         $r['type']='ranges';
                         $r['distanceDif']=$result['distanceDif'];
-                    }else{
+                    }elseif(!empty($result)){
                         if($result['distanceDif']<$r['distanceDif'] || $result['distanceDif']=='' && $r['value']<$result['sum']){
                             $r=$inland['range'][$b];
                             $r['value']=$result['sum'];
@@ -1921,7 +1921,7 @@ trait SearchTrait
                         if ($key=='C'.$container['code']) {
                             $containerResult['C'.$container['code']]=$inlandC;
                         }
-                    }else{
+                    }elseif(!empty($inland['kms'])){
                         if ($key=='C'.$container['code']) {
                             $value1=$inlandC;
                         }
