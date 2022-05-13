@@ -10,34 +10,49 @@ class QuotationOceanFreightResource extends JsonResource
 {
 
     use UtilTrait;
-    
+
+    protected $segment_id;
     /**
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
+
     public function toArray($request)
     {
-        return [
-            'id' => $this->id,
-            'contract' => $this->contract,
-            'valid_from' => $this->valid_from,
-            'valid_until' => $this->valid_until,
-            'profit' => $this->arrayToFloat($this->profit) ?? [],
-            'total' => $this->arrayToFloat(json_decode($this->total)) ?? [],
-            'currency' => $this->currency->alphacode ?? null,
-            'origin' => $this->origin_port->display_name ?? null,
-            'destiny' => $this->destination_port->display_name ?? null,
-            'transit_time' => (int) $this->transit_time ?? null,
-            'service' =>  $this->getScheduleType($this->schedule_type) ?? null,
-            'via' => $this->via ?? null,
-            'carrier' => (new CarrierResource($this->carrier))->companyUser($this->quoteV2->company_user),
-            'all_in' => $this->quoteV2->pdf_options['allIn'] ?? false,
-            //'carrier' => $this->carrier,
-            'charges' => count($this->charge)>0 ? QuotationOceanFreightChargeResource::collection($this->charge):QuotationOceanFreightChargeLclResource::collection($this->charge_lcl_air),
-        ];
+        return $this->resource->map(function($item){
+                return [
+                'id' => $item->id,
+                'segment_id'=> $this->segment_id,
+                'contract' => $item->contract,
+                'valid_from' => $item->valid_from,
+                'valid_until' => $item->valid_until,
+                'profit' => $this->arrayToFloat($item->profit) ?? [],
+                'total' => $this->arrayToFloat(json_decode($item->total)) ?? [],
+                'currency' => $item->currency->alphacode ?? null,
+                'origin' => $item->origin_port->display_name ?? null,
+                'destiny' => $item->destination_port->display_name ?? null,
+                'transit_time' => (int) $item->transit_time ?? null,
+                'service' =>  $this->getScheduleType($item->schedule_type) ?? null,
+                'via' => $item->via ?? null,
+                'carrier' => (new CarrierResource($item->carrier))->companyUser($item->quoteV2->company_user),
+                'all_in' => $item->quoteV2->pdf_options['allIn'] ?? false,
+                //'carrier' => $this->carrier,
+                'charges' => count($item->charge)>0 ? QuotationOceanFreightChargeResource::collection($item->charge):QuotationOceanFreightChargeLclResource::collection($item->charge_lcl_air),
+            ];
+        });
+        
     }
+
+    
+
+    public function segmentId ($value)
+    {
+        $this->segment_id = $value;
+        return $this;
+    }
+
 
     public function getScheduleType($value)
     {
