@@ -239,8 +239,6 @@ class QuotationController extends Controller
             'contact_id' => isset($search_data_ids['contact']) ? $search_data_ids['contact'] : null,
             'price_id' => isset($search_data_ids['pricelevel']) ? $search_data_ids['pricelevel'] : null,
             'equipment' => $equipment,
-            //'origin_address' => $data['origin_address'],
-            //'destination_address' => $data['destination_address'],
             'date_issued' => $search_data_ids['dateRange']['startDate'],
             'validity_start' => $search_data_ids['dateRange']['startDate'],
             'validity_end' => $search_data_ids['dateRange']['endDate'],
@@ -256,10 +254,6 @@ class QuotationController extends Controller
             'chargeable_weight' => $search_data['chargeableWeight'],
         ]);
 
-        // En caso de que se vuelva a repetir el quote_id
-        // if($newq_id === $quote->quote_id){
-        //     return redirect()->route('searchV2.index');
-        // }
         $quote = $quote->fresh();
 
         if ($quote->language_id == 1) {
@@ -354,7 +348,7 @@ class QuotationController extends Controller
         
         foreach ($result_data as $result) {
             
-            $result = $this->formatApiResult($result, $search_data['selectedContainerGroup'], $search_data['containers']);
+            $result = $this->formatApiResult($result, $search_data);
 
             if (isset($result['validityFrom'])) {
                 $start_date = substr($result['validityFrom'], 0, 10);
@@ -392,7 +386,8 @@ class QuotationController extends Controller
                         'calculation_type_id' => $charge['calculationtype_id'],
                         'currency_id' => $charge['currency_id'],
                         'amount' => json_encode($charge['amount']),
-                        'total' => json_encode($charge['amount']),
+                        'markups' => json_encode($charge['markups']),
+                        'total' => json_encode($charge['total'])
                     ]);
                 }
             }
@@ -404,6 +399,7 @@ class QuotationController extends Controller
                 'destination_port_id' => $newRate->destination_port_id,
                 'carrier_id' => $newRate->carrier_id,
                 'currency_id' => $newRate->currency_id,
+                'markups' => $result['rate_markups'],
             ]);
 
             $rateTotals->totalize($newRate->currency_id);
@@ -762,7 +758,7 @@ class QuotationController extends Controller
 
         foreach ($result_data as $result) {
 
-            $result = $this->formatApiResult($result, $search_data['selectedContainerGroup'], $search_data['containers']);
+            $result = $this->formatApiResult($result, $search_data);
 
             if (isset($result['validityFrom'])) {
                 $start_date = substr($result['validityFrom'], 0, 10);

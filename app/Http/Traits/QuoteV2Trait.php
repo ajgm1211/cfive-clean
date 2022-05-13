@@ -1891,8 +1891,11 @@ trait QuoteV2Trait
         return json_encode($array);
     }
 
-    public function formatApiResult($result, $containerGroup, $containers)
+    public function formatApiResult($result, $search_data)
     {
+        $containerGroup = $search_data['selectedContainerGroup'];
+        $containers = $search_data['containers'];
+
         $user = \Auth::user('web');
         $company_user = $user->worksAt();
         $company_user_id = $company_user->id;
@@ -1975,11 +1978,26 @@ trait QuoteV2Trait
                     }
                 }
 
-                $charge['amount'] = [];
-
                 $i = 0;
                 foreach($charge['containers'] as $cont){
-                    $charge['amount']['c'.$containers[$i]['code']] = $cont['amount'];
+                    if(!isset($cont['priceLevel'])){
+                        $charge['amount']['c'.$containers[$i]['code']] = $cont['amount'];
+                        $charge['markups']['m'.$containers[$i]['code']] = 0;
+                        $rate_markups['m'.$containers[$i]['code']] = 0;
+                    } else {
+                        $charge['amount']['c'.$containers[$i]['code']] = $cont['chargeAmount'];
+                        $charge['markups']['m'.$containers[$i]['code']] = $cont['priceLevel']['amount'];
+
+                        if(!isset($rate_markups['m'.$containers[$i]['code']])){
+                            $rate_markups['m'.$containers[$i]['code']] = 0;
+                        }
+
+                        if($key == "freightSurcharges"){
+                            $rate_markups['m'.$containers[$i]['code']] += $cont['priceLevel']['amount'];
+                        }
+                    }
+                    
+                    $charge['total']['c'.$containers[$i]['code']] = $cont['amount'];
                     $i++;
                 }
 
@@ -1987,8 +2005,13 @@ trait QuoteV2Trait
             }   
         }
 
+        if(isset($rate_markups)){
+            $result['rate_markups'] = $rate_markups;
+        }
+
         return $result;
     }
+
     public function convertToCurrencyQuote(Currency $fromCurrency, Currency $toCurrency, Array $amounts, $quote)
     {    
         if ($fromCurrency['alphacode'] == $toCurrency['alphacode']) {                
