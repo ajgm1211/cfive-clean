@@ -112,7 +112,15 @@
 
           <ul class="places-list" v-if="openOriginPlacesFrom === true">
             <div v-if="!filtered_harbors.length && searching_harbors == false" class="no-results-filter">
-              We couldn't find any matching result.
+              <div v-if="not_found">
+                <p style="font-size: 16px;   margin-bottom: 0;">We couldn't find any matching result.</p>
+                <p style="color: #b2b2b2; font-size: 13px;   margin-bottom: 0;">
+                  Please check spelling or try different keywords.
+                </p>
+              </div>
+              <div v-else>
+                <p style="font-size: 16px; margin-bottom: 0;">Try typing something to find a port or location!</p>
+              </div>
             </div>
 
             <div v-if="searching_harbors == true">
@@ -203,8 +211,20 @@
             ></b-form-input>
           </label>
           <ul class="places-list" style="width:100%" v-show="openOriginPlacesTo === true">
-            <div v-if="!filtered_harbors.length && searching_harbors == false" class="no-results-filter">
+            <!-- <div v-if="!filtered_harbors.length && searching_harbors == false" class="no-results-filter">
               We couldn't find any matching result.
+            </div> -->
+
+            <div v-if="!filtered_harbors_destination.length && searching_harbors == false" class="no-results-filter">
+              <div v-if="not_found">
+                <p style="font-size: 16px;   margin-bottom: 0;">We couldn't find any matching result.</p>
+                <p style="color: #b2b2b2; font-size: 13px;   margin-bottom: 0;">
+                  Please check spelling or try different keywords.
+                </p>
+              </div>
+              <div v-else>
+                <p style="font-size: 16px; margin-bottom: 0;">Try typing something to find a port or location!</p>
+              </div>
             </div>
 
             <div v-if="searching_harbors == true">
@@ -236,7 +256,7 @@
             <li
               v-show="searching_harbors == false"
               style="cursor:pointer"
-              v-for="(data, key) in filtered_harbors"
+              v-for="(data, key) in filtered_harbors_destination"
               :key="key"
             >
               <b-form-checkbox
@@ -1248,6 +1268,7 @@ export default {
     return {
       // test new select harbors
       filtered_harbors: [],
+      filtered_harbors_destination: [],
       searching_harbors: false,
       skeletons: [1, 2, 3, 4],
       // end test new select harbors
@@ -1415,6 +1436,7 @@ export default {
       contractAdded: false,
       contractAddedFailed: false,
       creatingContract: false,
+      not_found: false,
       //HELP DROPDOWN
       helpOptions: [
         {
@@ -1436,18 +1458,20 @@ export default {
     api.getData({}, "/api/search/data", (err, data) => {
       this.setDropdownLists(err, data.data);
       this.getQuery();
-      this.filtered_harbors = this.datalists.harbors.filter((val, i) => i < 10);
     });
   },
   methods: {
     openSelect(e) {
-      this.filtered_harbors = this.datalists.harbors.filter((val, i) => i < 10);
       if (e == "destiny") {
+        this.not_found = false;
+        this.filtered_harbors = [];
         this.originPlacesTo = "";
         this.openOriginPlacesTo = !this.openOriginPlacesTo;
         this.openOriginPlacesFrom = false;
         this.$nextTick(() => this.$refs.input_select_destination.focus());
       } else if (e == "origin") {
+        this.not_found_destination = false;
+        this.filtered_harbors_destination = [];
         this.originPlacesFrom = "";
         this.openOriginPlacesFrom = !this.openOriginPlacesFrom;
         this.openOriginPlacesTo = false;
@@ -1455,6 +1479,8 @@ export default {
       }
     },
     filterHarbors: _.debounce(function(vmodel) {
+      this.filtered_harbors = [];
+      this.filtered_harbors_destination = [];
       this.searching_harbors = true;
 
       let currentInput;
@@ -1464,24 +1490,25 @@ export default {
         currentInput = this.originPlacesTo.toLowerCase();
       }
 
-      this.filtered_harbors = [];
+      if (currentInput.length > 1) {
+        this.not_found = true;
+        this.not_found_destination = true;
+      } else {
+        this.not_found = false;
+        this.not_found_destination = false;
+      }
 
-      let new_harbors = [];
-      this.datalists.harbors.filter((item, index) => {
-        let freeze = Object.freeze(item);
-
-        let filtered = freeze.location.toLowerCase().includes(currentInput.toLowerCase());
-
-        if (filtered == true) {
-          new_harbors.push(freeze);
+      api.getData({}, `/api/search/${currentInput}/get_port_and_location`, (err, data) => {
+        if (vmodel == "originPlacesFrom") {
+          this.filtered_harbors = data.filter((val, i) => i < 15);
+        } else {
+          this.filtered_harbors_destination = data.filter((val, i) => i < 15);
         }
       });
 
       setTimeout(() => {
         this.searching_harbors = false;
-      }, 800);
-
-      this.filtered_harbors = new_harbors.filter((val, i) => i < 10);
+      }, 500);
     }, 800),
     placeCheckedFrom(data) {
       let placeType = [];
