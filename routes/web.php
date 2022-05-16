@@ -44,6 +44,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
 
 Route::middleware(['auth'])->prefix('contacts')->group(function () {
     route::get('v2', 'ContactV2Controller@index');
+    route::get('v2/failed', 'ContactV2Controller@failed');
     route::get('v2/{id}/edit', 'ContactV2Controller@edit');
     Route::get('v2/template', 'ContactV2Controller@downloadTemplateFile');
 });
@@ -1077,7 +1078,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/search/storeContract', 'SearchApiController@storeContractNewSearch');
     Route::post('/api/search/downloadContract', 'SearchApiController@downloadContractFile');
     Route::get('/api/search/downloadMContract/{contract}', 'SearchApiController@downloadMultipleContractFile')->name('contract.multiple');
-    Route::get('/api/search/{name}/get_port_and_location', 'SearchApiController@getPortAndLocationByInput');
 
     /**New Search LCL */
     Route::get('/api/search_lcl/list', 'SearchApiLclController@list')->name('searchlclV2.list');

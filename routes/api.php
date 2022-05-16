@@ -90,6 +90,7 @@ Route::group(['prefix' => 'v2'], function () {
 
         // Providers
         Route::put('provider/{id}/update/refcode', 'ProvidersController@updateRefCode');
+        Route::get('getContract', 'ApiControllerV2@getContract');
     });
 });
 
@@ -204,4 +205,5 @@ Route::group(['prefix'=>'contacts','middleware' => 'auth:api'], function () {
     Route::put('deleteAll', 'ContactV2Controller@destroyAll');
     Route::get('retrieve/{company}', 'ContactV2Controller@retrieve');
     Route::get('template', 'ContactV2Controller@downloadTemplateFile');
+    Route::get('failed/list', 'ContactV2Controller@failedList');
 });

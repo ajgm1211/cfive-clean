@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Contact;
+use App\FailedContact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use App\Http\Resources\ContactResource;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\FailedContactResource;
 
 class ContactV2Controller extends Controller
 {
@@ -118,6 +120,29 @@ class ContactV2Controller extends Controller
 
         return new ContactResource($new_contact);
     }
+
+    /**
+     * Failed contacts view to storage.
+     *
+     * @param  \App\Contact $contact
+     * @return \Illuminate\Http\Response
+     */
+
+    public function failed(){
+        return view('contacts.v2.failed');
+    }
+    
+    /**
+     * Failed contacts to storage.
+     *
+     * @param  \App\Contact $contact
+     * @return \Illuminate\Http\Response
+     */
+    public function failedList(Request $request){
+        $failedContacts = FailedContact::FilterByCurrentCompanyUser()->orderBy('id', 'asc')->filter($request);
+        return FailedContactResource::collection($failedContacts);
+    }
+
 
     /**
      * Remove the specified resource from storage.

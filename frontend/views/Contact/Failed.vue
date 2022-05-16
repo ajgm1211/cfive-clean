@@ -3,7 +3,7 @@
   <div class="col-12">
         <div class="head">
             <div class="head-title">
-                <h2>Failed Companies</h2>
+                <h2>Failed Contacts</h2>
             </div>
             <div class="head-btns">
             </div>
@@ -13,8 +13,8 @@
             :fields="fields"
             :actions="actions"
             :filter="true"
-            :simpleSelect="false"
             :massiveSelect="false"
+            :simpleSelect="false"
             :massiveactions="[]"
             :singleActions="[]"
             :totalResults="totalResults"
@@ -28,7 +28,7 @@
 <script>
 
 import DataTable from '../../components/common/DataTable'
-import actions from '../../store/modules/company/actionFailed'
+import actions from '../../store/modules/contact/actionFailed'
 
 export default {
   components: {DataTable},
@@ -39,13 +39,11 @@ export default {
         actions:actions,
         fields: [
         { key: "id", label: "ID", filterIsOpen:false },
-        { key: "business_name", label: "Business Name", filterIsOpen:false },
-        { key: "phone", label: "Phone", filterIsOpen:false },
-        { key: "email", label: "Email", filterIsOpen:false },
-        { key: "address", label: "Address", filterIsOpen:false },
-        { key: "tax_number", label: "Tax Number", filterIsOpen:false },
-        { key: "associated_quotes", label: "Associated Quotes", filterIsOpen:false },
-        { key: "owner", label: "Owner", filterIsOpen:false },
+        { key: "first_name", label: "First Name", filterIsOpen: false },
+        { key: "last_name", label: "Last Name", filterIsOpen: false },
+        { key: "email", label: "Email", filterIsOpen: false },
+        { key: "phone", label: "Phone", filterIsOpen: false },
+        { key: "position", label: "Position", filterIsOpen: false },
         { key: "created_at", label: "Created at", filterIsOpen:false },
       ],
     }

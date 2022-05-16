@@ -21,9 +21,8 @@
             <!-- Header table -->
             <b-thead>
                 <b-tr>
-                    <b-th>
+                    <b-th v-if="massiveSelect">
                         <b-form-checkbox
-                            v-if="massiveSelect"
                             v-model="allSelected"
                             :indeterminate="false"
                             @change="toggleAll"
@@ -382,7 +381,7 @@
                 <!-- Data List -->
                 <b-tr v-for="(item, key) in data" :key="key" :id="key">
                     <!-- Checkbox column -->
-                    <b-td>
+                    <b-td v-if="simpleSelect">
                         <b-form-checkbox-group>
                             <b-form-checkbox
                                 v-bind:value="item"
@@ -759,6 +758,11 @@ export default {
             default: () => {
                 return {};
             },
+        },
+        simpleSelect:{
+            type: Boolean,
+            required: false,
+            default: true,
         },
         massiveSelect: {
             type: Boolean,

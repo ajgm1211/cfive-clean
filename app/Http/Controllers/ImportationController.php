@@ -18,7 +18,7 @@ use App\Country;
 use App\Currency;
 use App\Direction;
 use App\Failcompany;
-use App\Failedcontact;
+use App\FailedContact;
 use App\FailRate;
 use App\FailSurCharge;
 use App\GroupContainer;
@@ -4476,7 +4476,7 @@ class ImportationController extends Controller
                                    ]);
                                }
                            } else {
-                               $failcontactexits = Failedcontact::where('first_name', $firstnameVal)
+                               $failcontactexits = FailedContact::where('first_name', $firstnameVal)
                                    ->where('last_name', $lastnameVal)
                                    ->where('phone', $phoneVal)
                                    ->where('email', $emailVal)
@@ -4486,7 +4486,7 @@ class ImportationController extends Controller
                                    ->get();
 
                                if (empty($failcontactexits) ) {
-                                   Failedcontact::create([
+                                   FailedContact::create([
                                        'first_name' => $firstnameVal,
                                        'last_name' => $lastnameVal,
                                        'phone' => $phoneVal,
@@ -4523,14 +4523,14 @@ class ImportationController extends Controller
     public function FailedContactView()
     {
         $companyuser = \Auth::user()->company_user_id;
-        $countfailcontacts = Failedcontact::where('company_user_id', $companyuser)->count();
+        $countfailcontacts = FailedContact::where('company_user_id', $companyuser)->count();
 
         return view('importation.failedcontacts', compact('countfailcontacts', 'companyuser'));
     }
 
     public function FailedContactlist($id)
     {
-        $failedconatcs = Failedcontact::where('company_user_id', $id)->get();
+        $failedconatcs = FailedContact::where('company_user_id', $id)->get();
 
         $collections = collect([]);
         foreach ($failedconatcs as $failedconatc) {
@@ -4606,7 +4606,7 @@ class ImportationController extends Controller
     public function DeleteFailedContact($id)
     {
         try {
-            $fcontact = Failedcontact::find($id);
+            $fcontact = FailedContact::find($id);
             $fcontact->delete();
 
             return 1;
@@ -4617,7 +4617,7 @@ class ImportationController extends Controller
 
     public function ShowFailContact($id)
     {
-        $failedcontact = Failedcontact::find($id);
+        $failedcontact = FailedContact::find($id);
 
         $firnameVal = '';
         $lastnameVal = '';
@@ -4716,7 +4716,7 @@ class ImportationController extends Controller
         $contact->save();
 
         if (empty($contact->id) != true) {
-            $contact = Failedcontact::find($id);
+            $contact = FailedContact::find($id);
             $contact->delete();
         }
 
@@ -4724,7 +4724,7 @@ class ImportationController extends Controller
         $request->session()->flash('message.content', 'The conatct was updated');
 
         //Revisar
-        $countfail = Failedcontact::where('company_user_id', $id)->count();
+        $countfail = FailedContact::where('company_user_id', $id)->count();
         if (count($countfail) > 0) {
             return redirect()->route('contacts.index');
         } else {
