@@ -414,11 +414,7 @@ class QuotationController extends Controller
         
         /** Tracking create quote event with Mix Panel*/
         $this->trackEvents("create_quote", $quote);
-
-        $this->trackEvents("status_quote", $quote);
-
         
-
         return new QuotationResource($quote);
     }
 
