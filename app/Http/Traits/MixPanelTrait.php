@@ -201,6 +201,7 @@ trait MixPanelTrait
             array(
                 'Company' => $data->company_user->name,
                 'Type' => $data->type,
+                'Status' =>$data->status,
                 'Equipment' => $container_arr,
                 'Delivery_type' => $data->delivery,
                 'Client_company' => $data->company->business_name ?? null,
