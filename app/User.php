@@ -57,9 +57,15 @@ class User extends Authenticatable implements Auditable
     {
         return $this->belongsTo('App\CompanyUser');
     }
+    
     public function delegation()
     {
         return $this->belongsToMany('App\Delegation');
+    }
+
+    public function user_delegation()
+    {
+        return $this->hasManyThrough('App\Delegation', 'App\UserDelegation', 'users_id','id','id','delegations_id');
     }
 
     public function userToken()

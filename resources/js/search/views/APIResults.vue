@@ -463,13 +463,25 @@
                       }}</b></b-td
                     >
                     <b-td>{{ cmaSurchargeName.calculationType }}</b-td>
-                    <!-- <b-td></b-td>
-                        <b-td></b-td> -->
+                    
                     <b-td
                       v-for="(cmaSurchargeContainer,
                       cmaContainerKey) in cmaSurchargeName.containers"
                       :key="cmaContainerKey"
                       ><p>
+                      <p v-if="cmaSurchargeContainer.priceLevel != undefined">
+                        {{
+                          cmaSurchargeContainer.chargeAmount
+                        }}
+                      </p>
+                      <span
+                        v-if="
+                          cmaSurchargeContainer.priceLevel != undefined
+                        "
+                        class="profit"
+                        >+{{
+                            cmaSurchargeContainer.priceLevel.amount
+                      }}</span>
                         <b
                           >{{ cmaSurchargeContainer.currencyCode }}
                           {{ cmaSurchargeContainer.amount }}</b
@@ -479,9 +491,6 @@
                   </b-tr>
 
                   <b-tr>
-                    <!-- <b-td></b-td>
-                        <b-td></b-td>
-                        <b-td></b-td> -->
                     <b-td colspan="2" style="text-align: right"
                       ><b
                         >Total
@@ -1344,6 +1353,19 @@
                     containerKey) in surchargeName.containers"
                     :key="containerKey"
                     ><p>
+                      <p v-if="surchargeContainer.priceLevel != undefined">
+                        {{
+                          surchargeContainer.chargeAmount
+                        }}
+                      </p>
+                      <span
+                        v-if="
+                          surchargeContainer.priceLevel != undefined
+                        "
+                        class="profit"
+                        >+{{
+                            surchargeContainer.priceLevel.amount
+                      }}</span>
                       <b
                         >{{ surchargeContainer.currencyCode }}
                         {{ surchargeContainer.amount }}</b
@@ -2165,6 +2187,19 @@
                       evergreenContainerKey) in evergreenSurchargeName.containers"
                       :key="evergreenContainerKey"
                       ><p>
+                        <p v-if="evergreenSurchargeContainer.priceLevel != undefined">
+                        {{
+                          evergreenSurchargeContainer.chargeAmount
+                        }}
+                      </p>
+                      <span
+                        v-if="
+                          evergreenSurchargeContainer.priceLevel != undefined
+                        "
+                        class="profit"
+                        >+{{
+                            evergreenSurchargeContainer.priceLevel.amount
+                      }}</span>
                         <b
                           >{{ evergreenSurchargeContainer.currencyCode }}
                           {{ evergreenSurchargeContainer.amount }}</b
@@ -3059,6 +3094,19 @@
                       hapagContainerKey) in hapagSurchargeName.containers"
                       :key="hapagContainerKey"
                       ><p>
+                        <p v-if="hapagSurchargeContainer.priceLevel != undefined">
+                        {{
+                          hapagSurchargeContainer.chargeAmount
+                        }}
+                      </p>
+                      <span
+                        v-if="
+                          hapagSurchargeContainer.priceLevel != undefined
+                        "
+                        class="profit"
+                        >+{{
+                            hapagSurchargeContainer.priceLevel.amount
+                         }}</span>
                         <b
                           >{{ hapagSurchargeContainer.currencyCode }}
                           {{ hapagSurchargeContainer.amount }}</b
@@ -3947,6 +3995,19 @@
                       oneContainerKey) in oneSurchargeName.containers"
                       :key="oneContainerKey"
                       ><p>
+                        <p v-if="oneSurchargeContainer.priceLevel != undefined">
+                        {{
+                          oneSurchargeContainer.chargeAmount
+                        }}
+                      </p>
+                      <span
+                        v-if="
+                          oneSurchargeContainer.priceLevel != undefined
+                        "
+                        class="profit"
+                        >+{{
+                            oneSurchargeContainer.priceLevel.amount
+                        }}</span>
                         <b
                           >{{ oneSurchargeContainer.currencyCode }}
                           {{ oneSurchargeContainer.amount }}</b
@@ -4835,6 +4896,19 @@
                       coscoContainerKey) in coscoSurchargeName.containers"
                       :key="coscoContainerKey"
                       ><p>
+                        <p v-if="coscoSurchargeContainer.priceLevel != undefined">
+                        {{
+                          coscoSurchargeContainer.chargeAmount
+                        }}
+                      </p>
+                      <span
+                        v-if="
+                          coscoSurchargeContainer.priceLevel != undefined
+                        "
+                        class="profit"
+                        >+{{
+                            coscoSurchargeContainer.priceLevel.amount
+                        }}</span>
                         <b
                           >{{ coscoSurchargeContainer.currencyCode }}
                           {{ coscoSurchargeContainer.amount }}</b
@@ -5399,6 +5473,13 @@ export default {
       let fullResponseLength = 0;
       var params = [];
       let reqCounter = 0;
+      let today = new Date();
+
+      today = today.toISOString().slice(0,10);
+
+      if(apiDate < today){
+        apiDate = today;
+      }
 
       component.$emit("apiSearchStarted", "apiSearchStart");
 
@@ -5434,14 +5515,29 @@ export default {
                 (component.request.selectedContainerGroup.id == 2 &&
                   apiCarrier.code == "cmacgm")
               ) {
-                params.push({
-                  originPort: origin,
-                  destinationPort: destination,
-                  equipmentSizeType: apiContainers,
-                  departureDate: apiDate,
-                  uemail: component.datalists.user.email,
-                  brands: apiCarrier.code,
-                });
+                if(component.request.pricelevel === null) {
+                  params.push({
+                    originPort: origin,
+                    destinationPort: destination,
+                    equipmentSizeType: apiContainers,
+                    departureDate: apiDate,
+                    uemail: component.datalists.user.email,
+                    brands: apiCarrier.code,
+                  });
+                } else {
+                  params.push({
+                    originPort: origin,
+                    destinationPort: destination,
+                    equipmentSizeType: apiContainers,
+                    departureDate: apiDate,
+                    uemail: component.datalists.user.email,
+                    brands: apiCarrier.code,
+                    priceLevel: component.request.pricelevel.id,
+                    direction: component.request.direction == 2 ? 'export' : 'import',
+                  });
+                }
+
+
               } else {
                 component.$emit("apiSearchDone", fullResponseLength);
               }

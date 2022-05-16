@@ -1,5 +1,8 @@
 <template>
     <div class="container-fluid">
+      <HelpDropdown
+        :options="helpOptions"
+      ></HelpDropdown>
       <div class="row mt-5">
         <div class="col-12">
           <b-card>
@@ -20,8 +23,9 @@
               :fields="fields"
               :actions="actions.quotes"
               :filter="true"
-              :singleActions="['edit', 'duplicate', 'delete', 'specialduplicate']"
+              :singleActions="['edit', 'duplicate', 'delete', 'specialduplicate', 'generatePDF']"
               @onEdit="onEdit"
+              @onGeneratePDF="onGeneratePDF"
               :totalResults="totalResults"
             ></DataTable>
           </b-card>
@@ -38,6 +42,7 @@ import Ocean from "./Ocean";
 import actions from "../../actions";
 import Local from "./Local";
 import DataTable from "../../components/DataTable";
+import HelpDropdown from "../../components/HelpDropdown";
 
 export default {
   components: {
@@ -46,6 +51,7 @@ export default {
     Inland,
     Ocean,
     Local,
+    HelpDropdown,
   },
   data() {
     return {
@@ -101,6 +107,16 @@ export default {
         },
         { key: "created_at", label: "Created at", filterIsOpen:false },
       ],
+      helpOptions: [
+        {
+          title: "How to manage your quotes",
+          link: "https://support.cargofive.com/how-to-manage-your-quotes/"
+        },
+        {
+          title: "How to generate an FCL Quote",
+          link: "https://support.cargofive.com/how-to-generate-an-fcl-quote-new/"
+        }
+      ]
     };
   },
   created() {},
@@ -108,6 +124,9 @@ export default {
 
     onEdit(data) {
       window.location = `/api/quote/${data.id}/edit`;
+    },
+    onGeneratePDF(data) { 
+      window.open(`/api/quote/pdf/${data.id}`, '_blank');
     },
 
     setClient(value) {

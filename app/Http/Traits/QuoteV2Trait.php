@@ -2,6 +2,8 @@
 
 namespace App\Http\Traits;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\AutomaticRate;
 use App\Charge;
 use App\ChargeLclAir;
@@ -17,6 +19,8 @@ use App\SaleTermV2;
 use App\SendQuote;
 use App\User;
 use App\Surcharge;
+use App\LocalChargeQuoteLclTotal;
+use App\LocalChargeQuoteTotal;
 use Illuminate\Support\Collection as Collection;
 
 trait QuoteV2Trait
@@ -1887,8 +1891,11 @@ trait QuoteV2Trait
         return json_encode($array);
     }
 
-    public function formatApiResult($result, $containerGroup, $containers)
+    public function formatApiResult($result, $search_data)
     {
+        $containerGroup = $search_data['selectedContainerGroup'];
+        $containers = $search_data['containers'];
+
         $user = \Auth::user('web');
         $company_user = $user->worksAt();
         $company_user_id = $company_user->id;
@@ -1922,7 +1929,7 @@ trait QuoteV2Trait
 
                 $surcharge = Surcharge::where('name',$charge['chargeCode'])->first();
 
-                if($charge['chargeCode'] != "FRT00" && $charge['chargeCode'] != "bas" && $charge['chargeCode'] != "SEA"){
+                if(!in_array($charge['chargeCode'],["FRT00","bas","SEA","OFT"])){
                     
                     if($surcharge == null){
                         $newSurcharge = Surcharge::create([
@@ -1949,7 +1956,7 @@ trait QuoteV2Trait
                     $charge['type_id'] = 3;
                 }
 
-                if($charge['calculationType'] == 'Per Container' || $charge['calculationType'] == null || $charge['calculationType'] == 'PER CONTAINER' ){
+                if(in_array($charge['calculationType'],['Per Container', 'PER CONTAINER', null])){
                     if($containerGroup['id'] == 1){
                         $charge['calculationtype_id'] = 5;
                     }elseif($containerGroup['id'] == 2){
@@ -1959,7 +1966,7 @@ trait QuoteV2Trait
                     }elseif($containerGroup['id'] == 4){
                         $charge['calculationtype_id'] = 21;
                     }
-                }elseif($charge['calculationType'] == 'Per Doc' || $charge['calculationType'] == 'Per Document' || $charge['calculationType'] == 'PER DOC' ){
+                }elseif(in_array($charge['calculationType'],['Per Doc', 'Per Document', 'PER DOC', 'PER DOCUMENT'])){
                     if($containerGroup['id'] == 1){
                         $charge['calculationtype_id'] = 9;
                     }elseif($containerGroup['id'] == 2){
@@ -1971,16 +1978,35 @@ trait QuoteV2Trait
                     }
                 }
 
-                $charge['amount'] = [];
-
                 $i = 0;
                 foreach($charge['containers'] as $cont){
-                    $charge['amount']['c'.$containers[$i]['code']] = $cont['amount'];
+                    if(!isset($cont['priceLevel'])){
+                        $charge['amount']['c'.$containers[$i]['code']] = $cont['amount'];
+                        $charge['markups']['m'.$containers[$i]['code']] = 0;
+                        $rate_markups['m'.$containers[$i]['code']] = 0;
+                    } else {
+                        $charge['amount']['c'.$containers[$i]['code']] = $cont['chargeAmount'];
+                        $charge['markups']['m'.$containers[$i]['code']] = $cont['priceLevel']['amount'];
+
+                        if(!isset($rate_markups['m'.$containers[$i]['code']])){
+                            $rate_markups['m'.$containers[$i]['code']] = 0;
+                        }
+
+                        if($key == "freightSurcharges"){
+                            $rate_markups['m'.$containers[$i]['code']] += $cont['priceLevel']['amount'];
+                        }
+                    }
+                    
+                    $charge['total']['c'.$containers[$i]['code']] = $cont['amount'];
                     $i++;
                 }
 
                 $result['pricingDetails']['surcharges'][$key][$chargeKey] = $charge;
             }   
+        }
+
+        if(isset($rate_markups)){
+            $result['rate_markups'] = $rate_markups;
         }
 
         return $result;
@@ -2032,6 +2058,49 @@ trait QuoteV2Trait
             $amounts[$container] = isDecimal($convertedPrice,true);
         }
         return $amounts;
+    }
+
+    public function createLocalChargeTotal(Array $params)
+    {
+        $quote = QuoteV2::findOrFail($params['quote_id']);
+        $currency_id = Auth::user()->companyUser->currency_id;
+        
+        if($quote->type == "FCL"){
+            $local_charge_total = LocalChargeQuoteTotal::where(['quote_id' => $quote->id, 'type_id' => $params['type_id'], 'port_id' =>  $params['port_id']])->first();
+            
+            if(empty($local_charge_total)){
+                $local_charge_total = LocalChargeQuoteTotal::create([
+                    'total' => [],
+                    'quote_id' => $quote->id,
+                    'port_id' => $params['port_id'],
+                    'currency_id' => $currency_id,
+                    'type_id' => $params['type_id']
+                ]);
+            }
+        } else if($quote->type == "LCL"){
+            $local_charge_total = LocalChargeQuoteLclTotal::where(['quote_id' => $quote->id, 'type_id' => $params['type_id'], 'port_id' =>  $params['port_id']])->first();
+
+            if(empty($local_charge_total)){
+                $local_charge_total = LocalChargeQuoteLclTotal::create([
+                    'total' => 0,
+                    'quote_id' => $quote->id,
+                    'port_id' => $params['port_id'],
+                    'currency_id' => $currency_id,
+                    'type_id' => $params['type_id']
+                ]);
+            }
+            $amounts[$container] = isDecimal($convertedPrice,true);
+        }
+    }
+
+    public function getUsdExchangeRate($exchangeRate, $currency) {
+        if (isset($exchangeRate)) {
+            $inputConversion=$exchangeRate['exchangeUSD'];
+        }
+        else { 
+            $inputConversion=$currency->rates;
+        }
+        return $inputConversion;
     }
 
     public function getUsdExchangeRate($exchangeRate, $currency) {

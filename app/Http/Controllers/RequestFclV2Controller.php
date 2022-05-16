@@ -402,7 +402,9 @@ class RequestFclV2Controller extends Controller
         } elseif ($status == 'Processing') {
             $status_arr['Processing'] = 'Processing';
             $status_arr['Review'] = 'Review';
-        } elseif ($status == 'Imp Finished') {
+            $status_arr['Clarification needed'] = 'Clarification needed';
+        } elseif ($status == 'Imp Finished' || $status == 'Clarification needed') {
+            $status_arr['Clarification needed'] = 'Clarification needed';
             $status_arr['Processing'] = 'Processing';
             $status_arr['Imp Finished'] = 'Imp Finished';
             $status_arr['Review'] = 'Review';
@@ -442,8 +444,7 @@ class RequestFclV2Controller extends Controller
                     $Ncontract->time_star_one = true;
                 }
                 //Calling Mix Panel's event
-            } elseif ($Ncontract->status == 'Review') {
-                $this->setStatusContract($Ncontract->contract_id,'incomplete');
+            } elseif ($Ncontract->status == 'Review' || $Ncontract->status == 'Clarification needed') {
                 if ($Ncontract->time_total == null) {
                     $fechaEnd = Carbon::parse($now2);
                     if (empty($Ncontract->time_star) == true) {
@@ -459,7 +460,12 @@ class RequestFclV2Controller extends Controller
                         }
                         $Ncontract->time_total = $time_exacto;
                     }
+                }
+                if($Ncontract->status == 'Review'){
                     $this->trackEvents("Request_Review", $Ncontract);
+                    $this->setStatusContract($Ncontract->contract_id,'incomplete');
+                }else if($Ncontract->status == 'Clarification needed') {
+                    $this->setStatusContract($Ncontract->contract_id,'Clarification needed');
                 }
                 //Calling Mix Panel's event
             } elseif ($Ncontract->status == 'Done') {
@@ -509,7 +515,6 @@ class RequestFclV2Controller extends Controller
 
     public function setStatusContract($contract_id,$new_status)
     {
-
         $contractObj = Contract::find($contract_id);
         if($contractObj->status != $new_status ){
             $contractObj->status = $new_status;

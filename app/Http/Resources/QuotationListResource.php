@@ -38,10 +38,8 @@ class QuotationListResource extends JsonResource
             'custom_quote_id' => $this->custom_quote_id ?? '--',
             'company_id' => $this->company,
             'status' => $this->status_quote()->first(),
-            'rates' => $this->rates_v2,
             'origin' => $origin_array ?? '--',
             'destiny' => $destiny_array ?? '--',
-            'rates' => $this->rates_v2,
             'user_id' => $this->user,
             'created_at' => date('Y-m-d H:m:s', strtotime($this->created_at)),
         ];

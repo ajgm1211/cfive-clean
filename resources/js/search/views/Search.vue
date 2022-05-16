@@ -1,5 +1,8 @@
 <template>
-  <div id="search" class="search pt-5">
+  <div id="search" class="search" style="padding-top:1px;">
+    <HelpDropdown
+      :options="helpOptions"
+    ></HelpDropdown>
     <div v-if="loaded">
       <!-- OPCIONES DE DELIVERY Y ADDITIONAL SERVICES BOTON -->
       <div class="row mr-0 ml-0">
@@ -1537,7 +1540,7 @@ import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import "vue2-daterange-picker/dist/vue2-daterange-picker.css";
 import actions from "../../actions";
-import VueSkeletonLoader from "skeleton-loader-vue";
+import HelpDropdown from "../../components/HelpDropdown";
 
 export default {
   components: {
@@ -1545,7 +1548,7 @@ export default {
     Multiselect,
     DateRangePicker,
     vueDropzone: vue2Dropzone,
-    VueSkeletonLoader,
+    HelpDropdown,
   },
   data() {
     return {
@@ -1717,6 +1720,21 @@ export default {
       contractAdded: false,
       contractAddedFailed: false,
       creatingContract: false,
+      //HELP DROPDOWN
+      helpOptions: [
+        {
+          title: "How to search for FCL Rates",
+          link: "https://support.cargofive.com/how-to-search-for-fcl-rates-new/"
+        },
+        {
+          title: "How to search for LCL Rates",
+          link: "https://support.cargofive.com/how-to-perform-rate-searches-lcl-new/"
+        },
+        {
+          title: "How to create an FCL Express Contract",
+          link: "https://support.cargofive.com/how-to-create-a-fcl-express-contract/"
+        }
+      ]
     };
   },
   mounted() {

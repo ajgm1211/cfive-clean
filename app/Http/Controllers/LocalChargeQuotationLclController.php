@@ -245,6 +245,13 @@ class LocalChargeQuotationLclController extends Controller
             'type_id' => $request->type_id,
         ]);
 
+        $params_for_total = array(
+            'quote_id' => $request->quote_id,
+            'port_id' => $request->port_id,
+            'type_id' => $request->type_id
+        );
+        $this->createLocalChargeTotal($params_for_total);
+
         $local_charge_lcl->totalize();
     }
 
@@ -286,7 +293,7 @@ class LocalChargeQuotationLclController extends Controller
                 'quote_id' => $quote,
                 'type_id' => $type
             ])->first();
-
+            
             if ($previous_charge) {
                 $previous_charge->groupingCharges($localcharge);
                 $previous_charge->totalize();
@@ -309,6 +316,14 @@ class LocalChargeQuotationLclController extends Controller
                 ]);
 
                 $this->storeInPivotChargeSaleCodeQuote($sale_code_id, $localcharge, $local_charge);
+
+                $params_for_total = array(
+                    'quote_id' => $quote,
+                    'port_id' => $port,
+                    'type_id' => $type
+                );
+                $this->createLocalChargeTotal($params_for_total);
+
                 $local_charge->totalize();
             }
         } else {
@@ -331,8 +346,14 @@ class LocalChargeQuotationLclController extends Controller
                 'quote_id' => $quote,
                 'type_id' => $type,
             ]);
-
-            //$local_charge->sumarize();
+            
+            $params_for_total = array(
+                'quote_id' => $quote,
+                'port_id' => $port,
+                'type_id' => $type
+            );
+            $this->createLocalChargeTotal($params_for_total);
+            
             $local_charge->totalize();
         }
 

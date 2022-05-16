@@ -602,6 +602,7 @@ class FclPdf
             $totalsArrayOutput[$routePrefix . $routeId]['POD'] = $frTotal->rate()->first() ? $frTotal->rate()->first()->destination_port()->first()->display_name : "--";
             $totalsArrayOutput[$routePrefix . $routeId]['carrier'] = $frTotal->carrier()->first()->name ?? "--";
             $totalsArrayOutput[$routePrefix . $routeId]['currency'] = $quote->pdf_options['totalsCurrency']['alphacode'] ?? "--";
+            $totalsArrayOutput[$routePrefix . $routeId]['freightAdded'] = false;
             $routeId++;
         }
 
@@ -611,14 +612,15 @@ class FclPdf
 
         $totals = $freightTotals->concat($inlandTotals)->concat($localChargeTotals);
 
-
         foreach ($totals as $total) {
+            $isFreight = false;
 
             if (is_a($total, 'App\AutomaticRateTotal')) {
                 $totalsArrayInput = json_decode($total->totals, true);
                 $portArray['origin'] = $total->origin_port() ? $total->origin_port()->first()->display_name : "--";
                 $portArray['destination'] = $total->destination_port() ? $total->destination_port()->first()->display_name : "--";
                 $portArray['carrier'] = $total->carrier()->first()->name;
+                $isFreight = true;
             } else if (is_a($total, 'App\AutomaticInlandTotal')) {
                 $totalsArrayInput = json_decode($total->totals, true);
                 $portArray['carrier'] = 'local';
@@ -650,9 +652,15 @@ class FclPdf
             }
 
             foreach ($totalsArrayOutput as $key => $route) {
+
+                if($isFreight && $route['freightAdded']){
+                    continue;
+                }
+                
                 if (($route['POL'] == $portArray['origin'] && $route['POD'] == $portArray['destination'] && $portArray['carrier'] == $route['carrier']) ||
                     ($portArray['carrier'] == 'local' && ($route['POL'] == $portArray['origin'] || $route['POD'] == $portArray['destination']))
                 ) {
+                    
                     foreach ($containers as $c) {
                         if (isset($totalsArrayInput['c' . $c->code])) {
                             $dmCalc = isDecimal($totalsArrayInput['c' . $c->code], true);
@@ -663,7 +671,13 @@ class FclPdf
                             }
                         }
                     }
+                    
+                    if($isFreight) {
+                        $totalsArrayOutput[$key]['freightAdded'] = true;
+                        break;
+                    }
                 }
+
             }
         }
         return $totalsArrayOutput;

@@ -65,6 +65,23 @@
 @section('content')
 
 <div class="container m-content">
+    <div class="dropdown show" align="right" style="margin:20px;">
+        <a class="dropdown-toggle" style="font-size:16px" href="#" role="button" id="helpOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            See how it works
+        </a>
+
+        <div 
+            class="dropdown-menu" 
+            aria-labelledby="helpOptions"
+        >
+            <a class="dropdown-item" target="_blank" href="https://support.cargofive.com/how-to-setup-your-freight-forwarder-on-cargofive/"> 
+                How to setup your freight forwarder
+            </a>
+            <a class="dropdown-item" target="_blank" href="https://support.cargofive.com/how-to-modify-the-main-currency/"> 
+                How to modify your main currency
+            </a>
+        </div>
+    </div>
     <div class="m-portlet m-portlet--mobile" style="border-radius:10px;">
         <br>
         <br>
@@ -228,7 +245,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
                                             <label for="pdf_language">PDF language</label>
-                                            {{ Form::select('pdf_language',['0'=>'Choose a language','1'=>'English','2'=>'Spanish','3'=>'Portuguese'],null,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
+                                            {{ Form::select('pdf_language',['0'=>'Choose a language','1'=>'English','2'=>'Spanish','3'=>'Portuguese', '4'=>'Italian', '5'=>'Catalan'],null,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
                                         </div>
                                     </div>
                                     <div class="col-md-4" id="haeder_pdf">
@@ -466,7 +483,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
                                             <label for="pdf_language">PDF language</label>
-                                            {{ Form::select('pdf_language',['0'=>'Choose a language','1'=>'English','2'=>'Spanish','3'=>'Portuguese'],@$company->companyUser->pdf_language,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
+                                            {{ Form::select('pdf_language',['0'=>'Choose a language','1'=>'English','2'=>'Spanish','3'=>'Portuguese', '4'=>'Italian', '5'=>'Catalan'],@$company->companyUser->pdf_language,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
                                         </div>
                                     </div>
                                     <div class="col-md-4 {{@$company->companyUser->pdf_template_id=='2' ? '':'hide'}} " id="haeder_pdf">

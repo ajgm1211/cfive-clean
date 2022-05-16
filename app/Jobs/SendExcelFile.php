@@ -6,9 +6,9 @@ use App\CalculationType;
 use App\CompanyUser;
 use App\Container;
 use App\ContainerCalculation;
+use App\Country;
 use App\Currency;
 use App\Harbor;
-use App\Country;
 use App\LocalCharge;
 use App\Mail\EmailForExcelFile;
 use App\Rate;
@@ -56,8 +56,6 @@ class SendExcelFile implements ShouldQueue
     {
 
         $typeRoute = $this->data['data']['typeofroute'];
-
-
 
         if ($typeRoute == 'port') {
 
@@ -116,8 +114,8 @@ class SendExcelFile implements ShouldQueue
         $now = new \DateTime();
         $now = $now->format('dmY_His');
         $nameFile = str_replace([' '], '_', $now . '_rates');
-        $file = Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers, $container_calculation, $styleArray, $styleArrayALL,$typeRoute) {
-            $excel->sheet('Rates', function ($sheet) use ($arreglo, $arrayComplete, $containers, $container_calculation, $styleArray, $styleArrayALL,$typeRoute) {
+        $file = Excel::create($nameFile, function ($excel) use ($nameFile, $arreglo, $arrayComplete, $containers, $container_calculation, $styleArray, $styleArrayALL, $typeRoute) {
+            $excel->sheet('Rates', function ($sheet) use ($arreglo, $arrayComplete, $containers, $container_calculation, $styleArray, $styleArrayALL, $typeRoute) {
 
                 $sheet->cells('A1:AG1', function ($cells) {
                     $cells->setBackground('#2525ba');
@@ -182,19 +180,22 @@ class SendExcelFile implements ShouldQueue
                         $dest_country = $this->data['data']['destination'];
                     }
 
-                    // Localcharges ALL Call 
+                    // Localcharges ALL Call
 
-                    $port_origin_id = $data->port_origin->id.',1485';
-                    $port_destiny_id = $data->port_destiny->id.',1485';
-                    $orig_country = $orig_country.',250';
-                    $dest_country = $dest_country.',250';
+                    $port_origin_id = $data->port_origin->id . ',1485';
+                    $port_destiny_id = $data->port_destiny->id . ',1485';
 
-          
+                    array_push($orig_country, 250);
+                    array_push($dest_country, 250);
+
+                    $orig_country = implode("','",$orig_country);
+                    $dest_country = implode("','",$dest_country);
+
+                    //  $orig_country = $orig_country . ',250';
+                    // $dest_country = $dest_country . ',250';
 
                     $localCharge = new LocalCharge();
                     $localCharge = $localCharge->getLocalChargeExcelSync($data->contract_id, $port_origin_id, $port_destiny_id, $orig_country, $dest_country);
-      
-
 
                     if ($localCharge != null) {
 
@@ -205,7 +206,7 @@ class SendExcelFile implements ShouldQueue
                             foreach ($containers as $cont) {
                                 $name_arreglo = 'array' . $cont->code;
                                 $name_rate = 'rate' . $cont->code;
-                                if (in_array($localCharge[$i]->calculation_type_id, $$name_arreglo) && $$name_rate != '0' ) {
+                                if (in_array($localCharge[$i]->calculation_type_id, $$name_arreglo) && $$name_rate != '0') {
                                     $monto = $this->perTeu($localCharge[$i]->ammount, $localCharge[$i]->calculation_type_id, $cont->code);
                                     $currency_rate = $this->ratesCurrency($localCharge[$i]->currency_id, $data->currency->alphacode);
                                     $$name_rate = number_format($$name_rate + ($monto / $currency_rate), 2, '.', '');
@@ -269,7 +270,6 @@ class SendExcelFile implements ShouldQueue
         }
 
     }
-
 
     public function get_header_inicial($containers)
     {
@@ -411,13 +411,22 @@ class SendExcelFile implements ShouldQueue
     public function getArrayPortCountry($id)
     {
         $info = Harbor::find($id);
-        return $info->country_id;
+        $arregloCountry[] = $info->country_id;
+        return $arregloCountry;
     }
 
     public function getArrayCountryPort($id)
     {
-        $info = Country::find($id);
-        $ports = $info->ports->pluck('id')->toArray();
-        return $ports;
+
+        $query = Country::wherein('id', $id)->get();
+        $ports = array();
+
+        foreach ($query as $info) {
+            $ports = array_merge($ports, $info->ports->pluck('id')->toArray());
+
+        }
+        $resultado = array_unique($ports);
+
+        return $resultado;
     }
 }

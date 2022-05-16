@@ -66,10 +66,11 @@ trait SearchTrait
             $q->whereIn('port', $port);
         })->where('company_user_id', '=', $company_user_id)->where('gp_container_id', $groupContainer)->with('inlandRange', 'inlandports.ports', 'inlandkms.currency','inlandLocation');
 
-        $inlands->where(function ($query) use ($modality_inland) {
-            $query->where('type', $modality_inland)->orwhere('type', '2')->orwhere('type', '3');
-        });
-
+        // HECTOR ON 24-03-2022 - Why is this validation here?
+        /**$inlands->where(function ($query) use ($modality_inland) {
+            $query->where('type', $modality_inland)->orwhere('type', '3');
+        });**/
+        
         // HECTOR ON 11-01 - ADDING VALIDATION FOR EXPIRE, MODIFYING QUERY
         $inlands->where('status','publish');
         
@@ -2280,34 +2281,41 @@ trait SearchTrait
     public function searchTerms($search_data)
     {
         //Retrieving current companyto filter terms
-        $company_user = CompanyUser::where('id', $search_data['company_user'])->first();
+        $company_user_id = \Auth::user()->company_user_id;
 
-        $terms = TermAndConditionV2::where([['company_user_id',$company_user->id],['type',$search_data['type']]])->get();
+        $terms = TermAndConditionV2::where([['company_user_id', $company_user_id], ['type', $search_data['type']]])->get();
 
         $terms_english = '';
         $terms_spanish = '';
         $terms_portuguese = '';
+        $terms_italian = '';
+        $terms_catalan = '';
 
-        foreach($terms as $term){
+        foreach ($terms as $term) {
 
-            if($search_data['direction'] == 1){
+            if ($search_data['direction'] == 1) {
                 $terms_to_add = $term->import;
-            }else if($search_data['direction'] == 2){
+            } else if ($search_data['direction'] == 2) {
                 $terms_to_add = $term->export;
-            }else if($search_data['direction'] == 3){
+            } else if($search_data['direction'] == 3){
                 $terms_to_add = $term->import . '<br>' . $term->export;
             }
 
-            if($term->language_id == 1){
+            if ($term->language_id == 1) {
                 $terms_english .= $terms_to_add . '<br>';
-            }else if($term->language_id == 2){
+            } else if ($term->language_id == 2) {
                 $terms_spanish .= $terms_to_add . '<br>';
-            }else if($term->language_id == 3){
+            } else if ($term->language_id == 3) {
                 $terms_portuguese .= $terms_to_add . '<br>';
+            } else if ($term->language_id == 4) {
+                $terms_italian .= $terms_to_add . '<br>';
+            } else if ($term->language_id == 5) {
+                $terms_catalan .= $terms_to_add . '<br>';
             }
         }
 
-        $final_terms = ['english' => $terms_english, 'spanish' => $terms_spanish, 'portuguese' => $terms_portuguese ];
+        $final_terms = ['english' => $terms_english, 'spanish' => $terms_spanish, 'portuguese' => $terms_portuguese, 
+                        'italian' => $terms_italian, 'catalan' => $terms_catalan ];
 
         return $final_terms;
     }

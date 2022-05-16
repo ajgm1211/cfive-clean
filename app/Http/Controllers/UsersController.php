@@ -398,14 +398,8 @@ class UsersController extends Controller
         if (Auth::user()->type == 'company' || Auth::user()->type == 'data_entry' || Auth::user()->type == 'subuser') {
             $data = User::where('company_user_id', "=", Auth::user()->company_user_id)->with('companyUser')->get();;
         }
-        foreach($data as $u){
-            $ud=UserDelegation::where('users_id','=',$u->id)->first();
-            $delegation=Delegation::find($ud['delegations_id']);
-            $u['userD']=$delegation['name'];
-            $arreglo[]=$u;
-        }
-        // dd($arreglo);
-        return view('users/indexhtml', ['arreglo' => $arreglo]);
+
+        return view('users/indexhtml', ['arreglo' => $data]);
     }
 
     public function datajson()

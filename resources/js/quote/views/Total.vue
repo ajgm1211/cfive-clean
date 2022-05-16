@@ -57,7 +57,6 @@
                 track-by="alphacode"
                 @input="updatePdfOptions('showAs')"
                 style="width: 90px"
-                class="change-currency-totals"
               >
               </multiselect>
 
@@ -139,7 +138,6 @@
                     label="route"
                     track-by="route"
                     style="min-width: 200px"
-                    class="change-currency-totals"
                   >
                   </multiselect>
                 </div>
@@ -160,7 +158,6 @@
                     track-by="rate_id"
                     placeholder="Seleccione ruta"
                     style="min-width: 200px"
-                    class="change-currency-totals"
                   >
                   </multiselect>
                 </div>
@@ -441,10 +438,11 @@ export default {
       let originPorts = data.origin_ports;
       let destinyPorts = data.destiny_ports;
       let response = [];      
-      
-      let routeExist = false;
 
-      for(let i = 0; i < originPorts.length; i++) { 
+      for(let i = 0; i < originPorts.length; i++) {
+
+        let routeExist = false;
+        
         response.forEach(r => {
           if (r['key'] == `${originPorts[i]['id']}${destinyPorts[i]['id']}`) { 
             routeExist = true;

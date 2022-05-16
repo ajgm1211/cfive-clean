@@ -358,7 +358,7 @@ class ContractController extends Controller
     public function destroy(Contract $contract)
     {
         $status_erased = 1;
-        if ($contract->status == 'incomplete') {
+        if ($contract->status == 'incomplete' || $contract->status == 'Clarification needed') {
 
             $requestContract = NewContractRequest::where('contract_id', $contract->id);
             if (empty($requestContract) == 0) {
@@ -396,7 +396,9 @@ class ContractController extends Controller
     public function duplicate(Contract $contract)
     {
         $new_contract = $contract->duplicate();
-
+        $new_contract->update([
+            'user_id' => Auth::user()->id,
+        ]);
         return new ContractResource($new_contract);
     }
 
