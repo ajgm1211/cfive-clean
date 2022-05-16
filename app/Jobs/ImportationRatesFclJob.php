@@ -12,7 +12,7 @@ use App\ContractCarrier;
 use App\Country;
 use App\Currency;
 use App\Failcompany;
-use App\Failedcontact;
+use App\FailedContact;
 use App\FailRate;
 use App\FailSurCharge;
 use App\FileTmp;

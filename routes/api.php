@@ -205,4 +205,5 @@ Route::group(['prefix'=>'contacts','middleware' => 'auth:api'], function () {
     Route::put('deleteAll', 'ContactV2Controller@destroyAll');
     Route::get('retrieve/{company}', 'ContactV2Controller@retrieve');
     Route::get('template', 'ContactV2Controller@downloadTemplateFile');
+    Route::get('failed/list', 'ContactV2Controller@failedList');
 });
