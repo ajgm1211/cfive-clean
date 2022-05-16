@@ -701,4 +701,8 @@ h4 {
 section {
   width: auto;
 }
+
+table {
+  table-layout: fixed;
+}
 </style>
