@@ -245,6 +245,18 @@
         },
         {
             "name": "aws/aws-sdk-php",
+<<<<<<< HEAD
+            "version": "3.220.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aws/aws-sdk-php.git",
+                "reference": "6c2e36bb61741c87ed7ffd53e15d903311ad6b60"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/6c2e36bb61741c87ed7ffd53e15d903311ad6b60",
+                "reference": "6c2e36bb61741c87ed7ffd53e15d903311ad6b60",
+=======
             "version": "3.222.9",
             "source": {
                 "type": "git",
@@ -255,6 +267,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/cb1db65be035cc90de1019391bc3a57ca3cb1762",
                 "reference": "cb1db65be035cc90de1019391bc3a57ca3cb1762",
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
                 "shasum": ""
             },
             "require": {
@@ -327,7 +340,16 @@
                 "s3",
                 "sdk"
             ],
+<<<<<<< HEAD
+            "support": {
+                "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
+                "issues": "https://github.com/aws/aws-sdk-php/issues",
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.220.4"
+            },
+            "time": "2022-04-25T18:16:08+00:00"
+=======
             "time": "2022-05-10T18:14:43+00:00"
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -606,6 +628,13 @@
                 }
             ],
             "description": "Crisp API PHP Wrapper",
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/crisp-im/php-crisp-api/issues",
+                "source": "https://github.com/crisp-im/php-crisp-api/tree/1.7.2"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "time": "2022-03-15T11:23:10+00:00"
         },
         {
@@ -1975,6 +2004,13 @@
                 "uri",
                 "url"
             ],
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/guzzle/psr7/issues",
+                "source": "https://github.com/guzzle/psr7/tree/1.8.5"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "funding": [
                 {
                     "url": "https://github.com/GrahamCampbell",
@@ -3884,6 +3920,13 @@
                 "logging",
                 "psr-3"
             ],
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/Seldaek/monolog/issues",
+                "source": "https://github.com/Seldaek/monolog/tree/1.27.0"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "funding": [
                 {
                     "url": "https://github.com/Seldaek",
@@ -4487,6 +4530,13 @@
                 "secret-key cryptography",
                 "side-channel resistant"
             ],
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/paragonie/sodium_compat/issues",
+                "source": "https://github.com/paragonie/sodium_compat/tree/v1.17.1"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "time": "2022-03-23T19:32:04+00:00"
         },
         {
@@ -5228,6 +5278,13 @@
                 "x.509",
                 "x509"
             ],
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/phpseclib/phpseclib/issues",
+                "source": "https://github.com/phpseclib/phpseclib/tree/2.0.37"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "funding": [
                 {
                     "url": "https://github.com/terrafrost",
@@ -6509,6 +6566,13 @@
                 "pdf-to-image",
                 "spatie"
             ],
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/spatie/pdf-to-image/issues",
+                "source": "https://github.com/spatie/pdf-to-image/tree/master"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "time": "2016-12-14T15:37:00+00:00"
         },
         {
@@ -6613,6 +6677,13 @@
             ],
             "description": "File manager for web",
             "homepage": "http://elfinder.org",
+<<<<<<< HEAD
+            "support": {
+                "issues": "https://github.com/Studio-42/elFinder/issues",
+                "source": "https://github.com/Studio-42/elFinder/tree/2.1.61"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "funding": [
                 {
                     "url": "https://github.com/nao-pon",
@@ -6695,6 +6766,18 @@
         },
         {
             "name": "symfony/console",
+<<<<<<< HEAD
+            "version": "v4.4.40",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/console.git",
+                "reference": "bdcc66f3140421038f495e5b50e3ca6ffa14c773"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/console/zipball/bdcc66f3140421038f495e5b50e3ca6ffa14c773",
+                "reference": "bdcc66f3140421038f495e5b50e3ca6ffa14c773",
+=======
             "version": "v4.4.41",
             "source": {
                 "type": "git",
@@ -6705,6 +6788,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/console/zipball/0e1e62083b20ccb39c2431293de060f756af905c",
                 "reference": "0e1e62083b20ccb39c2431293de060f756af905c",
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
                 "shasum": ""
             },
             "require": {
@@ -6764,6 +6848,12 @@
             ],
             "description": "Eases the creation of beautiful and testable command line interfaces",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
+            "support": {
+                "source": "https://github.com/symfony/console/tree/v4.4.40"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -6778,7 +6868,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
+            "time": "2022-03-26T22:12:04+00:00"
+=======
             "time": "2022-04-12T15:19:55+00:00"
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
         },
         {
             "name": "symfony/css-selector",
@@ -6910,6 +7004,18 @@
         },
         {
             "name": "symfony/error-handler",
+<<<<<<< HEAD
+            "version": "v4.4.40",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/error-handler.git",
+                "reference": "2d0c9c229d995bef5e87fe4e83b717541832b448"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/error-handler/zipball/2d0c9c229d995bef5e87fe4e83b717541832b448",
+                "reference": "2d0c9c229d995bef5e87fe4e83b717541832b448",
+=======
             "version": "v4.4.41",
             "source": {
                 "type": "git",
@@ -6920,6 +7026,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/error-handler/zipball/529feb0e03133dbd5fd3707200147cc4903206da",
                 "reference": "529feb0e03133dbd5fd3707200147cc4903206da",
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
                 "shasum": ""
             },
             "require": {
@@ -6957,6 +7064,12 @@
             ],
             "description": "Provides tools to manage errors and ease debugging PHP code",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
+            "support": {
+                "source": "https://github.com/symfony/error-handler/tree/v4.4.40"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -6971,7 +7084,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
+            "time": "2022-03-07T13:29:34+00:00"
+=======
             "time": "2022-04-12T15:19:55+00:00"
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
         },
         {
             "name": "symfony/event-dispatcher",
@@ -7114,6 +7231,12 @@
                 "interoperability",
                 "standards"
             ],
+<<<<<<< HEAD
+            "support": {
+                "source": "https://github.com/symfony/event-dispatcher-contracts/tree/v1.1.12"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -7248,6 +7371,12 @@
                 "interoperability",
                 "standards"
             ],
+<<<<<<< HEAD
+            "support": {
+                "source": "https://github.com/symfony/http-client-contracts/tree/v1.1.12"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -7331,6 +7460,18 @@
         },
         {
             "name": "symfony/http-kernel",
+<<<<<<< HEAD
+            "version": "v4.4.40",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/http-kernel.git",
+                "reference": "330a859a7ec9d7e7d82f2569b1c0700a26ffb1e3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/330a859a7ec9d7e7d82f2569b1c0700a26ffb1e3",
+                "reference": "330a859a7ec9d7e7d82f2569b1c0700a26ffb1e3",
+=======
             "version": "v4.4.41",
             "source": {
                 "type": "git",
@@ -7341,6 +7482,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/http-kernel/zipball/7f8ce5bffc3939c63b7da32de5a546c98eb67698",
                 "reference": "7f8ce5bffc3939c63b7da32de5a546c98eb67698",
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
                 "shasum": ""
             },
             "require": {
@@ -7414,6 +7556,12 @@
             ],
             "description": "Provides a structured process for converting a Request into a Response",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
+            "support": {
+                "source": "https://github.com/symfony/http-kernel/tree/v4.4.40"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -7428,7 +7576,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
+            "time": "2022-04-02T05:55:50+00:00"
+=======
             "time": "2022-04-27T17:13:11+00:00"
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
         },
         {
             "name": "symfony/mime",
@@ -8267,6 +8419,18 @@
         },
         {
             "name": "symfony/process",
+<<<<<<< HEAD
+            "version": "v4.4.40",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/process.git",
+                "reference": "54e9d763759268e07eb13b921d8631fc2816206f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/process/zipball/54e9d763759268e07eb13b921d8631fc2816206f",
+                "reference": "54e9d763759268e07eb13b921d8631fc2816206f",
+=======
             "version": "v4.4.41",
             "source": {
                 "type": "git",
@@ -8277,6 +8441,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/process/zipball/9eedd60225506d56e42210a70c21bb80ca8456ce",
                 "reference": "9eedd60225506d56e42210a70c21bb80ca8456ce",
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
                 "shasum": ""
             },
             "require": {
@@ -8308,6 +8473,12 @@
             ],
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
+            "support": {
+                "source": "https://github.com/symfony/process/tree/v4.4.40"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -8322,7 +8493,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
+            "time": "2022-03-18T16:18:39+00:00"
+=======
             "time": "2022-04-04T10:19:07+00:00"
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
         },
         {
             "name": "symfony/psr-http-message-bridge",
@@ -8535,6 +8710,12 @@
                 "interoperability",
                 "standards"
             ],
+<<<<<<< HEAD
+            "support": {
+                "source": "https://github.com/symfony/service-contracts/tree/v1.1.12"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -8696,6 +8877,12 @@
                 "interoperability",
                 "standards"
             ],
+<<<<<<< HEAD
+            "support": {
+                "source": "https://github.com/symfony/translation-contracts/tree/v1.1.12"
+            },
+=======
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -8796,7 +8983,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
+            "time": "2022-02-25T10:38:15+00:00"
+=======
             "time": "2022-04-25T21:15:06+00:00"
+>>>>>>> f922d8a12a4162ba0fbf1a74612de445fe131c08
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",

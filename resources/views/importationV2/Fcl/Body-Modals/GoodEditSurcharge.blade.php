@@ -109,7 +109,7 @@ $portRadio = false;
                     <div class="col-lg-4">
                         {!! Form::label('calculationt', 'Calculation Type') !!}
                         <div class="m-input-icon m-input-icon--right">
-                            {{ Form::select('calculationtype_id', $calculationtypeselect,$goodsurcharges->calculationtype_id,['id' => 'calculationtype','class'=>'m-select2-general form-control ','style' => 'width:80%;']) }}
+                            {{ Form::select('calculationtype_id', $calculationtypeselect->pluck('name', 'id'),$goodsurcharges->calculationtype_id,['id' => 'calculationtype','class'=>'m-select2-general form-control ','style' => 'width:80%;']) }}
                             <span class="m-input-icon__icon m-input-icon__icon--right">
                                 <span>
                                     <i class="la la-map-marker"></i>
@@ -145,9 +145,34 @@ $portRadio = false;
 
                     </div>
                 </div>
+                <div class="form-group m-form__group row" id="div_ow" hidden>
+                <div class="col-lg-4">
+                    {!! Form::label('ammountL', 'Lower Limit') !!}
+                    <div class="m-input-icon m-input-icon--right">
+                        {!! Form::text('lower_limit', @$limits['lower_limit'], ['id' => 'lower_limit','placeholder' => 'Please enter Lower limit','class' => 'form-control m-input']) !!}
+                        <span class="m-input-icon__icon m-input-icon__icon--right">
+                            <span>
+                                <i class="la la-bookmark-o"></i>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    {!! Form::label('ammountL', 'Upper Limit') !!}
+                    <div class="m-input-icon m-input-icon--right">
+                        {!! Form::text('upper_limit', @$limits['upper_limit'], ['id' => 'upper_limit','placeholder' => 'Please enter Upper limit','class' => 'form-control m-input']) !!}
+                        <span class="m-input-icon__icon m-input-icon__icon--right">
+                            <span>
+                                <i class="la la-bookmark-o"></i>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
             </div>  
-
+            <input type="hidden" value="{{$goodsurcharges['is_ow_limits']}}" name="is_ow_limits" id="is_ow_limits_id" />
             <input type="hidden" value="{{$goodsurcharges['contract_id']}}" name="contract_id" id="contract_id" />
+            <input type="hidden" value="{{$calculationtypeselect->pluck('options_decode', 'id')}}" name="calculation_type_options" id="calculation_type_options_id" />
     </div>
 </div>
 <div id="edit-modal-footer" class="modal-footer">
@@ -160,6 +185,37 @@ $portRadio = false;
 <script src="/js/editcontracts.js"></script>
 
 <script>
+    $(document).ready(function(e) {
+        //alert(nameTab);
+        show_ow();
+        // frmSurcharges id del formulario Auto Save TAB
+    });
+    $('#calculationtype').select2().on('select2:select', function(e) {
+        show_ow();
+    });
+
+    function show_ow() {
+        calculationT_id = $('#calculationtype').val();
+        var calculationsT_ow = jQuery.parseJSON($('#calculation_type_options_id').val());
+        if (calculationT_id != null) {
+            if (calculationT_id in calculationsT_ow) {
+                if (calculationsT_ow[calculationT_id]['limits_ow'] == true) {
+                    $('#div_ow').removeAttr('hidden', 'hidden');
+                    $('#is_ow_limits_id').val(1);
+                } else{
+                    $('#div_ow').attr('hidden', 'hidden');
+                    $('#is_ow_limits_id').val(0);
+                    $('#lower_limit').val(null);
+                    $('#upper_limit').val(null);
+                }
+            } else {
+                $('#div_ow').attr('hidden', 'hidden');
+                $('#is_ow_limits_id').val(0);
+                $('#lower_limit').val(null);
+                $('#upper_limit').val(null);
+            }
+        }
+    }
 
     $('.m-select2-general').select2({
         placeholder: "Select an option"

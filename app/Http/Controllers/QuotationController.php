@@ -587,14 +587,17 @@ class QuotationController extends Controller
     
             $origin_charges = $search_data['originCharges'];
             $destination_charges = $search_data['destinationCharges'];
+            $imo_charges = $search_data['imoCharges'];
+            $overweight_charges = $search_data['overweightCharges'];
             $show_rate_currency = $search_data['showRateCurrency'];
     
             $origin_ports = $search_data['originPorts'];
             $destination_ports = $search_data['destinationPorts'];
     
             $search_options = compact(
-                'start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges', 
-                'origin_ports', 'destination_ports', 'show_rate_currency');
+                'start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges', 'imo_charges', 'overweight_charges' ,
+                'origin_ports', 'destination_ports', 'show_rate_currency'
+            );
     
             $quote->update(['search_options' => $search_options, 'direction_id' => $search_data['direction']]);
         }

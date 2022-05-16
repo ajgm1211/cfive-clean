@@ -205,6 +205,8 @@
                                     <th> Type Calculation </th>
                                     <th> Ammount </th>
                                     <th> Currency </th>
+                                    <th> Lower L. </th>
+                                    <th> Upper L. </th>
                                     <th> Carrier </th>
                                     <th> Options </th>
                                 </tr>
@@ -253,6 +255,8 @@
                                     <th> Type Calculation </th>
                                     <th> Ammount </th>
                                     <th> Currency </th>
+                                    <th> Lower L. </th>
+                                    <th> Upper L. </th>
                                     <th> Carrier </th>
                                     <th> Options </th>
                                 </tr>
@@ -445,6 +449,8 @@
                 { data: 'calculationtypelb', name: 'calculationtypelb' },
                 { data: 'ammount', name: "ammount" },
                 { data: 'currencylb', name: 'currencylb' },
+                { data: 'lower_limit', name: 'Lower L.' },
+                { data: 'upper_limit', name: 'Upper L.' },
                 { data: 'carrierlb', name: 'carrierlb' },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
@@ -475,6 +481,8 @@
                 { data: 'calculationtypelb', name: 'calculationtypelb' },
                 { data: 'ammount', name: "ammount" },
                 { data: 'currencylb', name: 'currencylb' },
+                { data: 'lower_limit', name: 'Lower L.' },
+                { data: 'upper_limit', name: 'Upper L.' },
                 { data: 'carrierlb', name: 'carrierlb' },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],

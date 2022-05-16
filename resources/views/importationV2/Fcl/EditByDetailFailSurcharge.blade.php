@@ -73,29 +73,35 @@ $validation_expire = 'Please enter validity date';
                                 <table class="table table-striped m-table m-table--head-separator-primary table-contracts" id="sample_editable_1" style="width:100%;">
                                     <thead>
                                         <tr>
-                                            <th title="Field #1" style="width:20%;padding: 0.75rem 0.3rem;">
+                                            <th title="Field #1" style="width:10%;padding: 0.75rem 0.3rem;">
                                                 Surcharge
                                             </th>
-                                            <th title="Field #2" style="width:20%;padding: 0.75rem 0.3rem;">
+                                            <th title="Field #2" style="width:15%;padding: 0.75rem 0.3rem;">
                                                 Origin Port
                                             </th>
-                                            <th title="Field #3" style="width:20%;padding: 0.75rem 0.3rem;">
+                                            <th title="Field #3" style="width:15%;padding: 0.75rem 0.3rem;">
                                                 Destination Port
                                             </th>
-                                            <th title="Field #4" style="width:20%;padding: 0.75rem 0.3rem;">
+                                            <th title="Field #4" style="width:7%;padding: 0.75rem 0.3rem;">
                                                 Type Destiny
                                             </th>
 
-                                            <th title="Field #5" style="width:20%;padding: 0.75rem 0.3rem;">
+                                            <th title="Field #5" style="width:15%;padding: 0.75rem 0.3rem;">
                                                 Type Calculation
                                             </th>
-                                            <th title="Field #6" style="width:20%;padding: 0.75rem 0.3rem;">
+                                            <th title="Field #6" style="width:10%;padding: 0.75rem 0.3rem;">
                                                 Amount
                                             </th>
                                             <th title="Field #7" style="padding: 0.75rem 0.3rem;">
                                                 Currency
+                                            </th>
+                                            <th title="Field #8" style="width:5%;padding: 0.75rem 0.3rem;">
+                                                Lower L.
+                                            </th>
+                                            <th title="Field #8" style="width:5%;padding: 0.75rem 0.3rem;">
+                                                Upper L.
                                             </th>   
-                                            <th title="Field #8" style="padding: 0.75rem 0.3rem;">
+                                            <th title="Field #8" style="width:10%;padding: 0.75rem 0.3rem;">
                                                 Carrier
                                             </th>
                                             <th title="Field #9">
@@ -178,7 +184,18 @@ $validation_expire = 'Please enter validity date';
                                                     <div class="progress-bar " role="progressbar" style=" background-color:{{$surchargef['classcurrency']}} ;width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
                                             </td>
-
+                                            <td style="padding: 0.80rem 0.2rem;">
+                                                {!! Form::text('lower_limit['.$rowTable.']', $surchargef['lower_limit'], ['placeholder' => 'Enter Lower L.','class' => 'form-control m-input','style' => 'width:110%; font-size: 12px;']) !!}
+                                                <div class="progress m-progress--sm" style="padding: 0.1rem 0.0rem;">
+                                                    <div class="progress-bar " role="progressbar" style=" background-color:{{$surchargef['classlowerlimit']}} ;width: 110%;" aria-valuenow="110" aria-valuemin="0" aria-valuemax="110"></div>
+                                                </div> 
+                                            </td>
+                                            <td style="padding: 0.80rem 0.2rem;">
+                                                {!! Form::text('upper_limit['.$rowTable.']', $surchargef['upper_limit'], ['placeholder' => 'Enter Upper L.','class' => 'form-control m-input','style' => 'width:110%; font-size: 12px;']) !!}
+                                                <div class="progress m-progress--sm" style="padding: 0.1rem 0.0rem;">
+                                                    <div class="progress-bar " role="progressbar" style=" background-color:{{$surchargef['classupperlimit']}} ;width: 110%;" aria-valuenow="110" aria-valuemin="0" aria-valuemax="110"></div>
+                                                </div> 
+                                            </td>
                                             <td style="padding: 0.75rem 0.2rem;">
                                                 {{ Form::select('carrier_id['.$rowTable.'][]', $carrier,$surchargef['carrierAIn'],['class'=>'m-select2-general col-sm-6 form-control','required' => 'required','style' => 'width:100%;','multiple' => 'multiple']) }}
                                                 <div class="progress m-progress--sm" style="padding: 0.1rem 0.2rem;">
@@ -231,5 +248,6 @@ $validation_expire = 'Please enter validity date';
     function removeTr(tr){
         $('#'+tr).remove(); 
     }
+    
 </script>
 @stop

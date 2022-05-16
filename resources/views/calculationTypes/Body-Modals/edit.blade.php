@@ -11,15 +11,13 @@
 </div>
 <div id="modal-body" class="modal-body">
     <div class="form-group m-form__group row">
-
-        <div class="col-md-1"></div>
         <div class="col-md-5">
             <label class="">Name</label>
             <div class="" id="conatiner_class">
                 {!! Form::text('name',$calculation->name,['class'=>'form-control','required','id'=>'nameCal'])!!}
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-6">
             <label class="">Code</label>
             <div class="" id="calculationT_class">
                 {!! Form::text('code',$calculation->code,['class'=>'form-control','required','id'=>'codeCal'])!!}
@@ -28,8 +26,6 @@
 
     </div>
     <div class="form-group m-form__group row">
-
-        <div class="col-md-1"></div>
         <div class="col-md-5">
             <label class="">Group Recognition Name</label>
             <div class="input-group m-form__group">
@@ -44,6 +40,20 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-3">
+            <label class="">Equipment</label>
+            <div class="" id="calculationT_class">
+                {!! Form::select('equipment',$equipments,$calculation->group_container_id,['class'=>' form-control','id'=>'equipments'])!!}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label class="">Behaviour Per Container</label>
+            <div class="" id="calculationT_class">
+                {!! Form::select('behaviourpcs',$behaviourpcs,$calculation->behaviour_pc_id,['class'=>' form-control','id'=>'behaviourpcs'])!!}
+            </div>
+        </div>
+    </div>
+    <div class="form-group m-form__group row">
         <div class="col-md-2">
             <label class=""><br></label> 
             <div class="" id="conatiner_class">
@@ -54,7 +64,7 @@
                 </label>
             </div>
         </div>
-        <div class="col-md-">
+        <div class="col-md-2">
             <label class=""><br></label> 
             <div class="" id="conatiner_class">
                 <label class="m-checkbox m-checkbox--state-primary">
@@ -64,13 +74,23 @@
                 </label>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-4">
             <label class=""><br></label>    
             <div class="" id="only_div">
                 <label class="m-checkbox m-checkbox--state-primary">
                     {!! Form::checkbox('gp_pcontainer',true,$calculation->gp_pcontainer,['class'=>'form-control','title'=>'Only importer.','id'=>'only_imp'])!!}
-                    Only Imp.
+                    Belongs Container Group
                     <span title="Only importer. The calculation type belongs to a column in the container table"></span>
+                </label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label class=""><br></label>    
+            <div class="" id="only_div">
+                <label class="m-checkbox m-checkbox--state-primary">
+                    {!! Form::checkbox('limits_ow',true,$options->limits_ow,['class'=>'form-control','title'=>'Limits OW','id'=>'limits_ow_id'])!!}
+                    Limits OW
+                    <span title="Enable OW limit loading"></span>
                 </label>
             </div>
         </div>
