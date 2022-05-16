@@ -39,9 +39,9 @@ class QuoteV2 extends Model implements HasMedia, Auditable
         'remarks', 'company_user_id', 'quote_id', 'type', 'quote_validity', 'validity_start', 'validity_end',
         'origin_address', 'destination_address', 'company_id', 'contact_id', 'delivery_type', 'user_id', 'equipment', 'incoterm_id',
         'status', 'date_issued', 'price_id', 'total_quantity', 'total_weight', 'total_volume', 'chargeable_weight', 'cargo_type',
-        'kind_of_cargo', 'commodity', 'payment_conditions', 'terms_and_conditions', 'terms_english', 'terms_portuguese', 'remarks_english',
-        'remarks_spanish', 'remarks_portuguese', 'language_id', 'pdf_options', 'localcharge_remarks', 'custom_quote_id', 'custom_incoterm',
-        'cargo_type_id', 'search_options', 'direction_id',
+        'kind_of_cargo', 'commodity', 'terms_and_conditions', 'terms_english', 'terms_portuguese', 'terms_italian', 'terms_catalan', 
+        'remarks_english', 'remarks_spanish', 'remarks_portuguese', 'remarks_italian', 'remarks_catalan', 'language_id', 'pdf_options', 
+        'localcharge_remarks', 'custom_quote_id', 'custom_incoterm', 'cargo_type_id', 'search_options', 'direction_id', 'payment_conditions'
     ];
 
     public function company()
@@ -281,10 +281,14 @@ class QuoteV2 extends Model implements HasMedia, Auditable
             'remarks_spanish',
             'remarks_english',
             'remarks_portuguese',
+            'remarks_italian',
+            'remarks_catalan',
             'localcharge_remarks',
             'terms_and_conditions as terms_spanish',
             'terms_english',
             'terms_portuguese',
+            'terms_italian',
+            'terms_catalan',
             'payment_conditions',
             'contact_id',
             'company_id',
