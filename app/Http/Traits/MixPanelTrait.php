@@ -231,8 +231,9 @@ trait MixPanelTrait
             'Status Quote',
             array(
                 'Company' => $data->company_user->name,
-                'Type' => $data->type,
+                'Number Quote' => $data->quote_id,
                 'Status' =>$data->status,
+                'Type' => $data->type,
                 'Equipment' => $container_arr,
                 'Delivery_type' => $data->delivery,
                 'User' => $user->fullname,

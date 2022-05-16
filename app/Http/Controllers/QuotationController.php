@@ -551,8 +551,11 @@ class QuotationController extends Controller
                 $quote->update(['chargeable_weight' => $request['total_weight']]);
             }
         }
+        
+        if($quote->wasChanged('status')){
+            $this->trackEvents("status_quote", $quote);
+        }
 
-        $this->trackEvents("status_quote", $quote);
 
     }
 
