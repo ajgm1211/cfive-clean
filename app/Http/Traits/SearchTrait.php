@@ -1690,7 +1690,7 @@ trait SearchTrait
 
         foreach ($new_search['destinationPorts'] as $key=> $dataLocations){
             if($dataLocations['type']=='city'){
-                $portDest=HarborsLocationSearch::where('location_id',$dataLocations['id'])->with('harbors')->get();
+                $portDest=HarborsLocationSearch::where('location_id',$dataLocations['id'])->with('harbor')->get();
                 if(count($portDest)==1){
                     $portD[]=[
                         'id'=>$portDest[0]['harbor']['id'],
