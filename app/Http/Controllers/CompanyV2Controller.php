@@ -6,11 +6,11 @@ use App\Company;
 use App\Contact;
 use App\FailCompany;
 use App\CompanyPrice;
-use GuzzleHttp\Client;
 use App\GroupUserCompany;
 use App\SettingsWhitelabel;
 use Illuminate\Http\Request;
 use App\Http\Traits\SearchTrait;
+use App\Http\Traits\WhiteLabelTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -23,7 +23,7 @@ use App\Http\Resources\FailCompanyResource;
 class CompanyV2Controller extends Controller
 {
     //
-    use SearchTrait;
+    use SearchTrait, WhiteLabelTrait;
 
     /**
      * Display a listing of the resource.
@@ -114,9 +114,16 @@ class CompanyV2Controller extends Controller
         }
 
         $this->saveExtraData($request, $company);
-
+        
         if ($company->whitelabel) {
-            $this->callApiTransferToWhiteLabel($company);
+
+            $companyToTransfer = $company->only(['business_name', 'phone', 'address', 'email']);
+
+            $api = $this->callApiTransferCompanyToWhiteLabel([$companyToTransfer]);   
+            if ($api['status'] != 201) {
+                $body= json_decode($api['body']);
+                return ['errors_in_request_whitelabel'=>isset($body->errors) ? $body->errors : $body->message ];
+            }
         }
 
         return new CompanyResource($company);
@@ -162,9 +169,7 @@ class CompanyV2Controller extends Controller
                 }
 
             DB::commit();
-                if ($companyForUpdate['company']['whitelabel'] == 1) {
-                    $this->callApiTransferToWhiteLabel($company);
-                }
+                // evaluar caso en el que se actualice la compañia desde cargofive con respecto a whitelabel
             return new CompanyResource($company);
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -270,16 +275,23 @@ class CompanyV2Controller extends Controller
     }
 
     public function transferToWhiteLabel(Request $request){
-        $companies = $request->get('companies');
+        $companiesToSearch = $request->get('companies');
 
         try {
-            foreach ($companies as $key => $value) {
-                Company::where('id', $value['id'])->update(array('whitelabel' => 1 ));
-            }
-            
-            $this->callApiTransferToWhiteLabel();
+            $companies= Company::whereIn('id',$companiesToSearch);
+            $companies->update(array('whitelabel' => 1 ));
 
-            return "Transfer to whiteLabel";
+            $companiesToTransfer =  $companies->get()->map(function ($company) {
+                                        return $company->only(['business_name', 'phone', 'address', 'email']);
+                                    });
+
+            $api = $this->callApiTransferCompanyToWhiteLabel($companiesToTransfer->toArray());
+            if ($api['status'] != 201) {
+                $body= json_decode($api['body']);
+                return ['errors_in_request_whitelabel'=>isset($body->errors) ? $body->errors : $body->message ];
+            }
+
+            return "Transfer successfully to whiteLabel";
         } catch (\Throwable $th) {
             return $th->getMessage();
         }
@@ -291,33 +303,8 @@ class CompanyV2Controller extends Controller
         //leer el archivo excel
         //insertar en la base de datos las compañias que todos los datos esten bien en la tabla companies
         //insertar en la base de datos las compañias que todos los datos que no esten bien en la tabla failed_companies
+        //importar msivamente a whitelabel en caso de que sea requerido
         //retornar el estado de la carga 200 para creacion completa 205 para creacion parcial 500 para fallo de creacion o almacenado de la info
-    }
-
-    //enviar esta funcion a un trait de wl
-    public function callApiTransferToWhiteLabel($companyForTransfer){
-        $company = $companyForTransfer->toArray();
-        $company_user_id = \Auth::user()->company_user_id;
-
-        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url','token')->first()->toArray();  
-        $endPoint = $url['url'].'shipper';
-        $service = new Client();
-        
-        $result =   $service->post($endPoint,
-                        [
-                            'http_errors' => false,
-                            'headers'=>[
-                                'Accept' => 'application/json',
-                                'Content-Type' => 'application/x-www-form-urlencoded',
-                                'Authorization' => Auth::user()->api_token,
-                            ],
-                            'form_params'=>[
-                                $company
-                            ]
-                        ]
-                    );
-
-        return $result;
     }
 
     public function exportCompanies(Request $request, $format){
