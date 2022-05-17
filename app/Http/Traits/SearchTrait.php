@@ -1337,7 +1337,7 @@ trait SearchTrait
                     continue;
                 }
 
-                if($calculation_options['iscont']) {
+                if(@$calculation_options['iscont']) {
                     foreach($search_containers as $container) {
                         $quantity_totals['C'.$container['code']] *= $container['qty'];
                         $quantity_totals_client_currency['C'.$container['code']] *= $container['qty'];
