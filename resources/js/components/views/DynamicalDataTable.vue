@@ -2,6 +2,7 @@
 
     <DataTable 
         v-if="isLoaded"
+        :contractData="contractData"
         :fields="fields"
         :inputFields="form_fields"
         :extraFields="extra_fields"
@@ -47,6 +48,7 @@
             FormView,
         },
         props: {
+            contractData: Object,
             classTable: String,
             view: String,
             equipment: Object,
