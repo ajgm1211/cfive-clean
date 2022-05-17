@@ -21,6 +21,8 @@ use App\Currency;
 use App\DeliveryType;
 use App\DestinationType;
 use App\Harbor;
+use App\Delegation;
+use App\UserDelegation;
 use App\Http\Resources\QuotationListResource;
 use App\Http\Resources\QuotationResource;
 use App\Http\Resources\CostSheetResource;
@@ -45,6 +47,7 @@ use App\Http\Traits\MixPanelTrait;
 use App\ViewQuoteV2;
 use App\LocalChargeQuote;
 
+
 class QuotationController extends Controller
 {
     use QuoteV2Trait, SearchTrait, MixPanelTrait;
@@ -57,13 +60,23 @@ class QuotationController extends Controller
     function list(Request $request)
     {   
         $company_user_id = \Auth::user()->company_user_id;
+        $company_user = CompanyUser::where('id','=',$company_user_id)->first();
+        $filter_delegation = $company_user['options']['filter_delegations'];
         $subtype = \Auth::user()->options['subtype'];
         $user_id = \Auth::user()->id;
+        $user_delegation =UserDelegation::where('users_id','=',$user_id)->first();
+        $delegation=Delegation::find($user_delegation['delegations_id']);
+        $id_delegation = $delegation['id'];
         
         //Permisos de subtype comercial, solo puede acceder a sus propias cotizaiones
         if($subtype === 'comercial') {
             $results = ViewQuoteV2::filterByCurrentUser()->filter($request);
-        } else {
+        }
+        // Filtro para buscar por delegacion los quotes
+        if($filter_delegation == true) {
+            $results =  ViewQuoteV2::filterByDelegation()->paginate(10);
+        }  
+        else {
             $results = ViewQuoteV2::filterByCurrentCompany()->filter($request);
         }
 
