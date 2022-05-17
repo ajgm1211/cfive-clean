@@ -424,7 +424,6 @@ class QuotationController extends Controller
         /** Tracking create quote event with Mix Panel*/
         $this->trackEvents("create_quote", $quote);
         
-
         return new QuotationResource($quote);
     }
 
@@ -561,6 +560,12 @@ class QuotationController extends Controller
                 $quote->update(['chargeable_weight' => $request['total_weight']]);
             }
         }
+        
+        if($quote->wasChanged('status')){
+            $this->trackEvents("status_quote", $quote);
+        }
+
+
     }
 
     public function getCompanyLanguageId($company_id) {
