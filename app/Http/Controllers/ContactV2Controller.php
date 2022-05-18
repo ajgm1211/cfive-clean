@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Contact;
+use App\Company;
 use App\FailedContact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use App\Http\Resources\ContactResource;
@@ -93,11 +95,22 @@ class ContactV2Controller extends Controller
      */
     public function update(Request $request, Contact $contact)
     {
+        $validated = $request->validate([
+            'contact.first_name' => 'required',
+            'contact.last_name' => 'required',
+            'contact.phone' => 'required',
+            'contact.email' => 'required',
+            'contact.position' => 'required',
+            'contact.company_id' => 'required',
+        ]);
+
+        $newContact = $request->get('contact');
+
         try {
             DB::beginTransaction();
 
-                if ($contact) {
-                    $contact->fill($request->input())->save();
+                if ($contact && $validated) {
+                    $contact->fill($newContact)->save();
                 }
 
             DB::commit();
@@ -119,6 +132,20 @@ class ContactV2Controller extends Controller
         $new_contact = $contact->duplicate();
 
         return new ContactResource($new_contact);
+    }
+
+
+    /**
+     * Clone the specified resource in storage.
+     *
+     * @param  \App\Contact $contact
+     * @return \Illuminate\Http\Response
+     */
+    public function getCompanies()
+    {
+        $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->select('id','business_name')->get();
+        $data = compact('companies');
+        return response()->json(['data' => $data]);
     }
 
     /**
@@ -143,6 +170,38 @@ class ContactV2Controller extends Controller
         return FailedContactResource::collection($failedContacts);
     }
 
+    public function failedEdit(){
+        return view('contacts.v2.failedEdit');
+    }
+
+    public function failedRetrieve(Request $request, FailedContact $failed)
+    {
+        return new FailedContactResource($failed);
+    }
+
+    public function failedUpdate(Request $request, FailedContact $failed){
+        $validated = $request->validate([
+            'contact.first_name' => 'required',
+            'contact.last_name' => 'required',
+            'contact.phone' => 'required',
+            'contact.email' => 'required',
+            'contact.position' => 'required',
+            'contact.company_id' => 'required',
+        ]);
+        try {
+            DB::beginTransaction();
+                if ($failed) {
+                    $newContact = new Contact($validated['contact']);
+                    $newContact->save();
+                    $failed->delete();
+                }
+            DB::commit();
+            return new ContactResource($newContact);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th->getMessage();
+        }
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -175,5 +234,46 @@ class ContactV2Controller extends Controller
 
     public function downloadTemplateFile(){
         return Storage::disk('DownLoadFile')->download('contacts_template.xlsx');
+    }
+
+    public function exportContacts(Request $request, $format){
+
+        $filename       = "Contacts";
+        $titleSheet1    = "Contacts";
+        $Sheet1header   = ['first_name','last_name','phone','email','position', 'company'];
+        $sheet1Content  = Contact::filterByCurrentCompany()->company()->get()->toArray();
+        $formatExport   = [];
+
+        return Excel::create($filename, function($excel) use ($titleSheet1, $Sheet1header, $sheet1Content, $formatExport) {
+
+            $excel->sheet($titleSheet1, function($sheet) use ($Sheet1header, $sheet1Content, $formatExport){
+                
+                $sheet->row(1, $Sheet1header);
+                $sheet->row(1, function($row){
+                    $row->setBackground('#006bfa');
+                    $row->setFontColor('#ffffff');
+                    $row->setAlignment('center');
+                });
+                
+                $sheetRow = 2;
+                foreach ($sheet1Content as $key => $value) {
+
+                    $formatExport['first_name'] = $value['first_name'] != null ? $value['first_name'] : 'N/A';
+                    $formatExport['last_name'] = $value['last_name'] != null ? $value['last_name'] : 'N/A';
+                    $formatExport['phone'] = $value['phone'] != null ? $value['phone'] : 'N/A';
+                    $formatExport['email'] = $value['email'] != null ? $value['email'] : 'N/A';
+                    $formatExport['position'] = $value['position'] != null ? $value['position'] : 'N/A';
+                    $formatExport['company'] = $value['company']['business_name'] != null ? $value['company']['business_name'] : 'N/A';
+                    
+                    $sheet->row($sheetRow, $formatExport);
+                    $sheet->row($sheetRow, function($row){
+                        $row->setAlignment('center');
+                    });
+                    
+                    $sheetRow ++;
+                    $formatExport= [];
+                }
+            });
+        })->export($format);
     }
 }

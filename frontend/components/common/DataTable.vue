@@ -60,7 +60,7 @@
                             @input="filterTable"
                         ></multiselect>
                     </b-th>
-                    <b-th>
+                    <b-th v-if="massiveactions.length > 0" >
                         <b-button
                             v-bind:id="'popover_all'"
                             class="action-app action-thead"
@@ -378,6 +378,10 @@
                 </b-tr>
                 <!-- Extra form end -->
 
+                <!-- Data List Empty-->
+                <b-tr v-if="totalData < 1 && !isBusy ">
+                    <h4>There are no records to show</h4> 
+                </b-tr>
                 <!-- Data List -->
                 <b-tr v-for="(item, key) in data" :key="key" :id="key">
                     <!-- Checkbox column -->
@@ -471,6 +475,13 @@
                             triggers="focus"
                             placement="bottomleft"
                         >
+                            <button
+                                class="btn-action"
+                                v-if="customAction"
+                                v-on:click="$emit('customAction',item)"
+                            >
+                                {{customAction}}
+                            </button>
                             <button
                                 class="btn-action"
                                 v-if="singleActions.includes('edit')"
@@ -769,6 +780,11 @@ export default {
             required: false,
             default: true,
         },
+        customAction:{
+            type:String,
+            required: false,
+            default: '',
+        }
     },
     components: {
         Multiselect,
@@ -1031,6 +1047,7 @@ export default {
 
         /* Refresh Data */
         refreshData() {
+            this.isBusy = true;
             this.$router.push({});
             this.initialPage = 1;
             this.initialData({});

@@ -11,6 +11,9 @@ export default {
     retrieve(id) {
         return api.call('get', `/api/contacts/retrieve/${id}`);
     },
+    update(id, contact) {
+        return api.call('post', `/api/contacts/${id}/update`, {contact});
+    },
     duplicate(id, data) {
         return api.call('post', `/api/contacts/${id}/duplicate`, data);
     },
@@ -28,5 +31,8 @@ export default {
     },
     transfer(contacts){
         return api.call('post', `/api/contacts/toWhiteLabel`, {contacts});
+    },
+    getCompanies(){
+        return api.call('get', `/api/contacts/getCompanies`);
     }
 }

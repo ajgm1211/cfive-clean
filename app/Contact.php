@@ -63,4 +63,28 @@ class Contact extends Model implements Auditable
     {
         return (new ContactFilter($request, $builder))->filter();
     }
+
+    public function duplicate()
+    {
+        $new_model = $this->replicate();
+        $new_model->push();
+        $new_model->save();
+        $relations = $this->getRelations();
+
+        foreach ($relations as $relation) {
+            if (!is_a($relation, 'Illuminate\Database\Eloquent\Collection')) {
+                if ($relation != null) {
+                    $relation->duplicate($new_model);
+                }
+            } else {
+                foreach ($relation as $relationRecord) {
+                    if ($relationRecord != null) {
+                        $newRelationship = $relationRecord->duplicate($new_model);
+                    }
+                }
+            }
+        }
+
+        return $new_model;
+    }
 }

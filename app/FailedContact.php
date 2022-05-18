@@ -12,6 +12,7 @@ class FailedContact extends Model
 {
     protected $table = 'failed_contacts';
     protected $fillable = [
+        'id',
         'first_name',
         'last_name',
         'phone',

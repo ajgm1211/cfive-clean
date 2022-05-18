@@ -1,37 +1,41 @@
 
 <template>
   <div class="col-12">
-        <div class="head">
-            <div class="head-title">
-                <h2>Failed Companies</h2>
-            </div>
-            <div class="head-btns">
-            </div>
+    <div class="back-btn" @click="$router.push('/companies/v2');">
+        <LeftArrow /> <span>back</span>
+    </div>
+    <div class="head">
+        <div class="head-title">
+            <h2>Failed Companies</h2>
         </div>
-        <div>
-          <DataTable
-            :fields="fields"
-            :actions="actions"
-            :filter="true"
-            :simpleSelect="false"
-            :massiveSelect="false"
-            :massiveactions="[]"
-            :singleActions="[]"
-            :totalResults="totalResults"
-            :classTable="classTable"
-          >
-          </DataTable>
+        <div class="head-btns">
         </div>
+    </div>
+    <div>
+      <DataTable
+        :fields="fields"
+        :actions="actions"
+        :filter="true"
+        :simpleSelect="false"
+        :massiveSelect="false"
+        :massiveactions="[]"
+        :singleActions="[]"
+        :totalResults="totalResults"
+        :classTable="classTable"
+      >
+      </DataTable>
+    </div>
   </div>
 </template>
 
 <script>
-
+import LeftArrow from '../../components/icons/LeftArrow'
 import DataTable from '../../components/common/DataTable'
 import actions from '../../store/modules/company/actionFailed'
 
+
 export default {
-  components: {DataTable},
+  components: {DataTable, LeftArrow},
   data() {
     return {
         totalResults:true,

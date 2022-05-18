@@ -5,7 +5,7 @@
           <h2>Contacts</h2>
         </div>
       <div class="head-btns">
-        <MainButton @click="createMasive(false)" text="Add Companies" :add="true" />
+        <MainButton @click="createMasive(false)" text="Add Contacts" :add="true" />
         <DropdownButton 
             :items="items"
             :btnText="'Import'"
@@ -48,7 +48,7 @@
         v-if="exportEntityModal"
         :title="'Contacts'"
         :action="'Export'"
-        :exportLink="'contacts/v2/export-contacts'"
+        :exportLink="'/contacts/v2/export-contacts'"
         @cancel="exportEntityModal = false"
       />
     </div>

@@ -7,5 +7,8 @@ export default {
             }).catch(error => {
                 callback(error, error.response.data);
             });
-    }
+    },
+    update(id, contact) {
+        return api.call('post', `/api/contacts/failed/${id}/update`, {contact, id});
+    },
 }
