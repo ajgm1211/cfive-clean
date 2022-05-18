@@ -187,11 +187,16 @@ Route::group(['prefix'=>'companies','middleware' => 'auth:api'], function () {
     Route::put('deleteAll', 'CompanyV2Controller@destroyAll');
     Route::get('retrieve/{company}', 'CompanyV2Controller@retrieve');
     Route::get('template', 'CompanyV2Controller@downloadTemplateFile');
-    Route::get('failed/list', 'CompanyV2Controller@failedList');
     Route::get('{company}/contacts', 'CompanyV2Controller@contactByCompanyList');
     Route::post('toWhiteLabel', 'CompanyV2Controller@transferToWhiteLabel');
     Route::get('export/{format}', 'CompanyV2Controller@exportCompanies');
     Route::post('create-massive', 'CompanyV2Controller@createCompaniesMassive');
+
+    Route::group(['prefix'=>'failed'],function(){
+        Route::get('list', 'CompanyV2Controller@failedList');
+        Route::get('retrieve/{failed}', 'CompanyV2Controller@failedRetrieve');
+        Route::post('{failed}/update', 'CompanyV2Controller@failedUpdate');
+    });
     
 });
 

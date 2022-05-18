@@ -37,7 +37,6 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     route::get('v2', 'CompanyV2Controller@index');
     route::get('v2/{id}/edit', 'CompanyV2Controller@edit');
     route::get('v2/failed', 'CompanyV2Controller@failed');
-    route::get('v2/failed/{failed}/edit', 'CompanyV2Controller@failedEdit');
     route::get('v2/template', 'CompanyV2Controller@downloadTemplateFile');
     Route::get('v2/{id}/contacts', 'CompanyV2Controller@contactByCompanyList');
     Route::get('v2/export-companies/{format}', 'CompanyV2Controller@exportCompanies');

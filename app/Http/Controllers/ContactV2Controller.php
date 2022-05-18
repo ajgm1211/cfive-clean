@@ -165,13 +165,10 @@ class ContactV2Controller extends Controller
      * @param  \App\Contact $contact
      * @return \Illuminate\Http\Response
      */
+
     public function failedList(Request $request){
         $failedContacts = FailedContact::FilterByCurrentCompanyUser()->orderBy('id', 'asc')->filter($request);
         return FailedContactResource::collection($failedContacts);
-    }
-
-    public function failedEdit(){
-        return view('contacts.v2.failedEdit');
     }
 
     public function failedRetrieve(Request $request, FailedContact $failed)
@@ -188,15 +185,16 @@ class ContactV2Controller extends Controller
             'contact.position' => 'required',
             'contact.company_id' => 'required',
         ]);
+        $newContact = $request->get('contact');
         try {
             DB::beginTransaction();
                 if ($failed) {
-                    $newContact = new Contact($validated['contact']);
+                    $contact = new Contact($newContact);
                     $newContact->save();
                     $failed->delete();
                 }
             DB::commit();
-            return new ContactResource($newContact);
+            return new ContactResource($contact);
         } catch (\Throwable $th) {
             DB::rollBack();
             return $th->getMessage();

@@ -24,6 +24,7 @@
         :classTable="classTable"
         :toggleAddToWhiteLabel="toggleToWhiteLabel"
         @toggleButtonWhiteLabel="toggleButtonWhiteLabel"
+        @selectedData="selectedData"
       ></DataTable>
     </div>
     <div>
@@ -38,9 +39,10 @@
       />
       <ToWhiteLabelModal
         v-if="modalWhiteLabel"
+        :moduleTitle="'Contacts'"
         :title="'To WhiteLabel'"
         :action="'Add'"
-        :selected="selectForTransfer"
+        :selected="selectedForModal"
         @cancel="modalWhiteLabel = false"
         @transferToWhiteLabel="transferToWhiteLabel"
       />
@@ -136,6 +138,11 @@ export default {
       return this.AddToWhiteLabel
     },
     ...mapState("auth", ["user"]),
+    selectedForModal(){
+      return this.selectForTransfer.map(item =>{
+        return {name: item.first_name +' '+ item.last_name}
+      })
+    }
   },
   methods: {
     onEdit(data) {

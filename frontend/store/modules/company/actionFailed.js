@@ -7,5 +7,8 @@ export default {
             }).catch(error => {
                 callback(error, error.response.data);
             });
-    }
+    },
+    update(id, company) {
+        return api.call('post', `/api/companies/failed/${id}/update`, {company, id});
+    },
 }

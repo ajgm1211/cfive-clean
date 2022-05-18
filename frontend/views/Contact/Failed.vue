@@ -135,7 +135,6 @@ export default {
         this.$refs.datatable_failed.refreshData()
         toastr.error("unsuccessful Modification")
       }
-      
     }
   }
 }

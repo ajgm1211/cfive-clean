@@ -268,6 +268,38 @@ class CompanyV2Controller extends Controller
         return FailCompanyResource::collection($failedCompanies);
     }
 
+    public function failedRetrieve(Request $request, FailCompany $failed)
+    {
+        return new FailCompanyResource($failed);
+    }
+
+    public function failedUpdate(Request $request, FailCompany $failed){
+
+        $validated = $request->validate([
+            'company.business_name' => 'required',
+            'company.phone' => 'required',
+            'company.address' => 'required',
+            'company.email' => 'required',
+            'company.tax_number' => 'required',
+            'company.owner' => 'required',
+        ]);
+
+        $newCompany = $request->get('company');
+        try {
+            DB::beginTransaction();
+                if ($failed) {
+                    $company = new Company($newCompany);
+                    $company->save();
+                    $failed->delete();
+                }
+            DB::commit();
+            return new CompanyResource($company);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th->getMessage();
+        }
+    }
+
     public function contactByCompanyList(Request $request, $company){
 
         $contactsByCompany = Contact::filterByCurrentEditingCompany($company)->orderBy('id', 'asc')->filter($request);
