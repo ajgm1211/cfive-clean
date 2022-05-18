@@ -220,6 +220,8 @@ class QuotationController extends Controller
         foreach ($result_data as $result) {
             if(isset($result['remarks'])){
                 $remarks .= $result['remarks'];
+                $remarksPenalties= isset($result['formattedPenalties']) ? $this->formatPenaltieRemark($result['formattedPenalties'],$result['company'],$result['search']['containers']) : '';
+                $remarks .=$remarksPenalties;
             }
         }
         // Validacion para el quote_id no sean iguales
@@ -1110,5 +1112,49 @@ class QuotationController extends Controller
 
         return new CostSheetResource($quote, $autorate);
 
+    }
+    public function formatPenaltieRemark($formattedPenalties,$company,$containers){
+        $table='';
+        $penalValue='';
+        $head='';
+        $count=count($containers);
+        foreach($containers as $key=>$container){
+            $c='';
+
+            if($key==0){
+                $c="<tr>"."<th>".$company." Fees"."</th>"."<th>".$container['code']."</th>";
+            }elseif($key==$count-1){
+                $c="<th>".$container['code']."</th>"."</tr>";
+            }else{
+                $c="<th>".$container['code']."</th>";
+            }
+            $head.=$c;
+        }
+        $table.=$head;
+
+        foreach($formattedPenalties as $key=>$penalties){
+            $index=array_keys($penalties);
+            $count=count($index);
+            
+            for ($i = 0; $i < $count; $i++) {
+                $penal='';
+
+                if($i==0){
+                    $penal="<tr>"."<th>".$penalties[$index[$i]]."</th>";
+                }elseif($i==$count-1){
+                    $penal="<th>".$penalties[$index[$i]]." ".$penalValue."</th>"."</tr>";
+                }elseif(is_int($penalties[$index[$i]])){
+                    $penalValue=$penalties[$index[$i]];
+                }elseif(isset($penalValue)){
+                    $penal="<th>".$penalties[$index[$i]]." ".$penalValue."</th>";
+                }else{
+                    $penal="<tr>"."<th>".$penalties[$index[$i]]."</th>";
+                }                 
+                $table.=$penal;
+            }  
+        }
+
+        $remark="<table>".$table."</table>";
+        return $remark;
     }
 }
