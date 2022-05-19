@@ -1146,7 +1146,7 @@
                     </button>
                     <button
                         class="btn btn-primary btn-bg"
-                        @click.once="onSubmit"
+                        @click="onSubmit"
                         @success="closeModal('localcharges')"
                     >
                         + Add Charges
