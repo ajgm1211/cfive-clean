@@ -39,7 +39,7 @@ class CompanyUser extends Model implements Auditable
 
     public function quota()
     {
-        return $this->hasOne('App\QuotaRequest','id');
+        return $this->hasOne('App\QuotaRequest');
     }
 
     public function getHigherId($companyCode)
