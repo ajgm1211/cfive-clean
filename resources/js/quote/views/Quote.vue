@@ -526,6 +526,20 @@ export default {
                     colClass: "col-lg-12",
                     }
                 }
+            }else if(this.currentData.language_id['name']=="Italian"){
+                this.term_fields = { 
+                    terms_italian: {
+                    type: "ckeditor",
+                    colClass: "col-lg-12",
+                    }
+                }
+            }else if(this.currentData.language_id['name']=="Catalan"){
+                this.term_fields = { 
+                    terms_catalan: {
+                    type: "ckeditor",
+                    colClass: "col-lg-12",
+                    }
+                }
             }
         },
 

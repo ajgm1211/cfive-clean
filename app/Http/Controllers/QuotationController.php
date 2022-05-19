@@ -75,7 +75,8 @@ class QuotationController extends Controller
         $company_user_id = \Auth::user()->company_user_id;
 
         $carriers = Carrier::get()->map(function ($carrier) {
-            return $carrier->only(['id', 'name', 'image']);
+            $carrier['model'] = 'App\Carrier';
+            return $carrier->only(['id', 'name', 'image', 'model']);
         });
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->get()->map(function ($company) {
@@ -238,8 +239,6 @@ class QuotationController extends Controller
             'contact_id' => isset($search_data_ids['contact']) ? $search_data_ids['contact'] : null,
             'price_id' => isset($search_data_ids['pricelevel']) ? $search_data_ids['pricelevel'] : null,
             'equipment' => $equipment,
-            //'origin_address' => $data['origin_address'],
-            //'destination_address' => $data['destination_address'],
             'date_issued' => $search_data_ids['dateRange']['startDate'],
             'validity_start' => $search_data_ids['dateRange']['startDate'],
             'validity_end' => $search_data_ids['dateRange']['endDate'],
@@ -247,16 +246,14 @@ class QuotationController extends Controller
             'terms_portuguese' => $search_data['terms'] ? $search_data['terms']['portuguese'] : null,
             'terms_and_conditions' => $search_data['terms'] ? $search_data['terms']['spanish'] : null,
             'terms_english' => $search_data['terms'] ? $search_data['terms']['english'] : null,
+            'terms_italian' => $search_data['terms'] ? $search_data['terms']['italian'] : null,
+            'terms_catalan' => $search_data['terms'] ? $search_data['terms']['catalan'] : null,
             'total_quantity' => $search_data['quantity'],
             'total_weight' => $search_data['weight'],
             'total_volume' => $search_data['volume'],
             'chargeable_weight' => $search_data['chargeableWeight'],
         ]);
 
-        // En caso de que se vuelva a repetir el quote_id
-        // if($newq_id === $quote->quote_id){
-        //     return redirect()->route('searchV2.index');
-        // }
         $quote = $quote->fresh();
 
         if ($quote->language_id == 1) {
@@ -265,6 +262,10 @@ class QuotationController extends Controller
             $quote->update(['remarks_spanish' => $remarks]);
         } else if ($quote->language_id == 3) {
             $quote->update(['remarks_portuguese' => $remarks]);
+        } else if ($quote->language_id == 4) {
+            $quote->update(['remarks_italian' => $remarks]);
+        } else if ($quote->language_id == 5) {
+            $quote->update(['remarks_catalan' => $remarks]);
         }
 
         foreach ($rate_data as $rate) {
@@ -347,7 +348,7 @@ class QuotationController extends Controller
         
         foreach ($result_data as $result) {
             
-            $result = $this->formatApiResult($result, $search_data['selectedContainerGroup'], $search_data['containers']);
+            $result = $this->formatApiResult($result, $search_data);
 
             if (isset($result['validityFrom'])) {
                 $start_date = substr($result['validityFrom'], 0, 10);
@@ -385,7 +386,8 @@ class QuotationController extends Controller
                         'calculation_type_id' => $charge['calculationtype_id'],
                         'currency_id' => $charge['currency_id'],
                         'amount' => json_encode($charge['amount']),
-                        'total' => json_encode($charge['amount']),
+                        'markups' => json_encode($charge['markups']),
+                        'total' => json_encode($charge['total'])
                     ]);
                 }
             }
@@ -397,6 +399,7 @@ class QuotationController extends Controller
                 'destination_port_id' => $newRate->destination_port_id,
                 'carrier_id' => $newRate->carrier_id,
                 'currency_id' => $newRate->currency_id,
+                'markups' => $result['rate_markups'],
             ]);
 
             $rateTotals->totalize($newRate->currency_id);
@@ -410,37 +413,6 @@ class QuotationController extends Controller
         
 
         return new QuotationResource($quote);
-    }
-
-    //Retrieves Terms and Conditions
-    public function searchTerms($search_data)
-    {
-        $terms = TermAndConditionV2::where([['company_user_id', \Auth::user()->company_user_id], ['type', $search_data['type']]])->get();
-
-        $terms_english = '';
-        $terms_spanish = '';
-        $terms_portuguese = '';
-
-        foreach ($terms as $term) {
-
-            if ($search_data['direction'] == 1) {
-                $terms_to_add = $term->import;
-            } else if ($search_data['direction'] == 2) {
-                $terms_to_add = $term->export;
-            }
-
-            if ($term->language_id == 1) {
-                $terms_english .= $terms_to_add . '<br>';
-            } else if ($term->language_id == 2) {
-                $terms_spanish .= $terms_to_add . '<br>';
-            } else if ($term->language_id == 3) {
-                $terms_portuguese .= $terms_to_add . '<br>';
-            }
-        }
-
-        $final_terms = ['english' => $terms_english, 'spanish' => $terms_spanish, 'portuguese' => $terms_portuguese];
-
-        return $final_terms;
     }
 
     public function edit(Request $request, QuoteV2 $quote)
@@ -485,18 +457,8 @@ class QuotationController extends Controller
 
                 ]);
             }
-            // else if ($request->input('cargo_type_id') != null) {
-            //     $data = $request->validate([
-            //         'cargo_type_id' => 'nullable',
-            //         'total_quantity' => 'nullable|numeric',
-            //         'total_volume' => 'nullable|numeric',
-            //         'total_weight' => 'nullable|numeric',
-            //         'chargeable_weight' => 'nullable',
-            //     ]);
-            // } 
             else {
                 $data = [];
-
                 foreach ($form_keys as $fkey) {
                     if (!in_array($fkey, $data) && $fkey != 'keys') {
                         $data[$fkey] = $request->input($fkey);
@@ -530,7 +492,25 @@ class QuotationController extends Controller
                 } else if ($data[$key] == 6) {
                     $data[$key] = 'Lost';
                 }
+            } 
+            
+            if ($key == 'language_id') {     
+                
+                $current_company_id = $quote->company_id;
+                $request_company_id = $data['company_id'];
+                
+                if ($request_company_id != $current_company_id) {
+                    if($request_company_id) {                     
+                        $company_id = (int)$request_company_id;
+                        $language_id = $this->getCompanyLanguageId($company_id);
+                        if ($language_id) {
+                            $data[$key] = $language_id;
+                        }
+                    }
+                }
+
             }
+
             $quote->update([$key => $data[$key]]);
 
             if ($key == 'validity_end') {
@@ -543,20 +523,6 @@ class QuotationController extends Controller
                 }
             }
         }
-
-        // if ($request->input('custom_incoterm') != null) {
-        //     $quote->update(['custom_incoterm' => $request->input('custom_incoterm')]);
-        // } 
-        // else {
-        //     $quote->update(['custom_incoterm' => null]);
-        // }
-
-        //  if ($request->input('custom_quote_id') != null) {
-        //      $quote->update(['custom_quote_id' => $request->input('custom_quote_id')]);
-        //  } 
-        //   else {
-        //       $quote->update(['custom_quote_id' => null]);
-        //     }
 
         if ($request->input('pdf_options') != null) {
 
@@ -582,6 +548,25 @@ class QuotationController extends Controller
                 $quote->update(['chargeable_weight' => $request['total_weight']]);
             }
         }
+    }
+
+    public function getCompanyLanguageId($company_id) {
+        $company = Company::find($company_id); 
+        $pdf_language = $company->pdf_language; 
+
+        if (!is_null($pdf_language)) {
+            $language = Language::where('name', strtoupper($pdf_language))->first();
+            if($language) {
+                return $language->id;
+            } else {
+                if($pdf_language == 0) {
+                    return 1;
+                } else { 
+                    return $pdf_language;
+                }
+            }
+        }
+        return false;
     }
 
     public function updateSearchOptions(Request $request, QuoteV2 $quote)
@@ -773,7 +758,7 @@ class QuotationController extends Controller
 
         foreach ($result_data as $result) {
 
-            $result = $this->formatApiResult($result, $search_data['selectedContainerGroup'], $search_data['containers']);
+            $result = $this->formatApiResult($result, $search_data);
 
             if (isset($result['validityFrom'])) {
                 $start_date = substr($result['validityFrom'], 0, 10);
@@ -1107,10 +1092,6 @@ class QuotationController extends Controller
     {
         $providers = Provider::where('company_user_id', \Auth::user()->company_user_id)->get();
 
-        foreach($carriers as $carrier){
-            $carrier['model'] = 'App\Carrier';
-        }
-        
         $providers = $providers->map(function ($value) {
             $value['model'] = 'App\Provider';
             return $value->only(['id', 'name', 'model']);
