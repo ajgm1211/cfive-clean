@@ -12,9 +12,9 @@
               </div>
               <div class="col-6">
                 <div class="float-right">
-                  <a href="/api/search" class="btn btn-primary btn-bg"
-                    ><i class="fa fa-search"></i> Search Rates</a
-                  >
+                  <a href="/api/search" class="btn btn-primary btn-bg">
+                    <i class="fa fa-search"></i> Search Rates
+                  </a>
                 </div>
               </div>
             </div>
@@ -41,7 +41,7 @@ import Inland from "./Inland";
 import Ocean from "./Ocean";
 import actions from "../../actions";
 import Local from "./Local";
-import DataTable from "../../components/DataTable";
+import DataTable from "../../components/DataTableV2";
 import HelpDropdown from "../../components/HelpDropdown";
 
 export default {
@@ -59,41 +59,57 @@ export default {
       activeOcean: false,
       actions: actions,
       fields: [
-        { key: "id", label: "ID", filterIsOpen:false },
-        { key: "quote_id", label: "Quote ID", filterIsOpen:false },
-        { key: "custom_quote_id", label: "Custom ID", filterIsOpen:false },
+        { 
+          key: "id", 
+          label: "ID", 
+          filterisOpen: true, 
+          isObject: false },
+        { 
+          key: "quote_id", 
+          label: "Quote ID", 
+          filterisOpen: true, 
+          isObject: false },
+        { 
+          key: "custom_quote_id", 
+          label: "Custom ID", 
+          filterisOpen: true, 
+          isObject: false},
         {
           key: "status",
           label: "status",
           formatter: (value) => {
             return value.name;
           },
-          filterIsOpen:false,
+          filterisOpen: true,
           filterTrackBy: "name",
           trackLabel: "name",
+          isObject: false
         },
         {
           key: "company_id",
           label: "Client",
+          filterisOpen: true,
           formatter: (value) => {
             return this.setClient(value);
           },
-          filterIsOpen:false,
           filterTrackBy: "business_name",
           trackLabel: "business_name",
+          isObject: true
         },
-        { key: "type", label: "Type", filterIsOpen:false },
+        { key: "type", label: "Type", filterisOpen:true, isObject: false },
         {
           key: "origin",
           label: "Origin",
-          filterIsOpen:false,
           collapse: "Show origins",
+          filterisOpen:true,
+          isObject: true
         },
         {
           key: "destiny",
           label: "Destiny",
-          filterIsOpen:false,
           collapse: "Show destinations",
+          filterisOpen:true,
+          isObject: true,
         },
         {
           key: "user_id",
@@ -101,11 +117,12 @@ export default {
           formatter: (value) => {
             return value.fullname;
           },
-          filterIsOpen:false,
+          filterisOpen:true,
+          isObject: true,
           filterTrackBy: "fullname",
           trackLabel: "fullname",
         },
-        { key: "created_at", label: "Created at", filterIsOpen:false },
+        { key: "created_at", label: "Created at", filterisOpen: false },
       ],
       helpOptions: [
         {
