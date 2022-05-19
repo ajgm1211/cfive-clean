@@ -21,6 +21,7 @@ import Rates from "../views/pages/PriceLevels/Rates.vue";
 import PriceLevels from "../views/pages/PriceLevels/Index.vue";
 import CompanyUsers from "../views/pages/Integrations/ApiCredentials/CompanyUsers.vue";
 import ApiProviders from "../views/pages/Integrations/ApiCredentials/ApiProviders.vue";
+import Segments from "../views/pages/Segments/Index.vue";
 
 // Const
 const options = {
@@ -53,6 +54,11 @@ const router = new VueRouter({
       path: "/api-credentials/company-user/:id",
       name: "api-credentials-by-company-user",
       component: ApiProviders,
+    },
+    {
+      path: "/segment-configuration",
+      name: "segment-configuration",
+      component:Segments,
     },
   ],
 });
