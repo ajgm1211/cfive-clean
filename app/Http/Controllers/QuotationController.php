@@ -278,6 +278,8 @@ class QuotationController extends Controller
         foreach ($result_data as $result) {
             if(isset($result['remarks'])){
                 $remarks .= $result['remarks'];
+                $remarksPenalties= isset($result['formattedPenalties']) ? $this->formatPenaltyRemark($result['formattedPenalties'],$result['company'],$result['search']['containers']) : '';
+                $remarks .=$remarksPenalties;
             }
         }
         // Validacion para el quote_id no sean iguales
@@ -326,6 +328,17 @@ class QuotationController extends Controller
             $quote->update(['remarks_catalan' => $remarks]);
         }
 
+        if (empty($quote->remarks_english) ) {
+            $quote->update(['remarks_english' => $remarksPenalties]);
+        }if (empty($quote->remarks_spanish)) {
+            $quote->update(['remarks_spanish' => $remarksPenalties]);
+        }if (empty($quote->remarks_portuguese)) {
+            $quote->update(['remarks_portuguese' => $remarksPenalties]);
+        }if (empty($quote->remarks_italian)) {
+            $quote->update(['remarks_italian' => $remarksPenalties]);
+        }if (empty($quote->remarks_catalan)) {
+            $quote->update(['remarks_catalan' => $remarksPenalties]);
+        }
         foreach ($rate_data as $rate) {
 
             $newRate = AutomaticRate::create([
@@ -1177,6 +1190,49 @@ class QuotationController extends Controller
         return new CostSheetResource($quote, $autorate);
 
     }
+    public function formatPenaltyRemark($formattedPenalties,$company,$containers){
+        $table='';
+        $penalValue='';
+        $head='';
+        $count=count($containers);
+        foreach($containers as $key=>$container){
+            $c='';
 
+            if($key==0){
+                $c="<tr>"."<th>".$company." Fees"."</th>"."<th>".$container['code']."</th>";
+            }elseif($key==$count-1){
+                $c="<th>".$container['code']."</th>"."</tr>";
+            }else{
+                $c="<th>".$container['code']."</th>";
+            }
+            $head.=$c;
+        }
+        $table.=$head;
+
+        foreach($formattedPenalties as $key=>$penalties){
+            $index=array_keys($penalties);
+            $count=count($index);
+            
+            for ($i = 0; $i < $count; $i++) {
+                $penal='';
+
+                if($i==0){
+                    $penal="<tr>"."<th>".$penalties[$index[$i]]."</th>";
+                }elseif($i==$count-1){
+                    $penal="<th>".$penalties[$index[$i]]." ".$penalValue."</th>"."</tr>";
+                }elseif(is_int($penalties[$index[$i]])){
+                    $penalValue=$penalties[$index[$i]];
+                }elseif(isset($penalValue)){
+                    $penal="<th>".$penalties[$index[$i]]." ".$penalValue."</th>";
+                }else{
+                    $penal="<tr>"."<th>".$penalties[$index[$i]]."</th>";
+                }                 
+                $table.=$penal;
+            }  
+        }
+
+        $remark="<table>".$table."</table>";
+        return $remark;
+    }
 }
     
