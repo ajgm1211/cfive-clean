@@ -15,7 +15,6 @@ class AccountImportationContractFcl extends Model implements HasMedia, Auditable
     protected $fillable = ['id',
                            'name',
                            'date',
-                           'data',
                            'namefile',
                            'company_user_id',
                            'request_id',

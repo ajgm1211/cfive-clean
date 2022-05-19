@@ -51,9 +51,6 @@ class HelperSurchargers
             $calculationtype = $surcharge->calculation_type;
             $ammount = $surcharge->ammount;
             $currency = $surcharge->currency;
-            $upper_limit = (empty($surcharge->upper_limit))? ' ----- ':$surcharge->upper_limit;
-            $lower_limit = (empty($surcharge->lower_limit))? ' ----- ':$surcharge->lower_limit;
-            $currency = $surcharge->currency;
             $arreglo = [
                 'id' => $surcharge->id,
                 'surchargelb' => $surchargeName,
@@ -64,8 +61,6 @@ class HelperSurchargers
                 'ammount' => $ammount,
                 'calculationtypelb' => $calculationtype,
                 'currencylb' => $currency,
-                'upper_limit' => $upper_limit,
-                'lower_limit' => $lower_limit,
                 'operation' => 2,
             ];
 

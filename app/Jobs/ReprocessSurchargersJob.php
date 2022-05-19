@@ -7,7 +7,6 @@ use App\Carrier;
 use App\Contract;
 use App\Currency;
 use App\FailSurCharge;
-use App\OverweightRange;
 use App\Harbor;
 use App\LocalCharCarrier;
 use App\LocalCharCountry;
@@ -48,7 +47,7 @@ class ReprocessSurchargersJob implements ShouldQueue
     public function handle()
     {
         $id = $this->id;
-        $failsurchargers = FailSurCharge::with('fail_overweight_ranges')->where('contract_id', '=', $id)->get();
+        $failsurchargers = FailSurCharge::where('contract_id', '=', $id)->get();
         foreach ($failsurchargers as $FailSurchager) {
             $surchargerEX = '';
             $origenEX = '';
@@ -78,10 +77,6 @@ class ReprocessSurchargersJob implements ShouldQueue
             $destinyB = false;
             $surcharB = false;
             $currencyB = false;
-            $lowerlimitB = false;
-            $upperlimitB = false;
-            $lower_limit = null;
-            $upper_limit = null;
 
             $surchargerEX = explode('_', trim($FailSurchager['surcharge_id']));
             $originEX = explode('_', trim($FailSurchager['port_orig']));
@@ -91,31 +86,12 @@ class ReprocessSurchargersJob implements ShouldQueue
             $ammountEX = explode('_', trim($FailSurchager['ammount']));
             $currencyEX = explode('_', trim($FailSurchager['currency_id']));
             $carrierEX = explode('_', trim($FailSurchager['carrier_id']));
-            $is_ow_range = !$FailSurchager->fail_overweight_ranges->isEmpty();
-            if ($is_ow_range) {
-                $limits = $FailSurchager->fail_overweight_ranges->first();
-                $upper_limitEx = explode('_', trim($limits['upper_limit']));
-                $lower_limitEx = explode('_', trim($limits['lower_limit']));
-                if (count($upper_limitEx) == 1) {
-                    $upperlimitB = true;
-                    $upper_limit = (!empty($upper_limitEx[0]))?$upper_limitEx[0]:null;
-                }
-                if (count($lower_limitEx) == 1) {
-                    $lowerlimitB = true;
-                    $lower_limit = (!empty($lower_limitEx[0]))?$lower_limitEx[0]:null;
-                }
-            } else {
-                $lowerlimitB = true;
-                $upperlimitB = true;
-            }
-            
-            if (
-                count($surchargerEX) <= 1 && count($typedestinyEX) <= 1
-                && count($typedestinyEX) <= 1 && count($calculationtypeEX) <= 1
-                && count($ammountEX) <= 1 && count($currencyEX) <= 1
-            ) {
 
-                // Origen Y Destino ------------------------------------------------------------------------
+            if (count($surchargerEX) <= 1 && count($typedestinyEX) <= 1
+                   && count($typedestinyEX) <= 1 && count($calculationtypeEX) <= 1
+                   && count($ammountEX) <= 1 && count($currencyEX) <= 1) {
+
+                    // Origen Y Destino ------------------------------------------------------------------------
 
                 if ($FailSurchager->differentiator == 1) {
                     $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
@@ -141,39 +117,39 @@ class ReprocessSurchargersJob implements ShouldQueue
 
                 //  Surcharge ------------------------------------------------------------------------------
 
-                $surchargerV = Surcharge::where('name', '=', $surchargerEX[0])->get();
-                if (!$surchargerV->isEmpty()) {
+                $surchargerV = Surcharge::where('name', '=', $surchargerEX[0])->first();
+                if (count((array)$surchargerV) == 1) {
                     $surcharB = true;
-                    $surchargerV = $surchargerV[0]['id'];
+                    $surchargerV = $surchargerV['id'];
                 }
 
                 //  Type Destiny ---------------------------------------------------------------------------
 
-                $typedestunyV = TypeDestiny::where('description', '=', $typedestinyEX[0])->get();
-                if ($typedestunyV->isEmpty()) {
+                $typedestunyV = TypeDestiny::where('description', '=', $typedestinyEX[0])->first();
+                if (count((array)$typedestunyV) == 1) {
                     $typedestinyB = true;
-                    $typedestunyV = $typedestunyV[0]['id'];
+                    $typedestunyV = $typedestunyV['id'];
                 }
 
                 //  Calculation Type -----------------------------------------------------------------------
 
-                $calculationtypeV = CalculationType::where('code', '=', $calculationtypeEX[0])->orWhere('name', '=', $calculationtypeEX[0])->get();
+                $calculationtypeV = CalculationType::where('code', '=', $calculationtypeEX[0])->orWhere('name', '=', $calculationtypeEX[0])->first();
 
-                if (!$calculationtypeV->isEmpty()) {
-                    $calculationtypeV = $calculationtypeV[0]['id'];
-                    $calculationtypeB = true;
+                if (count((array)$calculationtypeV) == 1) {
+                    $calculationtypeV = $calculationtypeV['id'];
                 }
 
+                $calculationtypeB = true;
                 //  Amount ---------------------------------------------------------------------------------
 
                 $amountV = floatval($ammountEX[0]);
 
                 //  Currency -------------------------------------------------------------------------------
 
-                $currencyV = Currency::where('alphacode', '=', $currencyEX[0])->get();
-                if (!$currencyV->isEmpty()) {
+                $currencyV = Currency::where('alphacode', '=', $currencyEX[0])->first();
+                if (count((array)$currencyV) == 1) {
                     $currencyB = true;
-                    $currencyV = $currencyV[0]['id'];
+                    $currencyV = $currencyV['id'];
                 }
 
                 //  Carrier -------------------------------------------------------------------------------
@@ -196,88 +172,67 @@ class ReprocessSurchargersJob implements ShouldQueue
 
                 dd($colleccion);*/
 
-                if (
-                    $originB == true && $destinyB == true
-                    && $surcharB == true && $typedestinyB == true
-                    && $calculationtypeB == true && $currencyB == true
-                    && $lowerlimitB == true && $upperlimitB == true
-                    && $carrierB == true
-                ) {
+                if ($originB == true && $destinyB == true
+                       && $surcharB == true && $typedestinyB == true
+                       && $calculationtypeB == true && $currencyB == true
+                       && $carrierB == true) {
                     $LocalchargeId = null;
                     $LocalchargeId = LocalCharge::where('surcharge_id', $surchargerV)
-                        ->where('typedestiny_id', $typedestunyV)
-                        ->where('contract_id', $id)
-                        ->where('calculationtype_id', $calculationtypeV)
-                        ->where('ammount', $amountV)
-                        ->where('currency_id', $currencyV);
+                            ->where('typedestiny_id', $typedestunyV)
+                            ->where('contract_id', $id)
+                            ->where('calculationtype_id', $calculationtypeV)
+                            ->where('ammount', $amountV)
+                            ->where('currency_id', $currencyV)
+                            ->first();
 
-                    if ($is_ow_range) {
-                        $LocalchargeId->whereHas('overweight_ranges', function ($query) use ($upper_limit, $lower_limit, $amountV) {
-                            $query->where('lower_limit', $lower_limit)
-                                ->where('upper_limit', $upper_limit)
-                                ->where('amount', $amountV)
-                                ->where('model_type', 'App\\LocalCharge');
-                        });
-                    }
-                    $LocalchargeId = $LocalchargeId->get();
-
-                    if ($LocalchargeId->isEmpty()) {
+                    if (count((array)$LocalchargeId) == 0) {
                         $LocalchargeId = LocalCharge::create([
-                            'surcharge_id'          => $surchargerV,
-                            'typedestiny_id'        => $typedestunyV,
-                            'contract_id'           => $id,
-                            'calculationtype_id'    => $calculationtypeV,
-                            'ammount'               => $amountV,
-                            'currency_id'           => $currencyV,
-                        ]);
-                        OverweightRange::create([
-                            'lower_limit' => $lower_limit,
-                            'upper_limit' => $upper_limit,
-                            'amount' => $amountV,
-                            'model_id' => $LocalchargeId->id,
-                            'model_type' => 'App\\LocalCharge',
-                        ]);
-                    } else {
-                        $LocalchargeId = $LocalchargeId->first();
+                                'surcharge_id'          => $surchargerV,
+                                'typedestiny_id'        => $typedestunyV,
+                                'contract_id'           => $id,
+                                'calculationtype_id'    => $calculationtypeV,
+                                'ammount'               => $amountV,
+                                'currency_id'           => $currencyV,
+                            ]);
                     }
 
                     $LocalchargeId = $LocalchargeId->id;
 
                     $existCa = null;
                     $existCa = LocalCharCarrier::where('carrier_id', $carrierV)
-                        ->where('localcharge_id', $LocalchargeId)->first();
+                            ->where('localcharge_id', $LocalchargeId)->first();
                     if (count((array)$existCa) == 0) {
                         LocalCharCarrier::create([
-                            'carrier_id'     => $carrierV,
-                            'localcharge_id' => $LocalchargeId,
-                        ]);
+                                'carrier_id'     => $carrierV,
+                                'localcharge_id' => $LocalchargeId,
+                            ]);
                     }
 
                     if ($FailSurchager->differentiator == 1) {
                         $existsP = null;
                         $existsP = LocalCharPort::where('port_orig', $originV)
-                            ->where('port_dest', $destinationV)
-                            ->where('localcharge_id', $LocalchargeId)
-                            ->first();
+                                ->where('port_dest', $destinationV)
+                                ->where('localcharge_id', $LocalchargeId)
+                                ->first();
                         if (count((array)$existsP) == 0) {
                             LocalCharPort::create([
-                                'port_orig'         => $originV,
-                                'port_dest'         => $destinationV,
-                                'localcharge_id'    => $LocalchargeId,
-                            ]);
+                                    'port_orig'         => $originV,
+                                    'port_dest'         => $destinationV,
+                                    'localcharge_id'    => $LocalchargeId,
+                                ]);
                         }
                     } elseif ($FailSurchager->differentiator == 2) {
                         $existsC = null;
                         $existsC = LocalCharCountry::where('country_orig', $originV)
-                            ->where('country_dest', $destinationV)
-                            ->where('localcharge_id', $LocalchargeId)
-                            ->first();
+                                ->where('country_dest', $destinationV)
+                                ->where('localcharge_id', $LocalchargeId)
+                                ->first();
                         if (count((array)$existsC) == 0) {
                             LocalCharCountry::create([
-                                'country_orig'      => $originV,
-                                'country_dest'      => $destinationV,
-                                'localcharge_id'    => $LocalchargeId,
-                            ]);
+                                    'country_orig'      => $originV,
+                                    'country_dest'      => $destinationV,
+                                    'localcharge_id'    => $LocalchargeId,
+                                ]);
                         }
                     }
 
@@ -289,7 +244,7 @@ class ReprocessSurchargersJob implements ShouldQueue
         $contractData = Contract::find($id);
         $usersNotifiques = User::where('type', '=', 'admin')->get();
         foreach ($usersNotifiques as $userNotifique) {
-            $message = 'The Surchargers was Reprocessed. Contract: ' . $contractData->number;
+            $message = 'The Surchargers was Reprocessed. Contract: '.$contractData->number;
             $userNotifique->notify(new N_general($userNotifique, $message));
         }
     }

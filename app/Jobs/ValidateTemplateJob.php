@@ -41,43 +41,7 @@ class ValidateTemplateJob implements ShouldQueue
             'Access-Control-Allow-Origin'    => '*',
             'Connection'    => 'keep-alive'
         ];
-
-        $events = [
-            [
-                'name'=>"barracuaep-template",
-                'url'=>"contracts/processing/".$this->request_id,
-                'data'=>'{"spreadsheetData":false,"type":"FCL"}'
-            ],
-            [
-                'name'=>"barracuaep-generate-mask",
-                'url'=>"requests/generateMask/".$this->request_id,
-                'data'=>'{"type":"FCL"}'
-            ],
-            [
-                'name'=>"barracuaep-cmpfile",
-                'url'=>"requests/cmpfiles/".$this->request_id,
-                'data'=>'{"duplicate":true,"re_search":true}'
-            ],
-        ];
-
-        foreach($events as $event){
-            $endpoint_obj = EndpointTable::where("name",$event['name'])->first();
-            if(!empty($endpoint_obj)){
-                if($endpoint_obj->status == 1){
-                    $json = $event['data'];
-                    $url = $endpoint_obj->url.$event['url'];
-                    try{
-                        $response = $client->request('POST',$url,['headers' => $headers,'body'=>$json]);
-                        $response = json_decode($response->getBody()->getContents(),true);
-                    }catch(\Exception $e){
-                        $response = false;
-                    }
-            
-                }
-            }
-        }
-
-/*        $endpoint_obj = EndpointTable::where("name","barracuaep-template")->first();
+        $endpoint_obj = EndpointTable::where("name","barracuaep-template")->first();
         if($endpoint_obj->status == 1){
             $json = '{"spreadsheetData":false,"type":"FCL"}';
             $url = $endpoint_obj->url."contracts/processing/".$this->request_id;
@@ -115,6 +79,6 @@ class ValidateTemplateJob implements ShouldQueue
             }catch(\Exception $e){
                 $response = false;
             }
-        }*/
+        }
     }
 }

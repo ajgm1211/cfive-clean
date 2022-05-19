@@ -30,12 +30,12 @@ class ContainerCalculationController extends Controller
                 return $containerscal->calculationtype->name;
             })
             ->addColumn('action', function ($containerscal) {
-                $eliminiar_buton = '<a href="#" class="eliminarconatinerCalculation" data-id-conatiner-calculation="' . $containerscal->id . '" title="Delete" >
+                $eliminiar_buton = '<a href="#" class="eliminarconatinerCalculation" data-id-conatiner-calculation="'.$containerscal->id.'" title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
 
                 $update_button = '&nbsp;&nbsp;&nbsp;<a href="#" title="Edit">
-                    <samp class="la la-edit" onclick="showModal(\'update\',' . $containerscal->id . ')" style="font-size:20px; color:#031B4E"></samp>
+                    <samp class="la la-edit" onclick="showModal(\'update\','.$containerscal->id.')" style="font-size:20px; color:#031B4E"></samp>
                     </a>
                     ';
                 //$button = $update_button.$eliminiar_buton;
@@ -48,7 +48,7 @@ class ContainerCalculationController extends Controller
 
     public function loadBodymodalAdd()
     {
-        $containers = Container::pluck('name', 'id');
+        $containers = HelperAll::addOptionSelect(Container::all(), 'id', 'name');
         $calculationts = CalculationType::pluck('name', 'id');
 
         return view('containersCalculation.Body-Modals.add', compact('containers', 'calculationts'));
@@ -58,12 +58,10 @@ class ContainerCalculationController extends Controller
     {
         //dd($request->all());
         foreach ($request->calculationTs as $calculationT_id) {
-            foreach ($request->container_id as $container_id) {
-                $containerscal = new ContainerCalculation();
-                $containerscal->container_id = $container_id;
-                $containerscal->calculationtype_id = $calculationT_id;
-                $containerscal->save();
-            }
+            $containerscal = new ContainerCalculation();
+            $containerscal->container_id = $request->container_id;
+            $containerscal->calculationtype_id = $calculationT_id;
+            $containerscal->save();
         }
 
         $request->session()->flash('message.nivel', 'success');

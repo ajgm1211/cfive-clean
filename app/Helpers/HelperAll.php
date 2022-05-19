@@ -3,10 +3,9 @@
 //app/Helpers/Envato/User.php
 
 namespace App\Helpers;
+
 use App\Currency;
-use App\Container;
 use App\GroupContainer;
-use App\CalculationType;
 
 class HelperAll
 {
@@ -194,42 +193,5 @@ class HelperAll
         );
     
         return $fileName;
-    }
-    
-    public static function calculationByContainers($gp_container_id){
-        $column_calculatioT_bol_rq = true;
-        $contenedores_calcult_rq = [];
-        $containers = Container::where('gp_container_id',$gp_container_id)->get()->pluck('code');
-        $cont_clt_all =  CalculationType::where('gp_pcontainer', true)
-            ->where('group_container_id',$gp_container_id)->orWhere('group_container_id',null)
-            ->with(['behaviour_per_container','containersCalculation.container'])
-            ->get();
-        foreach($cont_clt_all as $cont_clt){
-            if($cont_clt->behaviour_per_container){
-                $code = $cont_clt->containersCalculation->pluck('container')->where('gp_container_id',$gp_container_id)->pluck('code')->first();
-                $behaviour = $cont_clt->behaviour_per_container->name;
-                $options = $cont_clt->options;
-                $options = (!empty($options))?json_decode($options,true):["limits_ow" => false];
-                $options = (array_key_exists('limits_ow',$options))?$options:$options+["limits_ow" => false];
-                //dd(json_decode($cont_clt->behaviour_per_container->options,true)+['value'=>1]);
-                if($code != null){
-                    if(array_key_exists($behaviour,$contenedores_calcult_rq)){
-                        $contenedores_calcult_rq[$behaviour][$code] = ['id' => $cont_clt->id]+$options;
-                    } else {
-                        $contenedores_calcult_rq[$behaviour]=[$code => ['id' => $cont_clt->id]+$options];
-                    }
-                }
-            }
-        }
-        foreach($containers as $container){
-            $column_calculatioT_bol_rq = (count($contenedores_calcult_rq) == 0)?false:true;
-            foreach($contenedores_calcult_rq as $key => $val){
-                if(!array_key_exists($container,$val)){
-                    $column_calculatioT_bol_rq = false;
-                }
-            }
-        }
-
-        return [$column_calculatioT_bol_rq,$contenedores_calcult_rq]; 
     }
 }

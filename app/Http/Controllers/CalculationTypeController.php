@@ -2,21 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use HelperAll;
-use App\GroupContainer;
 use App\CalculationType;
 use Illuminate\Http\Request;
-use App\BehaviourPerContainer;
 use Yajra\Datatables\Datatables;
 
 class CalculationTypeController extends Controller
 {
     public function index()
     {
-        //dd([null=>'None']+$equipments);
-        $equipments = HelperAll::addOptionSelect(GroupContainer::all(), 'id', 'name');
-        $behaviourpcs = HelperAll::addOptionSelect(BehaviourPerContainer::all(), 'id', 'name');
-        return view('calculationTypes.Body-Modals.add',['equipments'=>$equipments,'behaviourpcs'=>$behaviourpcs]);
+        return view('calculationTypes.Body-Modals.add');
     }
 
     public function create()
@@ -43,26 +37,23 @@ class CalculationTypeController extends Controller
 
     public function store(Request $request)
     {
-        //dd($request->all());
         $calculation = new CalculationType();
         $calculation->name = $request->name;
         $calculation->display_name = strtoupper($request->name);
         $calculation->code = strtoupper($request->code);
-        $calculation->group_container_id = $request->equipment;
-        $options = [];
-        foreach(['group','isteu','limits_ow'] as $field){
-            $options[$field] = !empty($request->get($field));
-        }
+        $group = $request->group ? true : false;
+        $isteu = $request->isteu ? true : false;
         $calculation->gp_pcontainer = $request->gp_pcontainer ? true : false;
         if (!$request->name_prin_ch) {
             $name_prin_inp = $request->name_prin_inp;
         } else {
             $name_prin_inp = 'N\A';
-            $calculation->behaviour_pc_id = $request->behaviourpcs;
         }
-        $options['name'] = $name_prin_inp;
+        $options = ['group' => $group, 'isteu' => $isteu, 'name' => $name_prin_inp];
         $calculation->options = json_encode($options);
+
         $calculation->save();
+
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'Success. Calculation type created.');
 
@@ -77,40 +68,31 @@ class CalculationTypeController extends Controller
     public function edit($id)
     {
         $calculation = CalculationType::find($id);
-        $equipments = HelperAll::addOptionSelect(GroupContainer::all(), 'id', 'name');
-        $behaviourpcs = HelperAll::addOptionSelect(BehaviourPerContainer::all(), 'id', 'name');
+
         $options = json_decode($calculation->options);
         if (empty($options)) {
             $options = json_encode(['group' => false, 'isteu' => false, 'name' => 'N\A']);
             $options = json_decode($options);
         }
-        if(!array_key_exists('limits_ow',$options)){
-            $options->limits_ow = false;
-        }
 
-        return view('calculationTypes.Body-Modals.edit', compact('calculation', 'options','equipments','behaviourpcs'));
+        return view('calculationTypes.Body-Modals.edit', compact('calculation', 'options'));
     }
 
     public function update(Request $request, $id)
     {
-        //dd($request->all());
         $calculation = CalculationType::find($id);
+        $group = $request->group ? true : false;
+        $isteu = $request->isteu ? true : false;
         $calculation->name = $request->name;
-        $calculation->group_container_id = $request->equipment;
         $calculation->display_name = strtoupper($request->name);
         $calculation->code = strtoupper($request->code);
         if (!$request->name_prin_ch) {
             $name_prin_inp = $request->name_prin_inp;
         } else {
             $name_prin_inp = 'N\A';
-            $calculation->behaviour_pc_id = $request->behaviourpcs;
         }
         $calculation->gp_pcontainer = $request->gp_pcontainer ? true : false;
-        $options = [];
-        foreach(['group','isteu','limits_ow'] as $field){
-            $options[$field] = !empty($request->get($field));
-        }
-        $options['name'] = $name_prin_inp;
+        $options = ['group' => $group, 'isteu' => $isteu, 'name' => $name_prin_inp];
         $calculation->options = json_encode($options);
         $calculation->update();
 

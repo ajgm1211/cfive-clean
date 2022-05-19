@@ -2,41 +2,38 @@
 
 namespace App\Jobs;
 
-use App\Rate;
-use HelperAll;
-use PrvHarbor;
-use App\Harbor;
-use App\Region;
-use PrvCarrier;
+use App\AccountImportationContractFcl as AccountFcl;
+use App\CalculationType;
 use App\Carrier;
+use Carbon\Carbon;
+use App\Container;
+use App\ContainerCalculation;
 use App\Country;
 use App\Currency;
 use App\FailRate;
-use App\Container;
-use Carbon\Carbon;
-use App\Surcharge;
-use App\TypeDestiny;
-use App\LocalCharge;
 use App\FailSurCharge;
-use App\LocalCharPort;
-use App\CalculationType;
-use App\OverweightRange;
+use App\Harbor;
 use App\LocalCharCarrier;
 use App\LocalCharCountry;
-use App\NewContractRequest;
-use App\FailOverweightRange;
-use App\ContainerCalculation;
-use App\BehaviourPerContainer;
-use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Queue\SerializesModels;
+use App\LocalCharge;
+use App\LocalCharPort;
 use App\MyClass\Excell\ChunkReadFilter;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Queue\InteractsWithQueue;
+use App\NewContractRequest;
+use App\Rate;
+use App\Region;
+use App\Surcharge;
+use App\TypeDestiny;
+use HelperAll;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\AccountImportationContractFcl as AccountFcl;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PrvCarrier;
+use PrvHarbor;
 
 class ImportationRatesSurchargerJob implements ShouldQueue
 {
@@ -100,10 +97,24 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         $caracteres = ['*', '/', '.', '?', '"', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '{', '}', '[', ']', '+', '_', '|', '°', '!', '$', '%', '&', '(', ')', '=', '¿', '¡', ';', '>', '<', '^', '`', '¨', '~', ':', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 
         // LOAD CALCULATIONS FOR COLUMN ------------------------
+        $contenedores_to_cal = Container::where('gp_container_id', $groupContainer_id)->get();
         $conatiner_calculation_id = [];
-
-        $behaviourContainers = BehaviourPerContainer::pluck('name')->all();
-        [$column_calculatioT_bol, $conatiner_calculation_id] = HelperAll::calculationByContainers($valuesSelecteds['group_container_id']);
+        foreach ($contenedores_to_cal as $row_cont_calcult) {
+            $contenedores_calcult = null;
+            //$contenedores_calcult =  ContainerCalculation::where('container_id',10)
+            $contenedores_calcult = ContainerCalculation::where('container_id', $row_cont_calcult->id)
+                ->whereHas('calculationtype', function ($query) {
+                    $query->where('gp_pcontainer', true);
+                })->get();
+            //dd($contenedores_to_cal,$row_cont_calcult->code,$contenedores_calcult);
+            if (count($contenedores_calcult) == 1) {
+                foreach ($contenedores_calcult as $contenedor_calcult) {
+                    $conatiner_calculation_id[$row_cont_calcult->code] = $contenedor_calcult->calculationtype_id;
+                }
+            } elseif (count($contenedores_calcult) > 1 || count($contenedores_calcult) == 0) {
+                $column_calculatioT_bol = false;
+            }
+        }
         //dd($conatiner_calculation_id);
 
         // --------------- AL FINALIZAR  CARGAR LA EXATRACCION DESDE S3 -----------------
@@ -153,7 +164,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
             $chargeExc = @$final_columns['CHARGE']; // lectura de excel
             $calculationtypeExc = @$final_columns['CALCULATION TYPE']; // lectura de excel
             $chargeExc = @$final_columns['CHARGE']; // lectura de excel
-            $limitsExc = @$final_columns['LIMITS']; // lectura de excel // para los limites de OW
 
             $company_user_id = $valuesSelecteds['company_user_id'];
             $statusPortCountry = $valuesSelecteds['select_portCountryRegion'];
@@ -197,24 +207,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
             $countRow = 1;
             foreach ($sheetData as $row) {
                 if ($countRow > 1) {
-
-                    $calculationtypeVal = '';
-                    $typedestinyVal = '';
-                    $surchargeVal = '';
-                    $carrierVal = '';
-
-                    $typeExiBol = false;
-                    $carriExitBol = false;
-                    $typeChargeExiBol = false;
-                    $calculationtypeExiBol = false;
-                    $typedestinyExitBol = false;
-                    $ct_converted_Bol = false;
-
-                    $calculation_type_exc = null;
-                    $chargeExc_val = null;
-
-                    $chargeExc_val = $row[$chargeExc];
-                    $calculation_type_exc = $row[$calculationtypeExc];
                     //dd($final_columns->toArray(),$valuesSelecteds->toArray(),$columnsSelected->toArray(),$row);
 
                     //------------------ COLUMNS SELECTEDS VALUES/CURRENCY/OPTIONS ----------------------------
@@ -375,135 +367,29 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                         $descount++;
                     }
 
-
-                    //------------------ CALCULATION TYPE -----------------------------------------------------
-                    $calculationtype = null;
-                    $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)
-                        ->where('group_container_id', '=', $groupContainer_id)
-                        ->get();
-                    if ($calculationtype->isEmpty()) {
-                        $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)->get();
-                    }
-
-                    if (count($calculationtype) == 1) {
-                        $calculationtypeExiBol = true;
-                        $calculationtypeVal = $calculationtype[0]['id'];
-                        $ct_options = $calculationtype[0]->options;
-                        $ct_options = (!empty($ct_options)) ? json_decode($ct_options, true) : ["limits_ow" => false];
-                        $ct_options = (array_key_exists('limits_ow', $ct_options)) ? $ct_options : $ct_options + ["limits_ow" => false];
-                    } elseif (count($calculationtype) > 1) {
-                        $calculationtypeVal = $calculation_type_exc . ' F.R + ' . count($calculationtype) . ' fila ' . $countRow . '_E_E';
-                    } else {
-                        $calculationtypeVal = $calculation_type_exc . ' fila ' . $countRow . '_E_E';
-                    }
-
-                    //--- LIMITS OW -----------------------------------------------------
-                    $limits_val = [];
-                    $limitsExiBol = true;
-                    if (!empty($row[$limitsExc])) {
-                        $limits_val = array_map('trim', explode('-', $row[$limitsExc]));
-                        if (count($limits_val) == 1) {
-                            array_push($limits_val, null);
-                        }
-                    } else {
-                        $limitsExiBol = ($ct_options['limits_ow']) ? false : true;
-                        $limits_val = ['_E_E', '_E_E'];
-                    }
-                    //--------------- Type Destiny ------------------------------------------------------------
-
-                    if ($statusTypeDestiny) {
-                        $typedestinyExitBol = true;
-                        $typedestinyVal = $valuesSelecteds['typeDestinyVal'];
-                    } else {
-                        $typedestinyVal = $row[$typedestinyExc]; // cuando el carrier existe en el excel
-                        $typedestinyResul = str_replace($caracteres, '', $typedestinyVal);
-                        $typedestinyobj = TypeDestiny::where('description', '=', $typedestinyResul)->first();
-                        if (empty($typedestinyobj->id) != true) {
-                            $typedestinyExitBol = true;
-                            $typedestinyVal = $typedestinyobj->id;
-                        } else {
-                            $typedestinyVal = $typedestinyVal . '_E_E';
-                        }
-                    }
-
-                    //------------------ TYPE - CHARGE --------------------------------------------------------
-
-                    if (!empty($chargeExc_val)) {
-                        $typeChargeExiBol = true;
-                        if ($chargeExc_val != $chargeVal) {
-                            $surchargelist = Surcharge::where('name', '=', $chargeExc_val)
-                                ->where('company_user_id', '=', $company_user_id)
-                                ->first();
-                            if (empty($surchargelist) != true) {
-                                $surchargeVal = $surchargelist['id'];
-                            } else {
-                                $surchargelist = Surcharge::create([
-                                    'name' => $chargeExc_val,
-                                    'description' => $chargeExc_val,
-                                    'company_user_id' => $company_user_id,
-                                    'internal_options' => json_encode(['is_api' => false]),
-                                ]);
-                                $surchargeVal = $surchargelist->id;
-                            }
-                        }
-                    } else {
-                        $surchargeVal = $chargeExc_val . '_E_E';
-                    }
-
-                    //--------------- CARRIER -----------------------------------------------------------------
-                    if ($statusCarrier) {
-                        $carriExitBol = true;
-                        $carrierVal = $valuesSelecteds['carrierVal']; // cuando se indica que no posee carrier
-                    } else {
-                        $carrierVal = $row[$carrierExc]; // cuando el carrier existe en el excel
-                        $carrierArr = PrvCarrier::get_carrier($carrierVal);
-                        $carriExitBol = $carrierArr['boolean'];
-                        $carrierVal = $carrierArr['carrier'];
-                    }
-
-                    $values = true;
-                    $values_uniq = [];
-                    foreach ($columna_cont as $columnaRow) {
-                        array_push($values_uniq, floatval($columnaRow[0]));
-                    }
-                    if (
-                        count(array_unique($values_uniq)) == 1
-                        && $values_uniq[0] == 0.00
-                    ) {
-                        $values = false;
-                    }
-
-                    //dd($columna_cont,$values);
-
-                    //------------------ VALIDACION DE CURRENCY FALSE Ó TRUE 20 40 ...------------------------
-
-                    $variant_currency = true;
-                    $currency_uniq = [];
-                    foreach ($currency_bol as $columnCurrenRow) {
-                        if ($columnCurrenRow == true) {
-                            array_push($currency_uniq, 1);
-                        } else {
-                            array_push($currency_uniq, 0);
-                        }
-                    }
-                    if (count(array_unique($currency_uniq)) > 1) {
-                        $variant_currency = false;
-                    } elseif (
-                        count(array_unique($currency_uniq)) == 1
-                        && $currency_uniq[0] == 0
-                    ) {
-                        $variant_currency = false;
-                    }
                     //--- INICION DE ERECORRIDO POR | ---------------------------------
                     foreach ($originMultps as $originMult) {
                         foreach ($destinyMultps as $destinyMult) {
                             $originVal = '';
                             $destinyVal = '';
+                            $carrierVal = '';
+                            $typedestinyVal = '';
+                            $surchargeVal = '';
+                            $calculationtypeVal = '';
 
                             $differentiatorBol = false;
                             $origExiBol = false;
                             $destiExitBol = false;
+                            $typeExiBol = false;
+                            $carriExitBol = false;
+                            $typeChargeExiBol = false;
+                            $calculationtypeExiBol = false;
+                            $typedestinyExitBol = false;
 
+                            $calculation_type_exc = null;
+                            $chargeExc_val = null;
+                            $calculation_type_exc = $row[$calculationtypeExc];
+                            $chargeExc_val = $row[$chargeExc];
 
                             //--------------- DIFRENCIADOR HARBOR COUNTRY ---------------------------------------------
                             if ($statusPortCountry) {
@@ -549,6 +435,81 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 $destinyVal = $resultadocountryDes['country'];
                             }
 
+                            //--------------- Type Destiny ------------------------------------------------------------
+
+                            if ($statusTypeDestiny) {
+                                $typedestinyExitBol = true;
+                                $typedestinyVal = $valuesSelecteds['typeDestinyVal'];
+                            } else {
+                                $typedestinyVal = $row[$typedestinyExc]; // cuando el carrier existe en el excel
+                                $typedestinyResul = str_replace($caracteres, '', $typedestinyVal);
+                                $typedestinyobj = TypeDestiny::where('description', '=', $typedestinyResul)->first();
+                                if (empty($typedestinyobj->id) != true) {
+                                    $typedestinyExitBol = true;
+                                    $typedestinyVal = $typedestinyobj->id;
+                                } else {
+                                    $typedestinyVal = $typedestinyVal . '_E_E';
+                                }
+                            }
+
+                            //--------------- CARRIER -----------------------------------------------------------------
+                            if ($statusCarrier) {
+                                $carriExitBol = true;
+                                $carrierVal = $valuesSelecteds['carrierVal']; // cuando se indica que no posee carrier
+                            } else {
+                                $carrierVal = $row[$carrierExc]; // cuando el carrier existe en el excel
+                                $carrierArr = PrvCarrier::get_carrier($carrierVal);
+                                $carriExitBol = $carrierArr['boolean'];
+                                $carrierVal = $carrierArr['carrier'];
+                            }
+
+                            //------------------ TYPE - CHARGE --------------------------------------------------------
+
+                            if (!empty($chargeExc_val)) {
+                                $typeChargeExiBol = true;
+                                if ($chargeExc_val != $chargeVal) {
+                                    $surchargelist = Surcharge::where('name', '=', $chargeExc_val)
+                                        ->where('company_user_id', '=', $company_user_id)
+                                        ->first();
+                                    if (empty($surchargelist) != true) {
+                                        $surchargeVal = $surchargelist['id'];
+                                    } else {
+                                        $surchargelist = Surcharge::create([
+                                            'name' => $chargeExc_val,
+                                            'description' => $chargeExc_val,
+                                            'company_user_id' => $company_user_id,
+                                            'internal_options' => json_encode(['is_api' => false]),
+                                        ]);
+                                        $surchargeVal = $surchargelist->id;
+                                    }
+                                }
+                            } else {
+                                $surchargeVal = $chargeExc_val . '_E_E';
+                            }
+
+                            //------------------ CALCULATION TYPE -----------------------------------------------------
+                            $calculationtype = null;
+                            if (strnatcasecmp($calculation_type_exc, 'PER_CONTAINER') == 0 ||
+                                strnatcasecmp($calculation_type_exc, 'PER_TEU') == 0 || strnatcasecmp($calculation_type_exc, 'PER_BL') == 0
+                               || strnatcasecmp($calculation_type_exc, 'PER_TON') == 0) {
+                                $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)
+                                    ->whereHas('containersCalculation.container', function ($query) use ($groupContainer_id) {
+                                        $query->whereHas('groupContainer', function ($queryTw) use ($groupContainer_id) {
+                                            $queryTw->where('gp_container_id', $groupContainer_id);
+                                        });
+                                    })->get();
+                            } else {
+                                $calculationtype = CalculationType::where('options->name', '=', $calculation_type_exc)->get();
+                            }
+
+                            if (count($calculationtype) == 1) {
+                                $calculationtypeExiBol = true;
+                                $calculationtypeVal = $calculationtype[0]['id'];
+                            } elseif (count($calculationtype) > 1) {
+                                $calculationtypeVal = $calculation_type_exc . 'F.R + ' . count($calculationtype) . ' fila ' . $countRow . '_E_E';
+                            } else {
+                                $calculationtypeVal = $calculation_type_exc . ' fila ' . $countRow . '_E_E';
+                            }
                             //------------------ VALIDACION DE CAMPOS VACIOS COLUMNAS 20 40 ...------------------------
 
                             // AYUDANTES -----------------------
@@ -571,7 +532,35 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                             // FIN - AYUDANTES ------------------
 
+                            $values = true;
+                            $values_uniq = [];
+                            foreach ($columna_cont as $columnaRow) {
+                                array_push($values_uniq, floatval($columnaRow[0]));
+                            }
+                            if (count(array_unique($values_uniq)) == 1
+                                && $values_uniq[0] == 0.00) {
+                                $values = false;
+                            }
 
+                            //dd($columna_cont,$values);
+
+                            //------------------ VALIDACION DE CURRENCY FALSE Ó TRUE 20 40 ...------------------------
+
+                            $variant_currency = true;
+                            $currency_uniq = [];
+                            foreach ($currency_bol as $columnCurrenRow) {
+                                if ($columnCurrenRow == true) {
+                                    array_push($currency_uniq, 1);
+                                } else {
+                                    array_push($currency_uniq, 0);
+                                }
+                            }
+                            if (count(array_unique($currency_uniq)) > 1) {
+                                $variant_currency = false;
+                            } elseif (count(array_unique($currency_uniq)) == 1
+                                && $currency_uniq[0] == 0) {
+                                $variant_currency = false;
+                            }
                             //dd($currency_bol,$currency_uniq,array_unique($currency_uniq),$variant_currency);
 
                             $datos_finales = [
@@ -598,7 +587,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 'typedestinyExitBol' => $typedestinyExitBol, // true si encontro el valor type destiny
                                 'carriExitBol' => $carriExitBol, // true si encontro el valor carrier
                                 'calculationtypeExiBol' => $calculationtypeExiBol, // true si encontro el valor calculation type
-                                'limitsExiBol' => $limitsExiBol, // Booleano para verificar si existe valores limits_ow  para C.T. OW
                                 'values' => $values, // true si si todos los valore son distintos de cero
                                 'typeChargeExiBol' => $typeChargeExiBol, // true si el valor es distinto de vacio
                                 'variant_currency' => $variant_currency, // true si el encontro todos los currency, false si alguno de sus contenedores no tiene currency
@@ -609,8 +597,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 'statusCurrency' => $statusCurrency, // 3. val. por SELECT,1. columna de  currency, 2. currency mas valor juntos
                                 'conatiner_calculation_id' => $conatiner_calculation_id, // asocia los calculations con las columnas. relacion columna => calculation_id
                                 'column_calculatioT_bol' => $column_calculatioT_bol, // False si falla la asociacion, true si esta asociado correctamente
-                                'limits_val' => $limits_val, // Array que Indica los Limite para OW
-                                'ct_options' => $ct_options, // Indica el valor Booleano para los OW
+
                             ];
                             if (strnatcasecmp($chargeExc_val, $chargeVal) == 0 && $typedestinyExitBol == false) {
                                 $typedestinyExitBol = true;
@@ -620,17 +607,14 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                             /////////////////////////////////
 
                             // INICIO IF PARA FALLIDOS O BUENOS
-                            if (
-                                $origExiBol == true
+                            if ($origExiBol == true
                                 && $destiExitBol == true
                                 && $typedestinyExitBol == true
                                 && $carriExitBol == true
                                 && $calculationtypeExiBol == true
                                 && $values == true
                                 && $variant_currency == true
-                                && $typeChargeExiBol == true
-                                && $limitsExiBol == true
-                            ) {
+                                && $typeChargeExiBol == true) {
 
                                 ///////////////////////////////// GOOD
 
@@ -715,8 +699,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                     } else { //si es country verificamos si exite uno creado con country
                                         $typeplace = 'localcharcountries';
                                     }
-                                    // Es PER_CONTAINER - PER_CONTAINER_IMO ....
-                                    if (in_array($calculation_type_exc, $behaviourContainers)) {
+
+                                    if (strnatcasecmp($calculation_type_exc, 'PER_CONTAINER') == 0) {
 
                                         // ESTOS ARREGLOS SON DE EJEMPLO PARA IGUALDAD DE VALORES EN PER_CONTAINER / Solo condicional -------
                                         //$columna_cont['20DV'][0]    = 1200;
@@ -759,20 +743,10 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     ->where('calculationtype_id', $calculationtypeVal)
                                                     ->where('ammount', $ammount)
                                                     ->where('currency_id', $currency_val)
-                                                    ->has($typeplace);
+                                                    ->has($typeplace)
+                                                    ->first();
 
-                                                if ($ct_options['limits_ow'] == true) {
-                                                    $surchargeObj->whereHas('overweight_ranges', function ($query) use ($limits_val, $ammount) {
-                                                        $query->where('lower_limit', $limits_val[0])
-                                                            ->where('upper_limit', $limits_val[1])
-                                                            ->where('amount', $ammount)
-                                                            ->where('model_type', 'App\\LocalCharge');
-                                                    });
-                                                }
-
-                                                $surchargeObj = $surchargeObj->get();
-
-                                                if ($surchargeObj->isEmpty()) {
+                                                if (count((array)$surchargeObj) == 0) {
                                                     $surchargeObj = LocalCharge::create([ // tabla localcharges
                                                         'surcharge_id' => $surchargeVal,
                                                         'typedestiny_id' => $typedestinyVal,
@@ -781,22 +755,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'ammount' => $ammount,
                                                         'currency_id' => $currency_val,
                                                     ]);
-                                                    // ---------------------- Limits OW ------------------------------------------
-
-                                                    if ($ct_options['limits_ow'] == true) {
-
-                                                        OverweightRange::create([
-                                                            'lower_limit' => $limits_val[0],
-                                                            'upper_limit' => $limits_val[1],
-                                                            'amount' => $ammount,
-                                                            'model_id' => $surchargeObj->id,
-                                                            'model_type' => 'App\\LocalCharge',
-                                                        ]);
-                                                    }
-                                                } else {
-                                                    $surchargeObj = $surchargeObj->first();
                                                 }
-
                                                 //----------------------- CARRIERS -------------------------------------------
                                                 $existsCar = [];
                                                 $existsCar = LocalCharCarrier::where('carrier_id', $carrierVal)
@@ -844,8 +803,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             foreach ($columna_cont as $key => $conta_row) { // Cargamos cada columna para despues insertarlas en la BD
                                                 $rows_calculations[$key] = [
                                                     //'type'            => $key,
-                                                    'calculationtype' => $conatiner_calculation_id[$calculation_type_exc][$key]['id'],
-                                                    'limits_ow' => $conatiner_calculation_id[$calculation_type_exc][$key]['limits_ow'],
+                                                    'calculationtype' => $conatiner_calculation_id[$key],
                                                     'ammount' => $conta_row[0],
                                                     'currency' => $conta_row[1],
                                                 ];
@@ -864,19 +822,10 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         ->where('calculationtype_id', $row_calculation['calculationtype'])
                                                         ->where('ammount', $row_calculation['ammount'])
                                                         ->where('currency_id', $row_calculation['currency'])
-                                                        ->has($typeplace);
+                                                        ->has($typeplace)
+                                                        ->first();
 
-                                                    if ($row_calculation['limits_ow'] == true) {
-                                                        $surchargeObj->whereHas('overweight_ranges', function ($query) use ($limits_val, $row_calculation) {
-                                                            $query->where('lower_limit', $limits_val[0])
-                                                                ->where('upper_limit', $limits_val[1])
-                                                                ->where('amount', $row_calculation['ammount'])
-                                                                ->where('model_type', 'App\\LocalCharge');
-                                                        });
-                                                    }
-                                                    $surchargeObj = $surchargeObj->get();
-
-                                                    if ($surchargeObj->isEmpty()) {
+                                                    if (count((array)$surchargeObj) == 0) {
                                                         $surchargeObj = LocalCharge::create([ // tabla localcharges
                                                             'surcharge_id' => $surchargeVal,
                                                             'typedestiny_id' => $typedestinyVal,
@@ -885,19 +834,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             'ammount' => $row_calculation['ammount'],
                                                             'currency_id' => $row_calculation['currency'],
                                                         ]);
-                                                        // ---------------------- Limits OW ------------------------------------------
-
-                                                        if ($row_calculation['limits_ow'] == true) {
-                                                            OverweightRange::create([
-                                                                'lower_limit' => $limits_val[0],
-                                                                'upper_limit' => $limits_val[1],
-                                                                'amount' => $row_calculation['ammount'],
-                                                                'model_id' => $surchargeObj->id,
-                                                                'model_type' => 'App\\LocalCharge',
-                                                            ]);
-                                                        }
-                                                    } else {
-                                                        $surchargeObj = $surchargeObj->first();
                                                     }
 
                                                     //----------------------- CARRIERS -------------------------------------------
@@ -965,18 +901,10 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             ->where('calculationtype_id', $calculationtypeVal)
                                             ->where('ammount', $ammount)
                                             ->where('currency_id', $currency_val)
-                                            ->has($typeplace);
-                                        if ($ct_options['limits_ow'] == true) {
-                                            $surchargeObj->whereHas('overweight_ranges', function ($query) use ($limits_val, $ammount) {
-                                                $query->where('lower_limit', $limits_val[0])
-                                                    ->where('upper_limit', $limits_val[1])
-                                                    ->where('amount', $ammount)
-                                                    ->where('model_type', 'App\\LocalCharge');
-                                            });
-                                        }
-                                        $surchargeObj = $surchargeObj->get();
+                                            ->has($typeplace)
+                                            ->first();
 
-                                        if ($surchargeObj->isEmpty()) {
+                                        if (count((array)$surchargeObj) == 0) {
                                             $surchargeObj = LocalCharge::create([ // tabla localcharges
                                                 'surcharge_id' => $surchargeVal,
                                                 'typedestiny_id' => $typedestinyVal,
@@ -985,21 +913,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 'ammount' => $ammount,
                                                 'currency_id' => $currency_val,
                                             ]);
-                                            // ---------------------- Limits OW ------------------------------------------
-
-                                            if ($ct_options['limits_ow'] == true) {
-                                                OverweightRange::create([
-                                                    'lower_limit' => $limits_val[0],
-                                                    'upper_limit' => $limits_val[1],
-                                                    'amount' => $ammount,
-                                                    'model_id' => $surchargeObj->id,
-                                                    'model_type' => 'App\\LocalCharge',
-                                                ]);
-                                            }
-                                        } else {
-                                            $surchargeObj = $surchargeObj->first();
                                         }
-
 
                                         //----------------------- CARRIERS -------------------------------------------
                                         $existsCar = [];
@@ -1068,31 +982,27 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         }
                                     }
                                     //---------------------------- CALCULATION TYPE -----------------------
-                                    if ($calculationtypeExiBol == true && $ct_converted_Bol == false) {
+                                    if ($calculationtypeExiBol) {
                                         $calculationtypeVal = CalculationType::find($calculationtypeVal);
-                                        $calculationtypeVal = $calculationtypeVal['name'];
-                                        $ct_converted_Bol = true;
+                                        $calculationtypeVal = $calculationtypeVal->name;
                                     }
                                     //---------------------------- TYPE - SURCHARGE -----------------------
                                     if (strnatcasecmp($chargeExc_val, $chargeVal) != 0) {
                                         if ($typeChargeExiBol) {
                                             $surchargeVal = Surcharge::find($surchargeVal);
                                             $surchargeVal = $surchargeVal->name;
-                                            $typeChargeExiBol = false;
                                         }
                                     }
                                     //---------------------------- CARRIER --------------------------------
                                     if ($carriExitBol) {
                                         $carrierVal = Carrier::find($carrierVal);
                                         $carrierVal = $carrierVal->name;
-                                        $carriExitBol = false;
                                     }
                                     //---------------------------- TYPE DESTINY ---------------------------
                                     if ($typedestinyExitBol == true && strnatcasecmp($chargeExc_val, $chargeVal) != 0) {
                                         try {
                                             $typedestinyVal = TypeDestiny::find($typedestinyVal);
                                             $typedestinyVal = $typedestinyVal->description;
-                                            $typedestinyExitBol = false;
                                         } catch (\Exception $e) {
                                             dd($datos_finales);
                                         }
@@ -1111,12 +1021,10 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 foreach ($columna_cont as $key => $conta_row) {
                                                     if ($conta_row[4] == false) {
                                                         $rspVal = null;
-                                                        $rspVal = HelperAll::currencyJoin(
-                                                            $statusCurrency,
+                                                        $rspVal = HelperAll::currencyJoin($statusCurrency,
                                                             $currency_bol[$key],
                                                             $conta_row[0],
-                                                            $conta_row[1]
-                                                        );
+                                                            $conta_row[1]);
                                                         $container_json['C' . $key] = '' . $rspVal;
                                                     }
                                                     if ($conta_row[3] != true) {
@@ -1133,49 +1041,37 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 foreach ($columna_cont as $key => $conta_row) {
                                                     if ($conta_row[4] == false) { // columna contenedores
                                                         $rspVal = null;
-                                                        $rspVal = HelperAll::currencyJoin(
-                                                            $statusCurrency,
+                                                        $rspVal = HelperAll::currencyJoin($statusCurrency,
                                                             $currency_bol[$key],
                                                             $conta_row[0],
-                                                            $conta_row[1]
-                                                        );
+                                                            $conta_row[1]);
                                                         $container_json['C' . $key] = '' . $rspVal;
                                                     } else { // por columna específica
                                                         if (strnatcasecmp($columns_rt_ident[$key], 'twuenty') == 0) {
-                                                            $twuenty_val = HelperAll::currencyJoin(
-                                                                $statusCurrency,
+                                                            $twuenty_val = HelperAll::currencyJoin($statusCurrency,
                                                                 $currency_bol[$key],
                                                                 $conta_row[0],
-                                                                $conta_row[1]
-                                                            );
+                                                                $conta_row[1]);
                                                         } elseif (strnatcasecmp($columns_rt_ident[$key], 'forty') == 0) {
-                                                            $forty_val = HelperAll::currencyJoin(
-                                                                $statusCurrency,
+                                                            $forty_val = HelperAll::currencyJoin($statusCurrency,
                                                                 $currency_bol[$key],
                                                                 $conta_row[0],
-                                                                $conta_row[1]
-                                                            );
+                                                                $conta_row[1]);
                                                         } elseif (strnatcasecmp($columns_rt_ident[$key], 'fortyhc') == 0) {
-                                                            $fortyhc_val = HelperAll::currencyJoin(
-                                                                $statusCurrency,
+                                                            $fortyhc_val = HelperAll::currencyJoin($statusCurrency,
                                                                 $currency_bol[$key],
                                                                 $conta_row[0],
-                                                                $conta_row[1]
-                                                            );
+                                                                $conta_row[1]);
                                                         } elseif (strnatcasecmp($columns_rt_ident[$key], 'fortynor') == 0) {
-                                                            $fortynor_val = HelperAll::currencyJoin(
-                                                                $statusCurrency,
+                                                            $fortynor_val = HelperAll::currencyJoin($statusCurrency,
                                                                 $currency_bol[$key],
                                                                 $conta_row[0],
-                                                                $conta_row[1]
-                                                            );
+                                                                $conta_row[1]);
                                                         } elseif (strnatcasecmp($columns_rt_ident[$key], 'fortyfive') == 0) {
-                                                            $fortyfive_val = HelperAll::currencyJoin(
-                                                                $statusCurrency,
+                                                            $fortyfive_val = HelperAll::currencyJoin($statusCurrency,
                                                                 $currency_bol[$key],
                                                                 $conta_row[0],
-                                                                $conta_row[1]
-                                                            );
+                                                                $conta_row[1]);
                                                         }
                                                     }
                                                     if ($conta_row[3] != true) {
@@ -1198,7 +1094,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                 ->where('containers', $container_json)
                                                 ->where('currency_id', $currency_val)
                                                 ->get();
-
+                                            
                                             if (count($exists) == 0) {
                                                 $respFR = FailRate::create([
                                                     'origin_port' => $originVal,
@@ -1221,9 +1117,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                         } else {
                                             $differentiatorVal = 1;
                                         }
-                                        if ($calculationtypeExiBol == true && $ct_converted_Bol == true) {
-                                            // Es PER_CONTAINER PER_CONATINER_IMO .....
-                                            if (in_array($calculation_type_exc, $behaviourContainers)) {
+                                        if ($calculationtypeExiBol) {
+                                            if (strnatcasecmp($calculation_type_exc, 'PER_CONTAINER') == 0) {
                                                 $equals_values = [];
                                                 $key = null;
                                                 foreach ($columna_cont as $key => $conta_row) {
@@ -1254,20 +1149,18 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         }
                                                     }
 
-                                                    $ammount = HelperAll::currencyJoin(
-                                                        $statusCurrency,
+                                                    $ammount = HelperAll::currencyJoin($statusCurrency,
                                                         $currency_bol_f,
                                                         $ammount,
-                                                        $currency_val
-                                                    );
+                                                        $currency_val);
                                                     if ($currency_bol_f) {
                                                         $currencyObj = Currency::find($currency_val);
                                                         $currency_val = $currencyObj->alphacode;
                                                     }
 
                                                     //dd($ammount,$currency_val);
-                                                    $failSurcharge = [];
-                                                    $failSurcharge = FailSurCharge::where('surcharge_id', $surchargeVal)
+                                                    $exists = [];
+                                                    $exists = FailSurCharge::where('surcharge_id', $surchargeVal)
                                                         ->where('port_orig', $originVal)
                                                         ->where('port_dest', $destinyVal)
                                                         ->where('typedestiny_id', $typedestinyVal)
@@ -1276,18 +1169,11 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         ->where('ammount', $ammount)
                                                         ->where('currency_id', $currency_val)
                                                         ->where('carrier_id', $carrierVal)
-                                                        ->where('differentiator', $differentiatorVal);
-                                                    if ($ct_options['limits_ow'] == true) {
-                                                        $failSurcharge->whereHas('fail_overweight_ranges', function ($query) use ($limits_val) {
-                                                            $query->where('lower_limit', $limits_val[0])
-                                                                ->where('upper_limit', $limits_val[1])
-                                                                ->where('model_type', 'App\\FailSurCharge');
-                                                        });
-                                                    }
-                                                    $failSurcharge = $failSurcharge->get();
+                                                        ->where('differentiator', $differentiatorVal)
+                                                        ->get();
 
-                                                    if ($failSurcharge->isEmpty()) {
-                                                        $failSurcharge = FailSurCharge::create([
+                                                    if (count($exists) == 0) {
+                                                        FailSurCharge::create([
                                                             'surcharge_id' => $surchargeVal,
                                                             'port_orig' => $originVal,
                                                             'port_dest' => $destinyVal,
@@ -1299,27 +1185,12 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             'carrier_id' => $carrierVal,
                                                             'differentiator' => $differentiatorVal,
                                                         ]);
-                                                        if ($ct_options['limits_ow'] == true) {
-                                                            $failowRange = FailOverweightRange::where('lower_limit', $limits_val[0])
-                                                                ->where('upper_limit', $limits_val[1])
-                                                                ->where('model_id', $failSurcharge->id)
-                                                                ->where('model_type', 'App\\FailSurCharge')
-                                                                ->get();
-                                                            if ($failowRange->isEmpty()) {
-                                                                FailOverweightRange::create([
-                                                                    'lower_limit' => $limits_val[0],
-                                                                    'upper_limit' => $limits_val[1],
-                                                                    'model_id' => $failSurcharge->id,
-                                                                    'model_type' => 'App\\FailSurCharge',
-                                                                ]);
-                                                            }
-                                                        }
                                                     }
                                                 } elseif (count(array_unique($equals_values)) > 1) { //Valores distintos
                                                     $key = null;
                                                     $rows_calculations = [];
                                                     foreach ($columna_cont as $key => $conta_row) { // Cargamos cada columna para despues insertarlas en la BD
-                                                        $calculationtypeVal = CalculationType::find($conatiner_calculation_id[$calculation_type_exc][$key]['id']);
+                                                        $calculationtypeVal = CalculationType::find($conatiner_calculation_id[$key]);
                                                         $calculationtypeVal = $calculationtypeVal->name;
                                                         if ($currency_bol[$key]) {
                                                             $currency_val = Currency::find($conta_row[1]);
@@ -1328,12 +1199,10 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             $currency_val = $conta_row[1];
                                                         }
                                                         $ammount = null;
-                                                        $ammount = HelperAll::currencyJoin(
-                                                            $statusCurrency,
+                                                        $ammount = HelperAll::currencyJoin($statusCurrency,
                                                             $currency_bol[$key],
                                                             $conta_row[0],
-                                                            $conta_row[1]
-                                                        );
+                                                            $conta_row[1]);
                                                         $ammoun_zero = false;
                                                         if ($conta_row[0] == 0.0 || $conta_row[0] == 0) {
                                                             $ammoun_zero = true;
@@ -1343,14 +1212,13 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             'ammount' => $ammount,
                                                             'ammount_zero' => $ammoun_zero,
                                                             'currency' => $currency_val,
-                                                            'limits_ow' => $conatiner_calculation_id[$calculation_type_exc][$key]['limits_ow'],
                                                         ];
                                                     }
                                                     //dd($rows_calculations);
                                                     foreach ($rows_calculations as $key => $row_calculation) {
                                                         if ($row_calculation['ammount_zero'] != true) {
-                                                            $failSurcharge = [];
-                                                            $failSurcharge = FailSurCharge::where('surcharge_id', $surchargeVal)
+                                                            $exists = [];
+                                                            $exists = FailSurCharge::where('surcharge_id', $surchargeVal)
                                                                 ->where('port_orig', $originVal)
                                                                 ->where('port_dest', $destinyVal)
                                                                 ->where('typedestiny_id', $typedestinyVal)
@@ -1359,18 +1227,10 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                                 ->where('ammount', $row_calculation['ammount'])
                                                                 ->where('currency_id', $row_calculation['currency'])
                                                                 ->where('carrier_id', $carrierVal)
-                                                                ->where('differentiator', $differentiatorVal);
-
-                                                            if ($row_calculation['limits_ow'] == true) {
-                                                                $failSurcharge->whereHas('fail_overweight_ranges', function ($query) use ($limits_val) {
-                                                                    $query->where('lower_limit', $limits_val[0])
-                                                                        ->where('upper_limit', $limits_val[1])
-                                                                        ->where('model_type', 'App\\FailSurCharge');
-                                                                });
-                                                            }
-                                                            $failSurcharge = $failSurcharge->get();
-                                                            if ($failSurcharge->isEmpty()) {
-                                                                $failSurcharge = FailSurCharge::create([
+                                                                ->where('differentiator', $differentiatorVal)
+                                                                ->get();
+                                                            if (count($exists) == 0) {
+                                                                FailSurCharge::create([
                                                                     'surcharge_id' => $surchargeVal,
                                                                     'port_orig' => $originVal,
                                                                     'port_dest' => $destinyVal,
@@ -1382,14 +1242,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                                     'carrier_id' => $carrierVal,
                                                                     'differentiator' => $differentiatorVal,
                                                                 ]);
-                                                                if ($row_calculation['limits_ow'] == true) {
-                                                                    FailOverweightRange::create([
-                                                                        'lower_limit' => $limits_val[0],
-                                                                        'upper_limit' => $limits_val[1],
-                                                                        'model_id' => $failSurcharge->id,
-                                                                        'model_type' => 'App\\FailSurCharge',
-                                                                    ]);
-                                                                }
                                                             }
                                                         }
                                                     }
@@ -1418,19 +1270,17 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     }
                                                 }
 
-                                                $ammount = HelperAll::currencyJoin(
-                                                    $statusCurrency,
+                                                $ammount = HelperAll::currencyJoin($statusCurrency,
                                                     $currency_bol_f,
                                                     $ammount,
-                                                    $currency_val
-                                                );
+                                                    $currency_val);
                                                 if ($currency_bol_f) {
                                                     $currencyObj = Currency::find($currency_val);
                                                     $currency_val = $currencyObj->alphacode;
                                                 }
                                                 //dd('registro pr ship',$variant_currency,$columna_cont,$currency_val,$ammount);
-                                                $failSurcharge = [];
-                                                $failSurcharge = FailSurCharge::where('surcharge_id', $surchargeVal)
+                                                $exists = [];
+                                                $exists = FailSurCharge::where('surcharge_id', $surchargeVal)
                                                     ->where('port_orig', $originVal)
                                                     ->where('port_dest', $destinyVal)
                                                     ->where('typedestiny_id', $typedestinyVal)
@@ -1439,19 +1289,10 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     ->where('ammount', $ammount)
                                                     ->where('currency_id', $currency_val)
                                                     ->where('carrier_id', $carrierVal)
-                                                    ->where('differentiator', $differentiatorVal);
-
-                                                if ($ct_options['limits_ow'] == true) {
-                                                    $failSurcharge->whereHas('fail_overweight_ranges', function ($query) use ($limits_val) {
-                                                        $query->where('lower_limit', $limits_val[0])
-                                                            ->where('upper_limit', $limits_val[1])
-                                                            ->where('model_type', 'App\\FailSurCharge');
-                                                    });
-                                                }
-
-                                                $failSurcharge = $failSurcharge->get();
-                                                if ($failSurcharge->isEmpty()) {
-                                                    $failSurcharge = FailSurCharge::create([
+                                                    ->where('differentiator', $differentiatorVal)
+                                                    ->get();
+                                                if (count($exists) == 0) {
+                                                    FailSurCharge::create([
                                                         'surcharge_id' => $surchargeVal,
                                                         'port_orig' => $originVal,
                                                         'port_dest' => $destinyVal,
@@ -1463,15 +1304,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         'carrier_id' => $carrierVal,
                                                         'differentiator' => $differentiatorVal,
                                                     ]);
-                                                    if ($ct_options['limits_ow'] == true) {
-
-                                                        FailOverweightRange::create([
-                                                            'lower_limit' => $limits_val[0],
-                                                            'upper_limit' => $limits_val[1],
-                                                            'model_id' => $failSurcharge->id,
-                                                            'model_type' => 'App\\FailSurCharge',
-                                                        ]);
-                                                    }
                                                 }
                                             }
                                         } else { // Calculation Type desconocido
@@ -1488,34 +1320,26 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     $currency_val = $conta_row[1];
                                                 }
                                                 $ammount = null;
-                                                $ammount = HelperAll::currencyJoin(
-                                                    $statusCurrency,
+                                                $ammount = HelperAll::currencyJoin($statusCurrency,
                                                     $currency_bol[$key],
                                                     $conta_row[0],
-                                                    $conta_row[1]
-                                                );
+                                                    $conta_row[1]);
                                                 $ammoun_zero = false;
                                                 if ($conta_row[0] == 0.0 || $conta_row[0] == 0) {
                                                     $ammoun_zero = true;
                                                 }
-                                                $limit_ow_bool = false;
-                                                if (array_key_exists($calculation_type_exc, $conatiner_calculation_id)) {
-                                                    $limit_ow_bool = $conatiner_calculation_id[$calculation_type_exc][$key]['limits_ow'];
-                                                }
-
                                                 $rows_calculations[$key] = [
-                                                    'calculationtype' => $calculationtypeValFail . ' Fila ' . $countRow,
+                                                    'calculationtype' => $calculationtypeValFail . 'Fila ' . $countRow,
                                                     'ammount' => $ammount,
                                                     'ammount_zero' => $ammoun_zero,
                                                     'currency' => $currency_val,
-                                                    'limits_ow' => $limit_ow_bool,
                                                 ];
                                             }
                                             //dd('llega aqui Cals',$rows_calculations);
                                             foreach ($rows_calculations as $key => $row_calculation) {
                                                 if ($row_calculation['ammount_zero'] != true) {
-                                                    $failSurcharge = [];
-                                                    $failSurcharge = FailSurCharge::where('surcharge_id', $surchargeVal)
+                                                    $exists = [];
+                                                    $exists = FailSurCharge::where('surcharge_id', $surchargeVal)
                                                         ->where('port_orig', $originVal)
                                                         ->where('port_dest', $destinyVal)
                                                         ->where('typedestiny_id', $typedestinyVal)
@@ -1524,17 +1348,10 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         ->where('ammount', $row_calculation['ammount'])
                                                         ->where('currency_id', $row_calculation['currency'])
                                                         ->where('carrier_id', $carrierVal)
-                                                        ->where('differentiator', $differentiatorVal);
-                                                    if ($row_calculation['limits_ow'] == true) {
-                                                        $failSurcharge->whereHas('fail_overweight_ranges', function ($query) use ($limits_val) {
-                                                            $query->where('lower_limit', $limits_val[0])
-                                                                ->where('upper_limit', $limits_val[1])
-                                                                ->where('model_type', 'App\\FailSurCharge');
-                                                        });
-                                                    }
-                                                    $failSurcharge = $failSurcharge->get();
-                                                    if ($failSurcharge->isEmpty()) {
-                                                        $failSurcharge = FailSurCharge::create([
+                                                        ->where('differentiator', $differentiatorVal)
+                                                        ->get();
+                                                    if (count($exists) == 0) {
+                                                        FailSurCharge::create([
                                                             'surcharge_id' => $surchargeVal,
                                                             'port_orig' => $originVal,
                                                             'port_dest' => $destinyVal,
@@ -1546,15 +1363,6 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                             'carrier_id' => $carrierVal,
                                                             'differentiator' => $differentiatorVal,
                                                         ]);
-                                                        if ($row_calculation['limits_ow'] == true) {
-
-                                                            FailOverweightRange::create([
-                                                                'lower_limit' => $limits_val[0],
-                                                                'upper_limit' => $limits_val[1],
-                                                                'model_id' => $failSurcharge->id,
-                                                                'model_type' => 'App\\FailSurCharge',
-                                                            ]);
-                                                        }
                                                     }
                                                 }
                                             }

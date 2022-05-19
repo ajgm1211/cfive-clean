@@ -89,9 +89,4 @@ class GlobalCharge extends Model implements Auditable
     {
         return $this->belongsTo('App\TypeDestiny');
     }
-
-    public function overweight_ranges()
-    {
-        return $this->morphMany(OverweightRange::class, 'model');
-    }
 }

@@ -619,8 +619,6 @@ class RequestFclV2Controller extends Controller
         array_push($columns, 'CURRENCY');
         array_push($columns, 'CARRIER');
         array_push($columns, 'DIFFERENTIATOR');
-        array_push($columns, 'VIA');
-        array_push($columns, 'LIMITS');
         //dd($columns);
 
         $spreadsheet = new Spreadsheet();

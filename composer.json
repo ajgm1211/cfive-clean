@@ -105,9 +105,6 @@
         "optimize-autoloader": true,
         "platform": {
             "php": "7.1.3"
-        },
-        "allow-plugins": {
-            "kylekatarnls/update-helper": true
         }
     },
     "minimum-stability": "dev",
