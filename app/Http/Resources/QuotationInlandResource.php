@@ -28,7 +28,7 @@ class QuotationInlandResource extends JsonResource
 
             return [
                 'id' => $item->id,
-                'segment_id' => $this->segment_id,
+                'segment_id' => $this->segment_id ?? null,
                 'type' => $item->type,
                 'contract' => $item->contract,
                 'charge' => $item->charge,

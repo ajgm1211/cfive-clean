@@ -24,7 +24,7 @@ class QuotationOceanFreightResource extends JsonResource
         return $this->resource->map(function($item){
                 return [
                 'id' => $item->id,
-                'segment_id'=> $this->segment_id,
+                'segment_id'=> $this->segment_id ?? null,
                 'contract' => $item->contract,
                 'valid_from' => $item->valid_from,
                 'valid_until' => $item->valid_until,

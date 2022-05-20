@@ -203,7 +203,8 @@ class QuotationApiResource extends JsonResource
     }
 
     public function getSegmentIdByType($company_user_id, $type){
-        $result = CompanyUserQuoteSegment::where('company_user_id', $company_user_id)->where('quote_segment_type_id', $type)->first();
-        return $result->segment_id;
+        $resultSegment = CompanyUserQuoteSegment::where('company_user_id', $company_user_id)->where('quote_segment_type_id', $type)->first();
+        $result = !empty($resultSegment) ?  $resultSegment->segment_id : null;
+        return $result;
     }
 }
