@@ -328,17 +328,20 @@ class QuotationController extends Controller
             $quote->update(['remarks_catalan' => $remarks]);
         }
 
-        if (empty($quote->remarks_english) ) {
-            $quote->update(['remarks_english' => $remarksPenalties]);
-        }if (empty($quote->remarks_spanish)) {
-            $quote->update(['remarks_spanish' => $remarksPenalties]);
-        }if (empty($quote->remarks_portuguese)) {
-            $quote->update(['remarks_portuguese' => $remarksPenalties]);
-        }if (empty($quote->remarks_italian)) {
-            $quote->update(['remarks_italian' => $remarksPenalties]);
-        }if (empty($quote->remarks_catalan)) {
-            $quote->update(['remarks_catalan' => $remarksPenalties]);
+        if(isset($remarksPenalties)){
+            if (empty($quote->remarks_english) ) {
+                $quote->update(['remarks_english' => $remarksPenalties]);
+            }if (empty($quote->remarks_spanish)) {
+                $quote->update(['remarks_spanish' => $remarksPenalties]);
+            }if (empty($quote->remarks_portuguese)) {
+                $quote->update(['remarks_portuguese' => $remarksPenalties]);
+            }if (empty($quote->remarks_italian)) {
+                $quote->update(['remarks_italian' => $remarksPenalties]);
+            }if (empty($quote->remarks_catalan)) {
+                $quote->update(['remarks_catalan' => $remarksPenalties]);
+            }
         }
+
         foreach ($rate_data as $rate) {
 
             $newRate = AutomaticRate::create([
