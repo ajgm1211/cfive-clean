@@ -2,14 +2,7 @@
   <div class=" custom-card-container bg-white">
     <div class="custom-card bg-white ">
       <!-- COMPANY LOGO  -->
-      <img
-        class="company-logo"
-        :src="
-          'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
-            rate.carrier.image
-        "
-        alt="company logo"
-      />
+      <img class="company-logo" :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' + rate.carrier.image" alt="company logo" />
 
       <!-- SEARCH RESULT INFO  -->
       <div class="card-info">
@@ -27,16 +20,9 @@
             </div>
 
             <!-- TT -->
-            <div
-              style="margin: 0 20px;"
-              class="via d-flex flex-column justify-content-center align-items-center"
-            >
+            <div style="margin: 0 20px;" class="via d-flex flex-column justify-content-center align-items-center">
               <div class="direction-form d-none d-md-flex">
-                <img
-                  src="/images/logo-ship-blue.svg"
-                  alt="bote"
-                  style="top: -30px"
-                />
+                <img src="/images/logo-ship-blue.svg" alt="bote" style="top: -30px" />
 
                 <div class="route-indirect d-flex align-items-center">
                   <div class="circle mr-2"></div>
@@ -58,28 +44,15 @@
           </div>
 
           <div class="d-flex justify-content-center align-items-center">
-            <div
-              v-if="
-                (rate.charges.Origin == undefined &&
-                  rate.charges.Destination == undefined) ||
-                  (!searchData.originCharges && !searchData.destinationCharges) ||
-                  searchData.showRateCurrency
-              "
-            >
-              <b style="margin-right:5px; font-size: 15px">{{
-                rate.total_with_markups_freight_currency
-                  ? rate.total_with_markups_freight_currency
-                  : rate.total_freight_currency
-              }}</b>
+            <div v-if="(rate.charges.Origin == undefined && rate.charges.Destination == undefined) || (!searchData.originCharges && !searchData.destinationCharges) || searchData.showRateCurrency">
+              <b style="margin-right:5px; font-size: 15px">{{ rate.total_with_markups_freight_currency ? rate.total_with_markups_freight_currency : rate.total_freight_currency }}</b>
 
               <span>
                 <b>{{ rate.currency.alphacode }}</b></span
               >
             </div>
             <div v-else>
-              <b style="margin-right:5px; font-size: 15px">{{
-                rate.total_with_markups ? rate.total_with_markups : rate.total
-              }}</b>
+              <b style="margin-right:5px; font-size: 15px">{{ rate.total_with_markups ? rate.total_with_markups : rate.total }}</b>
 
               <span>
                 <b>{{ rate.client_currency.alphacode }}</b></span
@@ -91,9 +64,7 @@
         <div class="info-details align-items-center">
           <div class="d-flex align-items-end" style="justify-self: baseline;">
             <b>Validity:</b>
-            <p style="margin-left:10px">
-              {{ rate.contract.validity }} / {{ rate.contract.expire }}
-            </p>
+            <p style="margin-left:10px">{{ rate.contract.validity }} / {{ rate.contract.expire }}</p>
           </div>
 
           <div class="d-flex align-items-center">
@@ -107,11 +78,7 @@
               <b style="margin-right:10px">Remarks</b>
               <b-icon icon="caret-down-fill"></b-icon>
             </div>
-            <div
-              :aria-controls="'remarks_' + +String(rate.id)"
-              @click="rate.detailCollapse = !rate.detailCollapse"
-              class="detailsbtn"
-            >
+            <div :aria-controls="'remarks_' + +String(rate.id)" @click="rate.detailCollapse = !rate.detailCollapse" class="detailsbtn">
               <b style="margin-right:10px">detailed cost</b>
               <b-icon icon="caret-down-fill"></b-icon>
             </div>
@@ -121,23 +88,13 @@
 
       <!--  ADD TO QUOTE BTN  -->
       <div class="d-flex align-items-center justify-content-center">
-        <b-form-checkbox
-          v-model="rate.addToQuote"
-          class="btn-add-quote"
-          name="check-button"
-          button
-          @change="sendQuote(rate)"
-        >
+        <b-form-checkbox v-model="rate.addToQuote" class="btn-add-quote" name="check-button" button @change="sendQuote(rate)">
           <b>add to quote</b>
         </b-form-checkbox>
       </div>
     </div>
 
-    <b-collapse
-      v-model="rate.detailCollapse"
-      :id="'details_' + String(rate.id)"
-      style="background:white;"
-    >
+    <b-collapse v-model="rate.detailCollapse" :id="'details_' + String(rate.id)" style="background:white;">
       <CustomTable
         v-for="(charge, index) in rate.charges"
         :key="index"
@@ -151,11 +108,7 @@
       />
     </b-collapse>
 
-    <b-collapse
-      :id="'remarks_' + String(rate.id)"
-      class="pt-5 pb-5 pl-5 pr-5 col-12"
-      v-model="rate.remarksCollapse"
-    >
+    <b-collapse :id="'remarks_' + String(rate.id)" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.remarksCollapse">
       <h5><b>Remarks</b></h5>
 
       <b-card>
@@ -187,16 +140,7 @@ export default {
     };
   },
   mounted() {
-    this.rate.search.pricelevel != null
-      ? (this.fields = [
-          "Charge",
-          "Detail",
-          "Amount",
-          "Units",
-          "Markups",
-          "Total",
-        ])
-      : (this.fields = ["Charge", "Detail", "Amount", "Units", "Total"]);
+    this.rate.search.pricelevel != null ? (this.fields = ["Charge", "Detail", "Amount", "Units", "Markups", "Total"]) : (this.fields = ["Charge", "Detail", "Amount", "Units", "Total"]);
   },
   methods: {
     sendQuote(rate) {
@@ -206,7 +150,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 p {
   margin: 0;
 }
@@ -378,5 +322,15 @@ p {
 .route > p {
   color: #071c4b;
   font-weight: bold;
+}
+
+.prices-card-res > p > b {
+  font-size: 14px !important;
+  display: flex;
+  align-items: center;
+
+  & > span {
+    margin-left: 2px;
+  }
 }
 </style>

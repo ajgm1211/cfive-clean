@@ -3,13 +3,7 @@
     <!-- RESULTS -->
     <div v-if="finalRates.length != 0" class="row" id="top-results">
       <div v-if="searchType == 'LCL'" class="col-12 mb-4">
-        <ResultSearch
-          v-for="(item, index) in finalRates"
-          :key="index"
-          :rate="item"
-          :searchData="searchData"
-          @QuoteToAdd="addRateToQuote"
-        />
+        <ResultSearch v-for="(item, index) in finalRates" :key="index" :rate="item" :searchData="searchData" @QuoteToAdd="addRateToQuote" />
       </div>
 
       <!-- FCL CARD -->
@@ -18,18 +12,8 @@
           <!-- INFORMACION DE TARIFA -->
           <div class="row">
             <!-- CARRIER -->
-            <div
-              class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center"
-              style="border-right: 1px solid #f3f3f3"
-            >
-              <img
-                :src="
-                  'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
-                    rate.carrier.image
-                "
-                alt="logo"
-                width="115px"
-              />
+            <div class="col-12 col-lg-2 carrier-img d-flex justify-content-center align-items-center" style="border-right: 1px solid #f3f3f3">
+              <img :src="'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' + rate.carrier.image" alt="logo" width="115px" />
             </div>
             <!-- FIN CARRIER -->
 
@@ -44,15 +28,9 @@
               <!-- FIN CONTRACT NAME -->
 
               <!-- RUTA Y PRECIOS -->
-              <div
-                class="row col-12 mr-0 ml-0"
-                style="border-bottom: 1px solid #f3f3f3"
-              >
+              <div class="row col-12 mr-0 ml-0" style="border-bottom: 1px solid #f3f3f3">
                 <!-- RUTA -->
-                <div
-                  class="col-12 col-lg-6 d-none d-lg-flex"
-                  style="border-bottom: 1px solid #eeeeee"
-                >
+                <div class="col-12 col-lg-6 d-none d-lg-flex" style="border-bottom: 1px solid #eeeeee">
                   <!-- ORIGIN -->
                   <div class="origin mr-4">
                     <span>origin</span>
@@ -60,9 +38,7 @@
                   </div>
 
                   <!-- LINEA DE RUTA -->
-                  <div
-                    class="d-flex flex-column justify-content-center align-items-center"
-                  >
+                  <div class="d-flex flex-column justify-content-center align-items-center">
                     <div class="direction-form">
                       <img src="/images/logo-ship-blue.svg" alt="bote" />
 
@@ -76,34 +52,9 @@
                     </div>
 
                     <div class="direction-desc">
-                      <b
-                        v-if="
-                          rate.transit_time != undefined &&
-                            rate.transit_time != undefined
-                        "
-                        >{{
-                          rate.transit_time.service == 1
-                            ? "Direct"
-                            : "Transhipment"
-                        }}</b
-                      >
-                      <b
-                        v-if="
-                          rate.transit_time != undefined &&
-                            rate.transit_time != undefined
-                        "
-                        >{{
-                          rate.transit_time.via ? rate.transit_time.via : ""
-                        }}</b
-                      >
-                      <p
-                        v-if="
-                          rate.transit_time != null &&
-                            rate.transit_time.transit_time != null
-                        "
-                      >
-                        <b>TT:</b> {{ rate.transit_time.transit_time }}
-                      </p>
+                      <b v-if="rate.transit_time != undefined && rate.transit_time != undefined">{{ rate.transit_time.service == 1 ? "Direct" : "Transhipment" }}</b>
+                      <b v-if="rate.transit_time != undefined && rate.transit_time != undefined">{{ rate.transit_time.via ? rate.transit_time.via : "" }}</b>
+                      <p v-if="rate.transit_time != null && rate.transit_time.transit_time != null"><b>TT:</b> {{ rate.transit_time.transit_time }}</p>
                     </div>
                   </div>
 
@@ -115,10 +66,7 @@
                 </div>
 
                 <!-- RUTA RESPONSIVA -->
-                <div
-                  class="row col-lg-6 d-lg-none mr-0 ml-0"
-                  style="border-bottom: 1px solid #eeeeee"
-                >
+                <div class="row col-lg-6 d-lg-none mr-0 ml-0" style="border-bottom: 1px solid #eeeeee">
                   <!-- DESTINOS -->
                   <div class="col-sm-6">
                     <!-- ORGIEN -->
@@ -143,18 +91,12 @@
                     <div class="via">
                       <ul class="pl-0" style="list-style: none">
                         <li>
-                          <b class="mt-2">{{
-                            rate.transit_time ? rate.transit_time.via : "Direct"
-                          }}</b>
+                          <b class="mt-2">{{ rate.transit_time ? rate.transit_time.via : "Direct" }}</b>
                         </li>
                         <li>
                           <p>
                             <b>TT:</b>
-                            {{
-                              rate.transit_time
-                                ? rate.transit_time.transit_time
-                                : "None"
-                            }}
+                            {{ rate.transit_time ? rate.transit_time.transit_time : "None" }}
                           </p>
                         </li>
                       </ul>
@@ -169,11 +111,7 @@
                 <div class="col-12 col-lg-6">
                   <!-- PRECIO RESPONSIVE -->
                   <div class="row card-amount card-amount-header__res">
-                    <div
-                      class="col-2 pl-0 pr-0 prices-card-res"
-                      v-for="(container, requestKey) in request.containers"
-                      :key="requestKey"
-                    >
+                    <div class="col-2 pl-0 pr-0 prices-card-res" v-for="(container, requestKey) in request.containers" :key="requestKey">
                       <p>
                         <b>{{ container.code }}</b>
                       </p>
@@ -182,42 +120,19 @@
                   <!-- FIN PRECIO RESPONSIVE -->
 
                   <div class="row card-amount card-amount__res">
-                    <div
-                      class="col-2 pl-0 pr-0 prices-card-res"
-                      :class="countContainersClass()"
-                      v-for="(container, contKey) in request.containers"
-                      :key="contKey"
-                    >
+                    <div class="col-2 pl-0 pr-0 prices-card-res" :class="countContainersClass()" v-for="(container, contKey) in request.containers" :key="contKey">
                       <p>
                         <b
                           style="font-size: 16px"
                           v-if="
-                            (rate.charges.Origin == undefined && rate.charges.Destination == undefined) ||
-                            (!searchData.originCharges && !searchData.destinationCharges) ||
-                              request.showRateCurrency
+                            (rate.charges.Origin == undefined && rate.charges.Destination == undefined) || (!searchData.originCharges && !searchData.destinationCharges) || request.showRateCurrency
                           "
-                          >{{
-                            rate.totals_with_markups_freight_currency
-                              ? rate.totals_with_markups_freight_currency[
-                                  "C" + container.code
-                                ]
-                              : rate.totals_freight_currency[
-                                  "C" + container.code
-                                ]
-                          }}
-                          <span style="font-size: 10px">{{
-                            rate.currency.alphacode
-                          }}</span></b
+                          >{{ rate.totals_with_markups_freight_currency ? rate.totals_with_markups_freight_currency["C" + container.code] : rate.totals_freight_currency["C" + container.code] }}
+                          <span style="font-size: 10px">{{ rate.currency.alphacode }}</span></b
                         >
                         <b style="font-size: 16px" v-else
-                          >{{
-                            rate.totals_with_markups
-                              ? rate.totals_with_markups["C" + container.code]
-                              : rate.totals["C" + container.code]
-                          }}
-                          <span style="font-size: 10px">{{
-                            rate.client_currency.alphacode
-                          }}</span></b
+                          >{{ rate.totals_with_markups ? rate.totals_with_markups["C" + container.code] : rate.totals["C" + container.code] }}
+                          <span style="font-size: 10px">{{ rate.client_currency.alphacode }}</span></b
                         >
                       </p>
                     </div>
@@ -231,20 +146,10 @@
                   <p class="mr-4 mb-0">
                     <b style="font-size:11px;">VALIDITY:</b>
                     {{ rate.contract.validity + " / " + rate.contract.expire }}
-                    <img
-                      v-if="rate.contract.validity > searchEndDate"
-                      src="/images/error.svg"
-                      width="15px"
-                      data-toggle="tooltip"
-                      title="Contract date beyond search range"
-                    />
+                    <img v-if="rate.contract.validity > searchEndDate" src="/images/error.svg" width="15px" data-toggle="tooltip" title="Contract date beyond search range" />
                   </p>
                   <b-button
-                    v-if="
-                      rate.contract_id != 0 ||
-                        rate.contract_request_id != 0 ||
-                        rate.contract_backup_id != 0
-                    "
+                    v-if="rate.contract_id != 0 || rate.contract_request_id != 0 || rate.contract_backup_id != 0"
                     style="
                       background: transparent;
                       border: 0 !important;
@@ -290,17 +195,8 @@
             </div>
 
             <!-- ADD QUOTE BTN -->
-            <div
-              class="col-12 col-lg-2 d-flex justify-content-center align-items-center btn-quote-res"
-              style="border-left: 1px solid #f3f3f3"
-            >
-              <b-form-checkbox
-                v-model="rate.addToQuote"
-                class="btn-add-quote"
-                name="check-button"
-                button
-                @change="addRateToQuote(rate)"
-              >
+            <div class="col-12 col-lg-2 d-flex justify-content-center align-items-center btn-quote-res" style="border-left: 1px solid #f3f3f3">
+              <b-form-checkbox v-model="rate.addToQuote" class="btn-add-quote" name="check-button" button @change="addRateToQuote(rate)">
                 <b>add to quote</b>
               </b-form-checkbox>
             </div>
@@ -311,22 +207,18 @@
           <!-- DETALLES DE TARIFA -->
           <div class="row">
             <!-- TARIFAS -->
-            <b-collapse
-              :id="'details_' + String(rate.id)"
-              class="pt-5 pb-5 pl-5 pr-5 col-12"
-              v-model="rate.detailCollapse"
-            >
-              <div
-                v-for="(chargeArray, chargeType) in rate.charges"
-                :key="chargeType"
-              >
-                <h5 v-show="(searchData.originCharges && chargeType=='Origin') || (searchData.destinationCharges && chargeType=='Destination') || chargeType=='Freight'">
+            <b-collapse :id="'details_' + String(rate.id)" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.detailCollapse">
+              <div v-for="(chargeArray, chargeType) in rate.charges" :key="chargeType">
+                <h5 v-show="(searchData.originCharges && chargeType == 'Origin') || (searchData.destinationCharges && chargeType == 'Destination') || chargeType == 'Freight'">
                   <b>{{ chargeType }}</b>
                 </h5>
 
-                <b-table-simple 
-                  v-show="(searchData.originCharges && chargeType=='Origin') || (searchData.destinationCharges && chargeType=='Destination') || chargeType=='Freight'"
-                  hover small responsive class="sc-table"
+                <b-table-simple
+                  v-show="(searchData.originCharges && chargeType == 'Origin') || (searchData.destinationCharges && chargeType == 'Destination') || chargeType == 'Freight'"
+                  hover
+                  small
+                  responsive
+                  class="sc-table"
                 >
                   <b-thead>
                     <b-tr>
@@ -347,67 +239,27 @@
                   </b-thead>
 
                   <b-tbody>
-                    <b-tr
-                      v-for="(charge, chargeKey) in chargeArray"
-                      :key="chargeKey"
-                    >
+                    <b-tr v-for="(charge, chargeKey) in chargeArray" :key="chargeKey">
                       <b-td
                         ><b>{{ charge.surcharge.name }}</b></b-td
                       >
                       <b-td>{{ charge.calculationtype.name }}</b-td>
                       <!-- <b-td></b-td>
                                             <b-td></b-td> -->
-                      <b-td
-                        v-for="(container, contKey) in request.containers"
-                        :key="contKey"
-                      >
+                      <b-td v-for="(container, contKey) in request.containers" :key="contKey">
                         <p v-if="charge.container_markups != undefined">
-                          {{
-                            charge.joint_as == "client_currency"
-                              ? charge.containers_client_currency[
-                                  "C" + container.code
-                                ]
-                              : charge.containers["C" + container.code]
-                          }}
+                          {{ charge.joint_as == "client_currency" ? charge.containers_client_currency["C" + container.code] : charge.containers["C" + container.code] }}
                         </p>
-                        <span
-                          v-if="
-                            charge.container_markups != undefined &&
-                              charge.container_markups['C' + container.code] !=
-                                undefined
-                          "
-                          class="profit"
-                          >+{{
-                            charge.joint_as == "client_currency"
-                              ? charge.totals_markups["C" + container.code]
-                              : charge.container_markups["C" + container.code]
-                          }}</span
+                        <span v-if="charge.container_markups != undefined && charge.container_markups['C' + container.code] != undefined" class="profit"
+                          >+{{ charge.joint_as == "client_currency" ? charge.totals_markups["C" + container.code] : charge.container_markups["C" + container.code] }}</span
                         >
-                        <b v-if="chargeType == 'Freight'">{{
-                          charge.joint_as == "client_currency"
-                            ? rate.currency.alphacode
-                            : charge.currency.alphacode
-                        }}</b>
-                        <b v-else-if="charge.joint_as == 'client_currency'">{{
-                          charge.client_currency.alphacode
-                        }}</b>
-                        <b v-else-if="charge.joint_as != 'client_currency'">{{
-                          charge.currency.alphacode
-                        }}</b>
+                        <b v-if="chargeType == 'Freight'">{{ charge.joint_as == "client_currency" ? rate.currency.alphacode : charge.currency.alphacode }}</b>
+                        <b v-else-if="charge.joint_as == 'client_currency'">{{ charge.client_currency.alphacode }}</b>
+                        <b v-else-if="charge.joint_as != 'client_currency'">{{ charge.currency.alphacode }}</b>
                         <b v-if="charge.container_markups != undefined">{{
-                          charge.joint_as == "client_currency"
-                            ? charge.totals_with_markups["C" + container.code]
-                            : charge.containers_with_markups[
-                                "C" + container.code
-                              ]
+                          charge.joint_as == "client_currency" ? charge.totals_with_markups["C" + container.code] : charge.containers_with_markups["C" + container.code]
                         }}</b>
-                        <b v-else>{{
-                          charge.joint_as == "client_currency"
-                            ? charge.containers_client_currency[
-                                "C" + container.code
-                              ]
-                            : charge.containers["C" + container.code]
-                        }}</b>
+                        <b v-else>{{ charge.joint_as == "client_currency" ? charge.containers_client_currency["C" + container.code] : charge.containers["C" + container.code] }}</b>
                       </b-td>
                     </b-tr>
 
@@ -418,21 +270,8 @@
                       <b-td colspan="2" style="text-align: right"
                         ><b>Total {{ chargeType }}</b></b-td
                       >
-                      <b-td
-                        v-for="(container, contKey) in request.containers"
-                        :key="contKey"
-                        ><b
-                          >{{
-                            chargeType == "Freight"
-                              ? rate.currency.alphacode
-                              : rate.client_currency.alphacode
-                          }}
-                          {{
-                            rate.charge_totals_by_type[chargeType][
-                              "C" + container.code
-                            ]
-                          }}</b
-                        ></b-td
+                      <b-td v-for="(container, contKey) in request.containers" :key="contKey"
+                        ><b>{{ chargeType == "Freight" ? rate.currency.alphacode : rate.client_currency.alphacode }} {{ rate.charge_totals_by_type[chargeType]["C" + container.code] }}</b></b-td
                       >
                     </b-tr>
                   </b-tbody>
@@ -442,11 +281,7 @@
             <!-- FIN TARIFAS -->
 
             <!-- REMARKS -->
-            <b-collapse
-              :id="'remarks_' + String(rate.id)"
-              class="pt-5 pb-5 pl-5 pr-5 col-12"
-              v-model="rate.remarksCollapse"
-            >
+            <b-collapse :id="'remarks_' + String(rate.id)" class="pt-5 pb-5 pl-5 pr-5 col-12" v-model="rate.remarksCollapse">
               <h5><b>Remarks</b></h5>
 
               <b-card>
@@ -468,9 +303,7 @@
     <div id="sticky-header-results" v-bind:class="{ activeSticky: isActive }">
       <div class="container-fluid">
         <div class="row result-header">
-          <div
-            class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
-          >
+          <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center">
             <b>carrier</b>
           </div>
           <div class="col-12 col-sm-10 btn-action-sticky">
@@ -558,10 +391,7 @@ export default {
       }
     },
     countContainersClass() {
-      if (
-        this.request.containers.length == 5 ||
-        this.request.containers.length == 4
-      ) {
+      if (this.request.containers.length == 5 || this.request.containers.length == 4) {
         return "col-2";
       }
 
@@ -638,10 +468,7 @@ export default {
       } else {
         component.ratesForQuote.forEach(function(rateQ) {
           if (rate.id == rateQ.id) {
-            component.ratesForQuote.splice(
-              component.ratesForQuote.indexOf(rateQ),
-              1
-            );
+            component.ratesForQuote.splice(component.ratesForQuote.indexOf(rateQ), 1);
           }
         });
       }
@@ -674,3 +501,15 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.prices-card-res > p > b {
+  font-size: 14px !important;
+  display: flex;
+  align-items: center;
+
+  & > span {
+    margin-left: 2px;
+  }
+}
+</style>

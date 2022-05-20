@@ -6009,4 +6009,15 @@ export default {
 .mr-32px{
   margin-right: 32px;
 }
+
+
+.prices-card-res > p > b {
+  font-size: 14px!important;
+  display: flex;
+  align-items: center;
+
+  & > span{
+    margin-left: 2px;
+  }
+}
 </style>
