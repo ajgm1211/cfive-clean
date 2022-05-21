@@ -123,16 +123,14 @@
                     <div class="col-2 pl-0 pr-0 prices-card-res" :class="countContainersClass()" v-for="(container, contKey) in request.containers" :key="contKey">
                       <p>
                         <b
-                          style="font-size: 16px"
                           v-if="
                             (rate.charges.Origin == undefined && rate.charges.Destination == undefined) || (!searchData.originCharges && !searchData.destinationCharges) || request.showRateCurrency
                           "
                           >{{ rate.totals_with_markups_freight_currency ? rate.totals_with_markups_freight_currency["C" + container.code] : rate.totals_freight_currency["C" + container.code] }}
-                          <span style="font-size: 10px">{{ rate.currency.alphacode }}</span></b
+                          <span>{{ rate.currency.alphacode }}</span></b
                         >
-                        <b style="font-size: 16px" v-else
-                          >{{ rate.totals_with_markups ? rate.totals_with_markups["C" + container.code] : rate.totals["C" + container.code] }}
-                          <span style="font-size: 10px">{{ rate.client_currency.alphacode }}</span></b
+                        <b v-else
+                          >{{ rate.totals_with_markups ? rate.totals_with_markups["C" + container.code] : rate.totals["C" + container.code] }} <span>{{ rate.client_currency.alphacode }}</span></b
                         >
                       </p>
                     </div>
@@ -501,15 +499,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.prices-card-res > p > b {
-  font-size: 14px !important;
-  display: flex;
-  align-items: center;
-
-  & > span {
-    margin-left: 2px;
-  }
-}
-</style>

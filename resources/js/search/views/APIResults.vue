@@ -254,9 +254,9 @@
                     :key="cmaTotalKey"
                   >
                     <p>
-                      <b style="font-size: 16px">
+                      <b >
                         {{ cmaGlobalTotal.total }}
-                        <span style="font-size: 10px">{{
+                        <span >{{
                           cmaGlobalTotal.currencyCode
                         }}</span></b
                       >
@@ -1155,9 +1155,9 @@
                     :key="totalKey"
                   >
                     <p>
-                      <b style="font-size: 16px"
+                      <b 
                         >{{ globalTotal.total }}
-                        <span style="font-size: 10px">{{
+                        <span >{{
                           globalTotal.currencyCode
                         }}</span></b
                       >
@@ -1989,9 +1989,9 @@
                     :key="evergreenTotalKey"
                   >
                     <p>
-                      <b style="font-size: 16px">
+                      <b >
                         {{ evergreenGlobalTotal.total }}
-                        <span style="font-size: 10px">{{
+                        <span >{{
                           evergreenGlobalTotal.currencyCode
                         }}</span></b
                       >
@@ -2893,13 +2893,13 @@
                     :key="hapagTotalKey"
                   >
                     <p>
-                      <b style="font-size: 16px">
+                      <b >
                         {{
                           datalists.company_user.decimals === 1
                             ? hapagGlobalTotal.total
                             : parseFloat(hapagGlobalTotal.total).toFixed(0)
                         }}
-                        <span style="font-size: 10px">{{
+                        <span >{{
                           hapagGlobalTotal.currencyCode
                         }}</span></b
                       >
@@ -3795,13 +3795,13 @@
                     :key="oneTotalKey"
                   >
                     <p>
-                      <b style="font-size: 16px">
+                      <b >
                         {{
                           datalists.company_user.decimals === 1
                             ? oneGlobalTotal.total
                             : parseFloat(oneGlobalTotal.total).toFixed(0)
                         }}
-                        <span style="font-size: 10px">{{
+                        <span >{{
                           oneGlobalTotal.currencyCode
                         }}</span></b
                       >
@@ -4696,13 +4696,13 @@
                     :key="coscoTotalKey"
                   >
                     <p>
-                      <b style="font-size: 16px">
+                      <b >
                         {{
                           datalists.company_user.decimals === 1
                             ? coscoGlobalTotal.total
                             : parseFloat(coscoGlobalTotal.total).toFixed(0)
                         }}
-                        <span style="font-size: 10px">{{
+                        <span >{{
                           coscoGlobalTotal.currencyCode
                         }}</span></b
                       >
@@ -6002,22 +6002,7 @@ export default {
   width: 100%;
 }
 
-// .pl-40px {
-//   // padding-left: 40px;
-// }
-
 .mr-32px{
   margin-right: 32px;
-}
-
-
-.prices-card-res > p > b {
-  font-size: 14px!important;
-  display: flex;
-  align-items: center;
-
-  & > span{
-    margin-left: 2px;
-  }
 }
 </style>

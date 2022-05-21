@@ -47,7 +47,7 @@
         </div>
         <div class="row col-12 " :class="[searchRequest.selectedContainerGroup.id === 2 ? ['col-sm-5'] : ['col-sm-4']]"></div>
         <div
-          style="padding-left: 7rem; column-gap:10px"
+          style="column-gap:10px"
           :class="[searchRequest.selectedContainerGroup.id === 2 ? ['justify-content-start', 'pl-47px'] : ['justify-content-start', 'row ', 'col-12', 'col-sm-4']]"
           class=" d-flex align-items-center"
         >
@@ -406,8 +406,4 @@ export default {
 .mr-36px {
   margin-right: 36px !important;
 }
-
-// .pl-47px{
-//     padding-left: 47px;
-// }
 </style>
