@@ -59,6 +59,7 @@ div,
   display: flex;
   align-content: center;
   align-items: center;
+  justify-content: center;
 }
 
 .multiselect {
@@ -78,6 +79,7 @@ div,
     border: 2px solid #eee !important;
     // padding: 4px 40px 5px 10px !important;
     padding: 0 !important;
+    padding-right: 23px !important;
     border-radius: 0.25rem !important;
     height: auto !important;
     display: flex;
