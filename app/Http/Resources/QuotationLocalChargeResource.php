@@ -29,7 +29,7 @@ class QuotationLocalChargeResource extends JsonResource
             $provider = Provider::where('name', $item->provider_name)->first();
             return [
                 'id' => $item->id,
-                'segment_id' => $this->segment_id,
+                'segment_id' => $this->segment_id  ?? null,
                 'charge' => $item->charge,
                 'charge_id' => $item->surcharge_id ?? $item->sale_term_code_id ?? null,
                 'sale_code_id' => $item->sale_term_code_id ?? null,
