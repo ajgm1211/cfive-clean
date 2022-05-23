@@ -1079,7 +1079,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/api/search/storeContract', 'SearchApiController@storeContractNewSearch');
     Route::post('/api/search/downloadContract', 'SearchApiController@downloadContractFile');
     Route::get('/api/search/downloadMContract/{contract}', 'SearchApiController@downloadMultipleContractFile')->name('contract.multiple');
-
+    Route::get('/api/search/{name}/get_port_and_location', 'SearchApiController@getPortAndLocationByInput');
+    
     /**New Search LCL */
     Route::get('/api/search_lcl/list', 'SearchApiLclController@list')->name('searchlclV2.list');
     Route::post('/api/search_lcl/store', 'SearchApiLclController@store');
