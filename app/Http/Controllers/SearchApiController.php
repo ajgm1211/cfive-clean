@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Clients\ShenlongClient;
 use App\Http\Traits\SearchTrait;
 use App\Http\Traits\QuoteV2Trait;
 use App\User;
@@ -59,10 +60,13 @@ class SearchApiController extends Controller
     use SearchTrait, QuoteV2Trait, MixPanelTrait;
 
     protected $mixPanel;
+    protected $shenlongClient;
 
     public function __construct(LaravelMixPanel $mixPanel)
     {
         $this->mixPanel = $mixPanel;
+        $this->shenlongClient = new ShenlongClient();
+
         parent::__construct();
     }
 
@@ -261,7 +265,14 @@ class SearchApiController extends Controller
 
     //Validates search request data
     public function processSearch(Request $request)
-    {
+    {   
+        
+        try {
+            return $this->shenlongClient->schedules('ESBCN', 'CNSHA');
+        } catch (ClientException $exception) {
+            dd($exception->getResponse()->getBody()->getContents());
+        }
+        
         //Setting current company and user
          $user = \Auth::user();
          $user_id = $user->id;
