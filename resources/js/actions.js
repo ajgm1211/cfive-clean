@@ -347,14 +347,16 @@ export default {
         },
     },
     quotes: {
-        list(params, callback) {
-
-            api.call('get', '/api/quote/list', { params })
-                .then(response => {
-                    callback(null, response.data);
-                }).catch(error => {
-                    callback(error, error.response.data);
-                });
+        filterOptions() {
+            return api.call('get', `/api/quote/filters`);
+        },
+        list(params, callback, route, page) {
+            api.call('get', '/api/quote/list', {params, page})
+            .then(response => {
+                callback(null, response.data);
+            }).catch(error => {
+                callback(error, error.response.data);
+            });
         },
         create(data, route) {
             return api.call('post', `/api/quote/store`, data);
@@ -380,6 +382,10 @@ export default {
         deleteAll(ids) {
             return api.call('post', `/api/quotes/destroyAll`, { ids: ids });
         },
+        setCostSheet(autorate_id, route) {
+            let quote_id = route.params.id;
+            return api.call('get', `/api/quote/${quote_id}/setCostSheet/${autorate_id}`, {});
+        }
     },
     automaticrates: {
         list(params, callback, route) {
@@ -415,8 +421,7 @@ export default {
         },
         delete(id) {
             return api.call('delete', `/api/quotes/automatic_rate/${id}/destroy`, {});
-        },
-
+        },        
     },
     charges: {
         list(id, params, callback, route) {

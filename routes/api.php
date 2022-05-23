@@ -90,6 +90,7 @@ Route::group(['prefix' => 'v2'], function () {
 
         // Providers
         Route::put('provider/{id}/update/refcode', 'ProvidersController@updateRefCode');
+        Route::get('getContract', 'ApiControllerV2@getContract');
     });
 });
 
@@ -174,4 +175,16 @@ Route::group(['prefix'=>'apiCredentials','middleware' => 'auth:api'], function (
     Route::post('update/{apiCredential}', 'ApiCredentialsController@update');
     Route::post('status/{apiCredential}', 'ApiCredentialsController@updateStatus');
     Route::post('companyUser/{companyUser}/deleteApiProvider', 'ApiCredentialsController@deleteApiProviderOfCompanyUser');
+});
+
+Route::group(['prefix'=>'segment-configuration','middleware' => 'auth:api'], function () {
+    Route::get('data', 'SegmentConfigurationController@data');
+    Route::get('list', 'SegmentConfigurationController@list');
+    Route::post('types', 'SegmentConfigurationController@types');
+    Route::get('{settings_segment}/retrieve', 'SegmentConfigurationController@retrieve');
+    Route::post('store', 'SegmentConfigurationController@store');
+    Route::post('update', 'SegmentConfigurationController@update');
+    Route::put('{settings_segment}/delete', 'SegmentConfigurationController@destroy');
+    Route::put('deleteAll', 'SegmentConfigurationController@destroyAll');
+
 });

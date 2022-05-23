@@ -11,6 +11,7 @@ use App\ContractLclFile;
 use App\Currency;
 use App\Direction;
 use App\FailRateLcl;
+use Carbon\Carbon;
 use App\FileTmp;
 use App\Harbor;
 use App\Surcharge;
@@ -458,6 +459,34 @@ class ImportationLclController extends Controller
         }//*/
     }
 
+    public function changeStatusTime($ncontractRq,$start){
+        $time = new \DateTime();
+        $now = $time->format('Y-m-d H:i:s');
+        $data_options = json_decode($ncontractRq->data,true);
+        $status_time = $data_options["status_time"];
+        if(array_key_exists($ncontractRq->status,$status_time)){
+            if($start == true){
+                if(count($status_time[$ncontractRq->status]) >= 1){
+                    $fechaEnd = Carbon::parse($now);
+                    $fechaStar = Carbon::parse($status_time[$ncontractRq->status][count($status_time[$ncontractRq->status])-1][1]);
+                    $time_exacto = $fechaEnd->diffInMinutes($fechaStar).' minutes';
+                    array_push($status_time[$ncontractRq->status][count($status_time[$ncontractRq->status])-1],$now,$time_exacto);
+                }elseif(count($status_time[$ncontractRq->status]) == 0){
+                    array_push($status_time[$ncontractRq->status],['admin',$now,$now,'0 minutes.']);
+                }
+            }else{
+                array_push($status_time[$ncontractRq->status],['admin',$now]);
+            }
+        } else {
+            $status_time[$ncontractRq->status] = [['admin',$now]];
+        }
+        $data_options["status_time"] = $status_time;
+        $ncontractRq->data = json_encode($data_options);
+        //dd($data_options,$ncontractRq->data );
+        $ncontractRq->update();
+        return $ncontractRq;
+    }
+
     // Importador de Rates LCL
     public function create(Request $request)
     {
@@ -893,6 +922,7 @@ class ImportationLclController extends Controller
 
         $Ncontract = NewContractRequestLcl::where('contract_id',$request['Contract_id'])->first();
         if(!empty($Ncontract)){
+            $Ncontract = $this->changeStatusTime($Ncontract,true);
             $Ncontract->status = 'Review';
             $Ncontract->save();
         }

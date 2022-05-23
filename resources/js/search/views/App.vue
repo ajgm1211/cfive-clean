@@ -409,7 +409,7 @@ export default {
         component.quoteData.inland_ports.destination.forEach(function(
           destinationPort
         ) {
-          if (destinationPort.id == rate.destination_port) {
+          if (destinationPort.id == rate.destiny_port) {
             duplicateMatch = true;
           }
         });

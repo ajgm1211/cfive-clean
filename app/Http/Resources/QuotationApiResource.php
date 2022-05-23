@@ -11,6 +11,7 @@ use App\Http\Traits\UtilTrait;
 use App\Http\Traits\QuotationApiTrait;
 use App\LocalChargeQuote;
 use App\LocalChargeQuoteLcl;
+use App\CompanyUserQuoteSegment;
 use Spatie\MediaLibrary\Models\Media;
 
 class QuotationApiResource extends JsonResource
@@ -23,6 +24,7 @@ class QuotationApiResource extends JsonResource
      */
     public function toArray($request)
     {
+        $id =$this->company_user->id;
         $data = [
             'id' => $this->id,
             'type' => $this->type,
@@ -63,14 +65,12 @@ class QuotationApiResource extends JsonResource
             "company" => $this->company()->select('id', 'business_name', 'address', 'phone', 'options')->first() ?? null,
             "contact" => $this->contact()->select('id', 'first_name', 'last_name', 'email', 'phone')->first() ?? null,
             "exchange_rates" => $this->pdf_options["exchangeRates"] ?? null,
-            'ocean_freight' => QuotationOceanFreightResource::collection($this->rates_v2()->SelectFields()->SelectChargeApi($this->type)->CarrierRelation()->get()),
-            'origin_charges' => QuotationLocalChargeResource::collection($this->localCharges($this->id, 1, $this->type)),
-            'destination_charges' => QuotationLocalChargeResource::collection($this->localCharges($this->id, 2, $this->type)),
-            'inlands' => $this->type == 'FCL' ? QuotationInlandResource::collection($this->inland()->SelectFields()->get()) : QuotationInlandLclResource::collection($this->inland_lcl()->SelectFields()->get()),
-            'original_origin_charges' => $this->type == 'FCL' ?
-                QuotationChargeResource::collection($this->charge()->where('charges.type_id', 1)->SelectFields()->get()) : QuotationChargeLclResource::collection($this->charge_lcl()->where('charge_lcl_airs.type_id', 1)->SelectFields()->get()),
-            'original_destination_charges' => $this->type == 'FCL' ?
-                QuotationChargeResource::collection($this->charge()->where('charges.type_id', 2)->SelectFields()->get()) : QuotationChargeLclResource::collection($this->charge_lcl()->where('charge_lcl_airs.type_id', 2)->SelectFields()->get()),
+            'ocean_freight' => (new QuotationOceanFreightResource($this->rates_v2()->SelectFields()->SelectChargeApi($this->type)->CarrierRelation()->get()))->segmentId($this->getSegmentIdByType($this->company_user->id,1)),
+            'origin_charges' => (new QuotationLocalChargeResource($this->localCharges($this->id, 1, $this->type)))->segmentId($this->getSegmentIdByType($this->company_user->id,2)),
+            'destination_charges' => (new QuotationLocalChargeResource($this->localCharges($this->id, 2, $this->type)))->segmentId($this->getSegmentIdByType($this->company_user->id,3)),
+            'inlands' => $this->type == 'FCL' ? (new QuotationInlandResource($this->inland()->SelectFields()->get()))->segmentId($this->getSegmentIdByType($this->company_user->id,4)) : (new QuotationInlandLclResource($this->inland_lcl()->SelectFields()->get()))->segmentId($this->getSegmentIdByType($this->company_user->id,4)),
+            'original_origin_charges' => $this->type == 'FCL' ? (new QuotationChargeResource($this->charge()->where('charges.type_id', 1)->SelectFields()->get()))->segmentId($this->getSegmentIdByType($this->company_user->id,2)) : (new QuotationChargeLclResource($this->charge_lcl()->where('charge_lcl_airs.type_id', 1)->SelectFields()->get()))->segmentId($this->getSegmentIdByType($this->company_user->id,2)),
+            'original_destination_charges' => $this->type == 'FCL' ? (new QuotationChargeResource($this->charge()->where('charges.type_id', 2)->SelectFields()->get()))->segmentId($this->getSegmentIdByType($this->company_user->id,3)) : (new QuotationChargeLclResource($this->charge_lcl()->where('charge_lcl_airs.type_id', 2)->SelectFields()->get()))->segmentId($this->getSegmentIdByType($this->company_user->id,3)),
         ];
 
         return $data;
@@ -127,7 +127,7 @@ class QuotationApiResource extends JsonResource
                     ->Quote($id)->GetPort()->Type($type)->get();
                 break;
             case 'LCL':
-                $localcharges = LocalChargeQuoteLcl::select('id', 'price', 'units', 'total', 'charge', 'currency_id', 'port_id', 'calculation_type_id', 'provider_name', 'quote_id', 'sale_term_code_id')
+                $localcharges = LocalChargeQuoteLcl::select('id', 'price', 'profit', 'units', 'total', 'charge', 'currency_id', 'port_id', 'calculation_type_id', 'provider_name', 'surcharge_id', 'quote_id', 'sale_term_code_id')
                     ->Quote($id)->GetPort()->Type($type)->get();
                 break;
         }
@@ -200,5 +200,11 @@ class QuotationApiResource extends JsonResource
     
         return strtr($valor, $utf8_ansi2);      
     
+    }
+
+    public function getSegmentIdByType($company_user_id, $type){
+        $resultSegment = CompanyUserQuoteSegment::where('company_user_id', $company_user_id)->where('quote_segment_type_id', $type)->first();
+        $result = !empty($resultSegment) ?  $resultSegment->segment_id : null;
+        return $result;
     }
 }

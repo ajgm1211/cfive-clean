@@ -2,6 +2,8 @@
 
 namespace App\Http\Traits;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\AutomaticRate;
 use App\Charge;
 use App\ChargeLclAir;
@@ -17,6 +19,8 @@ use App\SaleTermV2;
 use App\SendQuote;
 use App\User;
 use App\Surcharge;
+use App\LocalChargeQuoteLclTotal;
+use App\LocalChargeQuoteTotal;
 use Illuminate\Support\Collection as Collection;
 
 trait QuoteV2Trait
@@ -1887,8 +1891,11 @@ trait QuoteV2Trait
         return json_encode($array);
     }
 
-    public function formatApiResult($result, $containerGroup, $containers)
+    public function formatApiResult($result, $search_data)
     {
+        $containerGroup = $search_data['selectedContainerGroup'];
+        $containers = $search_data['containers'];
+
         $user = \Auth::user('web');
         $company_user = $user->worksAt();
         $company_user_id = $company_user->id;
@@ -1949,7 +1956,7 @@ trait QuoteV2Trait
                     $charge['type_id'] = 3;
                 }
 
-                if($charge['calculationType'] == 'Per Container' || $charge['calculationType'] == null || $charge['calculationType'] == 'PER CONTAINER' ){
+                if(in_array($charge['calculationType'],['Per Container', 'PER CONTAINER', null])){
                     if($containerGroup['id'] == 1){
                         $charge['calculationtype_id'] = 5;
                     }elseif($containerGroup['id'] == 2){
@@ -1959,7 +1966,7 @@ trait QuoteV2Trait
                     }elseif($containerGroup['id'] == 4){
                         $charge['calculationtype_id'] = 21;
                     }
-                }elseif($charge['calculationType'] == 'Per Doc' || $charge['calculationType'] == 'Per Document' || $charge['calculationType'] == 'PER DOC' ){
+                }elseif(in_array($charge['calculationType'],['Per Doc', 'Per Document', 'PER DOC', 'PER DOCUMENT'])){
                     if($containerGroup['id'] == 1){
                         $charge['calculationtype_id'] = 9;
                     }elseif($containerGroup['id'] == 2){
@@ -1971,11 +1978,25 @@ trait QuoteV2Trait
                     }
                 }
 
-                $charge['amount'] = [];
-
                 $i = 0;
                 foreach($charge['containers'] as $cont){
-                    $charge['amount']['c'.$containers[$i]['code']] = $cont['amount'];
+                    if(!isset($rate_markups['m'.$containers[$i]['code']])){
+                        $rate_markups['m'.$containers[$i]['code']] = 0;
+                    }
+                    
+                    if(!isset($cont['priceLevel'])){
+                        $charge['amount']['c'.$containers[$i]['code']] = $cont['amount'];
+                        $charge['markups']['m'.$containers[$i]['code']] = 0;
+                    } else {
+                        $charge['amount']['c'.$containers[$i]['code']] = $cont['chargeAmount'];
+                        $charge['markups']['m'.$containers[$i]['code']] = $cont['priceLevel']['amount'];
+
+                        if($key == "freightSurcharges"){
+                            $rate_markups['m'.$containers[$i]['code']] += $cont['priceLevel']['amount'];
+                        }
+                    }
+                    
+                    $charge['total']['c'.$containers[$i]['code']] = $cont['amount'];
                     $i++;
                 }
 
@@ -1983,49 +2004,101 @@ trait QuoteV2Trait
             }   
         }
 
+        if(isset($rate_markups)){
+            $result['rate_markups'] = $rate_markups;
+        }
+
         return $result;
     }
-    public function convertToCurrencyQuote(Currency $fromCurrency, Currency $toCurrency, Array $amounts,$quote)
+
+    public function convertToCurrencyQuote(Currency $fromCurrency, Currency $toCurrency, Array $amounts, $quote)
     {    
-       if (isset($quote['pdf_options']['exchangeRates'])) {
-            foreach($quote['pdf_options']['exchangeRates'] as $key=>$exchangeRate){
-                
-                if ($fromCurrency->alphacode==$exchangeRate['alphacode']) {
-                    $exchangeRatefrom=$quote['pdf_options']['exchangeRates'][$key];
-                }elseif($toCurrency['alphacode']==$exchangeRate['alphacode']){
-                    $exchangeRateTo=$quote['pdf_options']['exchangeRates'][$key];
-                }
-            }
-        } 
-        if (isset($exchangeRatefrom)) {
-            $fromCurrency=$exchangeRatefrom;
-            $inputConversion=$exchangeRatefrom['exchangeUSD'];
-        }
-        else {
-            $inputConversion=$fromCurrency->rates;
-        }
-        if (isset($exchangeRateTo)) {
-            $toCurrency=$exchangeRateTo;
-            $outputConversion=$exchangeRateTo['exchangeUSD'];
-        }else {
-            $outputConversion=$toCurrency->rates;
+        if ($fromCurrency['alphacode'] == $toCurrency['alphacode']) {                
+            return $amounts;
         }
 
-        if ($fromCurrency['alphacode'] != $toCurrency['alphacode']) {
-            foreach ($amounts as $container => $price) {
-                $convertedPrice = $price / $inputConversion;
-                $amounts[$container] = isDecimal($convertedPrice,true);
-            }
-            if($toCurrency['alphacode']=='USD'){
-                return $amounts;
-            }else{
-                foreach ($amounts as $container => $price) {
-                    $convertedPrice = $price * $outputConversion;
-                    $amounts[$container] = isDecimal($convertedPrice,true);
+        $exchangeRates = $quote['pdf_options']['exchangeRates'];
+        $factorType = ['direct', 'reverse'];
+
+        if($exchangeRates) {
+            foreach($exchangeRates as $key=>$exchangeRate){            
+                if ($fromCurrency->alphacode == $exchangeRate['alphacode']) {
+                    $exchangeRatefrom=$exchangeRates[$key];
+                }
+                if($toCurrency->alphacode == $exchangeRate['alphacode']){
+                    $exchangeRateTo=$exchangeRates[$key];
                 }
             }
         }
+        
+        // Si toCurrency = USD O EUR, usar el factor de conversión de pdf_options        
+        if($toCurrency->alphacode == 'USD') {               
+            return $this->convertToCurrencyPrevious($amounts, $exchangeRatefrom['exchangeUSD'], $factorType[0]);
+        }
+        if($toCurrency->alphacode == 'EUR') {
+            return $this->convertToCurrencyPrevious($amounts, $exchangeRatefrom['exchangeEUR'], $factorType[0]);
+        }
+    
+        //Si no, primero convertir a USD luego a la moneda destino         
+        $usdExchangeRateFrom = $this->getUsdExchangeRate($exchangeRatefrom, $fromCurrency);
+        $usdExchangeRateTo = $this->getUsdExchangeRate($exchangeRateTo, $toCurrency);        
+        $amountsUSD = $this->convertToCurrencyPrevious($amounts, $usdExchangeRateFrom, $factorType[0]);
 
+        return $this->convertToCurrencyPrevious($amountsUSD, $usdExchangeRateTo, $factorType[1]);
+    }
+
+    public function convertToCurrencyPrevious($amounts, $exchangeRate, $factorType) {
+        foreach ($amounts as $container => $price) {
+            if($factorType == 'direct') {
+                $convertedPrice = $price / $exchangeRate;
+            } 
+            if($factorType == 'reverse') {
+                $convertedPrice = $price * $exchangeRate;
+            }
+            $amounts[$container] = isDecimal($convertedPrice,true);
+        }
         return $amounts;
+    }
+
+    public function createLocalChargeTotal(Array $params)
+    {
+        $quote = QuoteV2::findOrFail($params['quote_id']);
+        $currency_id = Auth::user()->companyUser->currency_id;
+        
+        if($quote->type == "FCL"){
+            $local_charge_total = LocalChargeQuoteTotal::where(['quote_id' => $quote->id, 'type_id' => $params['type_id'], 'port_id' =>  $params['port_id']])->first();
+            
+            if(empty($local_charge_total)){
+                $local_charge_total = LocalChargeQuoteTotal::create([
+                    'total' => [],
+                    'quote_id' => $quote->id,
+                    'port_id' => $params['port_id'],
+                    'currency_id' => $currency_id,
+                    'type_id' => $params['type_id']
+                ]);
+            }
+        } else if($quote->type == "LCL"){
+            $local_charge_total = LocalChargeQuoteLclTotal::where(['quote_id' => $quote->id, 'type_id' => $params['type_id'], 'port_id' =>  $params['port_id']])->first();
+
+            if(empty($local_charge_total)){
+                $local_charge_total = LocalChargeQuoteLclTotal::create([
+                    'total' => 0,
+                    'quote_id' => $quote->id,
+                    'port_id' => $params['port_id'],
+                    'currency_id' => $currency_id,
+                    'type_id' => $params['type_id']
+                ]);
+            }
+        }
+    }
+
+    public function getUsdExchangeRate($exchangeRate, $currency) {
+        if (isset($exchangeRate)) {
+            $inputConversion=$exchangeRate['exchangeUSD'];
+        }
+        else { 
+            $inputConversion=$currency->rates;
+        }
+        return $inputConversion;
     }
 }
