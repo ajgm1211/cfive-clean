@@ -15,7 +15,7 @@ class CompanyUser extends Model implements Auditable
         'options' => 'array',
     ];
 
-    protected $fillable = ['name', 'address', 'phone', 'currency_id', 'logo', 'pdf_language', 'type_pdf', 'pdf_ammounts', 'decimals'];
+    protected $fillable = ['id','name', 'address', 'phone', 'currency_id', 'logo', 'pdf_language', 'type_pdf', 'pdf_ammounts', 'decimals'];
 
     public function user()
     {
@@ -108,5 +108,9 @@ class CompanyUser extends Model implements Auditable
         }
 
         return $due_date;
+    }
+    
+    public function companyUserQuoteSegment(){
+        return $this->hasMany('App\CompanyUserQuoteSegment');
     }
 }

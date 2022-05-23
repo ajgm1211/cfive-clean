@@ -868,6 +868,10 @@ Route::group(['prefix' => 'inlandL', 'middleware' => ['auth']], function () {
 });
 Route::resource('inlandL', 'InlandLocationController')->middleware('auth');
 
+Route::group(['prefix' => 'segment-configuration', 'middleware' => ['auth']], function () {
+    Route::get('/', 'SegmentConfigurationController@index')->name('segments_configuration.index');
+});
+
 // Inlands Distances
 Route::group(['prefix' => 'inlandD', 'middleware' => ['auth']], function () {
     Route::get('add/{id}', 'InlandDistanceController@add')->name('inlandD.add');
@@ -1077,6 +1081,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quote/{quote}/update', 'QuotationController@update')->middleware('check_company:quote');
     Route::post('api/quote/{quote}/updateSearch', 'QuotationController@updateSearchOptions')->middleware('check_company:quote');
     Route::get('/api/quote/{quote}/setCostSheet/{autorate}', 'QuotationController@setCostSheet');
+    Route::get('/api/quote/filters', 'QuotationFilterController@getFilterOptions');
 
     /** AutomaticRate routes**/
     Route::get('api/quotes/{quote}/automatic_rate', 'AutomaticRateController@list')->middleware('check_company:quote');

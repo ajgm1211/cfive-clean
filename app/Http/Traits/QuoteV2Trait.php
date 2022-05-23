@@ -1980,17 +1980,16 @@ trait QuoteV2Trait
 
                 $i = 0;
                 foreach($charge['containers'] as $cont){
+                    if(!isset($rate_markups['m'.$containers[$i]['code']])){
+                        $rate_markups['m'.$containers[$i]['code']] = 0;
+                    }
+                    
                     if(!isset($cont['priceLevel'])){
                         $charge['amount']['c'.$containers[$i]['code']] = $cont['amount'];
                         $charge['markups']['m'.$containers[$i]['code']] = 0;
-                        $rate_markups['m'.$containers[$i]['code']] = 0;
                     } else {
                         $charge['amount']['c'.$containers[$i]['code']] = $cont['chargeAmount'];
                         $charge['markups']['m'.$containers[$i]['code']] = $cont['priceLevel']['amount'];
-
-                        if(!isset($rate_markups['m'.$containers[$i]['code']])){
-                            $rate_markups['m'.$containers[$i]['code']] = 0;
-                        }
 
                         if($key == "freightSurcharges"){
                             $rate_markups['m'.$containers[$i]['code']] += $cont['priceLevel']['amount'];

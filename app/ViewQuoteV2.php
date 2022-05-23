@@ -28,6 +28,18 @@ class ViewQuoteV2 extends Model
         return $query->where('company_user_id', '=', $company_id)
                      ->where('user_id', '=', $user_id);
     }
+    
+    public function scopeFilterByDelegation($query)
+    {
+        $user_id = Auth::user()->id;
+        $user_delegation =UserDelegation::where('users_id','=',$user_id)->first();
+        $delegation=Delegation::find($user_delegation['delegations_id']);
+        $id_delegation = $delegation['id'];
+        return $query->select('view_quote_v2s.*')
+                    ->join('users_delegations','view_quote_v2s.user_id','=', 'users_delegations.users_id')
+                    ->where('users_delegations.delegations_id', '=', $id_delegation )
+                    ->orderBy('view_quote_v2s.id','DESC');
+    }
 
     public function rates_v2()
     {

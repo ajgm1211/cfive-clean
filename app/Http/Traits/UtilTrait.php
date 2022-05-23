@@ -254,4 +254,9 @@ trait UtilTrait
         return true;
     }
 
+    public function segmentId ($value)
+    {
+        $this->segment_id = $value;
+        return $this;
+    }
 }

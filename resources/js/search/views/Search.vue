@@ -199,89 +199,7 @@
       <!-- FIN INPUTS DEL SEARCH -->
 
       <!-- INPUT FROM AND TO PORT -->
-      <div v-if="ptdActive || dtpActive || dtdActive" class="row mr-0 ml-0">
-        <div class="col-lg-1"></div>
-
-        <div
-          v-if="ptdActive"
-          class="col-lg-3"
-          style="padding-left: 30px; padding-right: inherit"
-        ></div>
-
-        <!-- Origin City -->
-        <div
-          v-if="dtpActive || dtdActive"
-          class="col-lg-3 mb-2 origen-search input-search-form"
-        >
-          <multiselect
-            v-if="originDistance"
-            v-model="searchRequest.originAddress"
-            disabled="true"
-            :multiple="false"
-            :close-on-select="true"
-            :clear-on-select="true"
-            :show-labels="false"
-            :options="originAddressOptions"
-            placeholder="Under construction"
-            label="display_name"
-            track-by="display_name"
-            class="s-input"
-          >
-          </multiselect>
-          <gmap-autocomplete
-            v-else
-            @place_changed="setOriginPlace"
-            @input="commitOriginAutocomplete"
-            :value="originAutocompleteValue"
-            class="form-input form-control"
-            placeholder="Start typing an address"
-          >
-          </gmap-autocomplete>
-          <img
-            src="/images/city.svg"
-            class="img-icon img-icon-left img-icon-origin"
-            alt="port"
-          />
-        </div>
-
-        <!-- Destination City -->
-        <div
-          v-if="ptdActive || dtdActive"
-          class="col-lg-3 mb-2 input-search-form"
-        >
-          <multiselect
-            v-if="destinationDistance"
-            v-model="searchRequest.destinationAddress"
-            disabled="true"
-            :multiple="false"
-            :close-on-select="true"
-            :clear-on-select="true"
-            :show-labels="false"
-            :options="destinationAddressOptions"
-            placeholder="Under construction"
-            label="display_name"
-            track-by="display_name"
-            class="s-input"
-          >
-          </multiselect>
-          <gmap-autocomplete
-            v-else
-            @place_changed="setDestinationPlace"
-            @input="commitDestinationAutocomplete"
-            :value="destinationAutocompleteValue"
-            class="form-input form-control"
-            placeholder="Start typing an address"
-          >
-          </gmap-autocomplete>
-          <img
-            src="/images/city.svg"
-            class="img-icon img-icon-left"
-            alt="port"
-          />
-        </div>
-      </div>
-      <!-- FIN INPUT FROM AND TO PORT -->
-
+      
       <!-- ADDITIONAL SERVICES -->
       <b-collapse :visible="additionalVisible" id="collapse-1" class="mt-3">
         <h6 class="t-as mt-5 mb-3 ml-4">ADDITIONAL SERVICES</h6>
@@ -2465,40 +2383,6 @@ export default {
     },
   },
   watch: {
-
-    /**deliveryType: function () {
-            if (this.deliveryType.id == 1) {
-                this.ptdActive = false;
-                this.dtpActive = false;
-                this.dtdActive = false;
-                return;
-            } else if (this.deliveryType.id == 2) {
-                this.dtpActive = false;
-                this.dtdActive = false;
-
-                this.ptdActive = !this.ptdActive;
-
-                this.setDestinationAddressMode();
-                return;
-            } else if (this.deliveryType.id == 3) {
-                this.ptdActive = false;
-                this.dtdActive = false;
-
-                this.dtpActive = !this.dtpActive;
-
-                this.setOriginAddressMode();
-                return;
-            } else if (this.deliveryType.id == 4) {
-                this.ptdActive = false;
-                this.dtpActive = false;
-
-                this.dtdActive = !this.dtdActive;
-
-                this.setDestinationAddressMode();
-                this.setOriginAddressMode();
-                return;
-            }
-        },**/
 
     selectedContainerGroup: function() {
       let component = this;

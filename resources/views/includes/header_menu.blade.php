@@ -488,6 +488,17 @@
                             </li>
                 
                             @endrole
+
+                            @role('administrator|company')
+                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                <a href="{{route('segments_configuration.index')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-user-settings"></i>
+                                    <span class="m-menu__link-text">
+                                        Segments Configuration
+                                    </span>
+                                </a>
+                            </li>
+                            @endrole
                             @if(Session::has('impersonate'))
                             <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
                                 <a href="{{route('impersonate.revert')}}" class="m-menu__link ">
