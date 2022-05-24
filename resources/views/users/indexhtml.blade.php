@@ -171,7 +171,7 @@
                             </td>
                             <td>@if($arr->companyUser){{ $arr->companyUser->name }}@endif</td>
                             <td>
-                                {{ $arr->userD ?? "----" }}
+                                {{ $arr->user_delegation[0]->name ?? "----" }}
                             </td>
                             @hasrole('administrator')
                             <td>

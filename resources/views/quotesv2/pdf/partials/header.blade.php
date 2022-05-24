@@ -8,6 +8,12 @@
             @case('Portuguese')
                 {{ App::setLocale('pt') }}
                 @break
+            @case('Italian')
+                {{ App::setLocale('it') }}
+                @break
+            @case('Catalan')
+                {{ App::setLocale('ca') }}
+                @break
             @default
                 {{ App::setLocale('en') }}
         @endswitch

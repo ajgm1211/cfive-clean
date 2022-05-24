@@ -234,4 +234,10 @@ trait UtilTrait
 
         return $is_unique;
     }
+
+    public function segmentId ($value)
+    {
+        $this->segment_id = $value;
+        return $this;
+    }
 }

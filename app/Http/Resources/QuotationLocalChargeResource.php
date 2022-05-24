@@ -19,27 +19,40 @@ class QuotationLocalChargeResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
+    protected $segment_id;
+    
     public function toArray($request)
     {
-        $provider = Provider::where('name', $this->provider_name)->first();
+       
 
-        return [
-            'id' => $this->id,
-            'charge' => $this->charge,
-            'charge_id' => $this->surcharge_id ?? $this->sale_term_code_id ?? null,
-            'sale_code_id' => $this->sale_term_code_id ?? null,
-            'charge_options' => $this->surcharge->options ?? null,
-            'calculation_type' => $this->calculation_type->name ?? null,
-            'calculation_type_code' => $this->calculation_type->unique_code ?? null,
-            'source' => $this->source == 2 ? 'templates':'charges',
-            'port' => $this->port->display_name ?? null,
-            'price' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($this->price) : $this->price,
-            'profit' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($this->profit) : $this->profit,
-            'total' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($this->total) : $this->total,
-            'units' => $this->units ?? null,
-            'currency' => $this->currency->alphacode ?? null,
-            'provider' => new ProvidersResource($provider)
-        ];
+        return $this->resource->map(function($item){
+            $provider = Provider::where('name', $item->provider_name)->first();
+            return [
+                'id' => $item->id,
+                'segment_id' => $this->segment_id  ?? null,
+                'charge' => $item->charge,
+                'charge_id' => $item->surcharge_id ?? $item->sale_term_code_id ?? null,
+                'sale_code_id' => $item->sale_term_code_id ?? null,
+                'charge_options' => $item->surcharge->options ?? null,
+                'calculation_type' => $item->calculation_type->name ?? null,
+                'calculation_type_code' => $item->calculation_type->unique_code ?? null,
+                'source' => $item->source == 2 ? 'templates':'charges',
+                'port' => $item->port->display_name ?? null,
+                'price' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($item->price) : $item->price,
+                'profit' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($item->profit) : $item->profit,
+                'total' => is_a($this->resource, "App\LocalChargeQuote") ? $this->arrayToFloat($item->total) : $item->total,
+                'units' => $item->units ?? null,
+                'currency' => $item->currency->alphacode ?? null,
+                'provider' => new ProvidersResource($provider)
+            ];
+        });
 
     }
+
+    public function segmentId ($value)
+    {
+        $this->segment_id = $value;
+        return $this;
+    }
+
 }
