@@ -2469,9 +2469,7 @@ export default {
       if (component.allCarriers) {
         component.carriers = [];
         // Check all
-        component.datalists.carriers.forEach(function(carrier) {
-          component.carriers.push(carrier);
-        });
+        component.carriers = [component.allCarriersIn.value]
       } else {
         component.carriers = [];
       }
@@ -2500,6 +2498,13 @@ export default {
       return this.carrierOptions.filter((c) =>
         c.text.toLowerCase().includes(this.carrierSearchQuery.toLowerCase())
       );
+    },
+    allCarriersIn(){
+      return this.carrierOptions.find(element => {
+          if (element.text.includes('ALL')) {
+            return true;
+          }
+        })
     },
     sortedContainers(){
       return this.containers.sort((a,b) => a.id-b.id);
