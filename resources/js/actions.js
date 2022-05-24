@@ -347,16 +347,13 @@ export default {
         },
     },
     quotes: {
-        filterOptions() {
-            return api.call('get', `/api/quote/filters`);
-        },
-        list(params, callback, route, page) {
-            api.call('get', '/api/quote/list', {params, page})
-            .then(response => {
-                callback(null, response.data);
-            }).catch(error => {
-                callback(error, error.response.data);
-            });
+        list(params, callback) {
+            api.call('get', '/api/quote/list', { params })
+                .then(response => {
+                    callback(null, response.data);
+                }).catch(error => {
+                    callback(error, error.response.data);
+                });
         },
         create(data, route) {
             return api.call('post', `/api/quote/store`, data);
