@@ -44,9 +44,10 @@
         />
         <ToWhiteLabelModal
           v-if="modalWhiteLabel"
+          :moduleTitle="'Companies'"
           :title="'To WhiteLabel'"
           :action="'Add'"
-          :selected="selectForTransfer"
+          :selected="selectedForModal"
           @cancel="modalWhiteLabel = false"
           @transferToWhiteLabel="transferToWhiteLabel"
         />
@@ -54,7 +55,7 @@
           v-if="exportEntityModal"
           :title="'Companies'"
           :action="'Export'"
-          :exportLink="'companies/v2/export-companies'"
+          :exportLink="'/companies/v2/export-companies'"
           @cancel="exportEntityModal = false"
         />
         
@@ -188,6 +189,11 @@ export default {
     toggleToWhiteLabel: function (){
       return this.AddToWhiteLabel
     },
+    selectedForModal(){
+      return this.selectForTransfer.map(item =>{
+        return {name: item.business_name}
+      })
+    },
     ...mapState('auth', ['user'])
   },
   methods: {
@@ -212,6 +218,9 @@ export default {
     },
     exportEntityModalShow(){
       this.exportEntityModal = true
+    },
+    defaultEvent(){
+      console.log('click')
     }
   },
   created(){

@@ -1,12 +1,12 @@
 
 <template>
   <div class="col-12">
-    <div class="back-btn" @click="$router.push('/companies/v2');">
+    <div class="back-btn" @click="$router.push('/contacts/v2');">
         <LeftArrow /> <span>back</span>
     </div>
     <div class="head">
         <div class="head-title">
-            <h2>Failed Companies</h2>
+            <h2>Failed Contacts</h2>
         </div>
         <div class="head-btns">
         </div>
@@ -16,8 +16,8 @@
         :fields="fields"
         :actions="actions"
         :filter="true"
-        :simpleSelect="false"
         :massiveSelect="false"
+        :simpleSelect="false"
         :massiveactions="[]"
         :singleActions="['Fix']"
         :totalResults="totalResults"
@@ -43,33 +43,35 @@
 </template>
 
 <script>
-import LeftArrow from '../../components/icons/LeftArrow'
-import DataTable from '../../components/common/DataTable'
-import actions from '../../store/modules/company/actionFailed'
-import ModalFrom from '../../components/common/Modals/ModalFrom'
 
+import toastr from "toastr"
+import DataTable from '../../components/common/DataTable'
+import LeftArrow from "../../components/icons/LeftArrow"
+import actions from '../../store/modules/contact/actionFailed'
+import ModalFrom from '../../components/common/Modals/ModalFrom'
 export default {
-  components: {DataTable, LeftArrow, ModalFrom},
+  components: {DataTable, ModalFrom, LeftArrow},
   data() {
     return {
+        dataEstructure:{},
         totalResults:true,
         classTable:"table table-striped table-responsive",
         actions:actions,
         fields: [
           { key: "id", label: "ID", filterIsOpen:false },
-          { key: "business_name", label: "Business Name", filterIsOpen:false },
-          { key: "phone", label: "Phone", filterIsOpen:false },
-          { key: "email", label: "Email", filterIsOpen:false },
-          { key: "address", label: "Address", filterIsOpen:false },
-          { key: "tax_number", label: "Tax Number", filterIsOpen:false },
+          { key: "first_name", label: "First Name", filterIsOpen: false },
+          { key: "last_name", label: "Last Name", filterIsOpen: false },
+          { key: "email", label: "Email", filterIsOpen: false },
+          { key: "phone", label: "Phone", filterIsOpen: false },
+          { key: "position", label: "Position", filterIsOpen: false },
           { key: "created_at", label: "Created at", filterIsOpen:false },
         ],
         showForm:false,
         modal_fields: [
           {
             type: "input",
-            label: "Business Name",
-            name: "business_name",
+            label: "First Name",
+            name: "first_name",
             error:false,
             rules: {
               required: true,
@@ -77,8 +79,8 @@ export default {
           },
           {
             type: "input",
-            label: "Phone",
-            name: "phone",
+            label: "Last Name",
+            name: "last_name",
             error:false,
             rules: {
               required: true,
@@ -95,8 +97,8 @@ export default {
           },
           {
             type: "input",
-            label: "Address",
-            name: "address",
+            label: "Phone",
+            name: "phone",
             error:false,
             rules: {
               required: true,
@@ -104,8 +106,8 @@ export default {
           },
           {
             type: "input",
-            label: "Tax Number",
-            name: "tax_number",
+            label: "Position",
+            name: "position",
             error:false,
             rules: {
               required: true,

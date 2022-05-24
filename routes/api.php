@@ -90,6 +90,7 @@ Route::group(['prefix' => 'v2'], function () {
 
         // Providers
         Route::put('provider/{id}/update/refcode', 'ProvidersController@updateRefCode');
+        Route::get('getContract', 'ApiControllerV2@getContract');
     });
 });
 
@@ -186,11 +187,16 @@ Route::group(['prefix'=>'companies','middleware' => 'auth:api'], function () {
     Route::put('deleteAll', 'CompanyV2Controller@destroyAll');
     Route::get('retrieve/{company}', 'CompanyV2Controller@retrieve');
     Route::get('template', 'CompanyV2Controller@downloadTemplateFile');
-    Route::get('failed/list', 'CompanyV2Controller@failedList');
     Route::get('{company}/contacts', 'CompanyV2Controller@contactByCompanyList');
     Route::post('toWhiteLabel', 'CompanyV2Controller@transferToWhiteLabel');
     Route::get('export/{format}', 'CompanyV2Controller@exportCompanies');
     Route::post('create-massive', 'CompanyV2Controller@createCompaniesMassive');
+
+    Route::group(['prefix'=>'failed'],function(){
+        Route::get('list', 'CompanyV2Controller@failedList');
+        Route::get('retrieve/{failed}', 'CompanyV2Controller@failedRetrieve');
+        Route::post('{failed}/update', 'CompanyV2Controller@failedUpdate');
+    });
     
 });
 
@@ -198,10 +204,18 @@ Route::group(['prefix'=>'contacts','middleware' => 'auth:api'], function () {
     Route::get('data', 'ContactV2Controller@data');
     Route::get('list', 'ContactV2Controller@list');
     Route::post('store', 'ContactV2Controller@store');
-    Route::post('{company}/update', 'ContactV2Controller@update');
-    Route::post('{company}/duplicate', 'ContactV2Controller@duplicate');
-    Route::put('{company}/delete', 'ContactV2Controller@destroy');
+    Route::post('{contact}/update', 'ContactV2Controller@update');
+    Route::post('{contact}/duplicate', 'ContactV2Controller@duplicate');
+    Route::put('{contact}/delete', 'ContactV2Controller@destroy');
     Route::put('deleteAll', 'ContactV2Controller@destroyAll');
-    Route::get('retrieve/{company}', 'ContactV2Controller@retrieve');
+    Route::get('retrieve/{contact}', 'ContactV2Controller@retrieve');
     Route::get('template', 'ContactV2Controller@downloadTemplateFile');
+    Route::get('getCompanies', 'ContactV2Controller@getCompanies');
+    
+    Route::group(['prefix'=>'failed'],function(){
+        Route::get('list', 'ContactV2Controller@failedList');
+        Route::get('retrieve/{failed}', 'ContactV2Controller@failedRetrieve');
+        Route::post('{failed}/update', 'ContactV2Controller@failedUpdate');
+    });
+    
 });

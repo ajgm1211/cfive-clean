@@ -5,7 +5,7 @@
           <h2>Contacts</h2>
         </div>
       <div class="head-btns">
-        <MainButton @click="createMasive(false)" text="Add Companies" :add="true" />
+        <MainButton @click="createMasive(false)" text="Add Contacts" :add="true" />
         <DropdownButton 
             :items="items"
             :btnText="'Import'"
@@ -24,6 +24,7 @@
         :classTable="classTable"
         :toggleAddToWhiteLabel="toggleToWhiteLabel"
         @toggleButtonWhiteLabel="toggleButtonWhiteLabel"
+        @selectedData="selectedData"
       ></DataTable>
     </div>
     <div>
@@ -38,9 +39,10 @@
       />
       <ToWhiteLabelModal
         v-if="modalWhiteLabel"
+        :moduleTitle="'Contacts'"
         :title="'To WhiteLabel'"
         :action="'Add'"
-        :selected="selectForTransfer"
+        :selected="selectedForModal"
         @cancel="modalWhiteLabel = false"
         @transferToWhiteLabel="transferToWhiteLabel"
       />
@@ -48,7 +50,7 @@
         v-if="exportEntityModal"
         :title="'Contacts'"
         :action="'Export'"
-        :exportLink="'contacts/v2/export-contacts'"
+        :exportLink="'/contacts/v2/export-contacts'"
         @cancel="exportEntityModal = false"
       />
     </div>
@@ -136,6 +138,11 @@ export default {
       return this.AddToWhiteLabel
     },
     ...mapState("auth", ["user"]),
+    selectedForModal(){
+      return this.selectForTransfer.map(item =>{
+        return {name: item.first_name +' '+ item.last_name}
+      })
+    }
   },
   methods: {
     onEdit(data) {

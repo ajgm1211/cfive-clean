@@ -10,11 +10,11 @@
           <b-container>
               <b-row>
                   <b-col cols="12" md="12" class="mb-2">
-                      <p>Are you sure to transfer these {{title}} to WhiteLabel?</p>
+                      <p>Are you sure to transfer these {{moduleTitle}} to WhiteLabel?</p>
                   </b-col>
                   <b-col cols="12" md="12" class="mb-2">
-                    <b-list-group v-for="(company, companyKey) in selected" :key="companyKey">
-                      <b-list-group-item>{{company.business_name}}</b-list-group-item>
+                    <b-list-group v-for="(item, itemKey) in selected" :key="itemKey">
+                      <b-list-group-item>{{item.name}}</b-list-group-item>
                     </b-list-group>
                     <p>selected {{title}}: {{selected.length}}</p>
                   </b-col>
@@ -59,6 +59,9 @@ export default {
       default(){
         return []
       }
+    },
+    moduleTitle:{
+      type:String
     }
   },
   methods: {
