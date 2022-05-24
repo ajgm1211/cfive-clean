@@ -48,23 +48,25 @@ class GenerateQuotePdf extends Command
 
         foreach ($quotes as $value) {
             try {
-                $upload = true;
                 $quote = $value->quote;
-                
-                switch ($quote->type) {
-                    case "FCL":
-                        $pdf = new FclPdf($upload);
-                        $pdf->generate($quote);
-                        $quote->pdf_quote_status()->update(['status' => true]);
-
-                        break;
-                    case "LCL":
-                        $pdf = new LclPdf($upload);
-                        $pdf->generate($quote);
-                        $quote->pdf_quote_status()->update(['status' => true]);
-
-                        break;
+                if($quote != null){
+                    $upload = true;
+                    switch ($quote->type) {
+                        case "FCL":
+                            $pdf = new FclPdf($upload);
+                            $pdf->generate($quote);
+                            $quote->pdf_quote_status()->update(['status' => true]);
+    
+                            break;
+                        case "LCL":
+                            $pdf = new LclPdf($upload);
+                            $pdf->generate($quote);
+                            $quote->pdf_quote_status()->update(['status' => true]);
+    
+                            break;
+                    }
                 }
+
             } catch (Exception $e) {
                 \Log::error("Error creating API PDF: " . $e->getMessage() . " for quote: " . $value->quote_id . " in line : " . $e->getLine());
                 continue;
