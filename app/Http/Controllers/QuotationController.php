@@ -21,6 +21,8 @@ use App\Currency;
 use App\DeliveryType;
 use App\DestinationType;
 use App\Harbor;
+use App\Delegation;
+use App\UserDelegation;
 use App\Http\Resources\QuotationListResource;
 use App\Http\Resources\QuotationResource;
 use App\Http\Resources\CostSheetResource;
@@ -45,6 +47,7 @@ use App\Http\Traits\MixPanelTrait;
 use App\ViewQuoteV2;
 use App\LocalChargeQuote;
 
+
 class QuotationController extends Controller
 {
     use QuoteV2Trait, SearchTrait, MixPanelTrait;
@@ -57,13 +60,23 @@ class QuotationController extends Controller
     function list(Request $request)
     {   
         $company_user_id = \Auth::user()->company_user_id;
+        $company_user = CompanyUser::where('id','=',$company_user_id)->first();
+        $filter_delegation = $company_user['options']['filter_delegations'];
         $subtype = \Auth::user()->options['subtype'];
         $user_id = \Auth::user()->id;
+        $user_delegation =UserDelegation::where('users_id','=',$user_id)->first();
+        $delegation=Delegation::find($user_delegation['delegations_id']);
+        $id_delegation = $delegation['id'];
         
         //Permisos de subtype comercial, solo puede acceder a sus propias cotizaiones
         if($subtype === 'comercial') {
             $results = ViewQuoteV2::filterByCurrentUser()->filter($request);
-        } else {
+        }
+        // Filtro para buscar por delegacion los quotes
+        if($filter_delegation == true) {
+            $results =  ViewQuoteV2::filterByDelegation()->paginate(10);
+        }  
+        else {
             $results = ViewQuoteV2::filterByCurrentCompany()->filter($request);
         }
 
@@ -220,6 +233,8 @@ class QuotationController extends Controller
         foreach ($result_data as $result) {
             if(isset($result['remarks'])){
                 $remarks .= $result['remarks'];
+                $remarksPenalties= isset($result['formattedPenalties']) ? $this->formatPenaltyRemark($result['formattedPenalties'],$result['company'],$result['search']['containers']) : '';
+                $remarks .=$remarksPenalties;
             }
         }
         // Validacion para el quote_id no sean iguales
@@ -266,6 +281,20 @@ class QuotationController extends Controller
             $quote->update(['remarks_italian' => $remarks]);
         } else if ($quote->language_id == 5) {
             $quote->update(['remarks_catalan' => $remarks]);
+        }
+
+        if(isset($remarksPenalties)){
+            if (empty($quote->remarks_english) ) {
+                $quote->update(['remarks_english' => $remarksPenalties]);
+            }if (empty($quote->remarks_spanish)) {
+                $quote->update(['remarks_spanish' => $remarksPenalties]);
+            }if (empty($quote->remarks_portuguese)) {
+                $quote->update(['remarks_portuguese' => $remarksPenalties]);
+            }if (empty($quote->remarks_italian)) {
+                $quote->update(['remarks_italian' => $remarksPenalties]);
+            }if (empty($quote->remarks_catalan)) {
+                $quote->update(['remarks_catalan' => $remarksPenalties]);
+            }
         }
 
         foreach ($rate_data as $rate) {
@@ -411,7 +440,6 @@ class QuotationController extends Controller
         /** Tracking create quote event with Mix Panel*/
         $this->trackEvents("create_quote", $quote);
         
-
         return new QuotationResource($quote);
     }
 
@@ -548,6 +576,12 @@ class QuotationController extends Controller
                 $quote->update(['chargeable_weight' => $request['total_weight']]);
             }
         }
+        
+        if($quote->wasChanged('status')){
+            $this->trackEvents("status_quote", $quote);
+        }
+
+
     }
 
     public function getCompanyLanguageId($company_id) {
@@ -1110,5 +1144,49 @@ class QuotationController extends Controller
 
         return new CostSheetResource($quote, $autorate);
 
+    }
+    public function formatPenaltyRemark($formattedPenalties,$company,$containers){
+        $table='';
+        $penalValue='';
+        $head='';
+        $count=count($containers);
+        foreach($containers as $key=>$container){
+            $c='';
+
+            if($key==0){
+                $c="<tr>"."<th>".$company." Fees"."</th>"."<th>".$container['code']."</th>";
+            }elseif($key==$count-1){
+                $c="<th>".$container['code']."</th>"."</tr>";
+            }else{
+                $c="<th>".$container['code']."</th>";
+            }
+            $head.=$c;
+        }
+        $table.=$head;
+
+        foreach($formattedPenalties as $key=>$penalties){
+            $index=array_keys($penalties);
+            $count=count($index);
+            
+            for ($i = 0; $i < $count; $i++) {
+                $penal='';
+
+                if($i==0){
+                    $penal="<tr>"."<th>".$penalties[$index[$i]]."</th>";
+                }elseif($i==$count-1){
+                    $penal="<th>".$penalties[$index[$i]]." ".$penalValue."</th>"."</tr>";
+                }elseif(is_int($penalties[$index[$i]])){
+                    $penalValue=$penalties[$index[$i]];
+                }elseif(isset($penalValue)){
+                    $penal="<th>".$penalties[$index[$i]]." ".$penalValue."</th>";
+                }else{
+                    $penal="<tr>"."<th>".$penalties[$index[$i]]."</th>";
+                }                 
+                $table.=$penal;
+            }  
+        }
+
+        $remark="<table>".$table."</table>";
+        return $remark;
     }
 }

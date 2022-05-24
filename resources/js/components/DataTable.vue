@@ -646,6 +646,7 @@ import paginate from "./paginate";
 
 export default {
     props: {
+        contractData: Object,
         totalResults: Boolean,
         classTable: String,
         view: String,

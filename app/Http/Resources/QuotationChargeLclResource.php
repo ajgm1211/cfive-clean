@@ -2,54 +2,61 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Traits\UtilTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\CarrierResource;
 use App\PivotLocalChargeLclQuote;
 
 class QuotationChargeLclResource extends JsonResource
 {
+    use UtilTrait;
     /**
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
+
+    protected $segment_id;
     public function toArray($request)
     {
-        $pivot_local_charge = PivotLocalChargeLclQuote::where(['charge_lcl_air_id' => $this->id, 
-        'quote_id' => $this->quote_id])->count();
+        return $this->resource->map(function($item){
+            $pivot_local_charge = PivotLocalChargeLclQuote::where(['charge_lcl_air_id' => $item->id, 
+            'quote_id' => $item->quote_id])->count();
 
-        return [
-            'id' => $this->id,
-            'type' => $this->type->description,
-            'charge' => $this->surcharge->name ?? 'Ocean Freight',
-            'charge_id' => $this->surcharge_id ?? null,
-            'charge_options' => $this->surcharge->options ?? null,
-            'calculation_type' => $this->calculation_type->name ?? null,
-            'calculation_type_code' => $this->calculation_type->unique_code ?? null,
-            'port' => $this->getType($this->type_id),
-            'units' => $this->units ?? 0,
-            'price' => $this->price ?? 0,
-            'profit' => $this->profit ?? 0,
-            'total' => $this->setTotal(),
-            'currency' => $this->currency->alphacode ?? null,
-            'provider' => (new CarrierResource($this->automatic_rate->carrier ?? null))->companyUser($this->automatic_rate->quote->company_user ?? null),
-            'added' => $pivot_local_charge>0 ? true:false,
-            'sale_code_id' => $this->charge_sale_code_quote['sale_term_code_id'] ?? null,
-        ];
+            return [
+                'id' => $item->id,
+                'segment_id' => $this->segment_id,
+                'type' => $item->type->description,
+                'charge' => $item->surcharge->name ?? 'Ocean Freight',
+                'charge_id' => $item->surcharge_id ?? null,
+                'charge_options' => $item->surcharge->options ?? null,
+                'calculation_type' => $item->calculation_type->name ?? null,
+                'calculation_type_code' => $item->calculation_type->unique_code ?? null,
+                'port' => $this->getType($item->automatic_rate, $item->type_id),
+                'units' => $item->units ?? 0,
+                'price' => $item->price ?? 0,
+                'profit' => $item->profit ?? 0,
+                'total' => $this->setTotal($item->units, $item->price, $item->profit ),
+                'currency' => $item->currency->alphacode ?? null,
+                'provider' => (new CarrierResource($item->automatic_rate->carrier ?? null))->companyUser($item->automatic_rate->quote->company_user ?? null),
+                'added' => $pivot_local_charge>0 ? true:false,
+                'sale_code_id' => $item->charge_sale_code_quote['sale_term_code_id'] ?? null,
+            ];
+        });
     }
 
-    public function getType($type){
+    public function getType($automatic_rate, $type){
         if($type == 1){
-            return $this->automatic_rate->origin_port->display_name;
+            return $automatic_rate->origin_port->display_name;
         }elseif($type == 2){
-            return $this->automatic_rate->destination_port->display_name;
+            return $automatic_rate->destination_port->display_name;
         }else{
             return null;
         }
     }
 
-    public function setTotal(){
-        return ((float)$this->units*(float)$this->price) + (float)$this->profit;
+    public function setTotal($units, $price, $profit){
+        return ((float)$units*(float)$price) + (float)$profit;
     }
 }

@@ -18,26 +18,38 @@ class QuotationInlandResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
+
+    protected $segment_id;
+
     public function toArray($request)
     {
-        $provider = $this->providers ?? Provider::where('name', $this->provider)->first();
+        return $this->resource->map(function($item){
+            $provider = $item->providers ?? Provider::where('name', $item->provider)->first();
 
-        return [
-            'id' => $this->id,
-            'type' => $this->type,
-            'contract' => $this->contract,
-            'charge' => $this->charge,
-            'distance' => $this->distance,
-            'port' => $this->port->display_name ?? null,
-            'address' => $this->inland_address->address ?? null,
-            'provider' => new ProvidersResource($provider),
-            'valid_from' => $this->valid_from,
-            'valid_until' => $this->valid_until,
-            'price' => $this->arrayToFloat($this->price),
-            'profit' => $this->arrayToFloat($this->profit),
-            'total' => $this->setTotal($this->price, $this->profit),
-            'currency' => $this->currency->alphacode ?? null,
-            'grouped_with' => $this->inland_local_group->local_charge_quote_id ?? null,
-        ];
+            return [
+                'id' => $item->id,
+                'segment_id' => $this->segment_id ?? null,
+                'type' => $item->type,
+                'contract' => $item->contract,
+                'charge' => $item->charge,
+                'distance' => $item->distance,
+                'port' => $item->port->display_name ?? null,
+                'address' => $item->inland_address->address ?? null,
+                'provider' => new ProvidersResource($provider),
+                'valid_from' => $item->valid_from,
+                'valid_until' => $item->valid_until,
+                'price' => $this->arrayToFloat($item->price),
+                'profit' => $this->arrayToFloat($item->profit),
+                'total' => $this->setTotal($item->price, $item->profit),
+                'currency' => $item->currency->alphacode ?? null,
+                'grouped_with' => $item->inland_local_group->local_charge_quote_id ?? null,
+            ];
+        });
+    }
+
+    public function segmentId ($value)
+    {
+        $this->segment_id = $value;
+        return $this;
     }
 }

@@ -868,6 +868,10 @@ Route::group(['prefix' => 'inlandL', 'middleware' => ['auth']], function () {
 });
 Route::resource('inlandL', 'InlandLocationController')->middleware('auth');
 
+Route::group(['prefix' => 'segment-configuration', 'middleware' => ['auth']], function () {
+    Route::get('/', 'SegmentConfigurationController@index')->name('segments_configuration.index');
+});
+
 // Inlands Distances
 Route::group(['prefix' => 'inlandD', 'middleware' => ['auth']], function () {
     Route::get('add/{id}', 'InlandDistanceController@add')->name('inlandD.add');

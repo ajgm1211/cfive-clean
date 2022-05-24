@@ -294,11 +294,11 @@ class LocalChargeQuotationController extends Controller
             ]);
             
             $local_charge->sumarize();
+            
+            $local_charge->totalize();
         }
 
         $this->createLocalChargeTotal($request_params);
-        
-        $local_charge->totalize();
         
         $local_charge_quote = LocalChargeQuote::where([
             'quote_id' => $request->params['quote_id'], 'type_id' => $request->params['type_id'],

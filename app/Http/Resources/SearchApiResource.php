@@ -19,9 +19,17 @@ class SearchApiResource extends JsonResource
         $origin_ports = $this->origin_ports()->get();
         $destination_ports = $this->destination_ports()->get();
         
-        $carriers = $this->carriers()->get()->map(function ($carrier) {
-            return $carrier->only(['id', 'name', 'image']);
-        });
+        if(!empty($request->get('carriers'))){
+            $carriers = $this->carriers()->get()->map(function ($carrier) {
+             return $carrier->only(['id', 'name', 'image']);
+         });
+        }else{
+
+            $getCarriers = $request->all();
+            $countCarriers = count($getCarriers);
+            $carriers =  $countCarriers <= 1 ? \App\Carrier::all()->map(function ($carrier) {return $carrier->only(['id', 'name', 'image']);}):$this->carriers()->get()->map(function ($carrier) {return $carrier->only(['id', 'name', 'image']);});
+
+        }
 
         $api_providers = $this->api_providers()->get()->map(function ($carrier) {
             return $carrier->only(['id', 'name', 'image', 'code']);
