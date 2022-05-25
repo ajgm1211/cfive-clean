@@ -33,6 +33,8 @@
         <b-form-checkbox
           v-if="datalists.company_user.has_whitelabel"
           v-model="price.options.whitelabel"
+          class="class_checkbox_whitelabel"
+          size="lg"
           :disabled="!price.options.whitelabel && datalists.company_user.whitelabel_price_active ? true : false"
           @change="update('main');checkStatus()"
         >
@@ -570,5 +572,10 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.class_checkbox_whitelabel {
+  font-size: 14px;
+  margin-top: 2.7rem;
 }
 </style>
