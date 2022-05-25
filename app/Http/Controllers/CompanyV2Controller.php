@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use App\Company;
 use App\Contact;
 use App\FailCompany;
@@ -11,6 +12,7 @@ use App\SettingsWhitelabel;
 use Illuminate\Http\Request;
 use App\Http\Traits\SearchTrait;
 use App\Http\Traits\WhiteLabelTrait;
+use App\Http\Traits\FileHandlerTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -23,7 +25,7 @@ use App\Http\Resources\FailCompanyResource;
 class CompanyV2Controller extends Controller
 {
     //
-    use SearchTrait, WhiteLabelTrait;
+    use SearchTrait, WhiteLabelTrait, FileHandlerTrait;
 
     /**
      * Display a listing of the resource.
@@ -331,13 +333,75 @@ class CompanyV2Controller extends Controller
     }
 
     public function createCompaniesMassive(Request $request){
-        //guardar el archivo excel
-        //leer el archivo excel
-        //insertar en la base de datos las compañias que todos los datos esten bien en la tabla companies
-        //insertar en la base de datos las compañias que todos los datos que no esten bien en la tabla failed_companies
-        //importar msivamente a whitelabel en caso de que sea requerido
-        //retornar el estado de la carga 200 para creacion completa 205 para creacion parcial 500 para fallo de creacion o almacenado de la info
+
+        $user = \Auth::user();
+        $validate = $this->validateFile($request, 'file');
+        
+        if($validate){
+            $filestored = $this->storeFile('companies', $request->file('file'));
+        }
+
+        $file = $this->getFile('companies', $filestored);
+        $errors = 0;
+        Session::put('massiveCreationErrors', 0);
+        $sessionError = Session::get('massiveCreationErrors');
+        $toWhiteLabel = $request->get('whitelabel');
+        Excel::load($file, function($reader) use ($user, $errors, $sessionError, $toWhiteLabel) {
+
+            $company_user_id = $user->company_user_id;
+            $owner = $user->id;
+            $reader->each(function($sheet) use ($company_user_id, $owner, $errors, $sessionError, $toWhiteLabel) {
+                if(!is_null($sheet['business_name']) && !is_null($sheet['phone']) && !is_null($sheet['email']) && !is_null($sheet['address']) && !is_null($sheet['tax_number'])){
+                    if(filter_var($sheet['email'], FILTER_VALIDATE_EMAIL)){
+                        $this->createCompany($sheet, $company_user_id, $owner, $toWhiteLabel);
+                        if ($toWhiteLabel == 1) {
+                            $resultWhiteLabel = $this->callApiTransferCompanyToWhiteLabel([$sheet->toArray()]);
+                        }
+                    }else{
+                        $sheet['email'] = "ERROR";
+                        $this->createFailedCompany($sheet, $company_user_id, $owner);
+                        $errors = isset($sessionError) ? Session::get('massiveCreationErrors') + 1 :  0 + 1;
+                        Session::put('massiveCreationErrors', $errors);
+                    }
+                }else{
+                    if (!is_null($sheet['business_name']) || !is_null($sheet['phone']) || !is_null($sheet['email']) || !is_null($sheet['address']) || !is_null($sheet['tax_number'])) {
+                        $this->createFailedCompany($sheet, $company_user_id, $owner);
+                        $errors = isset($sessionError) ? Session::get('massiveCreationErrors') + 1 :  0 + 1;
+                        Session::put('massiveCreationErrors', $errors);
+                    }
+                }
+            });
+        });
+        
+        $errors = isset($sessionError) ? Session::get('massiveCreationErrors') : 0;
+        Session::forget('massiveCreationErrors');
+        return response('successful creation with '.$errors.' failed companies.', 200);
     }
+
+    public function createCompany($sheet, $company_user_id, $owner, $toWhiteLabel){ 
+        company::firstOrCreate(
+            ['business_name' => $sheet['business_name']],
+            [
+                'phone'=> $sheet['phone'],
+                'email'=> $sheet['email'],
+                'address'=> $sheet['address'],
+                'tax_number'=> $sheet['tax_number'],
+                'whitelabel'=> $toWhiteLabel,
+                'company_user_id'=> $company_user_id
+            ]);
+    }
+    public function createFailedCompany($sheet, $company_user_id, $owner){ 
+        failCompany::create([
+                    'business_name' => $sheet['business_name'] ?? 'ERROR',
+                    'phone'=> $sheet['phone'] ?? 'ERROR',
+                    'email'=> $sheet['email'] ?? 'ERROR',
+                    'address'=> $sheet['address'] ?? 'ERROR',
+                    'tax_number'=> $sheet['tax_number'] ?? 'ERROR',
+                    'company_user_id'=> $company_user_id ?? 'ERROR',
+                    'owner' => $owner
+        ]);
+    }
+
 
     public function exportCompanies(Request $request, $format){
 

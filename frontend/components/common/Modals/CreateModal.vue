@@ -159,6 +159,7 @@ export default {
   },
   data() {
     return{
+      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       actions:actions,
       showCurrency: true,
       file:null,
@@ -208,10 +209,9 @@ export default {
             this.show = !this.show
             await this.actions.createMassive(formData)
             .then((response)=>{
-                this.messageFile = 'We have registered the information correctly!'
+                this.messageFile = response.data
                 this.showDismissibleAlert=false
                 this.showDismissibleAlertSuccess= true
-                this.items = response.data.data
                 this.show = true
             }).catch(error => {
                 this.showDismissibleAlert=true

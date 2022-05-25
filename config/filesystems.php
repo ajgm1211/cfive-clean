@@ -68,7 +68,12 @@ return [
             'url' => 'storage/app/public/pdf',
             'visibility' => 'public',
         ],
-
+        'companies' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/Companies'),
+            'url' => 'storage/app/public/Companies',
+            'visibility' => 'public',
+        ],
         'UpLoadFile' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
