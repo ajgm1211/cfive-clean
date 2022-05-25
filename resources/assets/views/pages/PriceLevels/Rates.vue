@@ -34,7 +34,7 @@
           v-if="datalists.company_user.has_whitelabel"
           v-model="price.options.whitelabel"
           :disabled="!price.options.whitelabel && datalists.company_user.whitelabel_price_active ? true : false"
-          @change="update('main')"
+          @change="update('main');checkStatus()"
         >
           Apply on Whitelabel
         </b-form-checkbox>
@@ -461,6 +461,15 @@ export default {
 
       return formatted;
     },
+
+    checkStatus() {
+      if(!this.price.options.whitelabel){
+        this.datalists.company_user.whitelabel_price_active = false;
+      } else if(this.price.options.whitelabel) {
+        this.datalists.company_user.whitelabel_price_active = true;
+      }
+    },
+
     close() {
       this.$store.commit("SET_MODAL_EDIT", false);
     },
