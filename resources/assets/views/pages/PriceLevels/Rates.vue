@@ -3,7 +3,7 @@
     <div class="back-btn" @click="$router.back()">
       <LeftArrow /> <span>back</span>
     </div>
-    <div class="i-container">
+    <div class="i-container" v-if="!loading">
       <div class="inputs-container">
         <CustomInput
           label="Name"
@@ -30,10 +30,18 @@
           :value="selected"
           label="Price Level Type"
         />
+        <b-form-checkbox
+          v-if="datalists.company_user.has_whitelabel"
+          v-model="price.options.whitelabel"
+          :disabled="!price.options.whitelabel && datalists.company_user.whitelabel_price_active ? true : false"
+          @change="update('main')"
+        >
+          Apply on Whitelabel
+        </b-form-checkbox>
       </div>
     </div>
 
-    <div class="tabscontainer" v-if="!loading">
+    <div class="tabscontainer">
       <div class="tabs">
         <p
           @click="currentTab(tab)"
@@ -152,7 +160,6 @@
 
 <script>
 import CustomInput from "../../../components/common/CustomInput.vue";
-// import Selectable from "../../../components/common/Selectable.vue";
 import LeftArrow from "../../../components/Icons/LeftArrow.vue";
 import actions from "../../../../../resources/js/actions";
 import ListPrices from "../../../components/PriceLevel/ListPrices.vue";
@@ -190,6 +197,7 @@ export default {
       description: "",
       company_restrictions: [],
       group_restrictions: [],
+      options: [],
     },
     selected: "",
     value: "",
@@ -229,6 +237,7 @@ export default {
     this.selected = this.GET_CURRENT_PRICE_LEVEL.type;
     this.price.company_restrictions = this.GET_CURRENT_PRICE_LEVEL.company_restrictions;
     this.price.group_restrictions = this.GET_CURRENT_PRICE_LEVEL.group_restrictions;
+    this.price.options = this.GET_CURRENT_PRICE_LEVEL.options;
 
     this.rates = this.GET_PRICE_LEVEL_RATES;
 
@@ -248,6 +257,7 @@ export default {
           name: this.price.name,
           display_name: this.price.display_name,
           price_level_type: this.selected,
+          options: this.price.options,
         };
       } else if (key == "description") {
         var updateBody = {

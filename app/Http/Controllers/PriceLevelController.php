@@ -11,6 +11,7 @@ use App\Direction;
 use App\CompanyGroup;
 use App\CompanyUser;
 use App\PriceLevelApply;
+use App\SettingsWhitelabel;
 use App\Http\Resources\PriceLevelResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +38,15 @@ class PriceLevelController  extends Controller
         //Querying each model used and mapping only necessary data
         $company_user_id = $user->company_user_id;
 
-        $company_user = CompanyUser::where('id', $company_user_id)->first();
+        $settings_whitelabel = SettingsWhitelabel::where('company_user_id',$company_user_id)->first();
+
+        $company_user = CompanyUser::select(['id', 'name', 'currency_id', 'logo', 'decimals'])->first();
+        
+        if($settings_whitelabel) {
+            $company_user->setAttribute('has_whitelabel',true);
+        } else { 
+            $company_user->setAttribute('has_whitelabel',false);
+        }
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->get();
         
@@ -58,8 +67,17 @@ class PriceLevelController  extends Controller
         $applies = PriceLevelApply::all();
 
         $price_levels = PriceLevel::where('company_user_id', $company_user_id)->get()->map(function ($price) {
-            return $price->only(['id', 'name']);
+            return $price->only(['id', 'name', 'options']);
         });
+
+        $company_user->setAttribute('whitelabel_price_active',false);
+
+        foreach($price_levels as $pricelevel) {
+            if($pricelevel['options']['whitelabel']) {
+                $company_user->whitelabel_price_active = true;
+                break;
+            }
+        }
 
         //Collecting all data retrieved
         $data = compact(
@@ -142,7 +160,7 @@ class PriceLevelController  extends Controller
     {
         $fields = $request->input();
 
-      if(array_key_exists('companies',$fields) || array_key_exists('groups',$fields)){
+        if(array_key_exists('companies',$fields) || array_key_exists('groups',$fields)){
             if(array_key_exists('companies',$fields)){
                 $model = 'App\\Company';
                 $model_type = 'companies';
@@ -186,12 +204,22 @@ class PriceLevelController  extends Controller
                     'name' => 'required',
                     'display_name' => 'required',
                     'price_level_type' => 'required',
+                    'options' => 'sometimes',
                 ]);
+
+                $options = $price_level->options;
+                
+                if(isset($data['options'])){
+                    foreach($data['options'] as $key => $newOption){
+                        $options[$key] = $newOption;
+                    }
+                }
     
                 $price_level->update([
                     'name' => $data['name'],
                     'display_name' => $data['display_name'],
                     'type' => $data['price_level_type'],
+                    'options' => $options,
                 ]);
             }else{  
                 $data = $request->validate([
