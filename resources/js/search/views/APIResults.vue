@@ -234,12 +234,7 @@
 
                 <!-- PRECIO -->
                 <div
-                  class="row  card-amount__res"
-                  :class="[
-                    request.selectedContainerGroup.id == 2
-                      ? ['justify-content-start', 'pl-40px']
-                      : ['justify-content-end'],
-                  ]"
+                  class="row  card-amount__res justify-content-start pl-40px"
                 >
                   <div
                     :class="[
