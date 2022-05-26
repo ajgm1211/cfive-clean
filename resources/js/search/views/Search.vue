@@ -2443,7 +2443,7 @@ export default {
     carriers() {
       let component = this;
 
-      if (component.carriers.length == component.datalists.carriers.length) {
+      if (component.carriers.length - 1 == component.datalists.carriers.length) {
         component.carrierText = "All Carriers Selected";
       } else if (component.carriers.length >= 5) {
         component.carrierText =
@@ -2470,8 +2470,11 @@ export default {
 
       if (component.allCarriers) {
         component.carriers = [];
-        // Check all
-        component.carriers = [component.allCarriersIn.value]
+        
+         component.datalists.carriers.forEach(function(carrier) {
+          component.carriers.push(carrier);
+        });
+        component.carriers.push(component.allCarriersIn.value);
       } else {
         component.carriers = [];
       }
