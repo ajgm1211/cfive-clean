@@ -716,16 +716,16 @@ trait SearchTrait
         return $ids_array;
     }
 
-    public function getMarkupsFromPriceLevels($search_data)
+    public function getMarkupsFromPriceLevels($rate, $search_data)
     {
-        $price_level_id = $search_data['pricelevel'];
-        $direction = $search_data['direction'];
-        //Querying for price levels and markups associated (freight,local charges and inlands)
         if($search_data['requestData']['requested'] != 2){
+            $price_level_id = $search_data['pricelevel'];
             $price_level = PriceLevel::where('id', $price_level_id)->with('price_level_details')->first();
-        }else{
+        } else {
             $price_level = PriceLevel::where('options->whitelabel','=', true)->with('price_level_details')->first();
+            $rate->setAttribute("price_level", $price_level->id);
         }
+        $direction = $search_data['direction'];
         
         $markup_array = [];
 

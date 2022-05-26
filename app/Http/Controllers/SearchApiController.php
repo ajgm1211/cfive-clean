@@ -310,7 +310,7 @@ class SearchApiController extends Controller
         
             //Getting price levels if requested
             if (isset($search_array['pricelevel']) || $search_array['requestData']['requested'] == 2) {
-                $price_level_markups = $this->searchPriceLevels($search_ids);
+                $price_level_markups = $this->searchPriceLevels($rate,$search_ids);
             } else {
                 $price_level_markups = [];
             }
@@ -707,13 +707,13 @@ class SearchApiController extends Controller
     }
 
     //Retrieves and cleans markups from price levels
-    public function searchPriceLevels($search_data)
+    public function searchPriceLevels($rate, $search_data)
     {
         //SEARCH TRAIT - Markups are organized in a collection containing
         //Freight markups (fixed & percent)
         //Local Charge markups (fixed & percent)
         //Inland markups (fixed & percent)
-        $markups = $this->getMarkupsFromPriceLevels($search_data);
+        $markups = $this->getMarkupsFromPriceLevels($rate, $search_data);
 
         return $markups;
     }
