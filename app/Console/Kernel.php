@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //Jobs
-        $schedule->job(new SyncCompaniesVforwarding, 'high')->cron('* * * * *')->appendOutputTo(storage_path('logs/laravel.log'));
+        $schedule->job(new SyncCompaniesVforwarding)->cron('* * * * *')->appendOutputTo(storage_path('logs/laravel.log'));
         //$schedule->job(new SyncCompaniesVisualtrans)->cron('0 */4 * * *')->appendOutputTo(storage_path('logs/commands.log'));
         //$schedule->job(new SaveFclRatesByContractJob)->cron('0 */8 * * *')->appendOutputTo(storage_path('logs/commands.log'));
 
