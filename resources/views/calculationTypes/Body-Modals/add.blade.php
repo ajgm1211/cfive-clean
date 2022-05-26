@@ -11,15 +11,13 @@
 </div>
 <div id="modal-body" class="modal-body">
     <div class="form-group m-form__group row">
-
-        <div class="col-md-1"></div>
-        <div class="col-md-5">
+        <div class="col-md-6">
             <label class="">Name</label>
             <div class="" id="conatiner_class">
                 {!! Form::text('name',null,['class'=>'form-control','required','id'=>'nameCal'])!!}
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-6">
             <label class="">Code</label>
             <div class="" id="calculationT_class">
                 {!! Form::text('code',null,['class'=>'form-control','required','id'=>'codeCal'])!!}
@@ -27,7 +25,6 @@
         </div>
     </div>
     <div class="form-group m-form__group row">
-        <div class="col-md-1"></div>
         <div class="col-md-5">
             <label class="">Group Recognition Name</label>
             <div class="input-group m-form__group">
@@ -42,38 +39,63 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-3">
+            <label class="">Equipment</label>
+            <div class="" id="calculationT_class">
+                {!! Form::select('equipment',$equipments,null,['class'=>' form-control','id'=>'equipments'])!!}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label class="">Behaviour Per Container</label>
+            <div class="" id="calculationT_class">
+                {!! Form::select('behaviourpcs',$behaviourpcs,null,['class'=>' form-control','id'=>'behaviourpcs'])!!}
+            </div>
+        </div>
+    </div>
+    <div class="form-group m-form__group">
+        <div class="row">
 
-        <div class="col-md-2">
-            <label class=""><br></label>    
-            <div class="" id="conatiner_class">
-                <label class="m-checkbox m-checkbox--state-primary">
-                    {!! Form::checkbox('group',true,true,['class'=>'form-control','id'=>'groupCal'])!!}
-                    Group
-                    <span></span>
-                </label>
+            <div class="col-md-2">
+                <label class=""><br></label>    
+                <div class="" id="conatiner_class">
+                    <label class="m-checkbox m-checkbox--state-primary">
+                        {!! Form::checkbox('group',true,true,['class'=>'form-control','id'=>'groupCal'])!!}
+                        Group
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label class=""><br></label>    
+                <div class="" id="conatiner_class">
+                    <label class="m-checkbox m-checkbox--state-primary">
+                        {!! Form::checkbox('isteu',true,false,['class'=>'form-control','id'=>'teuCal'])!!}
+                        Is Teu 
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class=""><br></label>    
+                <div class="" id="only_div">
+                    <label class="m-checkbox m-checkbox--state-primary">
+                        {!! Form::checkbox('gp_pcontainer',true,false,['class'=>'form-control','title'=>'only importer','id'=>'only_imp'])!!}
+                        Belongs Container Group
+                        <span title="Only importer. The calculation type belongs to a column in the container table"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class=""><br></label>    
+                <div class="" id="only_div">
+                    <label class="m-checkbox m-checkbox--state-primary">
+                        {!! Form::checkbox('limits_ow',true,false,['class'=>'form-control','title'=>'Limits OW','id'=>'limits_ow_id'])!!}
+                        Limits OW
+                        <span title="Enable OW limit loading"></span>
+                    </label>
+                </div>
             </div>
         </div>
-        <div class="col-md-2">
-            <label class=""><br></label>    
-            <div class="" id="conatiner_class">
-                <label class="m-checkbox m-checkbox--state-primary">
-                    {!! Form::checkbox('isteu',true,false,['class'=>'form-control','id'=>'teuCal'])!!}
-                    Is Teu 
-                    <span></span>
-                </label>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <label class=""><br></label>    
-            <div class="" id="only_div">
-                <label class="m-checkbox m-checkbox--state-primary">
-                    {!! Form::checkbox('gp_pcontainer',true,false,['class'=>'form-control','title'=>'only importer','id'=>'only_imp'])!!}
-                    Only Imp.
-                    <span title="Only importer. The calculation type belongs to a column in the container table"></span>
-                </label>
-            </div>
-        </div>
-
     </div>
 </div>
 <div class="modal-footer">

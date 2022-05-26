@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\FailOverweightRange;
 
 class FailSurCharge extends Model
 {
@@ -27,5 +28,10 @@ class FailSurCharge extends Model
     public function contract()
     {
         return $this->belongsTo('App\Contract', 'contract_id');
+    }
+
+    public function fail_overweight_ranges()
+    {
+        return $this->morphMany(FailOverweightRange::class, 'model');
     }
 }
