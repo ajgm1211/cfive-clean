@@ -30,16 +30,21 @@
           :value="selected"
           label="Price Level Type"
         />
-        <b-form-checkbox
-          v-if="isFclAndHasWhitelabel"
-          v-model="price.options.whitelabel"
-          class="class_checkbox_whitelabel"
-          size="lg"
-          :disabled="!price.options.whitelabel && datalists.company_user.whitelabel_price_active"
-          @change="update('main');checkStatus()"
-        >
-          Apply on Whitelabel
-        </b-form-checkbox>
+        <span id="checkbox_whitelabel">
+          <b-form-checkbox
+            v-if="isFclAndHasWhitelabel"
+            v-model="price.options.whitelabel"
+            class="class_checkbox_whitelabel"
+            size="lg"
+            :disabled="isCheckboxWhitelabelDisabled"
+            @change="update('main');checkStatus()"
+          >
+            Apply on Whitelabel
+          </b-form-checkbox>
+        </span>
+        <b-tooltip target="checkbox_whitelabel" placement="bottom" :disabled="!isCheckboxWhitelabelDisabled">
+          Price level for whitelabel already selected
+        </b-tooltip>
       </div>
     </div>
 
@@ -486,7 +491,10 @@ export default {
     ]),
     isFclAndHasWhitelabel() {
       return this.selected === 'FCL' && this.datalists.company_user.has_whitelabel
-    }
+    },
+    isCheckboxWhitelabelDisabled() {
+      return !this.price.options.whitelabel && this.datalists.company_user.whitelabel_price_active
+    },
   },
 };
 </script>
