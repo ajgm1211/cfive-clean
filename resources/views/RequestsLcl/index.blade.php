@@ -337,13 +337,13 @@
         });
 
         function showModal(id){
-
+            /*
             var url = '{{ route("show.status.Request.lcl",":id") }}';
             url = url.replace(':id',id);
             $('#modal-body').load(url,function(){
                 $('#changeStatus').modal();
-            });
-
+            });*/
+            alert('This functionality is disabled, Available in Barracuda.')
         }
 
         function editcontract(id){

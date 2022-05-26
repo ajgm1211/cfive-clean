@@ -270,6 +270,8 @@ class LocalChargeQuotationController extends Controller
      */
     public function storeChargeSaleTerm(Request $request)
     {
+        $request_params = $request->params; 
+
         LocalChargeQuote::where(['sale_term_v3_id' => $request->params['id'], 'quote_id' => $request->params['quote_id']])->delete();
 
         $sale_charges = SaleTermCharge::where('sale_term_id', $request->params['id'])->get();
@@ -292,9 +294,12 @@ class LocalChargeQuotationController extends Controller
             ]);
             
             $local_charge->sumarize();
+            
             $local_charge->totalize();
         }
 
+        $this->createLocalChargeTotal($request_params);
+        
         $local_charge_quote = LocalChargeQuote::where([
             'quote_id' => $request->params['quote_id'], 'type_id' => $request->params['type_id'],
             'port_id' => $request->params['port_id']
@@ -606,6 +611,15 @@ class LocalChargeQuotationController extends Controller
                 ]);
                 $quoteV2->updatePdfOptions('exchangeRates');
                 $local_charge->sumarize();
+
+                $params_for_total = array(
+                    'quote_id' => $quote,
+                    'port_id' => $port,
+                    'type_id' => $type
+                );
+
+                $this->createLocalChargeTotal($params_for_total);
+
                 $local_charge->totalize();
                 $this->storeInPivotChargeSaleCodeQuote($sale_code_term_id, $charge_id, $local_charge);
             }
@@ -624,6 +638,15 @@ class LocalChargeQuotationController extends Controller
             ]);
             $quoteV2->updatePdfOptions('exchangeRates');
             $local_charge->sumarize();
+
+            $params_for_total = array(
+                'quote_id' => $quote,
+                'port_id' => $port,
+                'type_id' => $type
+            );
+
+            $this->createLocalChargeTotal($params_for_total);
+            
             $local_charge->totalize();
         }
 

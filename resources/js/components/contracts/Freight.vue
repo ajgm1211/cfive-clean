@@ -19,6 +19,7 @@
 
             <DynamicalDataTable
                 v-if="loaded"
+                :contractData="contractData"
                 :initialFields="fields"
                 :initialFormFields="vform_fields"
                 :datalists="datalists"
@@ -307,7 +308,6 @@ export default {
         api.getData({}, `/api/v2/contracts/${id}/ocean_freight`, (err, data) => {
             this.vdatalists = {...this.vdatalists, ...data.data};
             this.loaded = true  
-            console.log('datalists', this.vdatalists);
         });
             
         },

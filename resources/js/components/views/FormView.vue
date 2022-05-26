@@ -330,8 +330,8 @@ export default {
         } else {
           //Para countries
 
-        this.fields["origin"].type = "select";
-        this.fields["destination"].type = "select";
+        this.fields["origin"].type = "multiselect";
+        this.fields["destination"].type = "multiselect";
 
         }
       }
@@ -462,7 +462,7 @@ export default {
       if (this.validateForm()) {
 
         if (!this.creatingData) {
-        this.creatingData = true;
+          this.creatingData = true;
 
           let data = this.prepareData();
 
@@ -538,6 +538,8 @@ export default {
                 });
             }
           }
+
+          this.creatingData = false;
         }
       }
     },
