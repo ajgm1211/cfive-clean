@@ -31,11 +31,11 @@
           label="Price Level Type"
         />
         <b-form-checkbox
-          v-if="datalists.company_user.has_whitelabel"
+          v-if="isFclAndHasWhitelabel"
           v-model="price.options.whitelabel"
           class="class_checkbox_whitelabel"
           size="lg"
-          :disabled="!price.options.whitelabel && datalists.company_user.whitelabel_price_active ? true : false"
+          :disabled="!price.options.whitelabel && datalists.company_user.whitelabel_price_active"
           @change="update('main');checkStatus()"
         >
           Apply on Whitelabel
@@ -484,6 +484,9 @@ export default {
       "GET_PAGINATE_RATES",
       "GET_MODAL_EDIT",
     ]),
+    isFclAndHasWhitelabel() {
+      return this.selected === 'FCL' && this.datalists.company_user.has_whitelabel
+    }
   },
 };
 </script>
