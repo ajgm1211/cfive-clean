@@ -545,7 +545,7 @@ class SearchApiController extends Controller
                     })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased', '!=', 1)->where('gp_container_id', $container_group);
                 } else {
                     $q->where(function ($query) use ($dateSince, $dateUntil) {
-                        $query->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil);
+                        $query->where('validity', '>=', $dateSince)->where('expire', '<=', $dateUntil);
                     })->where('company_user_id', '=', $company_user_id)->where('status', '!=', 'incomplete')->where('status_erased', '!=', 1)->where('gp_container_id', $container_group);
                 }
             });
