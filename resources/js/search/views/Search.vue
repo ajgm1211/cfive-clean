@@ -514,7 +514,8 @@
                           :allow-empty="false"
                           label="name"
                           track-by="name"
-                          :options="datalists.cargo_types"
+                          :options="selectLclPackaging"
+                          :disabled='isLclPackagingNotEmpty'
                           placeholder="Select"
                           class="s-input no-select-style"
                         >
@@ -2293,6 +2294,7 @@ export default {
           this.lclPackaging.push(newPackaging);
           this.setChargeableWeight();
           this.clearAddPackagingBar();
+          this.addPackagingBar.cargoType = this.lclPackaging[0].cargoType
         } else {
           this.invalidPackagingCalculation = true;
 
@@ -2508,6 +2510,15 @@ export default {
     },
     sortedContainers(){
       return this.containers.sort((a,b) => a.id-b.id);
+    },
+    isLclPackagingNotEmpty(){
+      return this.lclPackaging.length !== 0
+    },
+    selectLclPackaging(){
+      if (this.isLclPackagingNotEmpty) {
+        return [this.lclPackaging[0].cargoType]
+      }
+      return this.datalists.cargo_types
     }
   },
 };
