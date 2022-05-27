@@ -82,7 +82,7 @@
                             rate.transit_time != undefined
                         "
                         >{{
-                          rate.transit_time.service_id == 2
+                          rate.transit_time.service == 1
                             ? "Direct"
                             : "Transhipment"
                         }}</b

@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use OwenIt\Auditing\Contracts\Auditable;
-use SebastianBergmann\CodeCoverage\Report\Xml\Totals;
 
 class LocalChargeQuote extends Model implements Auditable
 {
@@ -142,21 +141,8 @@ class LocalChargeQuote extends Model implements Auditable
             }
         }
 
-        if(empty($local_charge_quote_total)){
-            $local_charge = LocalChargeQuoteTotal::create([
-                'quote_id' => $quote->id, 
-                'type_id' => $this->type_id, 
-                'port_id' =>  $this->port_id,
-                'currency_id' => $currency_id,
-                'totals'=>$totals
-            ]);
-        }else{
-            $local_charge_quote_total->total = $totals;
-            
-            $local_charge_quote_total->update();
-        }
-
-        
+        $local_charge_quote_total->total = $totals;
+        $local_charge_quote_total->update();
     }
 
     /**
