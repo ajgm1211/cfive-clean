@@ -52,7 +52,7 @@
                     </div>
 
                     <div class="direction-desc">
-                      <b v-if="rate.transit_time != undefined && rate.transit_time != undefined">{{ rate.transit_time.service == 1 ? "Direct" : "Transhipment" }}</b>
+                      <b v-if="rate.transit_time != undefined && rate.transit_time != undefined">{{ rate.transit_time.service_id == 2 ? "Direct" : "Transhipment" }}</b>
                       <b v-if="rate.transit_time != undefined && rate.transit_time != undefined">{{ rate.transit_time.via ? rate.transit_time.via : "" }}</b>
                       <p v-if="rate.transit_time != null && rate.transit_time.transit_time != null"><b>TT:</b> {{ rate.transit_time.transit_time }}</p>
                     </div>
