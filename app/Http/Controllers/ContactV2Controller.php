@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use App\Contact;
 use App\Company;
 use App\FailedContact;
@@ -9,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\WhiteLabelTrait;
+use App\Http\Traits\FileHandlerTrait;
 use Illuminate\Support\Facades\Input;
 use App\Http\Resources\ContactResource;
 use Illuminate\Support\Facades\Storage;
@@ -16,6 +19,8 @@ use App\Http\Resources\FailedContactResource;
 
 class ContactV2Controller extends Controller
 {
+    use WhiteLabelTrait, FileHandlerTrait;
+
     public function index()
     {
         return view('contacts.v2.index');
@@ -58,10 +63,10 @@ class ContactV2Controller extends Controller
     {
         $options         = null;
         $data = $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email',
-            'options' => 'json',
+            'contact.first_name' => 'required',
+            'contact.last_name' => 'required',
+            'contact.email' => 'required|email',
+            'contact.options' => 'json',
         ]);
 
         $request->request->add(
@@ -70,7 +75,7 @@ class ContactV2Controller extends Controller
                 ]
         );
 
-        $contact = Contact::create($request->all());
+        $contact = Contact::create($request->get('contact'));
 
         return new ContactResource($contact);
     }
@@ -155,7 +160,8 @@ class ContactV2Controller extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function failed(){
+    public function failed()
+    {
         return view('contacts.v2.failed');
     }
     
@@ -166,7 +172,8 @@ class ContactV2Controller extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function failedList(Request $request){
+    public function failedList(Request $request)
+    {
         $failedContacts = FailedContact::FilterByCurrentCompanyUser()->orderBy('id', 'asc')->filter($request);
         return FailedContactResource::collection($failedContacts);
     }
@@ -176,7 +183,8 @@ class ContactV2Controller extends Controller
         return new FailedContactResource($failed);
     }
 
-    public function failedUpdate(Request $request, FailedContact $failed){
+    public function failedUpdate(Request $request, FailedContact $failed)
+    {
         $validated = $request->validate([
             'contact.first_name' => 'required',
             'contact.last_name' => 'required',
@@ -200,6 +208,81 @@ class ContactV2Controller extends Controller
             return $th->getMessage();
         }
     }
+
+    public function createContactsMassive(Request $request)
+    {
+
+        $user = \Auth::user();
+        $validate = $this->validateFile($request, 'file');
+        
+        if($validate){
+            $filestored = $this->storeFile('contacts', $request->file('file'));
+        }
+
+        $file = $this->getFile('contacts', $filestored);
+        $errors = 0;
+        Session::put('massiveCreationErrors', 0);
+        $sessionError = Session::get('massiveCreationErrors');
+        $toWhiteLabel = $request->get('whitelabel');
+        $company_id = $request->get('company_id');
+        
+        Excel::load($file, function($reader) use ($user, $errors, $sessionError, $company_id, $toWhiteLabel) {
+
+            $company_user_id = $user->company_user_id;
+            $reader->each(function($sheet) use ($company_id, $errors, $sessionError, $company_user_id, $toWhiteLabel) {
+                if(!is_null($sheet['first_name']) && !is_null($sheet['last_name']) && !is_null($sheet['email']) && !is_null($sheet['phone']) && !is_null($sheet['position'])){
+                    if(filter_var($sheet['email'], FILTER_VALIDATE_EMAIL)){
+                        $this->createContact($sheet, $company_id, $toWhiteLabel);
+                        if ($toWhiteLabel == 1) {
+                            //$resultWhiteLabel = $this->callApiTransferContactToWhiteLabel([$sheet->toArray()]);
+                        }
+                    }else{
+                        $sheet['email'] = "ERROR";
+                        $this->createFailedContact($sheet, $company_id, $company_user_id);
+                        $errors = isset($sessionError) ? Session::get('massiveCreationErrors') + 1 :  0 + 1;
+                        Session::put('massiveCreationErrors', $errors);
+                    }
+                }else{
+                    if (!is_null($sheet['first_name']) || !is_null($sheet['last_name']) || !is_null($sheet['email']) || !is_null($sheet['phone']) || !is_null($sheet['position'])) {
+                        $this->createFailedContact($sheet, $company_id, $company_user_id);
+                        $errors = isset($sessionError) ? Session::get('massiveCreationErrors') + 1 :  0 + 1;
+                        Session::put('massiveCreationErrors', $errors);
+                    }
+                }
+            });
+        });
+        
+        $errors = isset($sessionError) ? Session::get('massiveCreationErrors') : 0;
+        Session::forget('massiveCreationErrors');
+        return response('successful creation with '.$errors.' failed contacts.', 200);
+    }
+
+    public function createContact($sheet, $company_id, $toWhiteLabel)
+    { 
+        Contact::firstOrCreate(
+            ['email' => $sheet['email']],
+            [
+                'first_name'=> $sheet['first_name'],
+                'last_name'=> $sheet['last_name'],
+                'phone'=> $sheet['phone'],
+                'position'=> $sheet['position'],
+                'whitelabel'=> $toWhiteLabel,
+                'company_id'=> $company_id
+            ]);
+    }
+    public function createFailedContact($sheet, $company_id, $company_user_id)
+    { 
+        FailedContact::create([
+                    'first_name' => $sheet['first_name'] ?? 'ERROR',
+                    'last_name'=> $sheet['last_name'] ?? 'ERROR',
+                    'email'=> $sheet['email'] ?? 'ERROR',
+                    'phone'=> $sheet['phone'] ?? 'ERROR',
+                    'position'=> $sheet['position'] ?? 'ERROR',
+                    'company_id'=> $company_id ?? 'ERROR',
+                    'company_user_id'=> $company_user_id ?? 'ERROR'
+        ]);
+    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -230,11 +313,13 @@ class ContactV2Controller extends Controller
         return response()->json(null, 204);
     }
 
-    public function downloadTemplateFile(){
+    public function downloadTemplateFile()
+    {
         return Storage::disk('DownLoadFile')->download('contacts_template.xlsx');
     }
 
-    public function exportContacts(Request $request, $format){
+    public function exportContacts(Request $request, $format)
+    {
 
         $filename       = "Contacts";
         $titleSheet1    = "Contacts";

@@ -8,9 +8,9 @@ use Illuminate\Support\Collection as Collection;
 
 trait FileHandlerTrait
 {
-    public function getFile($path, $name)
+    public function getFile($disk, $name)
     {
-        return Storage::disk('companies')->url($name);
+        return Storage::disk($disk)->url($name);
     }
 
     public function validateFile(Request $request, $inputFileName){

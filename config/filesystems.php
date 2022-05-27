@@ -74,6 +74,12 @@ return [
             'url' => 'storage/app/public/Companies',
             'visibility' => 'public',
         ],
+        'contacts' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/Contacts'),
+            'url' => 'storage/app/public/Contacts',
+            'visibility' => 'public',
+        ],
         'UpLoadFile' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

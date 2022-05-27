@@ -256,15 +256,18 @@ class CompanyV2Controller extends Controller
         return true;
     }
 
-    public function downloadTemplateFile(){
+    public function downloadTemplateFile()
+    {
         return Storage::disk('DownLoadFile')->download('company_template.xlsx');
     }
     
-    public function failed(){
+    public function failed()
+    {
         return view('companies.v2.failed');
     }
     
-    public function failedList(Request $request){
+    public function failedList(Request $request)
+    {
         $failedCompanies = FailCompany::filterByCurrentUser()->orderBy('id', 'asc')->filter($request);
 
         return FailCompanyResource::collection($failedCompanies);
@@ -275,7 +278,8 @@ class CompanyV2Controller extends Controller
         return new FailCompanyResource($failed);
     }
 
-    public function failedUpdate(Request $request, FailCompany $failed){
+    public function failedUpdate(Request $request, FailCompany $failed)
+    {
 
         $validated = $request->validate([
             'company.business_name' => 'required',
@@ -302,13 +306,15 @@ class CompanyV2Controller extends Controller
         }
     }
 
-    public function contactByCompanyList(Request $request, $company){
+    public function contactByCompanyList(Request $request, $company)
+    {
 
         $contactsByCompany = Contact::filterByCurrentEditingCompany($company)->orderBy('id', 'asc')->filter($request);
         return  ContactResource::collection($contactsByCompany);
     }
 
-    public function transferToWhiteLabel(Request $request){
+    public function transferToWhiteLabel(Request $request)
+    {
         $companiesToSearch = $request->get('companies');
 
         try {
@@ -332,7 +338,8 @@ class CompanyV2Controller extends Controller
             
     }
 
-    public function createCompaniesMassive(Request $request){
+    public function createCompaniesMassive(Request $request)
+    {
 
         $user = \Auth::user();
         $validate = $this->validateFile($request, 'file');
@@ -378,8 +385,9 @@ class CompanyV2Controller extends Controller
         return response('successful creation with '.$errors.' failed companies.', 200);
     }
 
-    public function createCompany($sheet, $company_user_id, $owner, $toWhiteLabel){ 
-        company::firstOrCreate(
+    public function createCompany($sheet, $company_user_id, $owner, $toWhiteLabel)
+    { 
+        Company::firstOrCreate(
             ['business_name' => $sheet['business_name']],
             [
                 'phone'=> $sheet['phone'],
@@ -390,8 +398,9 @@ class CompanyV2Controller extends Controller
                 'company_user_id'=> $company_user_id
             ]);
     }
-    public function createFailedCompany($sheet, $company_user_id, $owner){ 
-        failCompany::create([
+    public function createFailedCompany($sheet, $company_user_id, $owner)
+    { 
+        FailCompany::create([
                     'business_name' => $sheet['business_name'] ?? 'ERROR',
                     'phone'=> $sheet['phone'] ?? 'ERROR',
                     'email'=> $sheet['email'] ?? 'ERROR',
@@ -402,8 +411,8 @@ class CompanyV2Controller extends Controller
         ]);
     }
 
-
-    public function exportCompanies(Request $request, $format){
+    public function exportCompanies(Request $request, $format)
+    {
 
         $filename       = "companies";
         $titleSheet1    = "companies";
