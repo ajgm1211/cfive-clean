@@ -166,6 +166,7 @@ class SettingController extends Controller
             }
             $options=[
                 'api_providers'=> [],
+                'filter_delegations'=> false,
                 'company_address_pdf'=> 1,
                 'totals_in_freight_currency' => false,
                 'store_hidden_charges' => false,
