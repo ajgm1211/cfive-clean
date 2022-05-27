@@ -5459,6 +5459,10 @@ export default {
       this.$bvModal.show("qty-modal_" + quoteId);
     },
 
+    clearSelectedResults() {
+      this.resultsForQuote = []
+    },
+
     callAPIs() {
       let component = this;
       let apiOriginPorts = [];
@@ -5475,7 +5479,8 @@ export default {
       if(apiDate < today){
         apiDate = today;
       }
-
+      
+      this.clearSelectedResults()
       component.$emit("apiSearchStarted", "apiSearchStart");
 
       component.accordion_id = 0;
