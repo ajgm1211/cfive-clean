@@ -5475,7 +5475,7 @@ export default {
       if(apiDate < today){
         apiDate = today;
       }
-
+      this.resultsForQuote = []
       component.$emit("apiSearchStarted", "apiSearchStart");
 
       component.accordion_id = 0;
