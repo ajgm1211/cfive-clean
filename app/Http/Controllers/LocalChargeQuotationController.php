@@ -412,7 +412,7 @@ class LocalChargeQuotationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request->input());
+        dd($request->input());
         switch ($request->type) {
             case 1:
                 $request->validate([

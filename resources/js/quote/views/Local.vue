@@ -231,7 +231,7 @@
                                         "
                                     ></multiselect>
                                 </b-td>
-
+                                        {{charge}}
                                 <b-td
                                     v-for="(item, key) in quoteEquip"
                                     :key="key"
@@ -242,12 +242,26 @@
                                             class="q-input data-profit"
                                             @keypress="isNumber($event)"
                                             :disabled="!edit_charge"
+                                            @input="                                            
+                                            onUpdate(
+                                                charge.id,
+                                                charge.price['c' + item],
+                                                'price',
+                                                3
+                                            )"
                                         ></b-form-input>
                                         <b-form-input
                                             v-model="charge.profit['m' + item]"
                                             class="q-input data-profit"
                                             @keypress="isNumber($event)"
                                             :disabled="!edit_charge"
+                                            @input="                                            
+                                            onUpdate(
+                                                charge.id,
+                                                charge.profit['m' + item],
+                                                'profit',
+                                                4
+                                            )"
                                         ></b-form-input>
                                     </div>
                                 </b-td>
@@ -1641,6 +1655,7 @@ export default {
                 }
                     this.$refs.observer.setErrors(data.data.errors);
                 });
+                console.log(data)
         },
         updateRemarks(remarks) {
             let quote_id = this.$route.params.id;
