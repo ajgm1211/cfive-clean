@@ -79,13 +79,18 @@ class SettingController extends Controller
             } else {
                 $color_pdf = '#006bfa';
             }
+            if ($company->companyUser->options['disable_delegation_pdf'] == true) {
+                $disableDelegationPdf = "checked='true'";
+            } else {
+                $disableDelegationPdf ='';
+            }
 
         }
 
         $currencies = Currency::where('alphacode', '=', 'USD')->orwhere('alphacode', '=', 'EUR')->pluck('alphacode', 'id');
         $pdf_templates = PdfTemplate::pluck('name', 'id');
 
-        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'ShowFreightCurrency','StoreHiddenCharges', 'color_pdf','delegations'));
+        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'ShowFreightCurrency','StoreHiddenCharges', 'color_pdf','delegations','disableDelegationPdf'));
     }
 
     public function store(StoreSettings $request)
@@ -190,6 +195,7 @@ class SettingController extends Controller
             $company_options = $company->options;
             $company_options['totals_in_freight_currency'] = $request->showfreightcurrency;
             $company_options['store_hidden_charges'] = $request->storehiddencharges;
+            $company_options['disable_delegation_pdf'] = $request->disabledelegationpdf;
             $company->options = $company_options;
             $company->name = $request->name;
             $company->phone = $request->phone;

@@ -504,6 +504,16 @@
                                             <input  type="color" name="colors_pdf" value="{{ @$color_pdf}}"> 
                                         </div>
                                     </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group m-form__group">
+                                            <label  class="m-radio m-radio--check-bold m-radio--state-brand">
+                                                <label for="disabledelegationpdf">Disable delegation in PDF</label>
+                                                    <input {{ @$disableDelegationPdf}} type="checkbox"  name="disabledelegationpdf" value="true" >
+                                                        <span></span>
+                                                </label>       
+											</label>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12 {{@$company->companyUser->header_type=='image' ? '':'hide'}}" id="header_image">
