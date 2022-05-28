@@ -241,13 +241,13 @@
                                             v-model="charge.price['c' + item]"
                                             class="q-input data-profit"
                                             @keypress="isNumber($event)"
-                                            disabled
+                                            :disabled="!edit_charge"
                                         ></b-form-input>
                                         <b-form-input
                                             v-model="charge.profit['m' + item]"
                                             class="q-input data-profit"
                                             @keypress="isNumber($event)"
-                                            disabled
+                                            :disabled="!edit_charge"
                                         ></b-form-input>
                                     </div>
                                 </b-td>
@@ -1219,6 +1219,7 @@ export default {
             },
             allSelected: false,
             allSelectedLocal: false,
+            edit_charge: this.currentQuoteData.company_user.options.edit_quote_charges
         };
     },
     watch: {

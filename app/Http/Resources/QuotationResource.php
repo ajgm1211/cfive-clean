@@ -75,7 +75,7 @@ class QuotationResource extends JsonResource
             'remarks_italian' => $this->remarks_italian,
             'remarks_catalan' => $this->remarks_catalan,
             'kind_of_cargo' => is_null($this->kind_of_cargo) ? $this->kind_of_cargo : $this->kind_of_cargo()->first(),
-            'company_user' => $this->companyUser,
+            'company_user' => $this->company_user,
             'company_user_id' => $this->company_user_id,
             'origin_address' => $this->origin_address,
             'destination_address' => $this->destination_address,
