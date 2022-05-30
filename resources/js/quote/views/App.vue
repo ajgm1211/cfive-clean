@@ -77,23 +77,13 @@ export default {
         {
           key: "status",
           label: "status",
-          formatter: (value) => {
-            return value.name;
-          },
           filterisOpen: true,
-          filterTrackBy: "name",
-          trackLabel: "name",
           isObject: false
         },
         {
           key: "company_id",
           label: "Client",
           filterisOpen: true,
-          formatter: (value) => {
-            return this.setClient(value);
-          },
-          filterTrackBy: "business_name",
-          trackLabel: "business_name",
           isObject: true
         },
         { key: "type", label: "Type", filterisOpen:true, isObject: false },
@@ -114,13 +104,8 @@ export default {
         {
           key: "user_id",
           label: "User",
-          formatter: (value) => {
-            return value.fullname;
-          },
           filterisOpen:true,
           isObject: true,
-          filterTrackBy: "fullname",
-          trackLabel: "fullname",
         },
         { key: "created_at", label: "Created at", filterisOpen: false },
       ],
