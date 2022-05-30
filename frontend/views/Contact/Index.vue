@@ -82,6 +82,10 @@ export default {
         { key: "email", label: "Email", filterIsOpen: false },
         { key: "phone", label: "Phone", filterIsOpen: false },
         { key: "position", label: "Position", filterIsOpen: false },
+        { key: "company", label: "Company Name",
+          formatter: (value) => {
+            return value.business_name;
+          }, filterIsOpen: false },
         { key: "created_at", label: "Created at", filterIsOpen: false },
       ],
       classTable: "table table-striped table-responsive",
