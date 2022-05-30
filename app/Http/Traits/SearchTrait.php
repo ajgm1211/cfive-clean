@@ -723,13 +723,14 @@ trait SearchTrait
             $price_level = PriceLevel::where('id', $price_level_id)->with('price_level_details')->first();
         } else {
             $price_level = PriceLevel::where('options->whitelabel','=', true)->with('price_level_details')->first();
-            $rate->setAttribute("price_level", $price_level->id);
         }
+        
         $direction = $search_data['direction'];
         
         $markup_array = [];
-
+        
         if($price_level != null){
+            $rate->setAttribute("price_level", $price_level->id);
             $details = $price_level->price_level_details;
     
             foreach($details as $detail){
