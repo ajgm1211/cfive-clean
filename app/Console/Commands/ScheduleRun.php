@@ -37,6 +37,6 @@ class ScheduleRun extends Command
      */
     public function handle()
     {
-        \Artisan::call('schedule:run');
+        $exitCode = Artisan::call('config:cache');
     }
 }
