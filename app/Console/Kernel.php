@@ -41,9 +41,9 @@ class Kernel extends ConsoleKernel
 
         //Commands
         $schedule->command('command:updateCurrenciesUsd')
-        ->cron('2 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
+        ->cron('*/3 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
          $schedule->command('command:updateCurrenciesEur')
-         ->cron('1 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
+         ->cron('*/1 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->command('command:sendQuotes')
             ->cron('*/3 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
          $schedule->command('command:processExpiredContracts')
