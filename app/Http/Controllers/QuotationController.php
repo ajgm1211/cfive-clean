@@ -719,6 +719,13 @@ class QuotationController extends Controller
             }            
         }
 
+        //Buscar AutomaticRateTotals viejos
+        $old_rates_totals = $new_quote->automatic_rate_totals()->get();
+
+        foreach ($old_rates_totals as $old_rate_total) {
+            $old_rate_total->delete();
+        }
+        
         //Setting Automatic Rates
         $rate_ports = ['origin' => [], 'destination' => []];
 
