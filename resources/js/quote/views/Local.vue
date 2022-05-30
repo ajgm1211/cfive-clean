@@ -321,7 +321,7 @@
                                     <b-form-input
                                         v-model="charge.total"
                                         class="q-input local_charge_total_input"
-                                        :disabled="!edit_charge"
+                                        disabled
                                     ></b-form-input>
                                 </b-td>
 
