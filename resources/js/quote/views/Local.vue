@@ -445,8 +445,7 @@
                                     :key="key"
                                 >
                                     <span v-if="totals.total">
-                                        <b 
-                                        >{{ totals.total["c" + item] }}</b>
+                                        <b>{{ totals.total["c" + item] }}</b>
                                     </span>
                                 </b-td>
 
@@ -1640,6 +1639,8 @@ export default {
             this.inputs.splice(index, 1);
         },
         onUpdate(id, data, index, type) {
+            this.totals = [];
+            let self = this;
             actions.localcharges
                 .update(id, data, index, type)
                 .then((response) => {
