@@ -399,7 +399,7 @@ class Contract extends Model implements HasMedia, Auditable
         $new_contract->name .= ' copy';
         $new_contract->save();
 
-        $this->load('carriers.carrier', 'localcharges', 'rates');
+        $this->load('carriers.carrier', 'localcharges', 'rates', 'contract_company_restriction', 'contract_user_restriction');
         $relations = $this->getRelations();
 
         foreach ($relations as $relation) {
