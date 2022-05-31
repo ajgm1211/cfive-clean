@@ -78,7 +78,7 @@ class QuotationController extends Controller
         
         if ($subtype === 'comercial') {
             $query = ViewQuoteV2::filterByCurrentUser();
-        } else if($filter_delegation == true) {
+        } else if($filter_delegation == true && $user->type == "subuser") {
             $query =  ViewQuoteV2::filterByDelegation();
         } else {
             $query = ViewQuoteV2::filterByCurrentCompany();
