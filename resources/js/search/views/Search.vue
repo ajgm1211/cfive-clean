@@ -1844,7 +1844,7 @@ export default {
             component.carriers.push(carrier);
           });
         } else {
-          this.searchRequest.carriers = this.isAllCarriersSelected ? this.datalists.carriers : this.carriers
+          this.searchRequest.carriers = this.areAllCarriersSelected ? this.datalists.carriers : this.carriers
         }
         this.searchRequest.originCharges =
           this.searchData.origin_charges == 0 ? false : true;
@@ -2520,7 +2520,7 @@ export default {
       }
       return this.datalists.cargo_types
     },
-    isAllCarriersSelected() {
+    areAllCarriersSelected() {
       return this.carriers.length === 0 || (this.carriers.length === 1 && this.carriers[0].name === "ALL")
     }
   },
