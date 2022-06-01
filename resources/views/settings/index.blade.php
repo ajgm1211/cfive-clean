@@ -498,13 +498,13 @@
                                             {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image','Color'=>'Color'],@$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
                                         </div>
                                     </div>                          
-                                    <div class="col-md-5">
+                                    <div class="col-md-4">
                                         <div class="form-group m-form__group">
                                             <label for="colors_PDF">Color</label><br>
                                             <input  type="color" name="colors_pdf" value="{{ @$color_pdf}}"> 
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 pt-4 pb-3">
                                         <div class="form-group m-form__group">
                                             <label  class="m-radio m-radio--check-bold m-radio--state-brand">
                                                 <label for="disabledelegationpdf">Disable delegation in PDF</label>
