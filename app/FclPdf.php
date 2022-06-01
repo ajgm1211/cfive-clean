@@ -54,7 +54,18 @@ class FclPdf
 
         $quote_totals = $this->quoteTotals($quote, $containers);
 
-        $delegation = $this->delegation($quote);
+        //Option for disable delegation
+        $company_user = CompanyUser::find($quote->company_user_id);
+        $company_user_options =  $company_user['options'];
+        $disabled_delegation = $company_user_options['disable_delegation_pdf'];
+
+        if($disabled_delegation == true){
+            $delegation = true ;
+
+        }else{
+            $delegation = $this->delegation($quote);
+        }        
+
 
         $data = ['quote' => $quote, 'delegation' => $delegation, 'inlands' => $inlands, 'user' => $user, 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals];
 
@@ -62,8 +73,9 @@ class FclPdf
 
         //$pdf = \App::make('dompdf.wrapper');
 
+        
         $pdf = PDF::loadView('quote.pdf.index', $data);
-
+        
         if ($this->upload) {
             Storage::disk('pdf')->put('quote_'.$quote->id.'.pdf', $pdf->output());
             $quote->addMedia(storage_path().'/app/public/pdf/quote_'.$quote->id.'.pdf')->toMediaCollection('document', 'pdfApiS3');
@@ -81,13 +93,13 @@ class FclPdf
 
     public function Delegation($quote)
     {
-
         $id_ud = UserDelegation::where('users_id', '=', $quote->user_id)->first();
         if ($id_ud == null)
             $delegation = '';
         else {
             $delegation = Delegation::where('id', '=', $id_ud->delegations_id)->first();
         }
+        
 
         return $delegation;
     }
