@@ -1428,6 +1428,7 @@ export default {
         },
 
         dispatch(val, item) {
+            this.clearForm()  // Cleaning old data from the previous selection
             this.refresh = false;
             this.datalists[
                 "ori_" + this.inputFields[item].target
