@@ -263,6 +263,7 @@ class QuotationController extends Controller
             'terms_english' => $search_data['terms'] ? $search_data['terms']['english'] : null,
             'terms_italian' => $search_data['terms'] ? $search_data['terms']['italian'] : null,
             'terms_catalan' => $search_data['terms'] ? $search_data['terms']['catalan'] : null,
+            'terms_french' => $search_data['terms'] ? $search_data['terms']['french'] : null,
             'total_quantity' => $search_data['quantity'],
             'total_weight' => $search_data['weight'],
             'total_volume' => $search_data['volume'],
@@ -281,19 +282,33 @@ class QuotationController extends Controller
             $quote->update(['remarks_italian' => $remarks]);
         } else if ($quote->language_id == 5) {
             $quote->update(['remarks_catalan' => $remarks]);
+        } else if ($quote->language_id == 6) {
+            $quote->update(['remarks_french' => $remarks]);
         }
 
         if(isset($remarksPenalties)){
             if (empty($quote->remarks_english) ) {
                 $quote->update(['remarks_english' => $remarksPenalties]);
-            }if (empty($quote->remarks_spanish)) {
+            }
+
+            if (empty($quote->remarks_spanish)) {
                 $quote->update(['remarks_spanish' => $remarksPenalties]);
-            }if (empty($quote->remarks_portuguese)) {
+            }
+
+            if (empty($quote->remarks_portuguese)) {
                 $quote->update(['remarks_portuguese' => $remarksPenalties]);
-            }if (empty($quote->remarks_italian)) {
+            }
+
+            if (empty($quote->remarks_italian)) {
                 $quote->update(['remarks_italian' => $remarksPenalties]);
-            }if (empty($quote->remarks_catalan)) {
+            }
+
+            if (empty($quote->remarks_catalan)) {
                 $quote->update(['remarks_catalan' => $remarksPenalties]);
+            }
+
+            if (empty($quote->remarks_french)) {
+                $quote->update(['remarks_french' => $remarksPenalties]);
             }
         }
 
@@ -456,7 +471,8 @@ class QuotationController extends Controller
     {
         $form_keys = $request->input('keys');
 
-        $terms_keys = ['terms_and_conditions', 'terms_portuguese', 'terms_english', 'remarks_spanish', 'remarks_portuguese', 'remarks_english'];
+        $terms_keys = ['terms_and_conditions', 'terms_portuguese', 'terms_english', 'remarks_spanish', 'remarks_portuguese', 'remarks_english',
+                        'remarks_italian', 'remarks_catalan', 'remarks_french'];
 
         if ($form_keys != null) {
             if (array_intersect($terms_keys, $form_keys) == [] && $request->input('cargo_type_id') == null) {

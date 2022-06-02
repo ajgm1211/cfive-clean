@@ -516,41 +516,11 @@ export default {
         },
 
         setRemarksField(language){
-            if(language=="Spanish"){
-                this.remarks_fields = {
-                    remarks_spanish: {
-                        type: "ckeditor",
-                        colClass: "col-sm-12",
-                    },
-                }  
-            }else if(language=="Portuguese"){
-                this.remarks_fields = {
-                    remarks_portuguese: {
-                        type: "ckeditor",
-                        colClass: "col-sm-12",
-                    },
-                }  
-            }else if(language=="English"){
-                this.remarks_fields = {
-                    remarks_english: {
-                        type: "ckeditor",
-                        colClass: "col-sm-12",
-                    },
-                }  
-            }else if(language=="Italian"){
-                this.remarks_fields = {
-                    remarks_italian: {
-                        type: "ckeditor",
-                        colClass: "col-sm-12",
-                    },
-                }  
-            }else if(language=="Catalan"){
-                this.remarks_fields = {
-                    remarks_catalan: {
-                        type: "ckeditor",
-                        colClass: "col-sm-12",
-                    },
-                }  
+            let language_key = "remarks_" + language.toLowerCase();
+            
+            this.remarks_fields[language_key] = {
+                type: "ckeditor",
+                colClass: "col-sm-12",
             }
 
             this.global_remarks_fields = {
