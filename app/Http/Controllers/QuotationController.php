@@ -287,6 +287,7 @@ class QuotationController extends Controller
         if(!empty($validation_same_quote)){
             $newq_id = $company_code . '-' . strval($higherq_id + 2);        
         }
+        
         if(isset($search_data['company']['pdf_language'])){
             if(is_int($search_data['company']['pdf_language'])){
                 $language_id = ($search_data['company']['pdf_language'] == 0 || $search_data['company']['pdf_language'] == null) ? 1 : $search_data['company']['pdf_language'];
@@ -301,6 +302,7 @@ class QuotationController extends Controller
         }else{
             $language_id = ($company_user->pdf_language == 0 || $company_user->pdf_language == null) ? 1 : $company_user->pdf_language;
         }
+
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
             'type' => $search_data_ids['type'],
