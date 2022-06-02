@@ -1098,6 +1098,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('api/quotes/ocean_freight/{autorate}/charge', 'ChargeController@retrieve');
     Route::post('/api/quotes/ocean_freight/charge/{charge}/update', 'ChargeController@update');
     Route::post('api/quotes/automatic_rate/charges/destroyAll', 'ChargeController@destroyAll');
+    Route::post('/api/quotes/updateStatus/charge/{charge}', 'ChargeController@updateStatus');
     /**LCL **/
     Route::get('api/quotes/{quote}/automatic_rate/{autorate}/chargeslcl', 'ChargeLclController@list')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/storelcl', 'ChargeLclController@store')->middleware('check_company:quote');

@@ -447,6 +447,9 @@ export default {
         },
         deleteAll(ids) {
             return api.call('post', `/api/quotes/automatic_rate/charges/destroyAll`, { ids: ids });
+        },
+        updateStatusSelect(charge_id,data){
+            return api.call('post', `/api/quotes/updateStatus/charge/${charge_id}`,data)
         }
     },
     chargeslcl: {

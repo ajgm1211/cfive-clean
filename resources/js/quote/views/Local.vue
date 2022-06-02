@@ -493,7 +493,7 @@
             hide-footer
             title="Add Charges"
             @hidden="closeModal"
-        >
+        >{{inputs}}{{selectedInputs}}
             <div class="row">
                 <div class="col-12 col-lg-6 d-flex alig-items-center">
                     <h5>
@@ -596,6 +596,7 @@
                                         v-model="selectedCharges"
                                         :id="'id_' + localcharge.id"
                                         :value="localcharge"
+                                        @change="selectStatus(localcharge.id,selectedCharges)"
                                     ></b-form-checkbox>
                                      <b-form-input
                                         v-model="localcharge.id"
@@ -1401,6 +1402,7 @@ export default {
         getLocalCharges() {
             this.localcharges = [];
             this.port = [];
+            this.selectedCharges=[];
             let self = this;
             let data = {
                 quote_id: this.$route.params.id,
@@ -1415,6 +1417,12 @@ export default {
                         self.localcharges.forEach(function (local){
                             if(local.markup.length == 0){
                                 local.markup = {};
+                            }
+                            if(local.options.show_as!=null){
+                                local.sale_codes=local.options.show_as;
+                            }
+                            if(local.options.selected==true){
+                                self.selectedCharges.push(local);
                             }
                         })
                         self.port = response.data.port.display_name;
@@ -1516,10 +1524,12 @@ export default {
                             this.charges = response.data;
                             this.getStoredCharges();
                             this.getTotal();
+                            this.getLocalCharges()
                             this.alert("Record saved successfully", "success");
                             this.closeModal();
                             this.selectedCharges = [];
                             this.selectedInputs = [];
+                            this.inputs = [];
                         })
                         .catch((data) => {
                             if(data.status == 422){
@@ -1548,6 +1558,7 @@ export default {
                 this.alert("You must select a charge at least", "error");
             }
             this.allSelected=false;
+            
         },
         onDeleteAll() {
             if(this.currentQuoteData.type=="FCL"){
@@ -1706,6 +1717,35 @@ export default {
                         } 
                     }
             })
+        },
+        selectStatus(id_charge,charge_selected){
+
+            let selected=false;
+            let chargeStatus =[];
+            
+            charge_selected.forEach(function (charge){
+                if(charge.id==id_charge && charge.options.select !=true ){    
+                     chargeStatus = {
+                         select:true,
+                         type:'status'
+                     };
+                     selected=true;
+                }
+                if(charge.id!=id_charge && charge.options.select !=false && selected==false){
+                    chargeStatus = {
+                         select:false,
+                         type:'status'
+                     }
+                }
+            });
+            actions.charges
+                .updateStatusSelect(id_charge,chargeStatus)
+                .then((response) => {
+                    //
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
         }
     },
 };
