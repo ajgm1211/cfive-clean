@@ -1,7 +1,7 @@
 <template>
   <div @blur="$emit('blur')" class="dropdown" v-if="returnItems.length">
     <label
-      :class="error === true && !selectedItem ? 'error-msj' : ''"
+      :class="error && !selected_item ? 'error-msj' : ''"
       v-if="label"
       style="margin-bottom:10px"
       class="d-block labelv2"
@@ -10,26 +10,25 @@
     </label>
 
     <input
-      v-if="Object.keys(selectedItem).length === 0"
-      ref="dropdowninput"
-      v-model.trim="inputValue"
+      v-if="Object.keys(selected_item).length === 0"
+      ref="dropdown_input"
+      v-model.trim="input_value"
       class="dropdown-input"
       type="text"
       :placeholder="placeholder"
       @focus="is_open = true"
-      :class="error === true && !selectedItem ? 'error-border' : ''"
+      :class="error && !selected_item ? 'error-border' : ''"
     />
     <div
       v-else
       class="dropdown-selected"
       @focus="is_open = true"
-      @keydown.delete="resetSelection()"
-      tabindex="0"
+      @click="resetSelection"
     >
-      {{ selectedItem[show_by] ? selectedItem[show_by] : selectedItem }}
+      {{ selected_item[show_by] ? selected_item[show_by] : selected_item }}
     </div>
 
-    <div v-if="error === true && !selectedItem" class="error-msj-container">
+    <div v-if="error && !selected_item" class="error-msj-container">
       <span class="error-msj">This is required</span>
     </div>
 
@@ -52,9 +51,8 @@
 export default {
   data: () => ({
     is_open: false,
-    inputValue: "",
-    selectedItem: "",
-    loading: true,
+    input_value: '',
+    selected_item: '',
   }),
   props: {
     itemList: {
@@ -84,7 +82,7 @@ export default {
   },
   mounted() {
     if (this.preselected) {
-      this.selectedItem = this.preselected;
+      this.selected_item = this.preselected;
     }
 
     window.addEventListener("click", (e) => {
@@ -96,25 +94,26 @@ export default {
   methods: {
     itemVisible(item) {
       if (item[this.show_by]) {
-        let currentName = item[this.show_by].toLowerCase();
-        let currentInput = this.inputValue.toLowerCase();
-        return currentName.includes(currentInput);
+        let current_name = item[this.show_by].toLowerCase();
+        let current_input = this.input_value.toLowerCase();
+        return current_name.includes(current_input);
       } else {
-        let currentName = item.toLowerCase();
-        let currentInput = this.inputValue.toLowerCase();
-        return currentName.includes(currentInput);
+        let current_name = item.toLowerCase();
+        let current_input = this.input_value.toLowerCase();
+        return current_name.includes(current_input);
       }
     },
-    selectItem(theItem) {
-      this.selectedItem = theItem;
-      this.inputValue = "";
-      this.$emit("selected", theItem);
+    selectItem(item) {
+      this.$emit("selected", item)
+      this.selected_item = item
+      this.input_value = ''
       this.is_open = false
     },
     resetSelection() {
-      this.selectedItem = "";
-      this.$nextTick(() => this.$refs.dropdowninput.focus());
-      this.$emit("reset");
+      this.$emit("reset")
+      this.selected_item = ''
+      this.is_open = true
+      this.$nextTick(() => this.$refs.dropdown_input.focus())
     },
   },
   computed: {
