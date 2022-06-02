@@ -53,18 +53,8 @@ class FclPdf
         $freight_charges_detailed = $this->freightChargesDetailed($freight_charges, $quote, $containers);
 
         $quote_totals = $this->quoteTotals($quote, $containers);
-
-        //Option for disable delegation
-        $company_user = CompanyUser::find($quote->company_user_id);
-        $company_user_options =  $company_user['options'];
-        $disabled_delegation = $company_user_options['disable_delegation_pdf'];
-
-        if($disabled_delegation == true){
-            $delegation = true ;
-
-        }else{
-            $delegation = $this->delegation($quote);
-        }        
+ 
+        $delegation = $this->getDelegation($quote);
 
 
         $data = ['quote' => $quote, 'delegation' => $delegation, 'inlands' => $inlands, 'user' => $user, 'freight_charges' => $freight_charges, 'freight_charges_detailed' => $freight_charges_detailed, 'equipmentHides' => $equipmentHides, 'containers' => $containers, 'origin_charges' => $origin_charges, 'destination_charges' => $destination_charges, 'totals' => $quote_totals];
@@ -89,6 +79,22 @@ class FclPdf
         $event->event_pdfFcl();
 
         return $pdf->stream('quote-' . $quote->id . '.pdf');
+    }
+
+    public function getDelegation($quote){
+
+        //Option for disable delegation
+        $company_user = CompanyUser::find($quote->company_user_id);
+        $company_user_options =  $company_user['options'];
+        $disabled_delegation = $company_user_options['disable_delegation_pdf'];
+
+        if($disabled_delegation == true){
+            $delegation = true ;
+
+        }else{
+            $delegation = $this->delegation($quote);
+        }        
+        return $delegation;
     }
 
     public function Delegation($quote)
