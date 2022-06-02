@@ -320,9 +320,9 @@ class ImportationLclController extends Controller
             $account->requestlcl_id = $request_id;
             $account->save();
             if (env('APP_VIEW') == 'operaciones') {
-                ProcessContractFile::dispatch($account->id, $account->namefile, 'lcl', 'account')->onQueue('operaciones');
+                ProcessContractFile::dispatch($account->id, $account->namefile, 'lcl', 'account')->onQueue('high');
             } else {
-                ProcessContractFile::dispatch($account->id, $account->namefile, 'lcl', 'account');
+                ProcessContractFile::dispatch($account->id, $account->namefile, 'lcl', 'account')->onQueue('high');
             }
             if ($selector == 2) {
                 $contract = ContractLcl::find($request->contract_id);

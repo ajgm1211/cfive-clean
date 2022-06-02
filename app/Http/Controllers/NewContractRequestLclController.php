@@ -319,9 +319,9 @@ class NewContractRequestLclController extends Controller
             }
 
             if (env('APP_VIEW') == 'operaciones') {
-                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request')->onQueue('operaciones');
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request')->onQueue('high');
             } else {
-                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request');
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request')->onQueue('high');
             }
 
             $user = User::find($request->user);
@@ -533,7 +533,7 @@ class NewContractRequestLclController extends Controller
                     if (env('APP_VIEW') == 'operaciones') {
                         SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id)->onQueue('operaciones');
                     } else {
-                        SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id);
+                        SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id)->onQueue('high');
                     }
                 }
                 if ($Ncontract->contract_id != null) {
@@ -594,7 +594,7 @@ class NewContractRequestLclController extends Controller
             if (env('APP_VIEW') == 'operaciones') {
                 SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id)->onQueue('operaciones');
             } else {
-                SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id);
+                SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id)->onQueue('high');
             }
             $success = true;
         } catch (\Exception $e) {

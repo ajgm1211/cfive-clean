@@ -392,9 +392,9 @@ class ImportationGlobalChargerLclController extends Controller
             $account->save();
 
             if (env('APP_VIEW') == 'operaciones') {
-                ProcessContractFile::dispatch($account->id, $account->namefile, 'gclcl', 'account')->onQueue('operaciones');
+                ProcessContractFile::dispatch($account->id, $account->namefile, 'gclcl', 'account')->onQueue('high');
             } else {
-                ProcessContractFile::dispatch($account->id, $account->namefile, 'gclcl', 'account');
+                ProcessContractFile::dispatch($account->id, $account->namefile, 'gclcl', 'account')->onQueue('high');
             }
 
             $account_id = $account->id;
