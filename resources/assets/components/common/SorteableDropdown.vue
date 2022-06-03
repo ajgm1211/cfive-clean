@@ -128,6 +128,9 @@ export default {
         case 'Enter':
           this.selectItem(this.filteredItemList[this.focused_item_index])
           break
+        default:
+          this.focused_item_index = null
+          this.$refs.dropdown_list.scrollTop = 0
       }
     }
   },
