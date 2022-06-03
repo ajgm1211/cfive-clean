@@ -59,28 +59,73 @@ class QuotationController extends Controller
 
     function list(Request $request)
     {   
-        $company_user_id = \Auth::user()->company_user_id;
-        $company_user = CompanyUser::where('id','=',$company_user_id)->first();
-        $filter_delegation = $company_user['options']['filter_delegations'];
-        $subtype = \Auth::user()->options['subtype'];
-        $user_id = \Auth::user()->id;
-        $user_delegation =UserDelegation::where('users_id','=',$user_id)->first();
-        $delegation=Delegation::find($user_delegation['delegations_id']);
-        $id_delegation = $delegation['id'];
+        $user = auth()->user();
+
+        $query = $this->getFilterByUserType($user);
         
-        //Permisos de subtype comercial, solo puede acceder a sus propias cotizaiones
-        if($subtype === 'comercial') {
-            $results = ViewQuoteV2::filterByCurrentUser()->filter($request);
-        }
-        // Filtro para buscar por delegacion los quotes
-        if($filter_delegation == true) {
-            $results =  ViewQuoteV2::filterByDelegation()->paginate(10);
-        }  
-        else {
-            $results = ViewQuoteV2::filterByCurrentCompany()->filter($request);
-        }
+        $this->getFilterByRequestParams($query, $request['params']);
+
+        $results = $query->orderByDesc('id')->paginate(10); 
 
         return QuotationListResource::collection($results);
+    }
+
+    public function getFilterByUserType($user)
+    {
+        $company_user = CompanyUser::where('id','=',$user->company_user_id)->first();
+        $filter_delegation = $company_user['options']['filter_delegations'];
+        $subtype = $user->options['subtype'];
+        
+        if ($subtype === 'comercial') {
+            $query = ViewQuoteV2::filterByCurrentUser();
+        } else if($filter_delegation == true && $user->type == "subuser") {
+            $query =  ViewQuoteV2::filterByDelegation();
+        } else {
+            $query = ViewQuoteV2::filterByCurrentCompany();
+        }
+        
+        return $query;
+    }
+
+    public function getFilterByRequestParams($query, $params)
+    {
+        $params = json_decode($params, true);
+        $attributes = ['id', 'quote_id', 'custom_quote_id', 'status', 'company_id', 'type', 'user_id',];
+        
+        foreach ($attributes as $attr) {
+            if (isset($params[$attr]) && count($params[$attr])) {
+                $query->whereIn($attr, $params[$attr]);
+            }
+        }   
+
+        return $this->getFilterByJoinConditions($query, $params); 
+    }
+
+    public function getFilterByJoinConditions($query, $params)
+    {
+        if (isset($params['origin']) && count($params['origin']) && isset($params['destiny']) && count($params['destiny'])) { 
+            return $query->select('view_quote_v2s.*')
+                ->join('automatic_rates', 'automatic_rates.quote_id', '=', 'view_quote_v2s.id')
+                ->whereIn('automatic_rates.origin_port_id', $params['origin'])
+                ->whereIn('automatic_rates.destination_port_id', $params['destiny'])
+                ->groupBy('view_quote_v2s.id');
+        }
+
+        if (isset($params['origin']) && count($params['origin'])) { 
+            $query->select('view_quote_v2s.*')
+                ->join('automatic_rates', 'automatic_rates.quote_id', '=', 'view_quote_v2s.id')
+                ->whereIn('automatic_rates.origin_port_id', $params['origin'])
+                ->groupBy('view_quote_v2s.id');
+        }
+
+        if (isset($params['destiny']) && count($params['destiny'])) { 
+            $query->select('view_quote_v2s.*')
+                ->join('automatic_rates', 'automatic_rates.quote_id', '=', 'view_quote_v2s.id')
+                ->whereIn('automatic_rates.destination_port_id', $params['destiny'])
+                ->groupBy('view_quote_v2s.id');
+        }
+        
+        return $query;
     }
 
     public function data(Request $request)
@@ -242,6 +287,22 @@ class QuotationController extends Controller
         if(!empty($validation_same_quote)){
             $newq_id = $company_code . '-' . strval($higherq_id + 2);        
         }
+        
+        if(isset($search_data['company']['pdf_language'])){
+            if(is_int($search_data['company']['pdf_language'])){
+                $language_id = ($search_data['company']['pdf_language'] == 0 || $search_data['company']['pdf_language'] == null) ? 1 : $search_data['company']['pdf_language'];
+            }else{
+                $language = Language::where('name', $search_data['company']['pdf_language'])->first();
+                if(!isset($language)){
+                    $language_id = ($search_data['company']['pdf_language'] == "0" || $search_data['company']['pdf_language'] == null) ? 1 : (int)$search_data['company']['pdf_language'];    
+                }else{
+                    $language_id = $language->id;
+                }
+            }
+        }else{
+            $language_id = ($company_user->pdf_language == 0 || $company_user->pdf_language == null) ? 1 : $company_user->pdf_language;
+        }
+
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
             'type' => $search_data_ids['type'],
@@ -249,7 +310,7 @@ class QuotationController extends Controller
             'user_id' => $user->id,
             'direction_id' => $search_data_ids['direction'],
             'company_user_id' => $company_user->id,
-            'language_id' => ($company_user->pdf_language == 0 || $company_user->pdf_language == null) ? 1 : $company_user->pdf_language,
+            'language_id' => $language_id,
             'company_id' => isset($search_data_ids['company']) ? $search_data_ids['company'] : null,
             'contact_id' => isset($search_data_ids['contact']) ? $search_data_ids['contact'] : null,
             'price_id' => isset($search_data_ids['pricelevel']) ? $search_data_ids['pricelevel'] : null,
@@ -719,6 +780,13 @@ class QuotationController extends Controller
             }            
         }
 
+        //Buscar AutomaticRateTotals viejos
+        $old_rates_totals = $new_quote->automatic_rate_totals()->get();
+
+        foreach ($old_rates_totals as $old_rate_total) {
+            $old_rate_total->delete();
+        }
+        
         //Setting Automatic Rates
         $rate_ports = ['origin' => [], 'destination' => []];
 
@@ -1190,3 +1258,4 @@ class QuotationController extends Controller
         return $remark;
     }
 }
+    

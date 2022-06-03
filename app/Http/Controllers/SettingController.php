@@ -83,6 +83,10 @@ class SettingController extends Controller
                 $EditQuoteCharges = "checked='true'";
             } else {
                 $EditQuoteCharges = false;
+            if ($company->companyUser->options['disable_delegation_pdf'] == true) {
+                $disableDelegationPdf = "checked='true'";
+            } else {
+                $disableDelegationPdf ='';
             }
 
         }
@@ -90,7 +94,7 @@ class SettingController extends Controller
         $currencies = Currency::where('alphacode', '=', 'USD')->orwhere('alphacode', '=', 'EUR')->pluck('alphacode', 'id');
         $pdf_templates = PdfTemplate::pluck('name', 'id');
 
-        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'ShowFreightCurrency','StoreHiddenCharges', 'EditQuoteCharges', 'color_pdf','delegations'));
+        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'ShowFreightCurrency','StoreHiddenCharges', 'color_pdf','delegations','disableDelegationPdf','EditQuoteCharges'));
     }
 
     public function store(StoreSettings $request)
@@ -171,6 +175,7 @@ class SettingController extends Controller
             }
             $options=[
                 'api_providers'=> [],
+                'filter_delegations'=> false,
                 'company_address_pdf'=> 1,
                 'totals_in_freight_currency' => false,
                 'store_hidden_charges' => false,
@@ -196,6 +201,7 @@ class SettingController extends Controller
             $company_options['totals_in_freight_currency'] = $request->showfreightcurrency;
             $company_options['store_hidden_charges'] = $request->storehiddencharges;
             $company_options['edit_quote_charges'] = $request->editquotecharges;
+            $company_options['disable_delegation_pdf'] = $request->disabledelegationpdf;
             $company->options = $company_options;
             $company->name = $request->name;
             $company->phone = $request->phone;

@@ -16,13 +16,13 @@
       class="dropdown-input"
       type="text"
       :placeholder="placeholder"
-      @click="selectedItem == '' && open ? (open = !open) : (open = !open)"
+      @focus="is_open = true"
       :class="error === true && !selectedItem ? 'error-border' : ''"
     />
     <div
       v-else
       class="dropdown-selected"
-      @click="open = !open"
+      @focus="is_open = true"
       @keydown.delete="resetSelection()"
       tabindex="0"
     >
@@ -33,7 +33,7 @@
       <span class="error-msj">This is required</span>
     </div>
 
-    <div v-if="open == true" class="dropdown-list">
+    <div v-if="is_open" class="dropdown-list">
       <div
         v-show="itemVisible(item)"
         class="dropdown-item"
@@ -51,7 +51,7 @@
 <script>
 export default {
   data: () => ({
-    open: false,
+    is_open: false,
     inputValue: "",
     selectedItem: "",
     loading: true,
@@ -89,7 +89,7 @@ export default {
 
     window.addEventListener("click", (e) => {
       if (!this.$el.contains(e.target)) {
-        this.open = false;
+        this.is_open = false
       }
     });
   },
@@ -109,7 +109,7 @@ export default {
       this.selectedItem = theItem;
       this.inputValue = "";
       this.$emit("selected", theItem);
-      this.open = false;
+      this.is_open = false
     },
     resetSelection() {
       this.selectedItem = "";
