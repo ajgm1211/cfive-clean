@@ -493,7 +493,7 @@
             hide-footer
             title="Add Charges"
             @hidden="closeModal"
-        >{{inputs}}{{selectedInputs}}
+        >
             <div class="row">
                 <div class="col-12 col-lg-6 d-flex alig-items-center">
                     <h5>
