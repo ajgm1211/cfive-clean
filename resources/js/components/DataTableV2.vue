@@ -1,6 +1,19 @@
 <template>
     <div>
-        
+        <!-- Search Input -->
+        <div v-if="searchBar" class="row my-3">
+            <div class="col-12 col-sm-4">
+                <b-form inline>
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <b-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        v-model="search"
+                        placeholder="Search"
+                    ></b-input>
+                </b-form>
+            </div>
+        </div>
         <!-- DataTable --> 
         <b-table-simple small responsive borderless :class="classTable">
             <!-- Header table -->
@@ -728,12 +741,13 @@ export default {
             
             //Cleaning data array
             this.data = {};
-            
+            console.log('prueba', pageNumber.q);
             if (!this.multiList) {  
                 this.actions.list( 
                     {
                         params: this.filterValues, 
-                        page: pageNumber.page
+                        page: pageNumber.page,
+                        q: pageNumber.q
                     },
                     (err, data) => {
                         this.setData(err, data);
@@ -780,7 +794,7 @@ export default {
 
         /* Update url and execute api call */
         routerPush(qs) {
-            this.$router.push({ query: qs });
+            this.$router.push({ query: qs }); 
             console.log('qs', qs);
             this.getData(qs);
         },
@@ -1225,7 +1239,7 @@ export default {
         search: {
             handler: function (val, oldVal) {
                 let qs = { q: val };
-
+                
                 this.routerPush(qs);
             },
         },
