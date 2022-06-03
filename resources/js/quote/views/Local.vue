@@ -316,10 +316,15 @@
                                         "
                                     ></b-form-input>
                                 </b-td>
-
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
-                                        v-model="charge.total"
+                                        :value="
+                                            setTotal(
+                                                charge.units,
+                                                charge.price,
+                                                charge.profit
+                                            )
+                                        "
                                         class="q-input local_charge_total_input"
                                         disabled
                                     ></b-form-input>

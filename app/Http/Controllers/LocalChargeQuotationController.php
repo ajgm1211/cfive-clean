@@ -412,7 +412,7 @@ class LocalChargeQuotationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request->input());
+        // dd($request->input());
         switch ($request->type) {
             case 1:
                 $request->validate([
@@ -427,6 +427,8 @@ class LocalChargeQuotationController extends Controller
                     $local_charge->$index = $request->data;
                 }
                 $local_charge->update();
+
+                $local_charge->sumarize();
 
                 $local_charge->totalize();
                 
