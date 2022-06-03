@@ -711,6 +711,7 @@
                                         class="data-showas"
                                         label="name"
                                         track-by="name"
+                                        @input="changeSaleCode(localcharge.id,localcharge.sale_codes)"  
                                     ></multiselect>
                                 </b-td>
 
@@ -1718,30 +1719,47 @@ export default {
                     }
             })
         },
-        selectStatus(id_charge,charge_selected){
-
+        selectStatus(id_charge,value){
             let selected=false;
-            let chargeStatus =[];
+            let values =[];
             
-            charge_selected.forEach(function (charge){
+            value.forEach(function (charge){
                 if(charge.id==id_charge && charge.options.select !=true ){    
-                     chargeStatus = {
-                         select:true,
+                     values = {
+                         selected:true,
                          type:'status'
                      };
                      selected=true;
                 }
                 if(charge.id!=id_charge && charge.options.select !=false && selected==false){
-                    chargeStatus = {
-                         select:false,
+                    values = {
+                         selected:false,
                          type:'status'
                      }
                 }
             });
             actions.charges
-                .updateStatusSelect(id_charge,chargeStatus)
+                .updateStatusSelect(id_charge,values)
                 .then((response) => {
                     //
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
+        },
+        changeSaleCode(id_charge,value){
+            let values =[];
+
+                if(value!=null){
+                    values={
+                        "show_as":value,
+                        type:'show_as'
+                    }
+                }
+            actions.charges
+                .updateStatusSelect(id_charge,values)
+                .then((response) => {
+                      this.getLocalCharges();
                 })
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
