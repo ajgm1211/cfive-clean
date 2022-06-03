@@ -287,6 +287,22 @@ class QuotationController extends Controller
         if(!empty($validation_same_quote)){
             $newq_id = $company_code . '-' . strval($higherq_id + 2);        
         }
+        
+        if(isset($search_data['company']['pdf_language'])){
+            if(is_int($search_data['company']['pdf_language'])){
+                $language_id = ($search_data['company']['pdf_language'] == 0 || $search_data['company']['pdf_language'] == null) ? 1 : $search_data['company']['pdf_language'];
+            }else{
+                $language = Language::where('name', $search_data['company']['pdf_language'])->first();
+                if(!isset($language)){
+                    $language_id = ($search_data['company']['pdf_language'] == "0" || $search_data['company']['pdf_language'] == null) ? 1 : (int)$search_data['company']['pdf_language'];    
+                }else{
+                    $language_id = $language->id;
+                }
+            }
+        }else{
+            $language_id = ($company_user->pdf_language == 0 || $company_user->pdf_language == null) ? 1 : $company_user->pdf_language;
+        }
+
         $quote = QuoteV2::create([
             'quote_id' => $newq_id,
             'type' => $search_data_ids['type'],
@@ -294,7 +310,7 @@ class QuotationController extends Controller
             'user_id' => $user->id,
             'direction_id' => $search_data_ids['direction'],
             'company_user_id' => $company_user->id,
-            'language_id' => ($company_user->pdf_language == 0 || $company_user->pdf_language == null) ? 1 : $company_user->pdf_language,
+            'language_id' => $language_id,
             'company_id' => isset($search_data_ids['company']) ? $search_data_ids['company'] : null,
             'contact_id' => isset($search_data_ids['contact']) ? $search_data_ids['contact'] : null,
             'price_id' => isset($search_data_ids['pricelevel']) ? $search_data_ids['pricelevel'] : null,
