@@ -89,15 +89,15 @@ class QuotationController extends Controller
 
     public function getFilterByUserType($user)
     {
-        //$company_user = CompanyUser::where('id','=',$user->company_user_id)->first();
-        //$filter_delegation = $company_user['options']['filter_delegations']; 
+        $company_user = CompanyUser::where('id','=',$user->company_user_id)->first();
+        $filter_delegation = $company_user['options']['filter_delegations']; 
         $subtype = $user->options['subtype'];
         
         if ($subtype === 'comercial') {
             $query = ViewQuoteV2::filterByCurrentUser();
-        }  else /*if($filter_delegation == true && $user->type == "subuser") {
+        }  else if($filter_delegation == true && $user->type == "subuser") {
             $query =  ViewQuoteV2::filterByDelegation();
-        } else*/ {
+        } else {
             $query = ViewQuoteV2::filterByCurrentCompany();
         }
         
