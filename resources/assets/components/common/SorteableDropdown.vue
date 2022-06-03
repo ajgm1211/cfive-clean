@@ -1,23 +1,23 @@
 <template>
   <div class="dropdown" v-if="itemList.length">
     <label
-      :class="error && !selected_item ? 'error-msj' : ''"
       v-if="label"
       style="margin-bottom:10px"
       class="d-block labelv2"
+      :class="{ 'error-msj': error }"
     >
       {{ label }}
     </label>
 
     <input
-      v-if="Object.keys(selected_item).length === 0"
-      ref="dropdown_input"
+      v-if="selected_item === ''"
       v-model.trim="input_value"
-      class="dropdown-input"
       type="text"
+      ref="dropdown_input"
+      class="dropdown-input"
+      :class="{ 'error-border': error }"
       :placeholder="placeholder"
       @focus="is_open = true"
-      :class="error && !selected_item ? 'error-border' : ''"
       @keydown="highlightItem"
     />
     <div
