@@ -63,6 +63,8 @@ class QuotationController extends Controller
 
         $query = $this->getFilterByUserType($user);
         
+        $this->getFilterBySearch($query, $request['q']);
+        
         $this->getFilterByRequestParams($query, $request['params']);
 
         $results = $query->orderByDesc('id')->paginate(10); 
@@ -70,15 +72,30 @@ class QuotationController extends Controller
         return QuotationListResource::collection($results);
     }
 
+    public function getFilterBySearch($query, $qry) {            
+        
+        if (isset($qry)) {    
+
+            return $query->where(function ($q) use ($qry) {                    
+                    $filter_by = ['id', 'quote_id', 'origin_port', 'destination_port', 'business_name', 'type', 'owner'];        
+                    foreach ($filter_by as $column) {
+                        $q->orWhere($column, 'LIKE', '%' . $qry . '%');
+                    }
+            });
+
+        }
+        
+    }
+
     public function getFilterByUserType($user)
     {
         $company_user = CompanyUser::where('id','=',$user->company_user_id)->first();
-        $filter_delegation = $company_user['options']['filter_delegations'];
+        $filter_delegation = $company_user['options']['filter_delegations']; 
         $subtype = $user->options['subtype'];
         
         if ($subtype === 'comercial') {
             $query = ViewQuoteV2::filterByCurrentUser();
-        } else if($filter_delegation == true && $user->type == "subuser") {
+        }  else if($filter_delegation == true && $user->type == "subuser") {
             $query =  ViewQuoteV2::filterByDelegation();
         } else {
             $query = ViewQuoteV2::filterByCurrentCompany();
@@ -89,6 +106,7 @@ class QuotationController extends Controller
 
     public function getFilterByRequestParams($query, $params)
     {
+
         $params = json_decode($params, true);
         $attributes = ['id', 'quote_id', 'custom_quote_id', 'status', 'company_id', 'type', 'user_id',];
         
