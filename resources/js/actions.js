@@ -350,8 +350,8 @@ export default {
         filterOptions() {
             return api.call('get', `/api/quote/filters`);
         },
-        list(params, callback, route, page) {
-            api.call('get', '/api/quote/list', {params, page})
+        list(params, callback, route, page, q) {
+            api.call('get', '/api/quote/list', {params, page, q})
             .then(response => {
                 callback(null, response.data);
             }).catch(error => {
