@@ -13,35 +13,20 @@ class QuotationListResource extends JsonResource
      * @return array
      */
     public function toArray($request)
-    {
-        $origin_ports = $this->origin_harbor()->get();
-        $destiny_ports = $this->destination_harbor()->get();
-        $origin_array = [];
-        $destiny_array = [];
-
-        foreach($origin_ports as $item){
-            array_push($origin_array, $item->display_name);
-        }
-
-        foreach($destiny_ports as $item){
-            array_push($destiny_array, $item->display_name);
-        }
-
-        if(isset($this->user_id)){
-            $this->user->setAttribute('fullname', $this->user->fullname);
-        }
-
+    {        
         return [
             'id' => $this->id,
-            'type' => $this->type,
             'quote_id' => $this->quote_id,
             'custom_quote_id' => $this->custom_quote_id ?? '--',
-            'company_id' => $this->company,
-            'status' => $this->status_quote()->first(),
-            'origin' => $origin_array ?? '--',
-            'destiny' => $destiny_array ?? '--',
-            'user_id' => $this->user,
+            'status' => $this->status ?? '--',
+            'company_id' => $this->business_name ?? '--',
+            'type' => $this->type,
+            'origin' => explode("| ", $this->origin_port),
+            'destiny' => explode("| ", $this->destination_port),
+            'user_id' => $this->owner,
             'created_at' => date('Y-m-d H:m:s', strtotime($this->created_at)),
         ];
     }
+
+
 }

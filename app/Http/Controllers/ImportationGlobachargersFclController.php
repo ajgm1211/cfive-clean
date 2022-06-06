@@ -393,9 +393,9 @@ class ImportationGlobachargersFclController extends Controller
             $account->save();
 
             if (env('APP_VIEW') == 'operaciones') {
-                ProcessContractFile::dispatch($account->id, $account->namefile, 'gcfcl', 'account')->onQueue('operaciones');
+                ProcessContractFile::dispatch($account->id, $account->namefile, 'gcfcl', 'account')->onQueue('high');
             } else {
-                ProcessContractFile::dispatch($account->id, $account->namefile, 'gcfcl', 'account');
+                ProcessContractFile::dispatch($account->id, $account->namefile, 'gcfcl', 'account')->onQueue('high');
             }
 
             $account_id = $account->id;

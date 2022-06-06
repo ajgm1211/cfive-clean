@@ -250,9 +250,9 @@ class NewGlobalchargeRequestControllerFcl extends Controller
             $Ncontract->save();
 
             if (env('APP_VIEW') == 'operaciones') {
-                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'gcfcl', 'request')->onQueue('operaciones');
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'gcfcl', 'request')->onQueue('high');
             } else {
-                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'gcfcl', 'request');
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'gcfcl', 'request')->onQueue('high');
             }
 
             $user = User::find($request->user);
@@ -383,7 +383,7 @@ class NewGlobalchargeRequestControllerFcl extends Controller
                     if (env('APP_VIEW') == 'operaciones') {
                         SendEmailRequestGcJob::dispatch($usercreador->toArray(), $id, 'fcl')->onQueue('operaciones');
                     } else {
-                        SendEmailRequestGcJob::dispatch($usercreador->toArray(), $id, 'fcl');
+                        SendEmailRequestGcJob::dispatch($usercreador->toArray(), $id, 'fcl')->onQueue('high');
                     }
                 }
             }
