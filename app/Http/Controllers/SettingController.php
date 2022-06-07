@@ -83,6 +83,7 @@ class SettingController extends Controller
                 $EditQuoteCharges = "checked='true'";
             } else {
                 $EditQuoteCharges = false;
+            }
             if ($company->companyUser->options['disable_delegation_pdf'] == true) {
                 $disableDelegationPdf = "checked='true'";
             } else {
