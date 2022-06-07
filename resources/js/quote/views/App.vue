@@ -86,11 +86,7 @@ export default {
           filterisOpen: true,
           isObject: true
         },
-        { 
-          key: "type", 
-          label: "Type", 
-          filterisOpen:true, 
-          isObject: false },
+        { key: "type", label: "Type", filterisOpen:true, isObject: false },
         {
           key: "origin",
           label: "Origin",
@@ -111,12 +107,7 @@ export default {
           filterisOpen:true,
           isObject: true,
         },
-        { 
-          key: "created_at", 
-          label: "Created at", 
-          filterisOpen: true ,
-          isObject: false
-        }
+        { key: "created_at", label: "Created at", filterisOpen: false },
       ],
       helpOptions: [
         {

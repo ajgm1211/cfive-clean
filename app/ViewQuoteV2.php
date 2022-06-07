@@ -10,13 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ViewQuoteV2 extends Model
 {
-    protected $casts = [
-        'origin_port_array' => 'array', 
-        'destination_port_array' => 'array', 
-        'company_array' => 'array',
-        'user_array' => 'array'
-    ];
-    
     public function quotev2()
     {
         return $this->belongsTo('App\QuoteV2', 'quote_id');

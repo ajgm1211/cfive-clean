@@ -1,19 +1,6 @@
 <template>
     <div>
-        <!-- Search Input -->
-        <div v-if="searchBar" class="row my-3">
-            <div class="col-12 col-sm-4">
-                <b-form inline>
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                    <b-input
-                        id="inline-form-input-name"
-                        class="mb-2 mr-sm-2 mb-sm-0"
-                        v-model="search"
-                        placeholder="Search"
-                    ></b-input>
-                </b-form>
-            </div>
-        </div>
+        
         <!-- DataTable --> 
         <b-table-simple small responsive borderless :class="classTable">
             <!-- Header table -->
@@ -711,7 +698,7 @@ export default {
             this.isBusy = true;  
             
             /* Refresh */   
-            this.$router.push({}).catch(()=>{});
+            this.$router.push({});
             this.initialPage = 1;
 
             this.filterValues[filterObject.key] = filterObject.values;            
@@ -746,8 +733,7 @@ export default {
                 this.actions.list( 
                     {
                         params: this.filterValues, 
-                        page: pageNumber.page,
-                        q: pageNumber.q
+                        page: pageNumber.page
                     },
                     (err, data) => {
                         this.setData(err, data);
@@ -1239,8 +1225,8 @@ export default {
         search: {
             handler: function (val, oldVal) {
                 let qs = { q: val };
-                setTimeout(this.routerPush(qs), 20000);
-                
+
+                this.routerPush(qs);
             },
         },
     },
