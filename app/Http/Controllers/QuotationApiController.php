@@ -42,10 +42,10 @@ class QuotationApiController extends Controller
 
         $company_user_id = Auth::user()->company_user_id;
 
-        $quotes = QuoteV2::ConditionalWhen($type, $status, $integration)->FilterByType()->AuthUserCompany($company_user_id)->orderBy("id", $sort)->paginate($paginate);
+        $quotes = QuoteV2::ConditionalWhen($type, $status, $integration)->FilterByType()->AuthUserCompany($company_user_id)->where('deleted_at','=',null)->orderBy("id", $sort)->paginate($paginate);
 
         //Update Integration Quote Status
-        if ($integration) {
+        if (isset($integration)) {
             $this->updateIntegrationStatus($quotes);
         }
 
