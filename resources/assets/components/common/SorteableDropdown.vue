@@ -1,46 +1,45 @@
 <template>
-  <div @blur="$emit('blur')" class="dropdown" v-if="returnItems.length">
+  <div class="dropdown" v-if="itemList.length">
     <label
-      :class="error === true && !selectedItem ? 'error-msj' : ''"
       v-if="label"
       style="margin-bottom:10px"
       class="d-block labelv2"
+      :class="{ 'error-msj': error }"
     >
       {{ label }}
     </label>
 
     <input
-      v-if="Object.keys(selectedItem).length === 0"
-      ref="dropdowninput"
-      v-model.trim="inputValue"
-      class="dropdown-input"
+      v-if="selected_item === ''"
+      v-model.trim="input_value"
       type="text"
+      ref="dropdown_input"
+      class="dropdown-input"
+      :class="{ 'error-border': error }"
       :placeholder="placeholder"
       @focus="is_open = true"
-      :class="error === true && !selectedItem ? 'error-border' : ''"
+      @keydown="highlightItem"
     />
     <div
       v-else
       class="dropdown-selected"
       @focus="is_open = true"
-      @keydown.delete="resetSelection()"
-      tabindex="0"
+      @click="resetSelection"
     >
-      {{ selectedItem[show_by] ? selectedItem[show_by] : selectedItem }}
+      {{ selected_item[show_by] ? selected_item[show_by] : selected_item }}
     </div>
 
-    <div v-if="error === true && !selectedItem" class="error-msj-container">
+    <div v-if="error && !selected_item" class="error-msj-container">
       <span class="error-msj">This is required</span>
     </div>
 
-    <div v-if="is_open" class="dropdown-list">
+    <div v-if="is_open" ref="dropdown_list" class="dropdown-list">
       <div
-        v-show="itemVisible(item)"
-        class="dropdown-item"
-        v-for="(item, index) in returnItems"
+        v-for="(item, index) in filteredItemList"
         :key="index"
+        class="dropdown-item"
+        :class="{ 'dropdown-item-focused': focused_item_index === index }"
         @click="selectItem(item)"
-        @blur="blur(item)"
       >
         {{ item[show_by] ? item[show_by] : item }}
       </div>
@@ -52,9 +51,9 @@
 export default {
   data: () => ({
     is_open: false,
-    inputValue: "",
-    selectedItem: "",
-    loading: true,
+    input_value: '',
+    selected_item: '',
+    focused_item_index: null,
   }),
   props: {
     itemList: {
@@ -84,42 +83,70 @@ export default {
   },
   mounted() {
     if (this.preselected) {
-      this.selectedItem = this.preselected;
+      this.selected_item = this.preselected
     }
 
     window.addEventListener("click", (e) => {
       if (!this.$el.contains(e.target)) {
         this.is_open = false
       }
-    });
+    })
   },
   methods: {
-    itemVisible(item) {
-      if (item[this.show_by]) {
-        let currentName = item[this.show_by].toLowerCase();
-        let currentInput = this.inputValue.toLowerCase();
-        return currentName.includes(currentInput);
-      } else {
-        let currentName = item.toLowerCase();
-        let currentInput = this.inputValue.toLowerCase();
-        return currentName.includes(currentInput);
-      }
-    },
-    selectItem(theItem) {
-      this.selectedItem = theItem;
-      this.inputValue = "";
-      this.$emit("selected", theItem);
+    selectItem(item) {
+      this.$emit("selected", item)
+      this.selected_item = item
+      this.input_value = ''
       this.is_open = false
+      this.focused_item_index = null
     },
     resetSelection() {
-      this.selectedItem = "";
-      this.$nextTick(() => this.$refs.dropdowninput.focus());
-      this.$emit("reset");
+      this.$emit("reset")
+      this.selected_item = ''
+      this.is_open = true
+      this.$nextTick(() => this.$refs.dropdown_input.focus())
     },
+    highlightItem(event) {
+      const scroll_movement_units = 40
+      switch (event.key) {
+        case 'ArrowUp':
+          if (this.focused_item_index === null) {
+            this.focused_item_index = 0
+          } else if (this.focused_item_index > 0) {
+            this.focused_item_index--
+            this.$refs.dropdown_list.scrollTop -= scroll_movement_units
+          }
+          break
+        case 'ArrowDown':
+          if (this.focused_item_index === null) {
+            this.focused_item_index = 0
+          } else if (this.focused_item_index < this.maxIndexDropdown) {
+            this.focused_item_index++
+            this.$refs.dropdown_list.scrollTop += scroll_movement_units
+          }
+          break
+        case 'Enter':
+          this.selectItem(this.filteredItemList[this.focused_item_index])
+          break
+        default:
+          this.focused_item_index = null
+          this.$refs.dropdown_list.scrollTop = 0
+      }
+    }
   },
   computed: {
-    returnItems() {
-      return this.itemList;
+    filteredItemList() {
+      const filtered_item_list = []
+      this.itemList.forEach(element => {
+        const is_included = element[this.show_by].toLowerCase().includes(this.input_value.toLowerCase())
+        if (is_included) {
+          filtered_item_list.push(element)
+        }
+      })
+      return filtered_item_list
+    },
+    maxIndexDropdown() {
+      return this.filteredItemList.length - 1
     },
   },
 };
@@ -174,7 +201,8 @@ export default {
   padding: 11px 16px;
   cursor: pointer;
 }
-.dropdown-item:hover {
+.dropdown-item:hover,
+.dropdown-item-focused {
   background: #edf2f7;
 }
 .dropdown-item-flag {
@@ -182,7 +210,6 @@ export default {
   max-height: 18px;
   margin: auto 12px auto 0px;
 }
-
 .error-border {
   border: 1px solid #ff4c61 !important;
 }
