@@ -63,11 +63,28 @@ class QuotationController extends Controller
 
         $query = $this->getFilterByUserType($user);
         
+        $this->getFilterBySearch($query, $request['q']);
+
         $this->getFilterByRequestParams($query, $request['params']);
 
         $results = $query->orderByDesc('id')->paginate(10); 
 
         return QuotationListResource::collection($results);
+    }
+
+    public function getFilterBySearch($query, $qry) {            
+
+        if (isset($qry)) {    
+
+            return $query->where(function ($q) use ($qry) {                    
+                    $filter_by = ['id', 'quote_id', 'origin_port', 'destination_port', 'business_name', 'type', 'owner', 'created_at'];        
+                    foreach ($filter_by as $column) {
+                        $q->orWhere($column, 'LIKE', '%' . $qry . '%');
+                    }
+            });
+
+        }
+
     }
 
     public function getFilterByUserType($user)
@@ -98,7 +115,21 @@ class QuotationController extends Controller
             }
         }   
 
-        return $this->getFilterByJoinConditions($query, $params); 
+        $this->getFilterByCreatedAt($query, $params); 
+        $this->getFilterByJoinConditions($query, $params); 
+    }
+
+    public function getFilterByCreatedAt($query, $params)
+    {   
+        $query->where(function ($query) use ($params) {        
+            if (isset($params['created_at'])) {    
+                foreach($params['created_at'] as $date){
+                    $query->orWhere('view_quote_v2s.created_at', 'LIKE', '%' . $date . '%');
+                }
+            }
+        });
+
+        return $query;
     }
 
     public function getFilterByJoinConditions($query, $params)
