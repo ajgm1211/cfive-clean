@@ -459,8 +459,18 @@
                                                 </label>       
 											</label>
                                         </div>
-                                    </div>                       
-
+                                    </div>   
+                                    <div class="col-md-3">
+                                        <div class="form-group m-form__group">
+                                            <label  class="m-radio m-radio--check-bold m-radio--state-brand">
+                                                <label for="origincharge">Edit Local Charges on Quote</label>
+											        <input  {{ @$EditQuoteCharges}} type="checkbox" name="editquotecharges" value="true" >	
+											            <span></span>
+                                                </label>
+                                            </label>    
+                                            <br>
+                                        </div>
+                                    </div>                    
                                 </div>
                                 <br>
                                 <div class="row">

@@ -428,6 +428,8 @@ class LocalChargeQuotationController extends Controller
                 }
                 $local_charge->update();
 
+                $local_charge->sumarize();
+
                 $local_charge->totalize();
                 
                 $quote=QuoteV2::find($local_charge->quote_id);

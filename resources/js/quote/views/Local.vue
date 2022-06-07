@@ -150,6 +150,7 @@
                                 v-for="(charge, key) in this.charges"
                                 :key="key"
                             >
+
                                 <b-td>
                                     <b-form-checkbox
                                         v-model="selectedLocalCharges"
@@ -231,7 +232,6 @@
                                         "
                                     ></multiselect>
                                 </b-td>
-
                                 <b-td
                                     v-for="(item, key) in quoteEquip"
                                     :key="key"
@@ -241,13 +241,27 @@
                                             v-model="charge.price['c' + item]"
                                             class="q-input data-profit"
                                             @keypress="isNumber($event)"
-                                            disabled
+                                            :disabled="!edit_charge"
+                                            @input="                            
+                                            onUpdate(
+                                                charge.id,
+                                                charge.price,
+                                                'price',
+                                                1,
+                                            )"
                                         ></b-form-input>
                                         <b-form-input
                                             v-model="charge.profit['m' + item]"
                                             class="q-input data-profit"
                                             @keypress="isNumber($event)"
-                                            disabled
+                                            :disabled="!edit_charge"
+                                            @input="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.profit,
+                                                'profit',    
+                                                1
+                                            )"
                                         ></b-form-input>
                                     </div>
                                 </b-td>
@@ -257,7 +271,7 @@
                                         v-model="charge.units"
                                         class="q-input local_charge_total_input"
                                         @keypress="isNumber($event)"
-                                        disabled
+                                        :disabled="!edit_charge"
                                         v-on:change="
                                             onUpdate(
                                                 charge.id,
@@ -274,7 +288,7 @@
                                         v-model="charge.price"
                                         class="q-input local_charge_total_input"
                                         @keypress="isNumber($event)"
-                                        disabled
+                                        :disabled="!edit_charge"
                                         v-on:change="
                                             onUpdate(
                                                 charge.id,
@@ -291,7 +305,7 @@
                                         v-model="charge.profit"
                                         class="q-input local_charge_total_input"
                                         @keypress="isNumber($event)"
-                                        disabled
+                                        :disabled="!edit_charge"
                                         v-on:change="
                                             onUpdate(
                                                 charge.id,
@@ -302,10 +316,15 @@
                                         "
                                     ></b-form-input>
                                 </b-td>
-
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
-                                        v-model="charge.total"
+                                        :value="
+                                            setTotal(
+                                                charge.units,
+                                                charge.price,
+                                                charge.profit
+                                            )
+                                        "
                                         class="q-input local_charge_total_input"
                                         disabled
                                     ></b-form-input>
@@ -1219,6 +1238,7 @@ export default {
             },
             allSelected: false,
             allSelectedLocal: false,
+            edit_charge: this.currentQuoteData.company_user.options.edit_quote_charges
         };
     },
     watch: {
