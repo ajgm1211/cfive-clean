@@ -40,7 +40,7 @@ class QuotationInlandResource extends JsonResource
                 'valid_until' => $item->valid_until,
                 'price' => $this->arrayToFloat($item->price),
                 'profit' => $this->arrayToFloat($item->profit),
-                'total' => $this->setTotal($item->price, $item->profit),
+                'total' => $item->profit ? $this->setTotal($item->price, $item->profit):$this->arrayMapToFloat($item->price),
                 'currency' => $item->currency->alphacode ?? null,
                 'grouped_with' => $item->inland_local_group->local_charge_quote_id ?? null,
             ];
