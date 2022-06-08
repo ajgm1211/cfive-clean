@@ -78,7 +78,6 @@ class SearchApiController extends Controller
         $company_user_id = \Auth::user()->company_user_id;
         //Filtering and pagination
         $results = SearchRate::where([['company_user_id', $company_user_id], ['type', 'FCL']])->orderBy('id', 'desc')->take(4)->get();
-        dd($results);
         //Grouping as collection to be managed by Vue
         return SearchApiResource::collection($results);
     }
