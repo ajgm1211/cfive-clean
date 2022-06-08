@@ -102,6 +102,7 @@ export default {
           formatter: (value) => {
             return value.fullname;
           },
+          isObject : true,
           filterIsOpen:false,
           filterTrackBy: "fullname",
           trackLabel: "fullname",
