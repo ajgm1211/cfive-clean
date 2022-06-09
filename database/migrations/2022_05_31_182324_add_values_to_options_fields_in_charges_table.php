@@ -13,21 +13,19 @@ class AddValuesToOptionsFieldsInChargesTable extends Migration
      */
     public function up()
     {
-        Schema::table('charges', function (Blueprint $table) {
-            $charges = DB::table('charges')->get();
+        $charges = DB::table('charges')->get();
 
-            foreach($charges as $charge){
-    
-                $options = json_encode([
-                    "selected" => false,
-                    "show_as"=> null 
-                ]);
-    
-                DB::table('charges')
-                    ->where('id', $charge->id)
-                    ->update(['options' => $options]);
-            }
-        });
+        foreach($charges as $charge){
+
+            $options = json_encode([
+                "selected" => false,
+                "show_as"=> null 
+            ]);
+
+            DB::table('charges')
+                ->where('id', $charge->id)
+                ->update(['options' => $options]);
+        }
     }
 
     /**
