@@ -240,6 +240,7 @@ class LocalChargeQuotationController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
             'selectedCharges.*.surcharge_id' => 'required',
             'selectedCharges.*.surcharge' => 'required',
@@ -574,6 +575,11 @@ class LocalChargeQuotationController extends Controller
     {
         $quoteV2=QuoteV2::find($quote);
         
+        $options= [
+            "show_as"=>isset($localcharge['sale_codes']) ? ['id'=>$localcharge['sale_codes']['id'],'name'=>$localcharge['sale_codes']['name']]  : null,
+            "selected"=> true
+       ];
+        
         $charge = $localcharge['surcharge']['name'];
 
         if (!empty($localcharge['sale_codes'])) {
@@ -655,6 +661,8 @@ class LocalChargeQuotationController extends Controller
         }else{
             $charge_data = $localcharge;
         }
+        $chargeOptions=isset($charge_fcl['id']) ? Charge::findOrFail($charge_fcl['id']) : Charge::findOrFail($localcharge['id']);
+        $chargeOptions->update(['options' => $options]);
 
         $this->storeInPivotLocalChargeQuote($charge_data, $local_charge);
     }
@@ -695,6 +703,10 @@ class LocalChargeQuotationController extends Controller
             'amount' => $this->removeCommas($data['price']),
             'markups' => $this->removeCommas($data['markup']),
             'provider_name' => $data['provider_name'] ?? $data['automatic_rate']['carrier']['name'] ?? null,
+            'options' =>[
+                "show_as"=>isset($data['sale_codes']) ? ['id'=>$data['sale_codes']['id'],'name'=>$data['sale_codes']['name']] : null,
+                "selected"=> true
+            ]
         ]);
         $quote->updatePdfOptions('exchangeRates');
 
