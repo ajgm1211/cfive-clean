@@ -28,13 +28,12 @@ use Illuminate\Support\Facades\Storage;
 use PrvRequest;
 use Yajra\Datatables\Datatables;
 use App\Http\Traits\MixPanelTrait;
-use App\Http\Traits\UtilTrait;
 use Illuminate\Support\Facades\Log;
 use HelperAll;
 
 class NewContractRequestLclController extends Controller
 {
-    use MixPanelTrait, UtilTrait;
+    use MixPanelTrait;
 
     public function index()
     {
@@ -242,13 +241,7 @@ class NewContractRequestLclController extends Controller
 
     public function store2(StoreNewRequestLcl $request)
     {
-        //Validate if the company has remaining requests
-        $quota = $this->validateQuota($request->CompanyUserId);
-        if(!$quota){
-            $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.content', 'You have exceeded your contract quota or you are not enabled to create new requests. Please contact our support or sales team.');
-            return redirect()->route('Request.importaion.lcl');
-        }
+        //dd($request->all());
         $fileBoll = false;
         $time = new \DateTime();
         $now = $time->format('dmY_His');
