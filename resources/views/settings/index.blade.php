@@ -93,26 +93,21 @@
                             <a class="nav-link color-black" aria-controls="home" aria-selected="true"><h6><b>Company profile</b></h6></a>
                         </li>
                         @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company')
-                            <li class="nav-item">
-                                <a class="nav-link {{\Auth::user()->type!='subuser' ? 'active':''}}" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="home" aria-selected="true"><i class="fa fa-home"></i>&nbsp;Company info</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="pdf-tab" data-toggle="tab" href="#pdf" role="tab" aria-controls="profile" aria-selected="false"><i class="fa fa-edit"></i> &nbsp;PDF Settings</a>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{\Auth::user()->type!='subuser' ? 'active':''}}" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="home" aria-selected="true"><i class="fa fa-home"></i>&nbsp;Company info</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="pdf-tab" data-toggle="tab" href="#pdf" role="tab" aria-controls="profile" aria-selected="false"><i class="fa fa-edit"></i> &nbsp;PDF Settings</a>
+                        </li>
                         @endif
                         <li class="nav-item">
                             <a class="nav-link {{\Auth::user()->type=='subuser' ? 'active':''}}" id="emails-tab" data-toggle="tab" href="#emails" role="tab" aria-controls="profile" aria-selected="false"><i class="fa fa-envelope"></i> &nbsp;Emails</a>
                         </li>
                         @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company')
-                            <li class="nav-item">
-                                <a class="nav-link {{\Auth::user()->type=='subuser' ? 'active':''}}" id="delegations-tab" data-toggle="tab" href="#delegation" role="tab" aria-controls="profile" aria-selected="false"><i class="  fa fa-sitemap"></i> &nbsp;Delegations</a>
-                                <!-- <a class="nav-link {{\Auth::user()->type=='subuser' ? 'active':''}}" id="delegations-tab" data-toggle="tab" href="#delegation" role="tab" aria-controls="profile" aria-selected="false"><i class="  fa fa-users"></i> &nbsp;Delegations</a> -->
-                            </li>
-                        @endif
-                        @if(\Auth::user()->type=='admin' || Session::has('impersonate'))
-                            <li class="nav-item">
-                                <a class="nav-link" id="quota-tab" data-toggle="tab" href="#quota" role="tab" aria-controls="profile" aria-selected="false"><i class="fa fa-calculator"></i> &nbsp;Quota</a>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{\Auth::user()->type=='subuser' ? 'active':''}}" id="delegations-tab" data-toggle="tab" href="#delegation" role="tab" aria-controls="profile" aria-selected="false"><i class="  fa fa-sitemap"></i> &nbsp;Delegations</a>
+                            <!-- <a class="nav-link {{\Auth::user()->type=='subuser' ? 'active':''}}" id="delegations-tab" data-toggle="tab" href="#delegation" role="tab" aria-controls="profile" aria-selected="false"><i class="  fa fa-users"></i> &nbsp;Delegations</a> -->
+                        </li>
                         @endif
                     </ul>
                 </div>
@@ -638,60 +633,6 @@
                                         @endforeach
                                     </tbody>
                                 </table>                               
-                            </div>
-                            <div class="tab-pane fade" id="quota" role="tabpanel" aria-labelledby="quota-tab">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group m-form__group">
-                                            <label for="quota_type">Type</label>
-                                            {{ Form::select('type',['limited' => 'Limited', 'unlimited' => 'Unlimited'],@$company->companyUser->quota->type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_template','required'=>'true']) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group m-form__group">
-                                            <label for="billing_period">Billing period</label>
-                                            {{ Form::select('payment_type',['monthly'=>'Monthly','biannual'=>'Biannual','annual'=>'Annual'],@$company->companyUser->quota->payment_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group m-form__group">
-                                            <label for="status">Status</label>
-                                            {{ Form::select('status',[1=>'Active',0=>'Inactive'],@$company->companyUser->quota->status,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group m-form__group">
-                                            <label for="quantity">Quantity per month</label>
-                                            {{ Form::number('quota',@$company->companyUser->quota->quota,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group m-form__group">
-                                            <label for="remaining_quantity">Remaining quantity</label>
-                                            {{ Form::number('remaining_quota',@$company->companyUser->quota->remaining_quota,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group m-form__group">
-                                            <label for="issued_date">Issued date</label>
-                                            {{ Form::date('issued_date',@$company->companyUser->quota->issued_date,['placeholder' => 'Please choose a date','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group m-form__group">
-                                            <label for="issued_date">Due date</label>
-                                            {{ Form::date('due_date',@$company->companyUser->quota->due_date,['placeholder' => 'Please choose a date','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true', 'disabled'=>'true']) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <br>
-                                        <div class="form-group m-form__group">
-                                            <button type="button" id="default-currency-submit" class="btn btn-primary btn-block" style="background-color: #006BFA !important;">Update</button>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </form>
