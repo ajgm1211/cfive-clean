@@ -16,6 +16,8 @@ class addQuotaDetailsTableSeeder extends Seeder
     {
         $clients = CompanyUser::select('id')->get();
 
+        QuotaRequest::truncate();
+
         foreach ($clients as $client) {
             QuotaRequest::create([
                 'company_user_id' => $client->id,
