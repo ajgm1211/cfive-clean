@@ -20,20 +20,25 @@
                 :rules="field.rules"
                 :type="field.input_type ? field.input_type : 'text'"
               />
-
-              <SorteableDropdown
-                :class="[
-                  showCurrency == false && field.name == 'currency' ? 'hidden' : '',
-                ]"
-                v-else-if="field.type == 'dropdown'"
-                @reset="model[field.name] = ''"
-                :error="selectable_error"
-                :label="field.label"
-                @selected="setSelected($event, field.name)"
-                :itemList="field.items"
-                :show_by="field.show_by"
-                :preselected="model[field.name]"
-              />
+              <label
+                v-if="field.type == 'select'"
+                :for="name"
+                class="d-block labelv2"
+              >
+                {{ field.label }}
+              </label>
+              <b-form-select 
+                v-if="field.type == 'select'"
+                :label-field="field.label"
+                :name="field.name"
+                class="input-v2" 
+                v-model="model[field.name]" 
+                :options="optionSelect"
+              >
+                <template #first>
+                  <b-form-select-option value="" disabled>-- Select an option --</b-form-select-option>
+                </template>
+              </b-form-select>
             </div>
           </form>
           <div class="modal-footer-create-container">
@@ -67,6 +72,17 @@
           <b-container>
               <b-row>
                   <b-col cols="12" md="12" class="mb-2">
+                      <b-form-group description="Warning: the company you select will be associated with the contacts">
+                        <b-form-select 
+                          class="input-v2" 
+                          v-model="company_id" 
+                          :options="optionSelect"
+                        >
+                          <template #first>
+                            <b-form-select-option :value="null" disabled>-- Please select an option --</b-form-select-option>
+                          </template>
+                        </b-form-select>
+                      </b-form-group>
                       <b-form-group description="Warning: Only excel files are allowed">
                           <b-form-file
                               placeholder="Insert the file here" 
@@ -118,7 +134,7 @@
 
 <script>
 
-import actions from '../../../store/modules/company/actions'
+import actions from '../../../store/modules/contact/actions'
 import CustomInput from "../../../components/common/CustomInput"
 import MainButton from "../../../components/common/MainButton"
 import toastr from "toastr"
@@ -155,6 +171,12 @@ export default {
       default(){
         return {};
       }
+    },
+    optionSelect:{
+      type: Array,
+      default(){
+        return []
+      }
     }
   },
   data() {
@@ -173,7 +195,8 @@ export default {
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     "application/vnd.ms-excel"
       ],
-      whitelabel:"0"
+      whitelabel:"0",
+      company_id:null
     }
   },
   methods: {
@@ -196,7 +219,7 @@ export default {
         
         let formData = new FormData()
         formData.append('_token', this.csrf)
-        
+        formData.append('company_id', this.company_id)
         let validation = this.validateFormat(this.$refs.file.files[0].type)
         
         if(validation == true){
@@ -252,7 +275,7 @@ export default {
             field.error = false;
             bool = true;
           }
-        } else if (field.type == "dropdown") {
+        } else if (field.type == "select") {
           if (!component.model[field.name] && field.rules.required) {
             component.selectable_error = true;
             bool = false;

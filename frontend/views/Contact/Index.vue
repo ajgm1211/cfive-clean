@@ -36,6 +36,7 @@
         @cancel="create = false"
         :fields="modal_fields"
         :user="user"
+        :optionSelect="companies"
       />
       <ToWhiteLabelModal
         v-if="modalWhiteLabel"
@@ -63,7 +64,7 @@ import { mapState } from "vuex"
 import DataTable from "../../components/common/DataTable"
 import actions from "../../store/modules/contact/actions"
 import MainButton from "../../components/common/MainButton"
-import CreateModal from "../../components/common/Modals/CreateModal"
+import CreateModal from "./Modals/CreateModal"
 import ExportModal from "../../components/common/Modals/ExportModal"
 import DropdownButton from "../../components/common/DropdownButton"
 import ToWhiteLabelModal from "../../components/common/Modals/ToWhiteLabelModal"
@@ -81,6 +82,10 @@ export default {
         { key: "email", label: "Email", filterIsOpen: false },
         { key: "phone", label: "Phone", filterIsOpen: false },
         { key: "position", label: "Position", filterIsOpen: false },
+        { key: "company", label: "Company Name",
+          formatter: (value) => {
+            return value.business_name;
+          }, filterIsOpen: false },
         { key: "created_at", label: "Created at", filterIsOpen: false },
       ],
       classTable: "table table-striped table-responsive",
@@ -90,7 +95,63 @@ export default {
       exportEntityModal: false,
       isMassiveCreation: false,
       AddToWhiteLabel: true,
-      modal_fields: [],
+      companies:[],
+      modal_fields: [
+        {
+          type: "input",
+          label: "First Name",
+          name: "first_name",
+          error:false,
+          rules: {
+            required: true,
+          },
+        },
+        {
+          type: "input",
+          label: "Last Name",
+          name: "last_name",
+          error:false,
+          rules: {
+            required: true,
+          },
+        },
+        {
+          type: "input",
+          label: "Email",
+          name: "email",
+          error:false,
+          rules: {
+            required: true,
+          },
+        },
+        {
+          type: "input",
+          label: "Phone",
+          name: "phone",
+          error:false,
+          rules: {
+            required: true,
+          },
+        },
+        {
+          type: "input",
+          label: "Position",
+          name: "position",
+          error:false,
+          rules: {
+            required: true,
+          },
+        },
+        {
+          type: "select",
+          label: "Company Name",
+          name: "company_id",
+          error:false,
+          rules: {
+            required: true,
+          },
+        }
+      ],
       items: [
         {
           link: "#",
@@ -127,7 +188,7 @@ export default {
           disabled: () => false,
           click: () => this.defaultEvent()
         }
-      ],
+      ]
     }
   },
   computed: {
@@ -169,7 +230,18 @@ export default {
     },
     defaultEvent(){
       console.log('click')
+    },
+    async getCompanies(){
+      var companiesResult = await this.actions.getCompanies()
+      this.companies = companiesResult.data.data.companies.map(item =>{
+        return {
+          value : item.id,
+          text: item.business_name
+        }
+      })
+      
     }
+    
   },
   created(){
     if (this.user.settings_whitelabel == null) {
@@ -180,6 +252,7 @@ export default {
         }
       })
     }
+    this.getCompanies()
   }
 }
 </script>

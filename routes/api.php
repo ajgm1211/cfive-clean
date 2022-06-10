@@ -211,6 +211,9 @@ Route::group(['prefix'=>'contacts','middleware' => 'auth:api'], function () {
     Route::get('retrieve/{contact}', 'ContactV2Controller@retrieve');
     Route::get('template', 'ContactV2Controller@downloadTemplateFile');
     Route::get('getCompanies', 'ContactV2Controller@getCompanies');
+    //Route::post('toWhiteLabel', 'ContactV2Controller@transferToWhiteLabel');
+    Route::get('export/{format}', 'ContactV2Controller@exportContacts');
+    Route::post('create-massive', 'ContactV2Controller@createContactsMassive');
     
     Route::group(['prefix'=>'failed'],function(){
         Route::get('list', 'ContactV2Controller@failedList');
