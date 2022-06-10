@@ -319,9 +319,9 @@ class NewContractRequestLclController extends Controller
             }
 
             if (env('APP_VIEW') == 'operaciones') {
-                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request')->onQueue('high');
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request')->onQueue('operaciones');
             } else {
-                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request')->onQueue('high');
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request');
             }
 
             $user = User::find($request->user);
