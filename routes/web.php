@@ -1081,7 +1081,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quote/{quote}/update', 'QuotationController@update')->middleware('check_company:quote');
     Route::post('api/quote/{quote}/updateSearch', 'QuotationController@updateSearchOptions')->middleware('check_company:quote');
     Route::get('/api/quote/{quote}/setCostSheet/{autorate}', 'QuotationController@setCostSheet');
-    Route::get('/api/quote/filters', 'QuotationFilterController@getFilterOptions');
+
 
     /** AutomaticRate routes**/
     Route::get('api/quotes/{quote}/automatic_rate', 'AutomaticRateController@list')->middleware('check_company:quote');
