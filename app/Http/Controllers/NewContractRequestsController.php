@@ -495,7 +495,7 @@ class NewContractRequestsController extends Controller
                     if (env('APP_VIEW') == 'operaciones') {
                         SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id)->onQueue('operaciones');
                     } else {
-                        SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id)->onQueue('high');
+                        SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id);
                     }
                 }
             }
