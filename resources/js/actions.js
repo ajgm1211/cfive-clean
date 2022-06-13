@@ -206,7 +206,7 @@ export default {
             return api.call('get', `/api/v2/inland/${inland_id}/km/retrieve`, {});
         }
     },
-    
+
     inlandLocation: {
         list(params, callback, route) {
 
@@ -347,16 +347,13 @@ export default {
         },
     },
     quotes: {
-        filterOptions() {
-            return api.call('get', `/api/quote/filters`);
-        },
-        list(params, callback, route, page) {
-            api.call('get', '/api/quote/list', {params, page})
-            .then(response => {
-                callback(null, response.data);
-            }).catch(error => {
-                callback(error, error.response.data);
-            });
+        list(params, callback) {
+            api.call('get', '/api/quote/list', { params })
+                .then(response => {
+                    callback(null, response.data);
+                }).catch(error => {
+                    callback(error, error.response.data);
+                });
         },
         create(data, route) {
             return api.call('post', `/api/quote/store`, data);
@@ -421,7 +418,7 @@ export default {
         },
         delete(id) {
             return api.call('delete', `/api/quotes/automatic_rate/${id}/destroy`, {});
-        },        
+        },
     },
     charges: {
         list(id, params, callback, route) {
@@ -535,7 +532,7 @@ export default {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland/${port_id}/update_pdf_options`, data)
         },
-        getHarborAddresses(port_id){
+        getHarborAddresses(port_id) {
             return api.call('get', `/api/quotes/automatic_inlands/${port_id}/get_harbor_address`, {});
         },
     },
@@ -593,7 +590,7 @@ export default {
             let quote_id = route.params.id;
             return api.call('post', `/api/quotes/${quote_id}/automatic_inland_lcl/${port_id}/update_pdf_options`, data)
         },
-        getHarborAddresses(port_id){
+        getHarborAddresses(port_id) {
             return api.call('get', `/api/quotes/automatic_inlands/${port_id}/get_harbor_address`, {});
         },
     },
@@ -707,15 +704,15 @@ export default {
         },
         create(data) {
             return api.call('post', `/api/search/store`, data);
-        },        
+        },
         retrieve(id) {
             return api.call('get', `/api/search/${id}`, {});
         },
-        createContract(data){
-            return api.call('post',`/api/search/storeContract`,data);
+        createContract(data) {
+            return api.call('post', `/api/search/storeContract`, data);
         },
-        downloadContract(data){
-            return api.call('post',`/api/search/downloadContract`, data);
+        downloadContract(data) {
+            return api.call('post', `/api/search/downloadContract`, data);
         },
     },
     searchlcl: {
@@ -728,8 +725,8 @@ export default {
         create(data) {
             return api.call('post', `/api/search_lcl/store`, data);
         },
-        downloadContract(data){
-            return api.call('post',`/api/search_lcl/downloadContract`, data);
+        downloadContract(data) {
+            return api.call('post', `/api/search_lcl/downloadContract`, data);
         },
     },
     contracts_lcl: {
