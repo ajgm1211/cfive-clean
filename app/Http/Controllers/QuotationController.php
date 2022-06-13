@@ -18,19 +18,19 @@ use App\Contact;
 use App\Container;
 use App\Country;
 use App\Currency;
+use App\Delegation;
 use App\DeliveryType;
 use App\DestinationType;
 use App\Harbor;
-use App\Delegation;
-use App\UserDelegation;
+use App\Http\Resources\CostSheetResource;
 use App\Http\Resources\QuotationListResource;
 use App\Http\Resources\QuotationResource;
-use App\Http\Resources\CostSheetResource;
+use App\Http\Traits\MixPanelTrait;
 use App\Http\Traits\QuoteV2Trait;
 use App\Http\Traits\SearchTrait;
 use App\Incoterm;
-use App\InlandDistance;
 use App\Language;
+use App\LocalChargeQuote;
 use App\PaymentCondition;
 use App\Provider;
 use App\QuoteV2;
@@ -40,13 +40,11 @@ use App\StatusQuote;
 use App\Surcharge;
 use App\TermAndConditionV2;
 use App\User;
+use App\UserDelegation;
+use App\ViewQuoteV2;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Traits\MixPanelTrait;
-use App\ViewQuoteV2;
-use App\LocalChargeQuote;
-
 
 class QuotationController extends Controller
 {
@@ -57,75 +55,28 @@ class QuotationController extends Controller
         return view('quote.index');
     }
 
-    function list(Request $request)
-    {   
-        $user = auth()->user();
+    function list(Request $request) {
+        $company_user_id = \Auth::user()->company_user_id;
+        $company_user = CompanyUser::where('id', '=', $company_user_id)->first();
+        $filter_delegation = $company_user['options']['filter_delegations'];
+        $subtype = \Auth::user()->options['subtype'];
+        $user_id = \Auth::user()->id;
+        $user_delegation = UserDelegation::where('users_id', '=', $user_id)->first();
+        $delegation = Delegation::find($user_delegation['delegations_id']);
+        $id_delegation = $delegation['id'];
 
-        $query = $this->getFilterByUserType($user);
-        
-        $this->getFilterByRequestParams($query, $request['params']);
-
-        $results = $query->orderByDesc('id')->paginate(10); 
+        //Permisos de subtype comercial, solo puede acceder a sus propias cotizaiones
+        if ($subtype === 'comercial') {
+            $results = ViewQuoteV2::filterByCurrentUser()->filter($request);
+        }
+        // Filtro para buscar por delegacion los quotes
+        if ($filter_delegation == true) {
+            $results = ViewQuoteV2::filterByDelegation()->paginate(10);
+        } else {
+            $results = ViewQuoteV2::filterByCurrentCompany()->filter($request);
+        }
 
         return QuotationListResource::collection($results);
-    }
-
-    public function getFilterByUserType($user)
-    {
-        $company_user = CompanyUser::where('id','=',$user->company_user_id)->first();
-        $filter_delegation = $company_user['options']['filter_delegations'];
-        $subtype = $user->options['subtype'];
-        
-        if ($subtype === 'comercial') {
-            $query = ViewQuoteV2::filterByCurrentUser();
-        } else if($filter_delegation == true && $user->type == "subuser") {
-            $query =  ViewQuoteV2::filterByDelegation();
-        } else {
-            $query = ViewQuoteV2::filterByCurrentCompany();
-        }
-        
-        return $query;
-    }
-
-    public function getFilterByRequestParams($query, $params)
-    {
-        $params = json_decode($params, true);
-        $attributes = ['id', 'quote_id', 'custom_quote_id', 'status', 'company_id', 'type', 'user_id',];
-        
-        foreach ($attributes as $attr) {
-            if (isset($params[$attr]) && count($params[$attr])) {
-                $query->whereIn($attr, $params[$attr]);
-            }
-        }   
-
-        return $this->getFilterByJoinConditions($query, $params); 
-    }
-
-    public function getFilterByJoinConditions($query, $params)
-    {
-        if (isset($params['origin']) && count($params['origin']) && isset($params['destiny']) && count($params['destiny'])) { 
-            return $query->select('view_quote_v2s.*')
-                ->join('automatic_rates', 'automatic_rates.quote_id', '=', 'view_quote_v2s.id')
-                ->whereIn('automatic_rates.origin_port_id', $params['origin'])
-                ->whereIn('automatic_rates.destination_port_id', $params['destiny'])
-                ->groupBy('view_quote_v2s.id');
-        }
-
-        if (isset($params['origin']) && count($params['origin'])) { 
-            $query->select('view_quote_v2s.*')
-                ->join('automatic_rates', 'automatic_rates.quote_id', '=', 'view_quote_v2s.id')
-                ->whereIn('automatic_rates.origin_port_id', $params['origin'])
-                ->groupBy('view_quote_v2s.id');
-        }
-
-        if (isset($params['destiny']) && count($params['destiny'])) { 
-            $query->select('view_quote_v2s.*')
-                ->join('automatic_rates', 'automatic_rates.quote_id', '=', 'view_quote_v2s.id')
-                ->whereIn('automatic_rates.destination_port_id', $params['destiny'])
-                ->groupBy('view_quote_v2s.id');
-        }
-        
-        return $query;
     }
 
     public function data(Request $request)
@@ -151,14 +102,14 @@ class QuotationController extends Controller
             array_push($languages, ['company_id' => $company['id'], 'name' => $company['pdf_language']]);
 
             foreach ($full_contacts as $contact) {
-                if($contact['company_id'] == $company['id']) {
+                if ($contact['company_id'] == $company['id']) {
                     array_push($contacts, ['id' => $contact['id'], 'company_id' => $contact['company_id'], 'name' => $contact['first_name'] . " " . $contact['last_name']]);
                 }
             }
         };
 
         $incoterms = Incoterm::select(['id', 'name'])->get();
-  
+
         $users = User::whereHas('companyUser', function ($q) use ($company_user_id) {
             $q->where('company_user_id', '=', $company_user_id);
         })->get()->map(function ($user) {
@@ -243,10 +194,10 @@ class QuotationController extends Controller
     {
         $user = \Auth::user('web');
         $company_user = $user->worksAt();
-        $formatted_code=replaceSpecialCharacter($company_user->name);
+        $formatted_code = replaceSpecialCharacter($company_user->name);
         $company_code = strtoupper(substr($formatted_code, 0, 2));
         $higherq_id = $company_user->getHigherId($company_code);
-        $newq_id = $company_code . '-' . strval($higherq_id + 1);        
+        $newq_id = $company_code . '-' . strval($higherq_id + 1);
 
         $data = $request->input();
 
@@ -264,9 +215,9 @@ class QuotationController extends Controller
 
         $search_data_ids = $this->getIdsFromArray($search_data);
 
-        if($search_data_ids['type'] == 'FCL'){
+        if ($search_data_ids['type'] == 'FCL') {
             $equipment = "[\"" . implode("\",\"", $search_data_ids['containers']) . "\"]";
-        }else{
+        } else {
             $equipment = "[]";
         }
 
@@ -276,16 +227,16 @@ class QuotationController extends Controller
             $remarks .= $rate['client_remarks'];
         }
         foreach ($result_data as $result) {
-            if(isset($result['remarks'])){
+            if (isset($result['remarks'])) {
                 $remarks .= $result['remarks'];
-                $remarksPenalties= isset($result['formattedPenalties']) ? $this->formatPenaltyRemark($result['formattedPenalties'],$result['company'],$result['search']['containers']) : '';
-                $remarks .=$remarksPenalties;
+                $remarksPenalties = isset($result['formattedPenalties']) ? $this->formatPenaltyRemark($result['formattedPenalties'], $result['company'], $result['search']['containers']) : '';
+                $remarks .= $remarksPenalties;
             }
         }
         // Validacion para el quote_id no sean iguales
-        $validation_same_quote = QuoteV2::where('quote_id',$newq_id)->first();
-        if(!empty($validation_same_quote)){
-            $newq_id = $company_code . '-' . strval($higherq_id + 2);        
+        $validation_same_quote = QuoteV2::where('quote_id', $newq_id)->first();
+        if (!empty($validation_same_quote)) {
+            $newq_id = $company_code . '-' . strval($higherq_id + 2);
         }
         
         if(isset($search_data['company']['pdf_language'])){
@@ -344,8 +295,8 @@ class QuotationController extends Controller
             $quote->update(['remarks_catalan' => $remarks]);
         }
 
-        if(isset($remarksPenalties)){
-            if (empty($quote->remarks_english) ) {
+        if (isset($remarksPenalties)) {
+            if (empty($quote->remarks_english)) {
                 $quote->update(['remarks_english' => $remarksPenalties]);
             }if (empty($quote->remarks_spanish)) {
                 $quote->update(['remarks_spanish' => $remarksPenalties]);
@@ -374,14 +325,14 @@ class QuotationController extends Controller
                 'carrier_id' => $rate['carrier_id'],
             ]);
 
-            foreach ($rate['charges'] as $direction=>$charge_direction) {
+            foreach ($rate['charges'] as $direction => $charge_direction) {
                 $rate_markups[$direction] = 0;
                 foreach ($charge_direction as $charge) {
                     $currency_id = isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency' ? $rate['client_currency']['id'] : $charge['currency']['id'];
 
-                    if($search_data_ids['type'] == 'FCL'){
+                    if ($search_data_ids['type'] == 'FCL') {
                         $charge = $this->formatFclChargeForQuote($charge);
-                        $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
+                        $ocean_surcharge = Surcharge::where([['name', 'Ocean Freight'], ['company_user_id', null]])->first();
 
                         $freight = Charge::create([
                             'automatic_rate_id' => $newRate->id,
@@ -393,7 +344,7 @@ class QuotationController extends Controller
                             'markups' => json_encode($charge['markups']),
                             'total' => json_encode($charge['total']),
                         ]);
-                    }elseif($search_data_ids['type'] == 'LCL'){
+                    } elseif ($search_data_ids['type'] == 'LCL') {
                         $charge = $this->formatLclChargeForQuote($charge);
                         $rate_markups[$direction] += $charge['markup'];
 
@@ -413,10 +364,10 @@ class QuotationController extends Controller
                 }
             }
 
-            if($search_data_ids['type'] == 'FCL'){
+            if ($search_data_ids['type'] == 'FCL') {
                 $markups = isset($rate['container_markups']) ? $this->formatMarkupsForQuote($rate['container_markups']) : null;
-            }else{
-                $markups = [ 
+            } else {
+                $markups = [
                     'total' => 0,
                     'per_unit' => $rate_markups['Freight'] / $rate['units'],
                 ];
@@ -435,9 +386,9 @@ class QuotationController extends Controller
 
             $rateTotals->totalize($rate['currency_id']);
         }
-        
+
         foreach ($result_data as $result) {
-            
+
             $result = $this->formatApiResult($result, $search_data);
 
             if (isset($result['validityFrom'])) {
@@ -451,7 +402,7 @@ class QuotationController extends Controller
             } else {
                 $end_date = substr($search_data['dateRange']['endDate'], 0, 10);
             }
-            
+
             $newRate = AutomaticRate::create([
                 'quote_id' => $quote->id,
                 'contract' => $result['contractReference'] ?? $result['quoteLine'],
@@ -477,7 +428,7 @@ class QuotationController extends Controller
                         'currency_id' => $charge['currency_id'],
                         'amount' => json_encode($charge['amount']),
                         'markups' => json_encode($charge['markups']),
-                        'total' => json_encode($charge['total'])
+                        'total' => json_encode($charge['total']),
                     ]);
                 }
             }
@@ -495,19 +446,19 @@ class QuotationController extends Controller
             $rateTotals->totalize($newRate->currency_id);
 
         }
-        
+
         $quote->updatePdfOptions();
-        
+
         /** Tracking create quote event with Mix Panel*/
         $this->trackEvents("create_quote", $quote);
-        
+
         return new QuotationResource($quote);
     }
 
     public function edit(Request $request, QuoteV2 $quote)
-    {  
+    {
         $this->authorize('author', $quote); //policy para autorizar acceso.
-        
+
         // $this->validateOldQuote($quote);
 
         return view('quote.edit');
@@ -545,8 +496,7 @@ class QuotationController extends Controller
                     'custom_quote_id' => 'sometimes|nullable',
 
                 ]);
-            }
-            else {
+            } else {
                 $data = [];
                 foreach ($form_keys as $fkey) {
                     if (!in_array($fkey, $data) && $fkey != 'keys') {
@@ -581,16 +531,16 @@ class QuotationController extends Controller
                 } else if ($data[$key] == 6) {
                     $data[$key] = 'Lost';
                 }
-            } 
-            
-            if ($key == 'language_id') {     
-                
+            }
+
+            if ($key == 'language_id') {
+
                 $current_company_id = $quote->company_id;
                 $request_company_id = $data['company_id'];
-                
+
                 if ($request_company_id != $current_company_id) {
-                    if($request_company_id) {                     
-                        $company_id = (int)$request_company_id;
+                    if ($request_company_id) {
+                        $company_id = (int) $request_company_id;
                         $language_id = $this->getCompanyLanguageId($company_id);
                         if ($language_id) {
                             $data[$key] = $language_id;
@@ -637,26 +587,26 @@ class QuotationController extends Controller
                 $quote->update(['chargeable_weight' => $request['total_weight']]);
             }
         }
-        
-        if($quote->wasChanged('status')){
+
+        if ($quote->wasChanged('status')) {
             $this->trackEvents("status_quote", $quote);
         }
 
-
     }
 
-    public function getCompanyLanguageId($company_id) {
-        $company = Company::find($company_id); 
-        $pdf_language = $company->pdf_language; 
+    public function getCompanyLanguageId($company_id)
+    {
+        $company = Company::find($company_id);
+        $pdf_language = $company->pdf_language;
 
         if (!is_null($pdf_language)) {
             $language = Language::where('name', strtoupper($pdf_language))->first();
-            if($language) {
+            if ($language) {
                 return $language->id;
             } else {
-                if($pdf_language == 0) {
+                if ($pdf_language == 0) {
                     return 1;
-                } else { 
+                } else {
                     return $pdf_language;
                 }
             }
@@ -668,29 +618,29 @@ class QuotationController extends Controller
     {
         $search_data = $request->input();
 
-        if(isset($search_data['renew'])){
+        if (isset($search_data['renew'])) {
             $quote->update(['search_options' => null]);
-        }else{
+        } else {
             $date_range = $search_data['dateRange'];
             $start_date = substr($date_range['startDate'], 0, 10);
             $end_date = substr($date_range['endDate'], 0, 10);
-    
+
             $contact = $search_data['contact'];
             $company = $search_data['company'];
-    
+
             $price_level = $search_data['pricelevel'];
-    
+
             $origin_charges = $search_data['originCharges'];
             $destination_charges = $search_data['destinationCharges'];
             $show_rate_currency = $search_data['showRateCurrency'];
-    
+
             $origin_ports = $search_data['originPorts'];
             $destination_ports = $search_data['destinationPorts'];
-    
+
             $search_options = compact(
-                'start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges', 
+                'start_date', 'end_date', 'contact', 'company', 'price_level', 'origin_charges', 'destination_charges',
                 'origin_ports', 'destination_ports', 'show_rate_currency');
-    
+
             $quote->update(['search_options' => $search_options, 'direction_id' => $search_data['direction']]);
         }
 
@@ -704,7 +654,7 @@ class QuotationController extends Controller
     }
 
     public function retrieve(QuoteV2 $quote)
-    {   
+    {
         return new QuotationResource($quote);
     }
 
@@ -722,11 +672,11 @@ class QuotationController extends Controller
     }
 
     public function specialduplicate(Request $request)
-    {   
+    {
         $data = $request->input();
 
         //Nuevos fletes seleccionados
-        $rate_data = $data['rates']; 
+        $rate_data = $data['rates'];
         $result_data = $data['results'];
 
         if (count($rate_data) != 0) {
@@ -767,17 +717,17 @@ class QuotationController extends Controller
 
         //Buscar AutomaticRates viejos
         $old_rates = $new_quote->rates_v2()->get();
-        
+
         $oldChargesOriginAndDestinyType = [];
 
         //Obtener recargos de tipo origin y destino de los fletes originales (los que se muestran en el modal)
         foreach ($old_rates as $rate) {
             $charges = $rate->charge()->get();
             foreach ($charges as $charge) {
-                if($charge->type_id !== 3) {
-                    array_push($oldChargesOriginAndDestinyType, $charge);    
-                }                
-            }            
+                if ($charge->type_id !== 3) {
+                    array_push($oldChargesOriginAndDestinyType, $charge);
+                }
+            }
         }
 
         //Buscar AutomaticRateTotals viejos
@@ -786,7 +736,7 @@ class QuotationController extends Controller
         foreach ($old_rates_totals as $old_rate_total) {
             $old_rate_total->delete();
         }
-        
+
         //Setting Automatic Rates
         $rate_ports = ['origin' => [], 'destination' => []];
 
@@ -808,17 +758,17 @@ class QuotationController extends Controller
 
             //Asignar automatic_rate_id en caso el origin o destino sean iguales
             foreach ($oldChargesOriginAndDestinyType as $oldCharge) {
-                $automaticRateToOldCharge = $oldCharge->automatic_rate()->first();                                
-                if($oldCharge->type_id == 1 && $automaticRateToOldCharge->origin_port_id == $newRate->origin_port_id) {
-                    $oldCharge->automatic_rate_id  = $newRate->id;
+                $automaticRateToOldCharge = $oldCharge->automatic_rate()->first();
+                if ($oldCharge->type_id == 1 && $automaticRateToOldCharge->origin_port_id == $newRate->origin_port_id) {
+                    $oldCharge->automatic_rate_id = $newRate->id;
                 }
-                if($oldCharge->type_id == 2 && $automaticRateToOldCharge->destination_port_id == $newRate->destination_port_id) {
-                    $oldCharge->automatic_rate_id  = $newRate->id;
+                if ($oldCharge->type_id == 2 && $automaticRateToOldCharge->destination_port_id == $newRate->destination_port_id) {
+                    $oldCharge->automatic_rate_id = $newRate->id;
                 }
             }
 
-            //Guardar en la bd los 
-            foreach($oldChargesOriginAndDestinyType as $charges) {
+            //Guardar en la bd los
+            foreach ($oldChargesOriginAndDestinyType as $charges) {
                 $charges->save();
             }
 
@@ -827,9 +777,9 @@ class QuotationController extends Controller
 
                     $currency_id = isset($charge['joint_as']) && $charge['joint_as'] == 'client_currency' ? $rate['client_currency']['id'] : $charge['currency']['id'];
                     $charge = $this->formatFclChargeForQuote($charge);
-                    $ocean_surcharge = Surcharge::where([['name','Ocean Freight'],['company_user_id',null]])->first();
+                    $ocean_surcharge = Surcharge::where([['name', 'Ocean Freight'], ['company_user_id', null]])->first();
 
-                    if($charge['typedestiny_id'] == 3){ //Crear solo charges con tipo Freight
+                    if ($charge['typedestiny_id'] == 3) { //Crear solo charges con tipo Freight
                         $freight = Charge::create([
                             'automatic_rate_id' => $newRate->id,
                             'surcharge_id' => isset($charge['surcharge_id']) ? $charge['surcharge_id'] : $ocean_surcharge->id,
@@ -889,23 +839,23 @@ class QuotationController extends Controller
             ]);
             //Asignar automatic_rate_id en caso el origin o destino sean iguales
             foreach ($oldChargesOriginAndDestinyType as $oldCharge) {
-                $automaticRateToOldCharge = $oldCharge->automatic_rate()->first();                                
-                if($oldCharge->type_id == 1 && $automaticRateToOldCharge->origin_port_id == $newRate->origin_port_id) {
-                    $oldCharge->automatic_rate_id  = $newRate->id;
+                $automaticRateToOldCharge = $oldCharge->automatic_rate()->first();
+                if ($oldCharge->type_id == 1 && $automaticRateToOldCharge->origin_port_id == $newRate->origin_port_id) {
+                    $oldCharge->automatic_rate_id = $newRate->id;
                 }
-                if($oldCharge->type_id == 2 && $automaticRateToOldCharge->destination_port_id == $newRate->destination_port_id) {
-                    $oldCharge->automatic_rate_id  = $newRate->id;
+                if ($oldCharge->type_id == 2 && $automaticRateToOldCharge->destination_port_id == $newRate->destination_port_id) {
+                    $oldCharge->automatic_rate_id = $newRate->id;
                 }
             }
-            
-            //Guardar en la bd los 
-            foreach($oldChargesOriginAndDestinyType as $charges) {
+
+            //Guardar en la bd los
+            foreach ($oldChargesOriginAndDestinyType as $charges) {
                 $charges->save();
             }
 
             foreach ($result['pricingDetails']['surcharges'] as $charge_direction) {
                 foreach ($charge_direction as $charge) {
-                    if($charge['type_id'] == 3){ //Crear solo charges con tipo Freight
+                    if ($charge['type_id'] == 3) { //Crear solo charges con tipo Freight
                         $freight = Charge::create([
                             'automatic_rate_id' => $newRate->id,
                             'surcharge_id' => $charge['surcharge_id'],
@@ -1003,7 +953,7 @@ class QuotationController extends Controller
                         $localcharges = AutomaticInlandTotal::findOrFail($automaticInlnadT->id);
                         $pdfOptions = [
                             "groupId" => $local->id,
-                            "grouped" => true
+                            "grouped" => true,
                         ];
                         $localcharges->pdf_options = $pdfOptions;
                         $localcharges->update();
@@ -1042,7 +992,7 @@ class QuotationController extends Controller
         $inlandAddress = $quote->automatic_inland_address()->get();
         $quote_rate_totals = $quote->automatic_rate_totals()->get();
 
-        if(isset($quote->company)){
+        if (isset($quote->company)) {
             $clean_payment_conditions = str_replace("&nbsp;", " ", strip_tags($quote->company->payment_conditions));
 
             $quote->update(['payment_conditions' => $clean_payment_conditions]);
@@ -1208,54 +1158,55 @@ class QuotationController extends Controller
         return $collection;
     }
 
-    public function setCostSheet(QuoteV2 $quote, AutomaticRate $autorate) {
+    public function setCostSheet(QuoteV2 $quote, AutomaticRate $autorate)
+    {
 
         return new CostSheetResource($quote, $autorate);
 
     }
-    public function formatPenaltyRemark($formattedPenalties,$company,$containers){
-        $table='';
-        $penalValue='';
-        $head='';
-        $count=count($containers);
-        foreach($containers as $key=>$container){
-            $c='';
+    public function formatPenaltyRemark($formattedPenalties, $company, $containers)
+    {
+        $table = '';
+        $penalValue = '';
+        $head = '';
+        $count = count($containers);
+        foreach ($containers as $key => $container) {
+            $c = '';
 
-            if($key==0){
-                $c="<tr>"."<th>".$company." Fees"."</th>"."<th>".$container['code']."</th>";
-            }elseif($key==$count-1){
-                $c="<th>".$container['code']."</th>"."</tr>";
-            }else{
-                $c="<th>".$container['code']."</th>";
+            if ($key == 0) {
+                $c = "<tr>" . "<th>" . $company . " Fees" . "</th>" . "<th>" . $container['code'] . "</th>";
+            } elseif ($key == $count - 1) {
+                $c = "<th>" . $container['code'] . "</th>" . "</tr>";
+            } else {
+                $c = "<th>" . $container['code'] . "</th>";
             }
-            $head.=$c;
+            $head .= $c;
         }
-        $table.=$head;
+        $table .= $head;
 
-        foreach($formattedPenalties as $key=>$penalties){
-            $index=array_keys($penalties);
-            $count=count($index);
-            
+        foreach ($formattedPenalties as $key => $penalties) {
+            $index = array_keys($penalties);
+            $count = count($index);
+
             for ($i = 0; $i < $count; $i++) {
-                $penal='';
+                $penal = '';
 
-                if($i==0){
-                    $penal="<tr>"."<th>".$penalties[$index[$i]]."</th>";
-                }elseif($i==$count-1){
-                    $penal="<th>".$penalties[$index[$i]]." ".$penalValue."</th>"."</tr>";
-                }elseif(is_int($penalties[$index[$i]])){
-                    $penalValue=$penalties[$index[$i]];
-                }elseif(isset($penalValue)){
-                    $penal="<th>".$penalties[$index[$i]]." ".$penalValue."</th>";
-                }else{
-                    $penal="<tr>"."<th>".$penalties[$index[$i]]."</th>";
-                }                 
-                $table.=$penal;
-            }  
+                if ($i == 0) {
+                    $penal = "<tr>" . "<th>" . $penalties[$index[$i]] . "</th>";
+                } elseif ($i == $count - 1) {
+                    $penal = "<th>" . $penalties[$index[$i]] . " " . $penalValue . "</th>" . "</tr>";
+                } elseif (is_int($penalties[$index[$i]])) {
+                    $penalValue = $penalties[$index[$i]];
+                } elseif (isset($penalValue)) {
+                    $penal = "<th>" . $penalties[$index[$i]] . " " . $penalValue . "</th>";
+                } else {
+                    $penal = "<tr>" . "<th>" . $penalties[$index[$i]] . "</th>";
+                }
+                $table .= $penal;
+            }
         }
 
-        $remark="<table>".$table."</table>";
+        $remark = "<table>" . $table . "</table>";
         return $remark;
     }
 }
-    
