@@ -250,7 +250,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
                                             <label for="pdf_language">PDF language</label>
-                                            {{ Form::select('pdf_language',['0'=>'Choose a language','1'=>'English','2'=>'Spanish','3'=>'Portuguese', '4'=>'Italian', '5'=>'Catalan'],null,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
+                                            {{ Form::select('pdf_language',['0'=>'Choose a language','1'=>'English','2'=>'Spanish','3'=>'Portuguese', '4'=>'Italian', '5'=>'Catalan', '6'=>'French'],null,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
                                         </div>
                                     </div>
                                     <div class="col-md-4" id="haeder_pdf">
@@ -488,7 +488,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
                                             <label for="pdf_language">PDF language</label>
-                                            {{ Form::select('pdf_language',['0'=>'Choose a language','1'=>'English','2'=>'Spanish','3'=>'Portuguese', '4'=>'Italian', '5'=>'Catalan'],@$company->companyUser->pdf_language,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
+                                            {{ Form::select('pdf_language',['0'=>'Choose a language','1'=>'English','2'=>'Spanish','3'=>'Portuguese', '4'=>'Italian', '5'=>'Catalan', '6'=>'French'],@$company->companyUser->pdf_language,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
                                         </div>
                                     </div>
                                     <div class="col-md-4 {{@$company->companyUser->pdf_template_id=='2' ? '':'hide'}} " id="haeder_pdf">

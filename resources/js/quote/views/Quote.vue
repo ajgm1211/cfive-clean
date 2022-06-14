@@ -505,40 +505,17 @@ export default {
         },
         
         setTermsField(){
-            if(this.currentData.language_id['name']=="Spanish"){
-                this.term_fields = { 
-                    terms_and_conditions: {
+            let language_key = "terms_" + this.currentData.language_id['name'].toLowerCase();
+            
+            if( this.currentData.language_id['name'] == "Spanish") {
+                this.term_fields['terms_and_conditions'] = {
                     type: "ckeditor",
                     colClass: "col-lg-12",
                     }
-                }                 
-            }else if(this.currentData.language_id['name']=="Portuguese"){
-                this.term_fields = { 
-                    terms_portuguese: {
+            } else {
+                this.term_fields[language_key] = {
                     type: "ckeditor",
-                    colClass: "col-lg-12",
-                    }
-                }
-            }else if(this.currentData.language_id['name']=="English"){
-                this.term_fields = { 
-                    terms_english: {
-                    type: "ckeditor",
-                    colClass: "col-lg-12",
-                    }
-                }
-            }else if(this.currentData.language_id['name']=="Italian"){
-                this.term_fields = { 
-                    terms_italian: {
-                    type: "ckeditor",
-                    colClass: "col-lg-12",
-                    }
-                }
-            }else if(this.currentData.language_id['name']=="Catalan"){
-                this.term_fields = { 
-                    terms_catalan: {
-                    type: "ckeditor",
-                    colClass: "col-lg-12",
-                    }
+                    colClass: "col-sm-12",
                 }
             }
         },

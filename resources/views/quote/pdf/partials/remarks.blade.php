@@ -30,6 +30,21 @@ $remarkP = trim(str_replace("&nbsp;", '', $remarkP));
                         {!! str_replace('&nbsp;', ' ', $quote->remarks_portuguese) !!}
                     @endif
                 @break
+                @case(4)
+                    @if(trim(strip_tags($quote->remarks_italian)) !== '')
+                        {!! str_replace('&nbsp;', ' ', $quote->remarks_italian) !!}
+                    @endif
+                @break
+                @case(5)
+                    @if(trim(strip_tags($quote->remarks_catalan)) !== '')
+                        {!! str_replace('&nbsp;', ' ', $quote->remarks_catalan) !!}
+                    @endif
+                @break
+                @case(6)
+                    @if(trim(strip_tags($quote->remarks_french)) !== '')
+                        {!! str_replace('&nbsp;', ' ', $quote->remarks_french) !!}
+                    @endif
+                @break
             @endswitch
     </div>
 @endif
