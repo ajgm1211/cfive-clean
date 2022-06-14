@@ -14,7 +14,7 @@
             @case('Catalan')
                 {{ App::setLocale('ca') }}
                 @break
-            @case('Catalan')
+            @case('French')
                 {{ App::setLocale('fr') }}
                 @break
             @default
