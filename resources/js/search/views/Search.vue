@@ -600,14 +600,9 @@
                         />
                       </label>
                     </div>
-
-                    <div
-                      class="col-12 col-sm-1 pr-0 d-flex justify-content-center align-items-center"
-                    >
-                      <span @click="addLclPackaging" class="btn-add-surch"
-                        ><b-icon icon="check-circle"></b-icon
-                      ></span>
-                    </div>
+                    <b-button style="height: min-content; margin: 7px 0 0 15px;" variant="success" @click="addLclPackaging">
+                      <b-icon icon="check-circle" aria-hidden="true" /> Add
+                    </b-button>
                   </div>
                 </div>
               </div>
@@ -637,9 +632,9 @@
                     <p>{{ pack.weight }}</p>
                   </div>
                   <div class="col-12 col-sm-1 pr-0">
-                    <span v-on:click="deleteLclPackaging(index)"
-                      ><b-icon icon="x-circle"></b-icon
-                    ></span>
+                    <b-button variant="danger" @click="deleteLclPackaging(index)">
+                      <b-icon icon="x-circle" aria-hidden="true" /> Remove
+                    </b-button>
                   </div>
                 </div>
               </div>
