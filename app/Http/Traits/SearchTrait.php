@@ -1863,4 +1863,15 @@ trait SearchTrait
 
         return $search_data['dateRange'];
     }
+
+    function findObjectById($array,$id){
+
+        foreach ( $array as $element ) {
+            if ( $id == $element['id'] ) {
+                return $element['id'];
+            }
+        }
+    
+        return false;
+    }
 }
