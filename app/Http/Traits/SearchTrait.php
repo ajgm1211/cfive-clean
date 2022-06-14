@@ -1333,16 +1333,26 @@ trait SearchTrait
                     }
                 }
             }
-
             if ($direction == 'Freight') {
                 if($search_data['type'] == 'FCL'){
-                    $ocean_freight_array = [
-                        'surcharge' => ['name' => 'Ocean Freight'],
-                        'containers' => json_decode($rate->containers, true),
-                        'calculationtype' => ['name' => 'Per Container', 'id' => '5'], 
-                        'typedestiny_id' => 3,
-                        'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
-                    ];
+                    if($search_data['selectedContainerGroup'] == 1 ){
+                        $ocean_freight_array = [
+                            'surcharge' => ['name' => 'Ocean Freight'],
+                            'containers' => json_decode($rate->containers, true),
+                            'calculationtype' => ['name' => 'Per Container', 'id' => '5'], 
+                            'typedestiny_id' => 3,
+                            'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
+                        ];
+                    }
+                    // if($search_data['selectedContainerGroup'] == 2 ){
+                    //     $ocean_freight_array = [
+                    //         'surcharge' => ['name' => 'Ocean Freight'],
+                    //         'containers' => json_decode($rate->containers, true),
+                    //         'calculationtype' => ['name' => 'Per Container', 'id' => '5'], 
+                    //         'typedestiny_id' => 3,
+                    //         'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
+                    //     ];
+                    // }
                 }elseif($search_data['type'] == 'LCL'){
                     $ocean_freight_array = [
                         'surcharge' => $rate->surcharge,
