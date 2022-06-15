@@ -1343,7 +1343,6 @@ trait SearchTrait
                         'typedestiny_id' => 3,
                         'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
                 ];
-                // dd($ocean_freight_array);
                  }elseif($search_data['type'] == 'LCL'){
                     $ocean_freight_array = [
                         'surcharge' => $rate->surcharge,
