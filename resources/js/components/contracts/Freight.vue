@@ -246,7 +246,7 @@ export default {
                     options: "carriers"
                 },
                 currency: {
-                    label: "Origin Port",
+                    label: "Currency",
                     searchable: true,
                     type: "select",
                     rules: "required",
@@ -288,7 +288,7 @@ export default {
                     values: this.contractData.carriers,
                 },
                 currency: {
-                    label: "Origin Port",
+                    label: "Currency",
                     searchable: true,
                     type: "select",
                     rules: "required",

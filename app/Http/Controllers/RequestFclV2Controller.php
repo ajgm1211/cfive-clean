@@ -11,6 +11,7 @@ use App\Direction;
 use App\GroupContainer;
 use App\Http\Traits\MixPanelTrait;
 use App\Http\Traits\SearchTrait;
+use App\Http\Traits\UtilTrait;
 use App\Jobs\ExportRequestsJob;
 use App\Jobs\NotificationsJob;
 use App\Jobs\SelectionAutoImportJob;
@@ -39,7 +40,7 @@ use \Carbon\Carbon;
 
 class RequestFclV2Controller extends Controller
 {
-    use SearchTrait, MixPanelTrait;
+    use SearchTrait, MixPanelTrait, UtilTrait;
     // Load View All Request
     public function index(Request $request)
     {
@@ -243,7 +244,13 @@ class RequestFclV2Controller extends Controller
     // Crea un nueva Solicitud. (Cliente)
     public function store(Request $request)
     {
-        //dd($request->all());
+        //Validate if the company has remaining requests
+        $quota = $this->validateQuota($request->CompanyUserId);
+        if(!$quota){
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'You have exceeded your contract quota or you are not enabled to create new requests. Please contact our support or sales team.');
+            return redirect()->route('request.fcl.new.request');
+        }
         $CompanyUserId = $request->CompanyUserId;
         $direction_id = $request->direction;
         $carriers = $request->carrierM;
@@ -496,7 +503,7 @@ class RequestFclV2Controller extends Controller
                     if (env('APP_VIEW') == 'operaciones') {
                         SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id)->onQueue('operaciones');
                     } else {
-                        SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id);
+                        SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id)->onQueue('high');;
                     }
                 }
                 //Calling Mix Panel's event
@@ -543,7 +550,7 @@ class RequestFclV2Controller extends Controller
             if (env('APP_VIEW') == 'operaciones') {
                 SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id)->onQueue('operaciones');
             } else {
-                SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id);
+                SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id)->onQueue('high');
             }
             $success = true;
         } catch (\Exception $e) {

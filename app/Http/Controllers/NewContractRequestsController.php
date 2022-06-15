@@ -238,9 +238,9 @@ class NewContractRequestsController extends Controller
             }
 
             if (env('APP_VIEW') == 'operaciones') {
-                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('operaciones');
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('high');
             } else {
-                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request');
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('high');
             }
             $user = User::find($request->user);
             $message = "There is a new request from " . $user->name . " - " . $user->companyUser->name;
@@ -495,7 +495,7 @@ class NewContractRequestsController extends Controller
                     if (env('APP_VIEW') == 'operaciones') {
                         SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id)->onQueue('operaciones');
                     } else {
-                        SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id);
+                        SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id)->onQueue('high');
                     }
                 }
             }

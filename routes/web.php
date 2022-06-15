@@ -1081,7 +1081,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('api/quote/{quote}/update', 'QuotationController@update')->middleware('check_company:quote');
     Route::post('api/quote/{quote}/updateSearch', 'QuotationController@updateSearchOptions')->middleware('check_company:quote');
     Route::get('/api/quote/{quote}/setCostSheet/{autorate}', 'QuotationController@setCostSheet');
-    Route::get('/api/quote/filters', 'QuotationFilterController@getFilterOptions');
+
 
     /** AutomaticRate routes**/
     Route::get('api/quotes/{quote}/automatic_rate', 'AutomaticRateController@list')->middleware('check_company:quote');
@@ -1099,6 +1099,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('api/quotes/ocean_freight/{autorate}/charge', 'ChargeController@retrieve');
     Route::post('/api/quotes/ocean_freight/charge/{charge}/update', 'ChargeController@update');
     Route::post('api/quotes/automatic_rate/charges/destroyAll', 'ChargeController@destroyAll');
+    Route::post('/api/quotes/updateStatus/charge/{charge}', 'ChargeController@updateStatus');
     /**LCL **/
     Route::get('api/quotes/{quote}/automatic_rate/{autorate}/chargeslcl', 'ChargeLclController@list')->middleware('check_company:quote');
     Route::post('api/quotes/{quote}/automatic_rate/{autorate}/storelcl', 'ChargeLclController@store')->middleware('check_company:quote');

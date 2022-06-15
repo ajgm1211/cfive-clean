@@ -28,12 +28,13 @@ use Illuminate\Support\Facades\Storage;
 use PrvRequest;
 use Yajra\Datatables\Datatables;
 use App\Http\Traits\MixPanelTrait;
+use App\Http\Traits\UtilTrait;
 use Illuminate\Support\Facades\Log;
 use HelperAll;
 
 class NewContractRequestLclController extends Controller
 {
-    use MixPanelTrait;
+    use MixPanelTrait, UtilTrait;
 
     public function index()
     {
@@ -241,7 +242,13 @@ class NewContractRequestLclController extends Controller
 
     public function store2(StoreNewRequestLcl $request)
     {
-        //dd($request->all());
+        //Validate if the company has remaining requests
+        $quota = $this->validateQuota($request->CompanyUserId);
+        if(!$quota){
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'You have exceeded your contract quota or you are not enabled to create new requests. Please contact our support or sales team.');
+            return redirect()->route('Request.importaion.lcl');
+        }
         $fileBoll = false;
         $time = new \DateTime();
         $now = $time->format('dmY_His');
@@ -319,9 +326,9 @@ class NewContractRequestLclController extends Controller
             }
 
             if (env('APP_VIEW') == 'operaciones') {
-                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request')->onQueue('operaciones');
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request')->onQueue('high');
             } else {
-                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request');
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request')->onQueue('high');
             }
 
             $user = User::find($request->user);
@@ -533,7 +540,7 @@ class NewContractRequestLclController extends Controller
                     if (env('APP_VIEW') == 'operaciones') {
                         SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id)->onQueue('operaciones');
                     } else {
-                        SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id);
+                        SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id)->onQueue('high');
                     }
                 }
                 if ($Ncontract->contract_id != null) {
@@ -594,7 +601,7 @@ class NewContractRequestLclController extends Controller
             if (env('APP_VIEW') == 'operaciones') {
                 SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id)->onQueue('operaciones');
             } else {
-                SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id);
+                SendEmailRequestLclJob::dispatch($usercreador->toArray(), $id)->onQueue('high');
             }
             $success = true;
         } catch (\Exception $e) {
