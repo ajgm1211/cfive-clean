@@ -1335,43 +1335,15 @@ trait SearchTrait
             }
             if ($direction == 'Freight') {
                 if($search_data['type'] == 'FCL'){
-                    if($search_data['selectedContainerGroup'] == 1 ){
-                        $ocean_freight_array = [
-                            'surcharge' => ['name' => 'Ocean Freight'],
-                            'containers' => json_decode($rate->containers, true),
-                            'calculationtype' => ['name' => 'Per Container', 'id' => '5'], 
-                            'typedestiny_id' => 3,
-                            'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
-                        ];
-                    }
-                    if($search_data['selectedContainerGroup'] == 2 ){
-                        $ocean_freight_array = [
-                            'surcharge' => ['name' => 'Ocean Freight'],
-                            'containers' => json_decode($rate->containers, true),
-                            'calculationtype' => ['name' => 'Per Container RF', 'id' => '19'], 
-                            'typedestiny_id' => 3,
-                            'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
-                        ];
-                    }
-                    if($search_data['selectedContainerGroup'] == 3 ){
-                        $ocean_freight_array = [
-                            'surcharge' => ['name' => 'Ocean Freight'],
-                            'containers' => json_decode($rate->containers, true),
-                            'calculationtype' => ['name' => 'Per Container OT', 'id' => '20'], 
-                            'typedestiny_id' => 3,
-                            'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
-                        ];
-                    }
-                    if($search_data['selectedContainerGroup'] == 4 ){
-                        $ocean_freight_array = [
-                            'surcharge' => ['name' => 'Ocean Freight'],
-                            'containers' => json_decode($rate->containers, true),
-                            'calculationtype' => ['name' => 'Per Container FR', 'id' => '21 '], 
-                            'typedestiny_id' => 3,
-                            'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
-                        ];
-                    }                    
-                }elseif($search_data['type'] == 'LCL'){
+                    $calculationtype = $this->setOceanFreightCalculationTypeFCL($search_data,$rate);
+                    $ocean_freight_array = [
+                        'surcharge' => ['name' => 'Ocean Freight'],
+                        'containers' => json_decode($rate->containers, true),
+                        'calculationtype' => $calculationtype, 
+                        'typedestiny_id' => 3,
+                        'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
+                ];
+                 }elseif($search_data['type'] == 'LCL'){
                     $ocean_freight_array = [
                         'surcharge' => $rate->surcharge,
                         'total' => $rate->total > $rate->minimum ? $rate->total : $rate->minimum,
@@ -1394,6 +1366,31 @@ trait SearchTrait
             };
         }
         $rate->setAttribute('charges', $rate_charges);
+    }
+
+    public function setOceanFreightCalculationTypeFCL($search_data,$rate){
+
+        if($search_data['selectedContainerGroup'] == 1 ){
+            $ocean_freight_array = [
+                'calculationtype' => ['name' => 'Per Container', 'id' => '5'], 
+            ];
+        }
+        if($search_data['selectedContainerGroup'] == 2 ){
+            $ocean_freight_array = [
+                'calculationtype' => ['name' => 'Per Container RF', 'id' => '19'], 
+            ];
+        }
+        if($search_data['selectedContainerGroup'] == 3 ){
+            $ocean_freight_array = [
+                'calculationtype' => ['name' => 'Per Container OT', 'id' => '20'], 
+            ];
+        }
+        if($search_data['selectedContainerGroup'] == 4 ){
+            $ocean_freight_array = [
+                'calculationtype' => ['name' => 'Per Container FR', 'id' => '21 '], 
+            ];
+        }    
+        return $ocean_freight_array;
     }
 
     //Retrieves Global Remarks
