@@ -262,7 +262,6 @@ class SearchApiController extends Controller
     //Validates search request data
     public function processSearch(Request $request)
     {
-        // dd($this->data($request));
         //Setting current company and user
          $user = \Auth::user();
          $user_id = $user->id;
