@@ -44,9 +44,8 @@ class LocalChargeQuoteLcl extends Model implements Auditable
 
     public function totalLcl($index)
     {
-        if ($index == 'units' || $index == 'price'  || $index == 'total') {
-            $total = $this->price * $this->units;
-
+        if ($index == 'units' || $index == 'price'  || $index == 'total' || $index == 'profit' ) {
+            $total = ($this->price * $this->units) + $this->profit;
             $this->update(['total' => $total]);
         }
     }
