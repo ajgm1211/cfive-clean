@@ -207,7 +207,7 @@ class SearchApiController extends Controller
         $ports = Harbor::get()->map(function ($harbor){
             return $harbor->only(['id','display_name','country']);
         });
-        $locationsHarbors = HarborsLocationSearch::get()->map(function ($harbor){
+        $locationsHarbors = DistanceKmLocation::get()->map(function ($harbor){
             return $harbor->only(['location_id']);
         });
 
