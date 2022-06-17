@@ -61,6 +61,7 @@ class ContactV2Controller extends Controller
      */
     public function store(Request $request)
     {
+
         $options         = null;
         $data = $request->validate([
             'contact.first_name' => 'required',
@@ -75,7 +76,33 @@ class ContactV2Controller extends Controller
                 ]
         );
 
+        $addToWhitelabel = $request->get('toWhiteLabel');
+
         $contact = Contact::create($request->get('contact'));
+
+        if ( $addToWhitelabel == true) {
+            
+            $contact->name              = $contact->first_name;
+            $contact->lastname          = $contact->last_name;
+            $contact->name_company      = $contact->company->business_name;
+            $contact->password          = 'password';
+            $contact->confirm_password  = 'password';
+            $contact->type              = 'user';
+            $contact->unique_code       = $contact->company->unique_code;
+
+            $contactToTransfer = $contact->only(['name', 'lastname', 'email', 'phone', 'position', 'name_company', 'password', 'confirm_password', 'type', 'unique_code' ]);
+  
+            $apiContacts = $this->transferEntityToWhiteLabel([$contactToTransfer],'user');
+        
+            if ($apiContacts['status'] == 200) {
+                $newcontact = Contact::find($contact->id);
+                $newcontact->update(array('whitelabel'=> 1));
+                return response()->json(['message' => 'successfully transfer to whitelabel'], 200);
+            }else{
+                return response()->json(['message' => 'unsuccessfully transfer to whitelabel'], 500);
+            }
+
+        }
 
         return new ContactResource($contact);
     }
@@ -148,7 +175,7 @@ class ContactV2Controller extends Controller
      */
     public function getCompanies()
     {
-        $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->select('id','business_name')->get();
+        $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->select('id','business_name','whitelabel')->get();
         $data = compact('companies');
         return response()->json(['data' => $data]);
     }
@@ -222,8 +249,10 @@ class ContactV2Controller extends Controller
         $file = $this->getFile('contacts', $filestored);
         $errors = 0;
         Session::put('massiveCreationErrors', 0);
+        Session::put('contacts', []);
+        Session::put('failedContacts', []);
         $sessionError = Session::get('massiveCreationErrors');
-        $toWhiteLabel = $request->get('whitelabel');
+        $toWhiteLabel = $request->get('whitelabel') == true ? 1 : 0;
         $company_id = $request->get('company_id');
         
         Excel::load($file, function($reader) use ($user, $errors, $sessionError, $company_id, $toWhiteLabel) {
@@ -232,19 +261,20 @@ class ContactV2Controller extends Controller
             $reader->each(function($sheet) use ($company_id, $errors, $sessionError, $company_user_id, $toWhiteLabel) {
                 if(!is_null($sheet['first_name']) && !is_null($sheet['last_name']) && !is_null($sheet['email']) && !is_null($sheet['phone']) && !is_null($sheet['position'])){
                     if(filter_var($sheet['email'], FILTER_VALIDATE_EMAIL)){
-                        $this->createContact($sheet, $company_id, $toWhiteLabel);
-                        if ($toWhiteLabel == 1) {
-                            //$resultWhiteLabel = $this->callApiTransferContactToWhiteLabel([$sheet->toArray()]);
-                        }
+                        $contact = $this->parseContact($sheet, $company_id, $toWhiteLabel);
+                        Session::push('contacts', $contact);
                     }else{
                         $sheet['email'] = "ERROR";
-                        $this->createFailedContact($sheet, $company_id, $company_user_id);
+                        $failedContact = $this->parseFailedContact($sheet, $company_user_id, $company_id);
+                        Session::push('failedContacts', $failedContact);
                         $errors = isset($sessionError) ? Session::get('massiveCreationErrors') + 1 :  0 + 1;
                         Session::put('massiveCreationErrors', $errors);
                     }
                 }else{
                     if (!is_null($sheet['first_name']) || !is_null($sheet['last_name']) || !is_null($sheet['email']) || !is_null($sheet['phone']) || !is_null($sheet['position'])) {
-                        $this->createFailedContact($sheet, $company_id, $company_user_id);
+                        $sheet['email'] = "ERROR";
+                        $failedContact = $this->parseFailedContact($sheet, $company_user_id, $company_id);
+                        Session::push('failedContacts', $failedContact);
                         $errors = isset($sessionError) ? Session::get('massiveCreationErrors') + 1 :  0 + 1;
                         Session::put('massiveCreationErrors', $errors);
                     }
@@ -257,32 +287,85 @@ class ContactV2Controller extends Controller
         return response('successful creation with '.$errors.' failed contacts.', 200);
     }
 
-    public function createContact($sheet, $company_id, $toWhiteLabel)
-    { 
-        Contact::firstOrCreate(
-            ['email' => $sheet['email']],
-            [
-                'first_name'=> $sheet['first_name'],
-                'last_name'=> $sheet['last_name'],
-                'phone'=> $sheet['phone'],
-                'position'=> $sheet['position'],
-                'whitelabel'=> $toWhiteLabel,
-                'company_id'=> $company_id
-            ]);
-    }
-    public function createFailedContact($sheet, $company_id, $company_user_id)
-    { 
-        FailedContact::create([
-                    'first_name' => $sheet['first_name'] ?? 'ERROR',
-                    'last_name'=> $sheet['last_name'] ?? 'ERROR',
-                    'email'=> $sheet['email'] ?? 'ERROR',
-                    'phone'=> $sheet['phone'] ?? 'ERROR',
-                    'position'=> $sheet['position'] ?? 'ERROR',
-                    'company_id'=> $company_id ?? 'ERROR',
-                    'company_user_id'=> $company_user_id ?? 'ERROR'
-        ]);
+    public function parseContact($sheet, $company_id, $toWhiteLabel){
+        $contact= [
+            'first_name'=> $sheet['first_name'],
+            'last_name'=> $sheet['last_name'],
+            'phone'=> $sheet['phone'],
+            'position'=> $sheet['position'],
+            'whitelabel'=> $toWhiteLabel,
+            'company_id'=> $company_id
+        ];
+        return $contact;
     }
 
+    public function parseFailedContact($sheet, $company_user_id, $company_id){
+        $failedContact = [
+            'first_name' => $sheet['first_name'] ?? 'ERROR',
+            'last_name'=> $sheet['last_name'] ?? 'ERROR',
+            'email'=> $sheet['email'] ?? 'ERROR',
+            'phone'=> $sheet['phone'] ?? 'ERROR',
+            'position'=> $sheet['position'] ?? 'ERROR',
+            'company_id'=> $company_id ?? 'ERROR',
+            'company_user_id'=> $company_user_id ?? 'ERROR'
+        ];
+        return $failedContact;
+    }
+
+    public function createContact($sheet, $company_id, $toWhiteLabel)
+    { 
+        $result = [];
+        $contacts = Session::get('contacts');
+        if (isset($contacts)) {
+            foreach ($contacts as $key => $value) {
+                $contact = Contact::firstOrCreate(
+                    ['email' => $sheet['email']],
+                    [
+                        'first_name'=> $value['first_name'],
+                        'last_name'=> $value['last_name'],
+                        'phone'=> $value['phone'],
+                        'position'=> $value['position'],
+                        'whitelabel'=> $value['whitelabel'],
+                        'company_id'=> $value['company_id']
+                    ]);
+                array_push($result, $contact);
+            }
+        }
+        
+        return $result;
+    }
+
+    public function createFailedContact($sheet, $company_id, $company_user_id)
+    { 
+        $failedcontacts = Session::get('failedCompanies');
+        FailedContact::insert($failedcontacts);
+    }
+
+
+    public function transferToWhiteLabel(Request $request){
+        $contactsToSearch = $request->get('contacts');
+        $contacts         = Contact::whereIn('id',$contactsToSearch);
+        
+        $contactsToTransfer =   $contacts->company()->get()->map(function ($contact) {
+                                    $contact->name = $contact->first_name;
+                                    $contact->lastname = $contact->last_name;
+                                    $contact->name_company = $contact->company->business_name;
+                                    $contact->password = 'password';
+                                    $contact->confirm_password = 'password';
+                                    $contact->type = 'user';
+                                    $contact->unique_code = $contact->company->unique_code;
+
+                                    return $contact->only(['name', 'lastname', 'email', 'phone', 'position', 'name_company', 'password', 'confirm_password', 'type', 'unique_code' ]);
+                                });
+        $apiContacts = $this->transferEntityToWhiteLabel($contactsToTransfer->toArray(),'user');
+        if ($apiContacts['status'] == 200) {
+            $contacts->update(array('whitelabel'=> 1));
+            return response()->json(['message' => 'successfully transfer to whitelabel'], 200);
+        }else{
+            return response()->json(['message' => 'unsuccessfully transfer to whitelabel'], 500);
+        }
+        
+    }
 
     /**
      * Remove the specified resource from storage.

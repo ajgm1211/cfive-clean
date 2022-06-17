@@ -39,16 +39,9 @@
           <div class="modal-footer-create-container">
             <div class="modal-footer-content-wl input-box" >
               <div id="checkbox-create" v-if="user.settings_whitelabel">
-                  <b-form-checkbox
-                    v-model="model.whitelabel"
-                    name="checkbox-create"
-                    value="1"
-                    unchecked-value="0"
-                  >
-                    <label for="">
-                      Add to whitelabel
-                    </label> 
-                  </b-form-checkbox>
+                  <div class="main-btn" @click="toogleAddToWhiteLabel()" >
+                    {{textAdd}}
+                  </div>
               </div>
             </div>
             <div class="modal-footer-create-container-btns">
@@ -90,17 +83,10 @@
                       <div class="modal-footer-create-container">
                         <div class="modal-footer-content-wl input-box">
                           <div id="checkbox-create" v-if="user.settings_whitelabel">
-                            <b-form-checkbox
-                              v-model="whitelabel"
-                              name="checkbox-create"
-                              value="1"
-                              unchecked-value="0"
-                            >
-                              <label for="">
-                                Add to whitelabel
-                              </label> 
-                            </b-form-checkbox>
-                          </div>    
+                            <div class="main-btn" @click="toogleAddToWhiteLabel()" >
+                              {{textAdd}}
+                            </div>
+                          </div>
                         </div>
                         <div class="modal-footer-create-container-btns">
                           <p @click="$emit('cancel')">Cancel</p>
@@ -168,12 +154,13 @@ export default {
       messageFile:'',
       input_error: false,
       dataLoaded: false,
+      textAdd:"Add To WhiteLabel",
       validformats:[
                     ".csv",
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     "application/vnd.ms-excel"
       ],
-      whitelabel:"0"
+      whitelabel:false
     }
   },
   methods: {
@@ -235,8 +222,13 @@ export default {
             return true
         }
     },
-    addToWhiteLabel(){
-      this.whiteLabel = !this.whiteLabel
+    toogleAddToWhiteLabel(){
+      this.whitelabel= !this.whitelabel
+      if (this.whitelabel == true) {
+        this.textAdd = "Selected for add to WhiteLabel"  
+      }else{
+        this.textAdd = "Add To WhiteLabel"
+      }
     },
     validate() {
       let component = this;

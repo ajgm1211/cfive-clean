@@ -29,7 +29,7 @@ export default {
     createMassive(companies) {
         return api.call('post', `/api/companies/create-massive`, companies);
     },
-    transfer(companies){
-        return api.call('post', `/api/companies/toWhiteLabel`, {companies});
+    transfer(companies, addToContact){
+        return api.call('post', `/api/companies/toWhiteLabel`, {companies, addToContact});
     }
 }

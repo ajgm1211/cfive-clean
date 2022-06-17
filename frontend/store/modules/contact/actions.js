@@ -5,7 +5,7 @@ export default {
             .then(response => {
                 callback(null, response.data);
             }).catch(error => {
-                callback(error, error.response.data);
+                callback(error, error.data);
             });
     },
     retrieve(id) {
@@ -23,8 +23,8 @@ export default {
     deleteAll(ids) {
         return api.call('put', `/api/contacts/deleteAll`, { ids: ids });
     },
-    create(contact){
-        return api.call('post', `/api/contacts/store`, {contact});
+    create(contact, toWhiteLabel){
+        return api.call('post', `/api/contacts/store`, {contact, toWhiteLabel});
     },
     createMassive(contacts) {
         return api.call('post', `/api/contacts/create-massive`, contacts);

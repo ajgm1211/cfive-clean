@@ -8,21 +8,20 @@ use Illuminate\Support\Collection as Collection;
 
 trait WhiteLabelTrait
 {
-    public function callApiTransferCompanyToWhiteLabel($companies){
+    public function transferEntityToWhiteLabel($entity, $path){
         $company_user_id = \Auth::user()->company_user_id;
-        $url = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url','token')->first()->toArray();  
-        $endPoint = $url['url'].'shipper';
+        $route = SettingsWhitelabel::where('company_user_id', $company_user_id)->select('url','token')->first()->toArray();
         $service = new Client();
-        
-        $result =   $service->post($endPoint,
+        $finalRoute = $route['url'].$path;
+        $result =   $service->post($finalRoute,
                     [
                         'http_errors' => false,
                         'headers'=>[
                             'Accept' => 'application/json',
                             'Content-Type' => 'application/json',
-                            'Authorization' => 'Bearer '.$url['token']
+                            'Authorization' => 'Bearer '.$route['token']
                         ],
-                        'json'=>$companies
+                        'json'=>$entity
                     ]
                 );
 

@@ -46,7 +46,18 @@
         :selected="selectedForModal"
         @cancel="modalWhiteLabel = false"
         @transferToWhiteLabel="transferToWhiteLabel"
-      />
+      >
+        <template v-slot:entity_whitelabel="slotProps">
+          <div v-if="slotProps.entity.companyOnWhiteLabel == 1">
+            <p v-if="slotProps.entity.whitelabel == 1" class="item-label color-sucess" title="This company is on Whitelabel" > On Whitelabel</p>
+            <p v-else class="item-label color-warning" title="This company is not on Whitelabel" > Ready for send</p>
+          </div>
+          <div v-else>
+            <p v-if="slotProps.entity.whitelabel == 1" class="item-label color-sucess" title="This company is on Whitelabel" > On Whitelabel</p>
+            <p v-else class="item-label color-danger" title="This company is not on Whitelabel" > The company of this user is not in WhiteLabel</p>
+          </div>
+        </template>
+      </ToWhiteLabelModal>
       <ExportModal
         v-if="exportEntityModal"
         :title="'Contacts'"
@@ -96,6 +107,7 @@ export default {
       isMassiveCreation: false,
       AddToWhiteLabel: true,
       companies:[],
+      textAdd:"Add To WhiteLabel",
       modal_fields: [
         {
           type: "input",
@@ -201,8 +213,26 @@ export default {
     ...mapState("auth", ["user"]),
     selectedForModal(){
       return this.selectForTransfer.map(item =>{
-        return {name: item.first_name +' '+ item.last_name}
+        return {
+          id :item.id,
+          name: item.first_name +' '+ item.last_name,
+          whitelabel: item.whitelabel,
+          companyOnWhiteLabel: item.company.whitelabel
+        }
       })
+    },
+    selectedForWhitelabel(){
+      var data =  this.selectForTransfer.map(item =>{
+        if (item.company.whitelabel == 1) {
+          return item.id
+        }else{
+          return null
+        }
+      })
+
+      return data.filter(element => {
+        return element !== null;
+      });
     }
   },
   methods: {
@@ -220,7 +250,9 @@ export default {
       this.modalWhiteLabel = true
     },
     async transferToWhiteLabel() {
-      await this.actions.transfer(this.selectForTransfer)
+      await this.actions.transfer(this.selectedForWhitelabel)
+      await toastr.success("successful data transfer")
+      window.location.reload();
     },
     selectedData(selected) {
       this.selectForTransfer = selected
@@ -236,12 +268,11 @@ export default {
       this.companies = companiesResult.data.data.companies.map(item =>{
         return {
           value : item.id,
-          text: item.business_name
+          text: item.business_name,
+          whitelabel: item.whitelabel
         }
       })
-      
     }
-    
   },
   created(){
     if (this.user.settings_whitelabel == null) {

@@ -50,7 +50,18 @@
           :selected="selectedForModal"
           @cancel="modalWhiteLabel = false"
           @transferToWhiteLabel="transferToWhiteLabel"
-        />
+        >
+          <template v-slot:entity_whitelabel="slotProps">
+            <p v-if="slotProps.entity.whitelabel == 1" class="item-label color-sucess" title="This company is on Whitelabel" > On Whitelabel</p>
+            <p v-else class="item-label color-warning" title="This company is not on Whitelabel" > Ready for send</p>
+          </template>
+            
+          <template v-slot:action_whitelabel>
+            <div id="checkbox-create" class="main-btn" @click="toogleAddContact()" >
+              {{textAddContact}}
+            </div>
+          </template>
+        </ToWhiteLabelModal>
         <ExportModal
           v-if="exportEntityModal"
           :title="'Companies'"
@@ -96,6 +107,7 @@ export default {
         { key: "created_at", label: "Created at", filterIsOpen:false },
       ],
       classTable:"table table-striped table-responsive",
+      textAddContact:"Add Contacts To WhiteLabel",
       modal_fields: [
         {
           type: "input",
@@ -180,6 +192,7 @@ export default {
           click: () => this.defaultEvent()
         }
       ],
+      addContact:false
     }
   },
   computed:{
@@ -191,7 +204,16 @@ export default {
     },
     selectedForModal(){
       return this.selectForTransfer.map(item =>{
-        return {name: item.business_name}
+        return {
+          id :item.id,
+          name: item.business_name,
+          whitelabel: item.whitelabel
+        }
+      })
+    },
+    selectedForWhitelabel(){
+      return this.selectForTransfer.map(item =>{
+        return item.id
       })
     },
     ...mapState('auth', ['user'])
@@ -207,12 +229,23 @@ export default {
     toggleButtonWhiteLabel(){
       this.AddToWhiteLabel = this.selectForTransfer.length > 0 ? false : true
     },
+    toogleAddContact(){
+      this.addContact= !this.addContact
+      if (this.addContact == true) {
+        this.textAddContact = "Selected for add to WhiteLabel"  
+      }else{
+        this.textAddContact = "Add Contacts To WhiteLabel"
+      }
+      
+    },
     addToWhiteLabelModal(){
       this.modalWhiteLabel = true
     },
     async transferToWhiteLabel(){
-      await this.actions.transfer(this.selectForTransfer)
-    },
+      await this.actions.transfer(this.selectedForWhitelabel,this.addContact)
+      await toastr.success("successful data transfer")
+      window.location.reload();
+      },
     selectedData(selected){
       this.selectForTransfer = selected
     },

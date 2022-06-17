@@ -23,7 +23,7 @@ class Contact extends Model implements Auditable
     public function scopeCompany($query)
     {
         return $query->with(['company' => function ($q) {
-            $q->select('id', 'business_name', 'phone', 'address', 'tax_number', 'logo as url');
+            $q->select('id', 'business_name', 'phone', 'address', 'tax_number', 'logo as url', 'unique_code');
         }]);
     }
 

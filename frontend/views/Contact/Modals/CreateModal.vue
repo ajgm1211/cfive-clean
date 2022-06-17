@@ -34,6 +34,7 @@
                 class="input-v2" 
                 v-model="model[field.name]" 
                 :options="optionSelect"
+                @change="toogleAddToWhitelabelBtn($event)"
               >
                 <template #first>
                   <b-form-select-option value="" disabled>-- Select an option --</b-form-select-option>
@@ -44,22 +45,15 @@
           <div class="modal-footer-create-container">
             <div class="modal-footer-content-wl input-box" >
               <div id="checkbox-create" v-if="user.settings_whitelabel">
-                  <b-form-checkbox
-                    v-model="model.whitelabel"
-                    name="checkbox-create"
-                    value="1"
-                    unchecked-value="0"
-                  >
-                    <label for="">
-                      Add to whitelabel
-                    </label> 
-                  </b-form-checkbox>
+                <div  v-if="enableWhitelabel" class="main-btn" @click="toogleAddToWhiteLabel()" >
+                  {{textAdd}}
+                </div>
               </div>
             </div>
             <div class="modal-footer-create-container-btns">
               <p @click="$emit('cancel')">Cancel</p>
               <MainButton
-                @click="createCompany()"
+                @click="createContact()"
                 :text="action + ' ' + title"
                 :add="true"
               />
@@ -77,6 +71,7 @@
                           class="input-v2" 
                           v-model="company_id" 
                           :options="optionSelect"
+                          @change="toogleAddToWhitelabelBtn($event)"
                         >
                           <template #first>
                             <b-form-select-option :value="null" disabled>-- Please select an option --</b-form-select-option>
@@ -106,21 +101,14 @@
                       <div class="modal-footer-create-container">
                         <div class="modal-footer-content-wl input-box">
                           <div id="checkbox-create" v-if="user.settings_whitelabel">
-                            <b-form-checkbox
-                              v-model="whitelabel"
-                              name="checkbox-create"
-                              value="1"
-                              unchecked-value="0"
-                            >
-                              <label for="">
-                                Add to whitelabel
-                              </label> 
-                            </b-form-checkbox>
+                            <div v-if="enableWhitelabel" class="main-btn" @click="toogleAddToWhiteLabel()" >
+                              {{textAdd}}
+                            </div>
                           </div>    
                         </div>
                         <div class="modal-footer-create-container-btns">
                           <p @click="$emit('cancel')">Cancel</p>
-                          <b-button type="submit" class="btn-form" variant="primary">{{action}} {{title}}</b-button>
+                          <b-button type="submit" class="btn-form" variant="primary" >{{action}} {{title}}</b-button>
                         </div>
                       </div>
                   </b-col>
@@ -195,17 +183,27 @@ export default {
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     "application/vnd.ms-excel"
       ],
-      whitelabel:"0",
-      company_id:null
+      whitelabel:false,
+      company_id:null,
+      textAdd:"Add To WhiteLabel",
+      enableWhitelabel:false
     }
   },
   methods: {
-    async createCompany(){
+    toogleAddToWhitelabelBtn(event){
+      var option = this.optionSelect.find( item => item.value === event )
+
+      if (option.whitelabel == 1) {
+        this.enableWhitelabel =  true
+      }else{
+        this.enableWhitelabel =  false
+      }
+    },
+    async createContact(){
       try {
         if (!this.validate()) return;
         this.setBody()
-        const {newCompany} = await this.actions.create(this.model)  
-        //this.company  = newCompany
+        await this.actions.create(this.model, this.whitelabel)  
         toastr.success("Created successfully")
         this.$root.$emit('submitData')
         this.$emit('cancel')
@@ -235,7 +233,7 @@ export default {
                 this.messageFile = response.data
                 this.showDismissibleAlert=false
                 this.showDismissibleAlertSuccess= true
-                this.show = true
+                this.show = false
             }).catch(error => {
                 this.showDismissibleAlert=true
                 this.showDismissibleAlertSuccess= false
@@ -258,8 +256,13 @@ export default {
             return true
         }
     },
-    addToWhiteLabel(){
-      this.whiteLabel = !this.whiteLabel
+    toogleAddToWhiteLabel(){
+      this.whitelabel= !this.whitelabel
+      if (this.whitelabel == true) {
+        this.textAdd = "Selected for add to WhiteLabel"  
+      }else{
+        this.textAdd = "Add To WhiteLabel"
+      }
     },
     validate() {
       let component = this;
