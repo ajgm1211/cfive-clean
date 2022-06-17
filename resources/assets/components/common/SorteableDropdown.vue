@@ -132,15 +132,28 @@ export default {
           this.focused_item_index = null
           this.$refs.dropdown_list.scrollTop = 0
       }
+    },
+    isObject(val) {
+        return val instanceof Object
+    },
+    isIncluded(val) {
+        return val.toLowerCase().includes(this.input_value.toLowerCase())
+    },
+    getItemValue(val) {
+      if(this.isObject(val)) {
+        return val[this.show_by]
+      } else {
+        return val[0]
+      }
     }
   },
   computed: {
     filteredItemList() {
-      const filtered_item_list = []
-      this.itemList.forEach(element => {
-        const is_included = element[this.show_by].toLowerCase().includes(this.input_value.toLowerCase())
-        if (is_included) {
-          filtered_item_list.push(element)
+      const filtered_item_list = [];
+      this.itemList.forEach(item => {        
+        let item_value = this.getItemValue(item)
+        if (this.isIncluded(item_value)) {
+          filtered_item_list.push(item)
         }
       })
       return filtered_item_list
