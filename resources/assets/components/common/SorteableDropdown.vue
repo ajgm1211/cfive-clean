@@ -143,7 +143,7 @@ export default {
       if(this.isObject(val)) {
         return val[this.show_by]
       } else {
-        return val[0]
+        return val
       }
     }
   },
@@ -151,7 +151,7 @@ export default {
     filteredItemList() {
       const filtered_item_list = [];
       this.itemList.forEach(item => {        
-        let item_value = this.getItemValue(item)
+        const item_value = this.getItemValue(item)
         if (this.isIncluded(item_value)) {
           filtered_item_list.push(item)
         }
