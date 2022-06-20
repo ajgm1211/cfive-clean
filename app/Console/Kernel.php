@@ -35,28 +35,28 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //Jobs
-        $schedule->job(new SyncCompaniesVforwarding)->cron('0 */5 * * *')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->job(new SyncCompaniesVisualtrans)->cron('0 */4 * * *')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->job(new SaveFclRatesByContractJob)->cron('0 */8 * * *')->appendOutputTo(storage_path('logs/commands.log'));
+        //$schedule->job(new SyncCompaniesVforwarding)->cron('* * * * *')->appendOutputTo(storage_path('logs/laravel.log'));
+        //$schedule->job(new SyncCompaniesVisualtrans)->cron('0 */4 * * *')->appendOutputTo(storage_path('logs/commands.log'));
+        //$schedule->job(new SaveFclRatesByContractJob)->cron('0 */8 * * *')->appendOutputTo(storage_path('logs/commands.log'));
 
         //Commands
         $schedule->command('command:updateCurrenciesUsd')
-            ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->command('command:updateCurrenciesEur')
-            ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
-        //$schedule->command('command:sendQuotes')
-          //  ->cron('*/3 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->command('command:processExpiredContracts')
+        ->cron('*/3 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
+         $schedule->command('command:updateCurrenciesEur')
+         ->cron('*/1 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->command('command:sendQuotes')
+            ->cron('*/3 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
+         $schedule->command('command:processExpiredContracts')
             ->dailyAt('23:50')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->command('command:UpdateStatusInland')->cron('0 */4 * * *')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->command('command:generateQuotePdf')
-            ->dailyAt('00:30')
-            ->withoutOverlapping()
-            ->appendOutputTo(storage_path('logs/commands.log'));
+         $schedule->command('command:UpdateStatusInland')->cron('0 */4 * * *')->appendOutputTo(storage_path('logs/commands.log'));
+         $schedule->command('command:generateQuotePdf')
+             ->dailyAt('00:30')
+         //    ->withoutOverlapping()
+             ->appendOutputTo(storage_path('logs/commands.log'));
 
         // Backups
-        $schedule->command('backup:clean')->daily()->at('01:40');
-        $schedule->command('backup:run')->daily()->at('02:00');
+         //$schedule->command('backup:clean')->daily()->at('01:40');
+        // $schedule->command('backup:run')->daily()->at('02:00');
     }
 
     /**
