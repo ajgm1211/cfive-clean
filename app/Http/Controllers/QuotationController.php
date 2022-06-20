@@ -18,7 +18,6 @@ use App\Contact;
 use App\Container;
 use App\Country;
 use App\Currency;
-use App\Delegation;
 use App\DeliveryType;
 use App\DestinationType;
 use App\Harbor;
@@ -40,7 +39,6 @@ use App\StatusQuote;
 use App\Surcharge;
 use App\TermAndConditionV2;
 use App\User;
-use App\UserDelegation;
 use App\ViewQuoteV2;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -56,28 +54,44 @@ class QuotationController extends Controller
     }
 
     function list(Request $request) {
-
         $user = auth()->user();
 
         $query = $this->getFilterByUserType($user);
+
         $this->getFilterBySearch($query, $request['q']);
+
         $this->getFilterByRequestParams($query, $request['params']);
 
-        $results = $query->orderByDesc('id')->paginate(10); 
-    
+        $results = $query->orderByDesc('id')->paginate(10);
+
         return QuotationListResource::collection($results);
     }
 
-    public function getFilterByUserType($user) {
+    public function getFilterBySearch($query, $qry)
+    {
 
-        $filter_delegation = $user->companyUser->options['filter_delegations'];
+        if (isset($qry)) {
+
+            return $query->where(function ($q) use ($qry) {
+                $filter_by = ['id', 'quote_id', 'origin_port', 'destination_port', 'business_name', 'type', 'owner', 'created_at'];
+                foreach ($filter_by as $column) {
+                    $q->orWhere($column, 'LIKE', '%' . $qry . '%');
+                }
+            });
+
+        }
+
+    }
+
+    public function getFilterByUserType($user)
+    {
+        $company_user = CompanyUser::where('id', '=', $user->company_user_id)->first();
+        $filter_delegation = $company_user['options']['filter_delegations'];
         $subtype = $user->options['subtype'];
 
-        //Filtro por permisos a nivel de usuario y compañía
         if ($subtype === 'comercial') {
             $query = ViewQuoteV2::filterByCurrentUser();
-        }
-        if ($filter_delegation == true) {
+        } else if ($filter_delegation == true && $user->type == "subuser") {
             $query = ViewQuoteV2::filterByDelegation();
         } else {
             $query = ViewQuoteV2::filterByCurrentCompany();
@@ -86,41 +100,26 @@ class QuotationController extends Controller
         return $query;
     }
 
-    public function getFilterBySearch($query, $qry) {            
-
-        if (isset($qry)) {    
-
-            return $query->where(function ($q) use ($qry) {                    
-                    $filter_by = ['id', 'quote_id', 'origin_port', 'destination_port', 'business_name', 'type', 'owner', 'created_at'];        
-                    foreach ($filter_by as $column) {
-                        $q->orWhere('view_quote_v2s.'.$column, 'LIKE', '%' . $qry . '%');
-                    }
-            });
-
-        } 
-
-    }
-
     public function getFilterByRequestParams($query, $params)
     {
         $params = json_decode($params, true);
-        $attributes = ['id', 'quote_id', 'custom_quote_id', 'status', 'company_id', 'type', 'user_id',];
-        
+        $attributes = ['id', 'quote_id', 'custom_quote_id', 'status', 'company_id', 'type', 'user_id'];
+
         foreach ($attributes as $attr) {
             if (isset($params[$attr]) && count($params[$attr])) {
                 $query->whereIn($attr, $params[$attr]);
             }
-        }   
+        }
 
-        $this->getFilterByCreatedAt($query, $params); 
-        $this->getFilterByJoinConditions($query, $params); 
+        $this->getFilterByCreatedAt($query, $params);
+        $this->getFilterByJoinConditions($query, $params);
     }
 
     public function getFilterByCreatedAt($query, $params)
-    {   
-        $query->where(function ($query) use ($params) {        
-            if (isset($params['created_at'])) {    
-                foreach($params['created_at'] as $date){
+    {
+        $query->where(function ($query) use ($params) {
+            if (isset($params['created_at'])) {
+                foreach ($params['created_at'] as $date) {
                     $query->orWhere('view_quote_v2s.created_at', 'LIKE', '%' . $date . '%');
                 }
             }
@@ -131,37 +130,28 @@ class QuotationController extends Controller
 
     public function getFilterByJoinConditions($query, $params)
     {
-        if (isset($params['origin']) && count($params['origin']) && isset($params['destiny']) && count($params['destiny'])) { 
+        if (isset($params['origin']) && count($params['origin']) && isset($params['destiny']) && count($params['destiny'])) {
             return $query->select('view_quote_v2s.*')
-                ->join('automatic_rates', function($join){
-                    $join->on('automatic_rates.quote_id', '=', 'view_quote_v2s.id');
-                    $join->where('automatic_rates.deleted_at', '=', null);
-                })
+                ->join('automatic_rates', 'automatic_rates.quote_id', '=', 'view_quote_v2s.id')
                 ->whereIn('automatic_rates.origin_port_id', $params['origin'])
                 ->whereIn('automatic_rates.destination_port_id', $params['destiny'])
                 ->groupBy('view_quote_v2s.id');
         }
 
-        if (isset($params['origin']) && count($params['origin'])) { 
+        if (isset($params['origin']) && count($params['origin'])) {
             $query->select('view_quote_v2s.*')
-                ->join('automatic_rates', function($join){
-                    $join->on('automatic_rates.quote_id', '=', 'view_quote_v2s.id');
-                    $join->where('automatic_rates.deleted_at', '=', null);
-                })
+                ->join('automatic_rates', 'automatic_rates.quote_id', '=', 'view_quote_v2s.id')
                 ->whereIn('automatic_rates.origin_port_id', $params['origin'])
                 ->groupBy('view_quote_v2s.id');
         }
 
-        if (isset($params['destiny']) && count($params['destiny'])) { 
+        if (isset($params['destiny']) && count($params['destiny'])) {
             $query->select('view_quote_v2s.*')
-                ->join('automatic_rates', function($join){
-                    $join->on('automatic_rates.quote_id', '=', 'view_quote_v2s.id');
-                    $join->where('automatic_rates.deleted_at', '=', null);
-                })
+                ->join('automatic_rates', 'automatic_rates.quote_id', '=', 'view_quote_v2s.id')
                 ->whereIn('automatic_rates.destination_port_id', $params['destiny'])
                 ->groupBy('view_quote_v2s.id');
         }
-        
+
         return $query;
     }
 
@@ -324,19 +314,19 @@ class QuotationController extends Controller
         if (!empty($validation_same_quote)) {
             $newq_id = $company_code . '-' . strval($higherq_id + 2);
         }
-        
-        if(isset($search_data['company']['pdf_language'])){
-            if(is_int($search_data['company']['pdf_language'])){
+
+        if (isset($search_data['company']['pdf_language'])) {
+            if (is_int($search_data['company']['pdf_language'])) {
                 $language_id = ($search_data['company']['pdf_language'] == 0 || $search_data['company']['pdf_language'] == null) ? 1 : $search_data['company']['pdf_language'];
-            }else{
+            } else {
                 $language = Language::where('name', $search_data['company']['pdf_language'])->first();
-                if(!isset($language)){
-                    $language_id = ($search_data['company']['pdf_language'] == "0" || $search_data['company']['pdf_language'] == null) ? 1 : (int)$search_data['company']['pdf_language'];    
-                }else{
+                if (!isset($language)) {
+                    $language_id = ($search_data['company']['pdf_language'] == "0" || $search_data['company']['pdf_language'] == null) ? 1 : (int) $search_data['company']['pdf_language'];
+                } else {
                     $language_id = $language->id;
                 }
             }
-        }else{
+        } else {
             $language_id = ($company_user->pdf_language == 0 || $company_user->pdf_language == null) ? 1 : $company_user->pdf_language;
         }
 
@@ -570,7 +560,7 @@ class QuotationController extends Controller
         $form_keys = $request->input('keys');
 
         $terms_keys = ['terms_and_conditions', 'terms_portuguese', 'terms_english', 'remarks_spanish', 'remarks_portuguese', 'remarks_english',
-                        'remarks_italian', 'remarks_catalan', 'remarks_french'];
+            'remarks_italian', 'remarks_catalan', 'remarks_french'];
 
         if ($form_keys != null) {
             if (array_intersect($terms_keys, $form_keys) == [] && $request->input('cargo_type_id') == null) {
