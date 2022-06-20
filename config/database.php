@@ -41,14 +41,9 @@ return [
         ],
 
         'mysql' => [
-            'read' => [
-                'host' => [env('DB_HOST_READER')],
-            ],
-            'write' => [
-                'host' => [env('DB_HOST_WRITER')],
-            ],
             'driver' => 'mysql',
             'port' => env('DB_PORT', '3306'),
+            'host' => env('DB_HOST', 'localhost'),
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
