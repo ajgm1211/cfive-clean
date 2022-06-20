@@ -1929,7 +1929,7 @@ trait QuoteV2Trait
 
                 $surcharge = Surcharge::where('name',$charge['chargeCode'])->first();
 
-                if(!in_array($charge['chargeCode'],["FRT00","bas","SEA","OFT"])){
+                if(!in_array($charge['chargeCode'],["FRT00","bas","SEA","OFT", "FRT"])){
                     
                     if($surcharge == null){
                         $newSurcharge = Surcharge::create([

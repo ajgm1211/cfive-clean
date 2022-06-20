@@ -5399,6 +5399,907 @@
       </div>
     </div>
     <!-- FIN TARJETA COSCO -->
+
+    <!-- TARJETA MSC -->
+    <div
+      class="mb-4"
+      v-for="(mscResult, mscResultKey) in orderedMscRates"
+      :key="mscResultKey + 'msc'"
+    >
+      <div class="result-search">
+        <div class="banda-top msc"><span>MY MSC</span></div>
+
+        <!-- INFORMACION DE TARIFA -->
+        <div class="row" style="min-height: 199px !important">
+          <!-- CARRIER -->
+          <div
+            class="
+              col-12 col-lg-2
+              carrier-img
+              d-flex
+              justify-content-center
+              align-items-center
+            "
+            style="border-right: 1px solid #f3f3f3"
+          >
+            <img
+              :src="
+                'https://cargofive-production-21.s3.eu-central-1.amazonaws.com/imgcarrier/' +
+                  mscResult.image
+              "
+              alt="logo"
+              width="115px"
+            />
+          </div>
+          <!-- FIN CARRIER -->
+
+          <!-- INFORMACION PRINCIPAL -->
+          <div class="row col-12 col-lg-8 margin-res">
+            <!-- CONTRACT NAME -->
+            <div class="col-12">
+              <h6 class="mt-4 mb-5 contract-title">
+                <!-- {{ mscResult.quoteLine }} -->
+                <!-- {{ mscResult.contractReference }} -->
+              </h6>
+            </div>
+            <!-- FIN CONTRACT NAME -->
+
+            <!-- RUTA Y PRECIOS -->
+            <div
+              class="row col-12 mr-0 ml-0"
+              style="border-bottom: 1px solid #f3f3f3"
+            >
+              <!-- RUTA -->
+              <div
+                class="col-12 col-lg-6 d-none d-lg-flex"
+                style="border-bottom: 1px solid #eeeeee"
+              >
+                <!-- ORGIEN -->
+                <div class="origin mr-4">
+                  <span>origin</span>
+                  <p class="mb-0">
+                    {{ mscResult.departureName }}
+                  </p>
+                  <p v-if="mscResult.departureDateGmt">
+                    {{ mscResult.departureDateGmt.substring(0, 10) }}
+                  </p>
+                </div>
+                <!-- FIN ORGIEN -->
+
+                <!-- LINEA DE RUTA -->
+                <div
+                  class="
+                    d-flex
+                    flex-column
+                    justify-content-center
+                    align-items-center
+                  "
+                >
+                  <div class="direction-form">
+                    <img src="/images/logo-ship-blue.svg" alt="bote" />
+
+                    <div class="route-direct d-flex align-items-center">
+                      <div class="circle mr-2"></div>
+                      <div class="line"></div>
+                      <div class="circle fill-circle ml-2"></div>
+                    </div>
+                  </div>
+
+                  <div class="direction-desc mt-2">
+                    <p class="mb-1">
+                      <b>Transit Time: </b>
+                      {{ mscResult.transitTime + " days" }}
+                    </p>
+                    <p v-if="mscResult.vehiculeName">
+                      <b>Vessel: </b> {{ mscResult.vehiculeName }}
+                    </p>
+                  </div>
+                </div>
+                <!-- FIN LINEA DE RUTA -->
+
+                <!-- DESTINO -->
+                <div class="destination ml-4">
+                  <span>destination</span>
+                  <p class="mb-0">
+                    {{ mscResult.arrivalName }}
+                  </p>
+                  <p v-if="mscResult.arrivalDateGmt">
+                    {{ mscResult.arrivalDateGmt.substring(0, 10) }}
+                  </p>
+                </div>
+                <!-- FIN DESTINO -->
+              </div>
+              <!-- FIN RUTA -->
+
+              <!-- RUTA RESPONSIVA -->
+              <div
+                class="row col-lg-6 d-lg-none mr-0 ml-0"
+                style="border-bottom: 1px solid #eeeeee"
+              >
+                <!-- DESTINOS -->
+                <div class="col-sm-6">
+                  <!-- ORGIEN -->
+                  <div class="origin mb-3">
+                    <span>origin</span>
+                    <p class="mb-1">
+                      {{ mscResult.departureName }}
+                    </p>
+                    <p v-if="mscResult.departureDateGmt">
+                      {{ mscResult.departureDateGmt.substring(0, 10) }}
+                    </p>
+                  </div>
+                  <!-- FIN ORGIEN -->
+
+                  <!-- DESTINO -->
+                  <div class="destination align-items-start mb-3">
+                    <span>destination</span>
+                    <p class="mb-1">
+                      {{ mscResult.arrivalName }}
+                    </p>
+                    <p v-if="mscResult.arrivalDateGmt">
+                      {{ mscResult.arrivalDateGmt.substring(0, 10) }}
+                    </p>
+                  </div>
+                  <!-- FIN DESTINO -->
+                </div>
+                <!-- FIN DESTINOS -->
+
+                <!-- TRANSIT TIME -->
+                <div class="col-sm-6">
+                  <!-- LINEA DE RUTA -->
+                  <div class="via">
+                    <ul class="pl-0" style="list-style: none">
+                      <li>
+                        <p class="mb-1">
+                          <b>Transit Time: </b
+                          >{{ mscResult.transitTime + " days" }}
+                        </p>
+                      </li>
+                      <li>
+                        <p><b>Vessel: </b>{{ mscResult.vehiculeName }}</p>
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- FIN LINEA DE RUTA -->
+                </div>
+                <!-- FIN TRANSIT TIME -->
+              </div>
+              <!-- FIN RUTA RESPONSIVA -->
+
+              <!-- PRECIO -->
+              <div class="col-12 col-lg-6">
+                <!-- PRECIO RESPONSIVE -->
+                <div class="row card-amount card-amount-header__res">
+                  <div
+                    class="col-2 pl-0 pr-0 prices-card-res"
+                    v-for="(cont, contCode) in request.containers"
+                    :key="contCode"
+                  >
+                    <p>
+                      <b>{{ cont.code }}</b>
+                    </p>
+                  </div>
+                </div>
+                <!-- FIN PRECIO RESPONSIVE -->
+
+                <!-- PRECIO -->
+                <div class="row card-amount card-amount__res">
+                  <div
+                    class="col-2 pl-0 pr-0 prices-card-res"
+                    :class="countContainersClass()"
+                    v-for="(mscGlobalTotal, mscTotalKey) in mscResult
+                      .pricingDetails.totalRatePerContainer"
+                    :key="mscTotalKey"
+                  >
+                    <p>
+                      <b >
+                        {{
+                          datalists.company_user.decimals === 1
+                            ? mscGlobalTotal.total
+                            : parseFloat(mscGlobalTotal.total).toFixed(0)
+                        }}
+                        <span >{{
+                          mscGlobalTotal.currencyCode
+                        }}</span></b
+                      >
+                    </p>
+                  </div>
+                </div>
+                <!-- FIN PRECIO -->
+              </div>
+              <!-- FIN PRECIO -->
+            </div>
+            <!-- RUTA Y PRECIOS -->
+
+            <!-- OPCIONES E INFORMACION EXTRA -->
+            <div class="col-12 mt-3 mb-3 result-action">
+              <div class="d-flex align-items-center">
+                <span style="color: #006bfa; text-transform: capitalize"
+                  ><b-icon icon="check-circle-fill"></b-icon> MY MSC</span
+                >
+                <p
+                  class="ml-4 mb-0"
+                  v-if="mscResult.validityFrom && mscResult.validityTo"
+                >
+                  <b style="font-size:11px;">VALIDITY:</b>
+                  {{
+                    mscResult.validityFrom.substring(0, 10) +
+                      " / " +
+                      mscResult.validityTo.substring(0, 10)
+                  }}
+                </p>
+              </div>
+
+              <div class="d-flex justify-content-end align-items-center">
+                <b-button
+                  v-if="mscResult.remarks && mscResult.remarks != ''"
+                  class="rs-btn"
+                  v-b-toggle="
+                    'remarks_' +
+                      String(mscResult.contractReference) +
+                      '_' +
+                      String(mscResult.accordion_id)
+                  "
+                  ><b>remarks</b><b-icon icon="caret-down-fill"></b-icon
+                ></b-button>
+                <b-button
+                  class="rs-btn"
+                  v-b-toggle="
+                    'schedules_' +
+                      String(mscResult.contractReference) +
+                      '_' +
+                      String(mscResult.accordion_id)
+                  "
+                  v-if="mscResult.routingDetails.length"
+                  ><b>schedules</b><b-icon icon="caret-down-fill"></b-icon
+                ></b-button>
+                <b-button
+                  class="rs-btn"
+                  v-b-toggle="
+                    'details_' +
+                      String(mscResult.contractReference) +
+                      '_' +
+                      String(mscResult.accordion_id)
+                  "
+                  ><b>detailed cost</b><b-icon icon="caret-down-fill"></b-icon
+                ></b-button>
+              </div>
+            </div>
+            <!-- FIN OPCIONES E INFORMACION EXTRA -->
+          </div>
+          <!-- FIN INFORMACION PRINCIPAL -->
+
+          <!-- ADD QUOTE BTN -->
+          <div
+            class="
+              col-12 col-lg-2
+              d-flex
+              justify-content-center
+              align-items-center
+              btn-quote-res
+            "
+            style="border-left: 1px solid #f3f3f3"
+          >
+            <b-form-checkbox
+              v-model="mscResult.addToQuote"
+              class="btn-add-quote"
+              name="check-button"
+              button
+              @change="addResultToQuote(mscResult)"
+            >
+              <b>add to quote</b>
+            </b-form-checkbox>
+          </div>
+        </div>
+        <!-- FIN INFORMACION DE TARIFA -->
+
+        <!-- INFORMACION DESPLEGADA -->
+        <div
+          :id="'my-accordion-' + mscResult.accordion_id"
+          class="row mr-0 ml-0 accordion"
+          role="tablist"
+        >
+
+          <!-- REMARKS -->
+          <b-collapse
+            :id="
+              'remarks_' +
+                String(mscResult.contractReference) +
+                '_' +
+                String(mscResult.accordion_id)"
+            class="pt-5 pb-5 pl-5 pr-5 col-12"
+            :accordion="'my-accordion-' + mscResult.accordion_id"
+            role="tabpanel"
+            v-model="mscResult.remarksCollapse"
+          >
+            <h5><b>Remarks</b></h5>
+
+            <b-card>
+              <p v-html="mscResult.remarks"></p>
+            </b-card>
+          </b-collapse>
+          <!-- FIN REMARKS -->
+
+          <!-- DETALLES DE TARIFA -->
+          <b-collapse
+            :id="
+              'details_' +
+                String(mscResult.contractReference) +
+                '_' +
+                String(mscResult.accordion_id)
+            "
+            class="pt-5 pb-5 pl-5 pr-5 col-12"
+            :accordion="'my-accordion-' + mscResult.accordion_id"
+            role="tabpanel"
+            v-model="mscResult.detailCollapse"
+          >
+            <div
+              v-for="(mscSurchargeType, mscSurchargeKey) in mscResult
+                .pricingDetails.surcharges"
+              :key="mscSurchargeKey"
+            >
+              <h5 v-show="(searchData.originCharges && mscSurchargeKey=='originSurcharges') || (searchData.destinationCharges && mscSurchargeKey=='destinationSurcharges') || mscSurchargeKey=='freightSurcharges'">
+                <b>{{
+                  mscSurchargeKey
+                    .substring(0, mscSurchargeKey.length - 10)
+                    .charAt(0)
+                    .toUpperCase() +
+                    mscSurchargeKey
+                      .substring(0, mscSurchargeKey.length - 10)
+                      .slice(1)
+                }}</b>
+              </h5>
+
+              <b-table-simple 
+                hover small responsive class="sc-table"
+                v-show="(searchData.originCharges && mscSurchargeKey=='originSurcharges') || (searchData.destinationCharges && mscSurchargeKey=='destinationSurcharges') || mscSurchargeKey=='freightSurcharges'">
+                <b-thead>
+                  <b-tr>
+                    <b-th style="width: 300px">Charge</b-th>
+                    <b-th style="width: 325px">Detail</b-th>
+                    <!-- <b-th></b-th>
+                          <b-th></b-th> -->
+                    <b-th
+                      style="padding: 0.75rem 0.75rem 0.3rem 0.75rem !important"
+                      v-for="(requestContainer,
+                      rContainerKey) in request.containers"
+                      :key="rContainerKey"
+                      >{{ requestContainer.code }}
+                    </b-th>
+                  </b-tr>
+                </b-thead>
+
+                <b-tbody>
+                  <b-tr
+                    v-for="(mscSurchargeName,
+                    mscNameKey) in mscSurchargeType"
+                    :key="mscNameKey"
+                  >
+                    <b-td
+                      ><b>{{
+                        mscSurchargeName.chargeName != null
+                          ? mscSurchargeName.chargeCode +
+                            " - " +
+                            mscSurchargeName.chargeName
+                          : mscSurchargeName.chargeCode
+                      }}</b></b-td
+                    >
+                    <b-td>{{ mscSurchargeName.calculationType }}</b-td>
+                    <!-- <b-td></b-td>
+                          <b-td></b-td> -->
+                    <b-td
+                      v-for="(mscSurchargeContainer,
+                      mscContainerKey) in mscSurchargeName.containers"
+                      :key="mscContainerKey"
+                      ><p>
+                        <p v-if="mscSurchargeContainer.priceLevel != undefined">
+                        {{
+                          mscSurchargeContainer.chargeAmount
+                        }}
+                      </p>
+                      <span
+                        v-if="
+                          mscSurchargeContainer.priceLevel != undefined
+                        "
+                        class="profit"
+                        >+{{
+                            mscSurchargeContainer.priceLevel.amount
+                        }}</span>
+                        <b
+                          >{{ mscSurchargeContainer.currencyCode }}
+                          {{ mscSurchargeContainer.amount }}</b
+                        >
+                      </p></b-td
+                    >
+                  </b-tr>
+
+                  <b-tr>
+                    <!-- <b-td></b-td>
+                          <b-td></b-td>
+                          <b-td></b-td> -->
+                    <b-td colspan="2" style="text-align: right"
+                      ><b
+                        >Total
+                        {{
+                          mscSurchargeKey
+                            .substring(0, mscSurchargeKey.length - 10)
+                            .charAt(0)
+                            .toUpperCase() +
+                            mscSurchargeKey
+                              .substring(0, mscSurchargeKey.length - 10)
+                              .slice(1)
+                        }}</b
+                      ></b-td
+                    >
+                    <b-td
+                      v-for="(mscTypeTotal, mscTypeTotalKey) in mscResult
+                        .pricingDetails.totalRatePerType[
+                        'totalRate' +
+                          mscSurchargeKey
+                            .substring(0, mscSurchargeKey.length - 10)
+                            .charAt(0)
+                            .toUpperCase() +
+                          mscSurchargeKey
+                            .substring(0, mscSurchargeKey.length - 10)
+                            .slice(1)
+                      ]"
+                      :key="mscTypeTotalKey"
+                    >
+                      <b
+                        >{{ mscTypeTotal.currencyCode }}
+                        {{ mscTypeTotal.total }}
+                      </b></b-td
+                    >
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </div>
+          </b-collapse>
+          <!-- FIN DETALLES DE TARIFA-->
+
+          <!-- SCHEDULES -->
+          <b-collapse
+            :id="
+              'schedules_' +
+                String(mscResult.contractReference) +
+                '_' +
+                String(mscResult.accordion_id)
+            "
+            class="pt-5 pb-5 pl-5 pr-5 col-12 schedule"
+            :accordion="'my-accordion-' + mscResult.accordion_id"
+            role="tabpanel"
+            v-model="mscResult.scheduleCollapse"
+          >
+            <h5 class="mb-5 title-schedule"><b>Schedule Information</b></h5>
+
+            <!-- SCHEDULE INFORMATION -->
+            <b-tabs
+              pills
+              card
+              vertical
+              class="d-none d-lg-flex"
+              v-model="mscResult.activeTab"
+            >
+              <b-tab
+                v-for="(route, routeKey) in mscResult.routingDetails"
+                :key="routeKey"
+              >
+                <!-- INFORMACION PRINCIPAL -->
+                <template #title>
+                  <div class="margin-res">
+                    <!-- NOMBRE -->
+                    <div class="col-12">
+                      <h6 class="mt-4 mb-5 contract-title">
+                        <!-- {{ mscResult.contractReference }} -->
+                      </h6>
+                    </div>
+                    <!-- FIN NOMBRE -->
+
+                    <!-- RUTA -->
+                    <div class="row col-12 mr-0 ml-0">
+                      <div
+                        class="col-12 d-none d-lg-flex justify-content-between"
+                      >
+                        <!-- ORGIEN -->
+                        <div class="origin mr-4">
+                          <span>origin</span>
+                          <p class="mb-0">
+                            {{ route.details[0].departureName }}
+                          </p>
+                          <p v-if="route.details[0].departureDateGmt">
+                            {{
+                              route.details[0].departureDateGmt.substring(0, 10)
+                            }}
+                          </p>
+                        </div>
+                        <!-- FIN ORGIEN -->
+
+                        <!-- LINEA DE RUTA -->
+                        <div
+                          class="
+                            d-flex
+                            flex-column
+                            justify-content-center
+                            align-items-center
+                          "
+                        >
+                          <div class="direction-form">
+                            <img
+                              src="/images/logo-ship-blue.svg"
+                              alt="bote"
+                              style="top: -30px"
+                            />
+
+                            <div
+                              class="route-indirect d-flex align-items-center"
+                            >
+                              <div class="circle mr-2"></div>
+                              <div class="line"></div>
+                              <div
+                                class="circle fill-circle-gray mr-2 ml-2"
+                              ></div>
+                              <div class="line line-blue"></div>
+                              <div class="circle fill-circle ml-2"></div>
+                            </div>
+                          </div>
+
+                          <div class="direction-desc mt-2">
+                            <p class="mb-1">
+                              <b>Transit Time: </b>{{ route.transitTime }} days
+                            </p>
+                            <p v-if="route.details.length > 1">
+                              <b>Via: </b>{{ route.details[0].arrivalName }}
+                            </p>
+                            <p>
+                              <b>Service: </b
+                              >{{
+                                route.details.length > 1
+                                  ? "Transhipment"
+                                  : "Direct"
+                              }}
+                            </p>
+                          </div>
+                        </div>
+                        <!-- FIN LINEA DE RUTA -->
+
+                        <!-- DESTINO -->
+                        <div class="destination ml-4">
+                          <span>destination</span>
+                          <p class="mb-0">{{ route.details[0].arrivalName }}</p>
+                          <p v-if="route.details[0].arrivalDateGmt">
+                            {{
+                              route.details[0].arrivalDateGmt.substring(0, 10)
+                            }}
+                          </p>
+                        </div>
+                        <!-- FIN DESTINO -->
+                      </div>
+                    </div>
+                    <!-- FIN RUTA -->
+                  </div>
+                </template>
+                <!-- FIN INFORMACION PRINCIPAL -->
+
+                <!-- INFORMACION DE LA RUTA -->
+                <div class="row">
+                  <div
+                    class="col-12 d-none d-lg-flex align-items-center pl-5"
+                    style="border-left: 1px solid #eee"
+                  >
+                    <div class="row" style="width: 100%">
+                      <!-- INFORMACION DEL BARCO -->
+                      <div class="col-xl-6 schedule-info">
+                        <!-- VESSEL Information -->
+                        <h5 class="title-schedule mb-3">
+                          <b-icon icon="hdd-rack"></b-icon> Vessel Information
+                        </h5>
+                        <ul>
+                          <li>
+                            <h5
+                              class="sub-title-schedule"
+                              v-if="route.details[0].imoNumber != null"
+                            >
+                              <b>IMO:</b>
+                            </h5>
+                            <p class="text-schedule">
+                              {{ route.details[0].imoNumber }}
+                            </p>
+                          </li>
+                          <li>
+                            <h5 class="sub-title-schedule">
+                              <b>Vessel/Voyage:</b>
+                            </h5>
+                            <p class="text-schedule">
+                              {{
+                                route.details[0].vehiculeName +
+                                  " / " +
+                                  route.details[0].voyageNumber
+                              }}
+                            </p>
+                          </li>
+                        </ul>
+
+                        <!-- DEADLINE Information -->
+                        <h5
+                          class="title-schedule mb-3"
+                          style="margin-top: 25px"
+                        >
+                          <b-icon icon="stopwatch"></b-icon> Deadlines
+                        </h5>
+                        <ul>
+                          <li
+                            v-for="(mscDeadline, mscDeadlineKey) in route
+                              .details[0].deadlines"
+                            :key="mscDeadlineKey"
+                          >
+                            <h5 class="sub-title-schedule">
+                              <b>{{ mscDeadline.deadlineKey }}:</b>
+                            </h5>
+                            <p class="text-schedule">
+                              {{
+                                mscDeadline.deadline.substring(0, 10) +
+                                  " " +
+                                  mscDeadline.deadline.substring(
+                                    11,
+                                    mscDeadline.deadline.length - 4
+                                  )
+                              }}
+                            </p>
+                          </li>
+                        </ul>
+                      </div>
+                      <!-- FIN INFORMACION DEL BARCO -->
+
+                      <!-- DIAGRAMA DE LA RUTA -->
+                      <div class="col-xl-6 schedule-route-info">
+                        <h5 class="title-schedule mb-3">
+                          <b-icon icon="calendar2-check"></b-icon> Itinerary
+                          details
+                        </h5>
+                        <ul>
+                          <li
+                            v-for="(routeDetail, detailKey) in route.details"
+                            :key="detailKey"
+                          >
+                            <div>
+                              <p v-if="routeDetail.arrivalDateGmt">
+                                {{
+                                  routeDetail.arrivalDateGmt.substring(0, 10)
+                                }}
+                                {{
+                                  routeDetail.arrivalDateGmt.substring(12, 16)
+                                }}
+                              </p>
+                            </div>
+                            <div class="sri-circle"></div>
+                            <div class="d-flex">
+                              <img
+                                src="/images/port.svg"
+                                width="25px"
+                                alt="port"
+                              />
+                              <p>{{ routeDetail.arrivalName }}</p>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      <!-- FIN DIAGRAMA DE LA RUTA -->
+                    </div>
+                  </div>
+                </div>
+                <!-- FIN INFORMACION DE LA RUTA -->
+              </b-tab>
+            </b-tabs>
+            <!-- FIN SCHEDULE INFORMATION -->
+
+            <!-- SCHEDULE INFORMATION RESPONSIVE -->
+            <div>
+              <div
+                class="d-block d-lg-none si-responsive mb-3"
+                v-for="(route, routeKey) in mscResult.routingDetails"
+                :key="routeKey"
+              >
+                <!-- INFORMACION PRINCIPAL -->
+                <b-button
+                  v-b-toggle="
+                    'responsiveCollapse_' +
+                      mscResult.accordion_id +
+                      '_' +
+                      routeKey
+                  "
+                  style="width: 100%"
+                >
+                  <div class="row margin-res">
+                    <!-- CONTRACT NAME -->
+                    <div class="col-12">
+                      <h6 class="mt-4 mb-5 contract-title">
+                        {{ mscResult.contractReference }}
+                      </h6>
+                    </div>
+                    <!-- FIN CONTRACT NAME -->
+
+                    <!-- INFORMACION DE LA RUTA -->
+                    <div class="col-12 mr-0 ml-0 si-route-info">
+                      <!-- ORGIEN -->
+                      <div class="origin">
+                        <span>origin</span>
+                        <p class="mb-0">{{ route.details[0].departureName }}</p>
+                        <p v-if="route.details[0].departureDateGmt">
+                          {{
+                            route.details[0].departureDateGmt.substring(0, 10)
+                          }}
+                        </p>
+                      </div>
+                      <!-- FIN ORGIEN -->
+
+                      <!-- LINEA DE RUTA -->
+                      <div class="direction-desc">
+                        <p class="mb-1">
+                          <b>Transit Time: </b>{{ route.transitTime }} days
+                        </p>
+                        <p v-if="route.details.length > 1">
+                          <b>Via: </b>{{ route.details[0].arrivalName }}
+                        </p>
+                        <p>
+                          <b>Service: </b
+                          >{{
+                            route.details.length > 1 ? "Transhipment" : "Direct"
+                          }}
+                        </p>
+                      </div>
+                      <!-- FIN LINEA DE RUTA -->
+
+                      <!-- DESTINO -->
+                      <div class="destination">
+                        <span>destination</span>
+                        <p class="mb-0">{{ route.details[0].arrivalName }}</p>
+                        <p v-if="route.details[0].arrivalDateGmt">
+                          {{ route.details[0].arrivalDateGmt.substring(0, 10) }}
+                        </p>
+                      </div>
+                      <!-- FIN DESTINO -->
+                    </div>
+                    <!-- FIN INFORMACION DE LA RUTA -->
+                  </div>
+                </b-button>
+
+                <b-collapse
+                  :id="
+                    'responsiveCollapse_' +
+                      mscResult.accordion_id +
+                      '_' +
+                      routeKey
+                  "
+                  class="mt-2"
+                >
+                  <b-card>
+                    <!-- RUTA -->
+                    <div class="row">
+                      <div class="col-12 d-flex align-items-center mt-3">
+                        <div class="row" style="width: 100%">
+                          <!-- INFORMACION DEL BARCO -->
+                          <div class="col-sm-6 schedule-info">
+                            <!-- Vessel Information -->
+                            <h5 class="title-schedule mb-3">
+                              <b-icon icon="hdd-rack"></b-icon> Vessel
+                              Information
+                            </h5>
+
+                            <ul>
+                              <li>
+                                <h5
+                                  class="sub-title-schedule"
+                                  v-if="route.details[0].imoNumber != null"
+                                >
+                                  <b>IMO:</b>
+                                </h5>
+                                <p class="text-schedule">
+                                  {{ route.details[0].imoNumber }}
+                                </p>
+                              </li>
+                              <li>
+                                <h5 class="sub-title-schedule">
+                                  <b>Vessel/Voyage:</b>
+                                </h5>
+                                <p class="text-schedule">
+                                  {{
+                                    route.details[0].vehiculeName +
+                                      " / " +
+                                      route.details[0].voyageNumber
+                                  }}
+                                </p>
+                              </li>
+                            </ul>
+
+                            <!-- Vessel Information -->
+                            <h5
+                              class="title-schedule mb-3"
+                              style="margin-top: 25px"
+                            >
+                              <b-icon icon="stopwatch"></b-icon> Deadlines
+                            </h5>
+
+                            <ul>
+                              <li
+                                v-for="(mscDeadline,
+                                mscDeadlineKey) in route.details[0].deadlines"
+                                :key="mscDeadlineKey"
+                              >
+                                <h5 class="sub-title-schedule">
+                                  <b>{{ mscDeadline.deadlineKey }}:</b>
+                                </h5>
+                                <p class="text-schedule">
+                                  {{
+                                    mscDeadline.deadline.substring(0, 10) +
+                                      " " +
+                                      mscDeadline.deadline.substring(
+                                        11,
+                                        mscDeadline.deadline.length - 4
+                                      )
+                                  }}
+                                </p>
+                              </li>
+                            </ul>
+                          </div>
+                          <!-- FIN INFORMACION DEL BARCO -->
+
+                          <div class="col-sm-6 schedule-route-info mt-3">
+                            <h5 class="title-schedule mb-3">
+                              <b-icon icon="calendar2-check"></b-icon> Itinerary
+                              details
+                            </h5>
+                            <ul>
+                              <li
+                                v-for="(routeDetail,
+                                detailKey) in route.details"
+                                :key="detailKey"
+                              >
+                                <div>
+                                  <p v-if="routeDetail.arrivalDateGmt">
+                                    {{
+                                      routeDetail.arrivalDateGmt.substring(
+                                        0,
+                                        10
+                                      )
+                                    }}
+                                    {{
+                                      routeDetail.arrivalDateGmt.substring(
+                                        12,
+                                        16
+                                      )
+                                    }}
+                                  </p>
+                                </div>
+                                <div class="sri-circle"></div>
+                                <div class="d-flex">
+                                  <img
+                                    src="/images/port.svg"
+                                    width="25px"
+                                    alt="port"
+                                  />
+                                  <p>{{ routeDetail.arrivalName }}</p>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- FIN RUTA -->
+                  </b-card>
+                </b-collapse>
+
+                <!-- FIN INFORMACION PRINCIPAL -->
+              </div>
+            </div>
+            <!-- FIN SCHEDULE INFORMATION RESPONSIVE -->
+          </b-collapse>
+          <!-- FIN SCHEDULES -->
+        </div>
+        <!-- FIN INFORMACION DESPLEGADA -->
+      </div>
+    </div>
+    <!-- FIN TARJETA MSC -->
   </div>
 </template>
 
@@ -5989,6 +6890,14 @@ export default {
     orderedCoscoRates: function() {
       return _.orderBy(
         this.results.cosco,
+        (item) => item.pricingDetails.totalRatePerContainer[0].total,
+        ["asc"]
+      );
+    },
+
+    orderedMscRates: function() {
+      return _.orderBy(
+        this.results.msc,
         (item) => item.pricingDetails.totalRatePerContainer[0].total,
         ["asc"]
       );

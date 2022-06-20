@@ -506,7 +506,7 @@ class QuotationController extends Controller
 
             $newRate = AutomaticRate::create([
                 'quote_id' => $quote->id,
-                'contract' => $result['contractReference'] ?? $result['quoteLine'],
+                'contract' => $result['contractReference'] ?? $result['quoteLine'] ?? "",
                 'validity_start' => $start_date,
                 'validity_end' => $end_date,
                 'transit_time' => $result['routingDetails'][0]['transitTime'],
