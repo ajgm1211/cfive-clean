@@ -28,9 +28,7 @@ class QuotationFilterController extends Controller
 
     public function getFilterOptions()
     {
-
-        $user = auth()->user();
-        $query = $this->getFilterByUserType($user);
+        $query = $this->getBaseQuery();
 
         $options = [];
 
