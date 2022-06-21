@@ -54,7 +54,9 @@ class QuotationController extends Controller
     }
 
     function list(Request $request) {
-        $user = auth()->user();
+       // $user = auth()->user();
+
+        $user = Auth::user();
 
         $query = $this->getFilterByUserType($user);
 
