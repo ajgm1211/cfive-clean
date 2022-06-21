@@ -24,7 +24,6 @@ use App\ContractLclFile;
 use App\TermAndConditionV2;
 use GoogleMaps;
 use App\DistanceKmLocation;
-use App\HarborsLocationSearch;
 use App\Location;
 use App\SearchPort;
 use App\Surcharge;
@@ -1650,7 +1649,7 @@ trait SearchTrait
         $portD=array();
         foreach ($new_search['originPorts'] as $key=> $dataLocations){
             if($dataLocations['type']=='city'){
-                $portOrig=HarborsLocationSearch::where('location_id',$dataLocations['id'])->with('harbor')->get();
+                $portOrig=DistanceKmLocation::where('location_id',$dataLocations['id'])->with('harbor')->get();
                 if(count($portOrig)==1){
                     $portO[]=[
                         'id' =>$portOrig[0]['harbor']['id'],
@@ -1690,7 +1689,7 @@ trait SearchTrait
 
         foreach ($new_search['destinationPorts'] as $key=> $dataLocations){
             if($dataLocations['type']=='city'){
-                $portDest=HarborsLocationSearch::where('location_id',$dataLocations['id'])->with('harbor')->get();
+                $portDest=DistanceKmLocation::where('location_id',$dataLocations['id'])->with('harbor')->get();
                 if(count($portDest)==1){
                     $portD[]=[
                         'id'=>$portDest[0]['harbor']['id'],

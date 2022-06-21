@@ -15,7 +15,6 @@ use App\InlandService;
 use App\Provider;
 use App\Carrier;
 use App\DistanceKmLocation;
-use App\HarborsLocationSearch;
 use App\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
