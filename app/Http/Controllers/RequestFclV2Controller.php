@@ -503,7 +503,7 @@ class RequestFclV2Controller extends Controller
                     if (env('APP_VIEW') == 'operaciones') {
                         SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id)->onQueue('operaciones');
                     } else {
-                        SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id)->onQueue('high');;
+                        SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id);
                     }
                 }
                 //Calling Mix Panel's event
@@ -550,7 +550,7 @@ class RequestFclV2Controller extends Controller
             if (env('APP_VIEW') == 'operaciones') {
                 SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id)->onQueue('operaciones');
             } else {
-                SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id)->onQueue('high');
+                SendEmailRequestFclJob::dispatch($usercreador->toArray(), $id);
             }
             $success = true;
         } catch (\Exception $e) {
