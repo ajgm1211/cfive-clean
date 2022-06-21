@@ -5,6 +5,6 @@
 @endsection
 
 @section('js')
-    <script src="{{ asset('js/contracts_lcl/edit.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/contracts_lcl/edit.js?v=1') }}" type="text/javascript"></script>
 @parent
 @endsection
