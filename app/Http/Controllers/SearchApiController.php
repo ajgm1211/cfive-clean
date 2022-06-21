@@ -56,7 +56,6 @@ use App\RemarkCondition;
 use App\ScheduleType;
 use App\TermAndConditionV2;
 use App\TypeDestiny;
-use App\HarborsLocationSearch;
 use GeneaLabs\LaravelMixpanel\LaravelMixpanel;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaStream;
@@ -207,7 +206,7 @@ class SearchApiController extends Controller
         $ports = Harbor::get()->map(function ($harbor){
             return $harbor->only(['id','display_name','country']);
         });
-        $locationsHarbors = HarborsLocationSearch::get()->map(function ($harbor){
+        $locationsHarbors = DistanceKmLocation::get()->map(function ($harbor){
             return $harbor->only(['location_id']);
         });
 

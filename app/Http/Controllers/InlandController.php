@@ -14,7 +14,7 @@ use App\InlandType;
 use App\InlandService;
 use App\Provider;
 use App\Carrier;
-use App\HarborsLocationSearch;
+use App\DistanceKmLocation;
 use App\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -72,8 +72,8 @@ class InlandController extends Controller
             return $carrier->only(['id', 'name']);
         });
 
-        $location = HarborsLocationSearch::get()->map(function ($harbor){
-            return $harbor->only(['location','harbor_id']);
+        $location = DistanceKmLocation::get()->map(function ($harbor){
+            return $harbor->only(['location_id','harbor_id']);
         });
 
         $inlnadService = InlandService::get()->map(function ($inlnadService) {
