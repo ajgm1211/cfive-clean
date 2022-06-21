@@ -62,6 +62,9 @@ class PriceLevel extends Model
     public function duplicate()
     {
         $new_model = $this->replicate();
+        
+        $new_model->options = ['whitelabel' => false];
+        $new_model->name = $this->name . " copy";
 
         $this->load(
             'price_level_details',
