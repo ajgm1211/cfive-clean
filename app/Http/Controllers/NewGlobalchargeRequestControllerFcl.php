@@ -250,9 +250,9 @@ class NewGlobalchargeRequestControllerFcl extends Controller
             $Ncontract->save();
 
             if (env('APP_VIEW') == 'operaciones') {
-                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'gcfcl', 'request')->onQueue('high');
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'gcfcl', 'request')->onQueue('operaciones');
             } else {
-                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'gcfcl', 'request')->onQueue('high');
+                ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'gcfcl', 'request');
             }
 
             $user = User::find($request->user);
