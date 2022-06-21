@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Watson\Rememberable\Rememberable;
 
 class ViewQuoteV2 extends Model
 {
+    use Rememberable;
+    
     protected $casts = [
         'origin_port_array' => 'array', 
         'destination_port_array' => 'array', 
@@ -25,7 +28,7 @@ class ViewQuoteV2 extends Model
     public function scopeFilterByCurrentCompany($query)
     {
         $company_id = Auth::user()->company_user_id;
-        return $query->where('company_user_id', '=', $company_id);
+        return $query->remember(60 * 60)->where('company_user_id', '=', $company_id);
     }
 
     public function scopeFilterByCurrentUser($query)

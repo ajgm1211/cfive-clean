@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3cd91490fa9041a4bf9445e8968d3329",
+    "content-hash": "0a647ba668257bfcde12a7cbe04b6598",
     "packages": [
         {
             "name": "alexpechkarev/geometry-library",
@@ -9676,6 +9676,54 @@
                 "source": "https://github.com/voku/stop-words/tree/master"
             },
             "time": "2018-11-23T01:37:27+00:00"
+        },
+        {
+            "name": "watson/rememberable",
+            "version": "3.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dwightwatson/rememberable.git",
+                "reference": "d225d1c6733a4b47ad037df275f144858a968325"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dwightwatson/rememberable/zipball/d225d1c6733a4b47ad037df275f144858a968325",
+                "reference": "d225d1c6733a4b47ad037df275f144858a968325",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^5.0|^6.0",
+                "illuminate/support": "^5.0|^6.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Watson\\Rememberable\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dwight Watson",
+                    "email": "dwight@studiousapp.com"
+                }
+            ],
+            "description": "Query caching for Laravel 5",
+            "keywords": [
+                "caching",
+                "eloquent",
+                "laravel",
+                "remember"
+            ],
+            "support": {
+                "issues": "https://github.com/dwightwatson/rememberable/issues",
+                "source": "https://github.com/dwightwatson/rememberable/tree/3.2.1"
+            },
+            "time": "2019-10-04T00:29:10+00:00"
         },
         {
             "name": "webpatser/laravel-uuid",
