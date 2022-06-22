@@ -161,7 +161,7 @@ class QuotationController extends Controller
     {
         $company_user_id = Auth::user()->company_user_id;
 
-        $carriers = Carrier::get()->map(function ($carrier) {
+        $carriers = Carrier::remember(20 * 20)->get()->map(function ($carrier) {
             $carrier['model'] = 'App\Carrier';
             return $carrier->only(['id', 'name', 'image', 'model']);
         });
@@ -194,7 +194,7 @@ class QuotationController extends Controller
             return $user->only(['id', 'name', 'lastname', 'fullname']);
         });
 
-        $harbors = Harbor::select(['id', 'display_name', 'country_id', 'code'])->get();
+        $harbors = Harbor::remember(20 * 20)->select(['id', 'display_name', 'country_id', 'code'])->get();
 
         $payment_conditions = PaymentCondition::select(['id', 'quote_id', 'content'])->get();
 
@@ -202,25 +202,25 @@ class QuotationController extends Controller
 
         $delivery_types = DeliveryType::select(['id', 'name'])->get();
 
-        $status_options = StatusQuote::select(['id', 'name'])->get();
+        $status_options = StatusQuote::remember(1 * 1)->select(['id', 'name'])->get();
 
-        $kind_of_cargo = CargoKind::select(['id', 'name'])->get();
+        $kind_of_cargo = CargoKind::remember(1 * 1)->select(['id', 'name'])->get();
 
-        $languages = Language::select(['id', 'name'])->get();
+        $languages = Language::remember(20 * 20)->select(['id', 'name'])->get();
 
-        $currency = Currency::select(['id', 'alphacode', 'rates', 'rates_eur'])->get();
+        $currency = Currency::remember(20 * 20)->select(['id', 'alphacode', 'rates', 'rates_eur'])->get();
 
-        $filtered_currencies = Currency::whereIn('id', ['46', '149'])->select(['id', 'alphacode', 'rates', 'rates_eur'])->get();
+        $filtered_currencies = Currency::remember(20 * 20)->whereIn('id', ['46', '149'])->select(['id', 'alphacode', 'rates', 'rates_eur'])->get();
 
         $containers = Container::get();
 
-        $calculationtypes = CalculationType::select(['id', 'name'])->get();
+        $calculationtypes = CalculationType::remember(20 * 20)->select(['id', 'name'])->get();
 
-        $surcharges = Surcharge::where('company_user_id', '=', $company_user_id)->select(['id', 'name'])->get();
+        $surcharges = Surcharge::remember(20 * 20)->where('company_user_id', '=', $company_user_id)->select(['id', 'name'])->get();
 
         $schedule_types = ScheduleType::select(['id', 'name'])->get();
 
-        $countries = Country::select(['id', 'code', 'name'])->get();
+        $countries = Country::remember(20 * 20)->select(['id', 'code', 'name'])->get();
 
         $sale_codes = SaleTermCode::where('company_user_id', '=', $company_user_id)->select(['id', 'name'])->get();
 
@@ -229,11 +229,11 @@ class QuotationController extends Controller
             return $provider->only(['id', 'name', 'model']);
         });
 
-        $cargo_types = CargoType::select(['id', 'name'])->get();
+        $cargo_types = CargoType::remember(20 * 20)->select(['id', 'name'])->get();
 
-        $calculationtypeslcl = CalculationTypeLcl::select(['id', 'name'])->get();
+        $calculationtypeslcl = CalculationTypeLcl::remember(20 * 20)->select(['id', 'name'])->get();
 
-        $destination_types = DestinationType::select(['id', 'name'])->get();
+        $destination_types = DestinationType::remember(20 * 20)->select(['id', 'name'])->get();
 
         $carrier_providers = $this->providers($carriers);
 

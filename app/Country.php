@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Watson\Rememberable\Rememberable;
 
 class Country extends Model
 {
+    use Rememberable;
     protected $table = 'countries';
     protected $fillable = ['id',
                            'name',

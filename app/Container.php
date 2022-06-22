@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Watson\Rememberable\Rememberable;
 
 class Container extends Model
 {
+    use Rememberable;
     protected $table = 'containers';
     protected $fillable = ['id', 'name', 'code', 'gp_container_id'];
 

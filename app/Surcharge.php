@@ -3,9 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Watson\Rememberable\Rememberable;
 class Surcharge extends Model
 {
+    use Rememberable;
     protected $table = 'surcharges';
     protected $fillable = ['id', 'name', 'description', 'sale_term_id', 'company_user_id', 'variation', 'options','internal_options'];
 

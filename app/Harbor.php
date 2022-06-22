@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Watson\Rememberable\Rememberable;
 
 class Harbor extends Model
 {
+    use Rememberable;
     protected $table = "harbors";
     protected $fillable = ['id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation'];
 

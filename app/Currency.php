@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Watson\Rememberable\Rememberable;
 
 class Currency extends Model
 {
+    use Rememberable;
     protected $table = 'currency';
     protected $fillable = ['id', 'alphacode', 'name', 'rates'];
 
