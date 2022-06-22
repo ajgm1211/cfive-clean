@@ -353,6 +353,9 @@ class UsersController extends Controller
             ContractLcl::where('user_id', $id)->update(['user_id' => $request->user_id]);
             Company::where('owner', $id)->update(['owner' => $request->user_id]);
             TermAndConditionV2::where('user_id', $id)->update(['user_id' => $request->user_id]);
+        }elseif($request->user_id  == null){
+            $message = 'The user you want to delete does not exist';
+            return redirect()->route('users.home')->with('message',$message);
         }
 
         $user = self::destroy($id);
