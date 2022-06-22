@@ -64,7 +64,7 @@ class QuotationController extends Controller
 
         $this->getFilterByRequestParams($query, $request['params']);
 
-        $results = $query->orderByDesc('id')->paginate(10);
+        $results = $query->remember(1 * 1)->orderByDesc('id')->paginate(10);
 
         return QuotationListResource::collection($results);
     }

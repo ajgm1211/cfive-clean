@@ -28,7 +28,7 @@ class ViewQuoteV2 extends Model
     public function scopeFilterByCurrentCompany($query)
     {
         $company_id = Auth::user()->company_user_id;
-        return $query->remember(60 * 60)->where('company_user_id', '=', $company_id);
+        return $query->where('company_user_id', '=', $company_id);
     }
 
     public function scopeFilterByCurrentUser($query)
