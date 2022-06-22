@@ -1372,27 +1372,19 @@ trait SearchTrait
     public function setOceanFreightCalculationTypeFCL($search_data){
 
         if($search_data['selectedContainerGroup'] == 1 ){
-            $ocean_freight_array = [
-                'calculationtype' => ['name' => 'Per Container', 'id' => '5'], 
-            ];
+            return ['name' => 'Per Container', 'id' => '5']; 
         }
         elseif($search_data['selectedContainerGroup'] == 2 ){
-            $ocean_freight_array = [
-                'calculationtype' => ['name' => 'Per Container RF', 'id' => '19'], 
-            ];
+            return ['name' => 'Per Container RF', 'id' => '19'];
         }
         elseif($search_data['selectedContainerGroup'] == 3 ){
-            $ocean_freight_array = [
-                'calculationtype' => ['name' => 'Per Container OT', 'id' => '20'], 
-            ];
+            return  ['name' => 'Per Container OT', 'id' => '20'];
         }
         elseif($search_data['selectedContainerGroup'] == 4 ){
-            $ocean_freight_array = [
-                'calculationtype' => ['name' => 'Per Container FR', 'id' => '21 '], 
-            ];
+            return ['name' => 'Per Container FR', 'id' => '21 '];
         }    
         // $ocean_freight_array['calculationtype']);
-        return $ocean_freight_array['calculationtype'];
+        return $ocean_freight_array;
 
     }
 
