@@ -58,13 +58,14 @@ class QuotationController extends Controller
 
         $user = Auth::user();
 
+
         $query = $this->getFilterByUserType($user);
 
         $this->getFilterBySearch($query, $request['q']);
 
         $this->getFilterByRequestParams($query, $request['params']);
 
-        $results = $query->remember(1 * 1)->orderByDesc('id')->paginate(10);
+        $results = $query->remember(1 * 1)->cacheTags('user_queries')->orderByDesc('id')->paginate(10);
 
         return QuotationListResource::collection($results);
     }

@@ -9,12 +9,14 @@ use Lab404\Impersonate\Models\Impersonate;
 use Laravel\Passport\HasApiTokens;
 use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\Permission\Traits\HasRoles;
+use Watson\Rememberable\Rememberable;
 
 class User extends Authenticatable implements Auditable
 {
     use HasApiTokens, Notifiable;
     use HasRoles;
     use \OwenIt\Auditing\Auditable;
+    use Rememberable;
 
     protected $casts = [
         'options' => 'array'

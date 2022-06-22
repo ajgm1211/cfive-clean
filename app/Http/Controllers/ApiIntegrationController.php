@@ -11,6 +11,8 @@ use App\Partner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use App\ViewQuoteV2;
+
 class ApiIntegrationController extends Controller
 {
     /**
