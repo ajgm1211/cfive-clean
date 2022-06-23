@@ -39,8 +39,18 @@
           <div class="modal-footer-create-container">
             <div class="modal-footer-content-wl input-box" >
               <div id="checkbox-create" v-if="user.settings_whitelabel">
-                  <div class="main-btn" @click="toogleAddToWhiteLabel()" >
-                    {{textAdd}}
+                  <div>
+                    <b-form-checkbox
+                      v-model="whitelabel"
+                      id="create-whitelabel"
+                      name="checkbox-create"
+                      value=true
+                      unchecked-value=false
+                    >
+                      <label for="create-whitelabel">
+                        {{textAdd}}
+                      </label> 
+                    </b-form-checkbox>
                   </div>
               </div>
             </div>
@@ -82,9 +92,19 @@
                       </div>
                       <div class="modal-footer-create-container">
                         <div class="modal-footer-content-wl input-box">
-                          <div id="checkbox-create" v-if="user.settings_whitelabel">
-                            <div class="main-btn" @click="toogleAddToWhiteLabel()" >
-                              {{textAdd}}
+                          <div id="checkbox-create" v-if="user.settings_whitelabel" >
+                            <div>
+                              <b-form-checkbox
+                                id="create-whitelabel"
+                                v-model="whitelabel"
+                                name="checkbox-create"
+                                value="true"
+                                unchecked-value="false"
+                              >
+                                <label for="create-whitelabel">
+                                  {{textAdd}}
+                                </label> 
+                              </b-form-checkbox>
                             </div>
                           </div>
                         </div>
@@ -168,11 +188,11 @@ export default {
       try {
         if (!this.validate()) return;
         this.setBody()
-        const {newCompany} = await this.actions.create(this.model)  
+        const {newCompany} = await this.actions.create(this.model, this.whitelabel)  
         //this.company  = newCompany
         toastr.success("Created successfully")
         this.$root.$emit('submitData')
-        this.$emit('cancel')
+        //this.$emit('cancel')
       } catch (error) {
         toastr.success("Not created successfully")
       }
@@ -276,8 +296,7 @@ export default {
     },
     setBody() {
       var body = {};
-      let component = this;
-
+      let component = this
       this.fields.forEach(function(field) {
         body[field.name] = component.model[field.name];
       });

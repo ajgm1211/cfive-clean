@@ -63,17 +63,11 @@
           </b-col>
           <b-col class="input-box" v-if="user.settings_whitelabel">
             <div id="checkbox-edit">
-              <b-form-checkbox
-                v-model="companyData.whitelabel"
-                name="checkbox-edit"
-                value="1"
-                unchecked-value="0"
-                @change="update()"
-              >
-                <label for="">
-                  WhiteLabel
-                </label> 
-              </b-form-checkbox>
+              <div id="checkbox-create" v-if="user.settings_whitelabel">
+                <div class="main-btn" @click="toogleAddToWhiteLabel()" >
+                  {{textAdd}}
+                </div>
+              </div>
             </div>
           </b-col>
         </b-row>
@@ -108,7 +102,8 @@ export default {
         { text: 'English', value: '1' },
         { text: 'Spanish', value: '2' },
         { text: 'Portuguese', value: '3' }
-      ]
+      ],
+      textAdd: "Add To WhiteLabel"
     }
   },
   computed:{
@@ -131,7 +126,17 @@ export default {
         this.companyData  = newCompany
         toastr.success("successful update");
       } catch (error) {
+        this.toogleAddToWhiteLabel()
         toastr.error("unsuccessful update.");
+      }
+    },
+    toogleAddToWhiteLabel(){
+      this.companyData.whitelabel= !this.companyData.whitelabel
+      if (this.companyData.whitelabel == true) {
+        this.textAdd = "Selected for add to WhiteLabel"  
+        this.update()
+      }else{
+        this.textAdd = "Add To WhiteLabel"
       }
     }
   }

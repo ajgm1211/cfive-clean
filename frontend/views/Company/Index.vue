@@ -21,7 +21,7 @@
         <DataTable
           :fields="fields"
           :actions="actions"
-          :filter="true"
+          :filter="false"
           :singleActions="['edit', 'duplicate', 'delete']"
           @onEdit="onEdit"
           :totalResults="totalResults"
@@ -57,8 +57,19 @@
           </template>
             
           <template v-slot:action_whitelabel>
-            <div id="checkbox-create" class="main-btn" @click="toogleAddContact()" >
-              {{textAddContact}}
+            <div id="checkbox-create" >
+              <b-form-checkbox
+                v-model="addContact"
+                id='create-whitelabel'
+                name="checkbox-create"
+                value="true"
+                unchecked-value="false"
+              >
+                <label for="create-whitelabel">
+                  {{textAddContact}}
+                </label> 
+              </b-form-checkbox>
+              
             </div>
           </template>
         </ToWhiteLabelModal>

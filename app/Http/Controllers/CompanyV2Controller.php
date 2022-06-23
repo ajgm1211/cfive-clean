@@ -95,9 +95,9 @@ class CompanyV2Controller extends Controller
 
         //dd($request->all());
         $data = $request->validate([
-            '*.business_name' => 'required',
-            '*.logo' => 'max:1000',
-            '*.options' => 'json',
+            'company.business_name' => 'required',
+            'company.logo' => 'max:1000',
+            'company.options' => 'json',
         ]);
 
         if ($file != null) {
@@ -110,6 +110,8 @@ class CompanyV2Controller extends Controller
         $newCompany += [ "options" => $options ];
         $newCompany += [ "logo" => $filepath_tmp ];
         $newCompany += [ "unique_code" => Str::random(8)];
+        $newCompany += [ "whitelabel" => $request->get('whitelabel') == true ? 1 : 0];
+        
 
         $company = Company::create($newCompany);
 
@@ -124,9 +126,9 @@ class CompanyV2Controller extends Controller
             $companyToTransfer = $company->only(['business_name', 'phone', 'address', 'email', 'unique_code']);
 
             $api = $this->transferEntityToWhiteLabel([$companyToTransfer], 'shipper');   
-            if ($api['status'] != 201) {
+            if ($api['status'] != 200) {
                 $body= json_decode($api['body']);
-                return ['errors_in_request_whitelabel'=>isset($body->errors) ? $body->errors : $body->message ];
+                return response()->json(['message' => 'unsuccessfully transfer to whitelabel'], 500);
             }
         }
 
@@ -163,7 +165,6 @@ class CompanyV2Controller extends Controller
                     $filepath_tmp = 'Logos/Clients/' . $file->getClientOriginalName();
                     $request->request->add(['logo' => $filepath_tmp]);
                 }
-
                 if ($company) {
                     $company->fill($companyForUpdate['company'])->save();
                 }
@@ -173,7 +174,14 @@ class CompanyV2Controller extends Controller
                 }
 
             DB::commit();
-                // evaluar caso en el que se actualice la compañia desde cargofive con respecto a whitelabel
+            
+            if ($company->whitelabel == 1) {
+                $apiCompanies = $this->transferEntityToWhiteLabel($company->toArray(),'shipper');
+                if ($apiCompanies['status'] != 200) {
+                    return response()->json(['message' => 'unsuccessfully transfer to whitelabel'], 500);
+                }
+            }
+            
             return new CompanyResource($company);
         } catch (\Throwable $th) {
             DB::rollBack();

@@ -23,8 +23,8 @@ export default {
     update(id, company) {
         return api.call('post', `/api/companies/${id}/update`, {company});
     },
-    create(company){
-        return api.call('post', `/api/companies/store`, {company});
+    create(company, whitelabel){
+        return api.call('post', `/api/companies/store`, {company, whitelabel});
     },
     createMassive(companies) {
         return api.call('post', `/api/companies/create-massive`, companies);
