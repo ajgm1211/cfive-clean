@@ -28,12 +28,12 @@ class QuotationFilterController extends Controller
         return $query;
     }
 
-    public function getFilterOptions() { return $this->getDataFilterOptions();
-        // $user_id = auth()->user()->id;
-        // $minutes = 60;  
-        // return cache()->remember('filter_options_required_data_to_user_'.$user_id, $minutes, function() { 
-        //     return $this->getDataFilterOptions();
-        // });
+    public function getFilterOptions() {
+        $user_id = auth()->user()->id;
+        $minutes = 60;  
+        return cache()->remember('filter_options_required_data_to_user_'.$user_id, $minutes, function() { 
+            return $this->getDataFilterOptions();
+        });
     }
 
     private function getDataFilterOptions() {
