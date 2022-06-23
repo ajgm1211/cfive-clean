@@ -29,7 +29,15 @@ class QuotationFilterController extends Controller
     }
 
     public function getFilterOptions() {
-        
+
+        $minutes = 20;
+        return cache()->remember('filter_options_required_data', $minutes, function() { 
+            return $this->getDataFilterOptions();
+        });
+    }
+
+    private function getDataFilterOptions() {
+
         $user = auth()->user();
         $query = $this->getFilterByUserType($user);
 
