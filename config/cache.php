@@ -53,18 +53,18 @@ return [
 
         'memcached' => [
             'driver' => 'memcached',
-            'persistent_id' => env('cfive32'),
+            'persistent_id' => 'cfive32',
             'sasl' => [
-                env('cfive'),
-                env('7W^8#qKyX`YMvN4_'),
+                'cfive',
+                '7W^8#qKyX`YMvN4_',
             ],
             'options' => [
                 // Memcached::OPT_CONNECT_TIMEOUT => 2000,
             ],
             'servers' => [
                 [
-                    'host' => env('temporal.osfabu.0001.euc1.cache.amazonaws.com', '127.0.0.1'),
-                    'port' => env('11211', 11211),
+                    'host' => 'temporal.osfabu.0001.euc1.cache.amazonaws.com',
+                    'port' => '11211',
                     'weight' => 100,
                 ],
             ],
