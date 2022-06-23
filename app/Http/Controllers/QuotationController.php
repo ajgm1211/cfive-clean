@@ -171,8 +171,9 @@ class QuotationController extends Controller
      */
     public function data(Request $request)
     {   
-        $minutes = 20;
-        return cache()->remember('quotations_form_required_data', $minutes, function() { 
+        $user_id = auth()->user()->id;
+        $minutes = 60;  
+        return cache()->remember('quotations_form_required_data_to_user_'.$user_id, $minutes, function() { 
             return $this->getData();
         });
     }

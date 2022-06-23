@@ -2,19 +2,16 @@
 
 namespace App\Observers;
 
+use App\Http\Traits\QuoteV2Trait;
 use App\Contact;
 
 class ContactObserver
 {
-    /**
-     * Handle the contact "created" event.
-     *
-     * @param  \App\Contact  $contact
-     * @return void
-     */
+    use QuoteV2Trait;
+    
     public function created(Contact $contact)
     {
-        cache()->forget('quotations_form_required_data');
+        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
     }
 
     /**
@@ -25,7 +22,7 @@ class ContactObserver
      */
     public function updated(Contact $contact)
     {
-        cache()->forget('quotations_form_required_data');
+        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
     }
 
     /**
@@ -36,7 +33,7 @@ class ContactObserver
      */
     public function deleted(Contact $contact)
     {
-        cache()->forget('quotations_form_required_data');
+        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
     }
 
     /**

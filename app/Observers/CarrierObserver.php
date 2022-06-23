@@ -2,19 +2,16 @@
 
 namespace App\Observers;
 
+use App\Http\Traits\QuoteV2Trait;
 use App\Carrier;
 
 class CarrierObserver
 {
-    /**
-     * Handle the carrier "created" event.
-     *
-     * @param  \App\Carrier  $carrier
-     * @return void
-     */
+    use QuoteV2Trait;
+
     public function created(Carrier $carrier)
     {
-        cache()->forget('quotations_form_required_data');
+        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
     }
 
     /**
@@ -25,7 +22,7 @@ class CarrierObserver
      */
     public function updated(Carrier $carrier)
     {
-        cache()->forget('quotations_form_required_data');
+        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
     }
 
     /**
@@ -36,7 +33,7 @@ class CarrierObserver
      */
     public function deleted(Carrier $carrier)
     {
-        cache()->forget('quotations_form_required_data');
+        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
     }
 
     /**

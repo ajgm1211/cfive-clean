@@ -3,18 +3,15 @@
 namespace App\Observers;
 
 use App\Company;
+use App\Http\Traits\QuoteV2Trait;
 
 class CompanyObserver
 {
-    /**
-     * Handle the company "created" event.
-     *
-     * @param  \App\Company  $company
-     * @return void
-     */
+    use QuoteV2Trait;
+
     public function created(Company $company)
     {
-        cache()->forget('quotations_form_required_data');
+        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
     }
 
     /**
@@ -25,7 +22,7 @@ class CompanyObserver
      */
     public function updated(Company $company)
     {
-        cache()->forget('quotations_form_required_data');
+        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
     }
 
     /**
@@ -36,7 +33,7 @@ class CompanyObserver
      */
     public function deleted(Company $company)
     {
-        cache()->forget('quotations_form_required_data');
+        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
     }
 
     /**
