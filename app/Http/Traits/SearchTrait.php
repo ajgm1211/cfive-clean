@@ -1383,9 +1383,9 @@ trait SearchTrait
         elseif($search_data['selectedContainerGroup'] == 4 ){
             return ['name' => 'Per Container FR', 'id' => '21 '];
         }    
-        // $ocean_freight_array['calculationtype']);
-        return $ocean_freight_array;
-
+        else{
+            return ['name' => 'Per Container DRY', 'id' => '5']; 
+        }
     }
 
     //Retrieves Global Remarks
