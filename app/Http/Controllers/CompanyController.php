@@ -588,9 +588,9 @@ class CompanyController extends Controller
             $options_array = [];
 
             $key_names = $request->key_name;
-            unset($key_names[1]);
+            unset($key_names[0]);
             $key_values = $request->key_value;
-            unset($key_values[1]);
+            unset($key_values[0]);
             foreach ($key_values as $key => $value) {  
                 $key_names[$key] = $key_names[$key] == null ? $key.'_option_empty_name' : $key_names[$key];
                 $key_values[$key] = $value == null ? ' ' : $value;

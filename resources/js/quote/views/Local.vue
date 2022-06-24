@@ -150,6 +150,7 @@
                                 v-for="(charge, key) in this.charges"
                                 :key="key"
                             >
+
                                 <b-td>
                                     <b-form-checkbox
                                         v-model="selectedLocalCharges"
@@ -231,7 +232,6 @@
                                         "
                                     ></multiselect>
                                 </b-td>
-
                                 <b-td
                                     v-for="(item, key) in quoteEquip"
                                     :key="key"
@@ -241,13 +241,27 @@
                                             v-model="charge.price['c' + item]"
                                             class="q-input data-profit"
                                             @keypress="isNumber($event)"
-                                            disabled
+                                            :disabled="!edit_charge"
+                                            @input="                            
+                                            onUpdate(
+                                                charge.id,
+                                                charge.price,
+                                                'price',
+                                                1,
+                                            )"
                                         ></b-form-input>
                                         <b-form-input
                                             v-model="charge.profit['m' + item]"
                                             class="q-input data-profit"
                                             @keypress="isNumber($event)"
-                                            disabled
+                                            :disabled="!edit_charge"
+                                            @input="
+                                            onUpdate(
+                                                charge.id,
+                                                charge.profit,
+                                                'profit',    
+                                                1
+                                            )"
                                         ></b-form-input>
                                     </div>
                                 </b-td>
@@ -257,7 +271,7 @@
                                         v-model="charge.units"
                                         class="q-input local_charge_total_input"
                                         @keypress="isNumber($event)"
-                                        disabled
+                                        :disabled="!edit_charge"
                                         v-on:change="
                                             onUpdate(
                                                 charge.id,
@@ -274,7 +288,7 @@
                                         v-model="charge.price"
                                         class="q-input local_charge_total_input"
                                         @keypress="isNumber($event)"
-                                        disabled
+                                        :disabled="!edit_charge"
                                         v-on:change="
                                             onUpdate(
                                                 charge.id,
@@ -291,7 +305,7 @@
                                         v-model="charge.profit"
                                         class="q-input local_charge_total_input"
                                         @keypress="isNumber($event)"
-                                        disabled
+                                        :disabled="!edit_charge"
                                         v-on:change="
                                             onUpdate(
                                                 charge.id,
@@ -302,10 +316,15 @@
                                         "
                                     ></b-form-input>
                                 </b-td>
-
                                 <b-td v-if="currentQuoteData.type == 'LCL'">
                                     <b-form-input
-                                        v-model="charge.total"
+                                        :value="
+                                            setTotal(
+                                                charge.units,
+                                                charge.price,
+                                                charge.profit
+                                            )
+                                        "
                                         class="q-input local_charge_total_input"
                                         disabled
                                     ></b-form-input>
@@ -596,6 +615,7 @@
                                         v-model="selectedCharges"
                                         :id="'id_' + localcharge.id"
                                         :value="localcharge"
+                                        @change="selectStatus(localcharge.id,selectedCharges)"
                                     ></b-form-checkbox>
                                      <b-form-input
                                         v-model="localcharge.id"
@@ -710,6 +730,7 @@
                                         class="data-showas"
                                         label="name"
                                         track-by="name"
+                                        @input="changeSaleCode(localcharge.id,localcharge.sale_codes)"  
                                     ></multiselect>
                                 </b-td>
 
@@ -1219,6 +1240,7 @@ export default {
             },
             allSelected: false,
             allSelectedLocal: false,
+            edit_charge: this.currentQuoteData.company_user.options.edit_quote_charges
         };
     },
     watch: {
@@ -1401,6 +1423,7 @@ export default {
         getLocalCharges() {
             this.localcharges = [];
             this.port = [];
+            this.selectedCharges=[];
             let self = this;
             let data = {
                 quote_id: this.$route.params.id,
@@ -1415,6 +1438,12 @@ export default {
                         self.localcharges.forEach(function (local){
                             if(local.markup.length == 0){
                                 local.markup = {};
+                            }
+                            if(local.options.show_as!=null){
+                                local.sale_codes=local.options.show_as;
+                            }
+                            if(local.options.selected==true){
+                                self.selectedCharges.push(local);
                             }
                         })
                         self.port = response.data.port.display_name;
@@ -1516,10 +1545,12 @@ export default {
                             this.charges = response.data;
                             this.getStoredCharges();
                             this.getTotal();
+                            this.getLocalCharges()
                             this.alert("Record saved successfully", "success");
                             this.closeModal();
                             this.selectedCharges = [];
                             this.selectedInputs = [];
+                            this.inputs = [];
                         })
                         .catch((data) => {
                             if(data.status == 422){
@@ -1548,6 +1579,7 @@ export default {
                 this.alert("You must select a charge at least", "error");
             }
             this.allSelected=false;
+            
         },
         onDeleteAll() {
             if(this.currentQuoteData.type=="FCL"){
@@ -1706,6 +1738,52 @@ export default {
                         } 
                     }
             })
+        },
+        selectStatus(id_charge,value){
+            let selected=false;
+            let values =[];
+            
+            value.forEach(function (charge){
+                if(charge.id==id_charge && charge.options.select !=true ){    
+                     values = {
+                         selected:true,
+                         type:'status'
+                     };
+                     selected=true;
+                }
+                if(charge.id!=id_charge && charge.options.select !=false && selected==false){
+                    values = {
+                         selected:false,
+                         type:'status'
+                     }
+                }
+            });
+            actions.charges
+                .updateStatusSelect(id_charge,values)
+                .then((response) => {
+                    //
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
+        },
+        changeSaleCode(id_charge,value){
+            let values =[];
+
+                if(value!=null){
+                    values={
+                        "show_as":value,
+                        type:'show_as'
+                    }
+                }
+            actions.charges
+                .updateStatusSelect(id_charge,values)
+                .then((response) => {
+                      this.getLocalCharges();
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
         }
     },
 };

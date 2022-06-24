@@ -14,6 +14,9 @@
     @case(5)
         {{ App::setLocale('ca') }}
     @break
+    @case(6)
+        {{ App::setLocale('fr') }}
+    @break
     @default
         {{ App::setLocale('en') }}
 @endswitch

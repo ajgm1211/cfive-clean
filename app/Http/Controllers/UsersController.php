@@ -322,11 +322,13 @@ class UsersController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
-        $user->delete();
+        
         if($user === null){
             // Si el usuario no existe
             $message = 'The user you want to delete does not exist';
             return redirect()->route('users.home')->with('message',$message);
+        }else{
+            $user->delete();
         }
 
         $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.4']);

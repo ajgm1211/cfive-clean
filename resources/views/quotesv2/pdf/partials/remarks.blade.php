@@ -41,6 +41,24 @@
                         <span>{!! str_replace('&nbsp;', ' ',$rate->remarks_spanish) !!}</span>
                     @endif
                 @break
+
+                @case("Italian")
+                    @if(trim(strip_tags($rate->remarks_italian)) !== '')
+                        <span>{!! str_replace('&nbsp;', ' ',$rate->remarks_italian) !!}</span>
+                    @endif
+                @break
+
+                @case("Catalan")
+                    @if(trim(strip_tags($rate->remarks_catalan)) !== '')
+                        <span>{!! str_replace('&nbsp;', ' ',$rate->remarks_catalan) !!}</span>
+                    @endif
+                @break
+
+                @case("French")
+                    @if(trim(strip_tags($rate->remarks_french)) !== '')
+                        <span>{!! str_replace('&nbsp;', ' ',$rate->remarks_french) !!}</span>
+                    @endif
+                @break
             @endswitch
         @endforeach
 

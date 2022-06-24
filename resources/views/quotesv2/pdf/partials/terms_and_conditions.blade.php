@@ -18,6 +18,18 @@
                     <span style="word-wrap: break-word;" >{!! trim(@$quote->terms_and_conditions)  !!}</span>
                 @break
 
+                @case("Italian")
+                    <span style="word-wrap: break-word;" >{!! trim(@$quote->terms_italian)  !!}</span>
+                @break
+
+                @case("Catalan")
+                    <span style="word-wrap: break-word;" >{!! trim(@$quote->terms_catalan)  !!}</span>
+                @break
+
+                @case("French")
+                    <span style="word-wrap: break-word;" >{!! trim(@$quote->terms_french)  !!}</span>
+                @break
+
                 @default
 
                     <span style="word-wrap: break-word;">{!! trim(@$quote->terms_and_conditions)  !!}</span>
