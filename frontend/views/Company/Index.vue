@@ -62,8 +62,8 @@
                 v-model="addContact"
                 id='create-whitelabel'
                 name="checkbox-create"
-                value="true"
-                unchecked-value="false"
+                true-value="true"
+                false-value="false"
               >
                 <label for="create-whitelabel">
                   {{textAddContact}}

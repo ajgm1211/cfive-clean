@@ -64,7 +64,10 @@
           <b-col class="input-box" v-if="user.settings_whitelabel">
             <div id="checkbox-edit">
               <div id="checkbox-create" v-if="user.settings_whitelabel">
-                <div class="main-btn" @click="toogleAddToWhiteLabel()" >
+                <div class="main-btn" v-if="companyData.whitelabel == true">
+                  {{textAdded}}
+                </div>
+                <div v-else class="main-btn" @click="toogleAddToWhiteLabel()" >
                   {{textAdd}}
                 </div>
               </div>
@@ -103,7 +106,8 @@ export default {
         { text: 'Spanish', value: '2' },
         { text: 'Portuguese', value: '3' }
       ],
-      textAdd: "Add To WhiteLabel"
+      textAdd: "Add To WhiteLabel",
+      textAdded:"On Whitelabel"
     }
   },
   computed:{

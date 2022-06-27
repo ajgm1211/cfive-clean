@@ -45,8 +45,18 @@
           <div class="modal-footer-create-container">
             <div class="modal-footer-content-wl input-box" >
               <div id="checkbox-create" v-if="user.settings_whitelabel">
-                <div  v-if="enableWhitelabel" class="main-btn" @click="toogleAddToWhiteLabel()" >
-                  {{textAdd}}
+                <div  v-if="enableWhitelabel">
+                  <b-form-checkbox
+                    id="create-whitelabel"
+                    v-model="whitelabel"
+                    name="checkbox-create"
+                    true-value="true"
+                    false-value="false"
+                  >
+                    <label for="create-whitelabel">
+                      {{textAdd}}
+                    </label> 
+                  </b-form-checkbox>
                 </div>
               </div>
             </div>
@@ -101,8 +111,18 @@
                       <div class="modal-footer-create-container">
                         <div class="modal-footer-content-wl input-box">
                           <div id="checkbox-create" v-if="user.settings_whitelabel">
-                            <div v-if="enableWhitelabel" class="main-btn" @click="toogleAddToWhiteLabel()" >
-                              {{textAdd}}
+                            <div v-if="enableWhitelabel">
+                              <b-form-checkbox
+                                id="create-whitelabel"
+                                v-model="whitelabel"
+                                name="checkbox-create"
+                                true-value="true"
+                                false-value="false"
+                              >
+                                <label for="create-whitelabel">
+                                  {{textAdd}}
+                                </label> 
+                              </b-form-checkbox>
                             </div>
                           </div>    
                         </div>

@@ -44,8 +44,8 @@
                       v-model="whitelabel"
                       id="create-whitelabel"
                       name="checkbox-create"
-                      value=true
-                      unchecked-value=false
+                      true-value="true"
+                      false-value="false"
                     >
                       <label for="create-whitelabel">
                         {{textAdd}}
@@ -98,8 +98,8 @@
                                 id="create-whitelabel"
                                 v-model="whitelabel"
                                 name="checkbox-create"
-                                value="true"
-                                unchecked-value="false"
+                                true-value="true"
+                                false-value="false"
                               >
                                 <label for="create-whitelabel">
                                   {{textAdd}}

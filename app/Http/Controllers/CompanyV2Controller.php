@@ -175,8 +175,10 @@ class CompanyV2Controller extends Controller
 
             DB::commit();
             
-            if ($company->whitelabel == 1) {
-                $apiCompanies = $this->transferEntityToWhiteLabel($company->toArray(),'shipper');
+            if ($company->whitelabel == true) {
+                $dataTransfer = $company->only('business_name', 'phone', 'email', 'address', 'unique_code');
+                $apiCompanies = $this->transferEntityToWhiteLabel([$dataTransfer],'shipper');
+
                 if ($apiCompanies['status'] != 200) {
                     return response()->json(['message' => 'unsuccessfully transfer to whitelabel'], 500);
                 }
