@@ -2101,4 +2101,15 @@ trait QuoteV2Trait
         }
         return $inputConversion;
     }
+
+    public function forgetKeyCacheQuotationsFormRequiredDataOnAllUsers() {
+        $users_id = User::pluck('id');
+        foreach($users_id as $user_id) {
+            cache()->forget('quotations_form_required_data_to_user_'.$user_id);
+        }
+    }
+
+    public function forgetKeyCacheFilterOptionsRequiredDataToUser($user_id) {
+        cache()->forget('filter_options_required_data_to_user_'.$user_id);   
+    }
 }

@@ -6,7 +6,15 @@ use App\ApiIntegrationSetting;
 use App\Contract;
 use App\Observers\ContractObserver;
 use App\Observers\QuoteObserver;
+use App\Observers\CompanyObserver;
+use App\Observers\CarrierObserver;
+use App\Observers\ContactObserver;
+use App\Observers\QuoteV2Observer;
+use App\Company;
 use App\Quote;
+use App\Carrier;
+use App\Contact;
+use App\QuoteV2;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Routing\UrlGenerator;
@@ -26,6 +34,10 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Contract::observe(ContractObserver::class);
         Quote::observe(QuoteObserver::class);
+        Company::observe(CompanyObserver::class);
+        Carrier::observe(CarrierObserver::class);
+        Contact::observe(ContactObserver::class);
+        QuoteV2::observe(QuoteV2Observer::class);
 
         /*if (env('APP_ENV') === 'prod' || env('APP_ENV') === 'production') {
             $url->forceScheme('https');

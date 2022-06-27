@@ -28,7 +28,18 @@ class QuotationFilterController extends Controller
 
     public function getFilterOptions()
     {
-        $query = $this->getBaseQuery();
+        $user_id = auth()->user()->id;
+        $minutes = 60;
+        return cache()->remember('filter_options_required_data_to_user_' . $user_id, $minutes, function () {
+            return $this->getDataFilterOptions();
+        });
+    }
+
+    private function getDataFilterOptions()
+    {
+
+        $user = auth()->user();
+        $query = $this->getFilterByUserType($user);
 
         $options = [];
 
@@ -38,28 +49,21 @@ class QuotationFilterController extends Controller
         $options['status'] = $this->getStatusOptions($query);
         $options['company_id'] = $this->getCompanyIdOptions($query);
         $options['type'] = $this->getTypeOptions($query);
-        $options['origin'] = $this->getOriginOptions($query);
-        $options['destiny'] = $this->getDestinationOptions($query);
+        $options['origin'] = $this->getHarborsAll();
+        $options['destiny'] = $this->getHarborsAll();
         $options['user_id'] = $this->getUserIdOptions($query);
         $options['created_at'] = $this->getCreatedAtOptions($query);
 
         return $options;
     }
 
-    private function getDestinationOptions($query)
+    private function getHarborsAll()
     {
-        $multiDimArray = $query->distinct('destination_port_array')->pluck('destination_port_array');
-        return collect($multiDimArray)->flatMap(function ($ad) {
-            return $ad;
-        })->unique('id')->values();
-    }
-
-    private function getOriginOptions($query)
-    {
-        $multiDimArray = $query->distinct('origin_port_array')->pluck('origin_port_array');
-        return collect($multiDimArray)->flatMap(function ($a) {
-            return $a;
-        })->unique('id')->values();
+        return Harbor::get(['id', 'display_name'])->map(function ($harbor) {
+            $harbor->label = $harbor->display_name;
+            unset($harbor->display_name);
+            return $harbor;
+        });
     }
 
     private function getIdOptions($query)

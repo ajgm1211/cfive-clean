@@ -158,8 +158,21 @@ class QuotationController extends Controller
         return $query;
     }
 
+    /**
+     * Aplicación cliente hace request a este método
+     * para obtener los datos necesarios para gestionar un quote
+     */
     public function data(Request $request)
-    {
+    {   
+        $user_id = auth()->user()->id;
+        $minutes = 60;  
+        return cache()->remember('quotations_form_required_data_to_user_'.$user_id, $minutes, function() { 
+            return $this->getData();
+        });
+    }
+
+    public function getData() 
+    {   
         $company_user_id = Auth::user()->company_user_id;
 
         $carriers = Carrier::remember(20 * 20)->get()->map(function ($carrier) {

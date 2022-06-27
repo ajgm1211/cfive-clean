@@ -1848,6 +1848,7 @@
         },
         {
             "name": "guzzlehttp/guzzle",
+<<<<<<< HEAD
             "version": "6.5.8",
             "source": {
                 "type": "git",
@@ -1858,6 +1859,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/guzzle/guzzle/zipball/a52f0440530b54fa079ce76e8c5d196a42cad981",
                 "reference": "a52f0440530b54fa079ce76e8c5d196a42cad981",
+=======
+            "version": "6.5.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "724562fa861e21a4071c652c8a159934e4f05592"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/724562fa861e21a4071c652c8a159934e4f05592",
+                "reference": "724562fa861e21a4071c652c8a159934e4f05592",
+>>>>>>> remotes/origin/feature/add-caching-strategy-for-load-time-optimization
                 "shasum": ""
             },
             "require": {
@@ -1943,7 +1956,11 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/guzzle/guzzle/tree/6.5.8"
+=======
+                "source": "https://github.com/guzzle/guzzle/tree/6.5.7"
+>>>>>>> remotes/origin/feature/add-caching-strategy-for-load-time-optimization
             },
             "funding": [
                 {
@@ -1959,7 +1976,11 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD
             "time": "2022-06-20T22:16:07+00:00"
+=======
+            "time": "2022-06-09T21:36:50+00:00"
+>>>>>>> remotes/origin/feature/add-caching-strategy-for-load-time-optimization
         },
         {
             "name": "guzzlehttp/promises",

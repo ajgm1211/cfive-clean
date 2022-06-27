@@ -55,15 +55,15 @@ return [
             'driver' => 'memcached',
             'persistent_id' => 'cfive32',
             'sasl' => [
-                '',
-                '',
+                'cfive',
+                'dcpST31AnS$YVQCb',
             ],
             'options' => [
                 // Memcached::OPT_CONNECT_TIMEOUT => 2000,
             ],
             'servers' => [
                 [
-                    'host' => '127.0.0.1',
+                    'host' => 'temporal.osfabu.0001.euc1.cache.amazonaws.com',
                     'port' => '11211',
                     'weight' => 100,
                 ],
