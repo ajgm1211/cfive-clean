@@ -162,4 +162,27 @@ class ChargeController extends Controller
 
         return response()->json(null, 204);
     }
+    public function updateStatus(request $request , $id)
+    {
+        $charge=Charge::find($id); 
+
+        if($request['type']=='status'){
+        $charge->update([
+            'options' =>[
+                "show_as"=>$charge['options']['show_as'],
+                "selected"=> $request['selected']
+            ]
+        ]);  
+       }else{
+        $charge->update([
+            'options' =>[
+                "show_as"=>$request['show_as'],
+                "selected"=> $charge['options']['selected']
+            ]
+        ]); 
+       }
+        
+
+        
+    }
 }

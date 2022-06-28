@@ -5,9 +5,11 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Container;
 use App\GroupContainer;
+use App\Http\Traits\SearchTrait;
 
 class SearchApiResource extends JsonResource
 {
+    use SearchTrait;
     /**
      * Transform the resource into an array.
      *
@@ -17,18 +19,25 @@ class SearchApiResource extends JsonResource
     public function toArray($request)
     {
         $origin_ports = $this->origin_ports()->get();
-        $destination_ports = $this->destination_ports()->get();
-        
-        if(!empty($request->get('carriers'))){
-            $carriers = $this->carriers()->get()->map(function ($carrier) {
-             return $carrier->only(['id', 'name', 'image']);
-         });
-        }else{
 
+        $destination_ports = $this->destination_ports()->get();
+        $requestCarriers = $request->get('carriers');
+
+        if(!empty($requestCarriers)){
+            $findIdCarriers =$this->findObjectById($requestCarriers,26);
+            if($findIdCarriers != false){
+                $getCarriers = $request->all();
+                $countCarriers = count($getCarriers);
+                $carriers =  $countCarriers <= 1 ? \App\Carrier::all()->map(function ($carrier) {return $carrier->only(['id', 'name', 'image']);}):$this->carriers()->get()->map(function ($carrier) {return $carrier->only(['id', 'name', 'image']);});
+            }else{
+                $carriers = $this->carriers()->get()->map(function ($carrier) {
+                    return $carrier->only(['id', 'name', 'image']);
+                });
+            }
+        }else{
             $getCarriers = $request->all();
             $countCarriers = count($getCarriers);
             $carriers =  $countCarriers <= 1 ? \App\Carrier::all()->map(function ($carrier) {return $carrier->only(['id', 'name', 'image']);}):$this->carriers()->get()->map(function ($carrier) {return $carrier->only(['id', 'name', 'image']);});
-
         }
 
         $api_providers = $this->api_providers()->get()->map(function ($carrier) {

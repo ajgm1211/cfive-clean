@@ -16,6 +16,18 @@
                 @case(3)
                     <span style="word-wrap: break-word; text-align: justify; font-size: 10px !important;">{!! trim(@$quote->terms_portuguese) !!}</span>
                 @break
+                
+                @case(4)
+                    <span style="word-wrap: break-word; text-align: justify; font-size: 10px !important;">{!! trim(@$quote->terms_italian) !!}</span>
+                @break
+                
+                @case(5)
+                    <span style="word-wrap: break-word; text-align: justify; font-size: 10px !important;">{!! trim(@$quote->terms_catalan) !!}</span>
+                @break
+                
+                @case(6)
+                    <span style="word-wrap: break-word; text-align: justify; font-size: 10px !important;">{!! trim(@$quote->terms_french) !!}</span>
+                @break
 
                 @default
                     <span style="word-wrap: break-word; text-align: justify; font-size: 10px !important;">{!! trim(@$quote->terms_and_conditions)  !!}</span>

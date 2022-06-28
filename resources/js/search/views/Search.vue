@@ -514,7 +514,8 @@
                           :allow-empty="false"
                           label="name"
                           track-by="name"
-                          :options="datalists.cargo_types"
+                          :options="selectLclPackaging"
+                          :disabled='isLclPackagingNotEmpty'
                           placeholder="Select"
                           class="s-input no-select-style"
                         >
@@ -599,14 +600,9 @@
                         />
                       </label>
                     </div>
-
-                    <div
-                      class="col-12 col-sm-1 pr-0 d-flex justify-content-center align-items-center"
-                    >
-                      <span @click="addLclPackaging" class="btn-add-surch"
-                        ><b-icon icon="check-circle"></b-icon
-                      ></span>
-                    </div>
+                    <b-button style="height: min-content; margin: 7px 0 0 15px;" variant="success" @click="addLclPackaging">
+                      <b-icon icon="check-circle" aria-hidden="true" /> Add
+                    </b-button>
                   </div>
                 </div>
               </div>
@@ -636,9 +632,9 @@
                     <p>{{ pack.weight }}</p>
                   </div>
                   <div class="col-12 col-sm-1 pr-0">
-                    <span v-on:click="deleteLclPackaging(index)"
-                      ><b-icon icon="x-circle"></b-icon
-                    ></span>
+                    <b-button variant="danger" @click="deleteLclPackaging(index)">
+                      <b-icon icon="x-circle" aria-hidden="true" /> Remove
+                    </b-button>
                   </div>
                 </div>
               </div>
@@ -1843,7 +1839,7 @@ export default {
             component.carriers.push(carrier);
           });
         } else {
-          this.searchRequest.carriers = this.datalists.carriers;
+          this.searchRequest.carriers = this.areAllCarriersSelected ? this.datalists.carriers : this.carriers
         }
         this.searchRequest.originCharges =
           this.searchData.origin_charges == 0 ? false : true;
@@ -2293,6 +2289,7 @@ export default {
           this.lclPackaging.push(newPackaging);
           this.setChargeableWeight();
           this.clearAddPackagingBar();
+          this.addPackagingBar.cargoType = this.lclPackaging[0].cargoType
         } else {
           this.invalidPackagingCalculation = true;
 
@@ -2508,6 +2505,18 @@ export default {
     },
     sortedContainers(){
       return this.containers.sort((a,b) => a.id-b.id);
+    },
+    isLclPackagingNotEmpty(){
+      return this.lclPackaging.length !== 0
+    },
+    selectLclPackaging(){
+      if (this.isLclPackagingNotEmpty) {
+        return [this.lclPackaging[0].cargoType]
+      }
+      return this.datalists.cargo_types
+    },
+    areAllCarriersSelected() {
+      return this.carriers.length === 0 || (this.carriers.length === 1 && this.carriers[0].name === "ALL")
     }
   },
 };

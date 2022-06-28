@@ -1820,6 +1820,7 @@ trait SearchTrait
         $terms_portuguese = '';
         $terms_italian = '';
         $terms_catalan = '';
+        $terms_french = '';
 
         foreach ($terms as $term) {
 
@@ -1841,11 +1842,13 @@ trait SearchTrait
                 $terms_italian .= $terms_to_add . '<br>';
             } else if ($term->language_id == 5) {
                 $terms_catalan .= $terms_to_add . '<br>';
+            } else if ($term->language_id == 6) {
+                $terms_french .= $terms_to_add . '<br>';
             }
         }
 
         $final_terms = ['english' => $terms_english, 'spanish' => $terms_spanish, 'portuguese' => $terms_portuguese, 
-                        'italian' => $terms_italian, 'catalan' => $terms_catalan ];
+                        'italian' => $terms_italian, 'catalan' => $terms_catalan, 'french' => $terms_french ];
 
         return $final_terms;
     }
@@ -1867,5 +1870,16 @@ trait SearchTrait
         }**/
 
         return $search_data['dateRange'];
+    }
+
+    function findObjectById($array,$id){
+
+        foreach ( $array as $element ) {
+            if ( $id == $element['id'] ) {
+                return $element['id'];
+            }
+        }
+    
+        return false;
     }
 }

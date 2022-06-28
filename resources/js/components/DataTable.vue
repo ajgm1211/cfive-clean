@@ -1019,22 +1019,6 @@ export default {
             if (err) {
                 this.error = err.toString();
             } else {
-                // Decimal approximation if necessary
-                records.forEach((object) => {
-                    for(const property in object){
-                        // if is not a rate or not a number, then ignore it
-                        if(!property.startsWith('rates_') || isNaN(object[property])){
-                            continue
-                        }
-
-                        object[property] = parseFloat(object[property])
-                        if (this.contractData.company_user.decimals) {
-                            object[property] = object[property].toFixed(2)
-                        } else {
-                            object[property] = Math.round(object[property])
-                        }
-                    }
-                });
                 this.data = records;
                 this.autoupdateTableData = records;
                 this.pageCount = Math.ceil(meta.total / meta.per_page);
@@ -1444,6 +1428,7 @@ export default {
         },
 
         dispatch(val, item) {
+            this.clearForm()  // Cleaning old data from the previous selection
             this.refresh = false;
             this.datalists[
                 "ori_" + this.inputFields[item].target

@@ -134,7 +134,7 @@
           {{
             itemAmount.markup == "Percent Markup"
               ? itemAmount.amount + " %"
-              : itemAmount.amount + " $"
+              : itemAmount.amount
           }}
         </td>
         <td>{{ item.currency != null ? item.currency.alphacode : "-" }}</td>

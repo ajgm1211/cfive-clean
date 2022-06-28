@@ -399,7 +399,7 @@ class Contract extends Model implements HasMedia, Auditable
         $new_contract->name .= ' copy';
         $new_contract->save();
 
-        $this->load('carriers.carrier', 'localcharges', 'rates');
+        $this->load('carriers.carrier', 'localcharges', 'rates', 'contract_company_restriction', 'contract_user_restriction');
         $relations = $this->getRelations();
 
         foreach ($relations as $relation) {
@@ -458,21 +458,32 @@ class Contract extends Model implements HasMedia, Auditable
 
     public function createCustomCode()
     {
-        $lastContract = Contract::where('company_user_id', $this->company_user_id)
-            ->whereNotNull('contract_code')->orderBy('id', 'desc')->first();
-            
-        $companyName=replaceSpecialCharacter( $this->companyUser->name);
+        $code = $this->newCustomCode();
 
-        $company = strtoupper(substr($companyName, 0, 3));
-
-        $code = 'FCL-' . $company . '-1';
-
-        if (!empty($lastContract)) {
-            $lastContractId = intval(str_replace('FCL-' . $company . "-", "", $lastContract->contract_code));
-            $code = 'FCL-' . $company . '-' . strval($lastContractId + 1);
+        $newCustomCode = Contract::where('company_user_id', $this->company_user_id)->where('contract_code',$code)->orderBy('id', 'desc')->first();
+        while(isset($newCustomCode)){
+           $code = $this->newCustomCode($code);
+           $newCustomCode = Contract::where('company_user_id', $this->company_user_id)->where('contract_code',$code)->orderBy('id', 'desc')->first();
         }
-
         $this->contract_code = $code;
         $this->save();
+    }
+
+    public function newCustomCode($index = null){
+        $lastContract = Contract::where('company_user_id', $this->company_user_id)->whereNotNull('contract_code')->orderBy('id', 'desc')->first();
+        $companyName=replaceSpecialCharacter( $this->companyUser->name);
+        $company = strtoupper(substr($companyName, 0, 3));
+        $code = 'FCL-' . $company . '-1';
+        if (!isset($index)) {
+            if (!empty($lastContract)) {
+                $lastContractId = intval(str_replace('FCL-' . $company . "-", "", $lastContract->contract_code));
+                $code = 'FCL-' . $company . '-' . strval($lastContractId + 1);
+            }
+        }else{
+            $lastContractId = intval(str_replace('FCL-' . $company . "-", "", $index));
+            $code = 'FCL-' . $company . '-' . strval($lastContractId + 1);
+        }
+        
+        return $code;
     }
 }

@@ -5,15 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ViewQuoteV2;
 use App\Company;
+use App\Harbor;
+use App\CompanyUser;
 
 class QuotationFilterController extends Controller
 {
-    private function getBaseQuery() {
+    public function getFilterByUserType($user) {
 
-        $subtype = auth()->user()->options['subtype'];
+        $filter_delegation = $user->companyUser->options['filter_delegations'];
+        $subtype = $user->options['subtype'];
 
+        //Filtro por permisos a nivel de usuario y compañía
         if ($subtype === 'comercial') {
             $query = ViewQuoteV2::filterByCurrentUser();
+        }
+        if ($filter_delegation == true) {
+            $query = ViewQuoteV2::filterByDelegation();
         } else {
             $query = ViewQuoteV2::filterByCurrentCompany();
         }
@@ -22,7 +29,9 @@ class QuotationFilterController extends Controller
     }
 
     public function getFilterOptions() {
-        $query = $this->getBaseQuery();
+        
+        $user = auth()->user();
+        $query = $this->getFilterByUserType($user);
 
         $options = [];
 
@@ -35,48 +44,23 @@ class QuotationFilterController extends Controller
         $options['origin'] = $this->getOriginOptions($query);
         $options['destiny'] = $this->getDestinationOptions($query);
         $options['user_id'] = $this->getUserIdOptions($query);
+        $options['created_at'] = $this->getCreatedAtOptions($query);
 
         return $options;
     }
 
     private function getDestinationOptions($query) {
-        return $query->with([
-            'destination_harbor' => function ($q) {
-                return $q->distinct('id')->get([
-                    'harbors.id', 'harbors.display_name'
-                ]);
-            }
-        ])->get([
-            'id'
-        ])->pluck('destination_harbor')
-        ->flatten()
-        ->unique('id')->values()
-        ->map(function ($harbor) {
-            $harbor->label = $harbor->display_name;
-            unset($harbor->display_name);
-            unset($harbor->quote_id);
-            return $harbor;
-        });
+        $multiDimArray = $query->distinct('destination_port_array')->pluck('destination_port_array');
+        return collect($multiDimArray)->flatMap(function($ad) {
+                return $ad;
+            })->unique('id')->values();
     }
 
     private function getOriginOptions($query) {
-        return $query->with([
-            'origin_harbor' => function ($q) {
-                return $q->distinct('id')->get([
-                    'harbors.id', 'harbors.display_name'
-                ]);
-            }
-        ])->get([
-            'id'
-        ])->pluck('origin_harbor')
-        ->flatten()
-        ->unique('id')->values()
-        ->map(function ($harbor) {
-            $harbor->label = $harbor->display_name;
-            unset($harbor->display_name);
-            unset($harbor->quote_id);
-            return $harbor;
-        });
+        $multiDimArray = $query->distinct('origin_port_array')->pluck('origin_port_array'); 
+        return collect($multiDimArray)->flatMap(function($a) {
+                return $a;
+            })->unique('id')->values();        
     }
 
     private function getIdOptions($query) {
@@ -92,14 +76,7 @@ class QuotationFilterController extends Controller
     }
 
     private function getCompanyIdOptions($query) {
-        $companyIds = $query->distinct('company_id')->get(['company_id']);        
-        $companies = Company::whereIn('id', $companyIds)->get(['id', 'business_name']);
-
-        return $companies->map(function ($c) {
-            $c->label = $c->business_name;
-            unset($c->business_name);
-            return $c;
-        });
+        return $query->distinct('company_array')->pluck('company_array');
     }
     
     private function getCustomQuoteIdOptions($query) {
@@ -111,19 +88,13 @@ class QuotationFilterController extends Controller
     }
 
     private function getUserIdOptions($query) {
-        return $query->with([
-            'user' => function ($q) {
-                return $q->select(['id', 'name', 'lastname']);
-            }
-        ])->distinct('user_id')
-        ->get(['user_id'])
-        ->pluck('user')
-        ->map(function ($u) {
-            $u->label = $u->name . ' ' . $u->lastname;
-            unset($u->name);
-            unset($u->lastname);
-            return $u;
-        });
+        return $query->distinct('user_array')->pluck('user_array');
+    }
+    
+    private function getCreatedAtOptions($query) {
+        return $query->distinct('created_at')->pluck('created_at')->map(function($date){
+            return date('Y-m-d', strtotime($date));
+        })->unique()->values();
     }
 
 }

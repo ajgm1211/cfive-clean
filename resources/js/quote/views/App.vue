@@ -9,12 +9,13 @@
             <div class="row">
               <div class="col-6">
                 <b-card-title>Quotes</b-card-title>
+               
               </div>
               <div class="col-6">
                 <div class="float-right">
-                  <a href="/api/search" class="btn btn-primary btn-bg">
-                    <i class="fa fa-search"></i> Search Rates
-                  </a>
+                  <a href="/api/search" class="btn btn-primary btn-bg"
+                    ><i class="fa fa-search"></i> Search Rates</a
+                  >
                 </div>
               </div>
             </div>
@@ -41,7 +42,7 @@ import Inland from "./Inland";
 import Ocean from "./Ocean";
 import actions from "../../actions";
 import Local from "./Local";
-import DataTable from "../../components/DataTableV2";
+import DataTable from "../../components/DataTableV2s";
 import HelpDropdown from "../../components/HelpDropdown";
 
 export default {
@@ -77,26 +78,20 @@ export default {
         {
           key: "status",
           label: "status",
-          formatter: (value) => {
-            return value.name;
-          },
           filterisOpen: true,
-          filterTrackBy: "name",
-          trackLabel: "name",
           isObject: false
         },
         {
           key: "company_id",
           label: "Client",
           filterisOpen: true,
-          formatter: (value) => {
-            return this.setClient(value);
-          },
-          filterTrackBy: "business_name",
-          trackLabel: "business_name",
           isObject: true
         },
-        { key: "type", label: "Type", filterisOpen:true, isObject: false },
+        { 
+          key: "type", 
+          label: "Type", 
+          filterisOpen:true, 
+          isObject: false },
         {
           key: "origin",
           label: "Origin",
@@ -114,15 +109,15 @@ export default {
         {
           key: "user_id",
           label: "User",
-          formatter: (value) => {
-            return value.fullname;
-          },
           filterisOpen:true,
           isObject: true,
-          filterTrackBy: "fullname",
-          trackLabel: "fullname",
         },
-        { key: "created_at", label: "Created at", filterisOpen: false },
+        { 
+          key: "created_at", 
+          label: "Created at", 
+          filterisOpen: true ,
+          isObject: false
+        }
       ],
       helpOptions: [
         {

@@ -383,7 +383,7 @@ class NewGlobalchargeRequestControllerFcl extends Controller
                     if (env('APP_VIEW') == 'operaciones') {
                         SendEmailRequestGcJob::dispatch($usercreador->toArray(), $id, 'fcl')->onQueue('operaciones');
                     } else {
-                        SendEmailRequestGcJob::dispatch($usercreador->toArray(), $id, 'fcl');
+                        SendEmailRequestGcJob::dispatch($usercreador->toArray(), $id, 'fcl')->onQueue('high');
                     }
                 }
             }

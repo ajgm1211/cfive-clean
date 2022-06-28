@@ -205,11 +205,17 @@
                                                     Spanish
                                                 @elseif($company->pdf_language==3 || $company->pdf_language=="portuguese")
                                                     Portuguese
+                                                @elseif($company->pdf_language==4 || $company->pdf_language=="italian")
+                                                    Italian
+                                                @elseif($company->pdf_language==5 || $company->pdf_language=="catalan")
+                                                    Catalan
+                                                @elseif($company->pdf_language==6 || $company->pdf_language=="french")
+                                                    French
                                                 @else
                                                     English
                                                 @endif
                                             </span>
-                                            {{ Form::select('pdf_language',['0'=>'Choose a language','english'=>'English','spanish'=>'Spanish','portuguese'=>'Portuguese'],$company->pdf_language,['class'=>'custom-select form-control','id' => 'pdf_language_select','hidden'=>'true']) }}
+                                            {{ Form::select('pdf_language',['0'=>'Choose a language','english'=>'English','spanish'=>'Spanish','portuguese'=>'Portuguese', 'italian'=>'Italian','catalan'=>'Catalan','french'=>'French'],$company->pdf_language,['class'=>'custom-select form-control','id' => 'pdf_language_select','hidden'=>'true']) }}
                                             <a id='edit_pdf_language' onclick="display_pdf_language()"
                                                 class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill pull-right"
                                                 title="Edit ">

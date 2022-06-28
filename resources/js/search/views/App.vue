@@ -14,9 +14,7 @@
     <div v-if="resultsTotal > 0" class="container-cards">
       <!-- FILTERS -->
       <div class="row mb-3" style="margin-top: 80px">
-        <div
-          class="col-12 col-sm-6 d-flex align-items-center result-and-filter"
-        >
+        <div class="col-12 col-sm-6 d-flex align-items-center result-and-filter">
           <h2 class="mr-5 t-recent">
             results found: <b>{{ resultsTotal }}</b>
           </h2>
@@ -25,12 +23,7 @@
         <div class="col-12 col-sm-6 addcontract-createquote">
           <!--<b-button v-b-modal.add-contract class="add-contract mr-4">+ Add Contract</b-button>-->
 
-          <b-button
-            v-if="!creatingQuote"
-            b-button
-            variant="primary"
-            @click="createQuote"
-          >
+          <b-button v-if="!creatingQuote" b-button variant="primary" @click="createQuote">
             Create Quote
           </b-button>
 
@@ -49,35 +42,18 @@
 
       <!-- HEADER FCL -->
       <div class="row mt-4 mb-4 result-header" v-if="searchType == 'FCL'">
-        <div
-          class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
-        >
+        <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center">
           <b>carrier</b>
         </div>
+        <div class="row col-12 " :class="[searchRequest.selectedContainerGroup.id === 2 ? ['col-sm-5'] : ['col-sm-4']]"></div>
         <div
-          class="row col-12 "
-          :class="[
-            searchRequest.selectedContainerGroup.id === 2
-              ? ['col-sm-5']
-              : ['col-sm-4'],
-          ]"
-        ></div>
-        <div
-          :class="[
-            searchRequest.selectedContainerGroup.id === 2
-              ? ['justify-content-start', 'pl-47px']
-              : ['justify-content-end', 'row ', 'col-12', 'col-sm-4'],
-          ]"
+          style="column-gap:10px"
+          :class="[searchRequest.selectedContainerGroup.id === 2 ? ['justify-content-start', 'pl-47px'] : ['justify-content-start', 'row ', 'col-12', 'col-sm-4']]"
           class=" d-flex align-items-center"
         >
           <div
             class="d-flex justify-content-start"
-            :class="[
-              searchRequest.selectedContainerGroup.id === 2
-                ? ['mr-8']
-                : countContainersClass(),
-              container.code == '40HCRF' ? 'mr-36px' : '',
-            ]"
+            :class="[searchRequest.selectedContainerGroup.id === 2 ? ['mr-8'] : countContainersClass(), container.code == '40HCRF' ? 'mr-36px' : '']"
             v-for="(container, requestKey) in searchRequest.containers"
             :key="requestKey"
           >
@@ -91,14 +67,10 @@
 
       <!-- HEADER LCL -->
       <div class="row mt-4 mb-4 result-header" v-else-if="searchType == 'LCL'">
-        <div
-          class="col-12 col-sm-2 d-flex justify-content-center align-items-center"
-        >
+        <div class="col-12 col-sm-2 d-flex justify-content-center align-items-center">
           <b>carrier</b>
         </div>
-        <div
-          class="row col-12 col-sm-8 d-flex align-items-center justify-content-between"
-        >
+        <div class="row col-12 col-sm-8 d-flex align-items-center justify-content-between">
           <div class="col-12 col-sm-3"><b>ORIGEN</b></div>
           <div class="col-12 col-sm-3 d-flex justify-content-end">
             <b>DESTINO</b>
@@ -112,12 +84,7 @@
     </div>
     <!-- FIN RESULTS HEADER -->
 
-    <Recent
-      v-show="resultsTotal == 0 && !searching"
-      :searchType="searchType"
-      @recentSearch="quickSearch"
-      ref="recentComponent"
-    ></Recent>
+    <Recent v-show="resultsTotal == 0 && !searching" :searchType="searchType" @recentSearch="quickSearch" ref="recentComponent"></Recent>
 
     <APIResults
       v-if="searchRequest.length != 0"
@@ -211,10 +178,7 @@ export default {
     },
 
     countContainersClass() {
-      if (
-        this.searchRequest.containers.length == 5 ||
-        this.searchRequest.containers.length == 4
-      ) {
+      if (this.searchRequest.containers.length == 5 || this.searchRequest.containers.length == 4) {
         return "col-2";
       }
 
@@ -229,10 +193,7 @@ export default {
       let component = this;
       component.creatingQuote = true;
 
-      if (
-        component.ratesForQuote.rates.length == 0 &&
-        component.ratesForQuote.results.length == 0
-      ) {
+      if (component.ratesForQuote.rates.length == 0 && component.ratesForQuote.results.length == 0) {
         component.noRatesAdded = true;
         component.creatingQuote = false;
         setTimeout(function() {
@@ -255,8 +216,7 @@ export default {
           component.actions.quotes
             .create(component.ratesForQuote, component.$route)
             .then((response) => {
-              window.location.href =
-                "/api/quote/" + response.data.data.id + "/edit";
+              window.location.href = "/api/quote/" + response.data.data.id + "/edit";
               component.creatingQuote = false;
             })
             .catch((error) => {
@@ -267,19 +227,16 @@ export default {
             });
         } else if (component.requestData.requested == 1 || duplicateMatch) {
           if (component.ratesForQuote.rates.length > 0) {
-            component.ratesForQuote.rates[0].search.requestData =
-              component.requestData;
+            component.ratesForQuote.rates[0].search.requestData = component.requestData;
           }
 
           if (component.ratesForQuote.results.length > 0) {
-            component.ratesForQuote.results[0].search.requestData =
-              component.requestData;
+            component.ratesForQuote.results[0].search.requestData = component.requestData;
           }
           component.actions.quotes
             .specialduplicate(component.ratesForQuote)
             .then((response) => {
-              window.location.href =
-                "/api/quote/" + response.data.data.id + "/edit";
+              window.location.href = "/api/quote/" + response.data.data.id + "/edit";
               component.creatingQuote = false;
             })
             .catch((error) => {
@@ -318,10 +275,7 @@ export default {
         this.resultsTotal += this.foundRatesLcl.length;
       }
       this.searchDone = true;
-      if (
-        this.apiSearchDone ||
-        this.$refs.searchComponent.searchRequest.type == "LCL"
-      ) {
+      if (this.apiSearchDone || this.$refs.searchComponent.searchRequest.type == "LCL") {
         this.$refs.searchComponent.searching = false;
       }
     },
@@ -336,9 +290,9 @@ export default {
       if (this.$refs.resultsAPIComponent) {
         this.$refs.searchComponent.foundApiRates = false;
         this.$refs.resultsAPIComponent.results = {
-          maersk: [],
-          cmacgm: [],
-          evergreen: [],
+          "maersk": [],
+          "cmacgm": [],
+          "evergreen": [],
           "hapag-lloyd": [],
         };
       }
@@ -392,9 +346,7 @@ export default {
           }
         });
 
-        component.quoteData.local_ports.destination.forEach(function(
-          destinationPort
-        ) {
+        component.quoteData.local_ports.destination.forEach(function(destinationPort) {
           if (destinationPort.id == rate.destiny_port) {
             duplicateMatch = true;
           }
@@ -406,9 +358,7 @@ export default {
           }
         });
 
-        component.quoteData.inland_ports.destination.forEach(function(
-          destinationPort
-        ) {
+        component.quoteData.inland_ports.destination.forEach(function(destinationPort) {
           if (destinationPort.id == rate.destiny_port) {
             duplicateMatch = true;
           }
@@ -423,9 +373,7 @@ export default {
           }
         });
 
-        component.quoteData.local_ports.destination.forEach(function(
-          destinationPort
-        ) {
+        component.quoteData.local_ports.destination.forEach(function(destinationPort) {
           if (destinationPort.code == result.destinationPort) {
             duplicateMatch = true;
           }
@@ -437,9 +385,7 @@ export default {
           }
         });
 
-        component.quoteData.inland_ports.destination.forEach(function(
-          destinationPort
-        ) {
+        component.quoteData.inland_ports.destination.forEach(function(destinationPort) {
           if (destinationPort.code == result.destinationPort) {
             duplicateMatch = true;
           }
@@ -460,8 +406,4 @@ export default {
 .mr-36px {
   margin-right: 36px !important;
 }
-
-// .pl-47px{
-//     padding-left: 47px;
-// }
 </style>
