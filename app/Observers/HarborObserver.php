@@ -15,6 +15,7 @@ class HarborObserver
     public function created(Harbor $harbor)
     {
         cache()->forget('habors_all');
+        cache()->forget('data_harbors');
     }
 
     /**
@@ -25,7 +26,8 @@ class HarborObserver
      */
     public function updated(Harbor $harbor)
     {
-        //
+        cache()->forget('habors_all');
+        cache()->forget('data_harbors');
     }
 
     /**
@@ -36,7 +38,8 @@ class HarborObserver
      */
     public function deleted(Harbor $harbor)
     {
-        //
+        cache()->forget('habors_all');
+        cache()->forget('data_harbors');
     }
 
     /**

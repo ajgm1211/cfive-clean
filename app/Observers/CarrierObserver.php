@@ -2,16 +2,14 @@
 
 namespace App\Observers;
 
-use App\Http\Traits\QuoteV2Trait;
 use App\Carrier;
 
 class CarrierObserver
 {
-    use QuoteV2Trait;
 
     public function created(Carrier $carrier)
     {
-        
+        cache()->forget('data_carriers');
     }
 
     /**
@@ -22,7 +20,7 @@ class CarrierObserver
      */
     public function updated(Carrier $carrier)
     {
-        
+        cache()->forget('data_carriers');
     }
 
     /**
@@ -33,7 +31,7 @@ class CarrierObserver
      */
     public function deleted(Carrier $carrier)
     {
-        
+        cache()->forget('data_carriers');
     }
 
     /**

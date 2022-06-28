@@ -11,7 +11,7 @@ class ContactObserver
     
     public function created(Contact $contact)
     {
-
+        cache()->forget('data_full_contacts');
     }
 
     /**
@@ -22,7 +22,7 @@ class ContactObserver
      */
     public function updated(Contact $contact)
     {
-
+        cache()->forget('data_full_contacts');
     }
 
     /**
@@ -33,7 +33,7 @@ class ContactObserver
      */
     public function deleted(Contact $contact)
     {
-
+        cache()->forget('data_full_contacts');
     }
 
     /**

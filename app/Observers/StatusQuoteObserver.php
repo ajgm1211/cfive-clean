@@ -15,6 +15,7 @@ class StatusQuoteObserver
     public function created(StatusQuote $statusQuote)
     {
         cache()->forget('quote_status');
+        cache()->forget('data_status_options');
     }
 
     /**
@@ -25,7 +26,8 @@ class StatusQuoteObserver
      */
     public function updated(StatusQuote $statusQuote)
     {
-        //
+        cache()->forget('quote_status');
+        cache()->forget('data_status_options');
     }
 
     /**
@@ -36,7 +38,8 @@ class StatusQuoteObserver
      */
     public function deleted(StatusQuote $statusQuote)
     {
-        //
+        cache()->forget('quote_status');
+        cache()->forget('data_status_options');
     }
 
     /**
