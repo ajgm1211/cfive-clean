@@ -283,6 +283,8 @@ class SendExcelFile implements ShouldQueue
             'Origin',
             'Destination',
             'Charge',
+            'Origin_Contract',
+            'Destination_Contract'
 
         );
         $arrayHeaderFirstPart = array_merge($arrayHeaderFirstPart, $contHeaderArray);
@@ -298,6 +300,9 @@ class SendExcelFile implements ShouldQueue
     public function get_header_rate($data, $montos)
     {
 
+        $setCountryOrigin = $this->setDataForCountryOrigin($data);
+        $setCountryDestination = $this->setDataForCountryDestination($data);
+
         $arrayFirstPartAmount = array(
             'Contract' => $data->contract->name,
             'Reference' => $data->contract->id,
@@ -306,6 +311,8 @@ class SendExcelFile implements ShouldQueue
             'Origin' => ucwords(strtolower($data->port_origin->name)),
             'Destination' => ucwords(strtolower($data->port_destiny->name)),
             'Charge' => htmlentities('Freight'),
+            'Origin_Contract' => $setCountryOrigin,
+            'Destination_Contract' => $setCountryDestination
         );
         $arrayFirstPartAmount = array_merge($arrayFirstPartAmount, $montos);
         $arraySecondPartAmount = array(
@@ -357,6 +364,8 @@ class SendExcelFile implements ShouldQueue
 
     public function get_amount_allIn($data, $montosAllInTot)
     {
+        $setCountryOrigin = $this->setDataForCountryOrigin($data);
+        $setCountryDestination = $this->setDataForCountryDestination($data);
 
         $arrayFirstPartAmountAllIn = array(
             'Contract' => $data->contract->name,
@@ -366,6 +375,8 @@ class SendExcelFile implements ShouldQueue
             'Origin' => ucwords(strtolower($data->port_origin->name)),
             'Destination' => ucwords(strtolower($data->port_destiny->name)),
             'Charge' => 'Freight - ALL IN',
+            'Origin_Contract' => $setCountryOrigin,
+            'Destination_Contract' => $setCountryDestination
         );
         $arrayFirstPartAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $montosAllInTot);
         $arraySecondPartAmountAllIn = array(
@@ -428,5 +439,17 @@ class SendExcelFile implements ShouldQueue
         $resultado = array_unique($ports);
 
         return $resultado;
+    }
+
+    public function setDataForCountryOrigin($data){
+        $setDataOrigin = $data->port_origin->country_id;
+        $setCountryOrigin = Country::find($setDataOrigin);
+        return $setCountryOrigin['name'];
+    }
+
+    public function setDataForCountryDestination($data){
+        $setDataDestination = $data->port_destiny->country_id;
+        $setCountryDestination = Country::find($setDataDestination);
+        return $setCountryDestination['name'];
     }
 }

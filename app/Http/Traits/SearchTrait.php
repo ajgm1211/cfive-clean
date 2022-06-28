@@ -1333,17 +1333,18 @@ trait SearchTrait
                     }
                 }
             }
-
             if ($direction == 'Freight') {
                 if($search_data['type'] == 'FCL'){
-                    $ocean_freight_array = [
+                    $calculationtype = $this->setOceanFreightCalculationTypeFCL($search_data);
+                    $ocean_freight_array = 
+                        [
                         'surcharge' => ['name' => 'Ocean Freight'],
                         'containers' => json_decode($rate->containers, true),
-                        'calculationtype' => ['name' => 'Per Container', 'id' => '5'], 
+                        'calculationtype' => $calculationtype,
                         'typedestiny_id' => 3,
                         'currency' => ['alphacode' => $rate->currency->alphacode, 'id' => $rate->currency->id]
-                    ];
-                }elseif($search_data['type'] == 'LCL'){
+                ];
+                 }elseif($search_data['type'] == 'LCL'){
                     $ocean_freight_array = [
                         'surcharge' => $rate->surcharge,
                         'total' => $rate->total > $rate->minimum ? $rate->total : $rate->minimum,
@@ -1366,6 +1367,25 @@ trait SearchTrait
             };
         }
         $rate->setAttribute('charges', $rate_charges);
+    }
+
+    public function setOceanFreightCalculationTypeFCL($search_data){
+
+        if($search_data['selectedContainerGroup'] == 1 ){
+            return ['name' => 'Per Container', 'id' => '5']; 
+        }
+        elseif($search_data['selectedContainerGroup'] == 2 ){
+            return ['name' => 'Per Container RF', 'id' => '19'];
+        }
+        elseif($search_data['selectedContainerGroup'] == 3 ){
+            return  ['name' => 'Per Container OT', 'id' => '20'];
+        }
+        elseif($search_data['selectedContainerGroup'] == 4 ){
+            return ['name' => 'Per Container FR', 'id' => '21 '];
+        }    
+        else{
+            return ['name' => 'Per Container DRY', 'id' => '5']; 
+        }
     }
 
     //Retrieves Global Remarks
