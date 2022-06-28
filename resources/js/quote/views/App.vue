@@ -13,6 +13,9 @@
               </div>
               <div class="col-6">
                 <div class="float-right">
+                  <a v-on:click="cacheForgetByCurrentUser()" class="btn btn-primary btn-bg">
+                    <i class="fa fa-refresh"></i>
+                  </a>
                   <a href="/api/search" class="btn btn-primary btn-bg"
                     ><i class="fa fa-search"></i> Search Rates</a
                   >
@@ -133,7 +136,14 @@ export default {
   },
   created() {},
   methods: {
-
+    cacheForgetByCurrentUser() { console.log(this.actions.quotes);
+      this.actions.quotes
+          .cacheForgetByCurrentUser()
+          .then((response) => {
+              window.location.reload()
+          })
+          .catch((data) => {});
+    },
     onEdit(data) {
       window.location = `/api/quote/${data.id}/edit`;
     },

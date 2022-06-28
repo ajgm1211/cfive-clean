@@ -11,7 +11,7 @@ class ContactObserver
     
     public function created(Contact $contact)
     {
-        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
+
     }
 
     /**
@@ -22,7 +22,7 @@ class ContactObserver
      */
     public function updated(Contact $contact)
     {
-        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
+
     }
 
     /**
@@ -33,7 +33,7 @@ class ContactObserver
      */
     public function deleted(Contact $contact)
     {
-        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
+
     }
 
     /**

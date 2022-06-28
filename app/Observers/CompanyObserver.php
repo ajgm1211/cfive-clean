@@ -11,7 +11,7 @@ class CompanyObserver
 
     public function created(Company $company)
     {
-        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
+    
     }
 
     /**
@@ -22,7 +22,7 @@ class CompanyObserver
      */
     public function updated(Company $company)
     {
-        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
+    
     }
 
     /**
@@ -33,7 +33,7 @@ class CompanyObserver
      */
     public function deleted(Company $company)
     {
-        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
+    
     }
 
     /**

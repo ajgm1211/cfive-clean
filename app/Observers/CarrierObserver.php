@@ -11,7 +11,7 @@ class CarrierObserver
 
     public function created(Carrier $carrier)
     {
-        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
+        
     }
 
     /**
@@ -22,7 +22,7 @@ class CarrierObserver
      */
     public function updated(Carrier $carrier)
     {
-        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
+        
     }
 
     /**
@@ -33,7 +33,7 @@ class CarrierObserver
      */
     public function deleted(Carrier $carrier)
     {
-        $this->forgetKeyCacheQuotationsFormRequiredDataOnAllUsers();
+        
     }
 
     /**

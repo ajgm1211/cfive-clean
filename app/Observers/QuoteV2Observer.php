@@ -11,7 +11,7 @@ class QuoteV2Observer
 
     public function created(QuoteV2 $quoteV2)
     {
-        $this->forgetKeyCacheFilterOptionsRequiredDataToUser($quoteV2->user_id);
+    
     }
 
     /**

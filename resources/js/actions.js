@@ -385,7 +385,10 @@ export default {
         setCostSheet(autorate_id, route) {
             let quote_id = route.params.id;
             return api.call('get', `/api/quote/${quote_id}/setCostSheet/${autorate_id}`, {});
-        }
+        },
+        cacheForgetByCurrentUser() { console.log("llega a ctions");
+            return api.call('get', `/api/quote/cacheForgetByCurrentUser`);
+        },
     },
     automaticrates: {
         list(params, callback, route) {

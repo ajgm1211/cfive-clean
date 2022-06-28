@@ -742,7 +742,7 @@ export default {
             //Cleaning data array
             this.data = {};
             
-            if (!this.multiList) {  
+            if (!this.multiList) {
                 this.actions.list( 
                     {
                         params: this.filterValues, 
