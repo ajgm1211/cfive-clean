@@ -11,10 +11,12 @@ use App\Container;
 use App\Carrier;
 use App\Currency;
 use App\Harbor;
+use App\StatusQuote;
 use App\Inland;
 use App\IntegrationQuoteStatus;
 use App\Quote;
 use App\QuoteV2;
+use App\ViewQuoteV2;
 use App\SaleTermV2;
 use App\SendQuote;
 use App\User;
@@ -2102,14 +2104,110 @@ trait QuoteV2Trait
         return $inputConversion;
     }
 
-    public function forgetKeyCacheQuotationsFormRequiredDataOnAllUsers() {
-        $users_id = User::pluck('id');
-        foreach($users_id as $user_id) {
-            cache()->forget('quotations_form_required_data_to_user_'.$user_id);
+    /**
+     * Mover a un QuoteV2FilterTrait
+     */
+
+    public function getFilterByUserType($user) {
+
+        $filter_delegation = $user->companyUser->options['filter_delegations'];
+        $subtype = $user->options['subtype'];
+
+        //Filtro por permisos a nivel de usuario y compañía
+        if ($subtype === 'comercial') {
+            $query = ViewQuoteV2::filterByCurrentUser();
         }
+        if ($filter_delegation == true) {
+            $query = ViewQuoteV2::filterByDelegation();
+        } else {
+            $query = ViewQuoteV2::filterByCurrentCompany();
+        }
+        return $query;
     }
 
-    public function forgetKeyCacheFilterOptionsRequiredDataToUser($user_id) {
-        cache()->forget('filter_options_required_data_to_user_'.$user_id);   
+    public function getCacheIdOptions($company_user_id, $query) {
+        if(auth()->user()->options['subtype'] === 'comercial') {
+            return $query->distinct('id')->pluck('id'); 
+        }
+        return cache()->rememberForever('id_options_to_quotes_by_user_'.$company_user_id, function() use ($query) {
+            return $query->distinct('id')->pluck('id'); 
+         });
     }
+
+    public function getCacheQuoteIdOptions($company_user_id, $query) {
+        if(auth()->user()->options['subtype'] === 'comercial') {
+            return $query->distinct('quote_id')->pluck('quote_id');
+        }   
+        return cache()->rememberForever('quote_id_options_to_quotes_by_user_'.$company_user_id, function() use ($query) {
+            return $query->distinct('quote_id')->pluck('quote_id');
+        });
+    }
+
+    public function getCacheCustomQuoteIdOptions($company_user_id, $query) {
+        if(auth()->user()->options['subtype'] === 'comercial') {
+            return $query->distinct('custom_quote_id')->pluck('custom_quote_id');
+        }
+        return cache()->rememberForever('custom_quote_id_options_to_quotes_by_user_'.$company_user_id, function() use ($query) {
+            return $query->distinct('custom_quote_id')->pluck('custom_quote_id');
+        });
+    }
+
+    public function getCacheCompaniesOptions($company_user_id, $query) {
+        if(auth()->user()->options['subtype'] === 'comercial') {
+            return $query->distinct('company_array')->pluck('company_array');
+        }
+        return cache()->rememberForever('companies_option_to_quotes_by_user_'.$company_user_id, function() use ($query) {
+            return $query->distinct('company_array')->pluck('company_array');
+        });
+    }
+
+    public function getCacheCreatedAtOptions($company_user_id, $query) {
+        if(auth()->user()->options['subtype'] === 'comercial') {
+            return $query->distinct('created_at')->pluck('created_at')->map(function($date){
+                return date('Y-m-d', strtotime($date));
+            })->unique()->values();
+        }
+        return cache()->rememberForever('created_at_options_to_quotes_by_user_'.$company_user_id, function() use($query) {
+            return $query->distinct('created_at')->pluck('created_at')->map(function($date){
+                return date('Y-m-d', strtotime($date));
+            })->unique()->values();
+        });
+    }
+
+    public function getCacheStatusOptions() {
+        return cache()->rememberForever('quote_status', function() {
+            return StatusQuote::pluck('name');
+        });
+    }
+
+    public function getCacheTypeOptions() {
+        return cache()->rememberForever('quote_types', function() {
+            return ['FCL', 'LCL'];
+        });
+    }
+
+    public function getCacheHarborsOptions() {
+        return cache()->rememberForever('habors_all', function() {
+            return Harbor::get(['id', 'display_name'])->map(function ($harbor) {
+                $harbor->label = $harbor->display_name;
+                unset($harbor->display_name);
+                return $harbor;
+            });
+        });
+    }
+
+    public function getCacheUsersOptions() {
+        $company_user_id = auth()->user()->company_user_id;
+        return cache()->rememberForever('users_by_company_'.$company_user_id, function() use ($company_user_id) {
+            return User::where('company_user_id', $company_user_id)
+                ->get(['id', 'name', 'lastname'])
+                ->map(function($user) {
+                    $user->label = $user->name.' '.$user->lastname;
+                    unset($user->name);
+                    unset($user->lastname);
+                    return $user;
+                });
+        });
+    }
+
 }

@@ -1083,7 +1083,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/api/quote/{quote}/setCostSheet/{autorate}', 'QuotationController@setCostSheet');
     
     Route::get('/api/quote/filters', 'QuotationFilterController@getFilterOptions');
-    Route::get('/api/quote/cacheForgetByCurrentUser', 'QuotationFilterController@cacheForgetByCurrentUser');
+    
 
     /** AutomaticRate routes**/
     Route::get('api/quotes/{quote}/automatic_rate', 'AutomaticRateController@list')->middleware('check_company:quote');
