@@ -2112,6 +2112,7 @@ trait QuoteV2Trait
 
         $filter_delegation = $user->companyUser->options['filter_delegations'];
         $subtype = $user->options['subtype'];
+        $company_user_id = $user->company_user_id;
 
         //Filtro por permisos a nivel de usuario y compañía
         if ($subtype === 'comercial') {
@@ -2120,13 +2121,16 @@ trait QuoteV2Trait
         if ($filter_delegation == true) {
             $query = ViewQuoteV2::filterByDelegation();
         } else {
-            $query = ViewQuoteV2::filterByCurrentCompany();
+            $query = ViewQuoteV2::filterByCurrentCompany($company_user_id);
         }
         return $query;
     }
 
-    public function getCacheIdOptions($company_user_id, $query) {
-        if(auth()->user()->options['subtype'] === 'comercial') {
+    public function getCacheIdOptions($company_user_id, $query, $subtype = null) {
+        if(!isset($subtype)) {
+            $subtype = auth()->user()->options['subtype'];
+        }
+        if($subtype === 'comercial') {
             return $query->distinct('id')->pluck('id'); 
         }
         return cache()->rememberForever('id_options_to_quotes_by_user_'.$company_user_id, function() use ($query) {
@@ -2134,8 +2138,11 @@ trait QuoteV2Trait
          });
     }
 
-    public function getCacheQuoteIdOptions($company_user_id, $query) {
-        if(auth()->user()->options['subtype'] === 'comercial') {
+    public function getCacheQuoteIdOptions($company_user_id, $query, $subtype = null) {
+        if(!isset($subtype)) {
+            $subtype = auth()->user()->options['subtype'];
+        }
+        if($subtype === 'comercial') {
             return $query->distinct('quote_id')->pluck('quote_id');
         }   
         return cache()->rememberForever('quote_id_options_to_quotes_by_user_'.$company_user_id, function() use ($query) {
@@ -2143,8 +2150,11 @@ trait QuoteV2Trait
         });
     }
 
-    public function getCacheCustomQuoteIdOptions($company_user_id, $query) {
-        if(auth()->user()->options['subtype'] === 'comercial') {
+    public function getCacheCustomQuoteIdOptions($company_user_id, $query, $subtype = null) {
+        if(!isset($subtype)) {
+            $subtype = auth()->user()->options['subtype'];
+        }
+        if($subtype === 'comercial') {
             return $query->distinct('custom_quote_id')->pluck('custom_quote_id');
         }
         return cache()->rememberForever('custom_quote_id_options_to_quotes_by_user_'.$company_user_id, function() use ($query) {
@@ -2152,8 +2162,11 @@ trait QuoteV2Trait
         });
     }
 
-    public function getCacheCompaniesOptions($company_user_id, $query) {
-        if(auth()->user()->options['subtype'] === 'comercial') {
+    public function getCacheCompaniesOptions($company_user_id, $query, $subtype = null) {
+        if(!isset($subtype)) {
+            $subtype = auth()->user()->options['subtype'];
+        }
+        if($subtype === 'comercial') {
             return $query->distinct('company_array')->pluck('company_array');
         }
         return cache()->rememberForever('companies_option_to_quotes_by_user_'.$company_user_id, function() use ($query) {
@@ -2161,8 +2174,11 @@ trait QuoteV2Trait
         });
     }
 
-    public function getCacheCreatedAtOptions($company_user_id, $query) {
-        if(auth()->user()->options['subtype'] === 'comercial') {
+    public function getCacheCreatedAtOptions($company_user_id, $query, $subtype = null) {
+        if(!isset($subtype)) {
+            $subtype = auth()->user()->options['subtype'];
+        }
+        if($subtype === 'comercial') {
             return $query->distinct('created_at')->pluck('created_at')->map(function($date){
                 return date('Y-m-d', strtotime($date));
             })->unique()->values();

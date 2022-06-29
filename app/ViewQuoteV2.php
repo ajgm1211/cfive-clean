@@ -22,10 +22,12 @@ class ViewQuoteV2 extends Model
         return $this->belongsTo('App\QuoteV2', 'quote_id');
     }
 
-    public function scopeFilterByCurrentCompany($query)
-    {
-        $company_id = Auth::user()->company_user_id;
-        return $query->where('company_user_id', '=', $company_id);
+    public function scopeFilterByCurrentCompany($query, $company_user_id = null)
+    {   
+        if(!isset($company_user_id)){
+            $company_user_id = Auth::user()->company_user_id;
+        }
+        return $query->where('company_user_id', '=', $company_user_id);
     }
 
     public function scopeFilterByCurrentUser($query)

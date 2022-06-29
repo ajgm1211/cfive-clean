@@ -44,7 +44,6 @@ class QuoteV2Observer
         cache()->forget('companies_option_to_quotes_by_user_'.$company_user_id);
         cache()->forget('created_at_options_to_quotes_by_user_'.$company_user_id);
 
-        
         // Encolar carga de data en caché, se puede condicionar solo para company_user crítico
         AddDataToCacheForQuoteFilterOptionsJob::dispatch($user);
 
