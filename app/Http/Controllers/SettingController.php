@@ -29,6 +29,7 @@ use App\Delegation;
 use App\UserDelegation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use App\QuotaRequest;
 
 class SettingController extends Controller
 {
@@ -79,23 +80,22 @@ class SettingController extends Controller
             } else {
                 $color_pdf = '#006bfa';
             }
-            if ($company->companyUser->options['edit_quote_charges'] == true) {
+            if (isset($company->companyUser->options['edit_quote_charges']) && $company->companyUser->options['edit_quote_charges'] == true) {
                 $EditQuoteCharges = "checked='true'";
             } else {
                 $EditQuoteCharges = false;
             }
-            if ($company->companyUser->options['disable_delegation_pdf'] == true) {
+            if (isset($company->companyUser->options['disable_delegation_pdf']) && $company->companyUser->options['disable_delegation_pdf'] == true) {
                 $disableDelegationPdf = "checked='true'";
             } else {
-                $disableDelegationPdf ='';
+                $disableDelegationPdf = '';
             }
-
         }
 
         $currencies = Currency::where('alphacode', '=', 'USD')->orwhere('alphacode', '=', 'EUR')->pluck('alphacode', 'id');
         $pdf_templates = PdfTemplate::pluck('name', 'id');
 
-        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'ShowFreightCurrency','StoreHiddenCharges', 'color_pdf','delegations','disableDelegationPdf','EditQuoteCharges'));
+        return view('settings/index', compact('company', 'pdf_templates', 'currencies', 'email_settings', 'selectedTrue', 'selectedFalse', 'selectedDatesTrue', 'selectedDatesFalse', 'IncludeOrigin', 'IncludeDestiny', 'ShowFreightCurrency', 'StoreHiddenCharges', 'color_pdf', 'delegations', 'disableDelegationPdf', 'EditQuoteCharges'));
     }
 
     public function store(StoreSettings $request)
@@ -137,7 +137,7 @@ class SettingController extends Controller
             $filepath_header_image = 'Header/' . $header_image->getClientOriginalName();
             $s3 = \Storage::disk('s3_upload');
             $s3->put($filepath_header_image, \File::get($header_image), 'public');
-        } 
+        }
         if ($request->decimals) {
             $decimals = 1;
         } else {
@@ -145,23 +145,12 @@ class SettingController extends Controller
         }
 
         if (!$request->company_id) {
-            //$company=CompanyUser::create($request->all());
-            $company = new CompanyUser();
-            $company->name = $request->name;
-            $company->address = $request->address;
+            //CREATE
+            $company = new CompanyUser($request->all());
             $company->decimals = $decimals;
-            $company->Future_dates = $request->future_dates;
-            $company->origincharge = $request->origincharge;
-            $company->destinationcharge = $request->destinationcharge;
-            $company->phone = $request->phone;
-            $company->currency_id = $request->currency_id;
-            $company->hash = \Hash::make($request->name);
-            $company->pdf_language = $request->pdf_language;
-            $company->footer_type = $request->footer_type;
+
             $company->footer_text = $request->footer_text_content;
-            $company->header_type = $request->header_type;
-            $company->pdf_template_id = $request->pdf_template_id;
-            $company->colors_pdf = $request->colors_pdf;
+            $company->hash = \Hash::make($request->name);
 
             if ($footer_image != "") {
                 $company->footer_image = $filepath_footer_image;
@@ -174,14 +163,16 @@ class SettingController extends Controller
             if ($file != '') {
                 $company->logo = $filepath;
             }
-            $options=[
-                'api_providers'=> [],
-                'filter_delegations'=> false,
-                'company_address_pdf'=> 1,
+            $options = [
+                'api_providers' => [],
+                'filter_delegations' => false,
+                'company_address_pdf' => 1,
                 'totals_in_freight_currency' => false,
                 'store_hidden_charges' => false,
+                'edit_quote_charges' =>false,
+                'disable_delegation_pdf' => false,
             ];
-            $company->options=$options;
+            $company->options = $options;
             $company->save();
 
             User::where('id', \Auth::id())->update(['company_user_id' => $company->id]);
@@ -196,27 +187,18 @@ class SettingController extends Controller
             }
             $email_settings->save();
         } else {
+            //UPDATE
             $company = CompanyUser::findOrFail($request->company_id);
+            $company->fill($request->all());
             $company_options = $company->options;
             $company_options['totals_in_freight_currency'] = $request->showfreightcurrency;
             $company_options['store_hidden_charges'] = $request->storehiddencharges;
             $company_options['edit_quote_charges'] = $request->editquotecharges;
             $company_options['disable_delegation_pdf'] = $request->disabledelegationpdf;
             $company->options = $company_options;
-            $company->name = $request->name;
-            $company->phone = $request->phone;
-            $company->address = $request->address;
             $company->decimals = $decimals;
-            $company->Future_dates = $request->future_dates;
-            $company->origincharge = $request->origincharge;
-            $company->destinationcharge = $request->destinationcharge;
-            $company->currency_id = $request->currency_id;
-            $company->pdf_language = $request->pdf_language;
-            $company->footer_type = $request->footer_type;
             $company->footer_text = $request->footer_text_content;
-            $company->header_type = $request->header_type;
-            $company->pdf_template_id = $request->pdf_template_id;
-            $company->colors_pdf = $request->colors_pdf;
+
             if ($footer_image != "") {
                 $company->footer_image = $filepath_footer_image;
             }
@@ -226,7 +208,7 @@ class SettingController extends Controller
             if ($file != '') {
                 $company->logo = $filepath;
             }
-            $company->update();
+            $company->save();
 
             $email_settings = EmailSetting::where('company_user_id', $request->company_id)->first();
             if ($email_settings) {
@@ -251,10 +233,66 @@ class SettingController extends Controller
         }
 
         //Creating quota to import contracts
-        $company->createQuota($request);
-
+        $this->createQuota($request);
         return response()->json(['message' => 'Ok']);
     }
+
+
+    /**
+     * Create quantity of requests per company
+     * 
+     * @param mixed $data
+     * 
+     * @return void
+     */
+    function createQuota($data)
+    {
+        if ($data->issued_date && $data->payment_type)
+            $due_date = $this->addMonthYearToDate($data->issued_date, $data->payment_type);
+
+        $data->validate(
+            ['type' => 'required'],
+            ['quota' => 'required']
+        );
+
+        QuotaRequest::updateOrCreate([
+            'company_user_id' => $this->id
+        ], [
+            'type' => $data->type ?? null,
+            'payment_type' => $data->payment_type,
+            'quota' => $data->quota,
+            'remaining_quota' => $data->remaining_quota,
+            'company_user_id' => $this->id,
+            'issued_date' => $data->issued_date,
+            'due_date' => isset($due_date) ? $due_date->format('Y-m-d') : null,
+            'status' => $data->status,
+        ]);
+    }
+
+    /**
+     * Format date to add month or year
+     * 
+     * @param mixed $data
+     * 
+     * @return date
+     */
+    function addMonthYearToDate($date, $type)
+    {
+
+        $date = Carbon::createFromFormat('Y-m-d', $date);
+
+        if ($type == 'monthly') {
+            $due_date = $date->addMonth();
+        } else if ($type == 'biannual') {
+            $due_date = $date->addMonths(6);
+        } else {
+            $due_date = $date->addYear();
+        }
+
+        return $due_date;
+    }
+
+
 
     public function update_pdf_type(Request $request)
     {
@@ -591,7 +629,7 @@ class SettingController extends Controller
             'phone' => 'required',
             'address' => 'required'
         ]);
-        
+
         $delegation = new delegation();
         $delegation->name            = $request->name;
         $delegation->phone           = $request->phone;
@@ -605,9 +643,9 @@ class SettingController extends Controller
 
         return redirect()->back();
     }
- 
+
     public function edit_d($id)
-    {   
+    {
         return response()->json([
             'data' => Delegation::find($id),
         ]);
@@ -623,9 +661,9 @@ class SettingController extends Controller
 
         $delegation = Delegation::find($request->id);
 
-        $delegation->name=$request->name;
-        $delegation->phone=$request->phone;
-        $delegation->address=$request->address;
+        $delegation->name = $request->name;
+        $delegation->phone = $request->phone;
+        $delegation->address = $request->address;
         $delegation->update();
 
         $request->session()->flash('message.content', 'Record updated successfully');
@@ -636,17 +674,16 @@ class SettingController extends Controller
     }
     public function destroy($id)
     {
-        $id_ud=UserDelegation::where('delegations_id','=',$id)->first();
+        $id_ud = UserDelegation::where('delegations_id', '=', $id)->first();
 
-        if ($id_ud != null)  {
+        if ($id_ud != null) {
             return response()->json(['message' => 'error',]);
-
-        }else{
+        } else {
             $delegation = delegation::find($id)->delete();
 
             return response()->json([
                 'message' => 'Ok',
             ]);
-            }
+        }
     }
 }

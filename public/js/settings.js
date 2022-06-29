@@ -1,3 +1,16 @@
+//Test change name
+$(function() {
+    /* $("#name").on("change",function(element) {
+        $("#default-currency-submit").prop("disabled", false);
+    }); */
+    $("#default-currency-submit").prop("disabled", true);
+
+    $("#default-currency input ,#default-currency textarea , #default-currency select ").bind("keyup keydown change",function(element) {
+        $("#default-currency-submit").prop("disabled", false);
+    });
+});
+
+
 //binds to onchange event of your input field
 $(document).on('change', '#logo', function(e) {
     if (this.files[0].size > 1000000) {
@@ -16,6 +29,7 @@ $('#email_from').blur(function() {
         $('#email_from_error').addClass('hide');
     }
 });
+
 //Guardar settings
 $(document).on('click', '#default-currency-submit', function() {
     var id = $('#company_id').val();
