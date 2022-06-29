@@ -2047,8 +2047,10 @@ class ImportationController extends Controller
         $calculationtypeselect = $objCalculationType->all()->pluck('name', 'id');
 
         $goodsurcharges = LocalCharge::with('currency', 'calculationtype', 'surcharge', 'typedestiny', 'localcharcarriers.carrier', 'localcharports.portOrig', 'localcharports.portDest', 'localcharcountries.countryOrig', 'localcharcountries.countryDest')->find($id);
-        $surchargeSelect = $objsurcharge->where('company_user_id', '=', $goodsurcharges->contract->company_user_id)->pluck('name', 'id');
-        //dd($goodsurcharges);
+        //$surchargeSelect = $objsurcharge->where('company_user_id', '=', $goodsurcharges->contract->company_user_id)->pluck('name', 'id');
+        $surchargeSelect = $objsurcharge->where('company_user_id', '=', null)->pluck('name', 'id');
+        $goodsurcharges->surcharge_id = PrvSurchargers::get_single_surcharger($goodsurcharges->surcharge->name)['data'];
+        //dd($goodsurcharges, $surchargeSelect, PrvSurchargers::get_single_surcharger($goodsurcharges->surcharge->name)['data']);
         return view('importationV2.Fcl.Body-Modals.GoodEditSurcharge', compact('harbor',
                                                                                'currency',
                                                                                'countries',
