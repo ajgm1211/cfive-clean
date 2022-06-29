@@ -283,8 +283,8 @@ class SendExcelFile implements ShouldQueue
             'Origin',
             'Destination',
             'Charge',
-            'Origin_Contract',
-            'Destination_Contract'
+            'Origin Country',
+            'Destination Country'
 
         );
         $arrayHeaderFirstPart = array_merge($arrayHeaderFirstPart, $contHeaderArray);
@@ -311,8 +311,8 @@ class SendExcelFile implements ShouldQueue
             'Origin' => ucwords(strtolower($data->port_origin->name)),
             'Destination' => ucwords(strtolower($data->port_destiny->name)),
             'Charge' => htmlentities('Freight'),
-            'Origin_Contract' => $setCountryOrigin,
-            'Destination_Contract' => $setCountryDestination
+            'Origin Country' => $setCountryOrigin,
+            'Destination Country' => $setCountryDestination
         );
         $arrayFirstPartAmount = array_merge($arrayFirstPartAmount, $montos);
         $arraySecondPartAmount = array(
@@ -375,8 +375,8 @@ class SendExcelFile implements ShouldQueue
             'Origin' => ucwords(strtolower($data->port_origin->name)),
             'Destination' => ucwords(strtolower($data->port_destiny->name)),
             'Charge' => 'Freight - ALL IN',
-            'Origin_Contract' => $setCountryOrigin,
-            'Destination_Contract' => $setCountryDestination
+            'Origin Country' => $setCountryOrigin,
+            'Destination Country' => $setCountryDestination
         );
         $arrayFirstPartAmountAllIn = array_merge($arrayFirstPartAmountAllIn, $montosAllInTot);
         $arraySecondPartAmountAllIn = array(
