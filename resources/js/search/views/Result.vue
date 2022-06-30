@@ -440,7 +440,7 @@ export default {
         .then((response) => {
           if (response.data.zip == true) {
             console.log("Downloading!", response.data.url);
-            window.open("/api/search/downloadMContract/" + response.data.url.replace("+", "%2B"));
+            window.open("/api/search/downloadMContract/" + response.data.url);
             /*
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement("a");
