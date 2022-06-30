@@ -1740,22 +1740,16 @@ export default {
             })
         },
         selectStatus(id_charge,value){
-            let selected=false;
-            let values =[];
-            
+            let values = {
+                         selected:false,
+                         type:'status'
+                     };
             value.forEach(function (charge){
                 if(charge.id==id_charge && charge.options.select !=true ){    
                      values = {
                          selected:true,
                          type:'status'
                      };
-                     selected=true;
-                }
-                if(charge.id!=id_charge && charge.options.select !=false && selected==false){
-                    values = {
-                         selected:false,
-                         type:'status'
-                     }
                 }
             });
             actions.charges
@@ -1779,7 +1773,7 @@ export default {
             actions.charges
                 .updateStatusSelect(id_charge,values)
                 .then((response) => {
-                      this.getLocalCharges();
+                     //
                 })
                 .catch((data) => {
                     this.$refs.observer.setErrors(data.data.errors);
