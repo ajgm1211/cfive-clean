@@ -79,12 +79,12 @@ class SettingController extends Controller
             } else {
                 $color_pdf = '#006bfa';
             }
-            if ($company->companyUser->options['edit_quote_charges'] == true) {
+            if (isset($company->companyUser->options['edit_quote_charges']) && $company->companyUser->options['edit_quote_charges'] == true) {
                 $EditQuoteCharges = "checked='true'";
             } else {
                 $EditQuoteCharges = false;
             }
-            if ($company->companyUser->options['disable_delegation_pdf'] == true) {
+            if (isset($company->companyUser->options['disable_delegation_pdf']) && $company->companyUser->options['disable_delegation_pdf'] == true) {
                 $disableDelegationPdf = "checked='true'";
             } else {
                 $disableDelegationPdf ='';
@@ -145,6 +145,7 @@ class SettingController extends Controller
         }
 
         if (!$request->company_id) {
+            //CREATE
             //$company=CompanyUser::create($request->all());
             $company = new CompanyUser();
             $company->name = $request->name;
@@ -180,6 +181,8 @@ class SettingController extends Controller
                 'company_address_pdf'=> 1,
                 'totals_in_freight_currency' => false,
                 'store_hidden_charges' => false,
+                'edit_quote_charges' => false,
+                'disable_delegation_pdf' => false
             ];
             $company->options=$options;
             $company->save();
@@ -196,6 +199,7 @@ class SettingController extends Controller
             }
             $email_settings->save();
         } else {
+            //UPDATE
             $company = CompanyUser::findOrFail($request->company_id);
             $company_options = $company->options;
             $company_options['totals_in_freight_currency'] = $request->showfreightcurrency;
