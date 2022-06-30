@@ -533,15 +533,15 @@ class ContractController extends Controller
             //Dispatching jobs
             if ($type == 'FCL') {
                 if (env('APP_VIEW') == 'operaciones') {
-                    ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('high');
+                    ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('operaciones');
                 } else {
-                    ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request')->onQueue('high');
+                    ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'fcl', 'request');
                 }
             } else {
                 if (env('APP_VIEW') == 'operaciones') {
-                    ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request')->onQueue('high');
+                    ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request')->onQueue('operaciones');
                 } else {
-                    ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request')->onQueue('high');
+                    ProcessContractFile::dispatch($Ncontract->id, $Ncontract->namefile, 'lcl', 'request');
                 }
             }
 
