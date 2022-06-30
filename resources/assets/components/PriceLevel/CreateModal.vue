@@ -6,7 +6,7 @@
         <h3>{{ action + " " + title }}</h3>
       </div>
       <form action="" class="create-form" autocomplete="off">
-        <div v-for="(field, fieldKey) in fields" :key="fieldKey">
+        <div v-for="(field, index) in fields" :key="index">
           <CustomInput
             v-if="field.type == 'input'"
             :custom_error="field.error"
@@ -17,7 +17,7 @@
             :placeholder="field.placeholder"
             :rules="field.rules"
             :type="field.input_type ? field.input_type : 'text'"
-            :is_focused="field === fields[0]"
+            :is_focused="index === 0"
           />
 
           <SorteableDropdown
