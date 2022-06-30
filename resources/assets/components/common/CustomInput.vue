@@ -9,6 +9,7 @@
       {{ label }}
     </label>
     <input
+      ref="ref_input"
       :disabled="disabled"
       class="input-v2"
       autocomplete="off"
@@ -86,6 +87,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    is_focused: {
+      type: Boolean,
+      default: false
+    }
   },
   data: () => ({
     error: true,
@@ -94,6 +99,11 @@ export default {
     return {
       value: this.requiredValidations,
     };
+  },
+  mounted() {
+    if(this.is_focused) { 
+      this.$refs.ref_input.focus()
+    }
   },
   methods: {
     handleChange(_value) {

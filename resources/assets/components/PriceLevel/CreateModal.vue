@@ -17,6 +17,7 @@
             :placeholder="field.placeholder"
             :rules="field.rules"
             :type="field.input_type ? field.input_type : 'text'"
+            :is_focused="field === fields[0]"
           />
 
           <SorteableDropdown
