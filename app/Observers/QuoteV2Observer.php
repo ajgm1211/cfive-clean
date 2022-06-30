@@ -14,16 +14,9 @@ class QuoteV2Observer
         $user = auth()->user();
         $company_user_id = $user->company_user_id;
 
-        // olvidar cache de la compañia
-        cache()->forget('id_options_to_quotes_by_user_'.$company_user_id);
-        cache()->forget('quote_id_options_to_quotes_by_user_'.$company_user_id);
-        cache()->forget('custom_quote_id_options_to_quotes_by_user_'.$company_user_id);
-        cache()->forget('companies_option_to_quotes_by_user_'.$company_user_id);
-        cache()->forget('created_at_options_to_quotes_by_user_'.$company_user_id);
-
         
         // Encolar carga de data en caché, se puede condicionar solo para company_user crítico
-        AddDataToCacheForQuoteFilterOptionsJob::dispatch($user);
+        AddDataToCacheForQuoteFilterOptionsJob::dispatchNow($user);
 
     }
 
@@ -37,15 +30,10 @@ class QuoteV2Observer
         $user = auth()->user();
         $company_user_id = $user->company_user_id;
 
-        // olvidar cache de la compañia
-        cache()->forget('id_options_to_quotes_by_user_'.$company_user_id);
-        cache()->forget('quote_id_options_to_quotes_by_user_'.$company_user_id);
-        cache()->forget('custom_quote_id_options_to_quotes_by_user_'.$company_user_id);
-        cache()->forget('companies_option_to_quotes_by_user_'.$company_user_id);
-        cache()->forget('created_at_options_to_quotes_by_user_'.$company_user_id);
+        
 
         // Encolar carga de data en caché, se puede condicionar solo para company_user crítico
-        AddDataToCacheForQuoteFilterOptionsJob::dispatch($user);
+        AddDataToCacheForQuoteFilterOptionsJob::dispatchNow($user);
 
     }
 
