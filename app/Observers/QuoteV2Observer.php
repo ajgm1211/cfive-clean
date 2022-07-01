@@ -16,7 +16,7 @@ class QuoteV2Observer
 
         
         // Encolar carga de data en caché, se puede condicionar solo para company_user crítico
-        AddDataToCacheForQuoteFilterOptionsJob::dispatchNow($user)->onQueue("high");
+        AddDataToCacheForQuoteFilterOptionsJob::dispatch($user);
 
     }
 
@@ -33,7 +33,7 @@ class QuoteV2Observer
         
 
         // Encolar carga de data en caché, se puede condicionar solo para company_user crítico
-        AddDataToCacheForQuoteFilterOptionsJob::dispatchNow($user)->onQueue("high");
+        AddDataToCacheForQuoteFilterOptionsJob::dispatch($user);
 
     }
 
