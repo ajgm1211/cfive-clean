@@ -308,7 +308,7 @@
               
               <div class="d-flex justify-content-end align-items-center">
                 <b-button
-                  v-if="cmaResult.remarks && cmaResult.remarks != ''"
+                  v-if="cmaResult.remarks && cmaResult.remarks.length != 0"
                   class="rs-btn"
                   v-b-toggle="
                     'remarks_' +
@@ -389,7 +389,10 @@
             <h5><b>Remarks</b></h5>
 
             <b-card>
-              <p v-html="cmaResult.remarks"></p>
+                <p v-for="(cmaRemark, cmaRemarkIndex) in cmaResult.remarks" 
+                  :key="cmaRemarkIndex"
+                  v-html="cmaRemarkIndex + ': </br>' + cmaRemark">
+                </p>
             </b-card>
           </b-collapse>
           <!-- FIN REMARKS -->
@@ -1206,7 +1209,7 @@
                   role="tablist"
                 >
                   <b-button
-                    v-if="result.remarks && result.remarks != ''"
+                    v-if="result.remarks && result.remarks.length != 0"
                     class="rs-btn"
                     v-b-toggle="'remarks_' + String(result.quoteLine)"
                     ><b>remarks</b><b-icon icon="caret-down-fill"></b-icon
@@ -1278,7 +1281,10 @@
             <h5><b>Remarks</b></h5>
 
             <b-card>
-              <p v-html="result.remarks"></p>
+              <p v-for="(remark, remarkIndex) in result.remarks" 
+                :key="remarkIndex"
+                v-html="remarkIndex + ': </br>' + remark">
+              </p>
             </b-card>
           </b-collapse>
         <!-- FIN REMARKS -->
@@ -2023,7 +2029,7 @@
 
               <div class="d-flex justify-content-end align-items-center">
                 <b-button
-                  v-if="evergreenResult.remarks && evergreenResult.remarks != ''"
+                  v-if="evergreenResult.remarks && evergreenResult.remarks.length != 0"
                   class="rs-btn"
                   v-b-toggle="
                     'remarks_' +
@@ -2104,7 +2110,10 @@
             <h5><b>Remarks</b></h5>
 
             <b-card>
-              <p v-html="evergreenResult.remarks"></p>
+              <p v-for="(evergreenRemark, evergreenRemarkIndex) in evergreenResult.remarks" 
+                :key="evergreenRemarkIndex"
+                v-html="evergreenRemarkIndex + ': </br>' + evergreenRemark">
+              </p>
             </b-card>
           </b-collapse>
           <!-- FIN REMARKS -->
@@ -2929,7 +2938,7 @@
 
               <div class="d-flex justify-content-end align-items-center">
                 <b-button
-                  v-if="hapagResult.remarks && hapagResult.remarks != ''"
+                  v-if="hapagResult.remarks && hapagResult.remarks.length != 0"
                   class="rs-btn"
                   v-b-toggle="
                     'remarks_' +
@@ -3012,7 +3021,10 @@
             <h5><b>Remarks</b></h5>
 
             <b-card>
-              <p v-html="hapagResult.remarks"></p>
+              <p v-for="(hapagRemark, hapagRemarkIndex) in hapagResult.remarks" 
+                :key="hapagRemarkIndex"
+                v-html="hapagRemarkIndex + ': </br>' + hapagRemark">
+              </p>
             </b-card>
           </b-collapse>
           <!-- FIN REMARKS -->
@@ -3830,7 +3842,7 @@
 
               <div class="d-flex justify-content-end align-items-center">
                 <b-button
-                  v-if="oneResult.remarks && oneResult.remarks != ''"
+                  v-if="oneResult.remarks && oneResult.remarks.length != 0"
                   class="rs-btn"
                   v-b-toggle="
                     'remarks_' +
@@ -3913,7 +3925,10 @@
             <h5><b>Remarks</b></h5>
 
             <b-card>
-              <p v-html="oneResult.remarks"></p>
+              <p v-for="(oneRemark, oneRemarkIndex) in oneResult.remarks" 
+                :key="oneRemarkIndex"
+                v-html="oneRemarkIndex + ': </br>' + oneRemark">
+              </p>
             </b-card>
           </b-collapse>
           <!-- FIN REMARKS -->
@@ -4731,7 +4746,7 @@
 
               <div class="d-flex justify-content-end align-items-center">
                 <b-button
-                  v-if="coscoResult.remarks && coscoResult.remarks != ''"
+                  v-if="coscoResult.remarks && coscoResult.remarks.length != 0"
                   class="rs-btn"
                   v-b-toggle="
                     'remarks_' +
@@ -4814,7 +4829,10 @@
             <h5><b>Remarks</b></h5>
 
             <b-card>
-              <p v-html="coscoResult.remarks"></p>
+              <p v-for="(coscoRemark, coscoRemarkIndex) in coscoResult.remarks" 
+                :key="coscoRemarkIndex"
+                v-html="coscoRemarkIndex + ': </br>' + coscoRemark">
+              </p>
             </b-card>
           </b-collapse>
           <!-- FIN REMARKS -->
@@ -5587,6 +5605,7 @@ export default {
                 component.setRemarks(respData);
               });
 
+
               //Sending data to MixPanel
               component.$mixpanel.track("Rates Spot", {
                 distinct_id: component.datalists.user.id,
@@ -5918,7 +5937,7 @@ export default {
     },
 
     setRemarks(responseData) {
-      let finalRemarks = "";
+      var finalRemarks = {};
 
       if(responseData.additionalData.remarks){
         if(this.searchData.direction == 1){
@@ -5932,13 +5951,21 @@ export default {
 
       if(initialRemarksPort){
         for(const remarkLang in initialRemarksPort){
-          finalRemarks +=initialRemarksPort[remarkLang];
+          if(finalRemarks[remarkLang] == undefined){
+            finalRemarks[remarkLang] = "";
+          }
+
+          finalRemarks[remarkLang] += initialRemarksPort[remarkLang];
         }
       }
 
       if(initialRemarksCountry){
         for(const remarkLang in initialRemarksCountry){
-          finalRemarks +=initialRemarksCountry[remarkLang];
+          if(finalRemarks[remarkLang] == undefined){
+            finalRemarks[remarkLang] = "";
+          }
+
+          finalRemarks[remarkLang] += initialRemarksCountry[remarkLang];
         }
       }
 

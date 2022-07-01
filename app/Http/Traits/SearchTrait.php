@@ -1422,28 +1422,36 @@ trait SearchTrait
             })
             ->get();
 
-        $final_remarks = "";
-        $included_contracts = [];
-        $included_global_remarks = [];
+        $final_remarks = $this->sortRemarksByLanguage($remarks, $search_data);
 
-        foreach ($remarks as $remark) {
-            if ($search_data['direction'] == 1 && !in_array($remark->id, $included_global_remarks)) {
-                $final_remarks .= $remark->import . "<br>";
-                array_push($included_global_remarks, $remark->id);
-            } elseif ($search_data['direction'] == 2 && !in_array($remark->id, $included_global_remarks)) {
-                $final_remarks .= $remark->export . "<br>";
-                array_push($included_global_remarks, $remark->id);
-            }
-        }
-
-        if (!in_array($rate->contract_id, $included_contracts)) {
-            $final_remarks .= $rate->contract->remarks . '<br>';
-            array_push($included_contracts, $rate->contract->id);
+        foreach($final_remarks as $remark){
+            $remark .= $rate->contract->remarks . '<br>';
         }
 
         return $final_remarks;
     }
 
+    public function sortRemarksByLanguage($remarks, $search_data)
+    {
+        $final_remarks = [];
+        $included_global_remarks = [];
+
+        foreach ($remarks as $remark) {
+            if(!isset($final_remarks[strtolower($remark->language->name)])){
+                $final_remarks[strtolower($remark->language->name)] = "";
+            }
+
+            if ($search_data['direction'] == 1 && !in_array($remark->id, $included_global_remarks)) {
+                $final_remarks[strtolower($remark->language->name)] .= $remark->import . "<br>";
+                array_push($included_global_remarks, $remark->id);
+            } elseif ($search_data['direction'] == 2 && !in_array($remark->id, $included_global_remarks)) {
+                $final_remarks[strtolower($remark->language->name)] .= $remark->export . "<br>";
+                array_push($included_global_remarks, $remark->id);
+            }
+        }
+
+        return $final_remarks;
+    }
 
     //Retrives global Transit Times
     public function searchTransitTime($rate)

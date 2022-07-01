@@ -283,7 +283,10 @@
               <h5><b>Remarks</b></h5>
 
               <b-card>
-                <p v-html="rate.remarks"></p>
+                <p v-for="(remark, remarkIndex) in rate.remarks" 
+                  :key="remarkIndex"
+                  v-html="remarkIndex + ': </br>' + remark">
+                </p>
               </b-card>
             </b-collapse>
             <!-- FIN REMARKS -->

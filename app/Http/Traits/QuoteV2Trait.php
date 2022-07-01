@@ -18,6 +18,7 @@ use App\QuoteV2;
 use App\SaleTermV2;
 use App\SendQuote;
 use App\User;
+use App\Language;
 use App\Surcharge;
 use App\LocalChargeQuoteLclTotal;
 use App\LocalChargeQuoteTotal;
@@ -2100,5 +2101,87 @@ trait QuoteV2Trait
             $inputConversion=$currency->rates;
         }
         return $inputConversion;
+    }
+
+    public function setQuoteRemarks($rate_data, $result_data)
+    {
+        $remarks = [];
+        
+        if(!empty($rate_data)){
+            foreach ($rate_data as $rate) {
+                foreach($rate['client_remarks'] as $lang => $lang_remark){
+                    if(!isset($remarks[$lang])){
+                        $remarks[$lang] = "";
+                    }
+    
+                    $remarks[$lang] .= $lang_remark;
+                }
+            }
+        } else {
+            $languages = Language::all();
+
+            foreach($languages as $lang){
+                $remarks[strtolower($lang->name)] = "";
+            }
+        }
+
+        foreach ($result_data as $result) {
+            if (isset($result['remarks'])) {
+                foreach($remarks as $lang => $quote_remark){
+                    $remarks[$lang] .= $result['remarks'][$lang] ?? "";
+                    $remarksPenalties = isset($result['formattedPenalties']) ? $this->formatPenaltyRemark($result['formattedPenalties'], $result['company'], $result['search']['containers']) : '';
+                    $remarks[$lang] .= $remarksPenalties;
+                }
+            }
+        }
+
+        return $remarks;
+    }
+
+    public function formatPenaltyRemark($formattedPenalties, $company, $containers)
+    {
+        $table = '';
+        $penalValue = '';
+        $head = '';
+        $count = count($containers);
+        foreach ($containers as $key => $container) {
+            $c = '';
+
+            if ($key == 0) {
+                $c = "<tr>" . "<th>" . $company . " Fees" . "</th>" . "<th>" . $container['code'] . "</th>";
+            } elseif ($key == $count - 1) {
+                $c = "<th>" . $container['code'] . "</th>" . "</tr>";
+            } else {
+                $c = "<th>" . $container['code'] . "</th>";
+            }
+            $head .= $c;
+        }
+        $table .= $head;
+
+        foreach ($formattedPenalties as $key => $penalties) {
+            $index = array_keys($penalties);
+            $count = count($index);
+
+            for ($i = 0; $i < $count; $i++) {
+                $penal = '';
+
+                if ($i == 0) {
+                    $penal = "<tr>" . "<th>" . $penalties[$index[$i]] . "</th>";
+                } elseif ($i == $count - 1) {
+                    $penal = "<th>" . $penalties[$index[$i]] . " " . $penalValue . "</th>" . "</tr>";
+                } elseif (is_int($penalties[$index[$i]])) {
+                    $penalValue = $penalties[$index[$i]];
+                } elseif (isset($penalValue)) {
+                    $penal = "<th>" . $penalties[$index[$i]] . " " . $penalValue . "</th>";
+                } else {
+                    $penal = "<tr>" . "<th>" . $penalties[$index[$i]] . "</th>";
+                }
+                $table .= $penal;
+            }
+        }
+
+        $remark = "<table>" . $table . "</table>";
+        
+        return $remark;
     }
 }
