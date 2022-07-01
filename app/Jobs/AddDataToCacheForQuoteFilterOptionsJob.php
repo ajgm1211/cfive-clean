@@ -32,11 +32,11 @@ class AddDataToCacheForQuoteFilterOptionsJob implements ShouldQueue
     {   
         try {
             // olvidar cache de la compañia
-            cache()->forget('id_options_to_quotes_by_user_'.$company_user_id);
-            cache()->forget('quote_id_options_to_quotes_by_user_'.$company_user_id);
-            cache()->forget('custom_quote_id_options_to_quotes_by_user_'.$company_user_id);
-            cache()->forget('companies_option_to_quotes_by_user_'.$company_user_id);
-            cache()->forget('created_at_options_to_quotes_by_user_'.$company_user_id);
+            cache()->forget('id_options_to_quotes_by_user_'.$this->company_user_id);
+            cache()->forget('quote_id_options_to_quotes_by_user_'.$this->company_user_id);
+            cache()->forget('custom_quote_id_options_to_quotes_by_user_'.$this->company_user_id);
+            cache()->forget('companies_option_to_quotes_by_user_'.$this->company_user_id);
+            cache()->forget('created_at_options_to_quotes_by_user_'.$this->company_user_id);
 
             $query = $this->getFilterByUserType($this->user);
             
