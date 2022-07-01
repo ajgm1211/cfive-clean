@@ -34,7 +34,7 @@ Vue.use(VueCkeditor.plugin, options);
 
 Vue.use(VueGoogleMaps, {
     load: {
-        key: 'AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0',
+        key: 'AIzaSyDS6qwBNAF32f7FOHXsexBQSMwL7ZRNpOA',
         libraries: 'places',
     },
     installComponents: true
