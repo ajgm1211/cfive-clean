@@ -165,25 +165,39 @@ class QuotationController extends Controller
         return $query;
     }
 
+    /**
+     * Aplicación cliente hace request a este método
+     * para obtener los datos necesarios para gestionar un quote
+     */
     public function data(Request $request)
-    {
+    {   
+        return $this->getData();
+    }
+
+    public function getData() 
+    {   
         $company_user_id = Auth::user()->company_user_id;
 
-        $carriers = Carrier::get()->map(function ($carrier) {
-            $carrier['model'] = 'App\Carrier';
-            return $carrier->only(['id', 'name', 'image', 'model']);
-        });
+        $carriers = cache()->rememberForever('data_carriers', function() {
+            return Carrier::get()->map(function ($carrier) {
+                $carrier['model'] = 'App\Carrier';
+                return $carrier->only(['id', 'name', 'image', 'model']);
+            });
+        }); 
 
         $companies = Company::where('company_user_id', '=', $company_user_id)->get()->map(function ($company) {
             return $company->only(['id', 'business_name', 'pdf_language']);
         });
 
-        $full_contacts = Contact::get()->map(function ($contact) {
-            return $contact->only(['id', 'first_name', 'last_name', 'company_id']);
-        });
+        $full_contacts = cache()->rememberForever('data_full_contacts', function() {
+            return Contact::get()->map(function ($contact) {
+                return $contact->only(['id', 'first_name', 'last_name', 'company_id']);
+            });
+        }); 
 
         $contacts = [];
         $languages = [];
+        
         foreach ($companies as $company) {
             array_push($languages, ['company_id' => $company['id'], 'name' => $company['pdf_language']]);
 
@@ -194,7 +208,9 @@ class QuotationController extends Controller
             }
         };
 
-        $incoterms = Incoterm::select(['id', 'name'])->get();
+        $incoterms = cache()->rememberForever('data_incoterms', function() {
+            return Incoterm::select(['id', 'name'])->get();
+        });
 
         $users = User::whereHas('companyUser', function ($q) use ($company_user_id) {
             $q->where('company_user_id', '=', $company_user_id);
@@ -202,33 +218,57 @@ class QuotationController extends Controller
             return $user->only(['id', 'name', 'lastname', 'fullname']);
         });
 
-        $harbors = Harbor::select(['id', 'display_name', 'country_id', 'code'])->get();
+        $harbors = cache()->rememberForever('data_harbors', function() {
+            return Harbor::select(['id', 'display_name', 'country_id', 'code'])->get();
+        });
 
-        $payment_conditions = PaymentCondition::select(['id', 'quote_id', 'content'])->get();
+        $payment_conditions = cache()->rememberForever('data_payment_conditions', function() {
+            return PaymentCondition::select(['id', 'quote_id', 'content'])->get();
+        });
 
-        $terms_and_conditions = TermAndConditionV2::select(['id', 'name', 'user_id', 'type', 'company_user_id'])->get();
+        $terms_and_conditions = cache()->rememberForever('data_terms_and_conditions', function() {
+            return TermAndConditionV2::select(['id', 'name', 'user_id', 'type', 'company_user_id'])->get();
+        });
 
-        $delivery_types = DeliveryType::select(['id', 'name'])->get();
+        $delivery_types = cache()->rememberForever('data_delivery_types', function() {
+            return DeliveryType::select(['id', 'name'])->get();
+        }); 
 
-        $status_options = StatusQuote::select(['id', 'name'])->get();
+        $status_options = cache()->rememberForever('data_status_options', function() {
+            return StatusQuote::select(['id', 'name'])->get();
+        }); 
 
-        $kind_of_cargo = CargoKind::select(['id', 'name'])->get();
+        $kind_of_cargo = cache()->rememberForever('data_kind_of_cargo', function() {
+            return CargoKind::select(['id', 'name'])->get();
+        }); 
 
-        $languages = Language::select(['id', 'name'])->get();
+        $languages = cache()->rememberForever('data_languages', function() {
+            return Language::select(['id', 'name'])->get();
+        });
 
-        $currency = Currency::select(['id', 'alphacode', 'rates', 'rates_eur'])->get();
+        $currency = cache()->rememberForever('data_currency', function() {
+            return Currency::select(['id', 'alphacode', 'rates', 'rates_eur'])->get();
+        });
 
         $filtered_currencies = Currency::whereIn('id', ['46', '149'])->select(['id', 'alphacode', 'rates', 'rates_eur'])->get();
 
-        $containers = Container::get();
+        $containers = cache()->rememberForever('data_containers', function() {
+            return Container::get();
+        });
 
-        $calculationtypes = CalculationType::select(['id', 'name'])->get();
+        $calculationtypes = cache()->rememberForever('data_calculationtypes', function() {
+            return CalculationType::select(['id', 'name'])->get();
+        });
 
         $surcharges = Surcharge::where('company_user_id', '=', $company_user_id)->select(['id', 'name'])->get();
 
-        $schedule_types = ScheduleType::select(['id', 'name'])->get();
+        $schedule_types = cache()->rememberForever('data_schedule_types', function() {
+            return ScheduleType::select(['id', 'name'])->get();
+        });
 
-        $countries = Country::select(['id', 'code', 'name'])->get();
+        $countries = cache()->rememberForever('data_countries', function() {
+            return Country::select(['id', 'code', 'name'])->get();
+        });
 
         $sale_codes = SaleTermCode::where('company_user_id', '=', $company_user_id)->select(['id', 'name'])->get();
 
@@ -237,11 +277,17 @@ class QuotationController extends Controller
             return $provider->only(['id', 'name', 'model']);
         });
 
-        $cargo_types = CargoType::select(['id', 'name'])->get();
+        $cargo_types = cache()->rememberForever('data_cargo_types', function() {
+            return CargoType::select(['id', 'name'])->get();
+        });
 
-        $calculationtypeslcl = CalculationTypeLcl::select(['id', 'name'])->get();
+        $calculationtypeslcl = cache()->rememberForever('data_calculationtypeslcl', function() {
+            return CalculationTypeLcl::select(['id', 'name'])->get();
+        });
 
-        $destination_types = DestinationType::select(['id', 'name'])->get();
+        $destination_types = cache()->rememberForever('data_destination_types', function() {
+            return DestinationType::select(['id', 'name'])->get();
+        });
 
         $carrier_providers = $this->providers($carriers);
 

@@ -133,7 +133,6 @@ export default {
   },
   created() {},
   methods: {
-
     onEdit(data) {
       window.location = `/api/quote/${data.id}/edit`;
     },
