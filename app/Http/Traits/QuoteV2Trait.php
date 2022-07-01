@@ -2113,13 +2113,14 @@ trait QuoteV2Trait
         $filter_delegation = $user->companyUser->options['filter_delegations'];
         $subtype = $user->options['subtype'];
         $company_user_id = $user->company_user_id;
+        $user_id =  $user->id;
 
         //Filtro por permisos a nivel de usuario y compañía
         if ($subtype === 'comercial') {
-            $query = ViewQuoteV2::filterByCurrentUser();
+            $query = ViewQuoteV2::filterByCurrentUser($company_user_id,$user_id);
         }
         if ($filter_delegation == true) {
-            $query = ViewQuoteV2::filterByDelegation();
+            $query = ViewQuoteV2::filterByDelegation( $user_id);
         } else {
             $query = ViewQuoteV2::filterByCurrentCompany($company_user_id);
         }
