@@ -455,12 +455,21 @@ class AutomaticInlandController extends Controller
         $port = $autoinland->port_id;
         
         $total = AutomaticInlandTotal::where([['quote_id',$autoinland->quote_id],['port_id',$port]])->first();
+        
+        $quote_id = $autoinland->quote_id;
 
         $autoinland->delete();
         
         $total->totalize();
 
-        return response()->json(null, 204); 
+        $count = AutomaticInland::where('quote_id', $quote_id)->get()->count();
+
+        if ($count >= 1) {
+            return response()->json(null, 204);
+        }else{
+            return response()->json(null, 215);
+        }
+         
     }
 
     public function destroyAll(Request $request)

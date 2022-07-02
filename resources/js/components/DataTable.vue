@@ -1368,6 +1368,9 @@ export default {
                         this.actions
                             .delete(id)
                             .then((response) => {
+                                if (response.status == 215) {
+                                    this.$emit('onDelete')
+                                }
                                 this.refreshData();
                             }) 
                     }  

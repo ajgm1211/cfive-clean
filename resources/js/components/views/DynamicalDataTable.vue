@@ -30,6 +30,7 @@
         @onOpenModalContainerView="openModalContainerView"
         @onOpenModalHarborOrigView="openModalHarborOrigView"
         @onOpenModalHarborDestView="openModalHarborDestView"
+        @onDelete="onDelete"
         ref="table"
         :view="view"
         :classTable="classTable"
@@ -171,6 +172,10 @@
                 }else{
                     this.$emit('onEditSuccess', data,this.multiId);
                 }
+            },
+
+            onDelete(){
+                this.$emit('onDelete');
             },
 
             /* Reset all fields */

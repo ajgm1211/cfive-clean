@@ -167,6 +167,7 @@
                         :massiveactions="['delete']"
                         :singleActions="['delete']"
                         @onFormFieldUpdated="formFieldUpdated"
+                        @onDelete="OnDeleteSuccess"
                     ></DynamicalDataTable>
                     <!-- End DataTable -->
                 </div>
@@ -1471,6 +1472,29 @@ export default {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
         },
+
+        OnDeleteSuccess(){
+            let component = this;
+
+            if (
+                (component.currentAddress != undefined &&
+                    Object.keys(this.currentAddress).length != 0) 
+            ) {
+                var portAddressCombo = [
+                    component.currentAddress["address"] +
+                    ";" +
+                    component.currentPort["id"]
+                ];
+
+                component.inlandActions.deleteFull(portAddressCombo, component.$route).then((response) => {
+                    component.setAddresses();                        
+                })
+                .catch((data) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
+            }
+            
+        }
     },
 };
 </script>
