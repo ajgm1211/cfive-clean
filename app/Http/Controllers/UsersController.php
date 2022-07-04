@@ -62,8 +62,14 @@ class UsersController extends Controller
                 $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
             }
             
+            if($request->input('subtype')) {
+                $subtype = $request->input('subtype');
+            } else {
+                $subtype = 'operaciones';
+            }
+             
             $options = [
-                'subtype' => $request->input('subtype')
+                'subtype' => $subtype
             ];
             
             $user = new User($request->only('name', 'lastname','email', 'phone', 'type', 'company_user_id'));            
