@@ -64,10 +64,10 @@
           <b-col class="input-box" v-if="user.settings_whitelabel">
             <div id="checkbox-edit">
               <div id="checkbox-create" v-if="user.settings_whitelabel">
-                <div class="main-btn" v-if="companyData.whitelabel == true">
+                <div class="transfered-done" v-if="companyData.whitelabel != true">
                   {{textAdded}}
                 </div>
-                <div v-else class="main-btn" @click="toogleAddToWhiteLabel()" >
+                <div v-else class="main-btn" @click="confirmationCall()" >
                   {{textAdd}}
                 </div>
               </div>
@@ -130,18 +130,11 @@ export default {
         this.companyData  = newCompany
         toastr.success("successful update");
       } catch (error) {
-        this.toogleAddToWhiteLabel()
         toastr.error("unsuccessful update.");
       }
     },
-    toogleAddToWhiteLabel(){
-      this.companyData.whitelabel= !this.companyData.whitelabel
-      if (this.companyData.whitelabel == true) {
-        this.textAdd = "Selected for add to WhiteLabel"  
-        this.update()
-      }else{
-        this.textAdd = "Add To WhiteLabel"
-      }
+    async confirmationCall(){
+      await this.$emit('confirmation')
     }
   }
 }

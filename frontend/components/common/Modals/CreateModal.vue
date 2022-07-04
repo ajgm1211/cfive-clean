@@ -194,7 +194,7 @@ export default {
         this.$root.$emit('submitData')
         //this.$emit('cancel')
       } catch (error) {
-        toastr.success("Not created successfully")
+        toastr.error("Not created successfully")
       }
         
       

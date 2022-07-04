@@ -61,6 +61,26 @@
             >
             </b-form-select>
           </b-col>
+          <b-col>
+            <div class="modal-footer-content-wl input-box">
+              <div id="checkbox-create" v-if="user.settings_whitelabel" >
+                <div>
+                  <b-form-checkbox
+                    id="create-whitelabel"
+                    v-model="contactData.whitelabel"
+                    name="checkbox-create"
+                    true-value="true"
+                    false-value="false"
+                    @change="update()"
+                  >
+                    <label for="create-whitelabel">
+                      {{textAdd}}
+                    </label> 
+                  </b-form-checkbox>
+                </div>
+              </div>
+            </div>
+          </b-col>
         </b-row>
     </div>
 </template>
@@ -89,8 +109,8 @@ export default {
   data() {
     return {
       actions:actions,
-      optionsCompanies:[]
-
+      optionsCompanies:[],
+      textAdd:"Add To WhiteLabel"
     }
   },
   computed:{

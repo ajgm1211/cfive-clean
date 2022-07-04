@@ -2,7 +2,7 @@
 <template>
   <div class="col-12">
     <section>
-      <EditInputs :company="company" :user="user" />
+      <EditInputs :company="company" :user="user" @confirmation="ShowConfirm"/>
     </section>
     <section>
       <div>
@@ -13,22 +13,32 @@
         </b-tabs>
       </div>
     </section>
+    <ConfirmTransfer
+      :create="true"
+      v-if="create"
+      :title="'Transfer'"
+      :action="'Confirm'"
+      @cancel="create = false"
+      :company="company.id"
+    />
   </div>
 </template>
 
 <script>
 
 import { mapState } from 'vuex'
-import EditInputs from './partials/EditInputs'
+import EditInputs from './Partials/EditInputs'
 import actions from '../../store/modules/company/actions'
-import Contacts from './partials/Contacts'
+import Contacts from './Partials/Contacts'
+import ConfirmTransfer from './Modals/ConfirmTransfer'
 
 export default {
-  components: {EditInputs, Contacts},
+  components: {EditInputs, Contacts, ConfirmTransfer},
   data() {
     return {
         actions:actions,
-        company:{}
+        company:{},
+        create:false
     }
   },
   async created(){
@@ -37,6 +47,11 @@ export default {
   },
   computed:{
     ...mapState('auth', ['user'])
+  },
+  methods:{
+    ShowConfirm(){
+      this.create = true
+    }
   }
 }
 </script>
