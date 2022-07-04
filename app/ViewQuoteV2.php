@@ -22,23 +22,30 @@ class ViewQuoteV2 extends Model
         return $this->belongsTo('App\QuoteV2', 'quote_id');
     }
 
-    public function scopeFilterByCurrentCompany($query)
-    {
-        $company_id = Auth::user()->company_user_id;
-        return $query->where('company_user_id', '=', $company_id);
+    public function scopeFilterByCurrentCompany($query, $company_user_id = null)
+    {   
+        if(!isset($company_user_id)){
+            $company_user_id = Auth::user()->company_user_id;
+        }
+        return $query->where('company_user_id', '=', $company_user_id);
     }
 
-    public function scopeFilterByCurrentUser($query)
+    public function scopeFilterByCurrentUser($query,$company_id = null,$user_id = null)
     {
-        $company_id = Auth::user()->company_user_id;
-        $user_id = Auth::user()->id;
+        if(!isset($company_id)){
+            $company_id = Auth::user()->company_user_id;
+            $user_id = Auth::user()->id;
+        }
         return $query->where('company_user_id', '=', $company_id)
                      ->where('user_id', '=', $user_id);
     }
     
-    public function scopeFilterByDelegation($query)
+    public function scopeFilterByDelegation($query , $user_id = null)
     {
-        $user_id = Auth::user()->id;
+        if(!isset($user_id)){
+            $user_id = Auth::user()->id;
+        }
+      
         $user_delegation =UserDelegation::where('users_id','=',$user_id)->first();
         $delegation=Delegation::find($user_delegation['delegations_id']);
         $id_delegation = $delegation['id'];
